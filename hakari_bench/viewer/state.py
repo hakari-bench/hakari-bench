@@ -78,10 +78,10 @@ def normalize_query_state(
 ) -> QueryState:
     view = _normalized_view_name(view)
     selected_benchmarks = _normalized_benchmark_values(bench, viewer_config)
+    if view == CLEAR_SCOPE_NAME:
+        view = CUSTOM_SCOPE_NAME
     if selected_benchmarks:
         view = CUSTOM_SCOPE_NAME
-    elif view == CUSTOM_SCOPE_NAME:
-        view = CLEAR_SCOPE_NAME
     if view not in [*viewer_config.view_names, CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME]:
         view = viewer_config.overall.name
     if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
@@ -100,7 +100,8 @@ def normalize_query_state(
     )
     task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
-    if view == CUSTOM_SCOPE_NAME:
+    empty_custom_scope = view == CUSTOM_SCOPE_NAME and not selected_benchmarks
+    if view == CUSTOM_SCOPE_NAME and selected_benchmarks:
         query["bench"] = selected_benchmarks
     if target != "all":
         query["target"] = target
@@ -132,7 +133,7 @@ def normalize_query_state(
     has_task_length_filters = bool(query_len_min or query_len_max or doc_len_min or doc_len_max)
     if language_filters:
         query["lang_filter"] = language_filters
-    if view == CLEAR_SCOPE_NAME:
+    if empty_custom_scope:
         query.pop("lang_filter", None)
     if filters or has_task_length_filters:
         query["filters"] = "1"

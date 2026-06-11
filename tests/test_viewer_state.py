@@ -212,7 +212,7 @@ def test_bare_mnanobeir_selection_defaults_to_task_mean() -> None:
     assert query["bench"] == ["MNanoBEIR:task_mean"]
 
 
-def test_empty_custom_benchmark_selection_normalizes_to_clear() -> None:
+def test_empty_custom_benchmark_selection_stays_custom_and_resets_language() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
         view="Custom",
@@ -235,7 +235,33 @@ def test_empty_custom_benchmark_selection_normalizes_to_clear() -> None:
         lang_filter=["ja"],
     )
 
-    assert query == {"view": "Clear", "sort": "borda_rank", "direction": "asc"}
+    assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc"}
+
+
+def test_legacy_clear_view_normalizes_to_empty_custom() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Clear",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        task_scores=True,
+        lang_filter=["ja"],
+    )
+
+    assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc", "task_scores": "1"}
 
 
 def test_task_z_scores_do_not_force_task_score_columns() -> None:

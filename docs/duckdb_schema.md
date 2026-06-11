@@ -252,8 +252,8 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 The page header also reads `task_results` for the latest available evaluation
 timestamp. Configured scope presets (`Overall`, `Core`, and `Core-EN`) expand
 to their configured benchmark components before querying the leaderboard.
-`Custom` expands from repeated `bench=` query parameters, and `Clear` expands
-to an empty benchmark set.
+`Custom` expands from repeated `bench=` query parameters. Empty `view=Custom`
+with no `bench=` values represents the cleared benchmark set.
 
 ## Table Overview
 
@@ -817,9 +817,12 @@ For overall scope presets:
   Core suites and adds `NanoMTEB-v2`, yielding `NanoRTEB`, `NanoBRIGHT`,
   `NanoCoIR`, and `NanoMTEB-v2`.
 - `Custom`: a dynamic scope built from repeated `bench=` query parameters.
-  NanoSet labels in the viewer toggle membership in this selected set.
-- `Clear`: the empty custom scope. It selects no benchmarks, clears language
-  task facets back to All languages, and returns no leaderboard rows.
+  NanoSet labels in the viewer toggle membership in this selected set. When
+  `view=Custom` has no `bench=` values, it is the empty custom state: no
+  benchmarks are selected, language task facets reset to All languages, and no
+  leaderboard rows are returned.
+- `Clear`: a UI action button that resets the benchmark selection into empty
+  `view=Custom`. It is not a selected scope state in the URL.
 
 Overall scope presets also expose a `score` aggregation selector:
 
@@ -1022,15 +1025,16 @@ choices:
   `primary_languages` to keep auxiliary detector languages from cross-language
   tasks out of the selector; for example, `NanoMTEB-Dutch` exposes `nl`
   but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
-- Viewer benchmark scope exposes `Overall`, `Core`, `Core-EN`, and `Clear`
-  preset buttons, then the individual NanoSet labels. Scope preset buttons
+- Viewer benchmark scope exposes `Overall`, `Core`, `Core-EN`, a `Clear`
+  action button, then the individual NanoSet labels. Scope preset buttons
   carry inline help explaining their aggregation semantics. `Overall` and
   `Core` reset Task facets to All languages when selected; `Core-EN` selects
-  the `EN` facet; `Clear` resets to All languages and shows no rows. Overall,
-  Core, Core-EN, and Custom scopes expose a Score selector for `micro` and
-  `macro`. NanoSet labels toggle a `Custom` selection through repeated `bench=`
-  query parameters, so small combinations such as `NanoJMTEB-v2` plus
-  `NanoMTEB-v2` are represented directly in the URL. `MNanoBEIR` is special:
+  the `EN` facet; `Clear` pushes `view=Custom` with no `bench=` values, resets
+  to All languages, is not itself selected, and shows no rows. Overall, Core,
+  Core-EN, and Custom scopes expose a Score selector for `micro` and `macro`.
+  NanoSet labels toggle a `Custom` selection through repeated `bench=` query
+  parameters, so small combinations such as `NanoJMTEB-v2` plus `NanoMTEB-v2`
+  are represented directly in the URL. `MNanoBEIR` is special:
   combined scopes expose `MNanoBEIR:task_mean` as `MNanoBEIR(task)` and
   `MNanoBEIR:lang_mean` as `MNanoBEIR(lang)`. These two selection keys are
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
@@ -1090,9 +1094,9 @@ repository falls back to a metadata join so `query_len_min`, `query_len_max`,
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Configured
 overall rows in this mart use the default raw-task `score=micro` semantics.
-`score=macro` overall leaderboards, `Custom` `bench=` selections, and `Clear`
-are computed dynamically from `viewer_task_results` so the NanoSet aggregation
-policy is always applied from the current YAML configuration. It is keyed by
+`score=macro` overall leaderboards and `Custom` `bench=` selections, including
+empty Custom, are computed dynamically from `viewer_task_results` so the NanoSet
+aggregation policy is always applied from the current YAML configuration. It is keyed by
 `view_name`, `score_target`, and the four display
 flags
 `include_quantization_variants`, `include_truncate_variants`,

@@ -317,9 +317,10 @@ class LeaderboardService:
                 for view in available_views
             }
             if not benchmarks:
+                empty_view_name = CUSTOM_SCOPE_NAME if view_name == CUSTOM_SCOPE_NAME else CLEAR_SCOPE_NAME
                 return LeaderboardResult(
-                    view_name=CLEAR_SCOPE_NAME,
-                    view_label=self.config.label_for_view(CLEAR_SCOPE_NAME),
+                    view_name=empty_view_name,
+                    view_label=self.config.label_for_view(empty_view_name),
                     is_overall=True,
                     score_target=score_target,
                     score_aggregation=score_aggregation,
@@ -628,10 +629,12 @@ class LeaderboardService:
     ) -> tuple[str, OverallConfig | None, list[str]]:
         if view_name == CLEAR_SCOPE_NAME:
             return CLEAR_SCOPE_NAME, OverallConfig(name=CLEAR_SCOPE_NAME, label=CLEAR_SCOPE_NAME, benchmarks=[]), []
+        if view_name == CUSTOM_SCOPE_NAME and not selected_benchmarks:
+            return CUSTOM_SCOPE_NAME, OverallConfig(name=CUSTOM_SCOPE_NAME, label=CUSTOM_SCOPE_NAME, benchmarks=[]), []
         if selected_benchmarks:
             selection_keys = normalize_benchmark_selection_values(list(selected_benchmarks), self.config)
             if not selection_keys:
-                return CLEAR_SCOPE_NAME, OverallConfig(name=CLEAR_SCOPE_NAME, label=CLEAR_SCOPE_NAME, benchmarks=[]), []
+                return CUSTOM_SCOPE_NAME, OverallConfig(name=CUSTOM_SCOPE_NAME, label=CUSTOM_SCOPE_NAME, benchmarks=[]), []
             overall = self.config.overall_for_selected_benchmark_keys(
                 name=CUSTOM_SCOPE_NAME,
                 label=CUSTOM_SCOPE_NAME,

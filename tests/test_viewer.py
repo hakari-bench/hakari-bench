@@ -22,6 +22,7 @@ from hakari_bench.viewer.app import (
     _view_group,
     _z_score_bucket_class,
     create_app,
+    render_display_controls,
     render_tabs,
     render_leaderboard_csv,
     render_page,
@@ -1047,6 +1048,7 @@ overalls:
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
 
     result = service.get_leaderboard("Clear", language_filters=("ja",))
+    empty_custom_result = service.get_leaderboard("Custom", selected_benchmarks=(), language_filters=("ja",))
 
     assert result.view_name == "Clear"
     assert result.view_label == "Clear"
@@ -1055,6 +1057,13 @@ overalls:
     assert result.expected_tasks == 0
     assert result.rows == []
     assert result.selected_languages == ()
+    assert empty_custom_result.view_name == "Custom"
+    assert empty_custom_result.view_label == "Custom"
+    assert empty_custom_result.is_overall
+    assert empty_custom_result.selected_benchmarks == ()
+    assert empty_custom_result.expected_tasks == 0
+    assert empty_custom_result.rows == []
+    assert empty_custom_result.selected_languages == ()
 
 
 def test_custom_benchmark_selection_aggregates_selected_benchmarks(tmp_path: Path) -> None:
@@ -1182,11 +1191,13 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
     assert "Clear" in html
     assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
     core_en_button = html.split(">Core-EN</button>", 1)[0].rsplit("<button", 1)[1]
-    clear_button = html.split(">Clear</button>", 1)[0].rsplit("<button", 1)[1]
+    clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
     assert "view=Core-EN" in core_en_button
     assert "lang_filter=en" in core_en_button
-    assert 'hx-get="/leaderboard?view=Clear&amp;sort=borda_rank&amp;direction=asc' in html
+    assert 'data-icon="rotate-ccw"' in clear_button
+    assert 'hx-get="/leaderboard?view=Custom&amp;sort=borda_rank&amp;direction=asc' in clear_button
     assert "lang_filter=" not in clear_button
+    assert "border-cyan-700" not in clear_button
     bench_a_button = re.search(r'<button[^>]+data-benchmark-toggle="BenchA"[^>]+>', html)
     bench_c_button = re.search(r'<button[^>]+data-benchmark-toggle="BenchC"[^>]+>', html)
     assert bench_a_button is not None
@@ -1202,6 +1213,39 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
     assert "bench=BenchA" in bench_c_html
     assert "bench=BenchB" in bench_c_html
     assert "bench=BenchC" in bench_c_html
+
+
+def test_display_controls_preserve_custom_benchmark_selection() -> None:
+    result = LeaderboardResult(
+        view_name="Custom",
+        view_label="Custom",
+        is_overall=True,
+        expected_tasks=0,
+        rows=[],
+        available_views=["Overall", "Core", "MNanoBEIR", "NanoJMTEB-v2"],
+        available_view_labels={
+            "Overall": "Overall",
+            "Core": "Core",
+            "MNanoBEIR": "MNanoBEIR",
+            "NanoJMTEB-v2": "JMTEB-v2",
+        },
+        selected_benchmarks=("MNanoBEIR:task_mean", "NanoJMTEB-v2"),
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_display_controls(
+        result=result,
+        sort="borda_rank",
+        direction="asc",
+        filter_state=FilterState(language_filters=("ja",)),
+    )
+    column_form = html.split('id="column-controls"', 1)[1].split("</form>", 1)[0]
+
+    assert 'name="view" value="Custom"' in column_form
+    assert 'name="bench" value="MNanoBEIR:task_mean"' in column_form
+    assert 'name="bench" value="NanoJMTEB-v2"' in column_form
+    assert 'name="lang_filter" value="ja"' in column_form
 
 
 def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
@@ -1992,6 +2036,12 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     ]
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    default_response = TestClient(app).get("/leaderboard?view=BenchA")
+    assert default_response.status_code == 200
+    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white">' in default_response.text
+    assert "Advanced filters" not in default_response.text
+    assert 'id="facet-filters"' not in default_response.text
+
     response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
 
     assert response.status_code == 200
@@ -2016,10 +2066,10 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Refine results" in response.text
     assert 'data-icon="filter"' in response.text
-    assert '<details id="facet-filters" class="filter-panel min-w-0 bg-zinc-50 p-2">' in response.text
-    assert 'advanced-filter-summary flex cursor-pointer list-none items-center justify-between gap-2' in response.text
+    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white" open>' in response.text
+    assert 'refine-results-summary flex cursor-pointer list-none items-center justify-between gap-2 p-2' in response.text
     assert 'data-icon="chevron-right"' in response.text
-    assert "Advanced filters" in response.text
+    assert "Advanced filters" not in response.text
     assert "Efficiency filters" in response.text
     assert "Run metadata" in response.text
     assert 'data-filter-detail="dim_filter"' in response.text
@@ -2035,11 +2085,11 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="column-controls"' in response.text
     assert 'id="variant-controls"' in response.text
     assert 'id="filter-controls"' in response.text
-    assert 'id="facet-filters"' in response.text
+    assert 'id="facet-filters"' not in response.text
     assert 'from:input[type=' not in response.text
     assert 'hx-trigger="change, submit"' in response.text
     assert 'hx-include="#display-controls"' not in response.text
-    assert 'data-icon="list-filter"' in response.text
+    assert 'data-icon="list-filter"' not in response.text
     assert ">Dims</span>" in response.text
     assert "Truncate dims" not in response.text
     assert response.text.index(">Dims</span>") < response.text.index(">Quantization</span>")

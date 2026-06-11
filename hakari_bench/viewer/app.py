@@ -157,6 +157,7 @@ _ICON_PATHS = {
     "message-square-text": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 11h10"/><path d="M7 15h6"/><path d="M7 7h8"/>',
     "moon": '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
+    "rotate-ccw": '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
     "scan-eye": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="1"/><path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0"/>',
     "search": '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
     "shapes": '<path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>',
@@ -1117,14 +1118,24 @@ def _render_scope_button(
     query: str,
     query_payload: QueryState,
 ) -> str:
-    active = view_name == result.view_name
+    active = view_name == result.view_name and view_name != CLEAR_SCOPE_NAME
     classes = _control_button_classes(active=active)
     title, summary, details = _scope_preset_help(view_name)
     help_icon = _render_button_help_icon(title=title, summary=summary, details=details)
+    label_html = (
+        f"""{_icon_svg("rotate-ccw")}<span>{escape(view_label)}</span>"""
+        if view_name == CLEAR_SCOPE_NAME
+        else escape(view_label)
+    )
+    button_classes = (
+        "inline-flex items-center gap-1.5 py-1 pl-2 pr-0 text-left"
+        if view_name == CLEAR_SCOPE_NAME
+        else "py-1 pl-2 pr-0 text-left"
+    )
     return f"""<span class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}">
-                  <button type="button" class="py-1 pl-2 pr-0 text-left"
+                  <button type="button" class="{button_classes}"
                     hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                    {_leaderboard_control_hx_attrs()}>{escape(view_label)}</button>
+                    {_leaderboard_control_hx_attrs()}>{label_html}</button>
                   <span class="inline-flex items-center pl-1 pr-2">{help_icon}</span>
                 </span>"""
 
@@ -1171,6 +1182,8 @@ def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
 
 
 def _scope_or_benchmark_active(*, result: LeaderboardResult, view_name: str) -> bool:
+    if view_name == CLEAR_SCOPE_NAME:
+        return False
     if _view_group(view_name) == "Scope presets":
         return view_name == result.view_name
     selected_benchmarks = set(result.selected_benchmarks)
@@ -1205,7 +1218,7 @@ def _scope_preset_query_payload(
         direction=direction,
         filter_state=scope_filter_state,
     )
-    query_payload["view"] = view_name
+    query_payload["view"] = CUSTOM_SCOPE_NAME if view_name == CLEAR_SCOPE_NAME else view_name
     query_payload.pop("bench", None)
     if view_name == CLEAR_SCOPE_NAME:
         query_payload.pop("lang_filter", None)
@@ -1303,7 +1316,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
             "Clears every NanoSet selection.",
-            "Clear is an empty custom scope. No benchmark tasks are selected, Task facets return to All languages, and the leaderboard table shows no rows.\n\nUse it as a clean starting point before toggling a small custom set such as JMTEB-v2 plus MTEB-v2.",
+            "Clear resets the page to empty Custom selection. No benchmark tasks are selected, Task facets return to All languages, and the leaderboard table shows no rows.\n\nClear is an action, not a selected scope state. After pressing it, the URL remains view=Custom with no bench parameters so the next NanoSet toggle starts from a clean custom set.",
         ),
     }
     return help_text.get(
@@ -1674,6 +1687,7 @@ def render_display_controls(
         ("sort", sort),
         ("direction", direction),
     ]
+    state_fields.extend(_selected_benchmark_hidden_fields(result))
     if result.score_target != "all":
         state_fields.append(("target", result.score_target))
     if result.selected_score_metric != "ndcg@10":
@@ -1777,6 +1791,7 @@ def render_controls(
         ("sort", sort),
         ("direction", direction),
     ]
+    state_fields.extend(_selected_benchmark_hidden_fields(result))
     if result.score_target != "all":
         state_fields.append(("target", result.score_target))
     if result.selected_score_metric != "ndcg@10":
@@ -1992,23 +2007,37 @@ def render_controls(
             **_task_length_filter_kwargs(filter_state),
         ),
     )
-    advanced_filter_open_attr = " open" if filter_state.filters_active or filter_state.has_task_length_filters else ""
+    refine_results_open = (
+        bool(filter_state.model_filter.strip())
+        or bool(filter_state.task_filter.strip())
+        or filter_state.rank_filtered
+        or bool(filter_state.model_type_filters)
+        or filter_state.filters_active
+        or filter_state.has_task_length_filters
+    )
+    refine_results_open_attr = " open" if refine_results_open else ""
     return f"""
     <div class="grid gap-2 text-[0.8125rem] text-zinc-700">
-      <form id="filter-controls" class="border border-zinc-200 bg-white p-2"
-            hx-get="/leaderboard" hx-push-url="true"
-            {_leaderboard_control_hx_attrs()}
-            hx-trigger="change, submit">
-        {filter_hidden_html}
-        <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <span class="inline-flex items-center gap-1">
-            {_control_label(icon="filter", text="Refine results")}
-            {_render_help_tooltip(
-                "Refine results",
-                "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
-                "Refine results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
-            )}
+      <details id="filter-controls-panel" class="border border-zinc-200 bg-white"{refine_results_open_attr}>
+        <summary class="refine-results-summary flex cursor-pointer list-none items-center justify-between gap-2 p-2 text-[0.8125rem] font-medium text-zinc-800">
+          <span class="inline-flex items-center gap-1.5">
+            <span class="details-chevron inline-flex h-4 w-4 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
+            <span class="inline-flex items-center gap-1">
+              {_control_label(icon="filter", text="Refine results")}
+              {_render_help_tooltip(
+                  "Refine results",
+                  "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
+                  "Refine results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
+              )}
+            </span>
           </span>
+        </summary>
+        <form id="filter-controls" class="border-t border-zinc-200 p-2"
+              hx-get="/leaderboard" hx-push-url="true"
+              {_leaderboard_control_hx_attrs()}
+              hx-trigger="change, submit">
+          {filter_hidden_html}
+          <div class="mb-2 flex flex-wrap items-center justify-end gap-2">
           <label class="inline-flex items-center gap-2">
             <input type="hidden" name="rank_filtered" value="0">
             <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
@@ -2016,7 +2045,7 @@ def render_controls(
             {_render_help_tooltip(
                 "Recalculate ranks from filters",
                 "Recomputes ranking numbers using only the currently filtered result set.",
-                "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and advanced filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
+                "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Refine results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
             )}
           </label>
         </div>
@@ -2051,21 +2080,8 @@ def render_controls(
               </label>
             </div>
           </div>
-          <details id="facet-filters" class="filter-panel min-w-0 bg-zinc-50 p-2"{advanced_filter_open_attr}>
-            <summary class="advanced-filter-summary flex cursor-pointer list-none items-center justify-between gap-2 text-[0.8125rem] font-medium text-zinc-800">
-              <span class="inline-flex items-center gap-1.5">
-                <span class="details-chevron inline-flex h-4 w-4 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
-                <span class="inline-flex items-center gap-1">
-                  {_control_label(icon="list-filter", text="Advanced filters")}
-                  {_render_help_tooltip(
-                      "Advanced filters",
-                      "Opens lower-level filters for dimensions, quantization, task length, dtype, attention, and prompts.",
-                      "Advanced filters refine the current result set after the main controls have selected the evaluation mode, benchmark scope, language facet, and variant categories.\n\nUse Efficiency filters to narrow variant rows by embedding dimensions or quantization type. Use Length to include only tasks within query/document length bounds. Use Run metadata to inspect how results were produced, such as dtype, attention implementation, or prompt metadata.\n\nThese filters are useful for diagnostics and audits. They can change which rows and task columns are visible, especially when Recalculate ranks from filters is enabled.",
-                  )}
-                </span>
-              </span>
-            </summary>
-            <div class="filter-panel-body mt-2 space-y-2">
+          <div class="filter-panel min-w-0 bg-zinc-50 p-2">
+            <div class="filter-panel-body space-y-2">
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="git-branch", text="Efficiency filters")}
                 {_render_help_tooltip(
@@ -2089,9 +2105,10 @@ def render_controls(
                 {_render_filter_details(name="prompt_filter", summary="Prompt", icon="message-square-text", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
               </div>
             </div>
-          </details>
+          </div>
         </div>
       </form>
+      </details>
     </div>
     """
 
@@ -2107,6 +2124,12 @@ def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, 
     if result.include_other_variants:
         fields.append(("other_variant", "1"))
     return fields
+
+
+def _selected_benchmark_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
+    if result.view_name != CUSTOM_SCOPE_NAME:
+        return []
+    return [("bench", benchmark) for benchmark in result.selected_benchmarks]
 
 
 def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
