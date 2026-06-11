@@ -250,7 +250,7 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 | Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive so every task has at least one relevant candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 
 The page header also reads `task_results` for the latest available evaluation
-timestamp. Configured scope presets (`Core` and `Overall`) expand to their
+timestamp. Configured scope presets (`Overall` and `Core`) expand to their
 configured benchmark components before querying the leaderboard.
 
 ## Table Overview
@@ -724,7 +724,7 @@ the viewer uses competition rank (`1, 2, 2, 4`) for leaderboard ranks.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | Configured scope preset, such as `Core` or `Overall`, or a benchmark view name. |
+| `view_name` | `VARCHAR` | Configured scope preset, such as `Overall` or `Core`, or a benchmark view name. |
 | `model_name` | `VARCHAR` | Model name. |
 | `task_count` | `INTEGER` | Number of tasks used for ranking. |
 | `mean_score` | `DOUBLE` | Mean score on a 0 to 100 scale. |
@@ -747,7 +747,7 @@ HTML report. The current HTMX viewer does not use it.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | Configured scope preset, such as `Core` or `Overall`, or a benchmark view name. |
+| `view_name` | `VARCHAR` | Configured scope preset, such as `Overall` or `Core`, or a benchmark view name. |
 | `model_name` | `VARCHAR` | Model name. |
 | `benchmark` | `VARCHAR` | Benchmark group. |
 | `task_key` | `VARCHAR` | Task identity. |
@@ -803,25 +803,25 @@ benchmark.
 
 For overall scope presets:
 
-- `Core`: the default main leaderboard scope. It is a compact curated set
-  covering broad multilingual retrieval,
+- `Overall`: the default and broadest leaderboard scope. It includes all
+  configured benchmark views before language, model, task, and variant filters
+  are applied.
+- `Core`: a compact curated set covering broad multilingual retrieval,
   multilingual BEIR, English RTEB domains, multilingual long-document
   retrieval, reasoning-heavy retrieval, and code retrieval
   (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`, and
   `NanoCoIR`).
-- `Overall`: the broadest leaderboard scope. It includes all configured
-  benchmark views before language, model, task, and variant filters are applied.
 
 Overall scope presets also expose a `score` aggregation selector:
 
-- `score=macro`: the default and main leaderboard score. Each NanoSet
-  contributes one score row. Components with `group_by`, currently
+- `score=micro`: the default score. Every raw task row contributes directly.
+  This is useful for raw-task-weighted analysis and for comparing against older
+  leaderboard results.
+- `score=macro`: each NanoSet contributes one score row. Components with
+  `group_by`, currently
   `MNanoBEIR` using `task_name`, are first averaged inside the NanoSet, then the
   NanoSet contributes one score to the final ranking. This prevents large
   suites from dominating because they contain more raw tasks.
-- `score=micro`: every raw task row contributes directly. This is useful for
-  raw-task-weighted analysis and for comparing against older leaderboard
-  results.
 
 For overall views, `mean_score` follows the selected aggregation. In macro
 mode, Borda, `mean_score`, and metric columns are computed from NanoSet rows.
@@ -1013,10 +1013,10 @@ choices:
   `primary_languages` to keep auxiliary detector languages from cross-language
   tasks out of the selector; for example, `NanoMTEB-Dutch` exposes `nl`
   but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
-- Viewer benchmark scope exposes `Core` and `Overall` presets, then the
+- Viewer benchmark scope exposes `Overall` and `Core` presets, then the
   individual Nano set buttons. Scope preset buttons carry inline help
   explaining their aggregation semantics. Overall presets also expose a Score
-  selector for `macro` and `micro`. `MNanoBEIR` is shown as two Nano set
+  selector for `micro` and `macro`. `MNanoBEIR` is shown as two Nano set
   choices, `MNanoBEIR(task)` for `task_mean` and `MNanoBEIR(lang)` for
   `lang_mean`; other suite buttons preserve configuration order. Task facets
   live inside the same leaderboard configuration panel.
@@ -1072,8 +1072,8 @@ repository falls back to a metadata join so `query_len_min`, `query_len_max`,
 
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Overall rows in
-this mart use raw-task `score=micro` semantics; the default `score=macro`
-overall leaderboard is computed dynamically from `viewer_task_results` so the
+this mart use the default raw-task `score=micro` semantics. `score=macro`
+overall leaderboards are computed dynamically from `viewer_task_results` so the
 NanoSet aggregation policy is always applied from the current YAML
 configuration. It is keyed by `view_name`, `score_target`, and the four display
 flags
@@ -1442,7 +1442,7 @@ The final result should return both `macro_mean` and `micro_mean`. In
 
 ### 4. Overall Macro Leaderboard
 
-Overall views using `score=macro`, including the default `Core` leaderboard,
+Overall views using `score=macro`, including the compact `Core` leaderboard,
 first average raw tasks into one score row per NanoSet, then compute Borda,
 means, and NanoSet metric columns. Components with a `group_by` setting, such
 as `MNanoBEIR` grouped by `task_name`, first average those inner units before

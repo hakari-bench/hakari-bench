@@ -1,14 +1,4 @@
 overalls:
-  - name: Core
-    label: Core
-    benchmarks:
-      - name: MNanoBEIR
-        group_by: task_name
-      - NanoMMTEB-v2
-      - NanoRTEB
-      - NanoMLDR
-      - NanoBRIGHT
-      - NanoCoIR
   - name: Overall
     label: Overall
     benchmarks:
@@ -48,3 +38,13 @@ overalls:
       - NanoVNMTEB
       - NanoMTEB-Misc
       - NanoMIRACL
+  - name: Core
+    label: Core
+    benchmarks:
+      - name: MNanoBEIR
+        group_by: task_name
+      - NanoMMTEB-v2
+      - NanoRTEB
+      - NanoMLDR
+      - NanoBRIGHT
+      - NanoCoIR

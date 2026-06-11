@@ -242,7 +242,7 @@ def create_app(
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
-        score: str = Query(default="macro", pattern="^(macro|micro)$"),
+        score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -324,7 +324,7 @@ def create_app(
         sort = query_string(state_query["sort"])
         direction = query_string(state_query["direction"])
         target = query_string(state_query.get("target", "all"))
-        score = query_string(state_query.get("score", "macro"))
+        score = query_string(state_query.get("score", "micro"))
         score_metric = query_string(state_query.get("metric", "ndcg@10"))
         group = optional_query_string(state_query.get("group"))
         display_flags = variant_display_flags_from_query(state_query)
@@ -369,7 +369,7 @@ def create_app(
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
-        score: str = Query(default="macro", pattern="^(macro|micro)$"),
+        score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -445,7 +445,7 @@ def create_app(
         sort: str = Query(default="borda_rank"),
         direction: str = Query(default="asc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
-        score: str = Query(default="macro", pattern="^(macro|micro)$"),
+        score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
         variants: bool = Query(default=False),
@@ -1099,12 +1099,12 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         "Overall": (
             "Benchmark scope: Overall",
             "Shows every benchmark family available in the viewer.",
-            "Overall is the broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any language, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Macro when you want each NanoSet to contribute equally, or Micro when you want every raw task row to contribute equally.",
+            "Overall is the default and broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any language, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Micro when you want every raw task row to contribute equally, or Macro when you want each NanoSet to contribute equally.",
         ),
         "Core": (
             "Benchmark scope: Core",
             "Shows the compact core benchmark set.",
-            "Core is the default scope for the main leaderboard. It includes MNanoBEIR, NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want the primary HAKARI-Bench comparison before drilling into a specific Nano suite or language. With Macro scoring, MNanoBEIR is first averaged by BEIR source task across languages, then contributes as one NanoSet.",
+            "Core is a compact scope for the main leaderboard. It includes MNanoBEIR, NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want a smaller HAKARI-Bench comparison before drilling into a specific Nano suite or language. With Macro scoring, MNanoBEIR is first averaged by BEIR source task across languages, then contributes as one NanoSet.",
         ),
     }
     return help_text.get(
@@ -1121,13 +1121,13 @@ def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, dir
     if not result.is_overall:
         return ""
     buttons = []
-    for score, label in [("macro", "Macro"), ("micro", "Micro")]:
+    for score, label in [("micro", "Micro"), ("macro", "Macro")]:
         active = result.score_aggregation == score
         classes = _control_button_classes(active=active)
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
-        if score == "macro":
+        if score == "micro":
             query_payload.pop("score", None)
         else:
             query_payload["score"] = score
@@ -1145,8 +1145,8 @@ def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, dir
                 {_control_label(icon="sigma", text="Score")}
                 {_render_help_tooltip(
                   "Score aggregation",
-                  "Chooses whether the overall leaderboard is ranked by NanoSet-level macro units or raw task-level micro units.",
-                  "Macro is the default and main leaderboard score. It first computes one score per NanoSet, then ranks and averages those NanoSet scores so large suites do not dominate simply because they contain more tasks. For MNanoBEIR, language variants are first averaged by BEIR source task before the NanoSet receives one overall score.\n\nMicro ranks and averages every raw task row directly. Use Micro when you intentionally want task-count-weighted behavior, or when comparing against older raw-task leaderboard results.",
+                  "Chooses between raw task weighting and grouped NanoSet weighting.",
+                  "Micro is the default score. Think of it as the raw task average: every task row gets one vote. A NanoSet with many tasks or language variants therefore has more influence on the final ranking. This is the closest mode to the older raw-task Overall/All behavior.\n\nMacro is the grouped score. Think of it as the Group-style idea moved into the Score control: tasks are first summarized into one score per NanoSet, then the leaderboard ranks and averages those NanoSet scores. Each NanoSet gets one vote regardless of how many raw tasks it contains, so large suites do not dominate simply because they are larger.\n\nFor grouped collections such as MNanoBEIR, language variants are first averaged by BEIR source task, then MNanoBEIR contributes one NanoSet score to the final Macro ranking. Use Macro when you want a family-balanced view across benchmark groups.",
                 )}
               </span>
               {''.join(buttons)}
@@ -1291,8 +1291,8 @@ def _view_group(view_name: str) -> str:
 
 def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
     priority = {
-        "Core": 0,
-        "Overall": 1,
+        "Overall": 0,
+        "Core": 1,
         "MNanoBEIR": 0,
         "NanoMMTEB-v2": 1,
         "NanoRTEB": 2,

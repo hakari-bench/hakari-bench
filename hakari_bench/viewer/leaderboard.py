@@ -160,7 +160,7 @@ class LeaderboardResult(BaseModel):
     view_label: str
     is_overall: bool
     score_target: ScoreTarget = "all"
-    score_aggregation: ScoreAggregation = "macro"
+    score_aggregation: ScoreAggregation = "micro"
     selected_score_metric: str = "ndcg@10"
     available_score_metrics: list[str] = Field(default_factory=lambda: ["ndcg@10"])
     expected_tasks: int
@@ -225,7 +225,7 @@ class LeaderboardService:
         sort: str = "borda_rank",
         direction: SortDirection = "asc",
         score_target: ScoreTarget = "all",
-        score_aggregation: ScoreAggregation = "macro",
+        score_aggregation: ScoreAggregation = "micro",
         score_metric: str = "ndcg@10",
         score_group_name: str | None = None,
         include_quantization_variants: bool = False,
@@ -1356,7 +1356,7 @@ def compute_leaderboard_rows(
     show_task_z_scores: bool = False,
     show_task_ranks: bool = False,
     use_task_mean_for_overall: bool = False,
-    overall_score_aggregation: ScoreAggregation = "macro",
+    overall_score_aggregation: ScoreAggregation = "micro",
 ) -> list[LeaderboardRow]:
     expected_tasks = {row.task_key for row in rows}
     if not expected_tasks:

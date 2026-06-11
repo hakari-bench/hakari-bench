@@ -78,9 +78,17 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
     ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
 
-    assert config.overall.name == "Core"
-    assert config.overall.label == "Core"
-    core_overall = config.overall
+    assert config.overall.name == "Overall"
+    assert config.overall.label == "Overall"
+    overall = config.overall
+    assert overall.benchmark_names == all_benchmarks
+    assert [component.group_by for component in overall.benchmark_components[:3]] == [
+        None,
+        None,
+        "task_name",
+    ]
+    core_overall = config.overall_for_view("Core")
+    assert core_overall is not None
     assert core_overall.benchmark_names == core_benchmarks
     assert [component.group_by for component in core_overall.benchmark_components] == [
         "task_name",
@@ -90,17 +98,9 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         None,
         None,
     ]
-    overall = config.overall_for_view("Overall")
-    assert overall is not None
-    assert overall.benchmark_names == all_benchmarks
-    assert [component.group_by for component in overall.benchmark_components[:3]] == [
-        None,
-        None,
-        "task_name",
-    ]
     assert config.view_names[: len(all_benchmarks) + 2] == [
-        "Core",
         "Overall",
+        "Core",
         *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
@@ -962,7 +962,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'class="help-summary-trigger' in response.text
     assert 'data-help-title="Benchmark scope: Overall"' in response.text
     assert 'class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
-    assert "Overall is the broadest leaderboard scope." in response.text
+    assert "Overall is the default and broadest leaderboard scope." in response.text
     assert 'class="doc-summary-trigger' in response.text
     assert 'data-icon="book-open"' in response.text
     assert 'data-icon="circle-help"' in response.text
@@ -1442,7 +1442,7 @@ benchmarks:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
-    result = service.get_leaderboard("Overall")
+    result = service.get_leaderboard("Overall", score_aggregation="macro")
 
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
     assert result.rows[0].task_count == 2
@@ -1570,7 +1570,7 @@ overalls:
 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
     assert service.get_leaderboard("Overall").metric_columns == []
-    result = service.get_leaderboard("OverallGrouped", show_task_scores=True)
+    result = service.get_leaderboard("OverallGrouped", score_aggregation="macro", show_task_scores=True)
 
     assert result.expected_tasks == 2
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
@@ -1592,7 +1592,7 @@ overalls:
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=OverallGrouped&task_scores=1")
+    response = TestClient(app).get("/leaderboard?view=OverallGrouped&score=macro&task_scores=1")
 
     assert response.status_code == 200
     assert "Overall Grouped" in response.text

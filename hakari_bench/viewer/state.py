@@ -42,7 +42,7 @@ def normalize_query_state(
     sort: str,
     direction: str,
     target: str = "all",
-    score: str = "macro",
+    score: str = "micro",
     group: str | None,
     variants: bool,
     quantization: bool,
@@ -78,7 +78,7 @@ def normalize_query_state(
         direction = "asc"
     if target not in {"all", "reranking", "reranking_without_safeguard"}:
         target = "all"
-    score_aggregation: ScoreAggregation = "micro" if score == "micro" else "macro"
+    score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
     display_flags = variant_display_flags_from_values(
         variants=variants,
         quantization=quantization,
@@ -90,7 +90,7 @@ def normalize_query_state(
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if target != "all":
         query["target"] = target
-    if score_aggregation != "macro":
+    if score_aggregation != "micro":
         query["score"] = score_aggregation
     if metric and metric != "ndcg@10":
         query["metric"] = metric.strip().casefold()
@@ -183,7 +183,7 @@ def state_payload(
     query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
     if result.score_target != "all":
         query_payload["target"] = result.score_target
-    if result.score_aggregation != "macro":
+    if result.score_aggregation != "micro":
         query_payload["score"] = result.score_aggregation
     if result.selected_score_metric != "ndcg@10":
         query_payload["metric"] = result.selected_score_metric

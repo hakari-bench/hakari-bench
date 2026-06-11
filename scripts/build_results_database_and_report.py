@@ -5572,6 +5572,7 @@ def _viewer_leaderboard_mart_rows_from_service(
                 result = service.get_leaderboard(
                     view_name,
                     score_target=score_target,
+                    score_aggregation="micro",
                     include_quantization_variants=quantization,
                     include_truncate_variants=truncate,
                     include_rescore_variants=rescore,
@@ -5698,11 +5699,11 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                     rows = _aggregate_overall_scores(
                         rows,
                         overall,
-                        score_aggregation="macro",
+                        score_aggregation="micro",
                     )
                     metric_score_group = _overall_metric_score_group(
                         overall,
-                        score_aggregation="macro",
+                        score_aggregation="micro",
                     )
                 elif selected_score_group is not None:
                     rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
@@ -5712,7 +5713,7 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                     is_overall=is_overall,
                     score_group=metric_score_group,
                     metric_columns=[],
-                    overall_score_aggregation="macro",
+                    overall_score_aggregation="micro",
                 )
                 sorted_rows = sort_rows(leaderboard_rows, sort="borda_rank", direction="asc")
                 expected_tasks = len({row.task_key for row in rows})
