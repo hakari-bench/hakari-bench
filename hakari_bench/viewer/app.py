@@ -2055,7 +2055,7 @@ def render_table_head(
         ]
     )
     if result.include_quantization_variants:
-        columns.append(("quantization", "Quantization", "asc", "left", False, ""))
+        columns.append(("quantization", "Quant", "asc", "left", False, ""))
     if _show_base_delta_column(result):
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
     heads = []

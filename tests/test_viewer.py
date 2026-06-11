@@ -1838,8 +1838,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     base_head = render_table_head(result=base_result, sort="borda_rank", direction="asc")
     quantization_head = render_table_head(result=quantization_result, sort="borda_rank", direction="asc")
     score_desc_head = render_table_head(result=base_result, sort="borda_score", direction="desc")
-    assert ">Quantization</span>" not in base_head
-    assert ">Quantization</span>" in quantization_head
+    assert ">Quant</span>" not in base_head
+    assert ">Quant</span>" in quantization_head
     assert " ▲" not in base_head
     assert " ▼" not in base_head
     assert 'data-icon="arrow-down-narrow-wide"' in base_head
