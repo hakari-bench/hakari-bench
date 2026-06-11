@@ -51,7 +51,11 @@ overalls:
   - name: Core-EN
     label: Core-EN
     benchmarks:
+      - name: MNanoBEIR
+        group_by: task_name
       - NanoRTEB
+      - NanoMLDR
+      - NanoMIRACL
       - NanoBRIGHT
       - NanoCoIR
       - NanoMTEB-v2

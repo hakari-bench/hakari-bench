@@ -684,13 +684,12 @@ def _task_text_length_sql(*, viewer_columns: set[str], metadata_columns: set[str
 def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
     if not flags.any_enabled:
         return "AND tr.embedding_variant_name IS NULL"
-    if flags == VariantDisplayFlags(quantization=True, truncate=True, rescore=True, other=True):
-        return ""
 
     name = f"lower({qualified_column('tr', 'embedding_variant_name', allowed_columns=columns)})"
     quantization_category = f"({_column_or_null(columns, 'quantization')} IS NOT NULL OR {name} LIKE '%quantize%')"
     truncate_category = f"({name} LIKE '%truncate%')"
     rescore_category = f"({name} LIKE '%rescore%')"
+    sparse_dims_category = f"({name} LIKE '%sparse_%' AND ({name} LIKE '%max_active_dims%' OR {name} LIKE '%max_dims%'))"
     non_rescore = f"NOT {rescore_category}"
     clauses = ["tr.embedding_variant_name IS NULL"]
     if flags.rescore:
@@ -703,7 +702,9 @@ def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
     if quantize_or_truncate_clause:
         clauses.append(f"({non_rescore} AND {quantize_or_truncate_clause})")
     if flags.other:
-        clauses.append(f"({non_rescore} AND NOT {quantization_category} AND NOT {truncate_category})")
+        clauses.append(
+            f"({non_rescore} AND NOT {quantization_category} AND NOT {truncate_category} AND {sparse_dims_category})"
+        )
     return "AND (" + " OR ".join(clauses) + ")"
 
 

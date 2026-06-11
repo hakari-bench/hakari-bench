@@ -737,6 +737,10 @@
     border-color: transparent;
   }
 
+  .benchmark-scope-divider {
+    border-top-color: color-mix(in srgb, var(--hakari-border) 52%, transparent);
+  }
+
   .border.bg-amber-50,
   .border.bg-violet-50,
   .border.bg-zinc-100,

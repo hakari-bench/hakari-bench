@@ -62,6 +62,7 @@ from hakari_bench.viewer.state import (
 )
 from hakari_bench.viewer.store import LocalDuckDbStore
 from hakari_bench.viewer.variant_display import (
+    is_sparse_dims_variant_name,
     variant_category,
     variant_display_flags_from_query,
 )
@@ -136,6 +137,7 @@ _ICON_PATHS = {
     ),
     "cpu": '<rect width="16" height="16" x="4" y="4" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/>',
     "database": '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>',
+    "eraser": '<path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/>',
     "eye": '<path d="M2.06 12.35a1 1 0 0 1 0-.7C3.42 7.7 7.16 5 12 5s8.58 2.7 9.94 6.65a1 1 0 0 1 0 .7C20.58 16.3 16.84 19 12 19s-8.58-2.7-9.94-6.65"/><circle cx="12" cy="12" r="3"/>',
     "file-spreadsheet": (
         '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>'
@@ -1099,6 +1101,7 @@ def render_tabs(
               </span>
               <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
             </div>
+            <div class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
           </div>
           {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True)}
@@ -1123,7 +1126,7 @@ def _render_scope_button(
     title, summary, details = _scope_preset_help(view_name)
     help_icon = _render_button_help_icon(title=title, summary=summary, details=details)
     label_html = (
-        f"""{_icon_svg("rotate-ccw")}<span>{escape(view_label)}</span>"""
+        f"""{_icon_svg("eraser")}<span>{escape(view_label)}</span>"""
         if view_name == CLEAR_SCOPE_NAME
         else escape(view_label)
     )
@@ -1311,7 +1314,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         "Core-EN": (
             "Benchmark scope: Core-EN",
             "Shows the English-oriented core benchmark set.",
-            "Core-EN starts from the compact Core idea, removes multilingual suites, and adds NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core-EN also switches Task facets to EN so the page state matches the English-focused scope.",
+            "Core-EN starts from the compact Core idea and keeps the English-relevant retrieval anchors: MNanoBEIR task mean, NanoRTEB, NanoMLDR, NanoMIRACL, NanoBRIGHT, NanoCoIR, and NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core-EN also switches Task facets to EN so multilingual suites contribute their English slices.",
         ),
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
@@ -1749,7 +1752,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Efficiency variants",
               "Adds non-base rows that compare quality against storage, dimension, and reranking trade-offs.",
-              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Other includes model-specific variants, especially sparse active-dimension limits, with compact labels such as q32d and d256d when available.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
+              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse Dims includes sparse encoder active-dimension cap variants, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -1767,7 +1770,7 @@ def render_display_controls(
           </label>
           <label class="inline-flex items-center gap-2">
             <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
-            <span>Other</span>
+            <span>Sparse Dims</span>
           </label>
         </div>
       </form>
@@ -2087,7 +2090,7 @@ def render_controls(
                 {_render_help_tooltip(
                     "Efficiency filters",
                     "Filters already-included variant rows by dimensions or quantization type.",
-                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Other variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
+                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Sparse Dims variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
                 )}
                 {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
                 {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
@@ -2587,11 +2590,9 @@ def _csv_variant_category(row: LeaderboardRow) -> str | None:
 
 
 def _is_sparse_active_dims_variant(row: LeaderboardRow) -> bool:
-    variant_name = row.embedding_variant_name or ""
     return (
         model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse"
-        and "sparse_" in variant_name
-        and ("max_active_dims" in variant_name or "max_dims" in variant_name)
+        and is_sparse_dims_variant_name(row.embedding_variant_name)
     )
 
 

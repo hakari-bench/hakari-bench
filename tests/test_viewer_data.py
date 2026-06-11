@@ -399,6 +399,22 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
                 2048,
                 None,
             ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.74,
+                10,
+                12,
+                8192,
+                "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+                2048,
+                None,
+            ),
         ],
     )
 
@@ -443,7 +459,10 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
         ("truncate_dim_256_quantize_int8_docs", "int8"),
     ]
     assert [record.embedding_variant_name for record in rescore_records] == [None, "binary_rescore"]
-    assert [record.embedding_variant_name for record in other_records] == [None, "custom_variant"]
+    assert [record.embedding_variant_name for record in other_records] == [
+        None,
+        "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+    ]
 
 
 def test_task_results_repository_logs_duckdb_query_and_record_transform_timing(

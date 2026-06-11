@@ -813,9 +813,12 @@ For overall scope presets:
   retrieval, reasoning-heavy retrieval, and code retrieval
   (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`, and
   `NanoCoIR`).
-- `Core-EN`: an English-oriented core preset. It removes the multilingual
-  Core suites and adds `NanoMTEB-v2`, yielding `NanoRTEB`, `NanoBRIGHT`,
-  `NanoCoIR`, and `NanoMTEB-v2`.
+- `Core-EN`: an English-oriented core preset. It uses the `EN` task facet and
+  keeps English-relevant retrieval anchors from the compact Core idea:
+  `MNanoBEIR` grouped by `task_name`, `NanoRTEB`, `NanoMLDR`, `NanoMIRACL`,
+  `NanoBRIGHT`, `NanoCoIR`, and `NanoMTEB-v2`. `NanoMIRACL` is included because
+  the other Core-EN components do not otherwise provide the canonical MIRACL
+  passage retrieval task.
 - `Custom`: a dynamic scope built from repeated `bench=` query parameters.
   NanoSet labels in the viewer toggle membership in this selected set. When
   `view=Custom` has no `bench=` values, it is the empty custom state: no
@@ -859,7 +862,7 @@ variant categories are added.
 | Quantization | Non-rescore rows where `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`, excluding rows that also contain `truncate` unless Truncate dims is also enabled. |
 | Truncate dims | Rows where `embedding_variant_name` contains `truncate`, excluding quantized rows unless Quantization is also enabled. |
 | Rescore | `embedding_variant_name` contains `rescore`. Rescore rows are not included by the Quantization flag by default. |
-| Other variants | Variant rows that are neither quantization nor truncation variants. |
+| Sparse Dims | Sparse encoder active-dimension cap rows whose `embedding_variant_name` contains `sparse_` and either `max_active_dims` or `max_dims`, excluding rows categorized as quantization, truncation, or rescore variants. The query parameter and materialized-column name remain `other_variant` / `include_other_variants` for compatibility. |
 
 Rows that are both quantized and truncated are displayed only when both matching
 category flags are enabled. Facet filter query parameters such as `dim_filter` and
@@ -920,6 +923,8 @@ spreadsheet-friendly `Variant Label` and `Variant Category` columns. Variant
 labels mirror compact UI labels such as `512d <- 1024` or `q32d d256d`, while
 categories summarize the variant as `truncate`, `quantization`, `rescore`,
 `sparse active dims`, `other`, or a ` + ` joined combination for cross variants.
+The `Sparse Dims` display control only includes rows that match the sparse active
+dimension naming rule; arbitrary uncategorized variant names stay hidden.
 
 Task metric column headers keep their full metric key for sorting and query
 state, but shorten long dataset task keys for display. If a grouped key repeats
@@ -996,8 +1001,9 @@ choices:
 - When variants are requested, including for reranking targets, push the
   selected display categories into SQL.
   Base rows are always read, but quantization-only, truncate-only, rescore-only,
-  and other-variant views avoid fetching unrelated variant rows before Python
-  ranking. Cross variants such as truncate plus quantization are fetched when
+  and Sparse Dims views avoid fetching unrelated variant rows before Python
+  ranking. Sparse Dims views fetch only sparse active-dimension cap names.
+  Cross variants such as truncate plus quantization are fetched when
   both matching display flags are enabled.
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
@@ -1038,8 +1044,8 @@ choices:
   combined scopes expose `MNanoBEIR:task_mean` as `MNanoBEIR(task)` and
   `MNanoBEIR:lang_mean` as `MNanoBEIR(lang)`. These two selection keys are
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
-  `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall` and
-  `Core`, only the task-mean MNanoBEIR selection is active. Task facets live
+  `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall`, `Core`,
+  and `Core-EN`, only the task-mean MNanoBEIR selection is active. Task facets live
   inside the same leaderboard configuration panel.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
@@ -1100,7 +1106,9 @@ aggregation policy is always applied from the current YAML configuration. It is 
 `view_name`, `score_target`, and the four display
 flags
 `include_quantization_variants`, `include_truncate_variants`,
-`include_rescore_variants`, and `include_other_variants`. The viewer uses this
+`include_rescore_variants`, and `include_other_variants`. The last flag backs
+the UI label `Sparse Dims` and means sparse active-dimension cap variants, not
+arbitrary uncategorized variants. The viewer uses this
 mart when language filters, task-score columns, task text filters, length
 filters, macro overall aggregation, and custom `bench=` selection are not
 active. Those interactive, macro, and custom cases still fall back to the normal
@@ -1117,7 +1125,7 @@ are recalculated with BM25 in the reranking population.
 | `include_quantization_variants` | `BOOLEAN` | Whether quantization variants were included in this materialized view. |
 | `include_truncate_variants` | `BOOLEAN` | Whether truncation variants were included. |
 | `include_rescore_variants` | `BOOLEAN` | Whether rescore variants were included. |
-| `include_other_variants` | `BOOLEAN` | Whether non-categorized variants were included. |
+| `include_other_variants` | `BOOLEAN` | Whether Sparse Dims variants were included. |
 | `expected_tasks` | `INTEGER` | Number of expected complete tasks for the materialized view. |
 | `borda_rank`, `mean_rank` | `DOUBLE` | Precomputed display ranks. |
 | `model_name` | `VARCHAR` | Display model label, including variant details when needed. |
@@ -1324,6 +1332,11 @@ source_rows AS (
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
         )
         AND lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%truncate%'
+        AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%sparse_%'
+        AND (
+          lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%max_active_dims%'
+          OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%max_dims%'
+        )
       )
     )
 ),
@@ -1572,6 +1585,11 @@ raw_rows AS (
           OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%quantize%'
         )
         AND lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%truncate%'
+        AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%sparse_%'
+        AND (
+          lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%max_active_dims%'
+          OR lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%max_dims%'
+        )
       )
     )
 ),

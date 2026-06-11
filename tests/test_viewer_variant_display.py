@@ -86,3 +86,23 @@ def test_rescore_is_not_included_by_quantization_flag() -> None:
         quantization="binary",
         flags=VariantDisplayFlags(rescore=True),
     )
+
+
+def test_other_variant_flag_only_includes_sparse_dimension_variants() -> None:
+    flags = VariantDisplayFlags(other=True)
+
+    assert include_variant_row(
+        embedding_variant_name="sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+        quantization=None,
+        flags=flags,
+    )
+    assert not include_variant_row(
+        embedding_variant_name="custom_variant",
+        quantization=None,
+        flags=flags,
+    )
+    assert not include_variant_row(
+        embedding_variant_name="custom_variant",
+        quantization=None,
+        flags=variant_display_flags_from_values(variants=True),
+    )

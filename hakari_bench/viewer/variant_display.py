@@ -61,7 +61,16 @@ def include_variant_row(
         return flags.quantization
     if category.truncate:
         return flags.truncate
-    return flags.other
+    return flags.other and is_sparse_dims_variant_name(embedding_variant_name)
+
+
+def is_sparse_dims_variant_name(embedding_variant_name: str | None) -> bool:
+    if embedding_variant_name is None:
+        return False
+    normalized_name = embedding_variant_name.lower()
+    return "sparse_" in normalized_name and (
+        "max_active_dims" in normalized_name or "max_dims" in normalized_name
+    )
 
 
 @dataclass(frozen=True)

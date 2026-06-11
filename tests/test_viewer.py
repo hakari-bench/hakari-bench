@@ -79,7 +79,10 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         "NanoCoIR",
     ]
     core_en_benchmarks = [
+        "MNanoBEIR",
         "NanoRTEB",
+        "NanoMLDR",
+        "NanoMIRACL",
         "NanoBRIGHT",
         "NanoCoIR",
         "NanoMTEB-v2",
@@ -109,6 +112,15 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
     core_en_overall = config.overall_for_view("Core-EN")
     assert core_en_overall is not None
     assert core_en_overall.benchmark_names == core_en_benchmarks
+    assert [component.group_by for component in core_en_overall.benchmark_components] == [
+        "task_name",
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+    ]
     assert config.view_names[: len(all_benchmarks) + 3] == [
         "Overall",
         "Core",
@@ -1189,15 +1201,18 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
 
     assert "Core-EN" in html
     assert "Clear" in html
+    assert 'class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"' in html
     assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
     core_en_button = html.split(">Core-EN</button>", 1)[0].rsplit("<button", 1)[1]
     clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
     assert "view=Core-EN" in core_en_button
     assert "lang_filter=en" in core_en_button
-    assert 'data-icon="rotate-ccw"' in clear_button
+    assert 'data-icon="eraser"' in clear_button
+    assert 'data-icon="rotate-ccw"' not in clear_button
     assert 'hx-get="/leaderboard?view=Custom&amp;sort=borda_rank&amp;direction=asc' in clear_button
     assert "lang_filter=" not in clear_button
     assert "border-cyan-700" not in clear_button
+    assert html.index(">Clear</span>") < html.index("benchmark-scope-divider") < html.index('data-benchmark-toggle="BenchA"')
     bench_a_button = re.search(r'<button[^>]+data-benchmark-toggle="BenchA"[^>]+>', html)
     bench_c_button = re.search(r'<button[^>]+data-benchmark-toggle="BenchC"[^>]+>', html)
     assert bench_a_button is not None
@@ -1963,6 +1978,22 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.81, 10, 12, 8192, "binary_rescore", 768, "binary"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 10, 12, 8192, "custom_variant", 2048, None),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "a1",
+                0.74,
+                10,
+                12,
+                8192,
+                "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+                2048,
+                None,
+            ),
             ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096, None, 512, None),
         ],
         include_embedding_variant_columns=True,
@@ -2050,12 +2081,12 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "<span>STD</span>" in response.text
     assert "Efficiency variants" in response.text
     assert 'data-icon="git-compare-arrows"' in response.text
-    assert ">Other</span>" in response.text
+    assert ">Sparse Dims</span>" in response.text
     assert "Other variants" not in response.text
     assert 'data-help-title="Efficiency variants"' in response.text
     assert "Dims includes truncated embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
     assert "Quantization includes compressed numeric formats such as int8 and binary." in response.text
-    assert "Other includes model-specific variants, especially sparse active-dimension limits" in response.text
+    assert "Sparse Dims includes sparse encoder active-dimension cap variants" in response.text
     assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
