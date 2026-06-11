@@ -278,10 +278,8 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
     if borda_score_bar_width is not None:
         clamped_width = min(100.0, max(0.0, borda_score_bar_width))
         borda_bar_html = (
-            '<svg class="borda-score-bar" viewBox="0 0 100 10" preserveAspectRatio="none"'
-            ' aria-hidden="true" focusable="false">'
-            f'<rect class="borda-score-bar-fill" x="0" y="0" width="{clamped_width:.2f}" height="10"></rect>'
-            "</svg>"
+            f'<progress class="borda-score-bar" value="{clamped_width:.2f}" max="100"'
+            ' aria-hidden="true"></progress>'
         )
     badges = []
     if model_view.model_type_badge_label is not None:

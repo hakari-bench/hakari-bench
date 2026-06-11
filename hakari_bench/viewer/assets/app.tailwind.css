@@ -412,12 +412,16 @@
 
   .borda-score-bar {
     position: absolute;
+    appearance: none;
     top: 2px;
     bottom: 2px;
     left: 0;
+    border: 0;
     display: block;
     width: 100%;
     height: calc(100% - 4px);
+    background-color: transparent;
+    color: var(--hakari-accent);
     opacity: 0.16;
     pointer-events: none;
     transition: opacity 0.18s ease-in-out;
@@ -429,8 +433,18 @@
     opacity: 0.3;
   }
 
-  .borda-score-bar-fill {
-    fill: var(--hakari-accent);
+  .borda-score-bar::-webkit-progress-bar {
+    background-color: transparent;
+  }
+
+  .borda-score-bar::-webkit-progress-value {
+    background-color: var(--hakari-accent);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .borda-score-bar::-moz-progress-bar {
+    background-color: var(--hakari-accent);
+    border-radius: 0 4px 4px 0;
   }
 
   .leaderboard-col-rank {
