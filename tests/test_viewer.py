@@ -2477,7 +2477,7 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         f'data-metric-column-full-name="{long_task}"'
     ) in head
     assert body.count('class="borda-score-bar"') == 2
-    assert 'class="borda-score-bar-fill" d="M 0 0 H 94.00 A 6.00 5.00 0 0 1 100.00 5.00 A 6.00 5.00 0 0 1 94.00 10.00 H 0 Z"' in body
+    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="10"' in body
     assert 'class="borda-score-bar-fill" x="0" y="0" width="0.00" height="10"' in body
 
 
@@ -2501,7 +2501,7 @@ def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row
     body = render_table_body(result=result, filter_context=filter_context)
 
     assert body.count('class="borda-score-bar"') == 1
-    assert 'class="borda-score-bar-fill" d="M 0 0 H 94.00 A 6.00 5.00 0 0 1 100.00 5.00 A 6.00 5.00 0 0 1 94.00 10.00 H 0 Z"' in body
+    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="10"' in body
     assert body.count('data-filter-hidden="true"') == 1
 
 

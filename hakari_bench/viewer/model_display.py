@@ -277,21 +277,10 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
     borda_bar_html = ""
     if borda_score_bar_width is not None:
         clamped_width = min(100.0, max(0.0, borda_score_bar_width))
-        if clamped_width > 0:
-            radius_x = min(6.0, clamped_width / 2)
-            inner_right = max(0.0, clamped_width - radius_x)
-            bar_shape = (
-                f'<path class="borda-score-bar-fill" d="M 0 0 H {inner_right:.2f} '
-                f"A {radius_x:.2f} 5.00 0 0 1 {clamped_width:.2f} 5.00 "
-                f"A {radius_x:.2f} 5.00 0 0 1 {inner_right:.2f} 10.00 H 0 Z"
-                '"></path>'
-            )
-        else:
-            bar_shape = '<rect class="borda-score-bar-fill" x="0" y="0" width="0.00" height="10"></rect>'
         borda_bar_html = (
             '<svg class="borda-score-bar" viewBox="0 0 100 10" preserveAspectRatio="none"'
             ' aria-hidden="true" focusable="false">'
-            f"{bar_shape}"
+            f'<rect class="borda-score-bar-fill" x="0" y="0" width="{clamped_width:.2f}" height="10"></rect>'
             "</svg>"
         )
     badges = []
