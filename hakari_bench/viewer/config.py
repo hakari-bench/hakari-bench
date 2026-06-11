@@ -12,6 +12,7 @@ LanguageFilterMode = Literal["languages", "primary_language"]
 ScoreAggregation = Literal["macro", "micro"]
 CUSTOM_SCOPE_NAME = "Custom"
 CLEAR_SCOPE_NAME = "Clear"
+BENCHMARK_SELECTION_SEPARATOR = ":"
 
 
 class ScoreGroupConfig(BaseModel):
@@ -134,16 +135,51 @@ class ViewerConfig(BaseModel):
     def overall_for_selected_benchmarks(
         self, *, name: str, label: str, benchmark_names: list[str]
     ) -> OverallConfig:
+        return self.overall_for_selected_benchmark_keys(name=name, label=label, selection_keys=benchmark_names)
+
+    def overall_for_selected_benchmark_keys(
+        self, *, name: str, label: str, selection_keys: list[str]
+    ) -> OverallConfig:
         component_by_benchmark: dict[str, OverallBenchmarkConfig] = {}
         for overall in self.overalls:
             for component in overall.benchmark_components:
                 if component.name not in component_by_benchmark or component.group_by is not None:
                     component_by_benchmark[component.name] = component
         components: list[str | OverallBenchmarkConfig] = [
-            component_by_benchmark.get(benchmark_name, OverallBenchmarkConfig(name=benchmark_name))
-            for benchmark_name in benchmark_names
+            self.component_for_selection_key(selection_key)
+            or component_by_benchmark.get(benchmark_name_from_selection_key(selection_key), OverallBenchmarkConfig(name=selection_key))
+            for selection_key in selection_keys
         ]
         return OverallConfig(name=name, label=label, benchmarks=components)
+
+    def component_for_selection_key(self, selection_key: str) -> OverallBenchmarkConfig | None:
+        benchmark_name, group_name = split_benchmark_selection_key(selection_key)
+        benchmark = self.benchmark_for_view(benchmark_name)
+        if benchmark is None:
+            return None
+        if group_name is None:
+            if benchmark.name == "MNanoBEIR":
+                default_group = benchmark.resolved_score_groups[0]
+                return OverallBenchmarkConfig(name=benchmark.name, group_by=default_group.group_by)
+            return OverallBenchmarkConfig(name=benchmark.name)
+        for group in benchmark.resolved_score_groups:
+            if group.name == group_name:
+                return OverallBenchmarkConfig(name=benchmark.name, group_by=group.group_by)
+        return None
+
+    def selection_key_for_component(self, component: OverallBenchmarkConfig) -> str:
+        benchmark = self.benchmark_for_view(component.name)
+        if benchmark is None:
+            return component.name
+        if benchmark.name != "MNanoBEIR":
+            return benchmark.name
+        for group in benchmark.resolved_score_groups:
+            if group.group_by == (component.group_by or group.group_by):
+                return benchmark_selection_key(benchmark.name, group.name)
+        return benchmark_selection_key(benchmark.name, benchmark.resolved_score_groups[0].name)
+
+    def selection_keys_for_overall(self, overall: OverallConfig) -> list[str]:
+        return [self.selection_key_for_component(component) for component in overall.benchmark_components]
 
 
 def load_viewer_config(config_dir: Path = Path("config/viewer")) -> ViewerConfig:
@@ -170,3 +206,41 @@ def _load_overalls(payload: dict[str, Any]) -> list[OverallConfig]:
     if "overalls" in payload:
         return [OverallConfig.model_validate(item) for item in payload["overalls"]]
     return [OverallConfig.model_validate(payload)]
+
+
+def normalize_benchmark_selection_values(values: list[str] | None, viewer_config: ViewerConfig) -> list[str]:
+    if values is None:
+        return []
+    selected: list[str] = []
+    selected_index_by_benchmark: dict[str, int] = {}
+    for value in values:
+        if not value:
+            continue
+        component = viewer_config.component_for_selection_key(value)
+        if component is None:
+            continue
+        selection_key = viewer_config.selection_key_for_component(component)
+        benchmark_name = component.name
+        existing_index = selected_index_by_benchmark.get(benchmark_name)
+        if existing_index is not None:
+            selected.pop(existing_index)
+            selected_index_by_benchmark = {
+                benchmark_name_from_selection_key(key): index
+                for index, key in enumerate(selected)
+            }
+        selected_index_by_benchmark[benchmark_name] = len(selected)
+        selected.append(selection_key)
+    return selected
+
+
+def benchmark_name_from_selection_key(selection_key: str) -> str:
+    return split_benchmark_selection_key(selection_key)[0]
+
+
+def benchmark_selection_key(benchmark_name: str, group_name: str) -> str:
+    return f"{benchmark_name}{BENCHMARK_SELECTION_SEPARATOR}{group_name}"
+
+
+def split_benchmark_selection_key(selection_key: str) -> tuple[str, str | None]:
+    benchmark_name, separator, group_name = selection_key.partition(BENCHMARK_SELECTION_SEPARATOR)
+    return benchmark_name, group_name if separator and group_name else None

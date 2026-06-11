@@ -20,6 +20,7 @@ from hakari_bench.viewer.config import (
     ScoreAggregation,
     ScoreGroupConfig,
     ViewerConfig,
+    normalize_benchmark_selection_values,
 )
 from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
 from hakari_bench.viewer.model_types import (
@@ -290,7 +291,11 @@ class LeaderboardService:
                 score_metric, available_score_metrics
             )
             is_overall = overall is not None
-            selected_benchmark_names = tuple(benchmarks)
+            selected_benchmark_names = (
+                tuple(self.config.selection_keys_for_overall(overall))
+                if overall is not None
+                else tuple(benchmarks)
+            )
             request_timing["benchmark_count"] = len(benchmarks)
             request_timing["score_aggregation"] = score_aggregation
             score_groups = (
@@ -624,13 +629,13 @@ class LeaderboardService:
         if view_name == CLEAR_SCOPE_NAME:
             return CLEAR_SCOPE_NAME, OverallConfig(name=CLEAR_SCOPE_NAME, label=CLEAR_SCOPE_NAME, benchmarks=[]), []
         if selected_benchmarks:
-            benchmark_names = _normalized_selected_benchmarks(self.config, selected_benchmarks)
-            if not benchmark_names:
+            selection_keys = normalize_benchmark_selection_values(list(selected_benchmarks), self.config)
+            if not selection_keys:
                 return CLEAR_SCOPE_NAME, OverallConfig(name=CLEAR_SCOPE_NAME, label=CLEAR_SCOPE_NAME, benchmarks=[]), []
-            overall = self.config.overall_for_selected_benchmarks(
+            overall = self.config.overall_for_selected_benchmark_keys(
                 name=CUSTOM_SCOPE_NAME,
                 label=CUSTOM_SCOPE_NAME,
-                benchmark_names=benchmark_names,
+                selection_keys=selection_keys,
             )
             return CUSTOM_SCOPE_NAME, overall, overall.benchmark_names
         overall = self.config.overall_for_view(view_name)
@@ -2232,18 +2237,6 @@ def _language_filter_policy_supports_precomputed(policy: LanguageFilterPolicy) -
 
 def _available_view_names(config: ViewerConfig) -> list[str]:
     return [*config.view_names, CLEAR_SCOPE_NAME]
-
-
-def _normalized_selected_benchmarks(config: ViewerConfig, benchmarks: tuple[str, ...]) -> list[str]:
-    allowed = set(config.benchmark_names)
-    selected: list[str] = []
-    seen = set()
-    for benchmark in benchmarks:
-        if benchmark not in allowed or benchmark in seen:
-            continue
-        selected.append(benchmark)
-        seen.add(benchmark)
-    return selected
 
 
 def _overall_metric_score_group(

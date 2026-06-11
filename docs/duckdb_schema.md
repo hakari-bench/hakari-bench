@@ -1030,10 +1030,13 @@ choices:
   Core, Core-EN, and Custom scopes expose a Score selector for `micro` and
   `macro`. NanoSet labels toggle a `Custom` selection through repeated `bench=`
   query parameters, so small combinations such as `NanoJMTEB-v2` plus
-  `NanoMTEB-v2` are represented directly in the URL. `MNanoBEIR` keeps the
-  visible `MNanoBEIR(task)` and `MNanoBEIR(lang)` labels for benchmark-local
-  score group compatibility; in combined scopes they both toggle MNanoBEIR
-  membership. Task facets live inside the same leaderboard configuration panel.
+  `NanoMTEB-v2` are represented directly in the URL. `MNanoBEIR` is special:
+  combined scopes expose `MNanoBEIR:task_mean` as `MNanoBEIR(task)` and
+  `MNanoBEIR:lang_mean` as `MNanoBEIR(lang)`. These two selection keys are
+  mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
+  `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall` and
+  `Core`, only the task-mean MNanoBEIR selection is active. Task facets live
+  inside the same leaderboard configuration panel.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -1464,7 +1467,9 @@ columns. Components with a `group_by` setting, such as `MNanoBEIR` grouped by
 `task_name`, first average those inner units before the final NanoSet score is
 computed. Generate configured `overall_components` from
 `config/viewer/overall.yaml`; generate Custom components from the selected
-benchmark names while preserving any configured component `group_by` policy.
+benchmark keys while preserving any configured component `group_by` policy.
+For custom MNanoBEIR keys, `MNanoBEIR:task_mean` maps to `group_by: task_name`
+and `MNanoBEIR:lang_mean` maps to `group_by: dataset_name`.
 
 ```sql
 WITH

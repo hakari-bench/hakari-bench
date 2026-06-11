@@ -16,7 +16,15 @@ from urllib.parse import urlencode
 from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
-from hakari_bench.viewer.config import CLEAR_SCOPE_NAME, CUSTOM_SCOPE_NAME, ScoreAggregation, ViewerConfig, load_viewer_config
+from hakari_bench.viewer.config import (
+    CLEAR_SCOPE_NAME,
+    CUSTOM_SCOPE_NAME,
+    ScoreAggregation,
+    ViewerConfig,
+    benchmark_name_from_selection_key,
+    benchmark_selection_key,
+    load_viewer_config,
+)
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
@@ -984,18 +992,30 @@ def render_tabs(
         )
         if view_name == "MNanoBEIR":
             if result.view_name != "MNanoBEIR":
-                query = urlencode(query_payload, doseq=True)
-                for offset, label in [(0, "M-BEIR(task)"), (1, "M-BEIR(lang)")]:
+                for offset, selection_key, label in [
+                    (0, benchmark_selection_key("MNanoBEIR", "task_mean"), "M-BEIR(task)"),
+                    (1, benchmark_selection_key("MNanoBEIR", "lang_mean"), "M-BEIR(lang)"),
+                ]:
+                    selection_query_payload = _benchmark_toggle_query_payload(
+                        result=result,
+                        selection_key=selection_key,
+                        sort=tab_sort,
+                        direction=tab_direction,
+                        filter_state=filter_state,
+                        available_views=available_views,
+                    )
+                    selection_query = urlencode(selection_query_payload, doseq=True)
+                    selection_active = _benchmark_selection_active(result=result, selection_key=selection_key)
                     grouped_buttons[group].append(
                         (
                             sort_key * 10 + offset,
                             _render_benchmark_view_button(
                                 label=label,
-                                active=active,
-                                query=query,
-                                query_payload=query_payload,
+                                active=selection_active,
+                                query=selection_query,
+                                query_payload=selection_query_payload,
                                 doc=doc,
-                                benchmark_name=view_name,
+                                benchmark_name=selection_key,
                             ),
                         )
                     )
@@ -1159,6 +1179,13 @@ def _scope_or_benchmark_active(*, result: LeaderboardResult, view_name: str) -> 
     return view_name == result.view_name
 
 
+def _benchmark_selection_active(*, result: LeaderboardResult, selection_key: str) -> bool:
+    selected_benchmarks = set(result.selected_benchmarks)
+    if selected_benchmarks:
+        return selection_key in selected_benchmarks
+    return benchmark_name_from_selection_key(selection_key) == result.view_name
+
+
 def _scope_preset_query_payload(
     *,
     result: LeaderboardResult,
@@ -1188,19 +1215,29 @@ def _scope_preset_query_payload(
 def _benchmark_toggle_query_payload(
     *,
     result: LeaderboardResult,
-    view_name: str,
+    view_name: str | None = None,
+    selection_key: str | None = None,
     sort: str,
     direction: str,
     filter_state: FilterState,
     available_views: list[str],
 ) -> QueryState:
+    selection_key = selection_key or view_name
+    if selection_key is None:
+        raise ValueError("selection_key or view_name is required")
+    benchmark_name = benchmark_name_from_selection_key(selection_key)
     selected = list(result.selected_benchmarks)
     if not selected and _view_group(result.view_name) == "Nano suites":
         selected = [result.view_name]
-    if view_name in selected:
-        selected = [benchmark for benchmark in selected if benchmark != view_name]
+    if selection_key in selected:
+        selected = [benchmark for benchmark in selected if benchmark != selection_key]
     else:
-        selected.append(view_name)
+        selected = [
+            benchmark
+            for benchmark in selected
+            if benchmark_name_from_selection_key(benchmark) != benchmark_name
+        ]
+        selected.append(selection_key)
     selected = _ordered_benchmark_selection(selected, available_views)
     query_payload = state_payload(
         result=result,
@@ -1220,16 +1257,19 @@ def _benchmark_toggle_query_payload(
 
 
 def _ordered_benchmark_selection(selected: list[str], available_views: list[str]) -> list[str]:
-    selected_set = set(selected)
+    selected_by_benchmark = {
+        benchmark_name_from_selection_key(selection_key): selection_key
+        for selection_key in selected
+    }
     ordered = [
-        view_name
+        selected_by_benchmark[view_name]
         for view_name in available_views
-        if _view_group(view_name) == "Nano suites" and view_name in selected_set
+        if _view_group(view_name) == "Nano suites" and view_name in selected_by_benchmark
     ]
     ordered.extend(
-        view_name
-        for view_name in selected
-        if view_name not in ordered
+        selection_key
+        for selection_key in selected
+        if selection_key not in ordered
     )
     return ordered
 

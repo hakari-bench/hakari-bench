@@ -3,7 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
-from hakari_bench.viewer.config import CLEAR_SCOPE_NAME, CUSTOM_SCOPE_NAME, ScoreAggregation, ViewerConfig
+from hakari_bench.viewer.config import (
+    CLEAR_SCOPE_NAME,
+    CUSTOM_SCOPE_NAME,
+    ScoreAggregation,
+    ViewerConfig,
+    normalize_benchmark_selection_values,
+)
 from hakari_bench.viewer.leaderboard import LeaderboardResult, SORT_COLUMNS
 from hakari_bench.viewer.variant_display import variant_display_flags_from_values
 
@@ -294,15 +300,7 @@ def _normalized_query_values(values: list[str] | None) -> list[str]:
 
 
 def _normalized_benchmark_values(values: list[str] | None, viewer_config: ViewerConfig) -> list[str]:
-    allowed = set(viewer_config.benchmark_names)
-    selected = []
-    seen = set()
-    for value in _normalized_query_values(values):
-        if value not in allowed or value in seen:
-            continue
-        selected.append(value)
-        seen.add(value)
-    return selected
+    return normalize_benchmark_selection_values(_normalized_query_values(values), viewer_config)
 
 
 def _normalized_model_type_filter_values(values: list[str] | None) -> list[str]:

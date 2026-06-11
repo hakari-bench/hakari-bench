@@ -1094,6 +1094,62 @@ def test_custom_benchmark_selection_aggregates_selected_benchmarks(tmp_path: Pat
     assert result.rows[1].mean_score == pytest.approx(60.0)
 
 
+def test_custom_mnanobeir_selection_uses_task_or_language_grouping(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "en", "arguana", "en-arguana", 0.90, 10, 12, 8192),
+            ("model/a", "MNanoBEIR", "NanoBEIR-en", "NanoBEIR-en", "en", "fever", "en-fever", 0.90, 10, 12, 8192),
+            ("model/a", "MNanoBEIR", "NanoBEIR-ja", "NanoBEIR-ja", "ja", "arguana", "ja-arguana", 0.10, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    score_groups:
+      - name: task_mean
+        label: Task Mean
+        group_by: task_name
+      - name: lang_mean
+        label: Lang Mean
+        group_by: dataset_name
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: Overall
+    label: Overall
+    benchmarks:
+      - name: MNanoBEIR
+        group_by: task_name
+""".strip(),
+        encoding="utf-8",
+    )
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    task_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:task_mean",),
+        score_aggregation="macro",
+    )
+    lang_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:lang_mean",),
+        score_aggregation="macro",
+    )
+
+    assert task_result.selected_benchmarks == ("MNanoBEIR:task_mean",)
+    assert lang_result.selected_benchmarks == ("MNanoBEIR:lang_mean",)
+    assert task_result.rows[0].mean_score == pytest.approx(70.0)
+    assert lang_result.rows[0].mean_score == pytest.approx(50.0)
+
+
 def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -> None:
     result = LeaderboardResult(
         view_name="Overall",
@@ -1146,6 +1202,45 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
     assert "bench=BenchA" in bench_c_html
     assert "bench=BenchB" in bench_c_html
     assert "bench=BenchC" in bench_c_html
+
+
+def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=0,
+        rows=[],
+        available_views=["Overall", "Core", "MNanoBEIR", "BenchA"],
+        available_view_labels={
+            "Overall": "Overall",
+            "Core": "Core",
+            "MNanoBEIR": "MNanoBEIR",
+            "BenchA": "BenchA",
+        },
+        selected_benchmarks=("MNanoBEIR:task_mean", "BenchA"),
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_tabs(
+        result=result,
+        sort="borda_rank",
+        direction="asc",
+        filter_state=FilterState(),
+    )
+
+    task_button = re.search(r'<button[^>]+data-benchmark-toggle="MNanoBEIR:task_mean"[^>]+>', html)
+    lang_button = re.search(r'<button[^>]+data-benchmark-toggle="MNanoBEIR:lang_mean"[^>]+>', html)
+    assert task_button is not None
+    assert lang_button is not None
+    task_html = task_button.group(0)
+    lang_html = lang_button.group(0)
+    assert "border-cyan-700" in task_html
+    assert "border-cyan-700" not in lang_html
+    assert "bench=MNanoBEIR%3Alang_mean" in lang_html
+    assert "bench=MNanoBEIR%3Atask_mean" not in lang_html
+    assert "bench=BenchA" in lang_html
 
 
 def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:

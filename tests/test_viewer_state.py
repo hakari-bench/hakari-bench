@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig
+from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ScoreGroupConfig, ViewerConfig
 from hakari_bench.viewer.leaderboard import LeaderboardResult
 from hakari_bench.viewer.state import (
     FilterState,
@@ -160,6 +160,56 @@ def test_custom_benchmark_selection_is_normalized() -> None:
         "direction": "asc",
         "bench": ["BenchB", "BenchA"],
     }
+
+
+def test_mnanobeir_task_and_lang_selection_are_exclusive() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Custom",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        bench=["MNanoBEIR:task_mean", "BenchA", "MNanoBEIR:lang_mean"],
+    )
+
+    assert query["bench"] == ["BenchA", "MNanoBEIR:lang_mean"]
+
+
+def test_bare_mnanobeir_selection_defaults_to_task_mean() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Custom",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        bench=["MNanoBEIR"],
+    )
+
+    assert query["bench"] == ["MNanoBEIR:task_mean"]
 
 
 def test_empty_custom_benchmark_selection_normalizes_to_clear() -> None:
@@ -356,6 +406,16 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
 
 def _viewer_config() -> ViewerConfig:
     return ViewerConfig(
-        benchmarks=[BenchmarkConfig(name="BenchA"), BenchmarkConfig(name="BenchB")],
+        benchmarks=[
+            BenchmarkConfig(name="BenchA"),
+            BenchmarkConfig(name="BenchB"),
+            BenchmarkConfig(
+                name="MNanoBEIR",
+                score_groups=[
+                    ScoreGroupConfig(name="task_mean", group_by="task_name"),
+                    ScoreGroupConfig(name="lang_mean", group_by="dataset_name"),
+                ],
+            ),
+        ],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
     )
