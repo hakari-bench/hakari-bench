@@ -853,10 +853,12 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".doc-summary-trigger:hover" in css_response.text
     assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
-    assert ".borda-score-bar{position:absolute;top:2px;bottom:2px;left:0;display:block" in css_response.text
-    assert "width:100%;height:calc(100% - 4px);opacity:.16;pointer-events:none" in css_response.text
+    assert ".borda-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
+    assert "top:2px;bottom:2px;left:0;border:0;display:block;width:100%;height:calc(100% - 4px)" in css_response.text
+    assert "background-color:transparent;color:var(--hakari-accent);opacity:.16;pointer-events:none" in css_response.text
     assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.3}" in css_response.text
-    assert ".borda-score-bar-fill{fill:var(--hakari-accent)}" in css_response.text
+    assert ".borda-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
+    assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
 
@@ -1293,13 +1295,20 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     lang_button = re.search(r'<button[^>]+data-benchmark-toggle="MNanoBEIR:lang_mean"[^>]+>', html)
     assert task_button is not None
     assert lang_button is not None
-    task_html = task_button.group(0)
     lang_html = lang_button.group(0)
-    assert "border-cyan-700" in task_html
-    assert "border-cyan-700" not in lang_html
+    task_group_html = html[: task_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
+    lang_group_html = html[: lang_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
+    assert "border-cyan-700" in task_group_html
+    assert "border-cyan-700" not in lang_group_html
     assert "bench=MNanoBEIR%3Alang_mean" in lang_html
     assert "bench=MNanoBEIR%3Atask_mean" not in lang_html
     assert "bench=BenchA" in lang_html
+    assert 'data-help-title="Benchmark scope: NanoBEIR(task)"' in html
+    assert 'data-help-title="Benchmark scope: NanoBEIR(lang)"' in html
+    assert "Averages the multilingual NanoBEIR matrix by BEIR source task." in html
+    assert "Averages the multilingual NanoBEIR matrix by language dataset." in html
+    assert "MNanoBEIR is a language x task benchmark matrix" in html
+    assert "Showing every language-task cell as an individual benchmark scope would make the picker hard to scan" in html
 
 
 def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:
@@ -2804,8 +2813,8 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         f'data-metric-column-full-name="{long_task}"'
     ) in head
     assert body.count('class="borda-score-bar"') == 2
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="10"' in body
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="0.00" height="10"' in body
+    assert 'class="borda-score-bar" value="100.00" max="100"' in body
+    assert 'class="borda-score-bar" value="0.00" max="100"' in body
 
 
 def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row(tmp_path: Path) -> None:
@@ -2828,8 +2837,59 @@ def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row
     body = render_table_body(result=result, filter_context=filter_context)
 
     assert body.count('class="borda-score-bar"') == 1
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="10"' in body
+    assert 'class="borda-score-bar" value="100.00" max="100"' in body
     assert body.count('data-filter-hidden="true"') == 1
+
+
+def test_leaderboard_model_name_borda_score_bar_uses_raw_borda_score_width() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/top",
+                borda_score=91.91,
+                mean_score=91.91,
+                task_count=1,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/middle",
+                borda_score=79.40,
+                mean_score=79.40,
+                task_count=1,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="model/bottom",
+                borda_score=61.87,
+                mean_score=61.87,
+                task_count=1,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    body = render_table_body(result=result)
+    filtered_body = render_table_body(
+        result=result,
+        filter_context=row_filter_context(result.rows, FilterState(filters_active=True, model_filter="middle")),
+    )
+
+    assert 'class="borda-score-bar" value="91.91" max="100"' in body
+    assert 'class="borda-score-bar" value="79.40" max="100"' in body
+    assert 'class="borda-score-bar" value="61.87" max="100"' in body
+    assert 'class="borda-score-bar" value="79.40" max="100"' in filtered_body
+    assert 'class="borda-score-bar" value="100.00" max="100"' not in filtered_body
 
 
 def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:

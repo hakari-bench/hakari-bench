@@ -24,6 +24,7 @@ from hakari_bench.viewer.config import (
     benchmark_name_from_selection_key,
     benchmark_selection_key,
     load_viewer_config,
+    split_benchmark_selection_key,
 )
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
@@ -999,6 +1000,8 @@ def render_tabs(
                     (0, benchmark_selection_key("MNanoBEIR", "task_mean"), "M-BEIR(task)"),
                     (1, benchmark_selection_key("MNanoBEIR", "lang_mean"), "M-BEIR(lang)"),
                 ]:
+                    _benchmark_name, score_group = split_benchmark_selection_key(selection_key)
+                    score_group = score_group or "task_mean"
                     selection_query_payload = _benchmark_toggle_query_payload(
                         result=result,
                         selection_key=selection_key,
@@ -1019,6 +1022,7 @@ def render_tabs(
                                 query_payload=selection_query_payload,
                                 doc=doc,
                                 benchmark_name=selection_key,
+                                help_content=_mnanobeir_scope_help(score_group),
                             ),
                         )
                     )
@@ -1050,6 +1054,7 @@ def render_tabs(
                             query_payload=group_query_payload,
                             doc=doc,
                             benchmark_name=view_name,
+                            help_content=_mnanobeir_scope_help(score_group),
                         ),
                     )
                 )
@@ -1151,16 +1156,33 @@ def _render_benchmark_view_button(
     query_payload: QueryState,
     doc: BenchmarkDoc | None,
     benchmark_name: str | None = None,
+    help_content: tuple[str, str, str] | None = None,
 ) -> str:
     classes = _control_button_classes(active=active)
     data_attr = "" if benchmark_name is None else f' data-benchmark-toggle="{escape(benchmark_name, quote=True)}"'
-    if doc is None:
+    if doc is None and help_content is None:
         return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                       {_leaderboard_control_hx_attrs()}>
                       {escape(label)}
                     </button>"""
-    doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
+    if doc is not None and help_content is None:
+        doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
+        return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+                  <button type="button" class="py-1 pl-2 pr-0 text-left"
+                    {data_attr}
+                    hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                    {_leaderboard_control_hx_attrs()}>
+                    {escape(label)}
+                  </button>
+                  <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
+                </span>"""
+    icon_triggers = []
+    if doc is not None:
+        icon_triggers.append(_render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview"))
+    if help_content is not None:
+        title, summary, details = help_content
+        icon_triggers.append(_render_button_help_icon(title=title, summary=summary, details=details))
     return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 {data_attr}
@@ -1168,8 +1190,29 @@ def _render_benchmark_view_button(
                 {_leaderboard_control_hx_attrs()}>
                 {escape(label)}
               </button>
-              <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
+              <span class="inline-flex items-center gap-0.5 pl-0.5 pr-2">{''.join(icon_triggers)}</span>
             </span>"""
+
+
+def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:
+    matrix_note = (
+        "MNanoBEIR is a language x task benchmark matrix: each raw row is one "
+        "NanoBEIR language dataset, such as NanoBEIR-ja, crossed with one "
+        "BEIR-style task, such as NanoArguAna or NanoSciFact. Showing every "
+        "language-task cell as an individual benchmark scope would make the "
+        "picker hard to scan, so the viewer exposes two grouped views."
+    )
+    if score_group == "lang_mean":
+        return (
+            "Benchmark scope: NanoBEIR(lang)",
+            "Averages the multilingual NanoBEIR matrix by language dataset.",
+            f"{matrix_note}\n\nNanoBEIR(lang) first groups rows by language dataset, such as NanoBEIR-en, NanoBEIR-ja, or NanoBEIR-de, averaging all tasks within each language before the final score is computed. Use it when you want language coverage and per-language robustness to be the visible unit.\n\nThis differs from NanoBEIR(task), which groups by BEIR source task first and averages languages inside each task.",
+        )
+    return (
+        "Benchmark scope: NanoBEIR(task)",
+        "Averages the multilingual NanoBEIR matrix by BEIR source task.",
+        f"{matrix_note}\n\nNanoBEIR(task) first groups rows by BEIR-style task, such as ArguAna, FEVER, or SciFact, averaging all available languages within each task before the final score is computed. Use it when you want task behavior to be the visible unit while smoothing over language coverage.\n\nThis differs from NanoBEIR(lang), which groups by language dataset first and averages tasks inside each language.",
+    )
 
 
 def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
@@ -2404,13 +2447,7 @@ def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: F
     visible_rows = [row for row in rows if filter_context.is_visible(row)]
     if not visible_rows:
         return {}
-    scores = [row.borda_score for row in visible_rows]
-    min_score = min(scores)
-    max_score = max(scores)
-    if max_score <= min_score:
-        return {row.model_name: 100.0 for row in visible_rows}
-    score_range = max_score - min_score
-    return {row.model_name: ((row.borda_score - min_score) / score_range) * 100.0 for row in visible_rows}
+    return {row.model_name: row.borda_score for row in visible_rows}
 
 
 def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:
