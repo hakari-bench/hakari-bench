@@ -1,0 +1,94 @@
+id: hotchpotch/japanese-splade-v2
+source:
+  type: huggingface
+  name: hotchpotch/japanese-splade-v2
+  revision: d1a16eef4748042285d5471f9203cdeb448d48bc
+method: sparse
+parameters:
+  total: 136440064
+  trainable: 136440064
+  input_embedding: 25165824
+  active: 111274240
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 512
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+  similarity_fn_name: dot
+  notes:
+  - The model uses BertJapaneseTokenizer with MeCab/fugashi and unidic-lite.
+    SparseEncoder loading requires those Japanese tokenizer libraries; in this
+    repository they are available via `uv run --extra wordseg`.
+  - Some long-document benchmark inputs can crash the native fugashi/MeCab
+    tokenizer before Hugging Face tokenizer truncation is applied. For full
+    all-dataset evaluation, use the compatibility loader documented in
+    docs/model_specific_benchmarking_notes.md; it still loads the model through
+    SparseEncoder and applies a raw input character guard before tokenization.
+language_support:
+  category: english_plus
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_japanese_sparse
+    evaluated_language_count: 1
+    japanese_score: 0.906
+  languages:
+  - ja
+  - en
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoVNMTEB

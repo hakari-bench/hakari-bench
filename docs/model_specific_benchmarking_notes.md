@@ -532,6 +532,50 @@ uv run hakari-bench evaluate sparse \
 No non-empty query/document prompts were found in the Sentence Transformers
 SparseEncoder config.
 
+## hotchpotch Japanese SPLADE v2
+
+Applies to:
+
+- `hotchpotch/japanese-splade-v2`
+
+Use the sparse evaluator:
+
+```bash
+uv run --extra wordseg hakari-bench evaluate sparse \
+  --model hotchpotch/japanese-splade-v2
+```
+
+The model can be loaded by Sentence Transformers `SparseEncoder`, which detects
+the `BertForMaskedLM` architecture and uses `SpladePooling(pooling_strategy="max")`.
+The Hugging Face repository does not currently include SentenceTransformers
+SparseEncoder metadata such as `modules.json` or `1_SpladePooling/config.json`,
+so loading relies on this default fallback.
+
+The tokenizer is `BertJapaneseTokenizer` with MeCab/fugashi and `unidic-lite`.
+Those Japanese tokenizer libraries must be installed before `SparseEncoder`
+loads the model. In this repository, `uv run --extra wordseg ...` enables the
+optional dependency set that includes them; the important requirement is the
+Japanese tokenizer libraries themselves, not BM25 word segmentation behavior.
+
+Long-document tasks can pass very large raw strings to the Japanese tokenizer.
+In the 2026-06 all-dataset run, `BertJapaneseTokenizer` with fugashi/MeCab hit
+a native crash on NanoBRIGHT before Hugging Face tokenizer truncation could
+apply `max_seq_length=512`. For full benchmark sweeps, use the compatibility
+loader below. It still constructs a Sentence Transformers `SparseEncoder`, but
+applies a raw character guard before query/document tokenization:
+
+```bash
+PYTHONPATH=$PWD uv run --extra wordseg hakari-bench evaluate sparse \
+  --model hotchpotch/japanese-splade-v2 \
+  --model-revision d1a16eef4748042285d5471f9203cdeb448d48bc \
+  --model-loader hakari_bench.model_loaders:load_safe_japanese_sparse_encoder \
+  --model-loader-kwargs-json '{"max_input_chars":8192}'
+```
+
+No non-empty query/document prompts were found in the SparseEncoder fallback
+configuration. Use `similarity_fn_name=dot`, `max_seq_length=512`, `dtype=bf16`,
+and `--attn-implementation sdpa`.
+
 ## ColBERT Late-Interaction Models
 
 Applies to:

@@ -7,6 +7,10 @@ from typing import Any
 import pytest
 import torch
 
+from hakari_bench.model_loaders import (
+    PreTokenizerCharacterLimitSparseEncoder,
+    load_safe_japanese_sparse_encoder,
+)
 from hakari_bench.models import (
     ColbertLateInteractionAdapter,
     ModelLoadConfig,
@@ -28,6 +32,51 @@ def test_resolve_torch_dtype_defaults_to_bf16() -> None:
 def test_resolve_attn_implementation_rejects_flash_attn_conflict() -> None:
     with pytest.raises(ValueError):
         resolve_attn_implementation(attn_implementation="sdpa", flash_attn2=True)
+
+
+def test_pre_tokenizer_character_limit_sparse_encoder_limits_raw_inputs() -> None:
+    class FakeSparseEncoder:
+        max_seq_length = 512
+        similarity_fn_name = "dot"
+
+        def __init__(self) -> None:
+            self.calls: list[tuple[str, object, dict[str, object]]] = []
+
+        def encode_query(self, sentences: object, **kwargs: object) -> str:
+            self.calls.append(("query", sentences, kwargs))
+            return "query-result"
+
+        def encode_document(self, sentences: object, **kwargs: object) -> str:
+            self.calls.append(("document", sentences, kwargs))
+            return "document-result"
+
+        def encode(self, sentences: object, **kwargs: object) -> str:
+            self.calls.append(("encode", sentences, kwargs))
+            return "encode-result"
+
+    fake = FakeSparseEncoder()
+    model = PreTokenizerCharacterLimitSparseEncoder(fake, max_input_chars=4)
+
+    assert model.max_seq_length == 512
+    assert model.encode_query(["abcdef", "xy"]) == "query-result"
+    assert model.encode_document("abcdef") == "document-result"
+    assert model.encode(["12345"], custom=True) == "encode-result"
+    assert fake.calls[0][1] == ["abcd", "xy"]
+    assert fake.calls[1][1] == "abcd"
+    assert fake.calls[2][1] == ["1234"]
+    assert model.metadata()["compatibility"] == "pre_tokenizer_character_limit"
+    assert model.metadata()["max_input_chars"] == 4
+
+
+def test_safe_japanese_sparse_encoder_loader_rejects_unknown_kwargs() -> None:
+    with pytest.raises(ValueError, match="Unsupported loader kwargs"):
+        load_safe_japanese_sparse_encoder(
+            ModelLoadConfig(
+                model_name_or_path="hotchpotch/japanese-splade-v2",
+                model_type="sparse",
+                model_loader_kwargs={"unexpected": True},
+            )
+        )
 
 
 def test_load_model_passes_dense_options(monkeypatch: pytest.MonkeyPatch) -> None:
