@@ -2905,7 +2905,12 @@ def _fmt_params(value: int | None) -> str:
 
 
 def _fmt_max_len(value: int | None) -> str:
-    return "" if value is None else f"{value:,}"
+    if value is None:
+        return ""
+    if value >= 1_024:
+        thousands = math.floor(value / 1_024 + 0.5)
+        return f"{thousands}K"
+    return f"{value:,}"
 
 
 def _fmt_embedding_dim(value: int | None) -> str:

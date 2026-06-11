@@ -4447,8 +4447,14 @@ benchmarks:
     assert 'data-doc-title="MNanoBEIR / NanoBEIR-ar / NanoArguAna"' not in filtered_response.text
 
 
-def test_max_len_is_formatted_with_grouping_separator() -> None:
-    assert _fmt_max_len(8192) == "8,192"
+def test_max_len_uses_compact_k_display_for_1k_and_above() -> None:
+    assert _fmt_max_len(512) == "512"
+    assert _fmt_max_len(1_023) == "1,023"
+    assert _fmt_max_len(1_024) == "1K"
+    assert _fmt_max_len(1_535) == "1K"
+    assert _fmt_max_len(1_536) == "2K"
+    assert _fmt_max_len(4_096) == "4K"
+    assert _fmt_max_len(8_192) == "8K"
     assert _fmt_max_len(None) == ""
 
 
