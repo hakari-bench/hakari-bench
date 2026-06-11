@@ -494,6 +494,19 @@ evaluation or recompute BM25 with `bm25s`. See
 [`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for the detailed
 sync/rebuild workflow.
 
+For a Hugging Face Hub snapshot download path, use:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend snapshot
+```
+
+The snapshot backend uses `huggingface_hub.snapshot_download()` and can use
+`hf_xet` when available. It stores files in a separate managed cache directory
+ending in `__snapshot`, cleans that directory by default so upstream deletions
+are reflected locally, then runs the same BM25 materialization and DuckDB
+rebuild steps.
+
 To merge historical or separate result roots, repeat `--results-dir` in
 priority order. If the same model-task JSON exists in more than one root, the
 first directory wins and later directories fill only missing results. The
