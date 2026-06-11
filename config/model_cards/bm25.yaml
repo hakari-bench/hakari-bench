@@ -1,0 +1,27 @@
+id: bm25
+source:
+  type: bm25
+  name: bm25
+method: bm25
+parameters:
+  total: 0
+  trainable: 0
+  input_embedding: 0
+  active: 0
+runtime:
+  backend_library: bm25
+  notes:
+  - BM25 is a lexical retrieval baseline, not a neural model. Parameter counts
+    are recorded as zero so leaderboard parameter displays and sorting treat it
+    consistently with model rows.
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: lexical_baseline_no_neural_parameters
+    evaluated_language_count: 20

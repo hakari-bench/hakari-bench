@@ -2823,6 +2823,10 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
     source = model.get("source")
     source_name = source.get("name") if isinstance(source, dict) else None
     card = model_cards.get(str(model_id or source_name or ""))
+    if card is None and (
+        model.get("method") == "bm25" or (isinstance(source, dict) and source.get("type") == "bm25")
+    ):
+        card = model_cards.get("bm25")
     if card is None:
         return model
     parameters = card.get("parameters")
@@ -2830,7 +2834,11 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
         return model
     total_parameters = _int_or_none(model.get("total_parameters"))
     card_total_parameters = _int_or_none(parameters.get("total"))
-    if total_parameters != card_total_parameters:
+    if (
+        total_parameters is not None
+        and card_total_parameters is not None
+        and total_parameters != card_total_parameters
+    ):
         return model
     active_parameters = _int_or_none(model.get("active_parameters"))
     card_active_parameters = _int_or_none(parameters.get("active"))
@@ -2842,6 +2850,8 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
         return model
     updated = dict(model)
     input_embedding_parameters = _int_or_none(parameters.get("input_embedding"))
+    if total_parameters is None and card_total_parameters is not None:
+        updated["total_parameters"] = card_total_parameters
     if active_parameters is None and card_active_parameters is not None:
         updated["active_parameters"] = card_active_parameters
     if _int_or_none(updated.get("embedding_parameters")) is None:

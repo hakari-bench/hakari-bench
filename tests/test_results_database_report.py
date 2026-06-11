@@ -2594,6 +2594,58 @@ def test_model_card_metadata_fills_missing_parameter_fields_without_overwriting(
     assert updated["transformer_parameters"] == 4
 
 
+def test_model_card_metadata_backfills_zero_total_parameters() -> None:
+    model = {
+        "id": "bm25",
+        "total_parameters": None,
+        "active_parameters": None,
+        "embedding_parameters": None,
+        "transformer_parameters": None,
+    }
+    model_cards = {
+        "bm25": {
+            "parameters": {
+                "total": 0,
+                "input_embedding": 0,
+                "active": 0,
+            },
+        },
+    }
+
+    updated = report._with_model_card_metadata(model, model_cards=model_cards)
+
+    assert updated["total_parameters"] == 0
+    assert updated["active_parameters"] == 0
+    assert updated["embedding_parameters"] == 0
+    assert updated["transformer_parameters"] == 0
+
+
+def test_model_card_metadata_uses_bm25_card_for_bm25_variants() -> None:
+    model = {
+        "id": "bm25/dataset-bm25",
+        "method": "bm25",
+        "source": {"type": "bm25", "name": "bm25/dataset-bm25"},
+        "total_parameters": None,
+        "active_parameters": None,
+    }
+    model_cards = {
+        "bm25": {
+            "parameters": {
+                "total": 0,
+                "input_embedding": 0,
+                "active": 0,
+            },
+        },
+    }
+
+    updated = report._with_model_card_metadata(model, model_cards=model_cards)
+
+    assert updated["total_parameters"] == 0
+    assert updated["active_parameters"] == 0
+    assert updated["embedding_parameters"] == 0
+    assert updated["transformer_parameters"] == 0
+
+
 def _write_minimal_task_result(path: Path, *, model_id: str, task_name: str, score: float) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
