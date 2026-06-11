@@ -1,0 +1,33 @@
+id: hotchpotch/bekko-embedding-v1-a8m
+source:
+  type: huggingface
+  name: hotchpotch/bekko-embedding-v1-a8m
+  revision: 26f8161ca92e39de93152e9a8ce76ca9a672c6e6
+method: dense
+parameters:
+  total: 105975168
+  trainable: 105975168
+  input_embedding: 98304000
+  active: 7671168
+embedding:
+  truncate_dims:
+  - 64
+  - 128
+  - 256
+  - 384
+runtime:
+  max_seq_length: 8192
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: passage
+language_support:
+  category: multilingual
+  evidence:
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual

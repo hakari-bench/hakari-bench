@@ -26,6 +26,19 @@ model. Use override arguments such as `--active-parameters`,
 `--input-embedding-parameters`, `--source-revision`, or `--max-seq-length` when
 automatic detection is wrong.
 
+For Matryoshka models, include every model-supported truncation dimension that
+should be evaluated. For example, `hotchpotch/bekko-embedding-v1-a8m` supports
+`384, 256, 128, 64` and should be generated with:
+
+```bash
+uv run --group tf4-fa2 python scripts/generate_model_cards.py \
+  --model hotchpotch/bekko-embedding-v1-a8m \
+  --model-type dense \
+  --truncate-dims 64 128 256 384 \
+  --flash-attn2 \
+  --output-dir config/model_cards
+```
+
 Evaluate directly from a card:
 
 ```bash

@@ -60,6 +60,7 @@ has been superseded by a newer validation.
 | `naver/splade-v3` | sparse | `tf5-sdpa` |
 | `lightonai/ColBERT-Zero` | late-interaction | `tf5-sdpa` with `uv run --group pylate` |
 | `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT` | dense | `tf4-fa2` |
+| `hotchpotch/bekko-embedding-v1-a8m` | dense | `tf4-fa2` |
 | `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | dense | `tf5-sdpa` |
 
 ## cl-nagoya/ruri-v3
@@ -227,6 +228,7 @@ Applies to:
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT`
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR`
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR-pt`
+- `hotchpotch/bekko-embedding-v1-a8m`
 
 Use the stored Sentence Transformers retrieval prompt names:
 
@@ -267,6 +269,9 @@ Truncation notes:
   standalone 384-dimensional truncation variant.
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR-pt` recommends
   `truncate_dim` values `256,128,64`.
+- `hotchpotch/bekko-embedding-v1-a8m` documents supported `truncate_dim`
+  values `384,256,128,64`. Use Transformers 4.x with Flash Attention 2 and
+  batch size 16 unless a newer validation supersedes the model card.
 
 ## Jina Embeddings v5
 
