@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
-from hakari_bench.viewer.config import ScoreAggregation, ViewerConfig
+from hakari_bench.viewer.config import CLEAR_SCOPE_NAME, CUSTOM_SCOPE_NAME, ScoreAggregation, ViewerConfig
 from hakari_bench.viewer.leaderboard import LeaderboardResult, SORT_COLUMNS
 from hakari_bench.viewer.variant_display import variant_display_flags_from_values
 
@@ -57,6 +57,7 @@ def normalize_query_state(
     prompt_filter: list[str] | None,
     model_type_filter: list[str] | None = None,
     lang_filter: list[str] | None = None,
+    bench: list[str] | None = None,
     model_filter: str,
     rank_filtered: bool = False,
     task_scores: bool = False,
@@ -70,7 +71,12 @@ def normalize_query_state(
     metric: str = "ndcg@10",
 ) -> QueryState:
     view = _normalized_view_name(view)
-    if view not in viewer_config.view_names:
+    selected_benchmarks = _normalized_benchmark_values(bench, viewer_config)
+    if selected_benchmarks:
+        view = CUSTOM_SCOPE_NAME
+    elif view == CUSTOM_SCOPE_NAME:
+        view = CLEAR_SCOPE_NAME
+    if view not in [*viewer_config.view_names, CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME]:
         view = viewer_config.overall.name
     if sort not in SORT_COLUMNS and not sort.startswith("metric:"):
         sort = "borda_rank"
@@ -88,6 +94,8 @@ def normalize_query_state(
     )
     task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
+    if view == CUSTOM_SCOPE_NAME:
+        query["bench"] = selected_benchmarks
     if target != "all":
         query["target"] = target
     if score_aggregation != "micro":
@@ -118,6 +126,8 @@ def normalize_query_state(
     has_task_length_filters = bool(query_len_min or query_len_max or doc_len_min or doc_len_max)
     if language_filters:
         query["lang_filter"] = language_filters
+    if view == CLEAR_SCOPE_NAME:
+        query.pop("lang_filter", None)
     if filters or has_task_length_filters:
         query["filters"] = "1"
         query["dim_filter"] = _normalized_query_values(dim_filter)
@@ -189,6 +199,9 @@ def state_payload(
         query_payload["metric"] = result.selected_score_metric
     if result.selected_score_group is not None:
         query_payload["group"] = result.selected_score_group.name
+    selected_benchmarks = getattr(result, "selected_benchmarks", ())
+    if result.view_name == CUSTOM_SCOPE_NAME and selected_benchmarks:
+        query_payload["bench"] = list(selected_benchmarks)
     if result.show_task_scores:
         query_payload["task_scores"] = "1"
     if result.show_task_z_scores:
@@ -278,6 +291,18 @@ def _normalized_query_values(values: list[str] | None) -> list[str]:
     if values is None:
         return []
     return [value for value in values if value]
+
+
+def _normalized_benchmark_values(values: list[str] | None, viewer_config: ViewerConfig) -> list[str]:
+    allowed = set(viewer_config.benchmark_names)
+    selected = []
+    seen = set()
+    for value in _normalized_query_values(values):
+        if value not in allowed or value in seen:
+            continue
+        selected.append(value)
+        seen.add(value)
+    return selected
 
 
 def _normalized_model_type_filter_values(values: list[str] | None) -> list[str]:

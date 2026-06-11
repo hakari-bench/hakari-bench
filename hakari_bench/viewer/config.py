@@ -10,6 +10,8 @@ from pydantic import BaseModel, ConfigDict, Field
 ScoreGroupKey = Literal["task_key", "dataset_name", "dataset_id", "split_name", "benchmark", "task_name"]
 LanguageFilterMode = Literal["languages", "primary_language"]
 ScoreAggregation = Literal["macro", "micro"]
+CUSTOM_SCOPE_NAME = "Custom"
+CLEAR_SCOPE_NAME = "Clear"
 
 
 class ScoreGroupConfig(BaseModel):
@@ -92,7 +94,13 @@ class ViewerConfig(BaseModel):
     def view_names(self) -> list[str]:
         return [*(overall.name for overall in self.overalls), *(benchmark.name for benchmark in self.benchmarks)]
 
+    @property
+    def benchmark_names(self) -> list[str]:
+        return [benchmark.name for benchmark in self.benchmarks]
+
     def benchmarks_for_view(self, view_name: str) -> list[str]:
+        if view_name == CLEAR_SCOPE_NAME:
+            return []
         overall = self.overall_for_view(view_name)
         if overall is not None:
             return overall.benchmark_names
@@ -113,6 +121,8 @@ class ViewerConfig(BaseModel):
         return None
 
     def label_for_view(self, view_name: str) -> str:
+        if view_name in {CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}:
+            return view_name
         overall = self.overall_for_view(view_name)
         if overall is not None:
             return overall.label
@@ -120,6 +130,20 @@ class ViewerConfig(BaseModel):
             if benchmark.name == view_name:
                 return benchmark.display_label
         return view_name
+
+    def overall_for_selected_benchmarks(
+        self, *, name: str, label: str, benchmark_names: list[str]
+    ) -> OverallConfig:
+        component_by_benchmark: dict[str, OverallBenchmarkConfig] = {}
+        for overall in self.overalls:
+            for component in overall.benchmark_components:
+                if component.name not in component_by_benchmark or component.group_by is not None:
+                    component_by_benchmark[component.name] = component
+        components: list[str | OverallBenchmarkConfig] = [
+            component_by_benchmark.get(benchmark_name, OverallBenchmarkConfig(name=benchmark_name))
+            for benchmark_name in benchmark_names
+        ]
+        return OverallConfig(name=name, label=label, benchmarks=components)
 
 
 def load_viewer_config(config_dir: Path = Path("config/viewer")) -> ViewerConfig:

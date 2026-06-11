@@ -13,6 +13,8 @@ from pydantic import BaseModel, ConfigDict, Field
 import yaml
 
 from hakari_bench.viewer.config import (
+    CLEAR_SCOPE_NAME,
+    CUSTOM_SCOPE_NAME,
     LanguageFilterMode,
     OverallConfig,
     ScoreAggregation,
@@ -183,6 +185,7 @@ class LeaderboardResult(BaseModel):
     metric_column_doc_keys: dict[str, str] = Field(default_factory=dict)
     available_languages: list[LanguageOption] = Field(default_factory=list)
     selected_languages: tuple[str, ...] = ()
+    selected_benchmarks: tuple[str, ...] = ()
 
 
 SORT_COLUMNS = {
@@ -249,6 +252,7 @@ class LeaderboardService:
         query_max_chars: float | None = None,
         document_min_chars: float | None = None,
         document_max_chars: float | None = None,
+        selected_benchmarks: tuple[str, ...] = (),
     ) -> LeaderboardResult:
         with timed_operation(
             "viewer.leaderboard.request",
@@ -276,15 +280,17 @@ class LeaderboardService:
                 attn_filters=ranking_attn_filters,
                 prompt_filters=ranking_prompt_filters,
             )
-            overall = self.config.overall_for_view(view_name)
+            view_name, overall, benchmarks = self._resolve_scope(
+                view_name, selected_benchmarks=selected_benchmarks
+            )
             available_score_metrics = (
                 self.task_results_repository.fetch_score_metric_options()
             )
             selected_score_metric = _normalize_score_metric(
                 score_metric, available_score_metrics
             )
-            benchmarks = self.config.benchmarks_for_view(view_name)
             is_overall = overall is not None
+            selected_benchmark_names = tuple(benchmarks)
             request_timing["benchmark_count"] = len(benchmarks)
             request_timing["score_aggregation"] = score_aggregation
             score_groups = (
@@ -298,8 +304,41 @@ class LeaderboardService:
                 other=include_other_variants,
             )
             language_filter_policy = _language_filter_policy_for_view(
-                self.config, view_name
+                self.config, view_name, overall=overall
             )
+            available_views = _available_view_names(self.config)
+            available_view_labels = {
+                view: self.config.label_for_view(view)
+                for view in available_views
+            }
+            if not benchmarks:
+                return LeaderboardResult(
+                    view_name=CLEAR_SCOPE_NAME,
+                    view_label=self.config.label_for_view(CLEAR_SCOPE_NAME),
+                    is_overall=True,
+                    score_target=score_target,
+                    score_aggregation=score_aggregation,
+                    selected_score_metric=selected_score_metric,
+                    available_score_metrics=available_score_metrics,
+                    expected_tasks=0,
+                    rows=[],
+                    available_views=available_views,
+                    available_view_labels=available_view_labels,
+                    include_quantization_variants=include_quantization_variants,
+                    include_truncate_variants=include_truncate_variants,
+                    include_rescore_variants=include_rescore_variants,
+                    include_other_variants=include_other_variants,
+                    show_task_scores=False,
+                    show_task_z_scores=False,
+                    show_task_ranks=False,
+                    rank_filtered=rank_filtered,
+                    task_filter="",
+                    score_groups=[],
+                    metric_columns=[],
+                    available_languages=[],
+                    selected_languages=(),
+                    selected_benchmarks=(),
+                )
             has_length_filters = _has_task_length_filters(
                 query_min_chars=query_min_chars,
                 query_max_chars=query_max_chars,
@@ -317,6 +356,7 @@ class LeaderboardService:
                 and not task_filter.strip()
                 and not has_length_filters
                 and selected_score_metric == "ndcg@10"
+                and view_name != CUSTOM_SCOPE_NAME
                 and _language_filter_policy_supports_precomputed(language_filter_policy)
                 and (overall is None or score_aggregation == "micro")
             ):
@@ -346,11 +386,8 @@ class LeaderboardService:
                         available_score_metrics=available_score_metrics,
                         expected_tasks=expected_tasks,
                         rows=sorted_rows,
-                        available_views=self.config.view_names,
-                        available_view_labels={
-                            view: self.config.label_for_view(view)
-                            for view in self.config.view_names
-                        },
+                        available_views=available_views,
+                        available_view_labels=available_view_labels,
                         include_quantization_variants=include_quantization_variants,
                         include_truncate_variants=include_truncate_variants,
                         include_rescore_variants=include_rescore_variants,
@@ -374,6 +411,7 @@ class LeaderboardService:
                         metric_columns=[],
                         available_languages=available_languages,
                         selected_languages=(),
+                        selected_benchmarks=selected_benchmark_names,
                     )
             with timed_operation(
                 "viewer.leaderboard.phase", operation="load_task_scores", view=view_name
@@ -549,11 +587,8 @@ class LeaderboardService:
                 available_score_metrics=available_score_metrics,
                 expected_tasks=len({row.task_key for row in rows}),
                 rows=sorted_rows,
-                available_views=self.config.view_names,
-                available_view_labels={
-                    view: self.config.label_for_view(view)
-                    for view in self.config.view_names
-                },
+                available_views=available_views,
+                available_view_labels=available_view_labels,
                 include_quantization_variants=include_quantization_variants,
                 include_truncate_variants=include_truncate_variants,
                 include_rescore_variants=include_rescore_variants,
@@ -580,7 +615,29 @@ class LeaderboardService:
                 metric_column_doc_keys=metric_column_doc_keys,
                 available_languages=available_languages,
                 selected_languages=selected_languages,
+                selected_benchmarks=selected_benchmark_names,
             )
+
+    def _resolve_scope(
+        self, view_name: str, *, selected_benchmarks: tuple[str, ...]
+    ) -> tuple[str, OverallConfig | None, list[str]]:
+        if view_name == CLEAR_SCOPE_NAME:
+            return CLEAR_SCOPE_NAME, OverallConfig(name=CLEAR_SCOPE_NAME, label=CLEAR_SCOPE_NAME, benchmarks=[]), []
+        if selected_benchmarks:
+            benchmark_names = _normalized_selected_benchmarks(self.config, selected_benchmarks)
+            if not benchmark_names:
+                return CLEAR_SCOPE_NAME, OverallConfig(name=CLEAR_SCOPE_NAME, label=CLEAR_SCOPE_NAME, benchmarks=[]), []
+            overall = self.config.overall_for_selected_benchmarks(
+                name=CUSTOM_SCOPE_NAME,
+                label=CUSTOM_SCOPE_NAME,
+                benchmark_names=benchmark_names,
+            )
+            return CUSTOM_SCOPE_NAME, overall, overall.benchmark_names
+        overall = self.config.overall_for_view(view_name)
+        if overall is not None:
+            return view_name, overall, overall.benchmark_names
+        benchmarks = self.config.benchmarks_for_view(view_name)
+        return view_name, None, benchmarks
 
     def _load_task_scores(
         self,
@@ -2137,9 +2194,10 @@ def _language_page_languages_for_view(
 
 
 def _language_filter_policy_for_view(
-    config: ViewerConfig, view_name: str
+    config: ViewerConfig, view_name: str, *, overall: OverallConfig | None = None
 ) -> LanguageFilterPolicy:
-    overall = config.overall_for_view(view_name)
+    if overall is None:
+        overall = config.overall_for_view(view_name)
     if overall is not None:
         benchmark_names = set(overall.benchmark_names)
         modes_by_benchmark: dict[str, LanguageFilterMode] = {
@@ -2170,6 +2228,22 @@ def _language_filter_policy_supports_precomputed(policy: LanguageFilterPolicy) -
         and not policy.modes_by_benchmark
         and not policy.allowed_languages_by_benchmark
     )
+
+
+def _available_view_names(config: ViewerConfig) -> list[str]:
+    return [*config.view_names, CLEAR_SCOPE_NAME]
+
+
+def _normalized_selected_benchmarks(config: ViewerConfig, benchmarks: tuple[str, ...]) -> list[str]:
+    allowed = set(config.benchmark_names)
+    selected: list[str] = []
+    seen = set()
+    for benchmark in benchmarks:
+        if benchmark not in allowed or benchmark in seen:
+            continue
+        selected.append(benchmark)
+        seen.add(benchmark)
+    return selected
 
 
 def _overall_metric_score_group(

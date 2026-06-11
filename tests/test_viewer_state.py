@@ -132,6 +132,62 @@ def test_task_filter_enables_task_score_columns() -> None:
     assert query["task_filter"] == "fever"
 
 
+def test_custom_benchmark_selection_is_normalized() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Custom",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        bench=["BenchB", "Missing", "BenchA", "BenchA"],
+    )
+
+    assert query == {
+        "view": "Custom",
+        "sort": "borda_rank",
+        "direction": "asc",
+        "bench": ["BenchB", "BenchA"],
+    }
+
+
+def test_empty_custom_benchmark_selection_normalizes_to_clear() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Custom",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        bench=[],
+        lang_filter=["ja"],
+    )
+
+    assert query == {"view": "Clear", "sort": "borda_rank", "direction": "asc"}
+
+
 def test_task_z_scores_do_not_force_task_score_columns() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
@@ -300,6 +356,6 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
 
 def _viewer_config() -> ViewerConfig:
     return ViewerConfig(
-        benchmarks=[BenchmarkConfig(name="BenchA")],
+        benchmarks=[BenchmarkConfig(name="BenchA"), BenchmarkConfig(name="BenchB")],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
     )

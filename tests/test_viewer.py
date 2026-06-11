@@ -22,6 +22,7 @@ from hakari_bench.viewer.app import (
     _view_group,
     _z_score_bucket_class,
     create_app,
+    render_tabs,
     render_leaderboard_csv,
     render_page,
     render_table_body,
@@ -76,6 +77,12 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         "NanoBRIGHT",
         "NanoCoIR",
     ]
+    core_en_benchmarks = [
+        "NanoRTEB",
+        "NanoBRIGHT",
+        "NanoCoIR",
+        "NanoMTEB-v2",
+    ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
 
     assert config.overall.name == "Overall"
@@ -98,9 +105,13 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         None,
         None,
     ]
-    assert config.view_names[: len(all_benchmarks) + 2] == [
+    core_en_overall = config.overall_for_view("Core-EN")
+    assert core_en_overall is not None
+    assert core_en_overall.benchmark_names == core_en_benchmarks
+    assert config.view_names[: len(all_benchmarks) + 3] == [
         "Overall",
         "Core",
+        "Core-EN",
         *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
@@ -193,6 +204,9 @@ def test_primary_language_view_benchmarks_define_primary_languages() -> None:
 def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
     assert _view_group("All") == "Scope presets"
     assert _view_group("Core") == "Scope presets"
+    assert _view_group("Core-EN") == "Scope presets"
+    assert _view_group("Clear") == "Scope presets"
+    assert _view_group("Custom") == "Scope presets"
     assert _view_group("Group") == "Scope presets"
     assert _view_group("NanoMMTEB-v2") == "Nano suites"
     assert _view_group("NanoMTEB-Dutch") == "Nano suites"
@@ -995,6 +1009,143 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "leaderboard-col-borda sticky" not in response.text
     assert "leaderboard-col-mean sticky" not in response.text
     assert "z-20" in response.text
+
+
+def test_leaderboard_clear_scope_returns_empty_table_and_resets_language(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        "benchmarks:\n  - name: BenchA\n  - name: BenchB\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: Overall
+    label: Overall
+    benchmarks:
+      - BenchA
+  - name: Core
+    label: Core
+    benchmarks:
+      - BenchA
+  - name: Core-EN
+    label: Core-EN
+    benchmarks:
+      - BenchB
+""".strip(),
+        encoding="utf-8",
+    )
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    result = service.get_leaderboard("Clear", language_filters=("ja",))
+
+    assert result.view_name == "Clear"
+    assert result.view_label == "Clear"
+    assert result.is_overall
+    assert result.selected_benchmarks == ()
+    assert result.expected_tasks == 0
+    assert result.rows == []
+    assert result.selected_languages == ()
+
+
+def test_custom_benchmark_selection_aggregates_selected_benchmarks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/a", "BenchB", "bench/b", "BenchB", "b1", "b1", "b1", 0.70, 10, 12, 8192),
+            ("model/a", "BenchC", "bench/c", "BenchC", "c1", "c1", "c1", 0.10, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+            ("model/b", "BenchB", "bench/b", "BenchB", "b1", "b1", "b1", 0.40, 10, 12, 8192),
+            ("model/b", "BenchC", "bench/c", "BenchC", "c1", "c1", "c1", 0.95, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        "benchmarks:\n  - name: BenchA\n  - name: BenchB\n  - name: BenchC\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n  - BenchB\n  - BenchC\n",
+        encoding="utf-8",
+    )
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    result = service.get_leaderboard("Custom", selected_benchmarks=("BenchA", "BenchB"))
+
+    assert result.view_name == "Custom"
+    assert result.view_label == "Custom"
+    assert result.is_overall
+    assert result.selected_benchmarks == ("BenchA", "BenchB")
+    assert result.expected_tasks == 2
+    assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
+    assert result.rows[0].mean_score == pytest.approx(80.0)
+    assert result.rows[1].mean_score == pytest.approx(60.0)
+
+
+def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=0,
+        rows=[],
+        available_views=["Overall", "Core", "Core-EN", "BenchA", "BenchB", "BenchC"],
+        available_view_labels={
+            "Overall": "Overall",
+            "Core": "Core",
+            "Core-EN": "Core-EN",
+            "BenchA": "BenchA",
+            "BenchB": "BenchB",
+            "BenchC": "BenchC",
+        },
+        selected_benchmarks=("BenchA", "BenchB"),
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_tabs(
+        result=result,
+        sort="borda_rank",
+        direction="asc",
+        filter_state=FilterState(language_filters=("ja",)),
+    )
+
+    assert "Core-EN" in html
+    assert "Clear" in html
+    assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
+    core_en_button = html.split(">Core-EN</button>", 1)[0].rsplit("<button", 1)[1]
+    clear_button = html.split(">Clear</button>", 1)[0].rsplit("<button", 1)[1]
+    assert "view=Core-EN" in core_en_button
+    assert "lang_filter=en" in core_en_button
+    assert 'hx-get="/leaderboard?view=Clear&amp;sort=borda_rank&amp;direction=asc' in html
+    assert "lang_filter=" not in clear_button
+    bench_a_button = re.search(r'<button[^>]+data-benchmark-toggle="BenchA"[^>]+>', html)
+    bench_c_button = re.search(r'<button[^>]+data-benchmark-toggle="BenchC"[^>]+>', html)
+    assert bench_a_button is not None
+    assert bench_c_button is not None
+    bench_a_html = bench_a_button.group(0)
+    bench_c_html = bench_c_button.group(0)
+    assert "view=Custom" in bench_a_html
+    assert "lang_filter=ja" in bench_a_html
+    assert "bench=BenchB" in bench_a_html
+    assert "bench=BenchA" not in bench_a_html
+    assert "view=Custom" in bench_c_html
+    assert "lang_filter=ja" in bench_c_html
+    assert "bench=BenchA" in bench_c_html
+    assert "bench=BenchB" in bench_c_html
+    assert "bench=BenchC" in bench_c_html
 
 
 def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:
@@ -2859,9 +3010,12 @@ benchmarks:
     assert "MMTEB-v2" in response.text
     lang_scope_section = response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
     mmteb_scope_section = mmteb_response.text.split("Benchmark scope", 1)[1].split("Table display", 1)[0]
-    expected_scope_order = ["M-BEIR(task)", "M-BEIR(lang)", "MMTEB-v2"]
     for scope_section in [lang_scope_section, mmteb_scope_section]:
-        scope_positions = [scope_section.index(label) for label in expected_scope_order]
+        scope_positions = [
+            scope_section.index("M-BEIR(task)"),
+            scope_section.index("M-BEIR(lang)"),
+            scope_section.rindex("MMTEB-v2"),
+        ]
         assert scope_positions == sorted(scope_positions)
     assert "Task Mean" not in response.text
     assert 'aria-label="Score groups"' not in response.text

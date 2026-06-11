@@ -48,3 +48,10 @@ overalls:
       - NanoMLDR
       - NanoBRIGHT
       - NanoCoIR
+  - name: Core-EN
+    label: Core-EN
+    benchmarks:
+      - NanoRTEB
+      - NanoBRIGHT
+      - NanoCoIR
+      - NanoMTEB-v2

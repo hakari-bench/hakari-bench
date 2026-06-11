@@ -16,7 +16,7 @@ from urllib.parse import urlencode
 from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
-from hakari_bench.viewer.config import ScoreAggregation, ViewerConfig, load_viewer_config
+from hakari_bench.viewer.config import CLEAR_SCOPE_NAME, CUSTOM_SCOPE_NAME, ScoreAggregation, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
@@ -47,6 +47,7 @@ from hakari_bench.viewer.state import (
     filter_state_from_query,
     normalize_query_state,
     optional_query_string,
+    query_values,
     query_string,
     state_payload,
     task_length_bounds,
@@ -261,6 +262,7 @@ def create_app(
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
         lang_filter: list[str] | None = Query(default=None),
+        bench: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
@@ -296,6 +298,7 @@ def create_app(
                 attn_filter=attn_filter,
                 prompt_filter=prompt_filter,
                 lang_filter=lang_filter,
+                bench=bench,
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
@@ -327,6 +330,7 @@ def create_app(
         score = query_string(state_query.get("score", "micro"))
         score_metric = query_string(state_query.get("metric", "ndcg@10"))
         group = optional_query_string(state_query.get("group"))
+        selected_benchmarks = tuple(query_values(state_query.get("bench")))
         display_flags = variant_display_flags_from_query(state_query)
         filter_state = filter_state_from_query(state_query)
         length_bounds = task_length_bounds(filter_state)
@@ -360,6 +364,7 @@ def create_app(
             query_max_chars=length_bounds["query_max_chars"],
             document_min_chars=length_bounds["document_min_chars"],
             document_max_chars=length_bounds["document_max_chars"],
+            selected_benchmarks=selected_benchmarks,
         )
         return result, sort, direction, filter_state
 
@@ -388,6 +393,7 @@ def create_app(
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
         lang_filter: list[str] | None = Query(default=None),
+        bench: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
@@ -423,6 +429,7 @@ def create_app(
                 attn_filter=attn_filter,
                 prompt_filter=prompt_filter,
                 lang_filter=lang_filter,
+                bench=bench,
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
@@ -464,6 +471,7 @@ def create_app(
         attn_filter: list[str] | None = Query(default=None),
         prompt_filter: list[str] | None = Query(default=None),
         lang_filter: list[str] | None = Query(default=None),
+        bench: list[str] | None = Query(default=None),
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
@@ -499,6 +507,7 @@ def create_app(
                 attn_filter=attn_filter,
                 prompt_filter=prompt_filter,
                 lang_filter=lang_filter,
+                bench=bench,
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
@@ -930,19 +939,26 @@ def render_tabs(
         "Scope presets": [],
         "Nano suites": [],
     }
-    for index, view_name in enumerate(result.available_views):
-        active = view_name == result.view_name
+    available_views = _available_view_names_with_clear(result.available_views)
+    for index, view_name in enumerate(available_views):
+        active = _scope_or_benchmark_active(result=result, view_name=view_name)
         raw_view_label = result.available_view_labels.get(view_name, view_name)
         view_label = _viewer_scope_label(view_name=view_name, fallback=raw_view_label)
         classes = _control_button_classes(active=active)
         tab_sort = "borda_rank" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
-        query_payload["view"] = view_name
         doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
         group = _view_group(view_name)
         sort_key = _view_group_sort_key(view_name=view_name, fallback=index)
         if group == "Scope presets":
+            query_payload = _scope_preset_query_payload(
+                result=result,
+                view_name=view_name,
+                sort=tab_sort,
+                direction=tab_direction,
+                filter_state=filter_state,
+            )
             query_payload.pop("group", None)
             query = urlencode(query_payload, doseq=True)
             grouped_buttons[group].append(
@@ -958,12 +974,44 @@ def render_tabs(
                 )
             )
             continue
+        query_payload = _benchmark_toggle_query_payload(
+            result=result,
+            view_name=view_name,
+            sort=tab_sort,
+            direction=tab_direction,
+            filter_state=filter_state,
+            available_views=available_views,
+        )
         if view_name == "MNanoBEIR":
+            if result.view_name != "MNanoBEIR":
+                query = urlencode(query_payload, doseq=True)
+                for offset, label in [(0, "M-BEIR(task)"), (1, "M-BEIR(lang)")]:
+                    grouped_buttons[group].append(
+                        (
+                            sort_key * 10 + offset,
+                            _render_benchmark_view_button(
+                                label=label,
+                                active=active,
+                                query=query,
+                                query_payload=query_payload,
+                                doc=doc,
+                                benchmark_name=view_name,
+                            ),
+                        )
+                    )
+                continue
             for offset, score_group, label in [
                 (0, "task_mean", "M-BEIR(task)"),
                 (1, "lang_mean", "M-BEIR(lang)"),
             ]:
-                group_query_payload = dict(query_payload)
+                group_query_payload = state_payload(
+                    result=result,
+                    sort=tab_sort,
+                    direction=tab_direction,
+                    filter_state=filter_state,
+                )
+                group_query_payload["view"] = view_name
+                group_query_payload.pop("bench", None)
                 group_query_payload["group"] = score_group
                 group_query = urlencode(group_query_payload, doseq=True)
                 active = result.view_name == view_name and (
@@ -978,17 +1026,18 @@ def render_tabs(
                             query=group_query,
                             query_payload=group_query_payload,
                             doc=doc,
+                            benchmark_name=view_name,
                         ),
                     )
                 )
             continue
-        query_payload.pop("group", None)
         query = urlencode(query_payload, doseq=True)
         if doc is None:
             grouped_buttons[group].append(
                 (
                     sort_key * 10,
                     f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
+                      data-benchmark-toggle="{escape(view_name, quote=True)}"
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                       {_leaderboard_control_hx_attrs()}>
                       {escape(view_label)}
@@ -1005,6 +1054,7 @@ def render_tabs(
                     query=query,
                     query_payload=query_payload,
                     doc=doc,
+                    benchmark_name=view_name,
                 ),
             )
         )
@@ -1066,10 +1116,12 @@ def _render_benchmark_view_button(
     query: str,
     query_payload: QueryState,
     doc: BenchmarkDoc | None,
+    benchmark_name: str | None = None,
 ) -> str:
     classes = _control_button_classes(active=active)
+    data_attr = "" if benchmark_name is None else f' data-benchmark-toggle="{escape(benchmark_name, quote=True)}"'
     if doc is None:
-        return f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
+        return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                       {_leaderboard_control_hx_attrs()}>
                       {escape(label)}
@@ -1077,12 +1129,109 @@ def _render_benchmark_view_button(
     doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
     return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
+                {data_attr}
                 hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                 {_leaderboard_control_hx_attrs()}>
                 {escape(label)}
               </button>
               <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
             </span>"""
+
+
+def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
+    if CLEAR_SCOPE_NAME in available_views:
+        return available_views
+    views = list(available_views)
+    insert_after = "Core-EN" if "Core-EN" in views else "Core" if "Core" in views else "Overall"
+    if insert_after in views:
+        views.insert(views.index(insert_after) + 1, CLEAR_SCOPE_NAME)
+    else:
+        views.insert(0, CLEAR_SCOPE_NAME)
+    return views
+
+
+def _scope_or_benchmark_active(*, result: LeaderboardResult, view_name: str) -> bool:
+    if _view_group(view_name) == "Scope presets":
+        return view_name == result.view_name
+    selected_benchmarks = set(result.selected_benchmarks)
+    if selected_benchmarks:
+        return view_name in selected_benchmarks
+    return view_name == result.view_name
+
+
+def _scope_preset_query_payload(
+    *,
+    result: LeaderboardResult,
+    view_name: str,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+) -> QueryState:
+    scope_filter_state = filter_state
+    if view_name in {"Overall", "Core", CLEAR_SCOPE_NAME}:
+        scope_filter_state = _filter_state_with_languages(filter_state, ())
+    elif view_name == "Core-EN":
+        scope_filter_state = _filter_state_with_languages(filter_state, ("en",))
+    query_payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=scope_filter_state,
+    )
+    query_payload["view"] = view_name
+    query_payload.pop("bench", None)
+    if view_name == CLEAR_SCOPE_NAME:
+        query_payload.pop("lang_filter", None)
+    return query_payload
+
+
+def _benchmark_toggle_query_payload(
+    *,
+    result: LeaderboardResult,
+    view_name: str,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    available_views: list[str],
+) -> QueryState:
+    selected = list(result.selected_benchmarks)
+    if not selected and _view_group(result.view_name) == "Nano suites":
+        selected = [result.view_name]
+    if view_name in selected:
+        selected = [benchmark for benchmark in selected if benchmark != view_name]
+    else:
+        selected.append(view_name)
+    selected = _ordered_benchmark_selection(selected, available_views)
+    query_payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+    )
+    query_payload.pop("group", None)
+    query_payload.pop("bench", None)
+    if not selected:
+        query_payload["view"] = CLEAR_SCOPE_NAME
+        query_payload.pop("lang_filter", None)
+        return query_payload
+    query_payload["view"] = CUSTOM_SCOPE_NAME
+    query_payload["bench"] = selected
+    return query_payload
+
+
+def _ordered_benchmark_selection(selected: list[str], available_views: list[str]) -> list[str]:
+    selected_set = set(selected)
+    ordered = [
+        view_name
+        for view_name in available_views
+        if _view_group(view_name) == "Nano suites" and view_name in selected_set
+    ]
+    ordered.extend(
+        view_name
+        for view_name in selected
+        if view_name not in ordered
+    )
+    return ordered
 
 
 def _render_button_help_icon(*, title: str, summary: str, details: str) -> str:
@@ -1105,6 +1254,16 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
             "Benchmark scope: Core",
             "Shows the compact core benchmark set.",
             "Core is a compact scope for the main leaderboard. It includes MNanoBEIR, NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want a smaller HAKARI-Bench comparison before drilling into a specific Nano suite or language. With Macro scoring, MNanoBEIR is first averaged by BEIR source task across languages, then contributes as one NanoSet.",
+        ),
+        "Core-EN": (
+            "Benchmark scope: Core-EN",
+            "Shows the English-oriented core benchmark set.",
+            "Core-EN starts from the compact Core idea, removes multilingual suites, and adds NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core-EN also switches Task facets to EN so the page state matches the English-focused scope.",
+        ),
+        CLEAR_SCOPE_NAME: (
+            "Benchmark scope: Clear",
+            "Clears every NanoSet selection.",
+            "Clear is an empty custom scope. No benchmark tasks are selected, Task facets return to All languages, and the leaderboard table shows no rows.\n\nUse it as a clean starting point before toggling a small custom set such as JMTEB-v2 plus MTEB-v2.",
         ),
     }
     return help_text.get(
@@ -1283,7 +1442,7 @@ def _score_metric_label(metric: str) -> str:
 
 
 def _view_group(view_name: str) -> str:
-    overall_views = {"All", "Core", "Group", "Overall"}
+    overall_views = {"All", "Core", "Core-EN", "Group", "Overall", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
     if view_name in overall_views or view_name.startswith("Overall"):
         return "Scope presets"
     return "Nano suites"
@@ -1293,6 +1452,9 @@ def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
     priority = {
         "Overall": 0,
         "Core": 1,
+        "Core-EN": 2,
+        CLEAR_SCOPE_NAME: 3,
+        CUSTOM_SCOPE_NAME: 4,
         "MNanoBEIR": 0,
         "NanoMMTEB-v2": 1,
         "NanoRTEB": 2,
