@@ -250,7 +250,7 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 | Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive so every task has at least one relevant candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 
 The page header also reads `task_results` for the latest available evaluation
-timestamp. Configured scope presets (`Overall`, `Core`, and `Core-EN`) expand
+timestamp. Configured scope presets (`Overall`, `Core`, and `Core (EN)`) expand
 to their configured benchmark components before querying the leaderboard.
 `Custom` expands from repeated `bench=` query parameters. Empty `view=Custom`
 with no `bench=` values represents the cleared benchmark set.
@@ -813,11 +813,11 @@ For overall scope presets:
   retrieval, reasoning-heavy retrieval, and code retrieval
   (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`, and
   `NanoCoIR`).
-- `Core-EN`: an English-oriented core preset. It uses the `EN` task facet and
+- `Core (EN)`: an English-oriented core preset. It uses the `EN` task facet and
   keeps English-relevant retrieval anchors from the compact Core idea:
   `MNanoBEIR` grouped by `task_name`, `NanoRTEB`, `NanoMLDR`, `NanoMIRACL`,
   `NanoBRIGHT`, `NanoCoIR`, and `NanoMTEB-v2`. `NanoMIRACL` is included because
-  the other Core-EN components do not otherwise provide the canonical MIRACL
+  the other Core (EN) components do not otherwise provide the canonical MIRACL
   passage retrieval task.
 - `Custom`: a dynamic scope built from repeated `bench=` query parameters.
   NanoSet labels in the viewer toggle membership in this selected set. When
@@ -1031,13 +1031,13 @@ choices:
   `primary_languages` to keep auxiliary detector languages from cross-language
   tasks out of the selector; for example, `NanoMTEB-Dutch` exposes `nl`
   but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
-- Viewer benchmark scope exposes `Overall`, `Core`, `Core-EN`, a `Clear`
+- Viewer benchmark scope exposes `Overall`, `Core`, `Core (EN)`, a `Clear`
   action button, then the individual NanoSet labels. Scope preset buttons
   carry inline help explaining their aggregation semantics. `Overall` and
-  `Core` reset Task facets to All languages when selected; `Core-EN` selects
+  `Core` reset Task facets to All languages when selected; `Core (EN)` selects
   the `EN` facet; `Clear` pushes `view=Custom` with no `bench=` values, resets
   to All languages, is not itself selected, and shows no rows. Overall, Core,
-  Core-EN, and Custom scopes expose a Score selector for `micro` and `macro`.
+  Core (EN), and Custom scopes expose a Score selector for `micro` and `macro`.
   NanoSet labels toggle a `Custom` selection through repeated `bench=` query
   parameters, so small combinations such as `NanoJMTEB-v2` plus `NanoMTEB-v2`
   are represented directly in the URL. `MNanoBEIR` is special:
@@ -1045,7 +1045,7 @@ choices:
   `MNanoBEIR:lang_mean` as `MNanoBEIR(lang)`. These two selection keys are
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
   `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall`, `Core`,
-  and `Core-EN`, only the task-mean MNanoBEIR selection is active. Task facets live
+  and `Core (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
   inside the same leaderboard configuration panel.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
@@ -1477,7 +1477,7 @@ The final result should return both `macro_mean` and `micro_mean`. In
 
 ### 4. Overall Macro Leaderboard
 
-Overall views using `score=macro`, including the compact `Core` and `Core-EN`
+Overall views using `score=macro`, including the compact `Core` and `Core (EN)`
 leaderboards and dynamic `Custom` `bench=` selections, first average raw tasks
 into one score row per NanoSet, then compute Borda, means, and NanoSet metric
 columns. Components with a `group_by` setting, such as `MNanoBEIR` grouped by

@@ -751,6 +751,12 @@
     border-color: transparent;
   }
 
+  .refine-results-actions {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--hakari-border) 52%, transparent);
+  }
+
   .benchmark-scope-divider {
     border-top-color: color-mix(in srgb, var(--hakari-border) 52%, transparent);
   }

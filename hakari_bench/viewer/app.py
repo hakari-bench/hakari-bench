@@ -1219,7 +1219,7 @@ def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
     if CLEAR_SCOPE_NAME in available_views:
         return available_views
     views = list(available_views)
-    insert_after = "Core-EN" if "Core-EN" in views else "Core" if "Core" in views else "Overall"
+    insert_after = "Core (EN)" if "Core (EN)" in views else "Core" if "Core" in views else "Overall"
     if insert_after in views:
         views.insert(views.index(insert_after) + 1, CLEAR_SCOPE_NAME)
     else:
@@ -1256,7 +1256,7 @@ def _scope_preset_query_payload(
     scope_filter_state = filter_state
     if view_name in {"Overall", "Core", CLEAR_SCOPE_NAME}:
         scope_filter_state = _filter_state_with_languages(filter_state, ())
-    elif view_name == "Core-EN":
+    elif view_name == "Core (EN)":
         scope_filter_state = _filter_state_with_languages(filter_state, ("en",))
     query_payload = state_payload(
         result=result,
@@ -1354,10 +1354,10 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
             "Shows the compact core benchmark set.",
             "Core is a compact scope for the main leaderboard. It includes MNanoBEIR, NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want a smaller HAKARI-Bench comparison before drilling into a specific Nano suite or language. With Macro scoring, MNanoBEIR is first averaged by BEIR source task across languages, then contributes as one NanoSet.",
         ),
-        "Core-EN": (
-            "Benchmark scope: Core-EN",
+        "Core (EN)": (
+            "Benchmark scope: Core (EN)",
             "Shows the English-oriented core benchmark set.",
-            "Core-EN starts from the compact Core idea and keeps the English-relevant retrieval anchors: MNanoBEIR task mean, NanoRTEB, NanoMLDR, NanoMIRACL, NanoBRIGHT, NanoCoIR, and NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core-EN also switches Task facets to EN so multilingual suites contribute their English slices.",
+            "Core (EN) starts from the compact Core idea and keeps the English-relevant retrieval anchors: MNanoBEIR task mean, NanoRTEB, NanoMLDR, NanoMIRACL, NanoBRIGHT, NanoCoIR, and NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core (EN) also switches Task facets to EN so multilingual suites contribute their English slices.",
         ),
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
@@ -1541,7 +1541,7 @@ def _score_metric_label(metric: str) -> str:
 
 
 def _view_group(view_name: str) -> str:
-    overall_views = {"All", "Core", "Core-EN", "Group", "Overall", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
+    overall_views = {"All", "Core", "Core (EN)", "Group", "Overall", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
     if view_name in overall_views or view_name.startswith("Overall"):
         return "Scope presets"
     return "Nano suites"
@@ -1551,7 +1551,7 @@ def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
     priority = {
         "Overall": 0,
         "Core": 1,
-        "Core-EN": 2,
+        "Core (EN)": 2,
         CLEAR_SCOPE_NAME: 3,
         CUSTOM_SCOPE_NAME: 4,
         "MNanoBEIR": 0,
@@ -2083,7 +2083,7 @@ def render_controls(
               {_leaderboard_control_hx_attrs()}
               hx-trigger="change, submit">
           {filter_hidden_html}
-          <div class="mb-2 flex flex-wrap items-center justify-end gap-2">
+          <div class="refine-results-actions flex flex-wrap items-center gap-2">
           <label class="inline-flex items-center gap-2">
             <input type="hidden" name="rank_filtered" value="0">
             <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
@@ -2451,7 +2451,10 @@ def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: F
     visible_rows = [row for row in rows if filter_context.is_visible(row)]
     if not visible_rows:
         return {}
-    return {row.model_name: row.borda_score for row in visible_rows}
+    max_score = max(row.borda_score for row in visible_rows)
+    if max_score <= 0:
+        return {row.model_name: 0.0 for row in visible_rows}
+    return {row.model_name: (row.borda_score / max_score) * 100.0 for row in visible_rows}
 
 
 def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:

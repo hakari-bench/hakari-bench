@@ -109,7 +109,7 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         None,
         None,
     ]
-    core_en_overall = config.overall_for_view("Core-EN")
+    core_en_overall = config.overall_for_view("Core (EN)")
     assert core_en_overall is not None
     assert core_en_overall.benchmark_names == core_en_benchmarks
     assert [component.group_by for component in core_en_overall.benchmark_components] == [
@@ -124,7 +124,7 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
     assert config.view_names[: len(all_benchmarks) + 3] == [
         "Overall",
         "Core",
-        "Core-EN",
+        "Core (EN)",
         *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
@@ -217,7 +217,7 @@ def test_primary_language_view_benchmarks_define_primary_languages() -> None:
 def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
     assert _view_group("All") == "Scope presets"
     assert _view_group("Core") == "Scope presets"
-    assert _view_group("Core-EN") == "Scope presets"
+    assert _view_group("Core (EN)") == "Scope presets"
     assert _view_group("Clear") == "Scope presets"
     assert _view_group("Custom") == "Scope presets"
     assert _view_group("Group") == "Scope presets"
@@ -1052,8 +1052,8 @@ overalls:
     label: Core
     benchmarks:
       - BenchA
-  - name: Core-EN
-    label: Core-EN
+  - name: Core (EN)
+    label: Core (EN)
     benchmarks:
       - BenchB
 """.strip(),
@@ -1180,11 +1180,11 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
         is_overall=True,
         expected_tasks=0,
         rows=[],
-        available_views=["Overall", "Core", "Core-EN", "BenchA", "BenchB", "BenchC"],
+        available_views=["Overall", "Core", "Core (EN)", "BenchA", "BenchB", "BenchC"],
         available_view_labels={
             "Overall": "Overall",
             "Core": "Core",
-            "Core-EN": "Core-EN",
+            "Core (EN)": "Core (EN)",
             "BenchA": "BenchA",
             "BenchB": "BenchB",
             "BenchC": "BenchC",
@@ -1201,13 +1201,13 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
         filter_state=FilterState(language_filters=("ja",)),
     )
 
-    assert "Core-EN" in html
+    assert "Core (EN)" in html
     assert "Clear" in html
     assert 'class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"' in html
     assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
-    core_en_button = html.split(">Core-EN</button>", 1)[0].rsplit("<button", 1)[1]
+    core_en_button = html.split(">Core (EN)</button>", 1)[0].rsplit("<button", 1)[1]
     clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
-    assert "view=Core-EN" in core_en_button
+    assert "view=Core+%28EN%29" in core_en_button
     assert "lang_filter=en" in core_en_button
     assert 'data-icon="eraser"' in clear_button
     assert 'data-icon="rotate-ccw"' not in clear_button
@@ -2148,6 +2148,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Recalculate ranks from filters" in response.text
     assert "Borda ranks, mean ranks, and visible means are recalculated" in response.text
     assert "Apply text filters" not in response.text
+    assert 'class="refine-results-actions flex flex-wrap items-center gap-2"' in response.text
+    assert 'class="mb-2 flex flex-wrap items-center justify-end gap-2"' not in response.text
     assert response.text.index("Refine results") < response.text.index("Recalculate ranks from filters") < response.text.index("Model family")
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
@@ -2841,7 +2843,7 @@ def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row
     assert body.count('data-filter-hidden="true"') == 1
 
 
-def test_leaderboard_model_name_borda_score_bar_uses_raw_borda_score_width() -> None:
+def test_leaderboard_model_name_borda_score_bar_scales_to_visible_max_score() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -2852,24 +2854,24 @@ def test_leaderboard_model_name_borda_score_bar_uses_raw_borda_score_width() -> 
                 borda_rank=1,
                 mean_rank=1,
                 model_name="model/top",
-                borda_score=91.91,
-                mean_score=91.91,
+                borda_score=88.10,
+                mean_score=88.10,
                 task_count=1,
             ),
             LeaderboardRow(
                 borda_rank=2,
                 mean_rank=2,
                 model_name="model/middle",
-                borda_score=79.40,
-                mean_score=79.40,
+                borda_score=44.05,
+                mean_score=44.05,
                 task_count=1,
             ),
             LeaderboardRow(
                 borda_rank=3,
                 mean_rank=3,
                 model_name="model/bottom",
-                borda_score=61.87,
-                mean_score=61.87,
+                borda_score=3.30,
+                mean_score=3.30,
                 task_count=1,
             ),
         ],
@@ -2885,11 +2887,11 @@ def test_leaderboard_model_name_borda_score_bar_uses_raw_borda_score_width() -> 
         filter_context=row_filter_context(result.rows, FilterState(filters_active=True, model_filter="middle")),
     )
 
-    assert 'class="borda-score-bar" value="91.91" max="100"' in body
-    assert 'class="borda-score-bar" value="79.40" max="100"' in body
-    assert 'class="borda-score-bar" value="61.87" max="100"' in body
-    assert 'class="borda-score-bar" value="79.40" max="100"' in filtered_body
-    assert 'class="borda-score-bar" value="100.00" max="100"' not in filtered_body
+    assert 'class="borda-score-bar" value="100.00" max="100"' in body
+    assert 'class="borda-score-bar" value="50.00" max="100"' in body
+    assert 'class="borda-score-bar" value="3.75" max="100"' in body
+    assert filtered_body.count('class="borda-score-bar"') == 1
+    assert 'class="borda-score-bar" value="100.00" max="100"' in filtered_body
 
 
 def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:
