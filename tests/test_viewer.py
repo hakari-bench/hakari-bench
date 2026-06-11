@@ -4287,7 +4287,51 @@ def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("arguana") == "arguana"
     assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO"
     assert _metric_column_label("NanoMMTEB::NanoArguAna") == "NanoMMTEB::NanoArguAna"
+    assert _metric_column_label("NanoBRIGHT::NanoBRIGHTFooBar") == "NanoBRIGHT::FooBar"
+    assert _metric_column_label("NanoBRIGHT::NanoBRIGHT") == "NanoBRIGHT"
+    assert _metric_column_label("NanoBrightAops", parent_label="NanoBRIGHT") == "Aops"
+    assert _metric_column_label("NanoBRIGHT", parent_label="NanoBRIGHT") == "NanoBRIGHT"
     assert _metric_column_label("MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana") == "NanoBEIR-ar::arguana"
+
+
+def test_task_score_column_headers_strip_repeated_suite_prefix_from_subtask() -> None:
+    result = LeaderboardResult(
+        view_name="NanoBRIGHT",
+        view_label="NanoBRIGHT",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[],
+        available_views=["NanoBRIGHT"],
+        available_view_labels={"NanoBRIGHT": "NanoBRIGHT"},
+        score_groups=[],
+        metric_columns=["NanoBRIGHT::NanoBRIGHTFooBar", "NanoBRIGHT::NanoBRIGHT"],
+    )
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+
+    assert '<span class="block w-full truncate">NanoBRIGHT</span>' in head
+    assert '<span class="block max-w-full truncate font-normal">FooBar</span>' in head
+    assert '<span class="block max-w-full truncate font-normal">NanoBRIGHTFooBar</span>' not in head
+
+
+def test_task_score_column_headers_strip_view_prefix_from_single_task_name() -> None:
+    result = LeaderboardResult(
+        view_name="NanoBRIGHT",
+        view_label="NanoBRIGHT",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[],
+        available_views=["NanoBRIGHT"],
+        available_view_labels={"NanoBRIGHT": "NanoBRIGHT"},
+        score_groups=[],
+        metric_columns=["NanoBrightAops"],
+    )
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+
+    assert 'data-tooltip="Task score column for this benchmark task. Display: Aops.' in head
+    assert '>Aops</span>' in head
+    assert '>BrightAops</span>' not in head
 
 
 def test_metric_column_labels_keep_full_name_when_short_labels_collide() -> None:

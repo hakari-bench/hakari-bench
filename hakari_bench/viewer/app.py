@@ -2296,7 +2296,11 @@ def render_table_head(
     benchmark_docs: BenchmarkDocs | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
-    metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
+    metric_labels = _metric_column_labels(
+        result.metric_columns,
+        overrides=result.metric_column_labels,
+        parent_label=result.view_name,
+    )
     columns = [
         ("model_name", "Model Name", "asc", "left", False, ""),
         ("borda_rank", "Borda", "asc", "right", False, ""),
@@ -2454,7 +2458,11 @@ def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterSta
     filter_context = row_filter_context(result.rows, filter_state or FilterState())
     visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
     model_views = model_cell_views(result.rows)
-    metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
+    metric_labels = _metric_column_labels(
+        result.metric_columns,
+        overrides=result.metric_column_labels,
+        parent_label=result.view_name,
+    )
     metric_headers = _csv_metric_headers(result=result, metric_labels=metric_labels)
     output = StringIO()
     writer = csv.writer(output, lineterminator="\n")
@@ -2964,19 +2972,39 @@ def _fmt_percent_delta(value: float | None) -> str:
     return "" if value is None else f"{value:+.1f}%"
 
 
-def _metric_column_label(column: str) -> str:
+def _metric_column_label(column: str, *, parent_label: str | None = None) -> str:
     parts = column.split("::")
     if len(parts) >= 3:
         dataset = parts[-2].rsplit("/", 1)[-1]
         task = parts[-1]
         if dataset == task:
             return dataset
+        task = _strip_repeated_task_prefix(group_label=dataset, task_label=task)
         return f"{dataset}::{task}"
     if len(parts) == 2:
         if parts[0] == parts[1]:
             return parts[0]
-        return column
+        task = _strip_repeated_task_prefix(group_label=parts[0], task_label=parts[1])
+        return f"{parts[0]}::{task}"
+    if parent_label is not None:
+        parent = parent_label.rsplit("/", 1)[-1]
+        if _starts_with_ignore_case(column, parent):
+            stripped = column[len(parent) :]
+            if stripped:
+                return stripped
+            return column
     return column.removeprefix("Nano")
+
+
+def _strip_repeated_task_prefix(*, group_label: str, task_label: str) -> str:
+    if not _starts_with_ignore_case(task_label, group_label):
+        return task_label
+    stripped = task_label[len(group_label) :]
+    return stripped or task_label
+
+
+def _starts_with_ignore_case(value: str, prefix: str) -> bool:
+    return value.casefold().startswith(prefix.casefold())
 
 
 def _metric_column_label_markup(label: str) -> str:
@@ -2994,9 +3022,12 @@ def _metric_column_label_markup(label: str) -> str:
 def _metric_column_header_parts(label: str) -> tuple[str, str]:
     parts = [part for part in label.split("::") if part]
     if len(parts) >= 3:
-        return parts[-2].rsplit("/", 1)[-1], parts[-1]
+        group_label = parts[-2].rsplit("/", 1)[-1]
+        return group_label, _strip_repeated_task_prefix(group_label=group_label, task_label=parts[-1])
     if len(parts) == 2:
-        return parts[0], "" if parts[0] == parts[1] else parts[1]
+        return parts[0], "" if parts[0] == parts[1] else _strip_repeated_task_prefix(
+            group_label=parts[0], task_label=parts[1]
+        )
     return label, ""
 
 
@@ -3014,9 +3045,17 @@ def _metric_column_tooltip(*, label: str, full_metric_name: str, result: Leaderb
     return f"{base} Display: {label}. Full key: {full_metric_name}"
 
 
-def _metric_column_labels(columns: list[str], *, overrides: dict[str, str] | None = None) -> dict[str, str]:
+def _metric_column_labels(
+    columns: list[str],
+    *,
+    overrides: dict[str, str] | None = None,
+    parent_label: str | None = None,
+) -> dict[str, str]:
     overrides = overrides or {}
-    labels_by_column = {column: overrides.get(column) or _metric_column_label(column) for column in columns}
+    labels_by_column = {
+        column: overrides.get(column) or _metric_column_label(column, parent_label=parent_label)
+        for column in columns
+    }
     counts: dict[str, int] = {}
     for label in labels_by_column.values():
         counts[label] = counts.get(label, 0) + 1
