@@ -21,6 +21,7 @@ permissions:
   packages: write
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   IMAGE_NAME: ghcr.io/hakari-bench/hakari-bench-leaderboard
   IMAGE_TAG: hf-space-docker-latest
 
