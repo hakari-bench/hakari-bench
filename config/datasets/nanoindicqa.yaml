@@ -20,8 +20,42 @@ splits:
 metadata:
   language: multilingual
   category: natural_language
-  short_description: NanoIndicQA retrieval benchmark.
-  description: NanoIndicQA is a Nano-style retrieval dataset hosted by hakari-bench.
+  short_description: Compact multilingual IndicQA retrieval benchmark (11 Indic languages).
+  description: NanoIndicQA is a compact retrieval benchmark derived from IndicQA
+    (via mteb/IndicQARetrieval), a manually curated cloze-style reading comprehension
+    dataset covering 11 Indic languages, repurposed to retrieve the relevant context
+    for each question. IndicQA was introduced as part of the IndicXTREME benchmark.
+  citation_keys:
+  - doddapaneni2023indicxtreme
+  references:
+  - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+      Benchmark and Models for Indic Languages'
+    authors:
+    - Sumanth Doddapaneni
+    - Rahul Aralikatte
+    - Gowtham Ramesh
+    - Shreya Goyal
+    - Mitesh M. Khapra
+    - Anoop Kunchukuttan
+    - Pratyush Kumar
+    year: 2023
+    url: https://aclanthology.org/2023.acl-long.693/
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.18653/v1/2023.acl-long.693
+  - title: mteb/IndicQARetrieval Hugging Face dataset
+    url: https://huggingface.co/datasets/mteb/IndicQARetrieval
+    is_paper: false
+    source_confidence: probably_correct
+  bibtex: |
+    @inproceedings{doddapaneni2023indicxtreme,
+      title = {Towards Leaving No {Indic} Language Behind: Building Monolingual Corpora, Benchmark and Models for {Indic} Languages},
+      author = {Doddapaneni, Sumanth and Aralikatte, Rahul and Ramesh, Gowtham and Goyal, Shreya and Khapra, Mitesh M. and Kunchukuttan, Anoop and Kumar, Pratyush},
+      booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
+      year = {2023},
+      url = {https://aclanthology.org/2023.acl-long.693/},
+      doi = {10.18653/v1/2023.acl-long.693}
+    }
 task_metadata:
   as:
     language: as
@@ -41,10 +75,12 @@ task_metadata:
     languages:
     - as
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -96,10 +132,12 @@ task_metadata:
     languages:
     - bn
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -151,10 +189,12 @@ task_metadata:
     languages:
     - gu
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -205,10 +245,12 @@ task_metadata:
     languages:
     - hi
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -259,10 +301,12 @@ task_metadata:
     languages:
     - kn
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -313,10 +357,12 @@ task_metadata:
     languages:
     - ml
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -367,10 +413,12 @@ task_metadata:
     languages:
     - mr
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -422,10 +470,12 @@ task_metadata:
     languages:
     - or
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -476,10 +526,12 @@ task_metadata:
     languages:
     - pa
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -530,10 +582,12 @@ task_metadata:
     languages:
     - ta
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
@@ -584,10 +638,12 @@ task_metadata:
     languages:
     - te
     references:
-    - title: IndicQARetrieval source reference
-      url: https://arxiv.org/abs/2212.05409
-      is_paper: false
-      source_confidence: probably_correct
+    - title: 'Towards Leaving No Indic Language Behind: Building Monolingual Corpora,
+        Benchmark and Models for Indic Languages'
+      url: https://aclanthology.org/2023.acl-long.693/
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.18653/v1/2023.acl-long.693
     - title: mteb/IndicQARetrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/IndicQARetrieval
       is_paper: false
