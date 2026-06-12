@@ -23,8 +23,46 @@ splits:
 metadata:
   language: multilingual
   category: natural_language
-  short_description: NanoMuPLeR retrieval benchmark.
-  description: NanoMuPLeR is a Nano-style retrieval dataset hosted by hakari-bench.
+  short_description: Compact multilingual parallel legal retrieval benchmark (14 EU
+    languages).
+  description: NanoMuPLeR is a compact retrieval benchmark derived from MuPLeR-retrieval
+    (mteb/MuPLeR-retrieval), a multilingual parallel legal dataset built from the
+    European Union's DGT-Acquis corpus, with human-translated parallel passages and
+    synthetic queries across 14 European languages. The paper reference describes
+    the underlying EU parallel corpora (including DGT-Acquis); the retrieval task
+    itself was assembled by MTEB.
+  citation_keys:
+  - steinberger2014euparallel
+  references:
+  - title: An overview of the European Union's highly multilingual parallel corpora
+    authors:
+    - Ralf Steinberger
+    - Mohamed Ebrahim
+    - Alexandros Poulis
+    - Manuel Carrasco-Benitez
+    - Patrick Schlüter
+    - Marek Przybyszewski
+    - Signe Gilbro
+    year: 2014
+    url: https://doi.org/10.1007/s10579-014-9277-0
+    is_paper: true
+    source_confidence: definitive_paper_link
+    doi: 10.1007/s10579-014-9277-0
+  - title: mteb/MuPLeR-retrieval Hugging Face dataset
+    url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
+    is_paper: false
+    source_confidence: probably_correct
+  bibtex: |
+    @article{steinberger2014euparallel,
+      title = {An overview of the {European} {Union}'s highly multilingual parallel corpora},
+      author = {Steinberger, Ralf and Ebrahim, Mohamed and Poulis, Alexandros and Carrasco-Benitez, Manuel and Schl{\"u}ter, Patrick and Przybyszewski, Marek and Gilbro, Signe},
+      journal = {Language Resources and Evaluation},
+      volume = {48},
+      pages = {679--707},
+      year = {2014},
+      url = {https://doi.org/10.1007/s10579-014-9277-0},
+      doi = {10.1007/s10579-014-9277-0}
+    }
 task_metadata:
   el:
     language: el
@@ -45,10 +83,11 @@ task_metadata:
     languages:
     - el
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -100,10 +139,11 @@ task_metadata:
     languages:
     - en
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -155,10 +195,11 @@ task_metadata:
     languages:
     - es
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -210,10 +251,11 @@ task_metadata:
     languages:
     - fi
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -265,10 +307,11 @@ task_metadata:
     languages:
     - fr
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -320,10 +363,11 @@ task_metadata:
     languages:
     - it
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -375,10 +419,11 @@ task_metadata:
     languages:
     - lt
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -431,10 +476,11 @@ task_metadata:
     languages:
     - lv
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -486,10 +532,11 @@ task_metadata:
     languages:
     - nl
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -541,10 +588,11 @@ task_metadata:
     languages:
     - pl
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -596,10 +644,11 @@ task_metadata:
     languages:
     - pt
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -653,10 +702,11 @@ task_metadata:
     languages:
     - sk
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -710,10 +760,11 @@ task_metadata:
     languages:
     - sl
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false
@@ -773,10 +824,11 @@ task_metadata:
     languages:
     - sv
     references:
-    - title: MuPLeR-retrieval source reference
-      url: https://link.springer.com/article/10.1007/s10579-014-9277-0
-      is_paper: false
-      source_confidence: probably_correct
+    - title: An overview of the European Union's highly multilingual parallel corpora
+      url: https://doi.org/10.1007/s10579-014-9277-0
+      is_paper: true
+      source_confidence: definitive_paper_link
+      doi: 10.1007/s10579-014-9277-0
     - title: mteb/MuPLeR-retrieval Hugging Face dataset
       url: https://huggingface.co/datasets/mteb/MuPLeR-retrieval
       is_paper: false

@@ -24,6 +24,7 @@ from hakari_bench.viewer.config import (
     benchmark_name_from_selection_key,
     benchmark_selection_key,
     load_viewer_config,
+    split_benchmark_selection_key,
 )
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
@@ -648,7 +649,7 @@ def _leaderboard_control_hx_attrs() -> str:
 def render_leaderboard_loading_toast() -> str:
     return """
     <div id="leaderboard-loading-toast"
-         class="leaderboard-loading-toast fixed bottom-4 right-4 z-50 border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm"
+         class="leaderboard-loading-toast fixed bottom-4 right-4 z-50 border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-800 shadow-sm"
          role="status" aria-live="polite" aria-atomic="true">
       <span class="loading-spinner" aria-hidden="true"></span>
       <span>Loading leaderboard...</span>
@@ -999,6 +1000,8 @@ def render_tabs(
                     (0, benchmark_selection_key("MNanoBEIR", "task_mean"), "M-BEIR(task)"),
                     (1, benchmark_selection_key("MNanoBEIR", "lang_mean"), "M-BEIR(lang)"),
                 ]:
+                    _benchmark_name, score_group = split_benchmark_selection_key(selection_key)
+                    score_group = score_group or "task_mean"
                     selection_query_payload = _benchmark_toggle_query_payload(
                         result=result,
                         selection_key=selection_key,
@@ -1019,6 +1022,7 @@ def render_tabs(
                                 query_payload=selection_query_payload,
                                 doc=doc,
                                 benchmark_name=selection_key,
+                                help_content=_mnanobeir_scope_help(score_group),
                             ),
                         )
                     )
@@ -1050,6 +1054,7 @@ def render_tabs(
                             query_payload=group_query_payload,
                             doc=doc,
                             benchmark_name=view_name,
+                            help_content=_mnanobeir_scope_help(score_group),
                         ),
                     )
                 )
@@ -1151,16 +1156,33 @@ def _render_benchmark_view_button(
     query_payload: QueryState,
     doc: BenchmarkDoc | None,
     benchmark_name: str | None = None,
+    help_content: tuple[str, str, str] | None = None,
 ) -> str:
     classes = _control_button_classes(active=active)
     data_attr = "" if benchmark_name is None else f' data-benchmark-toggle="{escape(benchmark_name, quote=True)}"'
-    if doc is None:
+    if doc is None and help_content is None:
         return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                       hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                       {_leaderboard_control_hx_attrs()}>
                       {escape(label)}
                     </button>"""
-    doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
+    if doc is not None and help_content is None:
+        doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
+        return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+                  <button type="button" class="py-1 pl-2 pr-0 text-left"
+                    {data_attr}
+                    hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                    {_leaderboard_control_hx_attrs()}>
+                    {escape(label)}
+                  </button>
+                  <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
+                </span>"""
+    icon_triggers = []
+    if doc is not None:
+        icon_triggers.append(_render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview"))
+    if help_content is not None:
+        title, summary, details = help_content
+        icon_triggers.append(_render_button_help_icon(title=title, summary=summary, details=details))
     return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 {data_attr}
@@ -1168,15 +1190,36 @@ def _render_benchmark_view_button(
                 {_leaderboard_control_hx_attrs()}>
                 {escape(label)}
               </button>
-              <span class="inline-flex items-center pl-0.5 pr-2">{doc_trigger}</span>
+              <span class="inline-flex items-center gap-0.5 pl-0.5 pr-2">{''.join(icon_triggers)}</span>
             </span>"""
+
+
+def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:
+    matrix_note = (
+        "MNanoBEIR is a language x task benchmark matrix: each raw row is one "
+        "NanoBEIR language dataset, such as NanoBEIR-ja, crossed with one "
+        "BEIR-style task, such as NanoArguAna or NanoSciFact. Showing every "
+        "language-task cell as an individual benchmark scope would make the "
+        "picker hard to scan, so the viewer exposes two grouped views."
+    )
+    if score_group == "lang_mean":
+        return (
+            "Benchmark scope: NanoBEIR(lang)",
+            "Averages the multilingual NanoBEIR matrix by language dataset.",
+            f"{matrix_note}\n\nNanoBEIR(lang) first groups rows by language dataset, such as NanoBEIR-en, NanoBEIR-ja, or NanoBEIR-de, averaging all tasks within each language before the final score is computed. Use it when you want language coverage and per-language robustness to be the visible unit.\n\nThis differs from NanoBEIR(task), which groups by BEIR source task first and averages languages inside each task.",
+        )
+    return (
+        "Benchmark scope: NanoBEIR(task)",
+        "Averages the multilingual NanoBEIR matrix by BEIR source task.",
+        f"{matrix_note}\n\nNanoBEIR(task) first groups rows by BEIR-style task, such as ArguAna, FEVER, or SciFact, averaging all available languages within each task before the final score is computed. Use it when you want task behavior to be the visible unit while smoothing over language coverage.\n\nThis differs from NanoBEIR(lang), which groups by language dataset first and averages tasks inside each language.",
+    )
 
 
 def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
     if CLEAR_SCOPE_NAME in available_views:
         return available_views
     views = list(available_views)
-    insert_after = "Core-EN" if "Core-EN" in views else "Core" if "Core" in views else "Overall"
+    insert_after = "Core (EN)" if "Core (EN)" in views else "Core" if "Core" in views else "Overall"
     if insert_after in views:
         views.insert(views.index(insert_after) + 1, CLEAR_SCOPE_NAME)
     else:
@@ -1213,7 +1256,7 @@ def _scope_preset_query_payload(
     scope_filter_state = filter_state
     if view_name in {"Overall", "Core", CLEAR_SCOPE_NAME}:
         scope_filter_state = _filter_state_with_languages(filter_state, ())
-    elif view_name == "Core-EN":
+    elif view_name == "Core (EN)":
         scope_filter_state = _filter_state_with_languages(filter_state, ("en",))
     query_payload = state_payload(
         result=result,
@@ -1311,10 +1354,10 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
             "Shows the compact core benchmark set.",
             "Core is a compact scope for the main leaderboard. It includes MNanoBEIR, NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want a smaller HAKARI-Bench comparison before drilling into a specific Nano suite or language. With Macro scoring, MNanoBEIR is first averaged by BEIR source task across languages, then contributes as one NanoSet.",
         ),
-        "Core-EN": (
-            "Benchmark scope: Core-EN",
+        "Core (EN)": (
+            "Benchmark scope: Core (EN)",
             "Shows the English-oriented core benchmark set.",
-            "Core-EN starts from the compact Core idea and keeps the English-relevant retrieval anchors: MNanoBEIR task mean, NanoRTEB, NanoMLDR, NanoMIRACL, NanoBRIGHT, NanoCoIR, and NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core-EN also switches Task facets to EN so multilingual suites contribute their English slices.",
+            "Core (EN) starts from the compact Core idea and keeps the English-relevant retrieval anchors: MNanoBEIR task mean, NanoRTEB, NanoMLDR, NanoMIRACL, NanoBRIGHT, NanoCoIR, and NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core (EN) also switches Task facets to EN so multilingual suites contribute their English slices.",
         ),
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
@@ -1418,8 +1461,8 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         query = urlencode(query_payload, doseq=True)
         safeguard_help = _render_help_tooltip(
             "Safeguard positives",
-            "Keeps reranking tasks comparable by ensuring each candidate list contains at least one relevant positive.",
-            "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder a fixed candidate list, usually produced by BM25.\n\nWhen Safeguard positives is enabled, the candidate list uses the rank-101 safeguard so every evaluated task includes at least one known positive document. This is the default because it avoids scoring a reranker on tasks where the relevant document never appears in the candidate set.\n\nTurn it off only when you intentionally want to inspect reranking behavior without that safeguard.",
+            "Keeps reranking comparable by using the safeguarded hybrid candidate set.",
+            "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder the fixed reranking_hybrid candidate set.\n\nHybrid means RRF over BM25 and dense candidate rankings: BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them into the top-100 hybrid candidates for each query.\n\nWhen Safeguard positives is enabled, a query whose top-100 hybrid candidates contain no qrels-positive document gets an optional rank-101 safeguard positive appended. This keeps reranker scores from being dominated by candidate lists where the reranker had no relevant document to promote.\n\nTurn it off only when you intentionally want to inspect reranking on the raw hybrid top-100 without the appended safeguard positive.",
         )
         safeguard_toggle = f"""
                 <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
@@ -1498,7 +1541,7 @@ def _score_metric_label(metric: str) -> str:
 
 
 def _view_group(view_name: str) -> str:
-    overall_views = {"All", "Core", "Core-EN", "Group", "Overall", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
+    overall_views = {"All", "Core", "Core (EN)", "Group", "Overall", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
     if view_name in overall_views or view_name.startswith("Overall"):
         return "Scope presets"
     return "Nano suites"
@@ -1508,7 +1551,7 @@ def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
     priority = {
         "Overall": 0,
         "Core": 1,
-        "Core-EN": 2,
+        "Core (EN)": 2,
         CLEAR_SCOPE_NAME: 3,
         CUSTOM_SCOPE_NAME: 4,
         "MNanoBEIR": 0,
@@ -1752,7 +1795,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Efficiency variants",
               "Adds non-base rows that compare quality against storage, dimension, and reranking trade-offs.",
-              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse Dims includes sparse encoder active-dimension cap variants, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
+              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -1770,7 +1813,7 @@ def render_display_controls(
           </label>
           <label class="inline-flex items-center gap-2">
             <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
-            <span>Sparse Dims</span>
+            <span>Sparse pruning</span>
           </label>
         </div>
       </form>
@@ -2040,18 +2083,6 @@ def render_controls(
               {_leaderboard_control_hx_attrs()}
               hx-trigger="change, submit">
           {filter_hidden_html}
-          <div class="mb-2 flex flex-wrap items-center justify-end gap-2">
-          <label class="inline-flex items-center gap-2">
-            <input type="hidden" name="rank_filtered" value="0">
-            <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
-            <span class="font-medium text-zinc-800">Recalculate ranks from filters</span>
-            {_render_help_tooltip(
-                "Recalculate ranks from filters",
-                "Recomputes ranking numbers using only the currently filtered result set.",
-                "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Refine results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
-            )}
-          </label>
-        </div>
         <div class="grid gap-2">
           <div class="min-w-0 space-y-2">
             {_render_model_type_controls(
@@ -2067,7 +2098,7 @@ def render_controls(
                     "Model filter searches the displayed model names and hides rows that do not match.\n\nYou can search for multiple model-name keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, jina bge keeps rows whose model name contains jina or bge.\n\nModel keywords under 3 characters are ignored to avoid accidental broad matches. This filter changes which model rows are visible. It does not change the selected benchmark scope or which task columns are available.",
                 )}
                 <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
-                       class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
+                       class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
               <label class="flex min-w-64 flex-1 items-center gap-2">
@@ -2078,7 +2109,7 @@ def render_controls(
                     "Task filter searches task identifiers such as benchmark name, dataset name, split name, task name, and task key.\n\nYou can search for multiple task keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, arguana fever keeps task columns or task rows whose identifiers contain arguana or fever. Short task names such as nq also work because task keywords are accepted from 2 characters.\n\nWhen task columns are visible, matching task columns remain and non-matching columns are hidden. The underlying model ranking keeps its original context unless Recalculate ranks from filters is enabled. One-character task keywords are ignored.",
                 )}
                 <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
-                       class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
+                       class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
             </div>
@@ -2090,7 +2121,7 @@ def render_controls(
                 {_render_help_tooltip(
                     "Efficiency filters",
                     "Filters already-included variant rows by dimensions or quantization type.",
-                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Sparse Dims variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
+                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Sparse pruning variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
                 )}
                 {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
                 {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
@@ -2106,6 +2137,18 @@ def render_controls(
                 {_render_filter_details(name="dtype_filter", summary="Dtype", icon="type", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
                 {_render_filter_details(name="attn_filter", summary="Attention", icon="scan-eye", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
                 {_render_filter_details(name="prompt_filter", summary="Prompt", icon="message-square-text", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+              </div>
+              <div class="refine-results-actions flex flex-wrap items-center gap-2">
+                <label class="inline-flex items-center gap-2">
+                  <input type="hidden" name="rank_filtered" value="0">
+                  <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
+                  {_control_label(icon="sigma", text="Recalculate ranks from filters")}
+                  {_render_help_tooltip(
+                      "Recalculate ranks from filters",
+                      "Recomputes ranking numbers using only the currently filtered result set.",
+                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Refine results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
+                  )}
+                </label>
               </div>
             </div>
           </div>
@@ -2180,7 +2223,7 @@ def _render_model_type_controls(
 
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
     input_class = (
-        "w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_class = "text-cyan-700" if filter_state.has_task_length_filters else ""
@@ -2253,7 +2296,11 @@ def render_table_head(
     benchmark_docs: BenchmarkDocs | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
-    metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
+    metric_labels = _metric_column_labels(
+        result.metric_columns,
+        overrides=result.metric_column_labels,
+        parent_label=result.view_name,
+    )
     columns = [
         ("model_name", "Model Name", "asc", "left", False, ""),
         ("borda_rank", "Borda", "asc", "right", False, ""),
@@ -2404,20 +2451,21 @@ def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: F
     visible_rows = [row for row in rows if filter_context.is_visible(row)]
     if not visible_rows:
         return {}
-    scores = [row.borda_score for row in visible_rows]
-    min_score = min(scores)
-    max_score = max(scores)
-    if max_score <= min_score:
-        return {row.model_name: 100.0 for row in visible_rows}
-    score_range = max_score - min_score
-    return {row.model_name: ((row.borda_score - min_score) / score_range) * 100.0 for row in visible_rows}
+    max_score = max(row.borda_score for row in visible_rows)
+    if max_score <= 0:
+        return {row.model_name: 0.0 for row in visible_rows}
+    return {row.model_name: (row.borda_score / max_score) * 100.0 for row in visible_rows}
 
 
 def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:
     filter_context = row_filter_context(result.rows, filter_state or FilterState())
     visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
     model_views = model_cell_views(result.rows)
-    metric_labels = _metric_column_labels(result.metric_columns, overrides=result.metric_column_labels)
+    metric_labels = _metric_column_labels(
+        result.metric_columns,
+        overrides=result.metric_column_labels,
+        parent_label=result.view_name,
+    )
     metric_headers = _csv_metric_headers(result=result, metric_labels=metric_labels)
     output = StringIO()
     writer = csv.writer(output, lineterminator="\n")
@@ -2905,7 +2953,12 @@ def _fmt_params(value: int | None) -> str:
 
 
 def _fmt_max_len(value: int | None) -> str:
-    return "" if value is None else f"{value:,}"
+    if value is None:
+        return ""
+    if value >= 1_024:
+        thousands = math.floor(value / 1_024 + 0.5)
+        return f"{thousands}K"
+    return f"{value:,}"
 
 
 def _fmt_embedding_dim(value: int | None) -> str:
@@ -2922,19 +2975,39 @@ def _fmt_percent_delta(value: float | None) -> str:
     return "" if value is None else f"{value:+.1f}%"
 
 
-def _metric_column_label(column: str) -> str:
+def _metric_column_label(column: str, *, parent_label: str | None = None) -> str:
     parts = column.split("::")
     if len(parts) >= 3:
         dataset = parts[-2].rsplit("/", 1)[-1]
         task = parts[-1]
         if dataset == task:
             return dataset
+        task = _strip_repeated_task_prefix(group_label=dataset, task_label=task)
         return f"{dataset}::{task}"
     if len(parts) == 2:
         if parts[0] == parts[1]:
             return parts[0]
-        return column
+        task = _strip_repeated_task_prefix(group_label=parts[0], task_label=parts[1])
+        return f"{parts[0]}::{task}"
+    if parent_label is not None:
+        parent = parent_label.rsplit("/", 1)[-1]
+        if _starts_with_ignore_case(column, parent):
+            stripped = column[len(parent) :]
+            if stripped:
+                return stripped
+            return column
     return column.removeprefix("Nano")
+
+
+def _strip_repeated_task_prefix(*, group_label: str, task_label: str) -> str:
+    if not _starts_with_ignore_case(task_label, group_label):
+        return task_label
+    stripped = task_label[len(group_label) :]
+    return stripped or task_label
+
+
+def _starts_with_ignore_case(value: str, prefix: str) -> bool:
+    return value.casefold().startswith(prefix.casefold())
 
 
 def _metric_column_label_markup(label: str) -> str:
@@ -2952,9 +3025,12 @@ def _metric_column_label_markup(label: str) -> str:
 def _metric_column_header_parts(label: str) -> tuple[str, str]:
     parts = [part for part in label.split("::") if part]
     if len(parts) >= 3:
-        return parts[-2].rsplit("/", 1)[-1], parts[-1]
+        group_label = parts[-2].rsplit("/", 1)[-1]
+        return group_label, _strip_repeated_task_prefix(group_label=group_label, task_label=parts[-1])
     if len(parts) == 2:
-        return parts[0], "" if parts[0] == parts[1] else parts[1]
+        return parts[0], "" if parts[0] == parts[1] else _strip_repeated_task_prefix(
+            group_label=parts[0], task_label=parts[1]
+        )
     return label, ""
 
 
@@ -2972,9 +3048,17 @@ def _metric_column_tooltip(*, label: str, full_metric_name: str, result: Leaderb
     return f"{base} Display: {label}. Full key: {full_metric_name}"
 
 
-def _metric_column_labels(columns: list[str], *, overrides: dict[str, str] | None = None) -> dict[str, str]:
+def _metric_column_labels(
+    columns: list[str],
+    *,
+    overrides: dict[str, str] | None = None,
+    parent_label: str | None = None,
+) -> dict[str, str]:
     overrides = overrides or {}
-    labels_by_column = {column: overrides.get(column) or _metric_column_label(column) for column in columns}
+    labels_by_column = {
+        column: overrides.get(column) or _metric_column_label(column, parent_label=parent_label)
+        for column in columns
+    }
     counts: dict[str, int] = {}
     for label in labels_by_column.values():
         counts[label] = counts.get(label, 0) + 1

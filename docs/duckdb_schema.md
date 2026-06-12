@@ -247,10 +247,10 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 
 | UI surface | source tables | semantics |
 | --- | --- | --- |
-| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores plus the BM25 candidate-order baseline from `score_target = 'all'`. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive so every task has at least one relevant candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores. The `reranking_hybrid` candidate set is the RRF top-100 over BM25 and dense candidate rankings; BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them. The BM25 row shown in Reranking is a candidate-order baseline, not the source of the reranking candidate set. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive when a query's hybrid top-100 has no qrels-positive candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 
 The page header also reads `task_results` for the latest available evaluation
-timestamp. Configured scope presets (`Overall`, `Core`, and `Core-EN`) expand
+timestamp. Configured scope presets (`Overall`, `Core`, and `Core (EN)`) expand
 to their configured benchmark components before querying the leaderboard.
 `Custom` expands from repeated `bench=` query parameters. Empty `view=Custom`
 with no `bench=` values represents the cleared benchmark set.
@@ -649,10 +649,12 @@ ranking rows only.
 ### `task_diagnostics`
 
 `task_diagnostics` is a notebook-friendly table for analyzing why a model did
-or did not improve under BM25 candidate reranking. The viewer also uses
-`rerank_score` for the optional fixed-candidate reranking leaderboard mode when
-`rerank_status = 'available'`, `candidate_ranking = 'bm25'`, and
-`rerank_top_k = 100` where those columns are present.
+or did not improve under fixed-candidate reranking. The viewer uses
+`rerank_score` for the Reranking leaderboard mode when `rerank_status =
+'available'`, `candidate_ranking = 'reranking_hybrid'`, and a reranking depth is
+available. `reranking_hybrid` means the RRF top-100 over BM25 and dense
+candidate rankings, plus an optional rank-101 safeguard positive when the
+hybrid top-100 contains no qrels-positive candidate.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -669,7 +671,7 @@ or did not improve under BM25 candidate reranking. The viewer also uses
 | `rerank_status` | `VARCHAR` | Rerank availability status from result JSON. |
 | `rerank_top_k` | `INTEGER` | Candidate depth used for reranking. |
 | `candidate_source` | `VARCHAR` | Candidate source label, usually `dataset_candidate_subset`. |
-| `candidate_ranking` | `VARCHAR` | Configured candidate ranking, usually `bm25`. |
+| `candidate_ranking` | `VARCHAR` | Configured candidate ranking, usually `reranking_hybrid` for viewer Reranking rows. |
 | `bm25_source` | `VARCHAR` | BM25 source metadata, such as `dataset_candidate_subset` or `computed_bm25s`. |
 | `query_coverage` | `DOUBLE` | Fraction of qrels-bearing queries with at least one relevant document in top-k candidates. |
 | `relevant_coverage` | `DOUBLE` | Fraction of relevant documents covered by top-k candidates. |
@@ -813,11 +815,11 @@ For overall scope presets:
   retrieval, reasoning-heavy retrieval, and code retrieval
   (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`, and
   `NanoCoIR`).
-- `Core-EN`: an English-oriented core preset. It uses the `EN` task facet and
+- `Core (EN)`: an English-oriented core preset. It uses the `EN` task facet and
   keeps English-relevant retrieval anchors from the compact Core idea:
   `MNanoBEIR` grouped by `task_name`, `NanoRTEB`, `NanoMLDR`, `NanoMIRACL`,
   `NanoBRIGHT`, `NanoCoIR`, and `NanoMTEB-v2`. `NanoMIRACL` is included because
-  the other Core-EN components do not otherwise provide the canonical MIRACL
+  the other Core (EN) components do not otherwise provide the canonical MIRACL
   passage retrieval task.
 - `Custom`: a dynamic scope built from repeated `bench=` query parameters.
   Nano-set labels in the viewer toggle membership in this selected set. When
@@ -862,7 +864,7 @@ variant categories are added.
 | Quantization | Non-rescore rows where `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`, excluding rows that also contain `truncate` unless Truncate dims is also enabled. |
 | Truncate dims | Rows where `embedding_variant_name` contains `truncate`, excluding quantized rows unless Quantization is also enabled. |
 | Rescore | `embedding_variant_name` contains `rescore`. Rescore rows are not included by the Quantization flag by default. |
-| Sparse Dims | Sparse encoder active-dimension cap rows whose `embedding_variant_name` contains `sparse_` and either `max_active_dims` or `max_dims`, excluding rows categorized as quantization, truncation, or rescore variants. The query parameter and materialized-column name remain `other_variant` / `include_other_variants` for compatibility. |
+| Sparse pruning | Sparse encoder pruning rows that cap active query or document dimensions. These rows have an `embedding_variant_name` containing `sparse_` and either `max_active_dims` or `max_dims`, excluding rows categorized as quantization, truncation, or rescore variants. The query parameter and materialized-column name remain `other_variant` / `include_other_variants` for compatibility. |
 
 Rows that are both quantized and truncated are displayed only when both matching
 category flags are enabled. Facet filter query parameters such as `dim_filter` and
@@ -923,8 +925,9 @@ spreadsheet-friendly `Variant Label` and `Variant Category` columns. Variant
 labels mirror compact UI labels such as `512d <- 1024` or `q32d d256d`, while
 categories summarize the variant as `truncate`, `quantization`, `rescore`,
 `sparse active dims`, `other`, or a ` + ` joined combination for cross variants.
-The `Sparse Dims` display control only includes rows that match the sparse active
-dimension naming rule; arbitrary uncategorized variant names stay hidden.
+The `Sparse pruning` display control only includes rows that match the sparse
+active-dimension pruning naming rule; arbitrary uncategorized variant names stay
+hidden.
 
 Task metric column headers keep their full metric key for sorting and query
 state, but shorten long dataset task keys for display. If a grouped key repeats
@@ -1001,8 +1004,8 @@ choices:
 - When variants are requested, including for reranking targets, push the
   selected display categories into SQL.
   Base rows are always read, but quantization-only, truncate-only, rescore-only,
-  and Sparse Dims views avoid fetching unrelated variant rows before Python
-  ranking. Sparse Dims views fetch only sparse active-dimension cap names.
+  and Sparse pruning views avoid fetching unrelated variant rows before Python
+  ranking. Sparse pruning views fetch only sparse active-dimension cap names.
   Cross variants such as truncate plus quantization are fetched when
   both matching display flags are enabled.
 - Surface runtime metadata such as dtype, attention implementation, prompt
@@ -1031,21 +1034,21 @@ choices:
   `primary_languages` to keep auxiliary detector languages from cross-language
   tasks out of the selector; for example, `NanoMTEB-Dutch` exposes `nl`
   but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
-- Viewer benchmark scope exposes `Overall`, `Core`, `Core-EN`, a `Clear`
-  action button, then the individual Nano-set labels. Scope preset buttons
+- Viewer benchmark scope exposes `Overall`, `Core`, `Core (EN)`, a `Clear`
+  action button, then the individual NanoSet labels. Scope preset buttons
   carry inline help explaining their aggregation semantics. `Overall` and
-  `Core` reset Task facets to All languages when selected; `Core-EN` selects
+  `Core` reset Task facets to All languages when selected; `Core (EN)` selects
   the `EN` facet; `Clear` pushes `view=Custom` with no `bench=` values, resets
   to All languages, is not itself selected, and shows no rows. Overall, Core,
-  Core-EN, and Custom scopes expose a Score selector for `micro` and `macro`.
-  Nano-set labels toggle a `Custom` selection through repeated `bench=` query
+  Core (EN), and Custom scopes expose a Score selector for `micro` and `macro`.
+  NanoSet labels toggle a `Custom` selection through repeated `bench=` query
   parameters, so small combinations such as `NanoJMTEB-v2` plus `NanoMTEB-v2`
   are represented directly in the URL. `MNanoBEIR` is special:
   combined scopes expose `MNanoBEIR:task_mean` as `MNanoBEIR(task)` and
   `MNanoBEIR:lang_mean` as `MNanoBEIR(lang)`. These two selection keys are
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
   `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall`, `Core`,
-  and `Core-EN`, only the task-mean MNanoBEIR selection is active. Task facets live
+  and `Core (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
   inside the same leaderboard configuration panel.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
@@ -1107,8 +1110,8 @@ aggregation policy is always applied from the current YAML configuration. It is 
 flags
 `include_quantization_variants`, `include_truncate_variants`,
 `include_rescore_variants`, and `include_other_variants`. The last flag backs
-the UI label `Sparse Dims` and means sparse active-dimension cap variants, not
-arbitrary uncategorized variants. The viewer uses this
+the UI label `Sparse pruning` and means sparse active-dimension cap variants,
+not arbitrary uncategorized variants. The viewer uses this
 mart when language filters, task-score columns, task text filters, length
 filters, macro overall aggregation, and custom `bench=` selection are not
 active. Those interactive, macro, and custom cases still fall back to the normal
@@ -1125,7 +1128,7 @@ are recalculated with BM25 in the reranking population.
 | `include_quantization_variants` | `BOOLEAN` | Whether quantization variants were included in this materialized view. |
 | `include_truncate_variants` | `BOOLEAN` | Whether truncation variants were included. |
 | `include_rescore_variants` | `BOOLEAN` | Whether rescore variants were included. |
-| `include_other_variants` | `BOOLEAN` | Whether Sparse Dims variants were included. |
+| `include_other_variants` | `BOOLEAN` | Whether Sparse pruning variants were included. |
 | `expected_tasks` | `INTEGER` | Number of expected complete tasks for the materialized view. |
 | `borda_rank`, `mean_rank` | `DOUBLE` | Precomputed display ranks. |
 | `model_name` | `VARCHAR` | Display model label, including variant details when needed. |
@@ -1477,7 +1480,7 @@ The final result should return both `macro_mean` and `micro_mean`. In
 
 ### 4. Overall Macro Leaderboard
 
-Overall views using `score=macro`, including the compact `Core` and `Core-EN`
+Overall views using `score=macro`, including the compact `Core` and `Core (EN)`
 leaderboards and dynamic `Custom` `bench=` selections, first average raw tasks
 into one score row per Nano-set, then compute Borda, means, and Nano-set metric
 columns. Components with a `group_by` setting, such as `MNanoBEIR` grouped by

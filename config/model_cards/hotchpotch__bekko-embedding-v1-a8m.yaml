@@ -28,6 +28,11 @@ prompts:
 language_support:
   category: multilingual
   evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
     classification_policy: model identity first; use broad score evidence only for
       models without explicit language identity
     classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 15

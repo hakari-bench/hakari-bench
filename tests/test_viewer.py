@@ -109,7 +109,7 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         None,
         None,
     ]
-    core_en_overall = config.overall_for_view("Core-EN")
+    core_en_overall = config.overall_for_view("Core (EN)")
     assert core_en_overall is not None
     assert core_en_overall.benchmark_names == core_en_benchmarks
     assert [component.group_by for component in core_en_overall.benchmark_components] == [
@@ -124,7 +124,7 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
     assert config.view_names[: len(all_benchmarks) + 3] == [
         "Overall",
         "Core",
-        "Core-EN",
+        "Core (EN)",
         *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
@@ -217,7 +217,7 @@ def test_primary_language_view_benchmarks_define_primary_languages() -> None:
 def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
     assert _view_group("All") == "Scope presets"
     assert _view_group("Core") == "Scope presets"
-    assert _view_group("Core-EN") == "Scope presets"
+    assert _view_group("Core (EN)") == "Scope presets"
     assert _view_group("Clear") == "Scope presets"
     assert _view_group("Custom") == "Scope presets"
     assert _view_group("Group") == "Scope presets"
@@ -758,6 +758,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "leaderboard-initial-loading border border-zinc-200 bg-white" in response.text
     assert 'id="leaderboard-loading-toast"' in response.text
     assert "leaderboard-loading-toast fixed bottom-4 right-4" in response.text
+    assert "px-4 py-3" in response.text
     assert response.text.count('class="loading-spinner" aria-hidden="true"') == 2
     assert 'role="status"' in response.text
     assert 'aria-live="polite"' in response.text
@@ -837,7 +838,11 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "JetBrains Mono" in css_response.text
     assert ".theme-toggle" in css_response.text
     assert ".leaderboard-initial-loading" in css_response.text
+    assert "min-height:clamp(18rem,42vh,28rem)" in css_response.text
+    assert "padding:4rem 1.5rem" in css_response.text
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
+    assert "background-color:color-mix(in srgb,var(--hakari-surface) 90%,transparent)" in css_response.text
+    assert "padding:.75rem 1rem" in css_response.text
     assert ".loading-spinner" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
     assert "--hakari-radius-lg:8px" in css_response.text
@@ -847,16 +852,22 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-table-scroll{--hakari-model-col-width" in css_response.text
     assert "border-color:var(--hakari-border)" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
+    assert "button[data-leaderboard-pending=true]:after" not in css_response.text
+    assert "content:\"\";display:inline-block;height:.55rem" not in css_response.text
     assert ".global-tooltip" in css_response.text
     assert ".model-tooltip" not in css_response.text
     assert ".doc-summary-trigger{background-color:transparent" in css_response.text
     assert ".doc-summary-trigger:hover" in css_response.text
     assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
-    assert ".borda-score-bar{position:absolute;top:2px;bottom:2px;left:0;display:block" in css_response.text
-    assert "width:100%;height:calc(100% - 4px);opacity:.16;pointer-events:none" in css_response.text
+    assert ".borda-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
+    assert "top:2px;bottom:2px;left:2px;border:0;display:block;width:calc(100% - 2px);height:calc(100% - 4px)" in css_response.text
+    assert "background-color:transparent;color:var(--hakari-accent);opacity:.1;pointer-events:none" in css_response.text
+    assert ":root.dark .borda-score-bar{opacity:.16}" in css_response.text
+    assert ":root:not(.light) .borda-score-bar{opacity:.16}" in css_response.text
     assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.3}" in css_response.text
-    assert ".borda-score-bar-fill{fill:var(--hakari-accent)}" in css_response.text
+    assert ".borda-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
+    assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
 
@@ -1050,8 +1061,8 @@ overalls:
     label: Core
     benchmarks:
       - BenchA
-  - name: Core-EN
-    label: Core-EN
+  - name: Core (EN)
+    label: Core (EN)
     benchmarks:
       - BenchB
 """.strip(),
@@ -1178,11 +1189,11 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
         is_overall=True,
         expected_tasks=0,
         rows=[],
-        available_views=["Overall", "Core", "Core-EN", "BenchA", "BenchB", "BenchC"],
+        available_views=["Overall", "Core", "Core (EN)", "BenchA", "BenchB", "BenchC"],
         available_view_labels={
             "Overall": "Overall",
             "Core": "Core",
-            "Core-EN": "Core-EN",
+            "Core (EN)": "Core (EN)",
             "BenchA": "BenchA",
             "BenchB": "BenchB",
             "BenchC": "BenchC",
@@ -1199,13 +1210,13 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
         filter_state=FilterState(language_filters=("ja",)),
     )
 
-    assert "Core-EN" in html
+    assert "Core (EN)" in html
     assert "Clear" in html
     assert 'class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"' in html
     assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
-    core_en_button = html.split(">Core-EN</button>", 1)[0].rsplit("<button", 1)[1]
+    core_en_button = html.split(">Core (EN)</button>", 1)[0].rsplit("<button", 1)[1]
     clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
-    assert "view=Core-EN" in core_en_button
+    assert "view=Core+%28EN%29" in core_en_button
     assert "lang_filter=en" in core_en_button
     assert 'data-icon="eraser"' in clear_button
     assert 'data-icon="rotate-ccw"' not in clear_button
@@ -1293,13 +1304,20 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     lang_button = re.search(r'<button[^>]+data-benchmark-toggle="MNanoBEIR:lang_mean"[^>]+>', html)
     assert task_button is not None
     assert lang_button is not None
-    task_html = task_button.group(0)
     lang_html = lang_button.group(0)
-    assert "border-cyan-700" in task_html
-    assert "border-cyan-700" not in lang_html
+    task_group_html = html[: task_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
+    lang_group_html = html[: lang_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
+    assert "border-cyan-700" in task_group_html
+    assert "border-cyan-700" not in lang_group_html
     assert "bench=MNanoBEIR%3Alang_mean" in lang_html
     assert "bench=MNanoBEIR%3Atask_mean" not in lang_html
     assert "bench=BenchA" in lang_html
+    assert 'data-help-title="Benchmark scope: NanoBEIR(task)"' in html
+    assert 'data-help-title="Benchmark scope: NanoBEIR(lang)"' in html
+    assert "Averages the multilingual NanoBEIR matrix by BEIR source task." in html
+    assert "Averages the multilingual NanoBEIR matrix by language dataset." in html
+    assert "MNanoBEIR is a language x task benchmark matrix" in html
+    assert "Showing every language-task cell as an individual benchmark scope would make the picker hard to scan" in html
 
 
 def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:
@@ -1351,7 +1369,10 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert 'type="checkbox" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "target=reranking_without_safeguard" in response.text
     assert 'data-help-title="Safeguard positives"' in response.text
-    assert "every evaluated task includes at least one known positive document" in response.text
+    assert "RRF over BM25 and dense candidate rankings" in response.text
+    assert "top-100 hybrid candidates" in response.text
+    assert "optional rank-101 safeguard positive" in response.text
+    assert "usually produced by BM25" not in response.text
     assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
 
 
@@ -2081,12 +2102,12 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "<span>STD</span>" in response.text
     assert "Efficiency variants" in response.text
     assert 'data-icon="git-compare-arrows"' in response.text
-    assert ">Sparse Dims</span>" in response.text
+    assert ">Sparse pruning</span>" in response.text
     assert "Other variants" not in response.text
     assert 'data-help-title="Efficiency variants"' in response.text
-    assert "Dims includes truncated embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
+    assert "Dims includes truncated dense embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
     assert "Quantization includes compressed numeric formats such as int8 and binary." in response.text
-    assert "Sparse Dims includes sparse encoder active-dimension cap variants" in response.text
+    assert "Sparse pruning includes sparse encoder pruning variants" in response.text
     assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
@@ -2127,11 +2148,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert 'id="model-filter-input" type="search" name="model_filter" value="model/b"\n                       class="viewer-text-input' in response.text
     assert ">Model</span>" in response.text
     assert ">Model name</span>" not in response.text
     assert "Filters leaderboard rows by model name." in response.text
     assert "jina bge keeps rows whose model name contains jina or bge" in response.text
     assert ">Task</span>" in response.text
+    assert 'id="task-filter-input" type="search" name="task_filter"' in response.text
+    assert 'name="query_len_min" value=""\n               class="viewer-text-input' in response.text
     assert ">Task name</span>" not in response.text
     assert "Filters task columns and task rows by benchmark" in response.text
     assert "arguana fever keeps task columns or task rows whose identifiers contain arguana or fever" in response.text
@@ -2139,7 +2163,15 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Recalculate ranks from filters" in response.text
     assert "Borda ranks, mean ranks, and visible means are recalculated" in response.text
     assert "Apply text filters" not in response.text
-    assert response.text.index("Refine results") < response.text.index("Recalculate ranks from filters") < response.text.index("Model family")
+    assert 'class="refine-results-actions flex flex-wrap items-center gap-2"' in response.text
+    assert 'data-icon="sigma"' in response.text
+    assert 'class="mb-2 flex flex-wrap items-center justify-end gap-2"' not in response.text
+    assert (
+        response.text.index('data-icon="shapes"')
+        < response.text.index('data-icon="cpu"')
+        < response.text.index('class="refine-results-actions flex flex-wrap items-center gap-2"')
+        < response.text.index('data-icon="sigma"')
+    )
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text
@@ -2804,8 +2836,8 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
         f'data-metric-column-full-name="{long_task}"'
     ) in head
     assert body.count('class="borda-score-bar"') == 2
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="10"' in body
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="0.00" height="10"' in body
+    assert 'class="borda-score-bar" value="100.00" max="100"' in body
+    assert 'class="borda-score-bar" value="0.00" max="100"' in body
 
 
 def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row(tmp_path: Path) -> None:
@@ -2828,8 +2860,59 @@ def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row
     body = render_table_body(result=result, filter_context=filter_context)
 
     assert body.count('class="borda-score-bar"') == 1
-    assert 'class="borda-score-bar-fill" x="0" y="0" width="100.00" height="10"' in body
+    assert 'class="borda-score-bar" value="100.00" max="100"' in body
     assert body.count('data-filter-hidden="true"') == 1
+
+
+def test_leaderboard_model_name_borda_score_bar_scales_to_visible_max_score() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/top",
+                borda_score=88.10,
+                mean_score=88.10,
+                task_count=1,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/middle",
+                borda_score=44.05,
+                mean_score=44.05,
+                task_count=1,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="model/bottom",
+                borda_score=3.30,
+                mean_score=3.30,
+                task_count=1,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    body = render_table_body(result=result)
+    filtered_body = render_table_body(
+        result=result,
+        filter_context=row_filter_context(result.rows, FilterState(filters_active=True, model_filter="middle")),
+    )
+
+    assert 'class="borda-score-bar" value="100.00" max="100"' in body
+    assert 'class="borda-score-bar" value="50.00" max="100"' in body
+    assert 'class="borda-score-bar" value="3.75" max="100"' in body
+    assert filtered_body.count('class="borda-score-bar"') == 1
+    assert 'class="borda-score-bar" value="100.00" max="100"' in filtered_body
 
 
 def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:
@@ -4227,7 +4310,51 @@ def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("arguana") == "arguana"
     assert _metric_column_label("NanoBIRCO::NanoBIRCO") == "NanoBIRCO"
     assert _metric_column_label("NanoMMTEB::NanoArguAna") == "NanoMMTEB::NanoArguAna"
+    assert _metric_column_label("NanoBRIGHT::NanoBRIGHTFooBar") == "NanoBRIGHT::FooBar"
+    assert _metric_column_label("NanoBRIGHT::NanoBRIGHT") == "NanoBRIGHT"
+    assert _metric_column_label("NanoBrightAops", parent_label="NanoBRIGHT") == "Aops"
+    assert _metric_column_label("NanoBRIGHT", parent_label="NanoBRIGHT") == "NanoBRIGHT"
     assert _metric_column_label("MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana") == "NanoBEIR-ar::arguana"
+
+
+def test_task_score_column_headers_strip_repeated_suite_prefix_from_subtask() -> None:
+    result = LeaderboardResult(
+        view_name="NanoBRIGHT",
+        view_label="NanoBRIGHT",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[],
+        available_views=["NanoBRIGHT"],
+        available_view_labels={"NanoBRIGHT": "NanoBRIGHT"},
+        score_groups=[],
+        metric_columns=["NanoBRIGHT::NanoBRIGHTFooBar", "NanoBRIGHT::NanoBRIGHT"],
+    )
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+
+    assert '<span class="block w-full truncate">NanoBRIGHT</span>' in head
+    assert '<span class="block max-w-full truncate font-normal">FooBar</span>' in head
+    assert '<span class="block max-w-full truncate font-normal">NanoBRIGHTFooBar</span>' not in head
+
+
+def test_task_score_column_headers_strip_view_prefix_from_single_task_name() -> None:
+    result = LeaderboardResult(
+        view_name="NanoBRIGHT",
+        view_label="NanoBRIGHT",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[],
+        available_views=["NanoBRIGHT"],
+        available_view_labels={"NanoBRIGHT": "NanoBRIGHT"},
+        score_groups=[],
+        metric_columns=["NanoBrightAops"],
+    )
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+
+    assert 'data-tooltip="Task score column for this benchmark task. Display: Aops.' in head
+    assert '>Aops</span>' in head
+    assert '>BrightAops</span>' not in head
 
 
 def test_metric_column_labels_keep_full_name_when_short_labels_collide() -> None:
@@ -4447,8 +4574,14 @@ benchmarks:
     assert 'data-doc-title="MNanoBEIR / NanoBEIR-ar / NanoArguAna"' not in filtered_response.text
 
 
-def test_max_len_is_formatted_with_grouping_separator() -> None:
-    assert _fmt_max_len(8192) == "8,192"
+def test_max_len_uses_compact_k_display_for_1k_and_above() -> None:
+    assert _fmt_max_len(512) == "512"
+    assert _fmt_max_len(1_023) == "1,023"
+    assert _fmt_max_len(1_024) == "1K"
+    assert _fmt_max_len(1_535) == "1K"
+    assert _fmt_max_len(1_536) == "2K"
+    assert _fmt_max_len(4_096) == "4K"
+    assert _fmt_max_len(8_192) == "8K"
     assert _fmt_max_len(None) == ""
 
 
