@@ -649,7 +649,7 @@ def _leaderboard_control_hx_attrs() -> str:
 def render_leaderboard_loading_toast() -> str:
     return """
     <div id="leaderboard-loading-toast"
-         class="leaderboard-loading-toast fixed bottom-4 right-4 z-50 border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-800 shadow-sm"
+         class="leaderboard-loading-toast fixed bottom-4 right-4 z-50 border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-800 shadow-sm"
          role="status" aria-live="polite" aria-atomic="true">
       <span class="loading-spinner" aria-hidden="true"></span>
       <span>Loading leaderboard...</span>
@@ -1461,8 +1461,8 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         query = urlencode(query_payload, doseq=True)
         safeguard_help = _render_help_tooltip(
             "Safeguard positives",
-            "Keeps reranking tasks comparable by ensuring each candidate list contains at least one relevant positive.",
-            "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder a fixed candidate list, usually produced by BM25.\n\nWhen Safeguard positives is enabled, the candidate list uses the rank-101 safeguard so every evaluated task includes at least one known positive document. This is the default because it avoids scoring a reranker on tasks where the relevant document never appears in the candidate set.\n\nTurn it off only when you intentionally want to inspect reranking behavior without that safeguard.",
+            "Keeps reranking comparable by using the safeguarded hybrid candidate set.",
+            "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder the fixed reranking_hybrid candidate set.\n\nHybrid means RRF over BM25 and dense candidate rankings: BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them into the top-100 hybrid candidates for each query.\n\nWhen Safeguard positives is enabled, a query whose top-100 hybrid candidates contain no qrels-positive document gets an optional rank-101 safeguard positive appended. This keeps reranker scores from being dominated by candidate lists where the reranker had no relevant document to promote.\n\nTurn it off only when you intentionally want to inspect reranking on the raw hybrid top-100 without the appended safeguard positive.",
         )
         safeguard_toggle = f"""
                 <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
@@ -1795,7 +1795,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Efficiency variants",
               "Adds non-base rows that compare quality against storage, dimension, and reranking trade-offs.",
-              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse Dims includes sparse encoder active-dimension cap variants, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
+              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -1813,7 +1813,7 @@ def render_display_controls(
           </label>
           <label class="inline-flex items-center gap-2">
             <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
-            <span>Sparse Dims</span>
+            <span>Sparse pruning</span>
           </label>
         </div>
       </form>
@@ -2083,18 +2083,6 @@ def render_controls(
               {_leaderboard_control_hx_attrs()}
               hx-trigger="change, submit">
           {filter_hidden_html}
-          <div class="refine-results-actions flex flex-wrap items-center gap-2">
-          <label class="inline-flex items-center gap-2">
-            <input type="hidden" name="rank_filtered" value="0">
-            <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
-            <span class="font-medium text-zinc-800">Recalculate ranks from filters</span>
-            {_render_help_tooltip(
-                "Recalculate ranks from filters",
-                "Recomputes ranking numbers using only the currently filtered result set.",
-                "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Refine results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
-            )}
-          </label>
-        </div>
         <div class="grid gap-2">
           <div class="min-w-0 space-y-2">
             {_render_model_type_controls(
@@ -2110,7 +2098,7 @@ def render_controls(
                     "Model filter searches the displayed model names and hides rows that do not match.\n\nYou can search for multiple model-name keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, jina bge keeps rows whose model name contains jina or bge.\n\nModel keywords under 3 characters are ignored to avoid accidental broad matches. This filter changes which model rows are visible. It does not change the selected benchmark scope or which task columns are available.",
                 )}
                 <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
-                       class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
+                       class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
               <label class="flex min-w-64 flex-1 items-center gap-2">
@@ -2121,7 +2109,7 @@ def render_controls(
                     "Task filter searches task identifiers such as benchmark name, dataset name, split name, task name, and task key.\n\nYou can search for multiple task keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, arguana fever keeps task columns or task rows whose identifiers contain arguana or fever. Short task names such as nq also work because task keywords are accepted from 2 characters.\n\nWhen task columns are visible, matching task columns remain and non-matching columns are hidden. The underlying model ranking keeps its original context unless Recalculate ranks from filters is enabled. One-character task keywords are ignored.",
                 )}
                 <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
-                       class="w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
+                       class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
             </div>
@@ -2133,7 +2121,7 @@ def render_controls(
                 {_render_help_tooltip(
                     "Efficiency filters",
                     "Filters already-included variant rows by dimensions or quantization type.",
-                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Sparse Dims variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
+                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Sparse pruning variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
                 )}
                 {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
                 {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
@@ -2149,6 +2137,18 @@ def render_controls(
                 {_render_filter_details(name="dtype_filter", summary="Dtype", icon="type", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
                 {_render_filter_details(name="attn_filter", summary="Attention", icon="scan-eye", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
                 {_render_filter_details(name="prompt_filter", summary="Prompt", icon="message-square-text", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
+              </div>
+              <div class="refine-results-actions flex flex-wrap items-center gap-2">
+                <label class="inline-flex items-center gap-2">
+                  <input type="hidden" name="rank_filtered" value="0">
+                  <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
+                  {_control_label(icon="sigma", text="Recalculate ranks from filters")}
+                  {_render_help_tooltip(
+                      "Recalculate ranks from filters",
+                      "Recomputes ranking numbers using only the currently filtered result set.",
+                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Refine results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
+                  )}
+                </label>
               </div>
             </div>
           </div>
@@ -2223,7 +2223,7 @@ def _render_model_type_controls(
 
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
     input_class = (
-        "w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_class = "text-cyan-700" if filter_state.has_task_length_filters else ""

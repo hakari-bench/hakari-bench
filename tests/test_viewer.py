@@ -758,6 +758,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "leaderboard-initial-loading border border-zinc-200 bg-white" in response.text
     assert 'id="leaderboard-loading-toast"' in response.text
     assert "leaderboard-loading-toast fixed bottom-4 right-4" in response.text
+    assert "px-4 py-3" in response.text
     assert response.text.count('class="loading-spinner" aria-hidden="true"') == 2
     assert 'role="status"' in response.text
     assert 'aria-live="polite"' in response.text
@@ -837,7 +838,11 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "JetBrains Mono" in css_response.text
     assert ".theme-toggle" in css_response.text
     assert ".leaderboard-initial-loading" in css_response.text
+    assert "min-height:clamp(18rem,42vh,28rem)" in css_response.text
+    assert "padding:4rem 1.5rem" in css_response.text
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
+    assert "background-color:color-mix(in srgb,var(--hakari-surface) 90%,transparent)" in css_response.text
+    assert "padding:.75rem 1rem" in css_response.text
     assert ".loading-spinner" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
     assert "--hakari-radius-lg:8px" in css_response.text
@@ -847,6 +852,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-table-scroll{--hakari-model-col-width" in css_response.text
     assert "border-color:var(--hakari-border)" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
+    assert "button[data-leaderboard-pending=true]:after" not in css_response.text
+    assert "content:\"\";display:inline-block;height:.55rem" not in css_response.text
     assert ".global-tooltip" in css_response.text
     assert ".model-tooltip" not in css_response.text
     assert ".doc-summary-trigger{background-color:transparent" in css_response.text
@@ -854,8 +861,10 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
     assert ".borda-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
-    assert "top:2px;bottom:2px;left:0;border:0;display:block;width:100%;height:calc(100% - 4px)" in css_response.text
-    assert "background-color:transparent;color:var(--hakari-accent);opacity:.16;pointer-events:none" in css_response.text
+    assert "top:2px;bottom:2px;left:2px;border:0;display:block;width:calc(100% - 2px);height:calc(100% - 4px)" in css_response.text
+    assert "background-color:transparent;color:var(--hakari-accent);opacity:.1;pointer-events:none" in css_response.text
+    assert ":root.dark .borda-score-bar{opacity:.16}" in css_response.text
+    assert ":root:not(.light) .borda-score-bar{opacity:.16}" in css_response.text
     assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.3}" in css_response.text
     assert ".borda-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
@@ -1360,7 +1369,10 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert 'type="checkbox" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "target=reranking_without_safeguard" in response.text
     assert 'data-help-title="Safeguard positives"' in response.text
-    assert "every evaluated task includes at least one known positive document" in response.text
+    assert "RRF over BM25 and dense candidate rankings" in response.text
+    assert "top-100 hybrid candidates" in response.text
+    assert "optional rank-101 safeguard positive" in response.text
+    assert "usually produced by BM25" not in response.text
     assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
 
 
@@ -2090,12 +2102,12 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "<span>STD</span>" in response.text
     assert "Efficiency variants" in response.text
     assert 'data-icon="git-compare-arrows"' in response.text
-    assert ">Sparse Dims</span>" in response.text
+    assert ">Sparse pruning</span>" in response.text
     assert "Other variants" not in response.text
     assert 'data-help-title="Efficiency variants"' in response.text
-    assert "Dims includes truncated embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
+    assert "Dims includes truncated dense embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
     assert "Quantization includes compressed numeric formats such as int8 and binary." in response.text
-    assert "Sparse Dims includes sparse encoder active-dimension cap variants" in response.text
+    assert "Sparse pruning includes sparse encoder pruning variants" in response.text
     assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
@@ -2136,11 +2148,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Rescore" in response.text
     assert 'id="model-filter-input"' in response.text
     assert 'name="model_filter"' in response.text
+    assert 'id="model-filter-input" type="search" name="model_filter" value="model/b"\n                       class="viewer-text-input' in response.text
     assert ">Model</span>" in response.text
     assert ">Model name</span>" not in response.text
     assert "Filters leaderboard rows by model name." in response.text
     assert "jina bge keeps rows whose model name contains jina or bge" in response.text
     assert ">Task</span>" in response.text
+    assert 'id="task-filter-input" type="search" name="task_filter"' in response.text
+    assert 'name="query_len_min" value=""\n               class="viewer-text-input' in response.text
     assert ">Task name</span>" not in response.text
     assert "Filters task columns and task rows by benchmark" in response.text
     assert "arguana fever keeps task columns or task rows whose identifiers contain arguana or fever" in response.text
@@ -2149,8 +2164,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Borda ranks, mean ranks, and visible means are recalculated" in response.text
     assert "Apply text filters" not in response.text
     assert 'class="refine-results-actions flex flex-wrap items-center gap-2"' in response.text
+    assert 'data-icon="sigma"' in response.text
     assert 'class="mb-2 flex flex-wrap items-center justify-end gap-2"' not in response.text
-    assert response.text.index("Refine results") < response.text.index("Recalculate ranks from filters") < response.text.index("Model family")
+    assert (
+        response.text.index('data-icon="shapes"')
+        < response.text.index('data-icon="cpu"')
+        < response.text.index('class="refine-results-actions flex flex-wrap items-center gap-2"')
+        < response.text.index('data-icon="sigma"')
+    )
     assert 'value="model/b"' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
     assert "model/a" in response.text

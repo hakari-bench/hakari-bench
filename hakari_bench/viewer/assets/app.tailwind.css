@@ -415,17 +415,27 @@
     appearance: none;
     top: 2px;
     bottom: 2px;
-    left: 0;
+    left: 2px;
     border: 0;
     display: block;
-    width: 100%;
+    width: calc(100% - 2px);
     height: calc(100% - 4px);
     background-color: transparent;
     color: var(--hakari-accent);
-    opacity: 0.16;
+    opacity: 0.1;
     pointer-events: none;
     transition: opacity 0.18s ease-in-out;
     z-index: 0;
+  }
+
+  :root.dark .borda-score-bar {
+    opacity: 0.16;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) .borda-score-bar {
+      opacity: 0.16;
+    }
   }
 
   .leaderboard-row:hover .borda-score-bar,
@@ -566,17 +576,20 @@
     display: flex;
     gap: 0.625rem;
     justify-content: center;
-    min-height: 9rem;
-    padding: 3rem 1.5rem;
+    min-height: clamp(18rem, 42vh, 28rem);
+    padding: 4rem 1.5rem;
     text-align: center;
   }
 
   .leaderboard-loading-toast {
     align-items: center;
-    border-color: transparent;
+    background-color: color-mix(in srgb, var(--hakari-surface) 90%, transparent);
+    border-color: color-mix(in srgb, var(--hakari-border) 64%, transparent);
+    box-shadow: 0 0.75rem 2rem rgb(15 23 42 / 0.16);
     display: inline-flex;
     gap: 0.5rem;
     opacity: 0;
+    padding: 0.75rem 1rem;
     pointer-events: none;
     transform: translateY(0.5rem);
     transition:
@@ -610,22 +623,6 @@
   summary[data-leaderboard-pending="true"],
   .control-button-group[data-leaderboard-pending="true"] {
     opacity: 0.72;
-  }
-
-  button[data-leaderboard-pending="true"]::after,
-  a[data-leaderboard-pending="true"]::after,
-  summary[data-leaderboard-pending="true"]::after,
-  .control-button-group[data-leaderboard-pending="true"]::after {
-    animation: hakari-leaderboard-spin 700ms linear infinite;
-    border: 2px solid currentColor;
-    border-right-color: transparent;
-    border-radius: 9999px;
-    content: "";
-    display: inline-block;
-    height: 0.55rem;
-    margin-left: 0.375rem;
-    vertical-align: -0.075rem;
-    width: 0.55rem;
   }
 
   .task-z-score {
@@ -751,10 +748,14 @@
     border-color: transparent;
   }
 
-  .refine-results-actions {
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--hakari-border) 52%, transparent);
+  #filter-controls .viewer-text-input {
+    border-color: color-mix(in srgb, var(--hakari-border) 74%, var(--hakari-text-muted));
+    background-color: var(--hakari-surface);
+  }
+
+  #filter-controls .viewer-text-input:focus {
+    border-color: var(--hakari-accent-border);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--hakari-accent) 22%, transparent);
   }
 
   .benchmark-scope-divider {
@@ -881,11 +882,7 @@
       transition: none;
     }
 
-    .loading-spinner,
-    button[data-leaderboard-pending="true"]::after,
-    a[data-leaderboard-pending="true"]::after,
-    summary[data-leaderboard-pending="true"]::after,
-    .control-button-group[data-leaderboard-pending="true"]::after {
+    .loading-spinner {
       animation: none;
     }
   }
