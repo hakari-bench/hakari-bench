@@ -27,7 +27,7 @@ tags:
 
 # {{DATASET_NAME}}
 
-This dataset is a Nano-style retrieval dataset. Nano-series evaluation can
+This dataset is a Nano-set retrieval dataset. Nano-series evaluation can
 be run easily with [HAKARI-Bench](https://github.com/hakari-bench/hakari-bench).
 
 {{DATASET_NAME}} is derived from {{SOURCE_BENCHMARK_NAME}}. It follows the

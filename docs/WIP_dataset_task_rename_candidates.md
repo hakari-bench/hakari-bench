@@ -1,6 +1,6 @@
 # WIP Dataset And Task Rename Candidates
 
-Status: implemented for the Hakari-Bench dataset YAML registry, result JSON
+Status: implemented for the HAKARI-Bench dataset YAML registry, result JSON
 migration, and upload-staging dataset directories. This document intentionally
 keeps the old-to-new mapping for audit and review.
 

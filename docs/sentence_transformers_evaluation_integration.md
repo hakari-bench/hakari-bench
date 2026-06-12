@@ -2,7 +2,7 @@
 
 HAKARI-Bench provides SentenceTransformers-compatible evaluators under
 `hakari_bench.sentence_transformers`. They are designed for training-time
-feedback on Nano-style IR datasets while reusing HAKARI dataset definitions,
+feedback on Nano-set IR datasets while reusing HAKARI dataset definitions,
 BM25 candidate subsets, and IR scoring code.
 
 The default path is intentionally small. It computes only `nDCG@10` and

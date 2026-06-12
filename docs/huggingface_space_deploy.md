@@ -101,14 +101,14 @@ colorTo: gray
 sdk: docker
 app_port: 7860
 pinned: false
-license: apache-2.0
+license: mit
 fullWidth: true
 short_description: HAKARI-Bench retrieval leaderboard
 ---
 
 # HAKARI-Bench Leaderboard
 
-This Space hosts the public leaderboard for HAKARI-Bench, a Nano-style information retrieval benchmark suite for SentenceTransformers-compatible dense, sparse, reranker, late-interaction, and BM25 systems.
+This Space hosts the public leaderboard for HAKARI-Bench, a Nano-set information retrieval benchmark suite for SentenceTransformers-compatible dense, sparse, reranker, late-interaction, and BM25 systems.
 
 The leaderboard viewer runs from a prebuilt Docker image published by the HAKARI-Bench GitHub repository:
 

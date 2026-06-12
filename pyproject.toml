@@ -1,9 +1,32 @@
 [project]
 name = "hakari-bench"
 version = "0.1.0"
-description = "Add your description here"
+description = "Benchmark runner and leaderboard viewer for Nano-set information retrieval evaluation."
 readme = "README.md"
 requires-python = ">=3.12"
+license = "MIT"
+authors = [
+    { name = "Yuichi Tateno" },
+]
+maintainers = [
+    { name = "Yuichi Tateno" },
+]
+keywords = [
+    "benchmark",
+    "information-retrieval",
+    "sentence-transformers",
+    "leaderboard",
+    "bm25",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Indexing",
+]
 dependencies = [
     "bm25s>=0.3.6",
     "datasets>=4.8.4",
@@ -28,6 +51,12 @@ dependencies = [
     "einops>=0.8.2",
     "ijson>=3.5.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/hakari-bench/hakari-bench"
+Repository = "https://github.com/hakari-bench/hakari-bench"
+Issues = "https://github.com/hakari-bench/hakari-bench/issues"
+Author = "https://github.com/hotchpotch"
 
 [build-system]
 requires = ["setuptools>=81.0.0"]

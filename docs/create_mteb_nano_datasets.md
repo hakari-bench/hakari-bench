@@ -1,6 +1,6 @@
 # Creating Nano Datasets From MTEB
 
-This document defines the rules for creating Nano-style retrieval datasets from
+This document defines the rules for creating Nano-set retrieval datasets from
 the MTEB task registry and MTEB-compatible Hugging Face sources.
 
 It complements `docs/create_nano_datasets.md`, which describes the generic Nano
