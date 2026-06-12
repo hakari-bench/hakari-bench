@@ -61,8 +61,17 @@ Other model families use explicit subcommands:
 
 ```bash
 uv run hakari-bench evaluate sparse --model naver/splade-v3 --dataset NanoBEIR-en
+```
+
+```bash
 uv run hakari-bench evaluate reranker --model nreimers/mmarco-mMiniLMv2-L6-H384-v1 --dataset NanoRTEB
+```
+
+```bash
 uv run --group pylate hakari-bench evaluate late-interaction --model MODEL_NAME --dataset NanoMedical
+```
+
+```bash
 uv run hakari-bench evaluate bm25 --dataset NanoMLDR --split ja
 ```
 
@@ -96,6 +105,76 @@ uv run python scripts/build_results_database_and_report.py \
   --duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
 
+To refresh the canonical remote result JSON first, run:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py
+```
+
+That helper clones or fast-forwards the private Hugging Face results dataset,
+runs `git lfs pull`, materializes missing BM25 baseline JSON from the stored
+Nano-set BM25 metadata in `task_docs/metadata`, and rebuilds the DuckDB. It
+does not run a BM25 evaluation or recompute BM25 with `bm25s`. See
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for the detailed
+sync/rebuild workflow.
+
+For a Hugging Face Hub snapshot download path, use:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend snapshot
+```
+
+The snapshot backend uses `huggingface_hub.snapshot_download()` and can use
+`hf_xet` when available. It stores files in a separate managed cache directory
+ending in `__snapshot`, cleans that directory by default so upstream deletions
+are reflected locally, then runs the same BM25 materialization and DuckDB
+rebuild steps.
+
+To merge historical or separate result roots, repeat `--results-dir` in
+priority order. If the same model-task JSON exists in more than one root, the
+first directory wins and later directories fill only missing results. The
+logical model identity is `model.id` from each result JSON, exposed as
+`model_name`; `model_dir` is only the storage path under the results root.
+Use repeated `--exclude-model-name` options to omit known-bad or superseded
+model ids from the generated warehouse without deleting their JSON files.
+Use `--overwrite-result-duplicates` when later result roots should replace
+duplicate logical model-task rows from earlier roots.
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --results-dir output/hakari-results \
+  --results-dir output/hakari-results-combined_20260510_1340 \
+  --overwrite-result-duplicates \
+  --exclude-model-name hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR \
+  --duckdb-path output/hakari-results/hakari_bench.duckdb
+```
+
+To add a separate result root for new model-task JSON to an existing DuckDB
+without scanning the original result roots, use `--append-results-dir`. This is
+append-only: duplicate result paths or duplicate logical model-task rows are
+rejected.
+
+```bash
+uv run python scripts/build_results_database_and_report.py \
+  --append-results-dir output/new_model_results \
+  --duckdb-path output/hakari-results/hakari_bench.duckdb
+```
+
+If the target DuckDB does not exist, append mode can download the latest
+configured remote DuckDB before adding local results. Use
+`--append-base-duckdb latest` with `--append-output-duckdb` to create a separate
+merged copy, and `--model-name-override local/experiment_name` when a local
+result directory should be shown under a specific logical model id. See
+[`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for
+examples.
+
+The remote "latest" DuckDB is cached at
+`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default and
+is shared by append mode and the viewer's Hugging Face dataset source. Override
+that path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`; override the sidecar
+metadata path with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH`.
+
 Start the viewer:
 
 ```bash
@@ -103,8 +182,13 @@ uv run hakari-bench web \
   --source-duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
 
-The viewer binds to `127.0.0.1:8000` by default. It can also read a DuckDB file
-from a Hugging Face dataset:
+By default, the viewer binds to `127.0.0.1:8000` and keeps
+`output/viewer/hakari_bench.duckdb` synchronized from the benchmark results
+DuckDB when a page is loaded. Use `--host 0.0.0.0 --port 28090` for remote
+access, or pass `--source-results-dir` / `--source-duckdb-path` to point at a
+different source.
+
+The viewer can also sync its local DuckDB cache from a Hugging Face dataset:
 
 ```bash
 uv run hakari-bench web \

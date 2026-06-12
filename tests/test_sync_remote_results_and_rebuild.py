@@ -20,6 +20,73 @@ def test_resolve_plan_defaults_to_cached_huggingface_results_repo(tmp_path: Path
     assert plan.results_dir == tmp_path / "hakari-bench__results" / "hakari-results"
     assert plan.duckdb_path == plan.results_dir / "hakari_bench.duckdb"
     assert plan.include_bm25_baseline is True
+    assert plan.sync_backend == "git"
+
+
+def test_resolve_plan_snapshot_backend_uses_separate_managed_cache(tmp_path: Path) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(
+        ["--cache-root", str(tmp_path), "--sync-backend", "snapshot"]
+    )
+
+    plan = sync_rebuild.resolve_plan(args)
+
+    assert plan.sync_backend == "snapshot"
+    assert plan.repo_dir == tmp_path / "hakari-bench__results__snapshot"
+    assert plan.results_dir == plan.repo_dir / "hakari-results"
+    assert plan.snapshot_clean is True
+    assert plan.snapshot_max_workers == 32
+    assert plan.xet_high_performance is True
+
+
+def test_prepare_snapshot_local_dir_refuses_unmanaged_directory(tmp_path: Path) -> None:
+    repo_dir = tmp_path / "snapshot"
+    repo_dir.mkdir()
+    (repo_dir / "keep.txt").write_text("local data\n", encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="Refusing to clean non-managed snapshot directory"):
+        sync_rebuild._prepare_snapshot_local_dir(repo_dir)
+
+    assert (repo_dir / "keep.txt").exists()
+
+
+def test_sync_snapshot_repo_downloads_results_with_xet_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(
+        ["--cache-root", str(tmp_path), "--sync-backend", "snapshot", "--revision", "abc123"]
+    )
+    plan = sync_rebuild.resolve_plan(args)
+    calls: list[dict[str, object]] = []
+
+    def fake_snapshot_download(**kwargs: object) -> str:
+        calls.append(kwargs)
+        plan.results_dir.mkdir(parents=True)
+        (plan.results_dir / "sample.json.xz").write_bytes(b"placeholder")
+        return str(plan.repo_dir)
+
+    monkeypatch.delenv("HF_XET_HIGH_PERFORMANCE", raising=False)
+    monkeypatch.setattr(sync_rebuild, "_ensure_hf_auth", lambda: None)
+    monkeypatch.setitem(
+        __import__("sys").modules,
+        "huggingface_hub",
+        type("FakeHuggingFaceHub", (), {"snapshot_download": fake_snapshot_download}),
+    )
+
+    sync_rebuild.sync_repo(plan)
+
+    assert calls == [
+        {
+            "repo_id": "hakari-bench/results",
+            "repo_type": "dataset",
+            "revision": "abc123",
+            "allow_patterns": ["hakari-results/**", "README.md"],
+            "local_dir": plan.repo_dir,
+            "token": True,
+            "max_workers": 32,
+        }
+    ]
+    assert (plan.repo_dir / sync_rebuild.SNAPSHOT_CACHE_MARKER).exists()
+    assert __import__("os").environ["HF_XET_HIGH_PERFORMANCE"] == "1"
 
 
 def test_materialize_bm25_baseline_uses_task_metadata(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
