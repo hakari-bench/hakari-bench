@@ -70,6 +70,9 @@ from hakari_bench.viewer.variant_display import (
 
 ASSETS_DIR = Path(__file__).with_name("assets")
 DEFAULT_FRAME_ANCESTORS = "https://huggingface.co https://*.huggingface.co"
+_FRAME_ANCESTOR_TOKEN = re.compile(
+    r"^(?:'self'|'none'|\*|(?:https?://)?(?:\*\.)?[A-Za-z0-9.-]+(?::\d+)?)$"
+)
 SECURITY_HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
@@ -561,9 +564,9 @@ def _content_security_policy() -> str:
 def _frame_ancestors() -> str:
     value = os.environ.get("HAKARI_BENCH_VIEWER_FRAME_ANCESTORS", DEFAULT_FRAME_ANCESTORS)
     tokens = value.split()
-    if any("\r" in token or "\n" in token for token in tokens):
+    if not tokens or not all(_FRAME_ANCESTOR_TOKEN.match(token) for token in tokens):
         return DEFAULT_FRAME_ANCESTORS
-    return " ".join(tokens) or DEFAULT_FRAME_ANCESTORS
+    return " ".join(tokens)
 
 
 def render_page(

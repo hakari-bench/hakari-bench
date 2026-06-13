@@ -5435,3 +5435,36 @@ def _reranking_viewer_rows(base_rows: list[tuple], diagnostic_rows: list[tuple])
             )
         )
     return reranking_rows
+
+
+def test_frame_ancestors_keeps_valid_https_and_keyword_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
+    from hakari_bench.viewer import app as viewer_app
+
+    monkeypatch.setenv(
+        "HAKARI_BENCH_VIEWER_FRAME_ANCESTORS",
+        "'self' https://huggingface.co https://*.huggingface.co",
+    )
+    assert (
+        viewer_app._frame_ancestors()
+        == "'self' https://huggingface.co https://*.huggingface.co"
+    )
+
+
+def test_frame_ancestors_rejects_unsafe_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    from hakari_bench.viewer import app as viewer_app
+
+    monkeypatch.setenv(
+        "HAKARI_BENCH_VIEWER_FRAME_ANCESTORS",
+        "https://huggingface.co javascript:alert(1)",
+    )
+    assert viewer_app._frame_ancestors() == viewer_app.DEFAULT_FRAME_ANCESTORS
+
+
+def test_frame_ancestors_rejects_crlf_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    from hakari_bench.viewer import app as viewer_app
+
+    monkeypatch.setenv(
+        "HAKARI_BENCH_VIEWER_FRAME_ANCESTORS",
+        "https://huggingface.co\r\nContent-Type: text/html",
+    )
+    assert viewer_app._frame_ancestors() == viewer_app.DEFAULT_FRAME_ANCESTORS
