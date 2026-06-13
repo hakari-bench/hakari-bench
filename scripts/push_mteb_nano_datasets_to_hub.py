@@ -6,6 +6,7 @@ import re
 import shutil
 import tempfile
 from collections import defaultdict
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from huggingface_hub import HfApi
@@ -62,7 +63,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--delete", action="store_true", help="Delete replaced Hub datasets before uploading.")
     parser.add_argument("--upload", action="store_true", help="Upload regenerated datasets as private repos.")
     parser.add_argument("--dry-run", action="store_true", help="Print the planned actions without mutating the Hub.")
+    parser.add_argument(
+        "--yes",
+        action="store_true",
+        help="Skip the interactive confirmation before deleting Hub datasets.",
+    )
     return parser.parse_args()
+
+
+def _confirm_deletion(
+    delete_repos: Sequence[str],
+    *,
+    assume_yes: bool,
+    input_func: Callable[[str], str] = input,
+) -> bool:
+    if not delete_repos:
+        return True
+    if assume_yes:
+        return True
+    print("About to permanently delete the following Hub datasets:")
+    for repo_id in delete_repos:
+        print(f"  {repo_id}")
+    response = input_func(f"Type 'yes' to delete {len(delete_repos)} dataset(s): ")
+    return response.strip().lower() == "yes"
 
 
 def main() -> None:
@@ -82,6 +105,9 @@ def main() -> None:
     if args.dry_run:
         return
     if args.delete:
+        if not _confirm_deletion(delete_repos, assume_yes=args.yes):
+            print("Deletion aborted.")
+            return
         for repo_id in delete_repos:
             print(f"[delete] {repo_id}", flush=True)
             api.delete_repo(repo_id=repo_id, repo_type="dataset", missing_ok=True)
