@@ -555,6 +555,9 @@ def _content_security_policy() -> str:
             "style-src 'self'",
             "img-src 'self' data:",
             "connect-src 'self'",
+            "object-src 'none'",
+            "frame-src 'none'",
+            "form-action 'self'",
             "base-uri 'none'",
             f"frame-ancestors {frame_ancestors}",
         ]
@@ -721,7 +724,7 @@ def _database_footer_label(store: LocalDuckDbStore) -> str:
 def _sha1_prefix(path: Path, *, length: int = 12) -> str:
     if not path.exists():
         return "unavailable"
-    digest = hashlib.sha1()
+    digest = hashlib.sha1(usedforsecurity=False)
     with path.open("rb") as file:
         for chunk in iter(lambda: file.read(1024 * 1024), b""):
             digest.update(chunk)

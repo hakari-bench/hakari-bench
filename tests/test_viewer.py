@@ -941,6 +941,9 @@ def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: 
     assert "style-src 'self'" in response.headers["content-security-policy"]
     assert "'unsafe-inline'" not in response.headers["content-security-policy"]
     assert "img-src 'self' data:" in response.headers["content-security-policy"]
+    assert "object-src 'none'" in response.headers["content-security-policy"]
+    assert "frame-src 'none'" in response.headers["content-security-policy"]
+    assert "form-action 'self'" in response.headers["content-security-policy"]
     assert (
         "frame-ancestors https://huggingface.co https://*.huggingface.co https://example.com"
         in response.headers["content-security-policy"]
