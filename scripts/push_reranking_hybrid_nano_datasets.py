@@ -15,11 +15,30 @@ from huggingface_hub import HfApi, hf_hub_download
 
 CONFIG_ORDER = ("corpus", "queries", "qrels", "bm25", "harrier_oss_v1_270m", "reranking_hybrid")
 
+DEFAULT_ALLOWED_ORG = "hakari-bench"
+
 
 @dataclass(frozen=True)
 class DatasetTarget:
     dataset_dir: Path
     repo_id: str
+
+
+def should_push(*, upload: bool, dry_run: bool) -> bool:
+    """Only push when upload is explicitly requested and dry-run is off."""
+    return upload and not dry_run
+
+
+def validate_repo_org(repo_id: str, *, allowed_org: str = DEFAULT_ALLOWED_ORG) -> None:
+    """Reject repo ids whose org prefix is not the expected one.
+
+    The repo id originates from local ``reranking_hybrid_metadata.json`` files,
+    so an altered or mixed-in artifact could otherwise redirect an overwriting
+    push to any repo the token can write to.
+    """
+    org = repo_id.split("/", 1)[0] if "/" in repo_id else ""
+    if org != allowed_org:
+        raise ValueError(f"repo_id {repo_id!r} is outside the allowed org {allowed_org!r}")
 
 
 def main() -> None:
@@ -28,8 +47,18 @@ def main() -> None:
     parser.add_argument("--only", action="append", default=[], help="Dataset directory name or repo id to push.")
     parser.add_argument("--resume-after", default=None, help="Skip datasets until this dataset directory name has passed.")
     parser.add_argument("--log-path", type=Path, default=Path("tmp/push_reranking_hybrid_nano_datasets_20260526.jsonl"))
+    parser.add_argument(
+        "--upload",
+        action="store_true",
+        help="Actually push to the Hub. Without this flag the run is a dry run.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--readme-only", action="store_true", help="Only upload corrected README metadata.")
+    parser.add_argument(
+        "--allowed-org",
+        default=DEFAULT_ALLOWED_ORG,
+        help="Org prefix that target repo ids must match before pushing.",
+    )
     args = parser.parse_args()
 
     targets = discover_targets(args.output_root)
@@ -39,10 +68,15 @@ def main() -> None:
     if args.resume_after:
         targets = skip_until_after(targets, args.resume_after)
 
+    push_enabled = should_push(upload=args.upload, dry_run=args.dry_run)
+    if not push_enabled:
+        print("Dry run: pass --upload to push to the Hub.", flush=True)
+
     args.log_path.parent.mkdir(parents=True, exist_ok=True)
     for index, target in enumerate(targets, start=1):
         print(f"[{index}/{len(targets)}] {target.repo_id}", flush=True)
-        if args.dry_run:
+        validate_repo_org(target.repo_id, allowed_org=args.allowed_org)
+        if not push_enabled:
             log_event(args.log_path, target=target, status="dry_run")
             continue
         try:

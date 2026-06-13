@@ -98,3 +98,29 @@ def test_merge_frontmatter_rewrites_local_config_paths_to_uploaded_shards() -> N
             "data_files": [{"split": "ja_cwir", "path": "corpus/ja_cwir-00000-of-00001.parquet"}],
         },
     ]
+
+
+def test_should_push_requires_upload_flag() -> None:
+    from scripts.push_reranking_hybrid_nano_datasets import should_push
+
+    assert should_push(upload=True, dry_run=False) is True
+    assert should_push(upload=False, dry_run=False) is False
+    assert should_push(upload=True, dry_run=True) is False
+    assert should_push(upload=False, dry_run=True) is False
+
+
+def test_validate_repo_org_accepts_allowed_org() -> None:
+    from scripts.push_reranking_hybrid_nano_datasets import validate_repo_org
+
+    validate_repo_org("hakari-bench/NanoFoo")
+
+
+def test_validate_repo_org_rejects_other_org() -> None:
+    import pytest
+
+    from scripts.push_reranking_hybrid_nano_datasets import validate_repo_org
+
+    with pytest.raises(ValueError):
+        validate_repo_org("attacker/NanoFoo")
+    with pytest.raises(ValueError):
+        validate_repo_org("NanoFoo")
