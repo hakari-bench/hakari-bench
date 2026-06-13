@@ -4022,3 +4022,55 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         )
     finally:
         con.close()
+
+
+def _write_json_result(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with lzma.open(path, "wt", encoding="utf-8") as handle:
+        json.dump(payload, handle)
+
+
+def test_top_rankings_payload_reads_sidecar_within_result_dir(tmp_path: Path) -> None:
+    result_path = tmp_path / "model" / "dataset" / "task.json.xz"
+    result_path.parent.mkdir(parents=True, exist_ok=True)
+    sidecar = result_path.parent / "task.rankings.json"
+    sidecar.write_text(json.dumps({"rankings": [{"query_id": "q1"}]}), encoding="utf-8")
+    artifact = {"path": "task.rankings.json"}
+
+    payload = report._top_rankings_payload(artifact=artifact, result_path=result_path)
+
+    assert payload == {"rankings": [{"query_id": "q1"}]}
+
+
+def test_top_rankings_payload_rejects_parent_traversal(tmp_path: Path) -> None:
+    secret = tmp_path / "secret.json"
+    secret.write_text(json.dumps({"rankings": [{"query_id": "leak"}]}), encoding="utf-8")
+    result_path = tmp_path / "model" / "dataset" / "task.json.xz"
+    result_path.parent.mkdir(parents=True, exist_ok=True)
+    artifact = {"path": "../../secret.json"}
+
+    payload = report._top_rankings_payload(artifact=artifact, result_path=result_path)
+
+    assert payload is None
+
+
+def test_top_rankings_payload_rejects_absolute_path(tmp_path: Path) -> None:
+    secret = tmp_path / "secret.json"
+    secret.write_text(json.dumps({"rankings": [{"query_id": "leak"}]}), encoding="utf-8")
+    result_path = tmp_path / "model" / "dataset" / "task.json.xz"
+    result_path.parent.mkdir(parents=True, exist_ok=True)
+    artifact = {"path": str(secret)}
+
+    payload = report._top_rankings_payload(artifact=artifact, result_path=result_path)
+
+    assert payload is None
+
+
+def test_top_rankings_location_falls_back_on_unsafe_path(tmp_path: Path) -> None:
+    result_path = tmp_path / "model" / "dataset" / "task.json.xz"
+    result_path.parent.mkdir(parents=True, exist_ok=True)
+    artifact = {"path": "../../secret.json"}
+
+    location = report._top_rankings_location(artifact=artifact, result_path=result_path)
+
+    assert location == result_path

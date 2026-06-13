@@ -2797,6 +2797,20 @@ def _top_rankings_artifact(task_payload: dict[str, Any]) -> dict[str, Any] | Non
     return artifact
 
 
+def _safe_top_rankings_path(*, path: str, result_path: Path) -> Path | None:
+    """Resolve a sidecar ranking path, rejecting absolute paths or traversal.
+
+    The ``path`` value comes from untrusted result JSON (community-submitted
+    PRs), so it must stay strictly inside the directory holding ``result_path``.
+    Returns ``None`` when the resolved location escapes that directory.
+    """
+    base_dir = result_path.parent.resolve()
+    candidate = (base_dir / path).resolve()
+    if candidate == base_dir or not candidate.is_relative_to(base_dir):
+        return None
+    return candidate
+
+
 def _top_rankings_payload(*, artifact: dict[str, Any], result_path: Path) -> dict[str, Any] | None:
     rankings = artifact.get("rankings")
     path = artifact.get("path")
@@ -2804,8 +2818,8 @@ def _top_rankings_payload(*, artifact: dict[str, Any], result_path: Path) -> dic
         return artifact
     if not isinstance(path, str) or not path:
         return None
-    ranking_path = result_path.parent / path
-    if not ranking_path.exists():
+    ranking_path = _safe_top_rankings_path(path=path, result_path=result_path)
+    if ranking_path is None or not ranking_path.exists():
         return None
     ranking_payload = _read_json(ranking_path)
     return ranking_payload if isinstance(ranking_payload, dict) else None
@@ -2814,7 +2828,9 @@ def _top_rankings_payload(*, artifact: dict[str, Any], result_path: Path) -> dic
 def _top_rankings_location(*, artifact: dict[str, Any], result_path: Path) -> Path:
     path = artifact.get("path")
     if isinstance(path, str) and path:
-        return result_path.parent / path
+        ranking_path = _safe_top_rankings_path(path=path, result_path=result_path)
+        if ranking_path is not None:
+            return ranking_path
     return result_path
 
 
