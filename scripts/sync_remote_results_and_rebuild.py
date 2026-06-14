@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import lzma
+import os
+import shutil
 import shlex
 import subprocess
 import sys
@@ -22,6 +24,8 @@ DEFAULT_DUCKDB_NAME = "hakari_bench.duckdb"
 BM25_BASELINE_MODEL_ID = "bm25"
 TASK_METADATA_ROOT = Path("task_docs/metadata")
 EvaluationScopeChoice = Literal["standard", "all"]
+SyncBackend = Literal["git", "snapshot"]
+SNAPSHOT_CACHE_MARKER = ".hakari_bench_snapshot_cache"
 
 
 @dataclass(frozen=True)
@@ -29,10 +33,15 @@ class SyncRebuildPlan:
     repo_id: str
     repo_dir: Path
     revision: str
+    sync_backend: SyncBackend
+    results_subdir: str
     results_dir: Path
     duckdb_path: Path
     skip_git_sync: bool
     skip_lfs_pull: bool
+    snapshot_clean: bool
+    snapshot_max_workers: int
+    xet_high_performance: bool
     include_bm25_baseline: bool
     bm25_overwrite: bool
     bm25_evaluation_scope: EvaluationScopeChoice
@@ -57,6 +66,15 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--repo-id", default=DEFAULT_RESULTS_REPO_ID, help="Hugging Face dataset repo id.")
     parser.add_argument(
+        "--sync-backend",
+        choices=["git", "snapshot"],
+        default="git",
+        help=(
+            "How to sync the Hugging Face dataset repo. 'git' uses a git/LFS checkout. "
+            "'snapshot' uses huggingface_hub.snapshot_download(), which can use hf_xet."
+        ),
+    )
+    parser.add_argument(
         "--cache-root",
         type=Path,
         default=DEFAULT_CACHE_ROOT,
@@ -75,8 +93,35 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Path inside the dataset repo containing HAKARI result JSON.",
     )
     parser.add_argument("--duckdb-path", type=Path, default=None, help="Output DuckDB path.")
-    parser.add_argument("--skip-git-sync", action="store_true", help="Reuse an existing checkout without git pull.")
+    parser.add_argument(
+        "--skip-git-sync",
+        action="store_true",
+        help="Reuse an existing git checkout or snapshot local directory without syncing.",
+    )
     parser.add_argument("--skip-lfs-pull", action="store_true", help="Skip git lfs pull after syncing git metadata.")
+    parser.add_argument(
+        "--no-snapshot-clean",
+        dest="snapshot_clean",
+        action="store_false",
+        help=(
+            "Do not clear the managed snapshot local directory before downloading. "
+            "The default avoids stale files after upstream deletions."
+        ),
+    )
+    parser.set_defaults(snapshot_clean=True)
+    parser.add_argument(
+        "--snapshot-max-workers",
+        type=int,
+        default=32,
+        help="Maximum parallel workers for huggingface_hub.snapshot_download().",
+    )
+    parser.add_argument(
+        "--no-xet-high-performance",
+        dest="xet_high_performance",
+        action="store_false",
+        help="Do not set HF_XET_HIGH_PERFORMANCE=1 for snapshot downloads.",
+    )
+    parser.set_defaults(xet_high_performance=True)
     parser.add_argument(
         "--no-bm25-baseline",
         action="store_true",
@@ -123,17 +168,23 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 
 def resolve_plan(args: argparse.Namespace) -> SyncRebuildPlan:
-    repo_dir = args.repo_dir or _default_repo_dir(args.cache_root, args.repo_id)
+    sync_backend = cast(SyncBackend, args.sync_backend)
+    repo_dir = args.repo_dir or _default_repo_dir(args.cache_root, args.repo_id, sync_backend=sync_backend)
     results_dir = repo_dir / args.results_subdir
     duckdb_path = args.duckdb_path or results_dir / DEFAULT_DUCKDB_NAME
     return SyncRebuildPlan(
         repo_id=args.repo_id,
         repo_dir=repo_dir,
         revision=args.revision,
+        sync_backend=sync_backend,
+        results_subdir=args.results_subdir,
         results_dir=results_dir,
         duckdb_path=duckdb_path,
         skip_git_sync=args.skip_git_sync,
         skip_lfs_pull=args.skip_lfs_pull,
+        snapshot_clean=args.snapshot_clean,
+        snapshot_max_workers=max(1, args.snapshot_max_workers),
+        xet_high_performance=args.xet_high_performance,
         include_bm25_baseline=not args.no_bm25_baseline,
         bm25_overwrite=args.bm25_overwrite,
         bm25_evaluation_scope=cast(EvaluationScopeChoice, args.bm25_evaluation_scope),
@@ -154,6 +205,9 @@ def sync_repo(plan: SyncRebuildPlan) -> None:
     if plan.skip_git_sync:
         return
     _ensure_hf_auth()
+    if plan.sync_backend == "snapshot":
+        _sync_snapshot_repo(plan)
+        return
     if (plan.repo_dir / ".git").is_dir():
         _run(_git_command(["-C", str(plan.repo_dir), "pull", "--ff-only", "origin", plan.revision]))
     else:
@@ -163,6 +217,54 @@ def sync_repo(plan: SyncRebuildPlan) -> None:
             _run(_git_command(["-C", str(plan.repo_dir), "checkout", plan.revision]))
     if not plan.skip_lfs_pull:
         _run(_git_command(["-C", str(plan.repo_dir), "lfs", "pull"]))
+
+
+def _sync_snapshot_repo(plan: SyncRebuildPlan) -> None:
+    from huggingface_hub import snapshot_download
+
+    if plan.xet_high_performance:
+        os.environ.setdefault("HF_XET_HIGH_PERFORMANCE", "1")
+    if plan.snapshot_clean:
+        _prepare_snapshot_local_dir(plan.repo_dir)
+    else:
+        plan.repo_dir.mkdir(parents=True, exist_ok=True)
+
+    allow_patterns = [f"{plan.results_subdir}/**", "README.md"]
+    snapshot_download(
+        repo_id=plan.repo_id,
+        repo_type="dataset",
+        revision=plan.revision,
+        allow_patterns=allow_patterns,
+        local_dir=plan.repo_dir,
+        token=True,
+        max_workers=plan.snapshot_max_workers,
+    )
+    _write_snapshot_marker(plan)
+
+
+def _prepare_snapshot_local_dir(repo_dir: Path) -> None:
+    if not repo_dir.exists():
+        repo_dir.mkdir(parents=True, exist_ok=True)
+        return
+    marker = repo_dir / SNAPSHOT_CACHE_MARKER
+    if not marker.exists():
+        raise RuntimeError(
+            f"Refusing to clean non-managed snapshot directory: {repo_dir}. "
+            f"Remove it manually or create {marker.name} if this directory is disposable."
+        )
+    shutil.rmtree(repo_dir)
+    repo_dir.mkdir(parents=True, exist_ok=True)
+
+
+def _write_snapshot_marker(plan: SyncRebuildPlan) -> None:
+    marker_payload = {
+        "repo_id": plan.repo_id,
+        "revision": plan.revision,
+        "results_subdir": plan.results_subdir,
+        "sync_backend": plan.sync_backend,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    (plan.repo_dir / SNAPSHOT_CACHE_MARKER).write_text(json.dumps(marker_payload, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def load_task_doc_bm25_metadata(metadata_root: Path = TASK_METADATA_ROOT) -> dict[tuple[str, str], dict[str, Any]]:
@@ -367,8 +469,9 @@ def run_plan(plan: SyncRebuildPlan) -> None:
     _run(rebuild_duckdb_command(plan))
 
 
-def _default_repo_dir(cache_root: Path, repo_id: str) -> Path:
-    return cache_root / repo_id.replace("/", "__")
+def _default_repo_dir(cache_root: Path, repo_id: str, *, sync_backend: SyncBackend = "git") -> Path:
+    suffix = "" if sync_backend == "git" else "__snapshot"
+    return cache_root / f"{repo_id.replace('/', '__')}{suffix}"
 
 
 def _hf_dataset_git_url(repo_id: str) -> str:

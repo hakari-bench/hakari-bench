@@ -1,6 +1,6 @@
 # Creating Nano Datasets
 
-This document is the canonical workflow for recreating Nano-style retrieval
+This document is the canonical workflow for recreating Nano-set retrieval
 datasets in this repository.
 
 ## Goal
@@ -13,9 +13,9 @@ standard Hugging Face Datasets shape is:
 - config `qrels`
 - config `bm25`
 - config `harrier_oss_v1_270m` for dense candidates when building
-  reranking-hybrid Nano sets
+  reranking-hybrid Nano-sets
 - config `reranking_hybrid` for default reranking candidates when building
-  reranking-hybrid Nano sets
+  reranking-hybrid Nano-sets
 - task/subset names stored as split names in every config
 
 Example local output:
@@ -294,7 +294,7 @@ metadata:
   language: unknown
   category: natural_language
   short_description: NanoExample Nano retrieval dataset.
-  description: NanoExample is a Nano-style retrieval dataset generated from retrieval source tables.
+  description: NanoExample is a Nano-set retrieval dataset generated from retrieval source tables.
 ```
 
 If source metadata is known, pass `--metadata-json` with the final metadata
@@ -370,7 +370,7 @@ Upload four base `DatasetDict`s or equivalent parquet files:
 - config `qrels`
 - config `bm25`
 
-For reranking-hybrid Nano sets, also upload:
+For reranking-hybrid Nano-sets, also upload:
 
 - config `harrier_oss_v1_270m`
 - config `reranking_hybrid`

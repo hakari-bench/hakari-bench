@@ -606,7 +606,7 @@ The current best NanoBEIR-en options measured in this repository are:
 | `answerdotai/answerai-colbert-small-v1` | `fp32`, `sdpa` | none | `[unused0]` / `[unused1]` | `48` / `512` | n/a | fp32 was only marginally better than the existing bf16 result. |
 | `colbert-ir/colbertv2.0` | `bf16`, `sdpa` | none | `[unused0]` / `[unused1]` | `32` / `512` | `false` | Required for the Stanford ColBERT marker-token path; the fallback adapter inserts these as token IDs after CLS. |
 | `mixedbread-ai/mxbai-edge-colbert-v0-17m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | README/PyLate config defaults are q48/d512/no expansion; NanoBEIR-en primary exact score improved with q40/d512 over the default query length while keeping document length at 512. |
-| `mixedbread-ai/mxbai-edge-colbert-v0-32m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | Evaluated with the same optimized mxbai-edge ColBERT option as the 17m checkpoint for apples-to-apples full NanoSet coverage. |
+| `mixedbread-ai/mxbai-edge-colbert-v0-32m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | Evaluated with the same optimized mxbai-edge ColBERT option as the 17m checkpoint for apples-to-apples full Nano-set coverage. |
 
 Example for the highest-scoring ColBERT-Zero option:
 

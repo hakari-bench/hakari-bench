@@ -2,7 +2,7 @@
 
 This document defines the policy and template for reader-facing benchmark task
 documentation under `task_docs/docs/`, plus the group index pages that summarize
-each Nano set.
+each Nano-set.
 
 ## Purpose
 
@@ -119,7 +119,7 @@ task_docs/metadata/NanoMIRACL/ja.json
 
 The metadata JSON should include at least:
 
-- Nano set name.
+- Nano-set name.
 - Backing dataset name.
 - Backing Hugging Face dataset id.
 - Task or split name.
@@ -155,7 +155,7 @@ as an audit signal, but should not replace the generated task metadata.
 
 Use this structure unless a task needs a clearly better variant:
 
-1. `# {Nano set} / {task}` title.
+1. `# {Nano-set} / {task}` title.
 2. `## Overview`: a public web-page lead of about 120-180 English words, or
    roughly 500 Japanese characters when translated. Start from the source paper
    or source benchmark when one exists, then explain the concrete Nano task:
@@ -547,7 +547,7 @@ Field guidance:
 - `document_path`: repository-relative Markdown path only.
 - `source_research.primary_source_type`: use `task_paper`, `benchmark_paper`,
   `dataset_card`, `project_page`, `technical_article`, or `sample_inference`.
-- `bm25.source`: must be `dataset_candidate_subset` for the current Nano set
+- `bm25.source`: must be `dataset_candidate_subset` for the current Nano-set
   unless the task explicitly uses a different source.
 - `candidate_subsets`: records `bm25`, `dense`, and `reranking_hybrid`
   candidate metrics. `bm25` and `dense` are top-500 candidate subsets.
@@ -561,7 +561,7 @@ Field guidance:
 Use this template for new pages:
 
 ````markdown
-# {Nano set} / {task name}
+# {Nano-set} / {task name}
 
 ## Overview
 
@@ -728,7 +728,7 @@ include full character counts inline, and visibly truncate long content with
 ## Group Index Pages
 
 Collection-level index pages should not use the full task template. They should
-summarize the Nano set as a public entry point and then link to task pages. Use:
+summarize the Nano-set as a public entry point and then link to task pages. Use:
 
 ```text
 task_docs/docs/{Nano-set name}/index.md
@@ -736,7 +736,7 @@ task_docs/docs/{Nano-set name}/index.md
 
 Use this reader-facing structure:
 
-1. `# {Nano set}` title.
+1. `# {Nano-set}` title.
 2. `## Overview`: about 150-250 English words explaining the benchmark group,
    source benchmark or paper, language/domain coverage, and what kind of
    retrieval behavior the group measures.
@@ -746,7 +746,7 @@ Use this reader-facing structure:
    retrieval, monolingual/multilingual/cross-lingual behavior, and whether the
    group is native or translated.
 4. `## Task Families`: bullets by task family, language family, domain, or
-   retrieval setting. This section should make heterogeneous Nano sets easy to
+   retrieval setting. This section should make heterogeneous Nano-sets easy to
    scan.
 5. `## Dataset Shape`: task count, query/document/qrel totals, multi-positive
    distribution, task-family differences, document length differences, and
@@ -788,7 +788,7 @@ Avoid oversized tables in the index. Put full metric payloads, candidate counts,
 safeguard rows, and document status in `task_docs/metadata/`, not in the
 reader-facing group table.
 
-Group index pages should be authored one Nano set at a time. Use the metadata
+Group index pages should be authored one Nano-set at a time. Use the metadata
 JSON files and the task pages in `task_docs/docs/` as references, but write the
 group prose manually. Do not bulk-generate these index pages from a template
 script.

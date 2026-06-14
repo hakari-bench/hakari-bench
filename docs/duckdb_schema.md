@@ -704,7 +704,7 @@ language, category, citation coverage, or text length profile.
 | `task_key` | `VARCHAR` | Ranking task identity. |
 | `language` | `VARCHAR` | Primary metadata language code, or `multilingual`. |
 | `languages` | `VARCHAR[]` | Main detected language codes for the task, copied from YAML `metadata.languages`. Falls back conceptually to `[language]` for older metadata. |
-| `primary_languages` | `VARCHAR[]` | Canonical language-page routing codes from YAML `metadata.primary_languages`. Single-language NanoSets should define this at dataset level; split-language or bitext tasks may define it per task. |
+| `primary_languages` | `VARCHAR[]` | Canonical language-page routing codes from YAML `metadata.primary_languages`. Single-language Nano-sets should define this at dataset level; split-language or bitext tasks may define it per task. |
 | `category` | `VARCHAR` | Metadata category, such as `natural_language` or `code`. |
 | `short_description` | `VARCHAR` | Short human-readable task description. |
 | `citation_count` | `INTEGER` | Number of citation keys recorded for the task. |
@@ -797,8 +797,8 @@ Only models that have every expected task in the selected view are ranked.
 For overall scope presets, the complete model rule depends on the selected
 score aggregation. `micro` uses the raw task-key set directly. `macro` first
 checks raw task completeness within each model/benchmark pair, applies any
-component-level `group_by` rule, aggregates each benchmark into one NanoSet
-score row, and finally applies the complete model rule to those NanoSet rows.
+component-level `group_by` rule, aggregates each benchmark into one Nano-set
+score row, and finally applies the complete model rule to those Nano-set rows.
 
 ### Benchmark and Overall Views
 
@@ -822,7 +822,7 @@ For overall scope presets:
   the other Core (EN) components do not otherwise provide the canonical MIRACL
   passage retrieval task.
 - `Custom`: a dynamic scope built from repeated `bench=` query parameters.
-  NanoSet labels in the viewer toggle membership in this selected set. When
+  Nano-set labels in the viewer toggle membership in this selected set. When
   `view=Custom` has no `bench=` values, it is the empty custom state: no
   benchmarks are selected, language task facets reset to All languages, and no
   leaderboard rows are returned.
@@ -834,17 +834,17 @@ Overall scope presets also expose a `score` aggregation selector:
 - `score=micro`: the default score. Every raw task row contributes directly.
   This is useful for raw-task-weighted analysis and for comparing against older
   leaderboard results.
-- `score=macro`: each NanoSet contributes one score row. Components with
+- `score=macro`: each Nano-set contributes one score row. Components with
   `group_by`, currently
-  `MNanoBEIR` using `task_name`, are first averaged inside the NanoSet, then the
-  NanoSet contributes one score to the final ranking. This prevents large
+  `MNanoBEIR` using `task_name`, are first averaged inside the Nano-set, then the
+  Nano-set contributes one score to the final ranking. This prevents large
   suites from dominating because they contain more raw tasks.
 
 For overall views, `mean_score` follows the selected aggregation. In macro
-mode, Borda, `mean_score`, and metric columns are computed from NanoSet rows.
+mode, Borda, `mean_score`, and metric columns are computed from Nano-set rows.
 In micro mode, they are computed from raw task rows.
 
-Macro overall views expose the NanoSet rows as metric columns, using benchmark
+Macro overall views expose the Nano-set rows as metric columns, using benchmark
 names such as `MNanoBEIR` and `NanoMLDR`. Micro overall views keep metric
 columns disabled by default to avoid expanding the table to every raw task.
 
@@ -878,7 +878,7 @@ drops the no-op truncate row and prefers the original/full-dimension row.
 Task score columns are also controlled by an explicit display flag. The viewer
 does not render per-task or per-score-group metric columns by default. When
 `task_scores=1` is present, the leaderboard computes columns for the current
-selection: the selected score group for benchmark views, NanoSet columns for
+selection: the selected score group for benchmark views, Nano-set columns for
 overall `score=macro`, or task-level columns when no score group is available.
 By default, `model_filter` only hides rendered model rows,
 `task_filter` only narrows displayed task score columns, and facet filters such
@@ -1030,7 +1030,7 @@ choices:
   rows from MNanoBEIR but does not include `NanoBEIR-no` rows merely because
   their detected `languages` array contains English as a secondary language.
 - Benchmarks may also set `language_page_languages` to constrain the Task
-  language filter options. Language-focused Nano sets use this together with
+  language filter options. Language-focused Nano-sets use this together with
   `primary_languages` to keep auxiliary detector languages from cross-language
   tasks out of the selector; for example, `NanoMTEB-Dutch` exposes `nl`
   but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
@@ -1104,7 +1104,7 @@ repository falls back to a metadata join so `query_len_min`, `query_len_max`,
 complete leaderboard rows for common no-filter display modes. Configured
 overall rows in this mart use the default raw-task `score=micro` semantics.
 `score=macro` overall leaderboards and `Custom` `bench=` selections, including
-empty Custom, are computed dynamically from `viewer_task_results` so the NanoSet
+empty Custom, are computed dynamically from `viewer_task_results` so the Nano-set
 aggregation policy is always applied from the current YAML configuration. It is keyed by
 `view_name`, `score_target`, and the four display
 flags
@@ -1482,9 +1482,9 @@ The final result should return both `macro_mean` and `micro_mean`. In
 
 Overall views using `score=macro`, including the compact `Core` and `Core (EN)`
 leaderboards and dynamic `Custom` `bench=` selections, first average raw tasks
-into one score row per NanoSet, then compute Borda, means, and NanoSet metric
+into one score row per Nano-set, then compute Borda, means, and Nano-set metric
 columns. Components with a `group_by` setting, such as `MNanoBEIR` grouped by
-`task_name`, first average those inner units before the final NanoSet score is
+`task_name`, first average those inner units before the final Nano-set score is
 computed. Generate configured `overall_components` from
 `config/viewer/overall.yaml`; generate Custom components from the selected
 benchmark keys while preserving any configured component `group_by` policy.
@@ -1667,9 +1667,9 @@ grouped_rows AS (
 ```
 
 Then average `grouped_rows` once more by `(model_key, benchmark)` to produce
-one NanoSet row per model and benchmark. Use those NanoSet rows in place of
+one Nano-set row per model and benchmark. Use those Nano-set rows in place of
 `source_rows`, then reuse `expected` and later CTEs from the benchmark-view
-query. Because `score=macro` ranks the NanoSet rows directly, `mean_score` and
+query. Because `score=macro` ranks the Nano-set rows directly, `mean_score` and
 `borda_score` should be computed from those rows, and metric columns should use
 `benchmark` as their column key.
 
@@ -1825,7 +1825,7 @@ Borda, and mean calculations.
 3. For benchmark views with a selected `score_group`, aggregate complete-model
    raw rows by the selected `group_by` key. For overall `score=macro`, first
    check raw completeness per model and benchmark, apply any configured
-   component `group_by`, and aggregate each benchmark into one NanoSet row.
+   component `group_by`, and aggregate each benchmark into one Nano-set row.
 4. Build the expected task set and keep only complete models.
 5. Rank each task by score descending and compute per-task Borda scores.
 6. Aggregate per model into `borda_score`, `mean_score`, `task_count`, and

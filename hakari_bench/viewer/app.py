@@ -70,6 +70,9 @@ from hakari_bench.viewer.variant_display import (
 
 ASSETS_DIR = Path(__file__).with_name("assets")
 DEFAULT_FRAME_ANCESTORS = "https://huggingface.co https://*.huggingface.co"
+_FRAME_ANCESTOR_TOKEN = re.compile(
+    r"^(?:'self'|'none'|\*|(?:https?://)?(?:\*\.)?[A-Za-z0-9.-]+(?::\d+)?)$"
+)
 SECURITY_HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
@@ -552,6 +555,9 @@ def _content_security_policy() -> str:
             "style-src 'self'",
             "img-src 'self' data:",
             "connect-src 'self'",
+            "object-src 'none'",
+            "frame-src 'none'",
+            "form-action 'self'",
             "base-uri 'none'",
             f"frame-ancestors {frame_ancestors}",
         ]
@@ -561,9 +567,9 @@ def _content_security_policy() -> str:
 def _frame_ancestors() -> str:
     value = os.environ.get("HAKARI_BENCH_VIEWER_FRAME_ANCESTORS", DEFAULT_FRAME_ANCESTORS)
     tokens = value.split()
-    if any("\r" in token or "\n" in token for token in tokens):
+    if not tokens or not all(_FRAME_ANCESTOR_TOKEN.match(token) for token in tokens):
         return DEFAULT_FRAME_ANCESTORS
-    return " ".join(tokens) or DEFAULT_FRAME_ANCESTORS
+    return " ".join(tokens)
 
 
 def render_page(
@@ -718,7 +724,7 @@ def _database_footer_label(store: LocalDuckDbStore) -> str:
 def _sha1_prefix(path: Path, *, length: int = 12) -> str:
     if not path.exists():
         return "unavailable"
-    digest = hashlib.sha1()
+    digest = hashlib.sha1(usedforsecurity=False)
     with path.open("rb") as file:
         for chunk in iter(lambda: file.read(1024 * 1024), b""):
             digest.update(chunk)

@@ -18,7 +18,7 @@ set is:
 5. `NanoBRIGHT`
 6. `NanoCoIR`
 
-This document records why these six Nano sets were selected and why several
+This document records why these six Nano-sets were selected and why several
 plausible candidates were left out. The decision was made by combining external
 adoption signals, source benchmark quality, task and language diversity,
 overlap analysis, lexical baseline difficulty, and actual dense-model score
@@ -39,7 +39,7 @@ dominate the Core aggregate.
 
 ## Final Core Set
 
-| Position | Nano set | Role in Core | Main reason for inclusion |
+| Position | Nano-set | Role in Core | Main reason for inclusion |
 | ---: | --- | --- | --- |
 | 1 | `MNanoBEIR` | Classical multilingual IR anchor | BEIR-style retrieval remains a common reference point; Core aggregates it by source task name so multilingual coverage does not dominate by raw row count. |
 | 2 | `NanoMMTEB-v2` | Broad multilingual MTEB/MMTEB anchor | Represents modern MTEB-style retrieval coverage across many task types and languages. |
@@ -60,7 +60,7 @@ The Core set was deliberately pruned. These decisions are as important as the
 selected set because they prevent the Core score from becoming a second copy of
 the `All` view.
 
-| Nano set | Decision | Reason |
+| Nano-set | Decision | Reason |
 | --- | --- | --- |
 | `NanoMIRACL` | Removed from Core after review | MIRACL remains a canonical multilingual benchmark, but the analyzed dense results showed substantial saturation and low model separation. Its role is better served by the `All` and benchmark-specific views than by the compact Core score. |
 | `NanoLaw` | Removed from Core after review | Legal retrieval remains important, but many NanoLaw tasks duplicate similar source tasks already covered by `NanoRTEB` or `NanoMMTEB-v2`. After overlap removal, its effective contribution is only four tasks, so it is cleaner as a domain-specific view. |
@@ -133,7 +133,7 @@ Definitions:
 - `low-var`: tasks with std <= 0.03.
 - `healthy`: tasks with 0.25 < mean < 0.85 and std >= 0.05.
 
-| Nano set | Dense analysis task rows | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy |
+| Nano-set | Dense analysis task rows | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `MNanoBEIR` | 182 raw, grouped by `task_name` in Core | 0.5521 | 0.0476 | 0.1042 | 2 | 1 | 16 | 73 |
 | `NanoMMTEB-v2` proxy | 18 | 0.5434 | 0.0572 | 0.1206 | 5 | 2 | 5 | 9 |
@@ -161,7 +161,7 @@ This table explains several choices:
 
 ## Evidence from Pruned Alternatives
 
-| Nano set | Effective tasks | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy | Interpretation |
+| Nano-set | Effective tasks | avg_mean | avg_std | p90-p10 | ceiling | floor | low-var | healthy | Interpretation |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | `NanoMIRACL` | 18 | 0.7880 | 0.0280 | 0.0597 | 1 | 0 | 12 | 1 | Canonical multilingual benchmark, but too saturated and low-variance for the compact Core score. |
 | `NanoLaw` after overlap exclusions | 4 | 0.5634 | 0.0686 | 0.1516 | 0 | 0 | 0 | 4 | Good legal-domain signal, but too much overlap with selected Core sources and too few effective tasks for a Core slot. |
@@ -199,7 +199,7 @@ Official MTEB registration was checked against
 `embeddings-benchmark/mteb` main at commit
 `16cc3869619c78499c34bdb59533004899b0f4dc` on 2026-05-21. This matters because
 tasks already present in MTEB are more likely to be understood, reproduced, and
-compared by external users. It is not, by itself, a reason to include a Nano set
+compared by external users. It is not, by itself, a reason to include a Nano-set
 in Core.
 
 All `NanoLaw` tasks map to MTEB retrieval tasks:
@@ -267,7 +267,7 @@ selected components have strong BM25 baselines because the source task is
 lexical by nature. Others are deliberately hard for BM25. `NanoLaw` and
 `NanoBIRCO` are shown here as pruned comparison points.
 
-| Nano set | Subtasks | Queries | Split-local documents | Positive qrels | Query-weighted BM25 nDCG@10 | Query-weighted BM25 hit@10 |
+| Nano-set | Subtasks | Queries | Split-local documents | Positive qrels | Query-weighted BM25 nDCG@10 | Query-weighted BM25 hit@10 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | `NanoMLDR` | 13 | 2,089 | 55,585 | 2,089 | 0.7178 | 0.7946 |
 | `NanoBRIGHT` | 20 | 2,245 | 121,771 | 9,287 | 0.2156 | 0.4454 |

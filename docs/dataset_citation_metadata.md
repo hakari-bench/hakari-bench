@@ -8,7 +8,7 @@ this document.
 
 ## Purpose
 
-Dataset metadata should help benchmark users understand what each dataset group and task measures, which language and category it belongs to, and which sources should be cited when writing papers. Task-level citations matter because many Nano-style benchmark groups are assembled from external datasets. A group paper such as MTEB, MIRACL, RTEB, or a Nano benchmark paper may explain the benchmark wrapper, but it may not be the correct source for an individual task.
+Dataset metadata should help benchmark users understand what each dataset group and task measures, which language and category it belongs to, and which sources should be cited when writing papers. Task-level citations matter because many Nano-set benchmark groups are assembled from external datasets. A group paper such as MTEB, MIRACL, RTEB, or a Nano benchmark paper may explain the benchmark wrapper, but it may not be the correct source for an individual task.
 
 The citation metadata must therefore distinguish between:
 
@@ -121,7 +121,7 @@ task_metadata:
 | Field | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `language` | string | yes | ISO 639-1 two-character code, or `multilingual`. |
-| `primary_languages` | list of strings | required for language-axis Nano sets | Canonical language routing for leaderboard language pages. Use one code for a language-specific NanoSet such as `vi`, up to two codes for bitext/cross-lingual tasks such as `[de, fr]`, or only `[multilingual]` when the task is inherently mixed across many languages. |
+| `primary_languages` | list of strings | required for language-axis Nano-sets | Canonical language routing for leaderboard language pages. Use one code for a language-specific Nano-set such as `vi`, up to two codes for bitext/cross-lingual tasks such as `[de, fr]`, or only `[multilingual]` when the task is inherently mixed across many languages. |
 | `languages` | list of strings | recommended | Main detected languages for the task. Include languages that account for at least 10% of either query or document texts, ordered by detected usage. Use `unknown` when detection cannot establish a language. |
 | `language_detection` | mapping | recommended | `fast-langdetect` query/document language percentages. Include languages at or above 0.5% for each side. |
 | `category` | string | yes | `natural_language` or `code`. |

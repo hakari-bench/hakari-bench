@@ -250,6 +250,24 @@ The dataset repo is private, so authenticate before syncing, for example with
 already exists and you only want to rebuild from local files, pass
 `--skip-git-sync`.
 
+The helper also supports a Hugging Face Hub snapshot backend:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend snapshot
+```
+
+This uses `huggingface_hub.snapshot_download()` and can use `hf_xet` when the
+`hf_xet` package or `git-xet` integration is available. The default snapshot
+cache is separate from the git/LFS checkout:
+`~/.cache/hakari-bench/hf-datasets/hakari-bench__results__snapshot`. The helper
+cleans this managed directory by default before downloading so files deleted
+from the remote dataset do not remain locally. Use `--no-snapshot-clean` only
+when intentionally resuming or reusing an incomplete local snapshot. Tune
+parallelism with `--snapshot-max-workers`; the default is `32`. The helper sets
+`HF_XET_HIGH_PERFORMANCE=1` for snapshot downloads unless
+`--no-xet-high-performance` is passed.
+
 Useful variants:
 
 ```bash

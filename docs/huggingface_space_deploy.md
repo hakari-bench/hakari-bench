@@ -67,6 +67,37 @@ set the Space variable `HAKARI_BENCH_LEADERBOARD_IMAGE_TAG` to that tag before
 rebuilding the Space. Normal production operation leaves the variable unset or
 sets it to `hf-space-docker-latest`.
 
+## End-to-End Refresh Checklist
+
+Use this sequence when both the leaderboard database and viewer image should be
+refreshed:
+
+1. Merge the latest `main` into `hf-space-docker`.
+2. Rebuild the DuckDB from the current remote result JSON.
+3. Publish `duckdb/hakari_bench.duckdb` to
+   `hakari-bench/leaderboard_database`.
+4. Run local validation with `uv run tox`.
+5. Push `hf-space-docker` so GitHub Actions publishes
+   `ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest`.
+6. Factory reboot the Space so it pulls the rolling image tag and redownloads
+   the latest DuckDB.
+7. Verify both public URLs and compare CSV output when possible.
+
+The result sync helper can build the DuckDB directly from the private results
+dataset. The snapshot backend uses `huggingface_hub.snapshot_download()` and
+can use `hf_xet` when available:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend snapshot
+```
+
+The rebuilt DuckDB is written to:
+
+```text
+~/.cache/hakari-bench/hf-datasets/hakari-bench__results__snapshot/hakari-results/hakari_bench.duckdb
+```
+
 ## Deploy or Rebuild the Space Repo
 
 Deploy the Space by replacing its `main` branch with a minimal git commit. This
@@ -101,14 +132,14 @@ colorTo: gray
 sdk: docker
 app_port: 7860
 pinned: false
-license: apache-2.0
+license: mit
 fullWidth: true
 short_description: HAKARI-Bench retrieval leaderboard
 ---
 
 # HAKARI-Bench Leaderboard
 
-This Space hosts the public leaderboard for HAKARI-Bench, a Nano-style information retrieval benchmark suite for SentenceTransformers-compatible dense, sparse, reranker, late-interaction, and BM25 systems.
+This Space hosts the public leaderboard for HAKARI-Bench, a Nano-set information retrieval benchmark suite for SentenceTransformers-compatible dense, sparse, reranker, late-interaction, and BM25 systems.
 
 The leaderboard viewer runs from a prebuilt Docker image published by the HAKARI-Bench GitHub repository:
 
@@ -223,6 +254,25 @@ print(path.exists(), path.stat().st_size)
 PY
 ```
 
+Record the dataset commit and file metadata after publishing:
+
+```bash
+uv run --group viewer python - <<'PY'
+from huggingface_hub import HfApi
+
+info = HfApi().repo_info(
+    "hakari-bench/leaderboard_database",
+    repo_type="dataset",
+    files_metadata=True,
+)
+print(info.sha)
+for sibling in info.siblings:
+    if sibling.rfilename == "duckdb/hakari_bench.duckdb":
+        print(sibling.rfilename, sibling.size, sibling.lfs)
+        break
+PY
+```
+
 ## Runtime Configuration
 
 The viewer image sets these defaults:
@@ -262,6 +312,22 @@ embedding hosts:
 https://huggingface.co https://*.huggingface.co
 ```
 
+After publishing a new DuckDB or a new rolling GHCR image, factory reboot the
+Space so the container starts from a fresh image and downloads the current
+database:
+
+```bash
+uv run --group viewer python - <<'PY'
+from huggingface_hub import HfApi
+
+runtime = HfApi().restart_space(
+    "hakari-bench/leaderboard",
+    factory_reboot=True,
+)
+print(runtime.stage, runtime.raw)
+PY
+```
+
 ## Verification
 
 Wait for the deployed Space commit to become `RUNNING`:
@@ -289,11 +355,20 @@ iframe, while the `hf.space` URL serves the app directly:
 ```bash
 curl -L -sS https://huggingface.co/spaces/hakari-bench/leaderboard | rg "HAKARI-Bench Leaderboard|hakari-bench-leaderboard.hf.space"
 curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-Bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.png|/assets/htmx.min.js"
-curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=All' | rg "Retrieval|NanoMMTEB-v2|Task facets"
+curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=Overall' | rg "Overall|Core \\(EN\\)|Micro|Macro|Task facets"
+curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard.csv' -o /tmp/hakari_space_leaderboard.csv
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.png -o /tmp/hakari_favicon.png
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/app.css -o /tmp/hakari_app.css
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/viewer.js -o /tmp/hakari_viewer.js
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/htmx.min.js -o /tmp/hakari_htmx.min.js
+```
+
+When a local viewer was started from the same DuckDB, compare the exported CSV
+with the deployed Space:
+
+```bash
+curl -sS 'http://127.0.0.1:28090/leaderboard.csv' -o /tmp/hakari_local_leaderboard.csv
+sha256sum /tmp/hakari_local_leaderboard.csv /tmp/hakari_space_leaderboard.csv
 ```
 
 Check Space logs if the app is not serving traffic:

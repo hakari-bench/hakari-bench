@@ -941,6 +941,9 @@ def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: 
     assert "style-src 'self'" in response.headers["content-security-policy"]
     assert "'unsafe-inline'" not in response.headers["content-security-policy"]
     assert "img-src 'self' data:" in response.headers["content-security-policy"]
+    assert "object-src 'none'" in response.headers["content-security-policy"]
+    assert "frame-src 'none'" in response.headers["content-security-policy"]
+    assert "form-action 'self'" in response.headers["content-security-policy"]
     assert (
         "frame-ancestors https://huggingface.co https://*.huggingface.co https://example.com"
         in response.headers["content-security-policy"]
@@ -5435,3 +5438,36 @@ def _reranking_viewer_rows(base_rows: list[tuple], diagnostic_rows: list[tuple])
             )
         )
     return reranking_rows
+
+
+def test_frame_ancestors_keeps_valid_https_and_keyword_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
+    from hakari_bench.viewer import app as viewer_app
+
+    monkeypatch.setenv(
+        "HAKARI_BENCH_VIEWER_FRAME_ANCESTORS",
+        "'self' https://huggingface.co https://*.huggingface.co",
+    )
+    assert (
+        viewer_app._frame_ancestors()
+        == "'self' https://huggingface.co https://*.huggingface.co"
+    )
+
+
+def test_frame_ancestors_rejects_unsafe_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    from hakari_bench.viewer import app as viewer_app
+
+    monkeypatch.setenv(
+        "HAKARI_BENCH_VIEWER_FRAME_ANCESTORS",
+        "https://huggingface.co javascript:alert(1)",
+    )
+    assert viewer_app._frame_ancestors() == viewer_app.DEFAULT_FRAME_ANCESTORS
+
+
+def test_frame_ancestors_rejects_crlf_token(monkeypatch: pytest.MonkeyPatch) -> None:
+    from hakari_bench.viewer import app as viewer_app
+
+    monkeypatch.setenv(
+        "HAKARI_BENCH_VIEWER_FRAME_ANCESTORS",
+        "https://huggingface.co\r\nContent-Type: text/html",
+    )
+    assert viewer_app._frame_ancestors() == viewer_app.DEFAULT_FRAME_ANCESTORS
