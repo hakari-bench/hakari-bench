@@ -42,7 +42,7 @@ class SyncRebuildPlan:
     snapshot_clean: bool
     snapshot_max_workers: int
     xet_high_performance: bool
-    include_bm25_baseline: bool
+    materialize_bm25_baseline_from_metadata: bool
     bm25_overwrite: bool
     bm25_evaluation_scope: EvaluationScopeChoice
     bm25_dataset: list[str]
@@ -60,8 +60,8 @@ class SyncRebuildPlan:
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Sync result JSON from the Hugging Face dataset git repo, materialize the dataset-source BM25 "
-            "baseline from task_docs/metadata by default, and rebuild the viewer DuckDB."
+            "Sync result JSON from the Hugging Face dataset repo and rebuild the viewer DuckDB. "
+            "By default the DuckDB is built only from synced Hugging Face result JSON."
         )
     )
     parser.add_argument("--repo-id", default=DEFAULT_RESULTS_REPO_ID, help="Hugging Face dataset repo id.")
@@ -122,39 +122,58 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Do not set HF_XET_HIGH_PERFORMANCE=1 for snapshot downloads.",
     )
     parser.set_defaults(xet_high_performance=True)
-    parser.add_argument(
-        "--no-bm25-baseline",
+    bm25_materialization = parser.add_mutually_exclusive_group()
+    bm25_materialization.add_argument(
+        "--materialize-bm25-baseline-from-metadata",
+        "--materialize-bm25-baseline",
+        dest="materialize_bm25_baseline_from_metadata",
         action="store_true",
-        help="Do not materialize missing BM25 baseline result JSON before rebuilding DuckDB.",
+        default=False,
+        help=(
+            "Opt in to generating missing bm25/*.json.xz result files from local task_docs/metadata "
+            "before rebuilding DuckDB. The default is off so builds use only synced Hugging Face result JSON."
+        ),
+    )
+    bm25_materialization.add_argument(
+        "--no-bm25-baseline",
+        dest="materialize_bm25_baseline_from_metadata",
+        action="store_false",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--bm25-overwrite",
         action="store_true",
-        help="Regenerate BM25 baseline JSON from task metadata even when matching files already exist.",
+        help=(
+            "With --materialize-bm25-baseline-from-metadata, regenerate metadata-backed BM25 baseline JSON "
+            "even when matching files already exist."
+        ),
     )
     parser.add_argument(
         "--bm25-evaluation-scope",
         default="standard",
         choices=["standard", "all"],
-        help="Evaluation scope for BM25 baseline generation.",
+        help="Evaluation scope for metadata-backed BM25 baseline generation.",
     )
     parser.add_argument(
         "--bm25-dataset",
         action="append",
         default=None,
-        help="Restrict BM25 baseline generation to a built-in or Hugging Face dataset. May repeat.",
+        help="With --materialize-bm25-baseline-from-metadata, restrict BM25 generation to a dataset. May repeat.",
     )
     parser.add_argument(
         "--bm25-collection",
         action="append",
         default=None,
-        help="Restrict BM25 baseline generation to a dataset collection. May repeat.",
+        help=(
+            "With --materialize-bm25-baseline-from-metadata, restrict BM25 generation to a dataset collection. "
+            "May repeat."
+        ),
     )
     parser.add_argument(
         "--bm25-split",
         action="append",
         default=None,
-        help="Restrict BM25 baseline generation to a split/task. May repeat.",
+        help="With --materialize-bm25-baseline-from-metadata, restrict BM25 generation to a split/task. May repeat.",
     )
     parser.add_argument("--overwrite-result-duplicates", action="store_true")
     parser.add_argument("--incremental", action="store_true")
@@ -168,6 +187,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 
 def resolve_plan(args: argparse.Namespace) -> SyncRebuildPlan:
+    _validate_bm25_materialization_args(args)
     sync_backend = cast(SyncBackend, args.sync_backend)
     repo_dir = args.repo_dir or _default_repo_dir(args.cache_root, args.repo_id, sync_backend=sync_backend)
     results_dir = repo_dir / args.results_subdir
@@ -185,7 +205,7 @@ def resolve_plan(args: argparse.Namespace) -> SyncRebuildPlan:
         snapshot_clean=args.snapshot_clean,
         snapshot_max_workers=max(1, args.snapshot_max_workers),
         xet_high_performance=args.xet_high_performance,
-        include_bm25_baseline=not args.no_bm25_baseline,
+        materialize_bm25_baseline_from_metadata=args.materialize_bm25_baseline_from_metadata,
         bm25_overwrite=args.bm25_overwrite,
         bm25_evaluation_scope=cast(EvaluationScopeChoice, args.bm25_evaluation_scope),
         bm25_dataset=list(args.bm25_dataset or []),
@@ -464,9 +484,25 @@ def rebuild_duckdb_command(plan: SyncRebuildPlan) -> list[str]:
 def run_plan(plan: SyncRebuildPlan) -> None:
     sync_repo(plan)
     plan.results_dir.mkdir(parents=True, exist_ok=True)
-    if plan.include_bm25_baseline:
+    if plan.materialize_bm25_baseline_from_metadata:
         materialize_bm25_baseline_from_metadata(plan)
     _run(rebuild_duckdb_command(plan))
+
+
+def _validate_bm25_materialization_args(args: argparse.Namespace) -> None:
+    if args.materialize_bm25_baseline_from_metadata:
+        return
+    if (
+        args.bm25_overwrite
+        or args.bm25_evaluation_scope != "standard"
+        or args.bm25_dataset
+        or args.bm25_collection
+        or args.bm25_split
+    ):
+        raise ValueError(
+            "BM25 metadata materialization is disabled by default. "
+            "Pass --materialize-bm25-baseline-from-metadata before using --bm25-* generation options."
+        )
 
 
 def _default_repo_dir(cache_root: Path, repo_id: str, *, sync_backend: SyncBackend = "git") -> Path:
@@ -500,8 +536,13 @@ def _run(command: list[str]) -> None:
 
 
 def main() -> None:
-    args = build_arg_parser().parse_args()
-    run_plan(resolve_plan(args))
+    parser = build_arg_parser()
+    args = parser.parse_args()
+    try:
+        plan = resolve_plan(args)
+    except ValueError as exc:
+        parser.error(str(exc))
+    run_plan(plan)
 
 
 if __name__ == "__main__":
