@@ -2328,7 +2328,6 @@ def render_table_head(
     )
     columns.extend(
         [
-            ("task_count", "Tasks", "desc", "right", False, ""),
             ("active_parameters", "Active Params", "asc", "right", False, ""),
             ("total_parameters", "Total Params", "asc", "right", False, ""),
             ("max_seq_length", "Max Len", "desc", "right", False, ""),
@@ -2420,7 +2419,8 @@ def _sticky_head_class(key: str) -> str:
 
 def render_table_body(*, result: LeaderboardResult, filter_context: FilterContext | None = None) -> str:
     if not result.rows:
-        return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
+        colspan = _leaderboard_table_colspan(result)
+        return f"""<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="{colspan}">No complete results found.</td></tr></tbody>"""
     filter_context = filter_context or row_filter_context(result.rows, FilterState())
     body_rows = []
     model_views = model_cell_views(result.rows)
@@ -2432,16 +2432,16 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         hidden = not filter_context.is_visible(row)
         row_class = "leaderboard-row odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
+        borda_score_cell = _render_borda_score_cell(result=result, row=row)
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
               <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{borda_rank_labels[row.model_name]}</td>
               <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{mean_rank_labels[row.model_name]}</td>
-              <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>
+              {borda_score_cell}
               {mean_cells}
               {_render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels)}
-              <td class="px-2 py-1 text-left tabular-nums">{row.task_count}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
@@ -2451,6 +2451,28 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
+    column_count = 4
+    column_count += 2 if result.is_overall and not (result.rank_filtered and result.task_filter) else 1
+    column_count += len(result.metric_columns)
+    column_count += 4
+    if result.include_quantization_variants:
+        column_count += 1
+    if _show_base_delta_column(result):
+        column_count += 1
+    return column_count
+
+
+def _render_borda_score_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if result.show_task_z_scores:
+        return _render_score_z_cell(
+            score=row.borda_score,
+            z_score=row.borda_score_z,
+            cell_class="px-2 py-1 text-left tabular-nums",
+        )
+    return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>"""
 
 
 def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: FilterContext) -> dict[str, float]:
