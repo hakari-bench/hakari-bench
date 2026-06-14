@@ -373,7 +373,7 @@
 
   .leaderboard-table-scroll {
     --hakari-model-col-width: clamp(18rem, 40vw, 36rem);
-    --hakari-rank-col-width: 4rem;
+    --hakari-rank-col-width: 3.25rem;
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 82%, var(--hakari-surface));
     border-color: transparent;
     border-radius: var(--hakari-radius-lg);
@@ -462,6 +462,14 @@
     max-width: var(--hakari-rank-col-width);
     min-width: var(--hakari-rank-col-width);
     width: var(--hakari-rank-col-width);
+  }
+
+  .model-type-badge,
+  .dimension-badge,
+  .variant-badge,
+  .quantization-badge {
+    background-color: color-mix(in srgb, var(--hakari-surface-muted) 78%, transparent);
+    border: 0;
   }
 
   .benchmark-doc h1 {
@@ -633,8 +641,8 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    border: 1px solid rgb(29 27 24 / 0.14);
-    border-radius: var(--hakari-radius-sm);
+    border: 0;
+    background-color: transparent;
     line-height: 1;
     padding: 0.1rem 0.3rem;
     text-align: right;
@@ -788,83 +796,67 @@
   }
 
   .task-z-pos-025 {
-    background-color: #eaf6ef;
-    color: #326247;
+    color: #3f7655;
   }
 
   .task-z-pos-050 {
-    background-color: #d8eddf;
-    color: #28573e;
+    color: #356b4c;
   }
 
   .task-z-pos-075 {
-    background-color: #c2e1cc;
-    color: #1f4b36;
+    color: #2b6044;
   }
 
   .task-z-pos-100 {
-    background-color: #a6d0b5;
-    color: #173d2b;
+    color: #22563c;
   }
 
   .task-z-pos-125 {
-    background-color: #82bb97;
-    color: #103322;
+    color: #194b34;
   }
 
   .task-z-pos-150 {
-    background-color: #5fa578;
-    color: #f4fff8;
+    color: #11412d;
   }
 
   .task-z-pos-175 {
-    background-color: #438b61;
-    color: #f4fff8;
+    color: #0a3726;
   }
 
   .task-z-pos-200 {
-    background-color: #2f704d;
-    color: #f4fff8;
+    color: #052f20;
   }
 
   .task-z-neg-025 {
-    background-color: #f7ebe4;
-    color: #87513e;
+    color: #9a5a46;
   }
 
   .task-z-neg-050 {
-    background-color: #efd8cb;
-    color: #7a4234;
+    color: #8e4d3e;
   }
 
   .task-z-neg-075 {
-    background-color: #e5c0ae;
-    color: #6e342c;
+    color: #824136;
   }
 
   .task-z-neg-100 {
-    background-color: #d99f88;
-    color: #55251f;
+    color: #77352e;
   }
 
   .task-z-neg-125 {
-    background-color: #c97c63;
-    color: #3a1714;
+    color: #6b2a26;
   }
 
   .task-z-neg-150 {
-    background-color: #ad5d4d;
-    color: #fffaf0;
+    color: #5f201f;
   }
 
   .task-z-neg-175 {
-    background-color: #924436;
-    color: #fffaf0;
+    color: #541818;
   }
 
   .task-z-neg-200 {
-    background-color: #733126;
-    color: #fffaf0;
+    color: #481111;
   }
 
   @keyframes hakari-leaderboard-spin {
@@ -901,88 +893,68 @@
     color: var(--hakari-text);
   }
 
-  :root.dark .task-z-score {
-    border-color: rgb(241 251 255 / 0.22);
-  }
-
   :root.dark .task-z-pos-025 {
-    background-color: theme("colors.emerald.950");
-    color: theme("colors.emerald.200");
+    color: theme("colors.emerald.300");
   }
 
   :root.dark .task-z-pos-050 {
-    background-color: theme("colors.emerald.900");
-    color: theme("colors.emerald.100");
+    color: theme("colors.emerald.300");
   }
 
   :root.dark .task-z-pos-075 {
-    background-color: theme("colors.emerald.800");
-    color: theme("colors.emerald.50");
+    color: theme("colors.emerald.200");
   }
 
   :root.dark .task-z-pos-100 {
-    background-color: theme("colors.emerald.700");
-    color: theme("colors.white");
+    color: theme("colors.emerald.200");
   }
 
   :root.dark .task-z-pos-125 {
-    background-color: theme("colors.emerald.600");
-    color: theme("colors.white");
+    color: theme("colors.emerald.100");
   }
 
   :root.dark .task-z-pos-150 {
-    background-color: theme("colors.emerald.500");
-    color: theme("colors.emerald.950");
+    color: theme("colors.emerald.100");
   }
 
   :root.dark .task-z-pos-175 {
-    background-color: theme("colors.emerald.400");
-    color: theme("colors.emerald.950");
+    color: theme("colors.emerald.50");
   }
 
   :root.dark .task-z-pos-200 {
-    background-color: theme("colors.emerald.300");
-    color: theme("colors.emerald.950");
+    color: theme("colors.emerald.50");
   }
 
   :root.dark .task-z-neg-025 {
-    background-color: theme("colors.rose.950");
-    color: theme("colors.rose.200");
+    color: theme("colors.rose.300");
   }
 
   :root.dark .task-z-neg-050 {
-    background-color: theme("colors.rose.900");
-    color: theme("colors.rose.100");
+    color: theme("colors.rose.300");
   }
 
   :root.dark .task-z-neg-075 {
-    background-color: theme("colors.rose.800");
-    color: theme("colors.rose.50");
+    color: theme("colors.rose.200");
   }
 
   :root.dark .task-z-neg-100 {
-    background-color: theme("colors.rose.700");
-    color: theme("colors.white");
+    color: theme("colors.rose.200");
   }
 
   :root.dark .task-z-neg-125 {
-    background-color: theme("colors.rose.600");
-    color: theme("colors.white");
+    color: theme("colors.rose.100");
   }
 
   :root.dark .task-z-neg-150 {
-    background-color: theme("colors.rose.500");
-    color: theme("colors.white");
+    color: theme("colors.rose.100");
   }
 
   :root.dark .task-z-neg-175 {
-    background-color: theme("colors.rose.600");
-    color: theme("colors.white");
+    color: theme("colors.rose.50");
   }
 
   :root.dark .task-z-neg-200 {
-    background-color: theme("colors.rose.700");
-    color: theme("colors.white");
+    color: theme("colors.rose.50");
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1004,88 +976,68 @@
       color: var(--hakari-text);
     }
 
-    :root:not(.light) .task-z-score {
-      border-color: rgb(241 251 255 / 0.22);
-    }
-
     :root:not(.light) .task-z-pos-025 {
-      background-color: theme("colors.emerald.950");
-      color: theme("colors.emerald.200");
+      color: theme("colors.emerald.300");
     }
 
     :root:not(.light) .task-z-pos-050 {
-      background-color: theme("colors.emerald.900");
-      color: theme("colors.emerald.100");
+      color: theme("colors.emerald.300");
     }
 
     :root:not(.light) .task-z-pos-075 {
-      background-color: theme("colors.emerald.800");
-      color: theme("colors.emerald.50");
+      color: theme("colors.emerald.200");
     }
 
     :root:not(.light) .task-z-pos-100 {
-      background-color: theme("colors.emerald.700");
-      color: theme("colors.white");
+      color: theme("colors.emerald.200");
     }
 
     :root:not(.light) .task-z-pos-125 {
-      background-color: theme("colors.emerald.600");
-      color: theme("colors.white");
+      color: theme("colors.emerald.100");
     }
 
     :root:not(.light) .task-z-pos-150 {
-      background-color: theme("colors.emerald.500");
-      color: theme("colors.emerald.950");
+      color: theme("colors.emerald.100");
     }
 
     :root:not(.light) .task-z-pos-175 {
-      background-color: theme("colors.emerald.400");
-      color: theme("colors.emerald.950");
+      color: theme("colors.emerald.50");
     }
 
     :root:not(.light) .task-z-pos-200 {
-      background-color: theme("colors.emerald.300");
-      color: theme("colors.emerald.950");
+      color: theme("colors.emerald.50");
     }
 
     :root:not(.light) .task-z-neg-025 {
-      background-color: theme("colors.rose.950");
-      color: theme("colors.rose.200");
+      color: theme("colors.rose.300");
     }
 
     :root:not(.light) .task-z-neg-050 {
-      background-color: theme("colors.rose.900");
-      color: theme("colors.rose.100");
+      color: theme("colors.rose.300");
     }
 
     :root:not(.light) .task-z-neg-075 {
-      background-color: theme("colors.rose.800");
-      color: theme("colors.rose.50");
+      color: theme("colors.rose.200");
     }
 
     :root:not(.light) .task-z-neg-100 {
-      background-color: theme("colors.rose.700");
-      color: theme("colors.white");
+      color: theme("colors.rose.200");
     }
 
     :root:not(.light) .task-z-neg-125 {
-      background-color: theme("colors.rose.600");
-      color: theme("colors.white");
+      color: theme("colors.rose.100");
     }
 
     :root:not(.light) .task-z-neg-150 {
-      background-color: theme("colors.rose.500");
-      color: theme("colors.white");
+      color: theme("colors.rose.100");
     }
 
     :root:not(.light) .task-z-neg-175 {
-      background-color: theme("colors.rose.600");
-      color: theme("colors.white");
+      color: theme("colors.rose.50");
     }
 
     :root:not(.light) .task-z-neg-200 {
-      background-color: theme("colors.rose.700");
-      color: theme("colors.white");
+      color: theme("colors.rose.50");
     }
   }
 }

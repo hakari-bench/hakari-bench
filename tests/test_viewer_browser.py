@@ -75,30 +75,34 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert compact_table_state["paddingBottom"] <= 4
                 task_std_style = page.locator(".task-z-score").first.evaluate(
                     """(el) => ({
+                        backgroundColor: getComputedStyle(el).backgroundColor,
                         borderRadius: getComputedStyle(el).borderRadius,
                         borderStyle: getComputedStyle(el).borderStyle,
                         borderWidth: parseFloat(getComputedStyle(el).borderWidth),
                         boxSizing: getComputedStyle(el).boxSizing,
-                        borderColor: getComputedStyle(el).borderColor,
                         deltaFontSize: parseFloat(getComputedStyle(el.querySelector(".task-z-score-delta")).fontSize),
                         deltaFontWeight: getComputedStyle(el.querySelector(".task-z-score-delta")).fontWeight,
+                        deltaColor: getComputedStyle(el.querySelector(".task-z-score-delta")).color,
                         paddingLeft: parseFloat(getComputedStyle(el).paddingLeft),
                         paddingRight: parseFloat(getComputedStyle(el).paddingRight),
                         paddingTop: parseFloat(getComputedStyle(el).paddingTop),
                         valueFontSize: parseFloat(getComputedStyle(el.querySelector(".task-z-score-value")).fontSize),
                         valueFontWeight: getComputedStyle(el.querySelector(".task-z-score-value")).fontWeight,
+                        valueColor: getComputedStyle(el.querySelector(".task-z-score-value")).color,
                         width: parseFloat(getComputedStyle(el).width),
                     })"""
                 )
+                assert task_std_style["backgroundColor"] == "rgba(0, 0, 0, 0)"
                 assert task_std_style["borderRadius"] == "0px"
-                assert task_std_style["borderStyle"] == "solid"
-                assert task_std_style["borderWidth"] == pytest.approx(1.0, abs=0.1)
-                assert task_std_style["borderColor"] == "rgba(29, 27, 24, 0.14)"
+                assert task_std_style["borderStyle"] == "none"
+                assert task_std_style["borderWidth"] == pytest.approx(0.0, abs=0.1)
                 assert task_std_style["boxSizing"] == "border-box"
                 assert task_std_style["valueFontSize"] == pytest.approx(13.0, abs=0.1)
                 assert task_std_style["deltaFontSize"] == pytest.approx(9.0, abs=0.1)
                 assert task_std_style["valueFontWeight"] == "400"
                 assert task_std_style["deltaFontWeight"] == "400"
+                assert task_std_style["valueColor"] == task_std_style["deltaColor"]
+                assert task_std_style["valueColor"] != "rgb(36, 48, 54)"
                 assert task_std_style["paddingLeft"] > 0
                 assert task_std_style["paddingRight"] > 0
                 assert task_std_style["paddingTop"] > 0
@@ -181,8 +185,8 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert long_model_layout["badgeRowTop"] >= long_model_layout["modelButtonTop"] - 0.5
                 assert "Borda" in long_model_layout["bordaHeaderText"]
                 assert "Mean" in long_model_layout["meanHeaderText"]
-                assert long_model_layout["bordaHeaderWidth"] == pytest.approx(64.0, abs=0.5)
-                assert long_model_layout["meanHeaderWidth"] == pytest.approx(64.0, abs=0.5)
+                assert long_model_layout["bordaHeaderWidth"] == pytest.approx(52.0, abs=0.5)
+                assert long_model_layout["meanHeaderWidth"] == pytest.approx(52.0, abs=0.5)
                 assert long_model_layout["modelCellContentFlexWrap"] == "wrap"
                 assert long_model_layout["modelCellContentFlexDirection"] == "row"
                 assert long_model_layout["modelButtonFontSize"] == pytest.approx(13.0, abs=0.1)

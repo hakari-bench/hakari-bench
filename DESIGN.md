@@ -256,6 +256,10 @@ read as an analytical instrument rather than a general-purpose dashboard.
 ## Score Cells
 
 - Score cells must remain compact and numerically aligned.
+- Rank columns such as Borda and Mean should stay narrow; they are comparison
+  anchors, not score detail columns.
+- Do not show the Tasks column in the leaderboard table. Keep task counts
+  available in CSV export.
 - When only task ranks are shown, render ranks plainly like Borda rank values.
 - When z-score and task rank are both shown, keep rank and score inside the same
   cell without changing the score's perceived font size. The z-score should stay
@@ -264,12 +268,19 @@ read as an analytical instrument rather than a general-purpose dashboard.
   and it improves comparison. Avoid decorative rank badges.
 - Positive z-score in light mode should read as green but not saturated enough
   to dominate the table.
+- STD/z-score display should not use filled backgrounds or borders. Preserve a
+  stable numeric width, and express positive/negative strength through the text
+  color of the score and sigma string.
 
 ## Variant Labels
 
 - Keep row metadata short. Prefer `Dims`, `Quant`, `Rescore`, and
   `Sparse pruning` over longer technical labels when the displayed values are
   compact.
+- Model type, dimension, variant, and quantization labels use the same
+  semi-transparent muted background. Dimension and variant labels keep the
+  accent-blue text treatment, and all of these labels stay borderless so they
+  read as metadata rather than separate controls.
 - Sparse active-dimension variants should use short labels such as `q16d` and
   `d256d`, with the full setting and explanation in help or model detail UI.
 - CSV export may include longer descriptive fields such as Variant Label and

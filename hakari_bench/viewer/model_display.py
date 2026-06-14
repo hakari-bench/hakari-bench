@@ -286,14 +286,14 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
         badges.append(
             _render_badge(
                 label=model_view.model_type_badge_label,
-                classes="border-zinc-300 bg-zinc-100 text-zinc-700",
+                classes="model-type-badge bg-zinc-100 text-zinc-700",
             )
         )
     if model_view.dimension_label is not None:
         badges.append(
             _render_badge(
                 label=model_view.dimension_label,
-                classes="dimension-badge border-cyan-200 bg-cyan-50 text-cyan-800",
+                classes="dimension-badge bg-zinc-100 text-cyan-800",
                 tooltip=model_view.dimension_tooltip,
             )
         )
@@ -301,7 +301,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
         badges.append(
             _render_badge(
                 label=model_view.variant_label,
-                classes="dimension-badge truncate-dim-badge border-cyan-200 bg-cyan-50 text-cyan-800",
+                classes="dimension-badge truncate-dim-badge bg-zinc-100 text-cyan-800",
                 tooltip=model_view.variant_tooltip,
             )
         )
@@ -309,14 +309,14 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
         badges.append(
             _render_badge(
                 label=row.quantization,
-                classes="border-amber-200 bg-amber-50 text-amber-800",
+                classes="quantization-badge bg-zinc-100 text-amber-800",
             )
         )
     if model_view.variant_label and model_view.truncated_embedding_dim is None:
         badges.append(
             _render_badge(
                 label=model_view.variant_label,
-                classes="truncate-dim-badge border-violet-200 bg-violet-50 text-violet-800",
+                classes="variant-badge bg-zinc-100 text-cyan-800",
                 tooltip=model_view.variant_tooltip,
             )
         )

@@ -2180,7 +2180,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "model/a" in response.text
     assert "bg-cyan-50" in response.text
     assert "768d" in response.text
-    assert "bg-amber-50" in response.text
+    assert "quantization-badge bg-zinc-100 text-amber-800" in response.text
     assert "uint8" in response.text
     assert "binary_rescore" not in response.text
     assert "Δ vs Base" in response.text
@@ -2918,6 +2918,46 @@ def test_leaderboard_model_name_borda_score_bar_scales_to_visible_max_score() ->
     assert 'class="borda-score-bar" value="100.00" max="100"' in filtered_body
 
 
+def test_leaderboard_table_hides_task_count_column() -> None:
+    rows = [
+        LeaderboardRow(
+            borda_rank=1,
+            mean_rank=1,
+            model_name="model/a",
+            borda_score=100.0,
+            mean_score=0.9,
+            task_count=2,
+        ),
+        LeaderboardRow(
+            borda_rank=2,
+            mean_rank=2,
+            model_name="model/b",
+            borda_score=50.0,
+            mean_score=0.8,
+            task_count=1,
+        ),
+    ]
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=2,
+        rows=rows,
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    body = render_table_body(result=result)
+
+    assert 'data-column-key="task_count"' not in head
+    assert ">Tasks</span>" not in head
+    assert '<td class="px-2 py-1 text-left tabular-nums">2</td>' not in body
+    assert '<td class="px-2 py-1 text-left tabular-nums">1</td>' not in body
+
+
 def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -3283,7 +3323,7 @@ benchmarks:
     assert 'aria-label="Score groups"' not in response.text
     assert "group=task_mean" in response.text
     assert "group=lang_mean" in response.text
-    assert ">Tasks</span>" in response.text
+    assert ">Tasks</span>" not in response.text
     assert "Task score columns" not in response.text
     assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "Mean Score" in response.text
@@ -3804,6 +3844,8 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert mean_only_result.show_task_scores is False
     assert mean_only_result.show_task_z_scores is True
     assert mean_only_result.metric_columns == []
+    assert mean_only_rows_by_name["model/a"].borda_score_z == pytest.approx(1.0)
+    assert mean_only_rows_by_name["model/b"].borda_score_z == pytest.approx(-1.0)
     assert mean_only_rows_by_name["model/a"].mean_score_z == pytest.approx(1.0)
     assert mean_only_rows_by_name["model/b"].mean_score_z == pytest.approx(-1.0)
     assert mean_only_rows_by_name["model/a"].metric_z_values == {}
@@ -3818,12 +3860,15 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
 
     assert result.show_task_scores is True
     assert result.show_task_z_scores is True
+    assert rows_by_name["model/a"].borda_score_z == pytest.approx(1.0)
+    assert rows_by_name["model/b"].borda_score_z == pytest.approx(-1.0)
     assert rows_by_name["model/a"].mean_score_z == pytest.approx(1.0)
     assert rows_by_name["model/b"].mean_score_z == pytest.approx(-1.0)
     assert rows_by_name["model/a"].metric_values["arguana"] == 90.0
     assert rows_by_name["model/a"].metric_z_values["arguana"] == pytest.approx(1.0)
     assert rows_by_name["model/b"].metric_z_values["arguana"] == pytest.approx(-1.0)
     variant_row = next(row for row in result.rows if row.embedding_variant_name == "truncate_dim_256")
+    assert variant_row.borda_score_z == pytest.approx(0.0)
     assert variant_row.mean_score_z == pytest.approx(0.27)
     assert variant_row.metric_z_values["arguana"] == pytest.approx(0.27)
     assert "fever" not in variant_row.metric_z_values
@@ -3838,6 +3883,7 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "task-z-score task-z-pos-100" in response.text
     assert "task-z-score task-z-neg-100" in response.text
+    assert '<span class="task-z-score-value">100.00</span>' in response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
     assert "metric%3Aarguana" not in response.text
 
@@ -4074,25 +4120,24 @@ def test_task_z_score_heatmap_css_defines_light_and_dark_buckets() -> None:
             assert css_source.count(selector) == 3
 
 
-def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> None:
+def test_task_z_score_text_css_uses_intuitive_positive_negative_colors() -> None:
     css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
 
-    assert re.search(r"\.task-z-score\s*{[^}]*border: 1px solid rgb\(29 27 24 / 0\.14\);", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-score\s*{[^}]*border-radius: var\(--hakari-radius-sm\);", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*border: 0;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*background-color: transparent;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-size: 0\.8125rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-size: 0\.5625rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-score\s*{[^}]*border-color: rgb\(241 251 255 / 0\.22\);", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-pos-025\s*{\s*background-color: #eaf6ef;", css_source)
-    assert re.search(r"\.task-z-pos-200\s*{\s*background-color: #2f704d;", css_source)
-    assert re.search(r"\.task-z-neg-025\s*{\s*background-color: #f7ebe4;", css_source)
-    assert re.search(r"\.task-z-neg-200\s*{\s*background-color: #733126;", css_source)
-    assert re.search(r'\.task-z-pos-025\s*{\s*background-color: theme\("colors\.emerald\.950"\);', css_source)
-    assert re.search(r'\.task-z-pos-200\s*{\s*background-color: theme\("colors\.emerald\.300"\);', css_source)
-    assert re.search(r'\.task-z-neg-150\s*{\s*background-color: theme\("colors\.rose\.500"\);', css_source)
-    assert re.search(r'\.task-z-neg-175\s*{\s*background-color: theme\("colors\.rose\.600"\);', css_source)
-    assert re.search(r'\.task-z-neg-200\s*{\s*background-color: theme\("colors\.rose\.700"\);', css_source)
+    assert "task-z-score {\n    border-color:" not in css_source
+    assert re.search(r"\.task-z-pos-025\s*{\s*color: #3f7655;", css_source)
+    assert re.search(r"\.task-z-pos-200\s*{\s*color: #052f20;", css_source)
+    assert re.search(r"\.task-z-neg-025\s*{\s*color: #9a5a46;", css_source)
+    assert re.search(r"\.task-z-neg-200\s*{\s*color: #481111;", css_source)
+    assert re.search(r'\.task-z-pos-025\s*{\s*color: theme\("colors\.emerald\.300"\);', css_source)
+    assert re.search(r'\.task-z-pos-200\s*{\s*color: theme\("colors\.emerald\.50"\);', css_source)
+    assert "background-color: theme(\"colors.emerald" not in css_source
+    assert "background-color: theme(\"colors.rose" not in css_source
 
 
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:

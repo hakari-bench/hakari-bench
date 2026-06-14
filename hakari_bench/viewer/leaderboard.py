@@ -107,6 +107,7 @@ class LeaderboardRow(BaseModel):
     model_name: str
     model_type: str | None = None
     borda_score: float
+    borda_score_z: float | None = None
     mean_score: float
     mean_score_z: float | None = None
     macro_mean: float | None = None
@@ -1440,6 +1441,11 @@ def compute_leaderboard_rows(
     }
     complete_rows = [row for row in rows if row.model_name in complete_models]
     borda_scores = _borda_scores(complete_rows)
+    borda_score_z_values = (
+        _borda_score_z_values(borda_scores=borda_scores, rows=complete_rows)
+        if show_task_z_scores
+        else {}
+    )
     metric_columns = metric_columns or []
     z_values_by_model = (
         _metric_z_values_by_model(
@@ -1496,6 +1502,7 @@ def compute_leaderboard_rows(
                 model_name=model_name,
                 model_type=first.model_type,
                 borda_score=_mean(borda_scores[model_name]),
+                borda_score_z=borda_score_z_values.get(model_name),
                 mean_score=mean_score,
                 mean_score_z=aggregate_z_values.get("mean_score"),
                 macro_mean=macro_mean if is_overall else None,
@@ -1596,6 +1603,36 @@ def _borda_scores(rows: list[TaskScore]) -> dict[str, list[float]]:
             )
             scores_by_model[row.model_name].append(score)
     return scores_by_model
+
+
+def _borda_score_z_values(
+    *,
+    borda_scores: dict[str, list[float]],
+    rows: list[TaskScore],
+) -> dict[str, float]:
+    aggregate_scores = {
+        model_name: _mean(scores)
+        for model_name, scores in borda_scores.items()
+        if scores
+    }
+    base_model_names = {
+        row.model_name
+        for row in rows
+        if row.embedding_variant_name is None
+    }
+    base_scores = [
+        score
+        for model_name, score in aggregate_scores.items()
+        if model_name in base_model_names
+    ]
+    stddev = _population_stddev(base_scores)
+    if stddev is None or stddev <= 0.0:
+        return {}
+    mean = _mean(base_scores)
+    return {
+        model_name: (score - mean) / stddev
+        for model_name, score in aggregate_scores.items()
+    }
 
 
 def _rank_desc(items: Iterable[tuple[str, float]]) -> dict[str, float]:
