@@ -268,6 +268,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
   and it improves comparison. Avoid decorative rank badges.
 - Positive z-score in light mode should read as green but not saturated enough
   to dominate the table.
+- Light-mode z-score colors should be dark enough to remain legible at compact
+  table font sizes because STD uses text color without a filled background.
 - STD/z-score display should not use filled backgrounds or borders. Preserve a
   stable numeric width, and express positive/negative strength through the text
   color of the score and sigma string.
@@ -278,9 +280,10 @@ read as an analytical instrument rather than a general-purpose dashboard.
   `Sparse pruning` over longer technical labels when the displayed values are
   compact.
 - Model type, dimension, variant, and quantization labels use the same
-  semi-transparent muted background. Dimension and variant labels keep the
-  accent-blue text treatment, and all of these labels stay borderless so they
-  read as metadata rather than separate controls.
+  semi-transparent active-control background so light-mode labels stay visible
+  against both white and faint-cyan table rows. Dimension and variant labels
+  keep the accent-blue text treatment, and all of these labels stay borderless
+  so they read as metadata rather than separate controls.
 - Sparse active-dimension variants should use short labels such as `q16d` and
   `d256d`, with the full setting and explanation in help or model detail UI.
 - CSV export may include longer descriptive fields such as Variant Label and

@@ -4130,14 +4130,28 @@ def test_task_z_score_text_css_uses_intuitive_positive_negative_colors() -> None
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert "task-z-score {\n    border-color:" not in css_source
-    assert re.search(r"\.task-z-pos-025\s*{\s*color: #3f7655;", css_source)
-    assert re.search(r"\.task-z-pos-200\s*{\s*color: #052f20;", css_source)
-    assert re.search(r"\.task-z-neg-025\s*{\s*color: #9a5a46;", css_source)
-    assert re.search(r"\.task-z-neg-200\s*{\s*color: #481111;", css_source)
+    assert re.search(r"\.task-z-pos-025\s*{\s*color: #246b46;", css_source)
+    assert re.search(r"\.task-z-pos-200\s*{\s*color: #032d1a;", css_source)
+    assert re.search(r"\.task-z-neg-025\s*{\s*color: #9a3412;", css_source)
+    assert re.search(r"\.task-z-neg-200\s*{\s*color: #3f0c0a;", css_source)
     assert re.search(r'\.task-z-pos-025\s*{\s*color: theme\("colors\.emerald\.300"\);', css_source)
     assert re.search(r'\.task-z-pos-200\s*{\s*color: theme\("colors\.emerald\.50"\);', css_source)
     assert "background-color: theme(\"colors.emerald" not in css_source
     assert "background-color: theme(\"colors.rose" not in css_source
+
+
+def test_variant_badge_css_uses_visible_shared_background() -> None:
+    css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
+
+    shared_badge_selector = (
+        r"\.model-type-badge,\s*"
+        r"\.dimension-badge,\s*"
+        r"\.variant-badge,\s*"
+        r"\.quantization-badge\s*{[^}]*"
+        r"background-color: color-mix\(in srgb, var\(--hakari-control-active\) 88%, transparent\);"
+        r"[^}]*border: 0;"
+    )
+    assert re.search(shared_badge_selector, css_source, flags=re.DOTALL)
 
 
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:

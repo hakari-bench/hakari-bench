@@ -468,7 +468,7 @@
   .dimension-badge,
   .variant-badge,
   .quantization-badge {
-    background-color: color-mix(in srgb, var(--hakari-surface-muted) 78%, transparent);
+    background-color: color-mix(in srgb, var(--hakari-control-active) 88%, transparent);
     border: 0;
   }
 
@@ -796,67 +796,67 @@
   }
 
   .task-z-pos-025 {
-    color: #3f7655;
+    color: #246b46;
   }
 
   .task-z-pos-050 {
-    color: #356b4c;
+    color: #1f6240;
   }
 
   .task-z-pos-075 {
-    color: #2b6044;
+    color: #185939;
   }
 
   .task-z-pos-100 {
-    color: #22563c;
+    color: #125033;
   }
 
   .task-z-pos-125 {
-    color: #194b34;
+    color: #0d472d;
   }
 
   .task-z-pos-150 {
-    color: #11412d;
+    color: #083d26;
   }
 
   .task-z-pos-175 {
-    color: #0a3726;
+    color: #05351f;
   }
 
   .task-z-pos-200 {
-    color: #052f20;
+    color: #032d1a;
   }
 
   .task-z-neg-025 {
-    color: #9a5a46;
+    color: #9a3412;
   }
 
   .task-z-neg-050 {
-    color: #8e4d3e;
+    color: #8f2f13;
   }
 
   .task-z-neg-075 {
-    color: #824136;
+    color: #832914;
   }
 
   .task-z-neg-100 {
-    color: #77352e;
+    color: #762314;
   }
 
   .task-z-neg-125 {
-    color: #6b2a26;
+    color: #681d13;
   }
 
   .task-z-neg-150 {
-    color: #5f201f;
+    color: #5a1711;
   }
 
   .task-z-neg-175 {
-    color: #541818;
+    color: #4d110e;
   }
 
   .task-z-neg-200 {
-    color: #481111;
+    color: #3f0c0a;
   }
 
   @keyframes hakari-leaderboard-spin {
