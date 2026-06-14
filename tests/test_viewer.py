@@ -4154,6 +4154,23 @@ def test_variant_badge_css_uses_visible_shared_background() -> None:
     assert re.search(shared_badge_selector, css_source, flags=re.DOTALL)
 
 
+def test_light_theme_tokens_keep_control_contrast() -> None:
+    css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
+
+    expected_tokens = {
+        "--hakari-surface-muted": "#e0f1f5",
+        "--hakari-surface-faint": "#edf8fb",
+        "--hakari-border": "#a9ccd6",
+        "--hakari-text-muted": "#52626b",
+        "--hakari-text-faint": "#6f7f87",
+        "--hakari-control-bg": "#e3f2f6",
+        "--hakari-control-hover": "#d5eaf0",
+        "--hakari-control-active": "#c3e0e9",
+    }
+    for token, value in expected_tokens.items():
+        assert re.search(rf"{token}: {value};", css_source)
+
+
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     rows = [

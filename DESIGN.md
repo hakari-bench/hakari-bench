@@ -11,19 +11,19 @@ colors:
   light:
     bg: "#f7fdff"
     surface: "#ffffff"
-    surface-muted: "#e9f5f8"
-    surface-faint: "#f2fbfd"
-    border: "#bedbe3"
+    surface-muted: "#e0f1f5"
+    surface-faint: "#edf8fb"
+    border: "#a9ccd6"
     border-strong: "#85bdcc"
     text: "#243036"
-    text-muted: "#637078"
-    text-faint: "#87949a"
+    text-muted: "#52626b"
+    text-faint: "#6f7f87"
     accent: "#0077aa"
     accent-strong: "#005f88"
     accent-soft: "rgb(0 119 170 / 0.10)"
-    control-bg: "#edf8fb"
-    control-hover: "#e4f3f7"
-    control-active: "#d9eef4"
+    control-bg: "#e3f2f6"
+    control-hover: "#d5eaf0"
+    control-active: "#c3e0e9"
     warn-bg: "#fff6df"
     warn-text: "#a96b00"
     danger: "#ff5888"
@@ -163,6 +163,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep clickable-but-secondary controls visible without shouting. Default
   button fills should read as actionable, while active state should be clearly
   stronger.
+- Light-mode controls need a distinct visual step from panel backgrounds:
+  default controls should be visibly clickable, and active controls should read
+  one level stronger without adding hard borders.
 - Prefer surface color and background tint over hard borders. Borders are useful
   for the table and precision controls, but panel chrome should stay quiet.
 - Use green/emerald heat colors for strong positive score cells and rose/red for
