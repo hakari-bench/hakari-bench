@@ -11,6 +11,15 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/lightonai/GTE-ModernColBERT-v1
+links:
+  huggingface: https://huggingface.co/lightonai/GTE-ModernColBERT-v1
+  github: https://github.com/lightonai/pylate
+  papers:
+  - title: 'PyLate: Flexible Training and Retrieval for Late Interaction Models'
+    url: https://arxiv.org/abs/2508.03555
+  - title: 'Smarter, Better, Faster, Longer: A Modern Bidirectional Encoder for Fast,
+      Memory Efficient, and Long Context Finetuning and Inference'
+    url: https://arxiv.org/abs/2412.13663
 parameters:
   total: 149114112
   input_embedding: 38684160

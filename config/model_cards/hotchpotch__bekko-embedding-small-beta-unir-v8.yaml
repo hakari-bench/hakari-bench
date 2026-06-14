@@ -10,6 +10,8 @@ license:
   type: unknown
   commercial_use: unknown
   source: unavailable
+links:
+  huggingface: https://huggingface.co/hotchpotch/bekko-embedding-small-beta-unir-v8
 parameters:
   total: 123234432
   input_embedding: 98304000

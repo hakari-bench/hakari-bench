@@ -11,6 +11,13 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/codefuse-ai/F2LLM-v2-80M
+links:
+  huggingface: https://huggingface.co/codefuse-ai/F2LLM-v2-80M
+  github: https://github.com/codefuse-ai/CodeFuse-Embeddings
+  papers:
+  - title: 'F2LLM-v2: Inclusive, Performant, and Efficient Embeddings for a Multilingual
+      World'
+    url: https://arxiv.org/abs/2603.19223
 parameters:
   total: 80084288
   trainable: 80084288

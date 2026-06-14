@@ -11,6 +11,11 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/perplexity-ai/pplx-embed-v1-0.6b
+links:
+  huggingface: https://huggingface.co/perplexity-ai/pplx-embed-v1-0.6b
+  papers:
+  - title: Diffusion-Pretrained Dense and Contextual Embeddings
+    url: https://arxiv.org/abs/2602.11151
 parameters:
   total: 596049920
   trainable: 596049920

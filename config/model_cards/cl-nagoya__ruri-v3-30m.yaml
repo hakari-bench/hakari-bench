@@ -11,6 +11,11 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/cl-nagoya/ruri-v3-30m
+links:
+  huggingface: https://huggingface.co/cl-nagoya/ruri-v3-30m
+  papers:
+  - title: 'Ruri: Japanese General Text Embeddings'
+    url: https://arxiv.org/abs/2409.07737
 parameters:
   total: 36705536
   trainable: 36705536

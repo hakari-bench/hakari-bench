@@ -10,6 +10,8 @@ license:
   type: unknown
   commercial_use: unknown
   source: unavailable
+links:
+  huggingface: https://huggingface.co/hotchpotch/bekko-embedding-v1-a8m
 parameters:
   total: 105975168
   trainable: 105975168

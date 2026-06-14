@@ -11,6 +11,12 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
+links:
+  huggingface: https://huggingface.co/cross-encoder/mmarco-mMiniLMv2-L12-H384-v1
+  github: https://github.com/unicamp-dl/mMARCO
+  papers:
+  - title: 'mMARCO: A Multilingual Version of the MS MARCO Passage Ranking Dataset'
+    url: https://arxiv.org/abs/2108.13897
 parameters:
   total: 117641089
   input_embedding: 96000768

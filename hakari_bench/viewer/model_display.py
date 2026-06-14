@@ -267,6 +267,7 @@ def _model_metadata(
         "language_support_category": row.language_support_category,
         "language_support_languages": list(row.language_support_languages),
         "language_support_label": _language_support_label(row),
+        "links": row.links or None,
     }
 
 

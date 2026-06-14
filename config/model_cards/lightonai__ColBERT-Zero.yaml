@@ -11,6 +11,12 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/lightonai/ColBERT-Zero
+links:
+  huggingface: https://huggingface.co/lightonai/ColBERT-Zero
+  github: https://github.com/lightonai/pylate
+  papers:
+  - title: 'ColBERT-Zero: To Pre-train Or Not To Pre-train ColBERT models'
+    url: https://arxiv.org/abs/2602.16609
 parameters:
   total: 149114112
   input_embedding: 38684160

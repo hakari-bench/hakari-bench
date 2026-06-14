@@ -369,6 +369,54 @@ def test_static_model_cards_include_license_metadata() -> None:
     }
 
 
+def test_validate_model_card_links_normalizes_and_drops_empty() -> None:
+    normalized = model_cards.validate_model_card_links(
+        {
+            "huggingface": " https://huggingface.co/BAAI/bge-m3 ",
+            "github": "https://github.com/FlagOpen/FlagEmbedding",
+            "papers": [
+                {"title": " BGE M3-Embedding ", "url": " https://arxiv.org/abs/2402.03216 "},
+            ],
+        }
+    )
+
+    assert normalized == {
+        "huggingface": "https://huggingface.co/BAAI/bge-m3",
+        "github": "https://github.com/FlagOpen/FlagEmbedding",
+        "papers": [{"title": "BGE M3-Embedding", "url": "https://arxiv.org/abs/2402.03216"}],
+    }
+    assert model_cards.validate_model_card_links({}) == {}
+    assert model_cards.validate_model_card_links({"papers": []}) == {}
+
+
+@pytest.mark.parametrize(
+    "links",
+    [
+        {"unknown": "x"},
+        {"huggingface": ""},
+        {"github": 123},
+        {"papers": "not-a-list"},
+        {"papers": [{"title": "missing url"}]},
+        {"papers": [{"url": "https://example.com"}]},
+        {"papers": [{"title": "t", "url": "u", "extra": "x"}]},
+    ],
+)
+def test_validate_model_card_links_rejects_malformed(links: dict[str, object]) -> None:
+    with pytest.raises(ValueError):
+        model_cards.validate_model_card_links(links)
+
+
+def test_static_model_cards_links_are_well_formed() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+
+    for model_id, card in cards.items():
+        links = card.get("links")
+        if links is None:
+            continue
+        normalized = model_cards.validate_model_card_links(links)
+        assert model_cards.validate_model_card_links(normalized) == normalized, model_id
+
+
 def test_static_model_card_language_support_uses_model_identity() -> None:
     cards = model_cards.load_model_cards(Path("config/model_cards"))
 

@@ -11,6 +11,12 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/ibm-granite/granite-embedding-30m-sparse
+links:
+  huggingface: https://huggingface.co/ibm-granite/granite-embedding-30m-sparse
+  github: https://github.com/ibm-granite/granite-embedding-models
+  papers:
+  - title: Granite Embedding Models
+    url: https://arxiv.org/abs/2502.20204
 parameters:
   total: 30346329
   input_embedding: 19301760

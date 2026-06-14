@@ -11,6 +11,8 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/hotchpotch/japanese-reranker-xsmall-v2
+links:
+  huggingface: https://huggingface.co/hotchpotch/japanese-reranker-xsmall-v2
 parameters:
   total: 36771585
   input_embedding: 26214400

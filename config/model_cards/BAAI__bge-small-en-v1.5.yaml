@@ -11,6 +11,12 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/BAAI/bge-small-en-v1.5
+links:
+  huggingface: https://huggingface.co/BAAI/bge-small-en-v1.5
+  github: https://github.com/FlagOpen/FlagEmbedding
+  papers:
+  - title: 'C-Pack: Packed Resources For General Chinese Embeddings'
+    url: https://arxiv.org/abs/2309.07597
 parameters:
   total: 33360000
   input_embedding: 11720448

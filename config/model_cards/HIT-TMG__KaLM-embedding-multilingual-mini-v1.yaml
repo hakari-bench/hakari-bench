@@ -11,6 +11,12 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/HIT-TMG/KaLM-embedding-multilingual-mini-v1
+links:
+  huggingface: https://huggingface.co/HIT-TMG/KaLM-embedding-multilingual-mini-v1
+  github: https://github.com/HITsz-TMG/KaLM-Embedding
+  papers:
+  - title: 'KaLM-Embedding: Superior Training Data Brings A Stronger Embedding Model'
+    url: https://arxiv.org/abs/2501.01028
 parameters:
   total: 494032768
   trainable: 494032768

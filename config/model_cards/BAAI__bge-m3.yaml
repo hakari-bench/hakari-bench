@@ -11,6 +11,13 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/BAAI/bge-m3
+links:
+  huggingface: https://huggingface.co/BAAI/bge-m3
+  github: https://github.com/FlagOpen/FlagEmbedding
+  papers:
+  - title: 'BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity
+      Text Embeddings Through Self-Knowledge Distillation'
+    url: https://arxiv.org/abs/2402.03216
 parameters:
   total: 567754752
   trainable: 567754752

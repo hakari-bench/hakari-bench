@@ -12,6 +12,12 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/cross-encoder/ettin-reranker-68m-v1
+links:
+  huggingface: https://huggingface.co/cross-encoder/ettin-reranker-68m-v1
+  github: https://github.com/jhu-clsp/ettin-encoder-vs-decoder
+  papers:
+  - title: 'Seq vs Seq: An Open Suite of Paired Encoders and Decoders'
+    url: https://arxiv.org/abs/2507.11412
 parameters:
   total: 68408321
   trainable: 68408321

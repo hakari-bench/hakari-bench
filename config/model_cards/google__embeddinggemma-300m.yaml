@@ -12,6 +12,11 @@ license:
   source: huggingface_model_card
   source_url: https://huggingface.co/google/embeddinggemma-300m
   terms_url: https://ai.google.dev/gemma/terms
+links:
+  huggingface: https://huggingface.co/google/embeddinggemma-300m
+  papers:
+  - title: 'EmbeddingGemma: Powerful and Lightweight Text Representations'
+    url: https://arxiv.org/abs/2509.20354
 parameters:
   total: 307581696
   trainable: 307581696

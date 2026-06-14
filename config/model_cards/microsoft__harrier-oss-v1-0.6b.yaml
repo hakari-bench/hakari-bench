@@ -11,6 +11,8 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/microsoft/harrier-oss-v1-0.6b
+links:
+  huggingface: https://huggingface.co/microsoft/harrier-oss-v1-0.6b
 parameters:
   total: 596049920
   input_embedding: 155582464

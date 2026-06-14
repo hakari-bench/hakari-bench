@@ -11,6 +11,16 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/Lajavaness/bilingual-embedding-base
+links:
+  huggingface: https://huggingface.co/Lajavaness/bilingual-embedding-base
+  papers:
+  - title: Unsupervised Cross-lingual Representation Learning at Scale
+    url: https://arxiv.org/abs/1911.02116
+  - title: 'Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks'
+    url: https://arxiv.org/abs/1908.10084
+  - title: 'Augmented SBERT: Data Augmentation Method for Improving Bi-Encoders for
+      Pairwise Sentence Scoring Tasks'
+    url: https://arxiv.org/abs/2010.08240
 parameters:
   total: 278043648
   trainable: 278043648
