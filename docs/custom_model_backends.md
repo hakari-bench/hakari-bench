@@ -146,6 +146,76 @@ secret-bearing, including `api_key`, `token`, `secret`, `password`, and
 `credential`. Prefer passing real secrets through environment variables rather
 than JSON.
 
+## Pre-Quantized SentenceTransformers Artifacts
+
+SentenceTransformers can load already-exported ONNX and OpenVINO artifacts when
+the model repository contains them. Use this path when the quantization has
+already been done outside HAKARI-Bench and you want to evaluate that artifact
+directly, for example an ONNX Runtime qint8 model or an OpenVINO INT8 IR model.
+
+This is different from HAKARI's dense embedding variants such as `int8`,
+`binary`, `rescore:int8`, and `rescore:binary`. Those variants quantize or
+rescore the embeddings after model inference. A pre-quantized ONNX/OpenVINO
+backend changes the model inference itself. You can use both together, but keep
+the distinction clear when comparing results.
+
+`examples/custom_backends/quantized_sentence_transformers.py` is a small loader
+that forwards to `SentenceTransformer(..., backend=..., model_kwargs=...)` and
+records the selected backend and artifact path in result JSON metadata. Because
+`examples/` is not installed as a package, run these examples from the repository
+checkout with `PYTHONPATH=$PWD`.
+
+Install the backend runtime dependencies in the command environment. For a
+one-off run, `uv run --with` is usually enough:
+
+```bash
+PYTHONPATH=$PWD uv run --with 'sentence-transformers[onnx,openvino]>=5.4' \
+  hakari-bench evaluate dense \
+    --model hotchpotch/bekko-embedding-v1-a8m \
+    --model-alias hotchpotch/bekko-embedding-v1-a8m-onnx-qint8-avx512-cpu \
+    --model-loader examples.custom_backends.quantized_sentence_transformers:load_model \
+    --model-loader-kwargs-json '{"backend":"onnx","model_kwargs":{"file_name":"onnx/model_qint8_avx512.onnx","provider":"CPUExecutionProvider"}}' \
+    --dataset hakari-bench/NanoBEIR-en \
+    --split NanoNQ \
+    --device cpu \
+    --dtype fp32 \
+    --retrieval-score-device cpu
+```
+
+For OpenVINO CPU inference, point the loader at the quantized IR artifact and
+pass OpenVINO's CPU device through `model_kwargs`:
+
+```bash
+PYTHONPATH=$PWD uv run --with 'sentence-transformers[onnx,openvino]>=5.4' \
+  hakari-bench evaluate dense \
+    --model hotchpotch/bekko-embedding-v1-a8m \
+    --model-alias hotchpotch/bekko-embedding-v1-a8m-openvino-qint8-cpu \
+    --model-loader examples.custom_backends.quantized_sentence_transformers:load_model \
+    --model-loader-kwargs-json '{"backend":"openvino","model_kwargs":{"file_name":"openvino/openvino_model_qint8_quantized.xml","device":"CPU"}}' \
+    --dataset hakari-bench/NanoBEIR-en \
+    --split NanoNQ \
+    --device cpu \
+    --dtype fp32 \
+    --retrieval-score-device cpu
+```
+
+Run the original non-quantized model as a separate logical model name, then
+compare the result JSON or rebuild the DuckDB viewer database:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model hotchpotch/bekko-embedding-v1-a8m \
+  --dataset hakari-bench/NanoBEIR-en \
+  --split NanoNQ \
+  --dtype bf16 \
+  --device cuda:0
+```
+
+Using distinct `--model-alias` values for the quantized backends keeps the
+original, ONNX, and OpenVINO rows separate in result JSON and DuckDB. This makes
+the quality delta visible for the same task, such as base nDCG@10 for the
+original model versus the pre-quantized ONNX and OpenVINO CPU inference paths.
+
 ## Dummy Backend Example
 
 `examples/custom_backends/dummy_backend.py` is a minimal reference
@@ -153,7 +223,7 @@ implementation. It is intentionally simple, but it demonstrates the extension
 shape:
 
 ```bash
-uv run hakari-bench evaluate dense \
+PYTHONPATH=$PWD uv run hakari-bench evaluate dense \
   --model dummy/model \
   --model-loader examples.custom_backends.dummy_backend:load_model \
   --model-loader-kwargs-json '{"scale":1.0}' \

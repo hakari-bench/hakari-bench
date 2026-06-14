@@ -224,6 +224,9 @@ not belong to a specific official MTEB family are grouped under
 
 - [Evaluation runbook](docs/evaluation_runbook.md): practical evaluate, build,
   append, and viewer commands.
+- [New model evaluation to results PR workflow](docs/new_model_results_workflow.md):
+  end-to-end checklist from model research and model card creation through
+  evaluation, coverage audit, and `.json.xz` result submission.
 - [Evaluation policy](docs/evaluation_policy.md): runtime choices, prompt
   behavior, embedding variants, and coverage-audit rules.
 - [Leaderboard metric policy](docs/leaderboard_metrics.md): default visible
