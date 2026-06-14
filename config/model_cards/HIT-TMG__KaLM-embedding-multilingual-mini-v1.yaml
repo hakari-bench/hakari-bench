@@ -4,6 +4,13 @@ source:
   name: HIT-TMG/KaLM-embedding-multilingual-mini-v1
   revision: 685312fd77f8
 method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/HIT-TMG/KaLM-embedding-multilingual-mini-v1
 parameters:
   total: 494032768
   trainable: 494032768

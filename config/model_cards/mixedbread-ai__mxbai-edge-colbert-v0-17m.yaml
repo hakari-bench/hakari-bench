@@ -4,6 +4,13 @@ source:
   name: mixedbread-ai/mxbai-edge-colbert-v0-17m
   revision: 21996dcf231e0b406c3342b374155e43d4960341
 method: late-interaction
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/mixedbread-ai/mxbai-edge-colbert-v0-17m
 parameters:
   total: 16953600
   input_embedding: 12894720

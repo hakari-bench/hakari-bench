@@ -4,6 +4,13 @@ source:
   name: Qwen/Qwen3-Embedding-0.6B
   revision: 97b0c614be4d
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Qwen/Qwen3-Embedding-0.6B
 parameters:
   total: 595776512
   trainable: 595776512

@@ -4,6 +4,13 @@ source:
   name: intfloat/multilingual-e5-large
   revision: 3d7cfbdacd47
 method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/intfloat/multilingual-e5-large
 parameters:
   total: 559890432
   trainable: 559890432

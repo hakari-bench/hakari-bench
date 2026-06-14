@@ -4,6 +4,13 @@ source:
   name: jinaai/jina-embeddings-v3
   revision: ab036b023d30b4d1138c4c3bfa9f0c445ab455d6
 method: dense
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/jinaai/jina-embeddings-v3
 parameters:
   total: 572310396
   trainable: 12946300

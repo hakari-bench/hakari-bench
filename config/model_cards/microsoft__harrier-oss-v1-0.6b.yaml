@@ -4,6 +4,13 @@ source:
   name: microsoft/harrier-oss-v1-0.6b
   revision: f9b9dc8d367d443f2479d27aa5d8d2850c0774ee
 method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/microsoft/harrier-oss-v1-0.6b
 parameters:
   total: 596049920
   input_embedding: 155582464

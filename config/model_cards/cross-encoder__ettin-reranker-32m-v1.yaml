@@ -5,6 +5,13 @@ source:
   revision_requested: b33e5ceb5110773ea9cf5e00c9bedc83a8c2afdd
   revision: b33e5ceb5110773ea9cf5e00c9bedc83a8c2afdd
 method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/cross-encoder/ettin-reranker-32m-v1
 parameters:
   total: 32031745
   trainable: 32031745

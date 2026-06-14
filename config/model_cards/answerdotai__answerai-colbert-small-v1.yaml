@@ -4,6 +4,13 @@ source:
   name: answerdotai/answerai-colbert-small-v1
   revision: c72aa89bc61afdd85373643f3a1a75b2aad6e0fe
 method: late-interaction
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/answerdotai/answerai-colbert-small-v1
 parameters:
   total: 33396864
   input_embedding: 11720448

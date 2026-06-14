@@ -4,6 +4,13 @@ source:
   name: Lajavaness/bilingual-embedding-small
   revision: 80f7adb74544464c380b0c5dfda441f075400043
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Lajavaness/bilingual-embedding-small
 parameters:
   total: 117653760
   trainable: 117653760

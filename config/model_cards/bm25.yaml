@@ -3,6 +3,12 @@ source:
   type: bm25
   name: bm25
 method: bm25
+license:
+  id: not_applicable
+  label: Not applicable - Okapi BM25 algorithmic baseline
+  type: algorithm
+  commercial_use: not_applicable
+  source: internal_baseline
 parameters:
   total: 0
   trainable: 0

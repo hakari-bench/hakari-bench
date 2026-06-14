@@ -4,6 +4,12 @@ source:
   name: hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT
   revision: 65e027f8777ffba7bf695d9ace9ac9e73e4b5c71
 method: dense
+license:
+  id: unknown
+  label: unknown
+  type: unknown
+  commercial_use: unknown
+  source: unavailable
 parameters:
   total: 105975168
   input_embedding: 98304000

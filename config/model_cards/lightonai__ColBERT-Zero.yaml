@@ -4,6 +4,13 @@ source:
   name: lightonai/ColBERT-Zero
   revision: 5a1f22f2be589f17654d1ed455b635b70d4aff21
 method: late-interaction
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/lightonai/ColBERT-Zero
 parameters:
   total: 149114112
   input_embedding: 38684160

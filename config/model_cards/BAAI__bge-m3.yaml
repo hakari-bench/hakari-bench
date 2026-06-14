@@ -4,6 +4,13 @@ source:
   name: BAAI/bge-m3
   revision: 5617a9f61b028005a4858fdac845db406aefb181
 method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/BAAI/bge-m3
 parameters:
   total: 567754752
   trainable: 567754752
