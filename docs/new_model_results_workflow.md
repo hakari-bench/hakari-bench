@@ -131,9 +131,12 @@ If `runtime.trust_remote_code: true`, the card must also set
 Hugging Face commit SHA in `source.revision`.
 
 Result PRs to `hakari-bench/results` should normally contain only `.json.xz`
-files. Add or update `config/model_cards/*.yaml` in the code repository as a
-separate code change unless maintainers explicitly request model metadata in
-the result PR. See [`model_cards.md`](model_cards.md) for the full schema and
+files. Add or update `config/model_cards/*.yaml` in the GitHub code repository
+as a separate code change unless maintainers explicitly request model metadata
+in the result PR. Most contributors and evaluation workers should assume they
+do not have direct push permission to the GitHub repository, so model cards,
+viewer/schema changes, docs updates, or benchmark code fixes should be submitted
+as a GitHub PR. See [`model_cards.md`](model_cards.md) for the full schema and
 generation options.
 
 ## 3. Run A Small Validation
@@ -259,7 +262,33 @@ command or job manifest, model revision, dataset revisions, method, runtime
 options, Core `nDCG@10` summary, package/CUDA environment, retries, batch-size
 changes, and any intentional partial coverage or non-default variant choice.
 
-## 7. Submit `.json.xz` Files To The Results Repository
+## 7. Open The GitHub Code PR
+
+Open a GitHub PR for any code-repository changes required by the evaluation.
+Common examples are:
+
+- New or updated `config/model_cards/*.yaml`.
+- Documentation updates that explain model-specific runtime choices.
+- Viewer, DuckDB schema, or leaderboard display changes needed for the new
+  metadata.
+- Custom backend loaders under `examples/` or library changes needed to run the
+  model.
+
+Keep generated benchmark outputs, DuckDB files, caches, and local scratch files
+out of the GitHub PR. If the only deliverable is result JSON, this section can
+be skipped.
+
+The GitHub PR and Hugging Face results PR should link to each other when both
+exist. The ideal flow is:
+
+1. Open whichever PR is ready first.
+2. Include its URL in the second PR body.
+3. Edit the first PR body or add a comment with the second PR URL.
+
+This makes review easier because maintainers can see the model-card/runtime
+metadata and the `.json.xz` result payloads together.
+
+## 8. Submit `.json.xz` Files To The Results Repository
 
 Submit one model result directory per PR when possible. The canonical path in
 the private Hugging Face dataset repository is:
@@ -286,6 +315,10 @@ For large submissions, use the Dataset PR section of
 Copy only `.json.xz` files, inspect the branch, generate the PR body, and open
 a Hugging Face Dataset PR from the pushed branch.
 
+If a related GitHub code PR exists, paste that GitHub PR URL into the Hugging
+Face Dataset PR body. After the Hugging Face PR exists, add its URL back to the
+GitHub PR body or a GitHub PR comment.
+
 Before pushing, confirm these commands do not reveal unintended artifacts:
 
 ```bash
@@ -306,5 +339,8 @@ Both commands should print nothing for the submitted branch.
 - Full evaluation wrote compressed `.json.xz` task files.
 - Coverage and variant completeness were audited after DuckDB build or append.
 - PR body was generated and all TODOs were filled.
+- GitHub code PR exists for model cards, docs, loaders, viewer/schema changes,
+  or other repository changes when needed.
+- GitHub and Hugging Face PRs link to each other when both exist.
 - Result PR contains only the intended `.json.xz` files under
   `hakari-results/{model_dir}/`.
