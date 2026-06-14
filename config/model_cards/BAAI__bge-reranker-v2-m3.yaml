@@ -4,6 +4,13 @@ source:
   name: BAAI/bge-reranker-v2-m3
   revision: 953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e
 method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/BAAI/bge-reranker-v2-m3
 parameters:
   total: 567755777
   input_embedding: 256002048

@@ -4,6 +4,13 @@ source:
   name: ibm-granite/granite-embedding-30m-sparse
   revision: ad82b1fd09541c998c8d45045d601c51fdb8a9b7
 method: sparse
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/ibm-granite/granite-embedding-30m-sparse
 parameters:
   total: 30346329
   input_embedding: 19301760

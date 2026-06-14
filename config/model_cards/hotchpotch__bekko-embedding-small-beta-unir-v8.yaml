@@ -4,6 +4,12 @@ source:
   name: hotchpotch/bekko-embedding-small-beta-unir-v8
   revision: bfb1bc5d5a70be3c683dd190c82b0076d2dee8b5
 method: dense
+license:
+  id: unknown
+  label: unknown
+  type: unknown
+  commercial_use: unknown
+  source: unavailable
 parameters:
   total: 123234432
   input_embedding: 98304000

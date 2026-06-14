@@ -4,6 +4,13 @@ source:
   name: codefuse-ai/F2LLM-v2-330M
   revision: e8ef9a8eb907
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/codefuse-ai/F2LLM-v2-330M
 parameters:
   total: 334349184
   trainable: 334349184

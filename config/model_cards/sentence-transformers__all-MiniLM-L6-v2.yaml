@@ -4,6 +4,13 @@ source:
   name: sentence-transformers/all-MiniLM-L6-v2
   revision: c9745ed1d9f2
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 parameters:
   total: 22713216
   trainable: 22713216

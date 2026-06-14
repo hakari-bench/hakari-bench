@@ -4,6 +4,14 @@ source:
   name: google/embeddinggemma-300m
   revision: 57c266a740f5
 method: dense
+license:
+  id: gemma
+  label: Gemma Terms of Use
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: huggingface_model_card
+  source_url: https://huggingface.co/google/embeddinggemma-300m
+  terms_url: https://ai.google.dev/gemma/terms
 parameters:
   total: 307581696
   trainable: 307581696

@@ -4,6 +4,13 @@ source:
   name: cl-nagoya/ruri-v3-310m
   revision: 18b60fb8c2b9
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/cl-nagoya/ruri-v3-310m
 parameters:
   total: 314611968
   trainable: 314611968

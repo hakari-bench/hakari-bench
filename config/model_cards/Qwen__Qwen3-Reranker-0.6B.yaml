@@ -4,6 +4,13 @@ source:
   name: Qwen/Qwen3-Reranker-0.6B
   revision: e61197ed45024b0ed8a2d74b80b4d909f1255473
 method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Qwen/Qwen3-Reranker-0.6B
 parameters:
   total: 595776512
   input_embedding: 155309056

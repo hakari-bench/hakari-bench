@@ -4,6 +4,13 @@ source:
   name: colbert-ir/colbertv2.0
   revision: c1e84128e85ef755c096a95bdb06b47793b13acf
 method: late-interaction
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/colbert-ir/colbertv2.0
 parameters:
   total: 109580544
   input_embedding: 0

@@ -3,6 +3,13 @@ source:
   type: huggingface
   name: microsoft/harrier-oss-v1-270m
 method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/microsoft/harrier-oss-v1-270m
 parameters:
   total: 268098176
   trainable: 268098176

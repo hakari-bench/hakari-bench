@@ -4,6 +4,13 @@ source:
   name: Alibaba-NLP/gte-multilingual-base
   revision: 9bbca17d9273fd0d03d5725c7a4b0f6b45142062
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Alibaba-NLP/gte-multilingual-base
 parameters:
   total: 305368320
   trainable: 305368320

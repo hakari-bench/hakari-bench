@@ -4,6 +4,13 @@ source:
   name: hotchpotch/japanese-reranker-xsmall-v2
   revision: de99fd2f16c7b5df1df1bcc1d9ad2c16d88ce93a
 method: reranker
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/hotchpotch/japanese-reranker-xsmall-v2
 parameters:
   total: 36771585
   input_embedding: 26214400

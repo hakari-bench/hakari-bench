@@ -4,6 +4,13 @@ source:
   name: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
   revision: e8f8c211226b
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
 parameters:
   total: 117653760
   trainable: 117653760

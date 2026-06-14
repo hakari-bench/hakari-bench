@@ -4,6 +4,13 @@ source:
   name: lightonai/GTE-ModernColBERT-v1
   revision: cbbe53366e564450558f5e639dd499171f127538
 method: late-interaction
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/lightonai/GTE-ModernColBERT-v1
 parameters:
   total: 149114112
   input_embedding: 38684160
