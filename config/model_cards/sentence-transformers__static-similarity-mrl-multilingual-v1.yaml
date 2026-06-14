@@ -11,6 +11,14 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/sentence-transformers/static-similarity-mrl-multilingual-v1
+links:
+  huggingface: https://huggingface.co/sentence-transformers/static-similarity-mrl-multilingual-v1
+  github: https://github.com/UKPLab/sentence-transformers
+  papers:
+  - title: Matryoshka Representation Learning
+    url: https://arxiv.org/abs/2205.13147
+  - title: 'Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks'
+    url: https://arxiv.org/abs/1908.10084
 parameters:
   total: 108420096
   trainable: 108420096

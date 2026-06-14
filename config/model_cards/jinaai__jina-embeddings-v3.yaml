@@ -11,6 +11,11 @@ license:
   commercial_use: not_allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/jinaai/jina-embeddings-v3
+links:
+  huggingface: https://huggingface.co/jinaai/jina-embeddings-v3
+  papers:
+  - title: 'jina-embeddings-v3: Multilingual Embeddings With Task LoRA'
+    url: https://arxiv.org/abs/2409.10173
 parameters:
   total: 572310396
   trainable: 12946300

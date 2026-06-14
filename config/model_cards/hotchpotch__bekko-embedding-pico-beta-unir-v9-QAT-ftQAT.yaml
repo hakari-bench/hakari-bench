@@ -10,6 +10,8 @@ license:
   type: unknown
   commercial_use: unknown
   source: unavailable
+links:
+  huggingface: https://huggingface.co/hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT
 parameters:
   total: 105975168
   input_embedding: 98304000

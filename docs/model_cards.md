@@ -82,6 +82,24 @@ under model-specific conditions. BM25 is an algorithmic baseline rather than a
 licensed model, so its card uses `id: not_applicable`, `type: algorithm`, and
 the label `Not applicable - Okapi BM25 algorithmic baseline`.
 
+Model cards may include an optional `links` section that records canonical
+reference URLs for the model. All fields are optional, but including them is
+encouraged. Use a single `huggingface` URL, a single `github` URL, and a
+`papers` list where every paper pairs a `title` with a `url`:
+
+```yaml
+links:
+  huggingface: https://huggingface.co/BAAI/bge-m3
+  github: https://github.com/FlagOpen/FlagEmbedding
+  papers:
+  - title: "BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation"
+    url: https://arxiv.org/abs/2402.03216
+```
+
+Record the model's main Hugging Face page, its main GitHub repository, and one
+or more papers. Omit any field that is unknown rather than guessing. The
+leaderboard viewer renders these as clickable links in the Model Details dialog.
+
 Prompt settings use the optional `prompts` section:
 
 ```yaml

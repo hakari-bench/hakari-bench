@@ -11,6 +11,12 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/ibm-granite/granite-embedding-107m-multilingual
+links:
+  huggingface: https://huggingface.co/ibm-granite/granite-embedding-107m-multilingual
+  github: https://github.com/ibm-granite/granite-embedding-models
+  papers:
+  - title: Granite Embedding Models
+    url: https://arxiv.org/abs/2502.20204
 parameters:
   total: 106994304
   trainable: 106994304

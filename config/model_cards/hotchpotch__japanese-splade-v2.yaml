@@ -11,6 +11,9 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/hotchpotch/japanese-splade-v2
+links:
+  huggingface: https://huggingface.co/hotchpotch/japanese-splade-v2
+  github: https://github.com/hotchpotch/yast
 parameters:
   total: 136440064
   trainable: 136440064

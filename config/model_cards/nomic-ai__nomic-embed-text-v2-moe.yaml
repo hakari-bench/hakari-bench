@@ -11,6 +11,14 @@ license:
   commercial_use: allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/nomic-ai/nomic-embed-text-v2-moe
+links:
+  huggingface: https://huggingface.co/nomic-ai/nomic-embed-text-v2-moe
+  github: https://github.com/nomic-ai/contrastors
+  papers:
+  - title: Training Sparse Mixture Of Experts Text Embedding Models
+    url: https://arxiv.org/abs/2502.07972
+  - title: Matryoshka Representation Learning
+    url: https://arxiv.org/abs/2205.13147
 parameters:
   total: 475292928
   input_embedding: 192036864

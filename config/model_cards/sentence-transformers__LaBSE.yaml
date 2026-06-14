@@ -1,0 +1,49 @@
+id: sentence-transformers/LaBSE
+source:
+  type: huggingface
+  name: sentence-transformers/LaBSE
+  revision: 836121a0533e5664b21c7aacc5d22951f2b8b25b
+links:
+  huggingface: https://huggingface.co/sentence-transformers/LaBSE
+  github: https://github.com/UKPLab/sentence-transformers
+  papers:
+  - title: Language-agnostic BERT Sentence Embedding
+    url: https://arxiv.org/abs/2007.01852
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/sentence-transformers/LaBSE
+parameters:
+  total: 471517440
+  trainable: 471517440
+  input_embedding: 384885504
+  active: 86631936
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 256
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    english_score: 0.33
+    non_english_mean_score: 0.385
+    high_non_english_score_threshold: 0.6
+    high_non_english_language_count: 1
+    high_non_english_family_count: 1
+    evaluated_language_count: 24
