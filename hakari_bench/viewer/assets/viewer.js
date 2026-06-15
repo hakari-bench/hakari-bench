@@ -227,7 +227,7 @@
     anchor.href = url;
     anchor.target = "_blank";
     anchor.rel = "noopener noreferrer";
-    anchor.className = "break-all text-cyan-700 underline-offset-2 hover:underline";
+    anchor.className = "break-all text-cyan-700 underline underline-offset-2";
     anchor.textContent = text || url;
     return anchor;
   }
@@ -240,6 +240,17 @@
     dd.className = "break-all font-mono text-zinc-900";
     dd.append(node);
     list.append(dt, dd);
+  }
+
+  function appendModelDetailLicense(list, license) {
+    if (!license || typeof license !== "object") return;
+    const label = license.label || license.id;
+    if (!label) return;
+    const node =
+      typeof license.source_url === "string" && license.source_url
+        ? createModelDetailLink(license.source_url, label)
+        : document.createTextNode(label);
+    appendModelDetailRow(list, "License", node);
   }
 
   function appendModelDetailLinks(list, links) {
@@ -335,6 +346,7 @@
         dd.textContent = value;
         list.append(dt, dd);
       }
+      appendModelDetailLicense(list, metadata.license);
       appendModelDetailLinks(list, metadata.links);
       if (typeof modal.showModal === "function") modal.showModal();
     });
