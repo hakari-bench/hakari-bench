@@ -218,6 +218,10 @@ read as an analytical instrument rather than a general-purpose dashboard.
   parallel and compact, such as Table display and Efficiency variants.
 - Benchmark scope should keep all Nano suite choices visible on desktop.
   Collapsing them hides the primary navigation model.
+- Keep the configuration panel vertically tight so the leaderboard reaches the
+  first screen. Prefer small, consistent section padding and gaps over generous
+  spacing; do not buy compactness by hiding suite choices or shrinking control
+  hit targets below a comfortable size.
 - Use help modals rather than permanent explanatory copy for technical controls.
   The control area should remain compact.
 - Avoid nested cards. Sections should be low-border surfaces or full-width
@@ -229,6 +233,12 @@ read as an analytical instrument rather than a general-purpose dashboard.
   background fill, rounded radius, and enough padding to create a stable target.
 - Active controls should use the stronger active surface and accent text or
   border.
+- Boolean display and variant toggles (Task columns, STD, Task ranks, Dims,
+  Quantization, Rescore, Sparse pruning) use the `.toggle-chip` style: a control
+  chip whose checked state adopts the active surface and accent text, matching the
+  selection chips rather than a raw native checkbox. Keep the real checkbox for
+  form submission and focus, visually hidden, with a visible focus ring on the
+  chip.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
@@ -288,6 +298,12 @@ read as an analytical instrument rather than a general-purpose dashboard.
 
 - The table is the primary interface. Optimize it before optimizing surrounding
   chrome.
+- The table body scrolls inside a viewport-tall container (`max-height`) so the
+  column-header row and the model column stay pinned while scrolling. Because a
+  horizontally scrollable table is already a scroll container, the sticky header
+  needs this internal scroll rather than page scroll.
+- Keep the column-header row sticky to the top and the model column sticky to the
+  left; the model header cell stays pinned on both axes with a higher z-index.
 - Keep model name sticky and readable during horizontal scroll.
 - Keep task columns compact. Repeated suite prefixes may be removed from the
   subtask line when the remaining label is non-empty.
@@ -319,6 +335,10 @@ read as an analytical instrument rather than a general-purpose dashboard.
   and it improves comparison. Avoid decorative rank badges.
 - Positive z-score in light mode should read as green but not saturated enough
   to dominate the table.
+- The light-mode heat ramp must keep a clear green (positive) or red (negative)
+  hue across its whole range. Increase darkness with magnitude for emphasis, but
+  the strongest cells must still read as colored, not collapse to near-black —
+  otherwise the best and worst results lose their signal exactly where it matters.
 - Light-mode z-score colors should be dark enough to remain legible at compact
   table font sizes because STD uses text color without a filled background.
 - STD/z-score display should not use filled backgrounds or borders. Preserve a

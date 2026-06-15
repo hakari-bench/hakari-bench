@@ -882,9 +882,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".borda-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
     assert "top:2px;bottom:2px;left:2px;border:0;display:block;width:calc(100% - 2px);height:calc(100% - 4px)" in css_response.text
     assert "background-color:transparent;color:var(--hakari-accent);opacity:.1;pointer-events:none" in css_response.text
-    assert ":root.dark .borda-score-bar{opacity:.16}" in css_response.text
-    assert ":root:not(.light) .borda-score-bar{opacity:.16}" in css_response.text
-    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.3}" in css_response.text
+    assert ":root.dark .borda-score-bar{opacity:.13}" in css_response.text
+    assert ":root:not(.light) .borda-score-bar{opacity:.13}" in css_response.text
+    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.28}" in css_response.text
     assert ".borda-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
@@ -1278,7 +1278,7 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
 
     assert "Core (EN)" in html
     assert "Clear" in html
-    assert 'class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"' in html
+    assert 'class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"' in html
     assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
     core_en_button = html.split(">Core (EN)</button>", 1)[0].rsplit("<button", 1)[1]
     clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
@@ -1494,7 +1494,7 @@ def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: P
     response = TestClient(app).get("/leaderboard?view=BenchA&target=reranking&quantization=1")
 
     assert response.status_code == 200
-    assert 'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quantization" value="1" checked' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
 
 
@@ -2287,7 +2287,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     )
 
     assert facet_response.status_code == 200
-    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="other_variant" value="1" checked' in facet_response.text
     assert 'name="dim_filter" value="768" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
     assert "1025~ dims" in facet_response.text
@@ -2314,7 +2314,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     )
 
     assert explicit_truncate_off_response.status_code == 200
-    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' not in explicit_truncate_off_response.text
+    assert 'name="truncate" value="1" checked' not in explicit_truncate_off_response.text
     assert "384 dims" not in explicit_truncate_off_response.text
 
     explicit_quantization_off_response = TestClient(app).get(
@@ -2323,7 +2323,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     assert explicit_quantization_off_response.status_code == 200
     assert (
-        'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked'
+        'name="quantization" value="1" checked'
         not in explicit_quantization_off_response.text
     )
     assert ">uint8</td>" not in explicit_quantization_off_response.text
@@ -2331,14 +2331,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     rescore_response = TestClient(app).get("/leaderboard?view=BenchA&rescore=1")
 
     assert rescore_response.status_code == 200
-    assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
+    assert 'name="rescore" value="1" checked' in rescore_response.text
     assert "binary_rescore" in rescore_response.text
     assert "Δ vs Base" in rescore_response.text
 
     other_variant_response = TestClient(app).get("/leaderboard?view=BenchA&other_variant=1")
 
     assert other_variant_response.status_code == 200
-    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in other_variant_response.text
+    assert 'name="other_variant" value="1" checked' in other_variant_response.text
     assert "Δ vs Base" in other_variant_response.text
 
 
@@ -3388,7 +3388,7 @@ benchmarks:
     assert "group=lang_mean" in response.text
     assert ">Tasks</span>" not in response.text
     assert "Task score columns" not in response.text
-    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_scores" value="1" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
     assert "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]" in response.text
@@ -3943,7 +3943,7 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert "Table display" in response.text
     assert "<span>STD</span>" in response.text
     assert "Task std display" not in response.text
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_z_scores" value="1" checked' in response.text
     assert "task-z-score task-z-pos-100" in response.text
     assert "task-z-score task-z-neg-100" in response.text
     assert '<span class="task-z-score-value">100.00</span>' in response.text
@@ -4000,8 +4000,8 @@ def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "<span>Task ranks</span>" in response.text
-    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
-    assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_scores" value="1" checked' in response.text
+    assert 'name="task_ranks" value="1" checked' in response.text
     assert 'name="task_scores" value="1"' in response.text
     assert '<span class="task-rank-label">[1]</span>' not in response.text
     assert '<span class="task-rank-label">[T2]</span>' not in response.text
@@ -4143,8 +4143,8 @@ def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_
     default_response = client.get("/leaderboard?view=BenchA")
 
     assert default_response.status_code == 200
-    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700">' in default_response.text
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' not in default_response.text
+    assert 'name="task_scores" value="1">' in default_response.text
+    assert 'name="task_z_scores" value="1" checked' not in default_response.text
     assert '<input type="hidden" name="task_z_scores" value="0">' in default_response.text
     assert "task-z-score" not in default_response.text
     assert "metric%3Aa1" not in default_response.text
@@ -4152,7 +4152,7 @@ def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_
     enabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=1")
 
     assert enabled_response.status_code == 200
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in enabled_response.text
+    assert 'name="task_z_scores" value="1" checked' in enabled_response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in enabled_response.text
     assert "task_z_scores=1" in enabled_response.text
 
@@ -4193,10 +4193,10 @@ def test_task_z_score_text_css_uses_intuitive_positive_negative_colors() -> None
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert "task-z-score {\n    border-color:" not in css_source
-    assert re.search(r"\.task-z-pos-025\s*{\s*color: #246b46;", css_source)
-    assert re.search(r"\.task-z-pos-200\s*{\s*color: #032d1a;", css_source)
-    assert re.search(r"\.task-z-neg-025\s*{\s*color: #9a3412;", css_source)
-    assert re.search(r"\.task-z-neg-200\s*{\s*color: #3f0c0a;", css_source)
+    assert re.search(r"\.task-z-pos-025\s*{\s*color: #2f9e60;", css_source)
+    assert re.search(r"\.task-z-pos-200\s*{\s*color: #06552b;", css_source)
+    assert re.search(r"\.task-z-neg-025\s*{\s*color: #c83d31;", css_source)
+    assert re.search(r"\.task-z-neg-200\s*{\s*color: #7a1b12;", css_source)
     assert re.search(r'\.task-z-pos-025\s*{\s*color: theme\("colors\.emerald\.300"\);', css_source)
     assert re.search(r'\.task-z-pos-200\s*{\s*color: theme\("colors\.emerald\.50"\);', css_source)
     assert "background-color: theme(\"colors.emerald" not in css_source

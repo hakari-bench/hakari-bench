@@ -377,6 +377,12 @@
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 82%, var(--hakari-surface));
     border-color: transparent;
     border-radius: var(--hakari-radius-lg);
+    /* Scroll the table body inside a viewport-tall box so column headers and
+       the model column can stay pinned. A horizontally scrollable table forces
+       overflow-y to a scroll container, so sticky thead needs this height cap. */
+    max-height: calc(100vh - 5rem);
+    overflow: auto;
+    overscroll-behavior: contain;
   }
 
   .leaderboard-table {
@@ -385,7 +391,14 @@
   }
 
   .leaderboard-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 70%, var(--hakari-surface));
+  }
+
+  .leaderboard-table thead th.leaderboard-col-model {
+    z-index: 20;
   }
 
   .leaderboard-table tbody tr {
@@ -429,18 +442,18 @@
   }
 
   :root.dark .borda-score-bar {
-    opacity: 0.16;
+    opacity: 0.13;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not(.light) .borda-score-bar {
-      opacity: 0.16;
+      opacity: 0.13;
     }
   }
 
   .leaderboard-row:hover .borda-score-bar,
   .leaderboard-col-model:hover .borda-score-bar {
-    opacity: 0.3;
+    opacity: 0.28;
   }
 
   .borda-score-bar::-webkit-progress-bar {
@@ -795,68 +808,72 @@
     color: inherit;
   }
 
+  /* Light-mode heat ramps keep a clear green/red hue across the whole range so
+     the strongest cells still read as colored, not near-black. Darkness still
+     increases with magnitude for emphasis, and legibility stays high on the
+     light surfaces. Dark-mode overrides (emerald/rose) follow below. */
   .task-z-pos-025 {
-    color: #246b46;
+    color: #2f9e60;
   }
 
   .task-z-pos-050 {
-    color: #1f6240;
+    color: #259356;
   }
 
   .task-z-pos-075 {
-    color: #185939;
+    color: #1d884e;
   }
 
   .task-z-pos-100 {
-    color: #125033;
+    color: #167d46;
   }
 
   .task-z-pos-125 {
-    color: #0d472d;
+    color: #0f723e;
   }
 
   .task-z-pos-150 {
-    color: #083d26;
+    color: #0a6837;
   }
 
   .task-z-pos-175 {
-    color: #05351f;
+    color: #075e30;
   }
 
   .task-z-pos-200 {
-    color: #032d1a;
+    color: #06552b;
   }
 
   .task-z-neg-025 {
-    color: #9a3412;
+    color: #c83d31;
   }
 
   .task-z-neg-050 {
-    color: #8f2f13;
+    color: #be372c;
   }
 
   .task-z-neg-075 {
-    color: #832914;
+    color: #b33227;
   }
 
   .task-z-neg-100 {
-    color: #762314;
+    color: #a82d22;
   }
 
   .task-z-neg-125 {
-    color: #681d13;
+    color: #9d281e;
   }
 
   .task-z-neg-150 {
-    color: #5a1711;
+    color: #912319;
   }
 
   .task-z-neg-175 {
-    color: #4d110e;
+    color: #861f15;
   }
 
   .task-z-neg-200 {
-    color: #3f0c0a;
+    color: #7a1b12;
   }
 
   @keyframes hakari-leaderboard-spin {
@@ -1276,5 +1293,54 @@
 
   :root:not(.light) .hakari-modal::backdrop {
     background-color: rgb(8 11 12 / 0.62);
+  }
+}
+
+/* --- Toggle chips (display / variant checkboxes styled as control chips) --- */
+
+.toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-control-bg);
+  padding: 0.2rem 0.6rem;
+  color: var(--hakari-text-muted);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 140ms ease;
+}
+
+.toggle-chip:hover {
+  background-color: var(--hakari-accent-soft);
+}
+
+.toggle-chip:has(input[type="checkbox"]:checked) {
+  background-color: var(--hakari-control-active);
+  color: var(--hakari-accent);
+  font-weight: 600;
+}
+
+.toggle-chip:has(input[type="checkbox"]:focus-visible) {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--hakari-accent) 42%, transparent);
+}
+
+.toggle-chip input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-chip {
+    transition: none;
   }
 }

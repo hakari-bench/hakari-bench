@@ -659,7 +659,7 @@ def render_page(
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-    <header class="mb-4">
+    <header class="mb-3">
       <div class="flex items-center justify-between gap-3">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
           {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
@@ -667,8 +667,8 @@ def render_page(
         </h1>
         {header_actions}
       </div>
-      <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
-      <p class="mt-2 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
+      <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
+      <p class="mt-1.5 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
     </header>
     <section
       id="leaderboard-panel"
@@ -995,7 +995,7 @@ def render_leaderboard(
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs)}
-  <div class="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
+  <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
     <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
       <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
         {_icon_svg("table-properties", class_name="hakari-icon control-heading-icon shrink-0")}
@@ -1187,24 +1187,24 @@ def render_tabs(
     preset_buttons = [button for _, button in sorted(grouped_buttons["Scope presets"])]
     suite_buttons = [button for _, button in sorted(grouped_buttons["Nano suites"])]
     return f"""
-    <nav class="mb-4 border border-zinc-200 bg-white p-2 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
-      <div class="grid gap-2">
-        <div class="border border-zinc-200 bg-white p-2">
-          <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+    <nav class="mb-3 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
+      <div class="grid gap-1.5">
+        <div class="border border-zinc-200 bg-white p-1.5">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5">
             {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
             {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
             {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
           </div>
         </div>
-        <div class="grid gap-2">
-          <div class="border border-zinc-200 bg-white p-2">
-            <div class="mb-2 flex flex-wrap items-center gap-2">
+        <div class="grid gap-1.5">
+          <div class="border border-zinc-200 bg-white p-1.5">
+            <div class="mb-1.5 flex flex-wrap items-center gap-2">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="database", text="Benchmark scope")}
               </span>
               <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
             </div>
-            <div class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"></div>
+            <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
           </div>
           {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True)}
@@ -1740,7 +1740,7 @@ def render_language_pages(
         """
     wrapper_tag = "div" if embedded else "nav"
     wrapper_class = (
-        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
+        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-1.5"
         if embedded
         else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
     )
@@ -1856,13 +1856,13 @@ def render_display_controls(
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     return f"""
-    <div class="grid gap-2 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
-      <form id="column-controls" class="border border-zinc-200 bg-white p-2"
+    <div class="grid gap-1.5 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
+      <form id="column-controls" class="border border-zinc-200 bg-white p-1.5"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {column_hidden_html}
-        <div class="mb-2 flex flex-wrap items-center gap-2">
+        <div class="mb-1.5 flex flex-wrap items-center gap-2">
           {_control_label(icon="table-properties", text="Table display")}
           {_render_help_tooltip(
               "Table display",
@@ -1870,29 +1870,29 @@ def render_display_controls(
               "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD overlays standardized task scores so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank alongside the standardized score.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
           )}
         </div>
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="toggle-chip">
+            <input type="checkbox" name="task_scores" value="1"{task_scores_checked}>
             <span>Task columns</span>
           </label>
-          <label class="inline-flex items-center gap-2">
+          <label class="toggle-chip">
             <input type="hidden" name="task_z_scores" value="0">
-            <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
+            <input type="checkbox" name="task_z_scores" value="1"{task_z_scores_checked}>
             <span>STD</span>
           </label>
-          <label class="inline-flex items-center gap-2">
+          <label class="toggle-chip">
             <input type="hidden" name="task_ranks" value="0">
-            <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
+            <input type="checkbox" name="task_ranks" value="1"{task_ranks_checked}>
             <span>Task ranks</span>
           </label>
         </div>
       </form>
-      <form id="variant-controls" class="border border-zinc-200 bg-white p-2"
+      <form id="variant-controls" class="border border-zinc-200 bg-white p-1.5"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {variant_hidden_html}
-        <div class="mb-2 flex flex-wrap items-center gap-2">
+        <div class="mb-1.5 flex flex-wrap items-center gap-2">
           {_control_label(icon="git-compare-arrows", text="Efficiency variants")}
           {_render_help_tooltip(
               "Efficiency variants",
@@ -1900,21 +1900,21 @@ def render_display_controls(
               "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
           )}
         </div>
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="truncate" value="1" class="h-4 w-4 accent-cyan-700"{truncate_checked}>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="toggle-chip">
+            <input type="checkbox" name="truncate" value="1"{truncate_checked}>
             <span>Dims</span>
           </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
+          <label class="toggle-chip">
+            <input type="checkbox" name="quantization" value="1"{quantization_checked}>
             <span>Quantization</span>
           </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="rescore" value="1" class="h-4 w-4 accent-cyan-700"{rescore_checked}>
+          <label class="toggle-chip">
+            <input type="checkbox" name="rescore" value="1"{rescore_checked}>
             <span>Rescore</span>
           </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
+          <label class="toggle-chip">
+            <input type="checkbox" name="other_variant" value="1"{other_variant_checked}>
             <span>Sparse pruning</span>
           </label>
         </div>
