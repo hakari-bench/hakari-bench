@@ -298,6 +298,12 @@ read as an analytical instrument rather than a general-purpose dashboard.
 
 - The table is the primary interface. Optimize it before optimizing surrounding
   chrome.
+- The first column is a leading display-order rank (1, 2, 3 ...) shown before the
+  model name, with an empty header. It numbers the visible rows in the current
+  sort order so the ordering is obvious regardless of which column drives the sort
+  (the Borda and Mean columns show their own ranks, which can differ). It pins to
+  the left alongside the model column; hidden/filtered rows are skipped so the
+  numbers stay contiguous.
 - The column-header row pins to the top of the viewport on normal page scroll,
   and the model column pins to the left. Do not wrap the table in an `overflow`
   scroll container: a horizontally scrollable container becomes the sticky scroll

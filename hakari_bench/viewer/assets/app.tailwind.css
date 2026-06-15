@@ -372,11 +372,23 @@
   }
 
   .leaderboard-table-scroll {
+    --hakari-index-col-width: 2.75rem;
     --hakari-model-col-width: clamp(18rem, 40vw, 36rem);
     --hakari-rank-col-width: 3.25rem;
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 82%, var(--hakari-surface));
     border-color: transparent;
     border-radius: var(--hakari-radius-lg);
+  }
+
+  /* Leading display-order rank column (1, 2, 3 ...), pinned left like the model
+     column. Header is intentionally empty. */
+  .leaderboard-col-index {
+    box-sizing: border-box;
+    background-color: inherit;
+    left: 0;
+    width: var(--hakari-index-col-width);
+    min-width: var(--hakari-index-col-width);
+    max-width: var(--hakari-index-col-width);
   }
 
   .leaderboard-table {
@@ -398,6 +410,10 @@
     z-index: 20;
   }
 
+  .leaderboard-table thead th.leaderboard-col-index {
+    z-index: 30;
+  }
+
   .leaderboard-table tbody tr {
     background-color: var(--hakari-surface-faint);
   }
@@ -413,7 +429,7 @@
   .leaderboard-col-model {
     box-sizing: border-box;
     background-color: inherit;
-    left: 0;
+    left: var(--hakari-index-col-width);
     max-width: var(--hakari-model-col-width);
     min-width: var(--hakari-model-col-width);
     overflow: hidden;

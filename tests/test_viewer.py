@@ -868,7 +868,7 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "border-radius:var(--hakari-radius-lg)" in css_response.text
     assert 'nav[aria-label="Leaderboard configuration"]' in css_response.text
     assert "border-color:transparent" in css_response.text
-    assert ".leaderboard-table-scroll{--hakari-model-col-width" in css_response.text
+    assert ".leaderboard-table-scroll{--hakari-index-col-width" in css_response.text
     assert "border-color:var(--hakari-border)" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
     assert "button[data-leaderboard-pending=true]:after" not in css_response.text
@@ -877,8 +877,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".model-tooltip" not in css_response.text
     assert ".doc-summary-trigger{background-color:transparent" in css_response.text
     assert ".doc-summary-trigger:hover" in css_response.text
-    assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
+    assert ".leaderboard-col-model{box-sizing:border-box;left:var(--hakari-index-col-width)" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
+    assert ".leaderboard-col-index{box-sizing:border-box;background-color:inherit;left:0" in css_response.text
     assert ".borda-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
     assert "top:2px;bottom:2px;left:2px;border:0;display:block;width:calc(100% - 2px);height:calc(100% - 4px)" in css_response.text
     assert "background-color:transparent;color:var(--hakari-accent);opacity:.1;pointer-events:none" in css_response.text
@@ -2862,7 +2863,7 @@ def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> 
     assert body.count(">55.00</td>") >= 2
 
 
-def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: Path) -> None:
+def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     long_task = "legal_bench_corporate_lobbying"
     _write_task_results(
@@ -2883,8 +2884,18 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
     body = render_table_body(result=result)
 
     assert head.index("Model Name") < head.index("Borda")
-    assert body.index("model-a") < body.index(">1</td>")
+    # The leading display-order rank index is the leftmost (pinned) column, ahead
+    # of the model name, which is itself pinned to the right of the index column.
+    assert head.index('data-column-key="index"') < head.index('data-column-key="model_name"')
+    assert body.index("leaderboard-col-index") < body.index("leaderboard-col-model")
+    assert (
+        'class="leaderboard-col-index sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums text-zinc-500">1</td>'
+    ) in body
     assert 'data-column-key="model_name"' in head
+    assert (
+        'data-column-key="index" '
+        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-2 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"'
+    ) in head
     assert (
         'data-column-key="model_name" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-model sticky z-20'

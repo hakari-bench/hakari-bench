@@ -2550,7 +2550,11 @@ def render_table_head(
                  {header_content}
                </th>"""
         )
-    return f"<thead><tr>{''.join(heads)}</tr></thead>"
+    index_head = (
+        '<th scope="col" aria-label="Rank" data-column-key="index" '
+        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-2 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"></th>'
+    )
+    return f"<thead><tr>{index_head}{''.join(heads)}</tr></thead>"
 
 
 def _sticky_head_class(key: str) -> str:
@@ -2574,14 +2578,21 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     borda_rank_labels = _rank_display_labels((row.model_name, row.borda_rank) for row in result.rows)
     mean_rank_labels = _rank_display_labels((row.model_name, row.mean_rank) for row in result.rows)
     metric_rank_labels = _metric_rank_display_labels(result)
+    visible_index = 0
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
         row_class = "leaderboard-row odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
+        if hidden:
+            index_label = ""
+        else:
+            visible_index += 1
+            index_label = str(visible_index)
         borda_score_cell = _render_borda_score_cell(result=result, row=row)
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
+              <td class="leaderboard-col-index sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
               {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
               <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{borda_rank_labels[row.model_name]}</td>
               <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{mean_rank_labels[row.model_name]}</td>
@@ -2600,7 +2611,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
 
 
 def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
-    column_count = 4
+    column_count = 5  # leading rank index + model + borda rank + mean rank + borda score
     column_count += 2 if result.is_overall and not (result.rank_filtered and result.task_filter) else 1
     column_count += len(result.metric_columns)
     column_count += 4
