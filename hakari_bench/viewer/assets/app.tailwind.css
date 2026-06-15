@@ -1271,11 +1271,12 @@
 
 .hakari-modal-link {
   color: var(--hakari-accent);
+  text-decoration-line: underline;
   text-underline-offset: 2px;
 }
 
 .hakari-modal-link:hover {
-  text-decoration-line: underline;
+  text-decoration-color: var(--hakari-accent);
 }
 
 @media (prefers-color-scheme: dark) {
