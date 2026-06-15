@@ -724,9 +724,14 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert response.status_code == 200
     assert "<title>HAKARI-Bench leaderboard</title>" in response.text
     assert "HAKARI-Bench leaderboard" in response.text
-    assert '<h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">' in response.text
-    assert '<img src="/assets/favicon.png?' in response.text
-    assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
+    assert '<div class="flex items-center justify-between gap-3">' in response.text
+    assert '<h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">' in response.text
+    assert 'data-icon="hakari-bench"' in response.text
+    assert 'id="hakari-github-link"' in response.text
+    assert 'href="https://github.com/hakari-bench/hakari-bench"' in response.text
+    assert 'target="_blank" rel="noopener noreferrer"' in response.text
+    assert 'aria-label="Open hakari-bench/hakari-bench on GitHub"' in response.text
+    assert 'data-icon="github"' in response.text
     assert 'id="hakari-docs-link"' in response.text
     assert 'href="/docs/"' in response.text
     assert 'aria-label="Open documentation"' in response.text
@@ -735,6 +740,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'aria-label="Toggle color theme"' in response.text
     assert 'data-icon="moon"' in response.text
     assert 'data-icon="sun"' in response.text
+    assert response.text.index('id="hakari-github-link"') < response.text.index('id="hakari-docs-link"')
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-Bench leaderboard</p>' not in response.text
     assert (
         "🚧 WIP: This leaderboard is currently under active implementation, "
@@ -746,6 +752,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'data-icon="bar-chart-3"' not in response.text
     assert 'data-testid="summary-card-models"' not in response.text
     assert re.search(r'<link rel="stylesheet" href="/assets/app\.css\?v=[0-9a-f]{12}">', response.text)
+    assert re.search(r'<link rel="icon" type="image/svg\+xml" href="/assets/favicon-white\.svg\?v=[0-9a-f]{12}">', response.text)
     assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
     assert (
         '<meta name="htmx-config" content=\'{"allowEval":false,"allowScriptTags":false,'
@@ -830,6 +837,18 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert response.headers["content-type"].startswith("image/png")
     assert response.content.startswith(b"\x89PNG\r\n\x1a\n")
 
+    svg_response = client.get("/assets/favicon.svg")
+    assert svg_response.status_code == 200
+    assert svg_response.headers["content-type"].startswith("image/svg+xml")
+    assert 'stroke="currentColor"' in svg_response.text
+    assert "<circle" in svg_response.text
+
+    white_svg_response = client.get("/assets/favicon-white.svg")
+    assert white_svg_response.status_code == 200
+    assert white_svg_response.headers["content-type"].startswith("image/svg+xml")
+    assert 'stroke="#fff"' in white_svg_response.text
+    assert 'stroke="currentColor"' not in white_svg_response.text
+
     css_response = client.get("/assets/app.css")
     assert css_response.status_code == 200
     assert css_response.headers["content-type"].startswith("text/css")
@@ -906,6 +925,11 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert legacy_favicon_response.status_code == 200
     assert legacy_favicon_response.headers["content-type"].startswith("image/png")
     assert legacy_favicon_response.content.startswith(b"\x89PNG\r\n\x1a\n")
+
+    svg_favicon_response = client.get("/favicon.svg")
+    assert svg_favicon_response.status_code == 200
+    assert svg_favicon_response.headers["content-type"].startswith("image/svg+xml")
+    assert 'stroke="#fff"' in svg_favicon_response.text
 
     browser_default_favicon_response = client.get("/favicon.ico")
     assert browser_default_favicon_response.status_code == 200
@@ -1183,6 +1207,45 @@ overalls:
     assert lang_result.selected_benchmarks == ("MNanoBEIR:lang_mean",)
     assert task_result.rows[0].mean_score == pytest.approx(70.0)
     assert lang_result.rows[0].mean_score == pytest.approx(50.0)
+
+    task_columns_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:task_mean",),
+        show_task_scores=True,
+    )
+    lang_columns_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:lang_mean",),
+        show_task_scores=True,
+    )
+
+    assert task_columns_result.metric_columns == ["arguana", "fever"]
+    assert task_columns_result.rows[0].metric_values == {
+        "arguana": pytest.approx(50.0),
+        "fever": pytest.approx(90.0),
+    }
+    assert lang_columns_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
+    assert lang_columns_result.rows[0].metric_values == {
+        "NanoBEIR-en": pytest.approx(90.0),
+        "NanoBEIR-ja": pytest.approx(10.0),
+    }
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    client = TestClient(app)
+    task_response = client.get("/leaderboard?view=Custom&bench=MNanoBEIR%3Atask_mean&task_scores=1")
+    lang_response = client.get("/leaderboard?view=Custom&bench=MNanoBEIR%3Alang_mean&task_scores=1")
+
+    assert task_response.status_code == 200
+    assert lang_response.status_code == 200
+    assert 'name="bench" value="MNanoBEIR:task_mean"' in task_response.text
+    assert 'name="bench" value="MNanoBEIR:lang_mean"' in lang_response.text
+    assert 'data-metric-column-full-name="arguana"' in task_response.text
+    assert 'data-metric-column-full-name="fever"' in task_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-en"' not in task_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-ja"' not in task_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-en"' in lang_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-ja"' in lang_response.text
+    assert 'data-metric-column-full-name="fever"' not in lang_response.text
 
 
 def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -> None:
@@ -2823,19 +2886,19 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
     assert body.index("model-a") < body.index(">1</td>")
     assert 'data-column-key="model_name"' in head
     assert (
-        'data-column-key="model_name" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'data-column-key="model_name" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-model sticky z-20'
     ) in head
     assert (
-        'data-column-key="borda_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'data-column-key="borda_rank" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-rank'
     ) in head
     assert (
-        'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-rank'
     ) in head
     assert (
-        '<span class="min-w-0 text-left leading-tight block max-w-full truncate tooltip-trigger cursor-pointer" '
+        '<span class="min-w-0 text-left leading-tight font-normal block max-w-full truncate tooltip-trigger cursor-pointer" '
         f'data-metric-column-full-name="{long_task}"'
     ) in head
     assert body.count('class="borda-score-bar"') == 2
@@ -4411,7 +4474,7 @@ def test_task_score_column_headers_strip_repeated_suite_prefix_from_subtask() ->
 
     head = render_table_head(result=result, sort="borda_rank", direction="asc")
 
-    assert '<span class="block w-full truncate">NanoBRIGHT</span>' in head
+    assert '<span class="block w-full truncate font-normal">NanoBRIGHT</span>' in head
     assert '<span class="block max-w-full truncate font-normal">FooBar</span>' in head
     assert '<span class="block max-w-full truncate font-normal">NanoBRIGHTFooBar</span>' not in head
 
@@ -4622,8 +4685,8 @@ benchmarks:
 
     assert response.status_code == 200
     assert 'scope="colgroup"' not in response.text
-    assert '<span class="block w-full truncate">NanoBEIR-ar</span>' in response.text
-    assert '<span class="block w-full truncate">NanoBEIR-ja</span>' in response.text
+    assert '<span class="block w-full truncate font-normal">NanoBEIR-ar</span>' in response.text
+    assert '<span class="block w-full truncate font-normal">NanoBEIR-ja</span>' in response.text
     assert '<span class="block max-w-full truncate font-normal">arguana</span>' in response.text
     assert (
         '<span class="block max-w-full truncate font-normal">climatefever</span>'

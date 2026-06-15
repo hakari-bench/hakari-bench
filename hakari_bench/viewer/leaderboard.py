@@ -516,6 +516,11 @@ class LeaderboardService:
                     metric_score_group = _overall_metric_score_group(
                         overall, score_aggregation=score_aggregation
                     )
+                    if metric_score_group is None:
+                        metric_score_group = _custom_single_component_metric_score_group(
+                            self.config,
+                            overall,
+                        )
                     phase_timing["task_score_count"] = len(rows)
             elif selected_score_group is not None:
                 with timed_operation(
@@ -2288,6 +2293,26 @@ def _overall_metric_score_group(
         return None
     return ScoreGroupConfig(
         name="benchmark_macro", label="Benchmark Macro", group_by="benchmark"
+    )
+
+
+def _custom_single_component_metric_score_group(
+    config: ViewerConfig, overall: OverallConfig
+) -> ScoreGroupConfig | None:
+    if overall.name != CUSTOM_SCOPE_NAME or len(overall.benchmark_components) != 1:
+        return None
+    component = overall.benchmark_components[0]
+    if component.group_by is None:
+        return None
+    benchmark = config.benchmark_for_view(component.name)
+    if benchmark is not None:
+        for group in benchmark.resolved_score_groups:
+            if group.group_by == component.group_by:
+                return group
+    return ScoreGroupConfig(
+        name=f"{component.name}_{component.group_by}",
+        label=component.group_by.replace("_", " ").title(),
+        group_by=component.group_by,
     )
 
 

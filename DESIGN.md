@@ -84,8 +84,12 @@ spacing:
   xl: 32px
 components:
   app-header:
-    purpose: Brand, current mode, docs, and theme toggle.
-    treatment: Compact horizontal row; controls stay on the right.
+    purpose: Brand, repository link, docs, and theme toggle.
+    treatment: Compact horizontal row; title and right-side controls share the
+      same vertical center line. The title uses the same body-scale typography,
+      color, weight, and font family as the short product description below it.
+      The brand mark is a single-color inline SVG that follows the same
+      stroke-based icon style as header actions.
   leaderboard-configuration:
     purpose: Select evaluation mode, benchmark scope, metrics, task facets, display,
       variants, and filters.
@@ -180,11 +184,14 @@ read as an analytical instrument rather than a general-purpose dashboard.
   change. The table density depends on predictable text metrics.
 - Use the monospaced stack for model names, task names, scores, labels, and
   compact controls. This supports scanning and numeric comparison.
+- Table headers use a compact 11px regular weight. Standard columns and
+  multi-line task columns should keep the same size, color, and weight so
+  benchmark/task or benchmark/language labels scan as one label.
 - Use `font-variant-numeric: tabular-nums` for ranks, scores, z-scores, counts,
   dimensions, dates, and parameter values.
 - Keep letter spacing at 0. Do not use negative tracking for this viewer.
-- Avoid hero-scale text. Even the page title should remain compact because the
-  leaderboard table is the main content.
+- Avoid hero-scale text. The page title should match the product description's
+  compact text treatment because the leaderboard table is the main content.
 
 ## Layout Principles
 
@@ -217,6 +224,11 @@ read as an analytical instrument rather than a general-purpose dashboard.
   such as All/Core/Group or Safeguard positives.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
+- Keep the HAKARI-Bench brand mark as a simple single-color balance icon with
+  `currentColor` stroke so it can inherit the viewer accent color in both
+  themes.
+- Use a separate white SVG for the browser favicon, while keeping the in-page
+  brand mark theme-aware.
 - Loading indicators should be animated but small. Initial page loading can be
   centered and spacious; incremental loading should stay in the corner or near
   the affected control.

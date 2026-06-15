@@ -154,6 +154,21 @@ _ICON_PATHS = {
     "filter": '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
     "git-branch": '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
     "git-compare-arrows": '<circle cx="5" cy="6" r="3"/><circle cx="19" cy="18" r="3"/><path d="M12 6h3a4 4 0 0 1 4 4v5"/><path d="m15 9-3-3 3-3"/><path d="M12 18H9a4 4 0 0 1-4-4V9"/><path d="m9 15 3 3-3 3"/>',
+    "github": (
+        '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5a5.4 5.4 0 0 0-1-3.5c.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5a13.38 13.38 0 0 0-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>'
+        '<path d="M9 18c-4.51 2-5-2-7-2"/>'
+    ),
+    "hakari-bench": (
+        '<circle cx="12" cy="5" r="2"/>'
+        '<path d="M12 7v11"/>'
+        '<path d="M7 21h10"/>'
+        '<path d="M9 18h6"/>'
+        '<path d="M5 10c2.7 0 5-1.1 7-3 2 1.9 4.3 3 7 3"/>'
+        '<path d="m5 10-2 6h4Z"/>'
+        '<path d="m19 10-2 6h4Z"/>'
+        '<path d="M3 16c.5 2 3.5 2 4 0"/>'
+        '<path d="M17 16c.5 2 3.5 2 4 0"/>'
+    ),
     "info-simple": '<path d="M12 17v-6"/><path d="M12 7h.01"/>',
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
@@ -220,6 +235,10 @@ def create_app(
     @app.get("/favicon.png")
     def favicon() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
+
+    @app.get("/favicon.svg")
+    def favicon_svg() -> FileResponse:
+        return FileResponse(ASSETS_DIR / "favicon-white.svg", media_type="image/svg+xml")
 
     @app.get("/favicon.ico")
     def favicon_ico() -> FileResponse:
@@ -583,6 +602,7 @@ def render_page(
 ) -> str:
     query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
     css_url = _asset_url("app.css")
+    favicon_svg_url = _asset_url("favicon-white.svg")
     favicon_url = _asset_url("favicon.png")
     htmx_url = _asset_url("htmx.min.js")
     viewer_js_url = _asset_url("viewer.js")
@@ -597,6 +617,7 @@ def render_page(
   <title>HAKARI-Bench leaderboard</title>
   <link rel="canonical" href="/">
   <link rel="stylesheet" href="{css_url}">
+  <link rel="icon" type="image/svg+xml" href="{favicon_svg_url}">
   <link rel="icon" type="image/png" href="{favicon_url}">
   <meta name="htmx-config" content='{{"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false}}'>
   <script src="{htmx_url}"></script>
@@ -605,9 +626,9 @@ def render_page(
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
     <header class="mb-4">
-      <div class="flex items-start justify-between gap-3">
-        <h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">
-          <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
+      <div class="flex items-center justify-between gap-3">
+        <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
+          {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
           <span>HAKARI-Bench leaderboard</span>
         </h1>
         {header_actions}
@@ -685,8 +706,16 @@ def _render_docs_link() -> str:
         </a>"""
 
 
+def _render_github_link() -> str:
+    return f"""<a id="hakari-github-link" href="https://github.com/hakari-bench/hakari-bench" target="_blank" rel="noopener noreferrer" class="theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
+          aria-label="Open hakari-bench/hakari-bench on GitHub" title="Open hakari-bench/hakari-bench on GitHub">
+          {_icon_svg("github", class_name="hakari-icon")}
+        </a>"""
+
+
 def _render_header_actions() -> str:
     return f"""<div class="flex shrink-0 items-center gap-2">
+          {_render_github_link()}
           {_render_docs_link()}
           {_render_theme_toggle()}
         </div>"""
@@ -2349,7 +2378,7 @@ def render_table_head(
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = f"{_metric_column_width_class(result)} px-1 normal-case" if is_metric else "px-2 uppercase"
         sticky = _sticky_head_class(key)
-        label_class = "min-w-0 text-left leading-tight" if is_metric else "text-left"
+        label_class = "min-w-0 text-left leading-tight font-normal" if is_metric else "text-left"
         label_attrs = (
             f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
         )
@@ -2372,7 +2401,7 @@ def render_table_head(
                 header_content = f"""
                  <span class="doc-label-group block w-full min-w-0" data-doc-label-group="metric">
                    <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>
-                     <span class="block w-full truncate">{escape(group_label)}</span>
+                     <span class="block w-full truncate font-normal">{escape(group_label)}</span>
                      <span class="inline-flex max-w-full items-center gap-1">
                        <button type="button" class="inline-flex min-w-0 items-center gap-0.5 text-left hover:text-cyan-700"
                                hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2400,7 +2429,7 @@ def render_table_head(
                    <span class="{label_class}"{label_attrs}>{label_markup}</span>{indicator}
                  </button>"""
         heads.append(
-            f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
+            f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 {text_align} {th_spacing} {sticky}">
                  {header_content}
                </th>"""
         )
@@ -3045,7 +3074,7 @@ def _metric_column_label_markup(label: str) -> str:
     escaped_parts = [escape(part) for part in parts]
     first, rest = escaped_parts[0], escaped_parts[1:]
     return (
-        f'<span class="block w-full truncate">{first}</span>'
+        f'<span class="block w-full truncate font-normal">{first}</span>'
         + "".join(f'<span class="block w-full truncate font-normal">{part}</span>' for part in rest)
     )
 

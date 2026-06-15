@@ -879,7 +879,9 @@ Task score columns are also controlled by an explicit display flag. The viewer
 does not render per-task or per-score-group metric columns by default. When
 `task_scores=1` is present, the leaderboard computes columns for the current
 selection: the selected score group for benchmark views, Nano-set columns for
-overall `score=macro`, or task-level columns when no score group is available.
+overall `score=macro`, the selected component score group for a single Custom
+benchmark selection such as `MNanoBEIR:task_mean` or `MNanoBEIR:lang_mean`, or
+task-level columns when no score group is available.
 By default, `model_filter` only hides rendered model rows,
 `task_filter` only narrows displayed task score columns, and facet filters such
 as model type, dimensions, quantization, dtype, attention implementation, and
@@ -1049,7 +1051,10 @@ choices:
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
   `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall`, `Core`,
   and `Core (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
-  inside the same leaderboard configuration panel.
+  inside the same leaderboard configuration panel. When one grouped benchmark
+  is selected in Custom and `task_scores=1` is enabled, displayed task columns
+  follow that selection key: `MNanoBEIR(task)` displays BEIR source-task means
+  and `MNanoBEIR(lang)` displays language/dataset means.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
