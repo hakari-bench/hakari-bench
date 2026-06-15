@@ -304,14 +304,17 @@ read as an analytical instrument rather than a general-purpose dashboard.
   (the Borda and Mean columns show their own ranks, which can differ). It pins to
   the left alongside the model column; hidden/filtered rows are skipped so the
   numbers stay contiguous.
-- The column-header row pins to the top of the viewport on normal page scroll,
-  and the model column pins to the left. Do not wrap the table in an `overflow`
-  scroll container: a horizontally scrollable container becomes the sticky scroll
-  context and breaks page-scroll header pinning (CSS forces the cross-axis
-  overflow to a scroll value). The table flows in the page instead, so a table
-  wider than the viewport scrolls the page horizontally while the model column
-  stays pinned. The model header cell stays pinned on both axes with a higher
-  z-index.
+- Scroll axes are split: vertical scrolling is the browser/page, horizontal
+  scrolling stays inside the table via an `overflow-x: auto` wrapper. This keeps
+  the surrounding chrome (config panel, footer) fixed while only the table pans
+  horizontally. The rank-index and model columns pin to the left during that
+  horizontal scroll.
+- Note the CSS tradeoff: because the horizontal `overflow` wrapper also becomes
+  the vertical scroll context, the column-header row cannot be pinned to the
+  viewport top with pure CSS on page scroll. Do not reintroduce a page-scroll
+  sticky header by removing the horizontal wrapper — that makes a wide table
+  scroll the whole page and drags the footer/chrome off-screen. A pinned header
+  with this scroll split would require JS.
 - Keep model name sticky and readable during horizontal scroll.
 - Keep task columns compact. Repeated suite prefixes may be removed from the
   subtask line when the remaining label is non-empty.

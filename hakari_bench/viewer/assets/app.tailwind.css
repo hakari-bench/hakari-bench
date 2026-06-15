@@ -396,22 +396,8 @@
     border-spacing: 0;
   }
 
-  /* Pin the column-header row to the top of the viewport on page scroll. The
-     table is not wrapped in an overflow scroll container, so a wide table scrolls
-     the page horizontally while the model column stays pinned to the left. */
   .leaderboard-table thead th {
-    position: sticky;
-    top: 0;
-    z-index: 10;
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 70%, var(--hakari-surface));
-  }
-
-  .leaderboard-table thead th.leaderboard-col-model {
-    z-index: 20;
-  }
-
-  .leaderboard-table thead th.leaderboard-col-index {
-    z-index: 30;
   }
 
   .leaderboard-table tbody tr {
