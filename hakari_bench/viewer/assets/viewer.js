@@ -353,6 +353,10 @@
   document.addEventListener(
     "click",
     (event) => {
+      // Let interactive controls nested inside a tooltip target (e.g. the doc
+      // modal book icon or the sort button in a two-line task header) handle
+      // their own click instead of pinning the hover tooltip.
+      if (closestElement(event.target, "a, button, summary, input, select, textarea")) return;
       const trigger = closestElement(event.target, "[data-tooltip]");
       if (!trigger) return;
       event.preventDefault();
