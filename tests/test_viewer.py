@@ -1046,7 +1046,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
     assert (
-        'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc'
+        'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_score&amp;direction=desc'
         '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
     ) in response.text
     scope_section = response.text.split("Benchmark scope", 1)[1].split("Efficiency variants", 1)[0]
@@ -1057,9 +1057,10 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Code retrieval" not in response.text
     assert "Specialized domains" not in response.text
     assert "leaderboard-col-model sticky" in response.text
-    assert "leaderboard-col-rank" in response.text
-    assert "leaderboard-col-borda sticky" not in response.text
-    assert "leaderboard-col-mean sticky" not in response.text
+    assert "leaderboard-col-index sticky" in response.text
+    assert "leaderboard-col-rank" not in response.text
+    assert ">Borda<" not in response.text
+    assert ">Mean<" not in response.text
     assert "z-20" in response.text
 
 
@@ -1440,7 +1441,8 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert "top-100 hybrid candidates" in response.text
     assert "optional rank-101 safeguard positive" in response.text
     assert "usually produced by BM25" not in response.text
-    assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
+    # Default sort is now Borda Score (desc); the bm25 baseline sorts by its score.
+    assert response.text.index("model/b") < response.text.index("model/a") < response.text.index("bm25")
 
 
 def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: Path) -> None:
@@ -1901,7 +1903,7 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "More languages" in response.text
     assert 'data-language-page="ja"' in response.text
     assert (
-        'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
+        'hx-push-url="/?view=BenchA&amp;sort=borda_score&amp;direction=desc&amp;group=task'
         '&amp;task_z_scores=0&amp;lang_filter=en"'
     ) in response.text
     assert 'aria-label="Task facets"' in response.text
@@ -2261,8 +2263,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="dim_filter" value="256" class="h-4 w-4 accent-cyan-700" checked' not in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
-    base_head = render_table_head(result=base_result, sort="borda_rank", direction="asc")
-    quantization_head = render_table_head(result=quantization_result, sort="borda_rank", direction="asc")
+    base_head = render_table_head(result=base_result, sort="borda_score", direction="asc")
+    quantization_head = render_table_head(result=quantization_result, sort="borda_score", direction="asc")
     score_desc_head = render_table_head(result=base_result, sort="borda_score", direction="desc")
     assert ">Quant</span>" not in base_head
     assert ">Quant</span>" in quantization_head
@@ -2880,10 +2882,10 @@ def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> No
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
     result = service.get_leaderboard("BenchA", show_task_scores=True)
 
-    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    head = render_table_head(result=result, sort="borda_score", direction="desc")
     body = render_table_body(result=result)
 
-    assert head.index("Model Name") < head.index("Borda")
+    assert head.index("Model Name") < head.index("Borda Score")
     # The leading display-order rank index is the leftmost (pinned) column, ahead
     # of the model name, which is itself pinned to the right of the index column.
     assert head.index('data-column-key="index"') < head.index('data-column-key="model_name"')
@@ -2900,14 +2902,10 @@ def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> No
         'data-column-key="model_name" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-model sticky z-20'
     ) in head
-    assert (
-        'data-column-key="borda_rank" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
-        'text-left px-2 uppercase leaderboard-col-rank'
-    ) in head
-    assert (
-        'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
-        'text-left px-2 uppercase leaderboard-col-rank'
-    ) in head
+    # Borda and Mean rank columns were removed; the leading rank index replaces them.
+    assert 'data-column-key="borda_rank"' not in head
+    assert 'data-column-key="mean_rank"' not in head
+    assert "leaderboard-col-rank" not in head
     assert (
         '<span class="min-w-0 text-left leading-tight font-normal block max-w-full truncate tooltip-trigger cursor-pointer" '
         f'data-metric-column-full-name="{long_task}"'
@@ -3147,8 +3145,8 @@ def test_leaderboard_table_hides_sparse_dimension_values() -> None:
     assert ">sparse</span>" in body
     assert '<tr class="leaderboard-row odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
-    assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
-    assert "leaderboard-col-borda sticky" not in body
+    assert '<td class="leaderboard-col-index sticky z-10' in body
+    assert "leaderboard-col-rank" not in body
     assert "leaderboard-col-mean sticky" not in body
     assert '<td class="px-2 py-1 text-left tabular-nums">' in body
 

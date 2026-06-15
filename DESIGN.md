@@ -300,10 +300,11 @@ read as an analytical instrument rather than a general-purpose dashboard.
   chrome.
 - The first column is a leading display-order rank (1, 2, 3 ...) shown before the
   model name, with an empty header. It numbers the visible rows in the current
-  sort order so the ordering is obvious regardless of which column drives the sort
-  (the Borda and Mean columns show their own ranks, which can differ). It pins to
-  the left alongside the model column; hidden/filtered rows are skipped so the
-  numbers stay contiguous.
+  sort order. Because this leading rank already communicates standing, the table
+  does not carry separate Borda or Mean rank columns; the default sort is Borda
+  Score (descending) and that column is the visible sort anchor. The rank index
+  pins to the left alongside the model column; hidden/filtered rows are skipped so
+  the numbers stay contiguous.
 - Scroll axes are split: vertical scrolling is the browser/page, horizontal
   scrolling stays inside the table via an `overflow-x: auto` wrapper. This keeps
   the surrounding chrome (config panel, footer) fixed while only the table pans
@@ -334,8 +335,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
 ## Score Cells
 
 - Score cells must remain compact and numerically aligned.
-- Rank columns such as Borda and Mean should stay narrow; they are comparison
-  anchors, not score detail columns.
+- Standing is shown only by the leading rank-index column, not by dedicated Borda
+  or Mean rank columns. Keep Borda Score as the visible, default-sorted aggregate.
 - Do not show the Tasks column in the leaderboard table. Keep task counts
   available in CSV export.
 - When only task ranks are shown, render ranks plainly like Borda rank values.

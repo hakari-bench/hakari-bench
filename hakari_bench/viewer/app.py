@@ -279,8 +279,8 @@ def create_app(
     @app.get("/", response_class=HTMLResponse)
     def index(
         view: str = Query(default=viewer_config.overall.name),
-        sort: str = Query(default="borda_rank"),
-        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        sort: str = Query(default="borda_score"),
+        direction: str = Query(default="desc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
@@ -423,8 +423,8 @@ def create_app(
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
         view: str = Query(default=viewer_config.overall.name),
-        sort: str = Query(default="borda_rank"),
-        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        sort: str = Query(default="borda_score"),
+        direction: str = Query(default="desc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
@@ -509,8 +509,8 @@ def create_app(
     @app.get("/leaderboard.csv")
     def leaderboard_csv(
         view: str = Query(default=viewer_config.overall.name),
-        sort: str = Query(default="borda_rank"),
-        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        sort: str = Query(default="borda_score"),
+        direction: str = Query(default="desc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
@@ -634,7 +634,7 @@ def render_page(
     benchmark_docs: BenchmarkDocs | None = None,
     database_label: str = "",
 ) -> str:
-    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
+    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_score", "direction": "desc"}, doseq=True)
     css_url = _asset_url("app.css")
     favicon_svg_url = _asset_url("favicon-white.svg")
     favicon_url = _asset_url("favicon.png")
@@ -1055,7 +1055,7 @@ def render_tabs(
         raw_view_label = result.available_view_labels.get(view_name, view_name)
         view_label = _viewer_scope_label(view_name=view_name, fallback=raw_view_label)
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
@@ -1480,7 +1480,7 @@ def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, dir
     for score, label in [("micro", "Micro"), ("macro", "Macro")]:
         active = result.score_aggregation == score
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         if score == "micro":
@@ -1533,7 +1533,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
     for target, label, icon in target_options:
         active = result.score_target == "all" if target == "all" else result.score_target != "all"
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         if target == "all":
@@ -1593,7 +1593,7 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
     for metric in result.available_score_metrics:
         active = metric == result.selected_score_metric
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         if metric == "ndcg@10":
@@ -2425,7 +2425,7 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
             if active
             else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
         )
-        query_payload = state_payload(result=result, sort="borda_rank", direction="asc", filter_state=filter_state)
+        query_payload = state_payload(result=result, sort="borda_score", direction="desc", filter_state=filter_state)
         query_payload["group"] = score_group.name
         query = urlencode(query_payload, doseq=True)
         page_url = _page_url(query_payload)
@@ -2455,8 +2455,6 @@ def render_table_head(
     )
     columns = [
         ("model_name", "Model Name", "asc", "left", False, ""),
-        ("borda_rank", "Borda", "asc", "right", False, ""),
-        ("mean_rank", "Mean", "asc", "right", False, ""),
         ("borda_score", "Borda Score", "desc", "right", False, ""),
     ]
     if result.is_overall and not (result.rank_filtered and result.task_filter):
@@ -2560,10 +2558,6 @@ def render_table_head(
 def _sticky_head_class(key: str) -> str:
     if key == "model_name":
         return "leaderboard-col-model sticky z-20"
-    if key == "borda_rank":
-        return "leaderboard-col-rank"
-    if key == "mean_rank":
-        return "leaderboard-col-rank"
     return ""
 
 
@@ -2575,8 +2569,6 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
     body_rows = []
     model_views = model_cell_views(result.rows)
     borda_score_bar_widths = _borda_score_bar_widths(rows=result.rows, filter_context=filter_context)
-    borda_rank_labels = _rank_display_labels((row.model_name, row.borda_rank) for row in result.rows)
-    mean_rank_labels = _rank_display_labels((row.model_name, row.mean_rank) for row in result.rows)
     metric_rank_labels = _metric_rank_display_labels(result)
     visible_index = 0
     for row in result.rows:
@@ -2594,8 +2586,6 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="leaderboard-col-index sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
               {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
-              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{borda_rank_labels[row.model_name]}</td>
-              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{mean_rank_labels[row.model_name]}</td>
               {borda_score_cell}
               {mean_cells}
               {_render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels)}
@@ -2611,7 +2601,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
 
 
 def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
-    column_count = 5  # leading rank index + model + borda rank + mean rank + borda score
+    column_count = 3  # leading rank index + model + borda score
     column_count += 2 if result.is_overall and not (result.rank_filtered and result.task_filter) else 1
     column_count += len(result.metric_columns)
     column_count += 4
