@@ -100,7 +100,18 @@ components:
     treatment: Rounded low-contrast fill by default; subtle hover; clearer active fill.
   help-modal:
     purpose: Explain technical controls without adding permanent copy to the page.
-    treatment: Modal header uses the target concept name, not generic "Help".
+    treatment: Shared `.hakari-modal` shell on surface color with a strong border,
+      soft shadow, and a blurred dimmed backdrop. The header pairs a small accent
+      icon with the target concept name (not generic "Help"); the close control is
+      a quiet ghost chip. Body uses a stronger lead line over muted detail text.
+      Help, benchmark-doc summary, and model-detail dialogs all reuse this shell.
+  docs-page:
+    purpose: Standalone benchmark and task documentation rendered from Markdown.
+    treatment: Shares the leaderboard chrome (brand mark linking home, GitHub link,
+      theme toggle) and loads viewer.js so theme choice persists. Article sits on a
+      surface card; tables get a header row, light row striping, and a rounded
+      border; inline code reads as a subtle chip. The index lists groups as a
+      two-column grid of clickable cards with three-line clamped summaries.
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
@@ -249,6 +260,29 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Model and task text filters should document multi-keyword matching. For
   example, `jina bge` matches rows containing either `jina` or `bge`; task
   filters work similarly, and short task names such as `nq` must be supported.
+- All in-page dialogs (help, benchmark-doc summary, model detail) share the
+  `.hakari-modal` shell so they read as one component family in both themes. Use
+  surface background, a strong border, a soft shadow, and a blurred dimmed
+  backdrop. Keep an accent icon beside the header concept name and a quiet ghost
+  close chip. Because viewer.js sets dialog text with `textContent`, keep the
+  scripted id on an inner `<span>` so the static header icon survives updates.
+
+## Documentation Pages
+
+- The standalone `/docs` pages are part of the product, not a separate site:
+  reuse the leaderboard chrome so they feel continuous.
+- Give every docs page the same header: brand mark linking back to the
+  leaderboard, GitHub link, and theme toggle. Load viewer.js so the stored theme
+  applies and the toggle works; do not rely on inline scripts because the page
+  CSP forbids them.
+- Keep both themes intentional here too. Docs colors come from the same tokens as
+  the leaderboard; never let docs fall back to a fixed light palette.
+- Render documentation tables with a distinct header row, light row striping, and
+  a rounded border so dense metadata stays scannable. Inline code should read as a
+  subtle bordered chip, and code blocks use the faint code background.
+- The docs index is a two-column grid of clickable cards. Clamp group summaries
+  to a few lines so the index stays short and comparable; the full text lives on
+  the group page.
 
 ## Leaderboard Table
 

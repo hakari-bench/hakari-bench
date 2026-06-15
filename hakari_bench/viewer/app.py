@@ -26,7 +26,7 @@ from hakari_bench.viewer.config import (
     load_viewer_config,
     split_benchmark_selection_key,
 )
-from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
+from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
     FilterContext,
@@ -256,7 +256,7 @@ def create_app(
 
     @app.get("/docs/benchmark-tasks", response_class=HTMLResponse)
     def benchmark_docs_index() -> HTMLResponse:
-        return HTMLResponse(render_docs_index_page(docs=benchmark_docs.group_docs(), css_version=_asset_version("app.css")))
+        return HTMLResponse(render_docs_index_page(docs=benchmark_docs.group_docs(), chrome=_docs_page_chrome()))
 
     @app.get("/docs/benchmark-tasks/{benchmark}", response_class=HTMLResponse)
     def benchmark_doc(benchmark: str) -> HTMLResponse:
@@ -265,7 +265,7 @@ def create_app(
         doc = benchmark_docs.route_doc(benchmark=benchmark)
         if doc is None:
             raise HTTPException(status_code=404, detail="Benchmark documentation not found.")
-        return HTMLResponse(render_markdown_page(doc=doc, css_version=_asset_version("app.css")))
+        return HTMLResponse(render_markdown_page(doc=doc, chrome=_docs_page_chrome()))
 
     @app.get("/docs/benchmark-tasks/{benchmark}/{task}", response_class=HTMLResponse)
     def benchmark_task_doc(benchmark: str, task: str) -> HTMLResponse:
@@ -274,7 +274,7 @@ def create_app(
         doc = benchmark_docs.route_doc(benchmark=benchmark, task=task)
         if doc is None:
             raise HTTPException(status_code=404, detail="Benchmark task documentation not found.")
-        return HTMLResponse(render_markdown_page(doc=doc, css_version=_asset_version("app.css")))
+        return HTMLResponse(render_markdown_page(doc=doc, chrome=_docs_page_chrome()))
 
     @app.get("/", response_class=HTMLResponse)
     def index(
@@ -755,6 +755,29 @@ def _render_header_actions() -> str:
         </div>"""
 
 
+def _render_docs_header() -> str:
+    return f"""<header class="mb-5 flex items-center justify-between gap-3">
+          <a href="/" class="docs-brand flex min-w-0 items-center gap-1.5 text-sm font-medium text-zinc-600" aria-label="Back to HAKARI-Bench leaderboard">
+            {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
+            <span>HAKARI-Bench</span>
+          </a>
+          <div class="flex shrink-0 items-center gap-2">
+            {_render_github_link()}
+            {_render_theme_toggle()}
+          </div>
+        </header>"""
+
+
+def _docs_page_chrome() -> DocsPageChrome:
+    return DocsPageChrome(
+        css_url=_asset_url("app.css"),
+        viewer_js_url=_asset_url("viewer.js"),
+        favicon_svg_url=_asset_url("favicon-white.svg"),
+        favicon_png_url=_asset_url("favicon.png"),
+        header_html=_render_docs_header(),
+    )
+
+
 def _render_page_footer(*, latest_update: str, database_label: str) -> str:
     meta_items = []
     if latest_update:
@@ -850,18 +873,21 @@ def _control_label(*, icon: str, text: str, extra_class: str = "") -> str:
 
 
 def render_doc_summary_modal() -> str:
-    return """
-<dialog id="doc-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
+    return f"""
+<dialog id="doc-summary-modal" class="hakari-modal">
   <form method="dialog">
-    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 id="doc-summary-heading" class="break-all text-base font-semibold">Benchmark documentation</h3>
-      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
+    <div class="hakari-modal-header">
+      <h3 class="hakari-modal-title">
+        {_icon_svg("book-open", class_name="hakari-icon")}
+        <span id="doc-summary-heading" class="break-all">Benchmark documentation</span>
+      </h3>
+      <button type="submit" class="hakari-modal-close">Close</button>
     </div>
   </form>
-  <div class="px-4 py-3">
-    <p id="doc-summary-description" class="mt-3 whitespace-pre-wrap text-sm leading-tight text-zinc-700"></p>
+  <div class="hakari-modal-body">
+    <p id="doc-summary-description" class="hakari-modal-text text-sm"></p>
     <p class="mt-3 text-sm">
-      <a id="doc-summary-link" class="text-cyan-700 underline-offset-2 hover:underline" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
+      <a id="doc-summary-link" class="hakari-modal-link" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
     </p>
   </div>
 </dialog>
@@ -869,17 +895,20 @@ def render_doc_summary_modal() -> str:
 
 
 def render_help_summary_modal() -> str:
-    return """
-<dialog id="help-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
+    return f"""
+<dialog id="help-summary-modal" class="hakari-modal">
   <form method="dialog">
-    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 id="help-summary-heading" class="break-all text-base font-semibold">Help</h3>
-      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
+    <div class="hakari-modal-header">
+      <h3 class="hakari-modal-title">
+        {_icon_svg("circle-help", class_name="hakari-icon")}
+        <span id="help-summary-heading" class="break-all">Help</span>
+      </h3>
+      <button type="submit" class="hakari-modal-close">Close</button>
     </div>
   </form>
-  <div class="px-4 py-3">
-    <p id="help-summary-short" class="mt-3 text-sm font-medium leading-tight text-zinc-800"></p>
-    <p id="help-summary-details" class="mt-3 whitespace-pre-wrap text-sm leading-tight text-zinc-700"></p>
+  <div class="hakari-modal-body">
+    <p id="help-summary-short" class="hakari-modal-lead text-sm"></p>
+    <p id="help-summary-details" class="hakari-modal-text text-sm"></p>
   </div>
 </dialog>
 """

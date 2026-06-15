@@ -877,6 +877,12 @@
     .loading-spinner {
       animation: none;
     }
+
+    .doc-card,
+    .docs-brand,
+    .hakari-modal-close {
+      transition: none;
+    }
   }
 
   :root.dark .shadow-sm {
@@ -1039,5 +1045,236 @@
     :root:not(.light) .task-z-neg-200 {
       color: theme("colors.rose.50");
     }
+  }
+}
+
+/* ===================================================================
+   Help / detail modals and benchmark documentation pages.
+   These are hand-authored component rules placed after the Tailwind
+   utilities layer so they win over generic utility resets. Rebuild
+   app.css with `uv run python scripts/build_viewer_css.py`.
+   =================================================================== */
+
+/* --- Documentation page chrome --------------------------------------- */
+
+.docs-brand {
+  color: var(--hakari-text-muted);
+  transition: color 140ms ease;
+}
+
+.docs-brand:hover {
+  color: var(--hakari-accent);
+}
+
+.doc-card-grid {
+  display: grid;
+  gap: 0.625rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .doc-card-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.doc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--hakari-surface);
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-lg);
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.doc-card:hover {
+  border-color: var(--hakari-accent-border);
+  background-color: color-mix(in srgb, var(--hakari-surface) 92%, var(--hakari-accent) 8%);
+}
+
+.doc-card-title {
+  color: var(--hakari-accent);
+}
+
+.doc-card:hover .doc-card-title {
+  color: var(--hakari-accent-strong);
+}
+
+/* Stretch the title link across the whole card so the card is clickable. */
+.doc-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.doc-card-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  color: var(--hakari-text-muted);
+}
+
+/* --- Documentation article ------------------------------------------- */
+
+.benchmark-doc table {
+  min-width: 100%;
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-md);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.benchmark-doc tbody tr:first-child td {
+  background-color: var(--hakari-surface-muted);
+  color: var(--hakari-text);
+  font-weight: 600;
+  border-top: 0;
+}
+
+.benchmark-doc tbody tr:nth-child(2n) td {
+  background-color: var(--hakari-surface-faint);
+}
+
+.benchmark-doc blockquote {
+  border-left: 3px solid var(--hakari-accent-border);
+  border-radius: var(--hakari-radius-sm);
+  background-color: var(--hakari-surface-faint);
+  padding: 0.5rem 0.75rem;
+  color: var(--hakari-text-muted);
+}
+
+.benchmark-doc pre {
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-code-bg);
+}
+
+.benchmark-doc :not(pre) > code {
+  border: 1px solid color-mix(in srgb, var(--hakari-border) 55%, transparent);
+  border-radius: var(--hakari-radius-sm);
+  background-color: var(--hakari-code-bg);
+  padding: 0.04rem 0.32rem;
+  font-size: 0.85em;
+}
+
+.benchmark-doc a code {
+  color: inherit;
+}
+
+.machine-readable-metadata {
+  border-radius: var(--hakari-radius-md);
+}
+
+/* --- Help / detail modals (dialog) ----------------------------------- */
+
+.hakari-modal {
+  width: min(92vw, 42rem);
+  padding: 0;
+  border: 1px solid var(--hakari-border-strong);
+  border-radius: var(--hakari-radius-lg);
+  background-color: var(--hakari-surface);
+  color: var(--hakari-text);
+  box-shadow: 0 1.5rem 3.5rem rgb(15 23 42 / 0.22);
+}
+
+:root.dark .hakari-modal {
+  box-shadow: 0 1.5rem 3.5rem rgb(0 0 0 / 0.55);
+}
+
+.hakari-modal::backdrop {
+  background-color: rgb(15 23 42 / 0.34);
+  backdrop-filter: blur(2px);
+}
+
+:root.dark .hakari-modal::backdrop {
+  background-color: rgb(8 11 12 / 0.62);
+}
+
+.hakari-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--hakari-border);
+  padding: 0.75rem 1rem;
+}
+
+.hakari-modal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--hakari-text);
+}
+
+.hakari-modal-title .hakari-icon {
+  flex: 0 0 auto;
+  color: var(--hakari-accent);
+}
+
+.hakari-modal-close {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.3rem;
+  border: 0;
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-control-bg);
+  padding: 0.25rem 0.6rem;
+  color: var(--hakari-text-muted);
+  font-family: var(--hakari-font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.hakari-modal-close:hover,
+.hakari-modal-close:focus-visible {
+  background-color: var(--hakari-accent-soft);
+  color: var(--hakari-accent);
+}
+
+.hakari-modal-body {
+  padding: 0.875rem 1rem 1.125rem;
+}
+
+.hakari-modal-lead {
+  color: var(--hakari-text);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.hakari-modal-text {
+  margin-top: 0.625rem;
+  color: var(--hakari-text-muted);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.hakari-modal-link {
+  color: var(--hakari-accent);
+  text-underline-offset: 2px;
+}
+
+.hakari-modal-link:hover {
+  text-decoration-line: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .hakari-modal {
+    box-shadow: 0 1.5rem 3.5rem rgb(0 0 0 / 0.55);
+  }
+
+  :root:not(.light) .hakari-modal::backdrop {
+    background-color: rgb(8 11 12 / 0.62);
   }
 }

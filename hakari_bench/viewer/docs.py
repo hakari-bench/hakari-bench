@@ -20,6 +20,22 @@ class BenchmarkDoc:
     markdown: str
 
 
+@dataclass(frozen=True)
+class DocsPageChrome:
+    """Shared head/header assets so documentation pages match the leaderboard.
+
+    ``header_html`` is a pre-rendered, trusted HTML fragment built by the app;
+    the URL fields already include cache-busting query strings. ``viewer_js_url``
+    loads the shared script that applies the stored theme and binds the toggle.
+    """
+
+    css_url: str
+    viewer_js_url: str
+    favicon_svg_url: str
+    favicon_png_url: str
+    header_html: str
+
+
 class BenchmarkDocs:
     def __init__(self, docs_dir: Path, *, metadata_dir: Path | None = None) -> None:
         self.docs_dir = docs_dir
@@ -138,46 +154,45 @@ class BenchmarkDocs:
             return None
 
 
-def render_markdown_page(*, doc: BenchmarkDoc, css_version: str) -> str:
-    breadcrumb = _render_doc_breadcrumb(doc.url)
+def _render_docs_document(*, chrome: DocsPageChrome, title: str, body_html: str) -> str:
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{escape(doc.title)} - HAKARI-Bench docs</title>
-  <link rel="stylesheet" href="/assets/app.css?v={escape(css_version, quote=True)}">
+  <title>{escape(title)}</title>
+  <link rel="stylesheet" href="{chrome.css_url}">
+  <link rel="icon" type="image/svg+xml" href="{chrome.favicon_svg_url}">
+  <link rel="icon" type="image/png" href="{chrome.favicon_png_url}">
+  <script src="{chrome.viewer_js_url}" defer></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-4xl px-4 py-6 sm:px-6">
-    {breadcrumb}
-    <article class="benchmark-doc border border-zinc-200 bg-white px-4 py-5">
-      {render_markdown_to_html(doc.markdown, base_url=doc.url)}
-    </article>
+    {chrome.header_html}
+    {body_html}
   </main>
 </body>
 </html>"""
 
 
-def render_docs_index_page(*, docs: list[BenchmarkDoc], css_version: str) -> str:
+def render_markdown_page(*, doc: BenchmarkDoc, chrome: DocsPageChrome) -> str:
+    breadcrumb = _render_doc_breadcrumb(doc.url)
+    body = f"""{breadcrumb}
+    <article class="benchmark-doc border border-zinc-200 bg-white px-5 py-6 sm:px-7">
+      {render_markdown_to_html(doc.markdown, base_url=doc.url)}
+    </article>"""
+    return _render_docs_document(chrome=chrome, title=f"{doc.title} - HAKARI-Bench docs", body_html=body)
+
+
+def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) -> str:
     items = "\n".join(
-        f"""<li class="border border-zinc-200 bg-white px-4 py-3">
-          <a class="font-semibold text-cyan-700 underline underline-offset-2" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
-          <p class="mt-1 text-sm leading-snug text-zinc-700">{escape(doc.description)}</p>
+        f"""<li class="doc-card px-4 py-3.5">
+          <a class="doc-card-link doc-card-title font-semibold underline-offset-2 hover:underline" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
+          <p class="doc-card-description mt-1.5 text-sm leading-snug">{escape(doc.description)}</p>
         </li>"""
         for doc in docs
     )
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Benchmark documentation - HAKARI-Bench docs</title>
-  <link rel="stylesheet" href="/assets/app.css?v={escape(css_version, quote=True)}">
-</head>
-<body class="bg-zinc-50 text-zinc-950">
-  <main class="mx-auto max-w-4xl px-4 py-6 sm:px-6">
-    <nav class="doc-breadcrumb mb-3 text-sm text-zinc-600" aria-label="Breadcrumb">
+    body = f"""<nav class="doc-breadcrumb mb-3 text-sm text-zinc-600" aria-label="Breadcrumb">
       <ol class="flex flex-wrap items-center gap-y-1">
         <li><a class="underline underline-offset-2" href="/">Top</a></li>
         <li><span class="px-1 text-zinc-400" aria-hidden="true">&gt;</span></li>
@@ -185,15 +200,13 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], css_version: str) -> str
       </ol>
     </nav>
     <header class="mb-4">
-      <h1 class="text-2xl font-semibold text-zinc-950">Benchmark documentation</h1>
+      <h1 class="text-lg font-semibold text-zinc-950">Benchmark documentation</h1>
       <p class="mt-1 text-sm text-zinc-600">Dataset and benchmark task group descriptions used by the leaderboard viewer.</p>
     </header>
-    <ul class="space-y-2">
+    <ul class="doc-card-grid">
       {items}
-    </ul>
-  </main>
-</body>
-</html>"""
+    </ul>"""
+    return _render_docs_document(chrome=chrome, title="Benchmark documentation - HAKARI-Bench docs", body_html=body)
 
 
 def _render_task_metadata_markdown(metadata: TaskMetadata) -> str:

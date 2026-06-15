@@ -420,7 +420,7 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
     assert "Benchmark documentation" in response.text
     assert '<a class="underline underline-offset-2" href="/">Top</a>' in response.text
     assert response.text.index(">Top</a>") < response.text.index(">Benchmark documentation</span>")
-    assert 'class="font-semibold text-cyan-700 underline underline-offset-2" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
+    assert 'class="doc-card-link doc-card-title font-semibold underline-offset-2 hover:underline" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
     assert "MIRACL overview." in response.text
 
 
