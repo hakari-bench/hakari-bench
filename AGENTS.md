@@ -76,6 +76,20 @@ under `config/datasets/`, and dataset collection definitions live under
   `docs/duckdb_schema.md` in sync. Update it when DuckDB schema, viewer queries,
   leaderboard semantics, score grouping, variant handling, or required columns
   change.
+- The served stylesheet `hakari_bench/viewer/assets/app.css` is a compiled,
+  minified Tailwind output. Never hand-edit it. Edit the source
+  `hakari_bench/viewer/assets/app.tailwind.css`, then rebuild and commit both:
+
+  ```bash
+  uv run python scripts/build_viewer_css.py            # rebuild app.css
+  uv run python scripts/build_viewer_css.py --watch    # rebuild on change
+  uv run python scripts/build_viewer_css.py --check     # verify in sync
+  ```
+
+  The build pins the Tailwind version for reproducible output and needs Node's
+  `npx` on PATH. `uv run tox -e css` runs the `--check` in CI-style validation.
+  New Tailwind utility classes used in viewer `.py`/`.js` only appear after a
+  rebuild.
 
 ## Validation
 

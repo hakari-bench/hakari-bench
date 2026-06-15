@@ -168,4 +168,10 @@ commands = ruff check .
 
 [testenv:type]
 commands = ty check
+
+[testenv:css]
+description = Verify hakari_bench/viewer/assets/app.css matches its Tailwind source.
+skip_install = true
+allowlist_externals = npx
+commands = python scripts/build_viewer_css.py --check
 """
