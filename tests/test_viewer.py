@@ -4271,6 +4271,31 @@ def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: 
     assert result.rows[0].mean_score == pytest.approx(90.0)
 
 
+def test_leaderboard_filters_models_by_parameter_counts_in_millions(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = [
+        ("model/small", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 99_000_000, 150_000_000, 8192),
+        ("model/border", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.80, 100_000_000, 250_000_000, 8192),
+        ("model/large", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 101_000_000, 300_000_000, 8192),
+        ("model/missing", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.99, None, 90_000_000, 8192),
+    ]
+    _write_task_results(db_path, rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "BenchA",
+        active_params_max_millions=100,
+        total_params_min_millions=100,
+    )
+
+    assert [row.model_name for row in result.rows] == ["model/small", "model/border"]
+    assert result.rows[0].active_parameters == 99_000_000
+    assert result.rows[1].active_parameters == 100_000_000
+
+
 def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     rows = [
@@ -4443,6 +4468,37 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     assert ranking_response.text.index("model/a") < ranking_response.text.index("model/b")
     assert "90.0" in ranking_response.text
     assert "52.5" not in ranking_response.text
+
+
+def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/small", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 99_000_000, 150_000_000, 8192),
+            ("model/large", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 101_000_000, 300_000_000, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&filters=1&active_params_max=100")
+
+    assert response.status_code == 200
+    assert response.text.index(">Params</span>") < response.text.index(">Length</span>")
+    assert "Active Params ≤" in response.text
+    assert "Total Params ≤" in response.text
+    assert 'data-help-title="Parameter filters"' in response.text
+    assert "using parameter metadata measured in millions of parameters" in response.text
+    assert "at most 100M active parameters" in response.text
+    assert 'name="active_params_max" value="100"' in response.text
+    assert "model/small" in response.text
+    assert "model/large" not in response.text
 
 
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:

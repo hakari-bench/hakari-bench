@@ -224,6 +224,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
   such as All/Core/Group or Safeguard positives.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
+- In Refine results, Params sits above Length and uses compact numeric inputs
+  in millions for Active Params and Total Params bounds.
 - Keep the HAKARI-Bench brand mark as a simple single-color balance icon with
   `currentColor` stroke so it can inherit the viewer accent color in both
   themes.

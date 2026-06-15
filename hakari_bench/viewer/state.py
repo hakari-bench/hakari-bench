@@ -31,10 +31,23 @@ class FilterState:
     dtype_filters: tuple[str, ...] = ()
     attn_filters: tuple[str, ...] = ()
     prompt_filters: tuple[str, ...] = ()
+    active_params_min: str = ""
+    active_params_max: str = ""
+    total_params_min: str = ""
+    total_params_max: str = ""
     query_len_min: str = ""
     query_len_max: str = ""
     doc_len_min: str = ""
     doc_len_max: str = ""
+
+    @property
+    def has_parameter_filters(self) -> bool:
+        return bool(
+            self.active_params_min
+            or self.active_params_max
+            or self.total_params_min
+            or self.total_params_max
+        )
 
     @property
     def has_task_length_filters(self) -> bool:
@@ -70,6 +83,10 @@ def normalize_query_state(
     task_z_scores: bool = False,
     task_ranks: bool = False,
     task_filter: str = "",
+    active_params_min: str = "",
+    active_params_max: str = "",
+    total_params_min: str = "",
+    total_params_max: str = "",
     query_len_min: str = "",
     query_len_max: str = "",
     doc_len_min: str = "",
@@ -126,16 +143,21 @@ def normalize_query_state(
     if display_flags.other:
         query["other_variant"] = "1"
     language_filters = _normalized_query_values(lang_filter)
+    active_params_min = _normalized_numeric_bound(active_params_min)
+    active_params_max = _normalized_numeric_bound(active_params_max)
+    total_params_min = _normalized_numeric_bound(total_params_min)
+    total_params_max = _normalized_numeric_bound(total_params_max)
     query_len_min = _normalized_numeric_bound(query_len_min)
     query_len_max = _normalized_numeric_bound(query_len_max)
     doc_len_min = _normalized_numeric_bound(doc_len_min)
     doc_len_max = _normalized_numeric_bound(doc_len_max)
+    has_parameter_filters = bool(active_params_min or active_params_max or total_params_min or total_params_max)
     has_task_length_filters = bool(query_len_min or query_len_max or doc_len_min or doc_len_max)
     if language_filters:
         query["lang_filter"] = language_filters
     if empty_custom_scope:
         query.pop("lang_filter", None)
-    if filters or has_task_length_filters:
+    if filters or has_parameter_filters or has_task_length_filters:
         query["filters"] = "1"
         query["dim_filter"] = _normalized_query_values(dim_filter)
         query["quant_filter"] = _normalized_query_values(quant_filter)
@@ -143,6 +165,14 @@ def normalize_query_state(
         query["dtype_filter"] = _normalized_query_values(dtype_filter)
         query["attn_filter"] = _normalized_query_values(attn_filter)
         query["prompt_filter"] = _normalized_query_values(prompt_filter)
+        if active_params_min:
+            query["active_params_min"] = active_params_min
+        if active_params_max:
+            query["active_params_max"] = active_params_max
+        if total_params_min:
+            query["total_params_min"] = total_params_min
+        if total_params_max:
+            query["total_params_max"] = total_params_max
         if query_len_min:
             query["query_len_min"] = query_len_min
         if query_len_max:
@@ -182,6 +212,10 @@ def filter_state_from_query(query: QueryState) -> FilterState:
         dtype_filters=tuple(query_values(query.get("dtype_filter"))),
         attn_filters=tuple(query_values(query.get("attn_filter"))),
         prompt_filters=tuple(query_values(query.get("prompt_filter"))),
+        active_params_min=str(query.get("active_params_min", "")),
+        active_params_max=str(query.get("active_params_max", "")),
+        total_params_min=str(query.get("total_params_min", "")),
+        total_params_max=str(query.get("total_params_max", "")),
         query_len_min=str(query.get("query_len_min", "")),
         query_len_max=str(query.get("query_len_max", "")),
         doc_len_min=str(query.get("doc_len_min", "")),
@@ -233,7 +267,7 @@ def state_payload(
         query_payload["rank_filtered"] = "1"
     if filter_state.language_filters:
         query_payload["lang_filter"] = list(filter_state.language_filters)
-    if filter_state.filters_active or filter_state.has_task_length_filters:
+    if filter_state.filters_active or filter_state.has_parameter_filters or filter_state.has_task_length_filters:
         query_payload["filters"] = "1"
         query_payload["dim_filter"] = list(filter_state.dim_filters)
         query_payload["quant_filter"] = list(filter_state.quant_filters)
@@ -241,6 +275,14 @@ def state_payload(
         query_payload["dtype_filter"] = list(filter_state.dtype_filters)
         query_payload["attn_filter"] = list(filter_state.attn_filters)
         query_payload["prompt_filter"] = list(filter_state.prompt_filters)
+        if filter_state.active_params_min:
+            query_payload["active_params_min"] = filter_state.active_params_min
+        if filter_state.active_params_max:
+            query_payload["active_params_max"] = filter_state.active_params_max
+        if filter_state.total_params_min:
+            query_payload["total_params_min"] = filter_state.total_params_min
+        if filter_state.total_params_max:
+            query_payload["total_params_max"] = filter_state.total_params_max
         if filter_state.query_len_min:
             query_payload["query_len_min"] = filter_state.query_len_min
         if filter_state.query_len_max:
@@ -253,7 +295,11 @@ def state_payload(
 
 
 def active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    if not filter_state.filters_active and not filter_state.has_task_length_filters:
+    if (
+        not filter_state.filters_active
+        and not filter_state.has_parameter_filters
+        and not filter_state.has_task_length_filters
+    ):
         return [("lang_filter", value) for value in filter_state.language_filters]
     fields = [("lang_filter", value) for value in filter_state.language_filters]
     fields.append(("filters", "1"))
@@ -263,8 +309,18 @@ def active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, st
     fields.extend(("dtype_filter", value) for value in filter_state.dtype_filters)
     fields.extend(("attn_filter", value) for value in filter_state.attn_filters)
     fields.extend(("prompt_filter", value) for value in filter_state.prompt_filters)
+    fields.extend(_parameter_hidden_fields(filter_state))
     fields.extend(_task_length_hidden_fields(filter_state))
     return fields
+
+
+def parameter_bounds(filter_state: FilterState) -> dict[str, float | None]:
+    return {
+        "active_min_millions": numeric_filter_bound(filter_state.active_params_min),
+        "active_max_millions": numeric_filter_bound(filter_state.active_params_max),
+        "total_min_millions": numeric_filter_bound(filter_state.total_params_min),
+        "total_max_millions": numeric_filter_bound(filter_state.total_params_max),
+    }
 
 
 def task_length_bounds(filter_state: FilterState) -> dict[str, float | None]:
@@ -327,6 +383,19 @@ def _normalized_numeric_bound(value: str) -> str:
     if number.is_integer():
         return str(int(number))
     return value
+
+
+def _parameter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
+    fields = []
+    if filter_state.active_params_min:
+        fields.append(("active_params_min", filter_state.active_params_min))
+    if filter_state.active_params_max:
+        fields.append(("active_params_max", filter_state.active_params_max))
+    if filter_state.total_params_min:
+        fields.append(("total_params_min", filter_state.total_params_min))
+    if filter_state.total_params_max:
+        fields.append(("total_params_max", filter_state.total_params_max))
+    return fields
 
 
 def _task_length_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:

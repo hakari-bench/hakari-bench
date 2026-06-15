@@ -250,6 +250,10 @@ class LeaderboardService:
         dtype_filters: tuple[str, ...] = (),
         attn_filters: tuple[str, ...] = (),
         prompt_filters: tuple[str, ...] = (),
+        active_params_min_millions: float | None = None,
+        active_params_max_millions: float | None = None,
+        total_params_min_millions: float | None = None,
+        total_params_max_millions: float | None = None,
         query_min_chars: float | None = None,
         query_max_chars: float | None = None,
         document_min_chars: float | None = None,
@@ -352,6 +356,12 @@ class LeaderboardService:
                 document_min_chars=document_min_chars,
                 document_max_chars=document_max_chars,
             )
+            has_parameter_filters = _has_parameter_filters(
+                active_params_min_millions=active_params_min_millions,
+                active_params_max_millions=active_params_max_millions,
+                total_params_min_millions=total_params_min_millions,
+                total_params_max_millions=total_params_max_millions,
+            )
             if (
                 self.use_precomputed
                 and not language_filters
@@ -361,6 +371,7 @@ class LeaderboardService:
                 and not ranking_model_filter_terms
                 and not has_rank_facet_filters
                 and not task_filter.strip()
+                and not has_parameter_filters
                 and not has_length_filters
                 and selected_score_metric == "ndcg@10"
                 and view_name != CUSTOM_SCOPE_NAME
@@ -457,6 +468,20 @@ class LeaderboardService:
                         query_max_chars=query_max_chars,
                         document_min_chars=document_min_chars,
                         document_max_chars=document_max_chars,
+                    )
+                    phase_timing["task_score_count"] = len(rows)
+            if has_parameter_filters:
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="filter_parameters",
+                    view=view_name,
+                ) as phase_timing:
+                    rows = _filter_rows_by_parameters(
+                        rows,
+                        active_params_min_millions=active_params_min_millions,
+                        active_params_max_millions=active_params_max_millions,
+                        total_params_min_millions=total_params_min_millions,
+                        total_params_max_millions=total_params_max_millions,
                     )
                     phase_timing["task_score_count"] = len(rows)
             if has_rank_facet_filters:
@@ -2180,6 +2205,64 @@ def _has_task_length_filters(
             document_max_chars,
         )
     )
+
+
+def _has_parameter_filters(
+    *,
+    active_params_min_millions: float | None,
+    active_params_max_millions: float | None,
+    total_params_min_millions: float | None,
+    total_params_max_millions: float | None,
+) -> bool:
+    return any(
+        value is not None
+        for value in (
+            active_params_min_millions,
+            active_params_max_millions,
+            total_params_min_millions,
+            total_params_max_millions,
+        )
+    )
+
+
+def _filter_rows_by_parameters(
+    rows: list[TaskScore],
+    *,
+    active_params_min_millions: float | None,
+    active_params_max_millions: float | None,
+    total_params_min_millions: float | None,
+    total_params_max_millions: float | None,
+) -> list[TaskScore]:
+    return [
+        row
+        for row in rows
+        if _parameter_value_matches(
+            row.active_parameters,
+            minimum_millions=active_params_min_millions,
+            maximum_millions=active_params_max_millions,
+        )
+        and _parameter_value_matches(
+            row.total_parameters,
+            minimum_millions=total_params_min_millions,
+            maximum_millions=total_params_max_millions,
+        )
+    ]
+
+
+def _parameter_value_matches(
+    value: int | None,
+    *,
+    minimum_millions: float | None,
+    maximum_millions: float | None,
+) -> bool:
+    if minimum_millions is None and maximum_millions is None:
+        return True
+    if value is None:
+        return False
+    value_millions = value / 1_000_000
+    if minimum_millions is not None and value_millions < minimum_millions:
+        return False
+    return maximum_millions is None or value_millions <= maximum_millions
 
 
 def _filter_rows_by_task_lengths(

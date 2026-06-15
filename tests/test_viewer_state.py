@@ -353,6 +353,43 @@ def test_task_length_filters_are_normalized_into_filter_state() -> None:
     )
 
 
+def test_parameter_filters_are_normalized_into_filter_state() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        active_params_min="-1",
+        active_params_max=" 100 ",
+        total_params_min="bad",
+        total_params_max="250.5",
+    )
+
+    assert query["filters"] == "1"
+    assert query["active_params_max"] == "100"
+    assert query["total_params_max"] == "250.5"
+    assert "active_params_min" not in query
+    assert "total_params_min" not in query
+    assert filter_state_from_query(query) == FilterState(
+        filters_active=True,
+        active_params_max="100",
+        total_params_max="250.5",
+    )
+
+
 def test_filter_state_from_query_accepts_scalar_or_list_query_values() -> None:
     state = filter_state_from_query(
         {

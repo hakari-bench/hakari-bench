@@ -887,6 +887,11 @@ By default, `model_filter` only hides rendered model rows,
 as model type, dimensions, quantization, dtype, attention implementation, and
 prompt mode only hide rendered model rows. Model type filters use `dense`,
 `sparse`, `late-interaction`, and `reranker`; BM25 is grouped under `sparse`.
+Parameter filter query parameters `active_params_min`, `active_params_max`,
+`total_params_min`, and `total_params_max` are interpreted in millions of
+parameters and filter rows using `active_parameters` and `total_parameters`.
+For example, `active_params_max=100` keeps rows with at most 100M active
+parameters and excludes rows missing active-parameter metadata.
 When `rank_filtered=1` is present, those active filters narrow the ranked
 population before Borda, mean scores, task counts, and task score columns are
 computed. With a ranking task filter, the viewer ranks
@@ -1118,9 +1123,9 @@ flags
 the UI label `Sparse pruning` and means sparse active-dimension cap variants,
 not arbitrary uncategorized variants. The viewer uses this
 mart when language filters, task-score columns, task text filters, length
-filters, macro overall aggregation, and custom `bench=` selection are not
-active. Those interactive, macro, and custom cases still fall back to the normal
-`LeaderboardService` computation from task-score rows.
+filters, parameter filters, macro overall aggregation, and custom `bench=`
+selection are not active. Those interactive, macro, and custom cases still fall
+back to the normal `LeaderboardService` computation from task-score rows.
 For `score_target = 'reranking'`, the viewer uses this mart only when the
 materialized rows already include a BM25 baseline row. Older DuckDB builds that
 lack that row fall back to dynamic task-score computation so Borda and mean ranks

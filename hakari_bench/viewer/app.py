@@ -56,6 +56,7 @@ from hakari_bench.viewer.state import (
     filter_state_from_query,
     normalize_query_state,
     optional_query_string,
+    parameter_bounds,
     query_values,
     query_string,
     state_payload,
@@ -190,6 +191,10 @@ _ICON_PATHS = {
 
 class _TaskLengthFilterKwargs(TypedDict):
     rank_filtered: bool
+    active_params_min: str
+    active_params_max: str
+    total_params_min: str
+    total_params_max: str
     query_len_min: str
     query_len_max: str
     doc_len_min: str
@@ -300,6 +305,10 @@ def create_app(
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
+        active_params_min: str = Query(default=""),
+        active_params_max: str = Query(default=""),
+        total_params_min: str = Query(default=""),
+        total_params_max: str = Query(default=""),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -336,6 +345,10 @@ def create_app(
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
+                active_params_min=active_params_min,
+                active_params_max=active_params_max,
+                total_params_min=total_params_min,
+                total_params_max=total_params_max,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -367,6 +380,7 @@ def create_app(
         selected_benchmarks = tuple(query_values(state_query.get("bench")))
         display_flags = variant_display_flags_from_query(state_query)
         filter_state = filter_state_from_query(state_query)
+        params_bounds = parameter_bounds(filter_state)
         length_bounds = task_length_bounds(filter_state)
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
         result = service.get_leaderboard(
@@ -394,6 +408,10 @@ def create_app(
             dtype_filters=filter_state.dtype_filters if filter_state.filters_active else (),
             attn_filters=filter_state.attn_filters if filter_state.filters_active else (),
             prompt_filters=filter_state.prompt_filters if filter_state.filters_active else (),
+            active_params_min_millions=params_bounds["active_min_millions"],
+            active_params_max_millions=params_bounds["active_max_millions"],
+            total_params_min_millions=params_bounds["total_min_millions"],
+            total_params_max_millions=params_bounds["total_max_millions"],
             query_min_chars=length_bounds["query_min_chars"],
             query_max_chars=length_bounds["query_max_chars"],
             document_min_chars=length_bounds["document_min_chars"],
@@ -431,6 +449,10 @@ def create_app(
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
+        active_params_min: str = Query(default=""),
+        active_params_max: str = Query(default=""),
+        total_params_min: str = Query(default=""),
+        total_params_max: str = Query(default=""),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -467,6 +489,10 @@ def create_app(
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
+                active_params_min=active_params_min,
+                active_params_max=active_params_max,
+                total_params_min=total_params_min,
+                total_params_max=total_params_max,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -509,6 +535,10 @@ def create_app(
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
+        active_params_min: str = Query(default=""),
+        active_params_max: str = Query(default=""),
+        total_params_min: str = Query(default=""),
+        total_params_max: str = Query(default=""),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -545,6 +575,10 @@ def create_app(
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
+                active_params_min=active_params_min,
+                active_params_max=active_params_max,
+                total_params_min=total_params_min,
+                total_params_max=total_params_max,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -1741,6 +1775,10 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
 def _task_length_filter_kwargs(filter_state: FilterState) -> _TaskLengthFilterKwargs:
     return {
         "rank_filtered": filter_state.rank_filtered,
+        "active_params_min": filter_state.active_params_min,
+        "active_params_max": filter_state.active_params_max,
+        "total_params_min": filter_state.total_params_min,
+        "total_params_max": filter_state.total_params_max,
         "query_len_min": filter_state.query_len_min,
         "query_len_max": filter_state.query_len_max,
         "doc_len_min": filter_state.doc_len_min,
@@ -2094,6 +2132,7 @@ def render_controls(
         or filter_state.rank_filtered
         or bool(filter_state.model_type_filters)
         or filter_state.filters_active
+        or filter_state.has_parameter_filters
         or filter_state.has_task_length_filters
     )
     refine_results_open_attr = " open" if refine_results_open else ""
@@ -2161,6 +2200,7 @@ def render_controls(
                 {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
                 {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
               </div>
+              {_render_parameter_filter_inputs(filter_state)}
               {_render_task_length_filter_inputs(filter_state)}
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="cpu", text="Run metadata")}
@@ -2253,6 +2293,54 @@ def _render_model_type_controls(
         </span>
         {''.join(checkboxes)}
       </fieldset>
+    """
+
+
+def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
+    input_class = (
+        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "focus:border-cyan-700"
+    )
+    active_class = "text-cyan-700" if filter_state.has_parameter_filters else ""
+    return f"""
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="inline-flex items-center gap-1">
+        {_control_label(icon="cpu", text="Params", extra_class=active_class)}
+        {_render_help_tooltip(
+            "Parameter filters",
+            "Filters model rows by active or total parameter count.",
+            "Parameter filters operate at the model row level using parameter metadata measured in millions of parameters.\n\nActive Params bounds use active parameter counts. Total Params bounds use total parameter counts. For example, setting Active Params <= 100 keeps rows with at most 100M active parameters.\n\nRows without the selected parameter metadata are excluded when any bound for that parameter type is set.",
+        )}
+      </span>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Active Params ≥</span>
+        <input type="number" min="0" step="any" name="active_params_min" value="{escape(filter_state.active_params_min)}"
+               aria-label="Active Params minimum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Active Params ≤</span>
+        <input type="number" min="0" step="any" name="active_params_max" value="{escape(filter_state.active_params_max)}"
+               aria-label="Active Params maximum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Total Params ≥</span>
+        <input type="number" min="0" step="any" name="total_params_min" value="{escape(filter_state.total_params_min)}"
+               aria-label="Total Params minimum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Total Params ≤</span>
+        <input type="number" min="0" step="any" name="total_params_max" value="{escape(filter_state.total_params_max)}"
+               aria-label="Total Params maximum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+    </div>
     """
 
 
