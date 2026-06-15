@@ -4,6 +4,19 @@ source:
   name: ibm-granite/granite-embedding-97m-multilingual-r2
   revision: 0042fe50254a
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/ibm-granite/granite-embedding-97m-multilingual-r2
+links:
+  huggingface: https://huggingface.co/ibm-granite/granite-embedding-97m-multilingual-r2
+  github: https://github.com/ibm-granite/granite-embedding-models
+  papers:
+  - title: Granite Embedding Multilingual R2 Models
+    url: https://arxiv.org/abs/2605.13521
 parameters:
   total: 97441152
   trainable: 97441152

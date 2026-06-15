@@ -4,6 +4,22 @@ source:
   name: mixedbread-ai/mxbai-edge-colbert-v0-32m
   revision: 963e23afa1478d8bcc12e5d7115adcfdbd22c3af
 method: late-interaction
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/mixedbread-ai/mxbai-edge-colbert-v0-32m
+links:
+  huggingface: https://huggingface.co/mixedbread-ai/mxbai-edge-colbert-v0-32m
+  github: https://github.com/lightonai/pylate
+  papers:
+  - title: 'Fantastic (small) Retrievers and How to Train Them: mxbai-edge-colbert-v0
+      Tech Report'
+    url: https://arxiv.org/abs/2510.14880
+  - title: Simple Projection Variants Improve ColBERT Performance
+    url: https://arxiv.org/abs/2510.12327
 parameters:
   total: 32817792
   input_embedding: 19342080

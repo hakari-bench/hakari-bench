@@ -4,6 +4,19 @@ source:
   name: Snowflake/snowflake-arctic-embed-l-v2.0
   revision: ac6544c8a46e
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Snowflake/snowflake-arctic-embed-l-v2.0
+links:
+  huggingface: https://huggingface.co/Snowflake/snowflake-arctic-embed-l-v2.0
+  github: https://github.com/Snowflake-Labs/arctic-embed
+  papers:
+  - title: 'Arctic-Embed 2.0: Multilingual Retrieval Without Compromise'
+    url: https://arxiv.org/abs/2412.04506
 parameters:
   total: 567754752
   trainable: 567754752

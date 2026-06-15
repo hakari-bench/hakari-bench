@@ -4,6 +4,18 @@ source:
   name: jinaai/jina-embeddings-v5-text-nano
   revision: 8a7f00aac812071b69403df470f1038ec85f8925
 method: dense
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/jinaai/jina-embeddings-v5-text-nano
+links:
+  huggingface: https://huggingface.co/jinaai/jina-embeddings-v5-text-nano
+  papers:
+  - title: 'jina-embeddings-v5-text: Task-Targeted Embedding Distillation'
+    url: https://arxiv.org/abs/2602.15547
 parameters:
   total: 238897920
   trainable: 6782976

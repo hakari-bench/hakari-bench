@@ -253,6 +253,58 @@ def safe_model_card_stem(model_id: str) -> str:
     return model_id.replace("/", "__")
 
 
+_ALLOWED_LINK_KEYS = ("huggingface", "github", "papers")
+
+
+def validate_model_card_links(links: Any) -> dict[str, Any]:
+    """Validate and normalize an optional model-card ``links`` section.
+
+    The section may carry a single ``huggingface`` URL, a single ``github``
+    URL, and a list of ``papers`` where every paper pairs a ``title`` with a
+    ``url``. Every field is optional. Empty fields are dropped from the
+    returned mapping so absent links are simply omitted from the card.
+    """
+    if not isinstance(links, dict):
+        raise ValueError("Model card links must be a mapping.")
+    unknown = sorted(set(links) - set(_ALLOWED_LINK_KEYS))
+    if unknown:
+        raise ValueError(f"Unknown model card link keys: {', '.join(unknown)}")
+    normalized: dict[str, Any] = {}
+    for key in ("huggingface", "github"):
+        url = links.get(key)
+        if url is None:
+            continue
+        if not isinstance(url, str) or not url.strip():
+            raise ValueError(f"Model card link {key!r} must be a non-empty string URL.")
+        normalized[key] = url.strip()
+    papers = links.get("papers")
+    if papers is not None:
+        normalized_papers = _validate_link_papers(papers)
+        if normalized_papers:
+            normalized["papers"] = normalized_papers
+    return normalized
+
+
+def _validate_link_papers(papers: Any) -> list[dict[str, str]]:
+    if not isinstance(papers, list):
+        raise ValueError("Model card link 'papers' must be a list.")
+    normalized: list[dict[str, str]] = []
+    for paper in papers:
+        if not isinstance(paper, dict):
+            raise ValueError("Each model card paper must be a mapping with title and url.")
+        unknown = sorted(set(paper) - {"title", "url"})
+        if unknown:
+            raise ValueError(f"Unknown model card paper keys: {', '.join(unknown)}")
+        title = paper.get("title")
+        url = paper.get("url")
+        if not isinstance(title, str) or not title.strip():
+            raise ValueError("Each model card paper requires a non-empty title.")
+        if not isinstance(url, str) or not url.strip():
+            raise ValueError("Each model card paper requires a non-empty url.")
+        normalized.append({"title": title.strip(), "url": url.strip()})
+    return normalized
+
+
 def target_from_args(args: Any) -> dict[str, Any]:
     return _drop_empty(
         {

@@ -4,6 +4,20 @@ source:
   name: opensearch-project/opensearch-neural-sparse-encoding-multilingual-v1
   revision: 1e0f096c2b51c234f1d20725c793e1b5b6d556db
 method: sparse
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-multilingual-v1
+links:
+  huggingface: https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-multilingual-v1
+  github: https://github.com/opensearch-project/neural-search
+  papers:
+  - title: Towards Competitive Search Relevance For Inference-Free Learned Sparse
+      Retrievers
+    url: https://arxiv.org/abs/2411.04403
 parameters:
   total: 167569710
   input_embedding: 81315072

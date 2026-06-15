@@ -222,6 +222,48 @@
     return String(value);
   }
 
+  function createModelDetailLink(url, text) {
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+    anchor.className = "break-all text-cyan-700 underline-offset-2 hover:underline";
+    anchor.textContent = text || url;
+    return anchor;
+  }
+
+  function appendModelDetailRow(list, label, node) {
+    const dt = document.createElement("dt");
+    dt.className = "font-medium text-zinc-600";
+    dt.textContent = label;
+    const dd = document.createElement("dd");
+    dd.className = "break-all font-mono text-zinc-900";
+    dd.append(node);
+    list.append(dt, dd);
+  }
+
+  function appendModelDetailLinks(list, links) {
+    if (!links || typeof links !== "object") return;
+    if (typeof links.huggingface === "string" && links.huggingface) {
+      appendModelDetailRow(list, "Hugging Face", createModelDetailLink(links.huggingface, "Model page"));
+    }
+    if (typeof links.github === "string" && links.github) {
+      appendModelDetailRow(list, "GitHub", createModelDetailLink(links.github, "Repository"));
+    }
+    const papers = Array.isArray(links.papers) ? links.papers : [];
+    if (papers.length === 0) return;
+    const dt = document.createElement("dt");
+    dt.className = "font-medium text-zinc-600";
+    dt.textContent = papers.length > 1 ? "Papers" : "Paper";
+    const dd = document.createElement("dd");
+    dd.className = "flex flex-col gap-1 break-all font-mono text-zinc-900";
+    for (const paper of papers) {
+      if (!paper || typeof paper.url !== "string" || !paper.url) continue;
+      dd.append(createModelDetailLink(paper.url, paper.title || paper.url));
+    }
+    if (dd.childElementCount > 0) list.append(dt, dd);
+  }
+
   window.__hakariBindModelDetails = () => {
     if (window.__hakariModelDetailsBound) return;
     window.__hakariModelDetailsBound = true;
@@ -293,6 +335,7 @@
         dd.textContent = value;
         list.append(dt, dd);
       }
+      appendModelDetailLinks(list, metadata.links);
       if (typeof modal.showModal === "function") modal.showModal();
     });
 

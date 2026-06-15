@@ -54,6 +54,7 @@ class ModelCardParameters:
     language_support_category: str | None = None
     language_support_languages: tuple[str, ...] = ()
     language_support_marker: str | None = None
+    links: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -136,6 +137,7 @@ class LeaderboardRow(BaseModel):
     language_support_category: str | None = None
     language_support_languages: tuple[str, ...] = ()
     language_support_marker: str | None = None
+    links: dict[str, Any] | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
     metric_rank_values: dict[str, float] = Field(default_factory=dict)
@@ -799,6 +801,7 @@ def _cached_model_card_parameters(
             language_support_category=_str_or_none(language_support.get("category")),
             language_support_languages=_str_tuple(language_support.get("languages")),
             language_support_marker=_str_or_none(language_support.get("marker")),
+            links=_links_card_section(card),
         )
     return parameters_by_model
 
@@ -845,6 +848,29 @@ def _late_interaction_card_section(card: dict[str, Any]) -> dict[str, Any]:
 def _language_support_card_section(card: dict[str, Any]) -> dict[str, Any]:
     section = card.get("language_support")
     return section if isinstance(section, dict) else {}
+
+
+def _links_card_section(card: dict[str, Any]) -> dict[str, Any] | None:
+    section = card.get("links")
+    if not isinstance(section, dict):
+        return None
+    normalized: dict[str, Any] = {}
+    for key in ("huggingface", "github"):
+        url = _str_or_none(section.get(key))
+        if url and url.strip():
+            normalized[key] = url.strip()
+    papers = []
+    if isinstance(section.get("papers"), list):
+        for paper in section["papers"]:
+            if not isinstance(paper, dict):
+                continue
+            title = _str_or_none(paper.get("title"))
+            url = _str_or_none(paper.get("url"))
+            if title and title.strip() and url and url.strip():
+                papers.append({"title": title.strip(), "url": url.strip()})
+    if papers:
+        normalized["papers"] = papers
+    return normalized or None
 
 
 def _with_model_card_parameters_for_task_scores(
@@ -947,6 +973,7 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     "language_support_marker": row.language_support_marker
                     if row.language_support_marker is not None
                     else parameters.language_support_marker,
+                    "links": row.links if row.links is not None else parameters.links,
                 }
             )
         )

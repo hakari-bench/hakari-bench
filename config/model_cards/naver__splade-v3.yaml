@@ -4,6 +4,19 @@ source:
   name: naver/splade-v3
   revision: fdfeceb91d7b9de7985b38addd3ba9f53a59a355
 method: sparse
+license:
+  id: cc-by-nc-sa-4.0
+  label: CC BY-NC-SA 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/naver/splade-v3
+links:
+  huggingface: https://huggingface.co/naver/splade-v3
+  github: https://github.com/naver/splade
+  papers:
+  - title: 'SPLADE-v3: New baselines for SPLADE'
+    url: https://arxiv.org/abs/2403.06789
 parameters:
   total: 132985716
   input_embedding: 23440896

@@ -5,6 +5,19 @@ source:
   revision_requested: 025501c4e0f9bbeb4c5b198318e0089ff061cc14
   revision: 025501c4e0f9bbeb4c5b198318e0089ff061cc14
 method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/cross-encoder/ettin-reranker-150m-v1
+links:
+  huggingface: https://huggingface.co/cross-encoder/ettin-reranker-150m-v1
+  github: https://github.com/jhu-clsp/ettin-encoder-vs-decoder
+  papers:
+  - title: 'Seq vs Seq: An Open Suite of Paired Encoders and Decoders'
+    url: https://arxiv.org/abs/2507.11412
 parameters:
   total: 149606401
   trainable: 149606401

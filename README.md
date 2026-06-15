@@ -112,9 +112,9 @@ uv run python scripts/sync_remote_results_and_rebuild.py
 ```
 
 That helper clones or fast-forwards the private Hugging Face results dataset,
-runs `git lfs pull`, materializes missing BM25 baseline JSON from the stored
-Nano-set BM25 metadata in `task_docs/metadata`, and rebuilds the DuckDB. It
-does not run a BM25 evaluation or recompute BM25 with `bm25s`. See
+runs `git lfs pull`, and rebuilds the DuckDB from the synced result JSON. It
+does not generate missing BM25 baseline JSON by default, run a BM25 evaluation,
+or recompute BM25 with `bm25s`. See
 [`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for the detailed
 sync/rebuild workflow.
 
@@ -128,8 +128,7 @@ uv run python scripts/sync_remote_results_and_rebuild.py \
 The snapshot backend uses `huggingface_hub.snapshot_download()` and can use
 `hf_xet` when available. It stores files in a separate managed cache directory
 ending in `__snapshot`, cleans that directory by default so upstream deletions
-are reflected locally, then runs the same BM25 materialization and DuckDB
-rebuild steps.
+are reflected locally, then rebuilds the DuckDB from the synced result JSON.
 
 To merge historical or separate result roots, repeat `--results-dir` in
 priority order. If the same model-task JSON exists in more than one root, the
@@ -224,6 +223,9 @@ not belong to a specific official MTEB family are grouped under
 
 - [Evaluation runbook](docs/evaluation_runbook.md): practical evaluate, build,
   append, and viewer commands.
+- [New model evaluation to results PR workflow](docs/new_model_results_workflow.md):
+  end-to-end checklist from model research and model card creation through
+  evaluation, coverage audit, and `.json.xz` result submission.
 - [Evaluation policy](docs/evaluation_policy.md): runtime choices, prompt
   behavior, embedding variants, and coverage-audit rules.
 - [Leaderboard metric policy](docs/leaderboard_metrics.md): default visible

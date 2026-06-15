@@ -19,8 +19,42 @@ def test_resolve_plan_defaults_to_cached_huggingface_results_repo(tmp_path: Path
     assert plan.repo_dir == tmp_path / "hakari-bench__results"
     assert plan.results_dir == tmp_path / "hakari-bench__results" / "hakari-results"
     assert plan.duckdb_path == plan.results_dir / "hakari_bench.duckdb"
-    assert plan.include_bm25_baseline is True
+    assert plan.materialize_bm25_baseline_from_metadata is False
     assert plan.sync_backend == "git"
+
+
+def test_resolve_plan_can_opt_into_metadata_backed_bm25_generation(tmp_path: Path) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(
+        [
+            "--cache-root",
+            str(tmp_path),
+            "--materialize-bm25-baseline-from-metadata",
+            "--bm25-dataset",
+            "NanoBEIR-en",
+        ]
+    )
+
+    plan = sync_rebuild.resolve_plan(args)
+
+    assert plan.materialize_bm25_baseline_from_metadata is True
+    assert plan.bm25_dataset == ["NanoBEIR-en"]
+
+
+def test_resolve_plan_rejects_bm25_generation_options_without_opt_in(tmp_path: Path) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(
+        ["--cache-root", str(tmp_path), "--bm25-dataset", "NanoBEIR-en"]
+    )
+
+    with pytest.raises(ValueError, match="BM25 metadata materialization is disabled by default"):
+        sync_rebuild.resolve_plan(args)
+
+
+def test_legacy_no_bm25_baseline_flag_is_a_hidden_noop(tmp_path: Path) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(["--cache-root", str(tmp_path), "--no-bm25-baseline"])
+
+    plan = sync_rebuild.resolve_plan(args)
+
+    assert plan.materialize_bm25_baseline_from_metadata is False
 
 
 def test_resolve_plan_snapshot_backend_uses_separate_managed_cache(tmp_path: Path) -> None:
@@ -129,6 +163,7 @@ def test_materialize_bm25_baseline_skips_existing_files(tmp_path: Path, monkeypa
         [
             "--cache-root",
             str(tmp_path),
+            "--materialize-bm25-baseline-from-metadata",
             "--bm25-dataset",
             "NanoBEIR-en",
             "--bm25-split",

@@ -4,6 +4,21 @@ source:
   name: nomic-ai/nomic-embed-text-v2-moe
   revision: 1066b6599d099fbb93dfcb64f9c37a7c9e503e85
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/nomic-ai/nomic-embed-text-v2-moe
+links:
+  huggingface: https://huggingface.co/nomic-ai/nomic-embed-text-v2-moe
+  github: https://github.com/nomic-ai/contrastors
+  papers:
+  - title: Training Sparse Mixture Of Experts Text Embedding Models
+    url: https://arxiv.org/abs/2502.07972
+  - title: Matryoshka Representation Learning
+    url: https://arxiv.org/abs/2205.13147
 parameters:
   total: 475292928
   input_embedding: 192036864

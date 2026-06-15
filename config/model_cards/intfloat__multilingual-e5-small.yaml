@@ -4,6 +4,19 @@ source:
   name: intfloat/multilingual-e5-small
   revision: 614241f622f5
 method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/intfloat/multilingual-e5-small
+links:
+  huggingface: https://huggingface.co/intfloat/multilingual-e5-small
+  github: https://github.com/microsoft/unilm/tree/master/e5
+  papers:
+  - title: 'Multilingual E5 Text Embeddings: A Technical Report'
+    url: https://arxiv.org/abs/2402.05672
 parameters:
   total: 117653760
   trainable: 117653760

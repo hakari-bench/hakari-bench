@@ -4,6 +4,20 @@ source:
   name: Qwen/Qwen3-Embedding-0.6B
   revision: 97b0c614be4d
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Qwen/Qwen3-Embedding-0.6B
+links:
+  huggingface: https://huggingface.co/Qwen/Qwen3-Embedding-0.6B
+  github: https://github.com/QwenLM/Qwen3-Embedding
+  papers:
+  - title: 'Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation
+      Models'
+    url: https://arxiv.org/abs/2506.05176
 parameters:
   total: 595776512
   trainable: 595776512

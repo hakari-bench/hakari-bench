@@ -4,6 +4,21 @@ source:
   name: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
   revision: e8f8c211226b
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+links:
+  huggingface: https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+  github: https://github.com/UKPLab/sentence-transformers
+  papers:
+  - title: Making Monolingual Sentence Embeddings Multilingual using Knowledge Distillation
+    url: https://arxiv.org/abs/2004.09813
+  - title: 'Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks'
+    url: https://arxiv.org/abs/1908.10084
 parameters:
   total: 117653760
   trainable: 117653760

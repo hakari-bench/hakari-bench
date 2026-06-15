@@ -4,6 +4,15 @@ source:
   name: jinaai/jina-reranker-v2-base-multilingual
   revision: 9cfeff2df7d40d1b78e75e5e9cebec92a99813c9
 method: reranker
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual
+links:
+  huggingface: https://huggingface.co/jinaai/jina-reranker-v2-base-multilingual
 parameters:
   total: 278437633
   input_embedding: 192001536

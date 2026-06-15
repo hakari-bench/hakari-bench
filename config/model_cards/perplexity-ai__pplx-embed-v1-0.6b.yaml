@@ -4,6 +4,18 @@ source:
   name: perplexity-ai/pplx-embed-v1-0.6b
   revision: fc544480a6be6395bcfe59d4dcf10c0a4e65b236
 method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/perplexity-ai/pplx-embed-v1-0.6b
+links:
+  huggingface: https://huggingface.co/perplexity-ai/pplx-embed-v1-0.6b
+  papers:
+  - title: Diffusion-Pretrained Dense and Contextual Embeddings
+    url: https://arxiv.org/abs/2602.11151
 parameters:
   total: 596049920
   trainable: 596049920

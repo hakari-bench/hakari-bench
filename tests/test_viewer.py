@@ -3053,6 +3053,43 @@ def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows
     assert body.count('data-filter-hidden="true"') == 2
 
 
+def test_leaderboard_model_name_cell_includes_links_metadata(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/linked", "BenchA", "bench/a", "BenchA", "task-a", "task-a", "task-a", 0.90, 10, 12, 8192),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "model__linked.yaml").write_text(
+        """
+id: model/linked
+links:
+  huggingface: https://huggingface.co/model/linked
+  github: https://github.com/example/linked
+  papers:
+    - title: Linked Embeddings
+      url: https://arxiv.org/abs/2402.03216
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+
+    body = render_table_body(result=result)
+
+    assert "&quot;huggingface&quot;:&quot;https://huggingface.co/model/linked&quot;" in body
+    assert "&quot;github&quot;:&quot;https://github.com/example/linked&quot;" in body
+    assert "&quot;title&quot;:&quot;Linked Embeddings&quot;" in body
+    assert "&quot;url&quot;:&quot;https://arxiv.org/abs/2402.03216&quot;" in body
+
+
 def test_leaderboard_model_name_cell_omits_language_marker_and_keeps_language_details(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(

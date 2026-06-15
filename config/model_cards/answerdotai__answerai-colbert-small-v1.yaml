@@ -4,6 +4,20 @@ source:
   name: answerdotai/answerai-colbert-small-v1
   revision: c72aa89bc61afdd85373643f3a1a75b2aad6e0fe
 method: late-interaction
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/answerdotai/answerai-colbert-small-v1
+links:
+  huggingface: https://huggingface.co/answerdotai/answerai-colbert-small-v1
+  github: https://github.com/AnswerDotAI/rerankers
+  papers:
+  - title: 'JaColBERTv2.5: Optimising Multi-Vector Retrievers to Create State-of-the-Art
+      Japanese Retrievers with Constrained Resources'
+    url: https://arxiv.org/abs/2407.20750
 parameters:
   total: 33396864
   input_embedding: 11720448

@@ -4,6 +4,19 @@ source:
   name: Alibaba-NLP/gte-multilingual-reranker-base
   revision: 8215cf04918ba6f7b6a62bb44238ce2953d8831c
 method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Alibaba-NLP/gte-multilingual-reranker-base
+links:
+  huggingface: https://huggingface.co/Alibaba-NLP/gte-multilingual-reranker-base
+  papers:
+  - title: 'mGTE: Generalized Long-Context Text Representation and Reranking Models
+      for Multilingual Text Retrieval'
+    url: https://arxiv.org/abs/2407.19669
 parameters:
   total: 305959681
   input_embedding: 192036864

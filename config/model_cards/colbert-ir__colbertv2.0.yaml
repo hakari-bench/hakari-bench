@@ -4,6 +4,22 @@ source:
   name: colbert-ir/colbertv2.0
   revision: c1e84128e85ef755c096a95bdb06b47793b13acf
 method: late-interaction
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/colbert-ir/colbertv2.0
+links:
+  huggingface: https://huggingface.co/colbert-ir/colbertv2.0
+  github: https://github.com/stanford-futuredata/ColBERT
+  papers:
+  - title: 'ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction'
+    url: https://arxiv.org/abs/2112.01488
+  - title: 'ColBERT: Efficient and Effective Passage Search via Contextualized Late
+      Interaction over BERT'
+    url: https://arxiv.org/abs/2004.12832
 parameters:
   total: 109580544
   input_embedding: 0

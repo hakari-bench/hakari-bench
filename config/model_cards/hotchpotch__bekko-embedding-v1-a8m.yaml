@@ -4,6 +4,14 @@ source:
   name: hotchpotch/bekko-embedding-v1-a8m
   revision: 26f8161ca92e39de93152e9a8ce76ca9a672c6e6
 method: dense
+license:
+  id: unknown
+  label: unknown
+  type: unknown
+  commercial_use: unknown
+  source: unavailable
+links:
+  huggingface: https://huggingface.co/hotchpotch/bekko-embedding-v1-a8m
 parameters:
   total: 105975168
   trainable: 105975168

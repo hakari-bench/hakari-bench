@@ -4,6 +4,20 @@ source:
   name: mixedbread-ai/mxbai-embed-xsmall-v1
   revision: e6ac24e5d6efb8782b59de1647b3ececb4ece94e
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/mixedbread-ai/mxbai-embed-xsmall-v1
+links:
+  huggingface: https://huggingface.co/mixedbread-ai/mxbai-embed-xsmall-v1
+  papers:
+  - title: AnglE-optimized Text Embeddings
+    url: https://arxiv.org/abs/2309.12871
+  - title: 2D Matryoshka Sentence Embeddings
+    url: https://arxiv.org/abs/2402.14776
 parameters:
   total: 24089472
   input_embedding: 11720448

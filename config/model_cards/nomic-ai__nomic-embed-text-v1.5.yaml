@@ -4,6 +4,21 @@ source:
   name: nomic-ai/nomic-embed-text-v1.5
   revision: e9b6763023c676ca8431644204f50c2b100d9aab
 method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
+links:
+  huggingface: https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
+  github: https://github.com/nomic-ai/contrastors
+  papers:
+  - title: 'Nomic Embed: Training a Reproducible Long Context Text Embedder'
+    url: https://arxiv.org/abs/2402.01613
+  - title: Matryoshka Representation Learning
+    url: https://arxiv.org/abs/2205.13147
 parameters:
   total: 136731648
   input_embedding: 23445504

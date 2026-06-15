@@ -4,6 +4,20 @@ source:
   name: prithivida/Splade_PP_en_v2
   revision: f0d4aa214dcb60c274052a52c0497535e3aec64c
 method: sparse
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/prithivida/Splade_PP_en_v2
+links:
+  huggingface: https://huggingface.co/prithivida/Splade_PP_en_v2
+  github: https://github.com/PrithivirajDamodaran/SPLADERunner
+  papers:
+  - title: 'From Distillation to Hard Negative Sampling: Making Sparse Neural IR Models
+      More Effective'
+    url: https://arxiv.org/abs/2205.04733
 parameters:
   total: 132985716
   input_embedding: 23440896

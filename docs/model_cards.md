@@ -60,6 +60,46 @@ Candidate-ranking choices and reranking top-K/depth settings are benchmark
 protocol options, not model options, and should not be stored as model-card
 defaults.
 
+Model cards should include a top-level `license` section. Use the model's
+Hugging Face model-card metadata as the first source. If the license cannot be
+confirmed, set the license to `unknown` rather than guessing.
+
+```yaml
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/BAAI/bge-reranker-v2-m3
+```
+
+Use clear labels such as `MIT`, `Apache 2.0`, `CC BY-NC 4.0`, or `Gemma Terms
+of Use`. Set `commercial_use` to `allowed` for permissive licenses,
+`not_allowed` for non-commercial Creative Commons licenses, and
+`permitted_with_terms` for proprietary terms that permit commercial use only
+under model-specific conditions. BM25 is an algorithmic baseline rather than a
+licensed model, so its card uses `id: not_applicable`, `type: algorithm`, and
+the label `Not applicable - Okapi BM25 algorithmic baseline`.
+
+Model cards may include an optional `links` section that records canonical
+reference URLs for the model. All fields are optional, but including them is
+encouraged. Use a single `huggingface` URL, a single `github` URL, and a
+`papers` list where every paper pairs a `title` with a `url`:
+
+```yaml
+links:
+  huggingface: https://huggingface.co/BAAI/bge-m3
+  github: https://github.com/FlagOpen/FlagEmbedding
+  papers:
+  - title: "BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation"
+    url: https://arxiv.org/abs/2402.03216
+```
+
+Record the model's main Hugging Face page, its main GitHub repository, and one
+or more papers. Omit any field that is unknown rather than guessing. The
+leaderboard viewer renders these as clickable links in the Model Details dialog.
+
 Prompt settings use the optional `prompts` section:
 
 ```yaml
