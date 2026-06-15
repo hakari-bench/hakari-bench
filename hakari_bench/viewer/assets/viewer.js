@@ -380,6 +380,91 @@
   );
   window.addEventListener("resize", window.__hakariHideTooltip);
 
+  // Floating sticky column header. Horizontal scrolling lives inside the table's
+  // overflow container, so CSS sticky cannot pin the header on page scroll; this
+  // mirrors a copy of the header row at the viewport top instead, synced to the
+  // table's horizontal scroll and column widths, keeping the pinned-left columns.
+  function initStickyLeaderboardHeader() {
+    const existing = document.getElementById("hakari-sticky-head");
+    if (existing) existing.remove();
+    window.__hakariStickyHead = null;
+    const container = document.querySelector(".leaderboard-table-scroll");
+    const table = container && container.querySelector(".leaderboard-table");
+    const thead = table && table.querySelector("thead");
+    if (!container || !table || !thead) return;
+
+    const floater = document.createElement("div");
+    floater.id = "hakari-sticky-head";
+    floater.className = "leaderboard-sticky-head";
+    floater.setAttribute("aria-hidden", "true");
+    floater.hidden = true;
+    const cloneTable = document.createElement("table");
+    cloneTable.className = table.className;
+    cloneTable.style.tableLayout = "fixed";
+    const cloneThead = thead.cloneNode(true);
+    cloneTable.appendChild(cloneThead);
+    floater.appendChild(cloneTable);
+    container.appendChild(floater);
+
+    function syncWidths() {
+      if (floater.hidden) return;
+      const realThs = thead.querySelectorAll("tr > th");
+      const cloneThs = cloneThead.querySelectorAll("tr > th");
+      let total = 0;
+      realThs.forEach((th, index) => {
+        const width = th.getBoundingClientRect().width;
+        total += width;
+        if (cloneThs[index]) cloneThs[index].style.width = `${width}px`;
+      });
+      cloneTable.style.width = `${total}px`;
+    }
+
+    function update() {
+      const rect = container.getBoundingClientRect();
+      const headHeight = thead.getBoundingClientRect().height;
+      const shouldShow = rect.top < 0 && rect.bottom > headHeight + 4;
+      if (!shouldShow) {
+        if (!floater.hidden) floater.hidden = true;
+        return;
+      }
+      if (floater.hidden) {
+        floater.hidden = false;
+        syncWidths();
+      }
+      floater.style.left = `${rect.left}px`;
+      floater.style.width = `${container.clientWidth}px`;
+      floater.scrollLeft = container.scrollLeft;
+    }
+
+    container.addEventListener(
+      "scroll",
+      () => {
+        if (!floater.hidden) floater.scrollLeft = container.scrollLeft;
+      },
+      { passive: true },
+    );
+
+    window.__hakariStickyHead = { update, syncWidths };
+    update();
+  }
+  window.__hakariInitStickyHeader = initStickyLeaderboardHeader;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (window.__hakariStickyHead) window.__hakariStickyHead.update();
+    },
+    { passive: true },
+  );
+  window.addEventListener("resize", () => {
+    if (!window.__hakariStickyHead) return;
+    window.__hakariStickyHead.syncWidths();
+    window.__hakariStickyHead.update();
+  });
+  document.addEventListener("htmx:afterSwap", (event) => {
+    if (event.target && event.target.id === "leaderboard-panel") window.__hakariInitStickyHeader();
+  });
+
   window.__hakariApplyHashQueryState();
   window.__hakariBindThemeToggle();
   window.__hakariBindModelDetails();

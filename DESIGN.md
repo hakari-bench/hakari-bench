@@ -310,12 +310,14 @@ read as an analytical instrument rather than a general-purpose dashboard.
   the surrounding chrome (config panel, footer) fixed while only the table pans
   horizontally. The rank-index and model columns pin to the left during that
   horizontal scroll.
-- Note the CSS tradeoff: because the horizontal `overflow` wrapper also becomes
-  the vertical scroll context, the column-header row cannot be pinned to the
-  viewport top with pure CSS on page scroll. Do not reintroduce a page-scroll
-  sticky header by removing the horizontal wrapper — that makes a wide table
-  scroll the whole page and drags the footer/chrome off-screen. A pinned header
-  with this scroll split would require JS.
+- On page scroll, a JS-driven floating header (viewer.js) pins a copy of the
+  column-header row to the viewport top. It mirrors the table's internal
+  horizontal scroll and column widths and keeps the rank-index and model columns
+  pinned left; it is read-only (`pointer-events: none`) to avoid duplicate
+  controls. This is necessary because the horizontal `overflow` wrapper also
+  becomes the vertical scroll context, so pure CSS sticky cannot pin the header on
+  page scroll. Do not "fix" this by removing the horizontal wrapper — that makes a
+  wide table scroll the whole page and drags the footer/chrome off-screen.
 - Keep model name sticky and readable during horizontal scroll.
 - Keep task columns compact. Repeated suite prefixes may be removed from the
   subtask line when the remaining label is non-empty.
