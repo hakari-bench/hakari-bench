@@ -246,17 +246,14 @@
     if (!license || typeof license !== "object") return;
     const label = license.label || license.id;
     if (!label) return;
-    const node =
-      typeof license.source_url === "string" && license.source_url
-        ? createModelDetailLink(license.source_url, label)
-        : document.createTextNode(label);
-    appendModelDetailRow(list, "License", node);
+    appendModelDetailRow(list, "License", document.createTextNode(label));
   }
 
   function appendModelDetailLinks(list, links) {
     if (!links || typeof links !== "object") return;
     if (typeof links.huggingface === "string" && links.huggingface) {
-      appendModelDetailRow(list, "Hugging Face", createModelDetailLink(links.huggingface, "Model page"));
+      const repoId = links.huggingface.replace(/^https?:\/\/huggingface\.co\//, "").replace(/\/+$/, "");
+      appendModelDetailRow(list, "Hugging Face", createModelDetailLink(links.huggingface, repoId || "Model page"));
     }
     if (typeof links.github === "string" && links.github) {
       appendModelDetailRow(list, "GitHub", createModelDetailLink(links.github, "Repository"));
