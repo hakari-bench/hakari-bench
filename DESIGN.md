@@ -298,12 +298,14 @@ read as an analytical instrument rather than a general-purpose dashboard.
 
 - The table is the primary interface. Optimize it before optimizing surrounding
   chrome.
-- The table body scrolls inside a viewport-tall container (`max-height`) so the
-  column-header row and the model column stay pinned while scrolling. Because a
-  horizontally scrollable table is already a scroll container, the sticky header
-  needs this internal scroll rather than page scroll.
-- Keep the column-header row sticky to the top and the model column sticky to the
-  left; the model header cell stays pinned on both axes with a higher z-index.
+- The column-header row pins to the top of the viewport on normal page scroll,
+  and the model column pins to the left. Do not wrap the table in an `overflow`
+  scroll container: a horizontally scrollable container becomes the sticky scroll
+  context and breaks page-scroll header pinning (CSS forces the cross-axis
+  overflow to a scroll value). The table flows in the page instead, so a table
+  wider than the viewport scrolls the page horizontally while the model column
+  stays pinned. The model header cell stays pinned on both axes with a higher
+  z-index.
 - Keep model name sticky and readable during horizontal scroll.
 - Keep task columns compact. Repeated suite prefixes may be removed from the
   subtask line when the remaining label is non-empty.

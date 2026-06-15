@@ -1015,7 +1015,7 @@ def render_leaderboard(
       <span>Download CSV</span>
     </a>
   </div>
-  <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
+  <div class="leaderboard-table-scroll table-shell bg-white">
     <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
       {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
       {render_table_body(result=result, filter_context=filter_context)}

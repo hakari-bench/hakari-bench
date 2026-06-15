@@ -377,12 +377,6 @@
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 82%, var(--hakari-surface));
     border-color: transparent;
     border-radius: var(--hakari-radius-lg);
-    /* Scroll the table body inside a viewport-tall box so column headers and
-       the model column can stay pinned. A horizontally scrollable table forces
-       overflow-y to a scroll container, so sticky thead needs this height cap. */
-    max-height: calc(100vh - 5rem);
-    overflow: auto;
-    overscroll-behavior: contain;
   }
 
   .leaderboard-table {
@@ -390,6 +384,9 @@
     border-spacing: 0;
   }
 
+  /* Pin the column-header row to the top of the viewport on page scroll. The
+     table is not wrapped in an overflow scroll container, so a wide table scrolls
+     the page horizontally while the model column stays pinned to the left. */
   .leaderboard-table thead th {
     position: sticky;
     top: 0;
