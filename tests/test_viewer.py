@@ -2891,12 +2891,12 @@ def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> No
     assert head.index('data-column-key="index"') < head.index('data-column-key="model_name"')
     assert body.index("leaderboard-col-index") < body.index("leaderboard-col-model")
     assert (
-        'class="leaderboard-col-index sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums text-zinc-500">1</td>'
+        'class="leaderboard-col-index sticky z-10 bg-inherit px-1.5 py-1 text-right tabular-nums text-zinc-500">1</td>'
     ) in body
     assert 'data-column-key="model_name"' in head
     assert (
         'data-column-key="index" '
-        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-2 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"'
+        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-1.5 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"'
     ) in head
     assert (
         'data-column-key="model_name" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '

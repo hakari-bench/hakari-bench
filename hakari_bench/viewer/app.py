@@ -2550,7 +2550,7 @@ def render_table_head(
         )
     index_head = (
         '<th scope="col" aria-label="Rank" data-column-key="index" '
-        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-2 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"></th>'
+        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-1.5 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"></th>'
     )
     return f"<thead><tr>{index_head}{''.join(heads)}</tr></thead>"
 
@@ -2584,7 +2584,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
-              <td class="leaderboard-col-index sticky z-10 bg-inherit px-2 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
+              <td class="leaderboard-col-index sticky z-10 bg-inherit px-1.5 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
               {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
               {borda_score_cell}
               {mean_cells}
