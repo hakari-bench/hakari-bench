@@ -658,8 +658,8 @@ def render_page(
   <script src="{viewer_js_url}" defer></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
-  <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-    <header class="mb-3">
+  <main class="mx-auto max-w-[1600px] px-4 pt-2 pb-4 sm:px-6">
+    <header class="mb-2">
       <div class="flex items-center justify-between gap-3">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
           {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
@@ -667,8 +667,8 @@ def render_page(
         </h1>
         {header_actions}
       </div>
-      <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
-      <p class="mt-1.5 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
+      <p class="mt-1 border border-amber-200 bg-amber-50 px-2.5 py-1 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
+      <p class="mt-1 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
     </header>
     <section
       id="leaderboard-panel"

@@ -222,6 +222,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
   first screen. Prefer small, consistent section padding and gaps over generous
   spacing; do not buy compactness by hiding suite choices or shrinking control
   hit targets below a comfortable size.
+- Keep the page top chrome tight: the brand row should sit close to the viewport
+  top, and intro/status copy should use compact margins and padding so the
+  leaderboard remains the first meaningful surface.
 - Use help modals rather than permanent explanatory copy for technical controls.
   The control area should remain compact.
 - Avoid nested cards. Sections should be low-border surfaces or full-width
