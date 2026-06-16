@@ -26,7 +26,7 @@ from hakari_bench.viewer.config import (
     load_viewer_config,
     split_benchmark_selection_key,
 )
-from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, render_docs_index_page, render_markdown_page
+from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
     FilterContext,
@@ -56,6 +56,7 @@ from hakari_bench.viewer.state import (
     filter_state_from_query,
     normalize_query_state,
     optional_query_string,
+    parameter_bounds,
     query_values,
     query_string,
     state_payload,
@@ -154,6 +155,21 @@ _ICON_PATHS = {
     "filter": '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
     "git-branch": '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
     "git-compare-arrows": '<circle cx="5" cy="6" r="3"/><circle cx="19" cy="18" r="3"/><path d="M12 6h3a4 4 0 0 1 4 4v5"/><path d="m15 9-3-3 3-3"/><path d="M12 18H9a4 4 0 0 1-4-4V9"/><path d="m9 15 3 3-3 3"/>',
+    "github": (
+        '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5a5.4 5.4 0 0 0-1-3.5c.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5a13.38 13.38 0 0 0-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>'
+        '<path d="M9 18c-4.51 2-5-2-7-2"/>'
+    ),
+    "hakari-bench": (
+        '<circle cx="12" cy="5" r="2"/>'
+        '<path d="M12 7v11"/>'
+        '<path d="M7 21h10"/>'
+        '<path d="M9 18h6"/>'
+        '<path d="M5 10c2.7 0 5-1.1 7-3 2 1.9 4.3 3 7 3"/>'
+        '<path d="m5 10-2 6h4Z"/>'
+        '<path d="m19 10-2 6h4Z"/>'
+        '<path d="M3 16c.5 2 3.5 2 4 0"/>'
+        '<path d="M17 16c.5 2 3.5 2 4 0"/>'
+    ),
     "info-simple": '<path d="M12 17v-6"/><path d="M12 7h.01"/>',
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
@@ -175,6 +191,10 @@ _ICON_PATHS = {
 
 class _TaskLengthFilterKwargs(TypedDict):
     rank_filtered: bool
+    active_params_min: str
+    active_params_max: str
+    total_params_min: str
+    total_params_max: str
     query_len_min: str
     query_len_max: str
     doc_len_min: str
@@ -221,6 +241,10 @@ def create_app(
     def favicon() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
 
+    @app.get("/favicon.svg")
+    def favicon_svg() -> FileResponse:
+        return FileResponse(ASSETS_DIR / "favicon-white.svg", media_type="image/svg+xml")
+
     @app.get("/favicon.ico")
     def favicon_ico() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
@@ -232,7 +256,7 @@ def create_app(
 
     @app.get("/docs/benchmark-tasks", response_class=HTMLResponse)
     def benchmark_docs_index() -> HTMLResponse:
-        return HTMLResponse(render_docs_index_page(docs=benchmark_docs.group_docs(), css_version=_asset_version("app.css")))
+        return HTMLResponse(render_docs_index_page(docs=benchmark_docs.group_docs(), chrome=_docs_page_chrome()))
 
     @app.get("/docs/benchmark-tasks/{benchmark}", response_class=HTMLResponse)
     def benchmark_doc(benchmark: str) -> HTMLResponse:
@@ -241,7 +265,7 @@ def create_app(
         doc = benchmark_docs.route_doc(benchmark=benchmark)
         if doc is None:
             raise HTTPException(status_code=404, detail="Benchmark documentation not found.")
-        return HTMLResponse(render_markdown_page(doc=doc, css_version=_asset_version("app.css")))
+        return HTMLResponse(render_markdown_page(doc=doc, chrome=_docs_page_chrome()))
 
     @app.get("/docs/benchmark-tasks/{benchmark}/{task}", response_class=HTMLResponse)
     def benchmark_task_doc(benchmark: str, task: str) -> HTMLResponse:
@@ -250,13 +274,13 @@ def create_app(
         doc = benchmark_docs.route_doc(benchmark=benchmark, task=task)
         if doc is None:
             raise HTTPException(status_code=404, detail="Benchmark task documentation not found.")
-        return HTMLResponse(render_markdown_page(doc=doc, css_version=_asset_version("app.css")))
+        return HTMLResponse(render_markdown_page(doc=doc, chrome=_docs_page_chrome()))
 
     @app.get("/", response_class=HTMLResponse)
     def index(
         view: str = Query(default=viewer_config.overall.name),
-        sort: str = Query(default="borda_rank"),
-        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        sort: str = Query(default="borda_score"),
+        direction: str = Query(default="desc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
@@ -281,6 +305,10 @@ def create_app(
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
+        active_params_min: str = Query(default=""),
+        active_params_max: str = Query(default=""),
+        total_params_min: str = Query(default=""),
+        total_params_max: str = Query(default=""),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -317,6 +345,10 @@ def create_app(
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
+                active_params_min=active_params_min,
+                active_params_max=active_params_max,
+                total_params_min=total_params_min,
+                total_params_max=total_params_max,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -348,6 +380,7 @@ def create_app(
         selected_benchmarks = tuple(query_values(state_query.get("bench")))
         display_flags = variant_display_flags_from_query(state_query)
         filter_state = filter_state_from_query(state_query)
+        params_bounds = parameter_bounds(filter_state)
         length_bounds = task_length_bounds(filter_state)
         service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
         result = service.get_leaderboard(
@@ -375,6 +408,10 @@ def create_app(
             dtype_filters=filter_state.dtype_filters if filter_state.filters_active else (),
             attn_filters=filter_state.attn_filters if filter_state.filters_active else (),
             prompt_filters=filter_state.prompt_filters if filter_state.filters_active else (),
+            active_params_min_millions=params_bounds["active_min_millions"],
+            active_params_max_millions=params_bounds["active_max_millions"],
+            total_params_min_millions=params_bounds["total_min_millions"],
+            total_params_max_millions=params_bounds["total_max_millions"],
             query_min_chars=length_bounds["query_min_chars"],
             query_max_chars=length_bounds["query_max_chars"],
             document_min_chars=length_bounds["document_min_chars"],
@@ -386,8 +423,8 @@ def create_app(
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
         view: str = Query(default=viewer_config.overall.name),
-        sort: str = Query(default="borda_rank"),
-        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        sort: str = Query(default="borda_score"),
+        direction: str = Query(default="desc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
@@ -412,6 +449,10 @@ def create_app(
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
+        active_params_min: str = Query(default=""),
+        active_params_max: str = Query(default=""),
+        total_params_min: str = Query(default=""),
+        total_params_max: str = Query(default=""),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -448,6 +489,10 @@ def create_app(
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
+                active_params_min=active_params_min,
+                active_params_max=active_params_max,
+                total_params_min=total_params_min,
+                total_params_max=total_params_max,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -464,8 +509,8 @@ def create_app(
     @app.get("/leaderboard.csv")
     def leaderboard_csv(
         view: str = Query(default=viewer_config.overall.name),
-        sort: str = Query(default="borda_rank"),
-        direction: str = Query(default="asc", pattern="^(asc|desc)$"),
+        sort: str = Query(default="borda_score"),
+        direction: str = Query(default="desc", pattern="^(asc|desc)$"),
         target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
@@ -490,6 +535,10 @@ def create_app(
         model_filter: str = Query(default=""),
         task_filter: str = Query(default=""),
         rank_filtered: bool = Query(default=False),
+        active_params_min: str = Query(default=""),
+        active_params_max: str = Query(default=""),
+        total_params_min: str = Query(default=""),
+        total_params_max: str = Query(default=""),
         query_len_min: str = Query(default=""),
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
@@ -526,6 +575,10 @@ def create_app(
                 model_filter=model_filter,
                 task_filter=task_filter,
                 rank_filtered=rank_filtered,
+                active_params_min=active_params_min,
+                active_params_max=active_params_max,
+                total_params_min=total_params_min,
+                total_params_max=total_params_max,
                 query_len_min=query_len_min,
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
@@ -581,8 +634,9 @@ def render_page(
     benchmark_docs: BenchmarkDocs | None = None,
     database_label: str = "",
 ) -> str:
-    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_rank", "direction": "asc"}, doseq=True)
+    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_score", "direction": "desc"}, doseq=True)
     css_url = _asset_url("app.css")
+    favicon_svg_url = _asset_url("favicon-white.svg")
     favicon_url = _asset_url("favicon.png")
     htmx_url = _asset_url("htmx.min.js")
     viewer_js_url = _asset_url("viewer.js")
@@ -597,23 +651,24 @@ def render_page(
   <title>HAKARI-Bench leaderboard</title>
   <link rel="canonical" href="/">
   <link rel="stylesheet" href="{css_url}">
+  <link rel="icon" type="image/svg+xml" href="{favicon_svg_url}">
   <link rel="icon" type="image/png" href="{favicon_url}">
   <meta name="htmx-config" content='{{"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false}}'>
   <script src="{htmx_url}"></script>
   <script src="{viewer_js_url}" defer></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
-  <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6">
-    <header class="mb-4">
-      <div class="flex items-start justify-between gap-3">
-        <h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">
-          <img src="{favicon_url}" alt="" aria-hidden="true" class="h-8 w-8 shrink-0">
+  <main class="mx-auto max-w-[1600px] px-4 pt-2 pb-4 sm:px-6">
+    <header class="mb-2">
+      <div class="flex items-center justify-between gap-3">
+        <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
+          {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
           <span>HAKARI-Bench leaderboard</span>
         </h1>
         {header_actions}
       </div>
-      <p class="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
-      <p class="mt-2 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
+      <p class="mt-1 border border-amber-200 bg-amber-50 px-2.5 py-1 text-sm font-medium text-amber-800">🚧 WIP: This leaderboard is currently under active implementation, so specifications and data may change significantly.</p>
+      <p class="mt-1 max-w-4xl text-sm text-zinc-600">HAKARI-Bench is a lightweight multilingual information retrieval benchmark for comparing model performance and efficiency trade-offs across retrieval methods, compression variants, and reranking settings.</p>
     </header>
     <section
       id="leaderboard-panel"
@@ -685,11 +740,42 @@ def _render_docs_link() -> str:
         </a>"""
 
 
+def _render_github_link() -> str:
+    return f"""<a id="hakari-github-link" href="https://github.com/hakari-bench/hakari-bench" target="_blank" rel="noopener noreferrer" class="theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
+          aria-label="Open hakari-bench/hakari-bench on GitHub" title="Open hakari-bench/hakari-bench on GitHub">
+          {_icon_svg("github", class_name="hakari-icon")}
+        </a>"""
+
+
 def _render_header_actions() -> str:
     return f"""<div class="flex shrink-0 items-center gap-2">
+          {_render_github_link()}
           {_render_docs_link()}
           {_render_theme_toggle()}
         </div>"""
+
+
+def _render_docs_header() -> str:
+    return f"""<header class="mb-5 flex items-center justify-between gap-3">
+          <a href="/" class="docs-brand flex min-w-0 items-center gap-1.5 text-sm font-medium text-zinc-600" aria-label="Back to HAKARI-Bench leaderboard">
+            {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
+            <span>HAKARI-Bench</span>
+          </a>
+          <div class="flex shrink-0 items-center gap-2">
+            {_render_github_link()}
+            {_render_theme_toggle()}
+          </div>
+        </header>"""
+
+
+def _docs_page_chrome() -> DocsPageChrome:
+    return DocsPageChrome(
+        css_url=_asset_url("app.css"),
+        viewer_js_url=_asset_url("viewer.js"),
+        favicon_svg_url=_asset_url("favicon-white.svg"),
+        favicon_png_url=_asset_url("favicon.png"),
+        header_html=_render_docs_header(),
+    )
 
 
 def _render_page_footer(*, latest_update: str, database_label: str) -> str:
@@ -787,18 +873,21 @@ def _control_label(*, icon: str, text: str, extra_class: str = "") -> str:
 
 
 def render_doc_summary_modal() -> str:
-    return """
-<dialog id="doc-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
+    return f"""
+<dialog id="doc-summary-modal" class="hakari-modal">
   <form method="dialog">
-    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 id="doc-summary-heading" class="break-all text-base font-semibold">Benchmark documentation</h3>
-      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
+    <div class="hakari-modal-header">
+      <h3 class="hakari-modal-title">
+        {_icon_svg("book-open", class_name="hakari-icon")}
+        <span id="doc-summary-heading" class="break-all">Benchmark documentation</span>
+      </h3>
+      <button type="submit" class="hakari-modal-close">Close</button>
     </div>
   </form>
-  <div class="px-4 py-3">
-    <p id="doc-summary-description" class="mt-3 whitespace-pre-wrap text-sm leading-tight text-zinc-700"></p>
+  <div class="hakari-modal-body">
+    <p id="doc-summary-description" class="hakari-modal-text text-sm"></p>
     <p class="mt-3 text-sm">
-      <a id="doc-summary-link" class="text-cyan-700 underline-offset-2 hover:underline" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
+      <a id="doc-summary-link" class="hakari-modal-link" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
     </p>
   </div>
 </dialog>
@@ -806,17 +895,20 @@ def render_doc_summary_modal() -> str:
 
 
 def render_help_summary_modal() -> str:
-    return """
-<dialog id="help-summary-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
+    return f"""
+<dialog id="help-summary-modal" class="hakari-modal">
   <form method="dialog">
-    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 id="help-summary-heading" class="break-all text-base font-semibold">Help</h3>
-      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
+    <div class="hakari-modal-header">
+      <h3 class="hakari-modal-title">
+        {_icon_svg("circle-help", class_name="hakari-icon")}
+        <span id="help-summary-heading" class="break-all">Help</span>
+      </h3>
+      <button type="submit" class="hakari-modal-close">Close</button>
     </div>
   </form>
-  <div class="px-4 py-3">
-    <p id="help-summary-short" class="mt-3 text-sm font-medium leading-tight text-zinc-800"></p>
-    <p id="help-summary-details" class="mt-3 whitespace-pre-wrap text-sm leading-tight text-zinc-700"></p>
+  <div class="hakari-modal-body">
+    <p id="help-summary-short" class="hakari-modal-lead text-sm"></p>
+    <p id="help-summary-details" class="hakari-modal-text text-sm"></p>
   </div>
 </dialog>
 """
@@ -903,7 +995,7 @@ def render_leaderboard(
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs)}
-  <div class="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
+  <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
     <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
       <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
         {_icon_svg("table-properties", class_name="hakari-icon control-heading-icon shrink-0")}
@@ -963,7 +1055,7 @@ def render_tabs(
         raw_view_label = result.available_view_labels.get(view_name, view_name)
         view_label = _viewer_scope_label(view_name=view_name, fallback=raw_view_label)
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
@@ -1095,24 +1187,24 @@ def render_tabs(
     preset_buttons = [button for _, button in sorted(grouped_buttons["Scope presets"])]
     suite_buttons = [button for _, button in sorted(grouped_buttons["Nano suites"])]
     return f"""
-    <nav class="mb-4 border border-zinc-200 bg-white p-2 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
-      <div class="grid gap-2">
-        <div class="border border-zinc-200 bg-white p-2">
-          <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+    <nav class="mb-3 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
+      <div class="grid gap-1.5">
+        <div class="border border-zinc-200 bg-white p-1.5">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5">
             {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
             {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
             {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
           </div>
         </div>
-        <div class="grid gap-2">
-          <div class="border border-zinc-200 bg-white p-2">
-            <div class="mb-2 flex flex-wrap items-center gap-2">
+        <div class="grid gap-1.5">
+          <div class="border border-zinc-200 bg-white p-1.5">
+            <div class="mb-1.5 flex flex-wrap items-center gap-2">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="database", text="Benchmark scope")}
               </span>
               <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
             </div>
-            <div class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"></div>
+            <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
           </div>
           {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True)}
@@ -1388,7 +1480,7 @@ def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, dir
     for score, label in [("micro", "Micro"), ("macro", "Macro")]:
         active = result.score_aggregation == score
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         if score == "micro":
@@ -1441,7 +1533,7 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
     for target, label, icon in target_options:
         active = result.score_target == "all" if target == "all" else result.score_target != "all"
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         if target == "all":
@@ -1501,7 +1593,7 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
     for metric in result.available_score_metrics:
         active = metric == result.selected_score_metric
         classes = _control_button_classes(active=active)
-        tab_sort = "borda_rank" if sort.startswith("metric:") else sort
+        tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
         if metric == "ndcg@10":
@@ -1648,7 +1740,7 @@ def render_language_pages(
         """
     wrapper_tag = "div" if embedded else "nav"
     wrapper_class = (
-        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
+        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-1.5"
         if embedded
         else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
     )
@@ -1712,6 +1804,10 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
 def _task_length_filter_kwargs(filter_state: FilterState) -> _TaskLengthFilterKwargs:
     return {
         "rank_filtered": filter_state.rank_filtered,
+        "active_params_min": filter_state.active_params_min,
+        "active_params_max": filter_state.active_params_max,
+        "total_params_min": filter_state.total_params_min,
+        "total_params_max": filter_state.total_params_max,
         "query_len_min": filter_state.query_len_min,
         "query_len_max": filter_state.query_len_max,
         "doc_len_min": filter_state.doc_len_min,
@@ -1760,13 +1856,13 @@ def render_display_controls(
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
     return f"""
-    <div class="grid gap-2 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
-      <form id="column-controls" class="border border-zinc-200 bg-white p-2"
+    <div class="grid gap-1.5 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
+      <form id="column-controls" class="border border-zinc-200 bg-white p-1.5"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {column_hidden_html}
-        <div class="mb-2 flex flex-wrap items-center gap-2">
+        <div class="mb-1.5 flex flex-wrap items-center gap-2">
           {_control_label(icon="table-properties", text="Table display")}
           {_render_help_tooltip(
               "Table display",
@@ -1774,29 +1870,29 @@ def render_display_controls(
               "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD overlays standardized task scores so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank alongside the standardized score.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
           )}
         </div>
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="task_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_scores_checked}>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="toggle-chip">
+            <input type="checkbox" name="task_scores" value="1"{task_scores_checked}>
             <span>Task columns</span>
           </label>
-          <label class="inline-flex items-center gap-2">
+          <label class="toggle-chip">
             <input type="hidden" name="task_z_scores" value="0">
-            <input type="checkbox" name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700"{task_z_scores_checked}>
+            <input type="checkbox" name="task_z_scores" value="1"{task_z_scores_checked}>
             <span>STD</span>
           </label>
-          <label class="inline-flex items-center gap-2">
+          <label class="toggle-chip">
             <input type="hidden" name="task_ranks" value="0">
-            <input type="checkbox" name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700"{task_ranks_checked}>
+            <input type="checkbox" name="task_ranks" value="1"{task_ranks_checked}>
             <span>Task ranks</span>
           </label>
         </div>
       </form>
-      <form id="variant-controls" class="border border-zinc-200 bg-white p-2"
+      <form id="variant-controls" class="border border-zinc-200 bg-white p-1.5"
             hx-get="/leaderboard" hx-push-url="true"
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {variant_hidden_html}
-        <div class="mb-2 flex flex-wrap items-center gap-2">
+        <div class="mb-1.5 flex flex-wrap items-center gap-2">
           {_control_label(icon="git-compare-arrows", text="Efficiency variants")}
           {_render_help_tooltip(
               "Efficiency variants",
@@ -1804,21 +1900,21 @@ def render_display_controls(
               "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
           )}
         </div>
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="truncate" value="1" class="h-4 w-4 accent-cyan-700"{truncate_checked}>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="toggle-chip">
+            <input type="checkbox" name="truncate" value="1"{truncate_checked}>
             <span>Dims</span>
           </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="quantization" value="1" class="h-4 w-4 accent-cyan-700"{quantization_checked}>
+          <label class="toggle-chip">
+            <input type="checkbox" name="quantization" value="1"{quantization_checked}>
             <span>Quantization</span>
           </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="rescore" value="1" class="h-4 w-4 accent-cyan-700"{rescore_checked}>
+          <label class="toggle-chip">
+            <input type="checkbox" name="rescore" value="1"{rescore_checked}>
             <span>Rescore</span>
           </label>
-          <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="other_variant" value="1" class="h-4 w-4 accent-cyan-700"{other_variant_checked}>
+          <label class="toggle-chip">
+            <input type="checkbox" name="other_variant" value="1"{other_variant_checked}>
             <span>Sparse pruning</span>
           </label>
         </div>
@@ -2065,6 +2161,7 @@ def render_controls(
         or filter_state.rank_filtered
         or bool(filter_state.model_type_filters)
         or filter_state.filters_active
+        or filter_state.has_parameter_filters
         or filter_state.has_task_length_filters
     )
     refine_results_open_attr = " open" if refine_results_open else ""
@@ -2132,6 +2229,7 @@ def render_controls(
                 {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
                 {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
               </div>
+              {_render_parameter_filter_inputs(filter_state)}
               {_render_task_length_filter_inputs(filter_state)}
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="cpu", text="Run metadata")}
@@ -2227,6 +2325,54 @@ def _render_model_type_controls(
     """
 
 
+def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
+    input_class = (
+        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "focus:border-cyan-700"
+    )
+    active_class = "text-cyan-700" if filter_state.has_parameter_filters else ""
+    return f"""
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="inline-flex items-center gap-1">
+        {_control_label(icon="cpu", text="Params", extra_class=active_class)}
+        {_render_help_tooltip(
+            "Parameter filters",
+            "Filters model rows by active or total parameter count.",
+            "Parameter filters operate at the model row level using parameter metadata measured in millions of parameters.\n\nActive Params bounds use active parameter counts. Total Params bounds use total parameter counts. For example, setting Active Params <= 100 keeps rows with at most 100M active parameters.\n\nRows without the selected parameter metadata are excluded when any bound for that parameter type is set.",
+        )}
+      </span>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Active Params ≥</span>
+        <input type="number" min="0" step="any" name="active_params_min" value="{escape(filter_state.active_params_min)}"
+               aria-label="Active Params minimum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Active Params ≤</span>
+        <input type="number" min="0" step="any" name="active_params_max" value="{escape(filter_state.active_params_max)}"
+               aria-label="Active Params maximum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Total Params ≥</span>
+        <input type="number" min="0" step="any" name="total_params_min" value="{escape(filter_state.total_params_min)}"
+               aria-label="Total Params minimum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">Total Params ≤</span>
+        <input type="number" min="0" step="any" name="total_params_max" value="{escape(filter_state.total_params_max)}"
+               aria-label="Total Params maximum in millions"
+               class="{input_class}">
+        <span class="text-xs text-zinc-500">M</span>
+      </label>
+    </div>
+    """
+
+
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
     input_class = (
         "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
@@ -2279,7 +2425,7 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
             if active
             else "border-zinc-300 bg-white text-zinc-700 hover:border-cyan-500 hover:text-cyan-700"
         )
-        query_payload = state_payload(result=result, sort="borda_rank", direction="asc", filter_state=filter_state)
+        query_payload = state_payload(result=result, sort="borda_score", direction="desc", filter_state=filter_state)
         query_payload["group"] = score_group.name
         query = urlencode(query_payload, doseq=True)
         page_url = _page_url(query_payload)
@@ -2309,8 +2455,6 @@ def render_table_head(
     )
     columns = [
         ("model_name", "Model Name", "asc", "left", False, ""),
-        ("borda_rank", "Borda", "asc", "right", False, ""),
-        ("mean_rank", "Mean", "asc", "right", False, ""),
         ("borda_score", "Borda Score", "desc", "right", False, ""),
     ]
     if result.is_overall and not (result.rank_filtered and result.task_filter):
@@ -2328,7 +2472,6 @@ def render_table_head(
     )
     columns.extend(
         [
-            ("task_count", "Tasks", "desc", "right", False, ""),
             ("active_parameters", "Active Params", "asc", "right", False, ""),
             ("total_parameters", "Total Params", "asc", "right", False, ""),
             ("max_seq_length", "Max Len", "desc", "right", False, ""),
@@ -2350,7 +2493,7 @@ def render_table_head(
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = f"{_metric_column_width_class(result)} px-1 normal-case" if is_metric else "px-2 uppercase"
         sticky = _sticky_head_class(key)
-        label_class = "min-w-0 text-left leading-tight" if is_metric else "text-left"
+        label_class = "min-w-0 text-left leading-tight font-normal" if is_metric else "text-left"
         label_attrs = (
             f' data-metric-column-full-name="{escape(full_metric_name, quote=True)}"' if is_metric else ""
         )
@@ -2373,7 +2516,7 @@ def render_table_head(
                 header_content = f"""
                  <span class="doc-label-group block w-full min-w-0" data-doc-label-group="metric">
                    <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>
-                     <span class="block w-full truncate">{escape(group_label)}</span>
+                     <span class="block w-full truncate font-normal">{escape(group_label)}</span>
                      <span class="inline-flex max-w-full items-center gap-1">
                        <button type="button" class="inline-flex min-w-0 items-center gap-0.5 text-left hover:text-cyan-700"
                                hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2401,47 +2544,51 @@ def render_table_head(
                    <span class="{label_class}"{label_attrs}>{label_markup}</span>{indicator}
                  </button>"""
         heads.append(
-            f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 {text_align} {th_spacing} {sticky}">
+            f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 {text_align} {th_spacing} {sticky}">
                  {header_content}
                </th>"""
         )
-    return f"<thead><tr>{''.join(heads)}</tr></thead>"
+    index_head = (
+        '<th scope="col" aria-label="Rank" data-column-key="index" '
+        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-1.5 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"></th>'
+    )
+    return f"<thead><tr>{index_head}{''.join(heads)}</tr></thead>"
 
 
 def _sticky_head_class(key: str) -> str:
     if key == "model_name":
         return "leaderboard-col-model sticky z-20"
-    if key == "borda_rank":
-        return "leaderboard-col-rank"
-    if key == "mean_rank":
-        return "leaderboard-col-rank"
     return ""
 
 
 def render_table_body(*, result: LeaderboardResult, filter_context: FilterContext | None = None) -> str:
     if not result.rows:
-        return """<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="12">No complete results found.</td></tr></tbody>"""
+        colspan = _leaderboard_table_colspan(result)
+        return f"""<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="{colspan}">No complete results found.</td></tr></tbody>"""
     filter_context = filter_context or row_filter_context(result.rows, FilterState())
     body_rows = []
     model_views = model_cell_views(result.rows)
     borda_score_bar_widths = _borda_score_bar_widths(rows=result.rows, filter_context=filter_context)
-    borda_rank_labels = _rank_display_labels((row.model_name, row.borda_rank) for row in result.rows)
-    mean_rank_labels = _rank_display_labels((row.model_name, row.mean_rank) for row in result.rows)
     metric_rank_labels = _metric_rank_display_labels(result)
+    visible_index = 0
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
         row_class = "leaderboard-row odd:bg-white even:bg-zinc-50"
         hidden_attrs = ' hidden data-filter-hidden="true"' if hidden else ""
+        if hidden:
+            index_label = ""
+        else:
+            visible_index += 1
+            index_label = str(visible_index)
+        borda_score_cell = _render_borda_score_cell(result=result, row=row)
         mean_cells = _render_mean_cells(result=result, row=row)
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
+              <td class="leaderboard-col-index sticky z-10 bg-inherit px-1.5 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
               {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
-              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{borda_rank_labels[row.model_name]}</td>
-              <td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">{mean_rank_labels[row.model_name]}</td>
-              <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>
+              {borda_score_cell}
               {mean_cells}
               {_render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels)}
-              <td class="px-2 py-1 text-left tabular-nums">{row.task_count}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
@@ -2451,6 +2598,28 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
+    column_count = 3  # leading rank index + model + borda score
+    column_count += 2 if result.is_overall and not (result.rank_filtered and result.task_filter) else 1
+    column_count += len(result.metric_columns)
+    column_count += 4
+    if result.include_quantization_variants:
+        column_count += 1
+    if _show_base_delta_column(result):
+        column_count += 1
+    return column_count
+
+
+def _render_borda_score_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if result.show_task_z_scores:
+        return _render_score_z_cell(
+            score=row.borda_score,
+            z_score=row.borda_score_z,
+            cell_class="px-2 py-1 text-left tabular-nums",
+        )
+    return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>"""
 
 
 def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: FilterContext) -> dict[str, float]:
@@ -3023,7 +3192,7 @@ def _metric_column_label_markup(label: str) -> str:
     escaped_parts = [escape(part) for part in parts]
     first, rest = escaped_parts[0], escaped_parts[1:]
     return (
-        f'<span class="block w-full truncate">{first}</span>'
+        f'<span class="block w-full truncate font-normal">{first}</span>'
         + "".join(f'<span class="block w-full truncate font-normal">{part}</span>' for part in rest)
     )
 

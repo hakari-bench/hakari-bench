@@ -227,7 +227,7 @@
     anchor.href = url;
     anchor.target = "_blank";
     anchor.rel = "noopener noreferrer";
-    anchor.className = "break-all text-cyan-700 underline-offset-2 hover:underline";
+    anchor.className = "break-all text-cyan-700 underline underline-offset-2";
     anchor.textContent = text || url;
     return anchor;
   }
@@ -242,10 +242,18 @@
     list.append(dt, dd);
   }
 
+  function appendModelDetailLicense(list, license) {
+    if (!license || typeof license !== "object") return;
+    const label = license.label || license.id;
+    if (!label) return;
+    appendModelDetailRow(list, "License", document.createTextNode(label));
+  }
+
   function appendModelDetailLinks(list, links) {
     if (!links || typeof links !== "object") return;
     if (typeof links.huggingface === "string" && links.huggingface) {
-      appendModelDetailRow(list, "Hugging Face", createModelDetailLink(links.huggingface, "Model page"));
+      const repoId = links.huggingface.replace(/^https?:\/\/huggingface\.co\//, "").replace(/\/+$/, "");
+      appendModelDetailRow(list, "Hugging Face", createModelDetailLink(links.huggingface, repoId || "Model page"));
     }
     if (typeof links.github === "string" && links.github) {
       appendModelDetailRow(list, "GitHub", createModelDetailLink(links.github, "Repository"));
@@ -335,6 +343,7 @@
         dd.textContent = value;
         list.append(dt, dd);
       }
+      appendModelDetailLicense(list, metadata.license);
       appendModelDetailLinks(list, metadata.links);
       if (typeof modal.showModal === "function") modal.showModal();
     });
@@ -396,6 +405,10 @@
   document.addEventListener(
     "click",
     (event) => {
+      // Let interactive controls nested inside a tooltip target (e.g. the doc
+      // modal book icon or the sort button in a two-line task header) handle
+      // their own click instead of pinning the hover tooltip.
+      if (closestElement(event.target, "a, button, summary, input, select, textarea")) return;
       const trigger = closestElement(event.target, "[data-tooltip]");
       if (!trigger) return;
       event.preventDefault();
@@ -418,6 +431,91 @@
     true,
   );
   window.addEventListener("resize", window.__hakariHideTooltip);
+
+  // Floating sticky column header. Horizontal scrolling lives inside the table's
+  // overflow container, so CSS sticky cannot pin the header on page scroll; this
+  // mirrors a copy of the header row at the viewport top instead, synced to the
+  // table's horizontal scroll and column widths, keeping the pinned-left columns.
+  function initStickyLeaderboardHeader() {
+    const existing = document.getElementById("hakari-sticky-head");
+    if (existing) existing.remove();
+    window.__hakariStickyHead = null;
+    const container = document.querySelector(".leaderboard-table-scroll");
+    const table = container && container.querySelector(".leaderboard-table");
+    const thead = table && table.querySelector("thead");
+    if (!container || !table || !thead) return;
+
+    const floater = document.createElement("div");
+    floater.id = "hakari-sticky-head";
+    floater.className = "leaderboard-sticky-head";
+    floater.setAttribute("aria-hidden", "true");
+    floater.hidden = true;
+    const cloneTable = document.createElement("table");
+    cloneTable.className = table.className;
+    cloneTable.style.tableLayout = "fixed";
+    const cloneThead = thead.cloneNode(true);
+    cloneTable.appendChild(cloneThead);
+    floater.appendChild(cloneTable);
+    container.appendChild(floater);
+
+    function syncWidths() {
+      if (floater.hidden) return;
+      const realThs = thead.querySelectorAll("tr > th");
+      const cloneThs = cloneThead.querySelectorAll("tr > th");
+      let total = 0;
+      realThs.forEach((th, index) => {
+        const width = th.getBoundingClientRect().width;
+        total += width;
+        if (cloneThs[index]) cloneThs[index].style.width = `${width}px`;
+      });
+      cloneTable.style.width = `${total}px`;
+    }
+
+    function update() {
+      const rect = container.getBoundingClientRect();
+      const headHeight = thead.getBoundingClientRect().height;
+      const shouldShow = rect.top < 0 && rect.bottom > headHeight + 4;
+      if (!shouldShow) {
+        if (!floater.hidden) floater.hidden = true;
+        return;
+      }
+      if (floater.hidden) {
+        floater.hidden = false;
+        syncWidths();
+      }
+      floater.style.left = `${rect.left}px`;
+      floater.style.width = `${container.clientWidth}px`;
+      floater.scrollLeft = container.scrollLeft;
+    }
+
+    container.addEventListener(
+      "scroll",
+      () => {
+        if (!floater.hidden) floater.scrollLeft = container.scrollLeft;
+      },
+      { passive: true },
+    );
+
+    window.__hakariStickyHead = { update, syncWidths };
+    update();
+  }
+  window.__hakariInitStickyHeader = initStickyLeaderboardHeader;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (window.__hakariStickyHead) window.__hakariStickyHead.update();
+    },
+    { passive: true },
+  );
+  window.addEventListener("resize", () => {
+    if (!window.__hakariStickyHead) return;
+    window.__hakariStickyHead.syncWidths();
+    window.__hakariStickyHead.update();
+  });
+  document.addEventListener("htmx:afterSwap", (event) => {
+    if (event.target && event.target.id === "leaderboard-panel") window.__hakariInitStickyHeader();
+  });
 
   window.__hakariApplyHashQueryState();
   window.__hakariBindThemeToggle();

@@ -55,6 +55,7 @@ class ModelCardParameters:
     language_support_languages: tuple[str, ...] = ()
     language_support_marker: str | None = None
     links: dict[str, Any] | None = None
+    license: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -108,6 +109,7 @@ class LeaderboardRow(BaseModel):
     model_name: str
     model_type: str | None = None
     borda_score: float
+    borda_score_z: float | None = None
     mean_score: float
     mean_score_z: float | None = None
     macro_mean: float | None = None
@@ -137,6 +139,7 @@ class LeaderboardRow(BaseModel):
     language_support_languages: tuple[str, ...] = ()
     language_support_marker: str | None = None
     links: dict[str, Any] | None = None
+    license: dict[str, Any] | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
     metric_rank_values: dict[str, float] = Field(default_factory=dict)
@@ -251,6 +254,10 @@ class LeaderboardService:
         dtype_filters: tuple[str, ...] = (),
         attn_filters: tuple[str, ...] = (),
         prompt_filters: tuple[str, ...] = (),
+        active_params_min_millions: float | None = None,
+        active_params_max_millions: float | None = None,
+        total_params_min_millions: float | None = None,
+        total_params_max_millions: float | None = None,
         query_min_chars: float | None = None,
         query_max_chars: float | None = None,
         document_min_chars: float | None = None,
@@ -353,6 +360,12 @@ class LeaderboardService:
                 document_min_chars=document_min_chars,
                 document_max_chars=document_max_chars,
             )
+            has_parameter_filters = _has_parameter_filters(
+                active_params_min_millions=active_params_min_millions,
+                active_params_max_millions=active_params_max_millions,
+                total_params_min_millions=total_params_min_millions,
+                total_params_max_millions=total_params_max_millions,
+            )
             if (
                 self.use_precomputed
                 and not language_filters
@@ -362,6 +375,7 @@ class LeaderboardService:
                 and not ranking_model_filter_terms
                 and not has_rank_facet_filters
                 and not task_filter.strip()
+                and not has_parameter_filters
                 and not has_length_filters
                 and selected_score_metric == "ndcg@10"
                 and view_name != CUSTOM_SCOPE_NAME
@@ -460,6 +474,20 @@ class LeaderboardService:
                         document_max_chars=document_max_chars,
                     )
                     phase_timing["task_score_count"] = len(rows)
+            if has_parameter_filters:
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="filter_parameters",
+                    view=view_name,
+                ) as phase_timing:
+                    rows = _filter_rows_by_parameters(
+                        rows,
+                        active_params_min_millions=active_params_min_millions,
+                        active_params_max_millions=active_params_max_millions,
+                        total_params_min_millions=total_params_min_millions,
+                        total_params_max_millions=total_params_max_millions,
+                    )
+                    phase_timing["task_score_count"] = len(rows)
             if has_rank_facet_filters:
                 with timed_operation(
                     "viewer.leaderboard.phase",
@@ -517,6 +545,11 @@ class LeaderboardService:
                     metric_score_group = _overall_metric_score_group(
                         overall, score_aggregation=score_aggregation
                     )
+                    if metric_score_group is None:
+                        metric_score_group = _custom_single_component_metric_score_group(
+                            self.config,
+                            overall,
+                        )
                     phase_timing["task_score_count"] = len(rows)
             elif selected_score_group is not None:
                 with timed_operation(
@@ -771,6 +804,7 @@ def _cached_model_card_parameters(
             language_support_languages=_str_tuple(language_support.get("languages")),
             language_support_marker=_str_or_none(language_support.get("marker")),
             links=_links_card_section(card),
+            license=_license_card_section(card),
         )
     return parameters_by_model
 
@@ -839,6 +873,18 @@ def _links_card_section(card: dict[str, Any]) -> dict[str, Any] | None:
                 papers.append({"title": title.strip(), "url": url.strip()})
     if papers:
         normalized["papers"] = papers
+    return normalized or None
+
+
+def _license_card_section(card: dict[str, Any]) -> dict[str, Any] | None:
+    section = card.get("license")
+    if not isinstance(section, dict):
+        return None
+    normalized: dict[str, Any] = {}
+    for key in ("id", "label", "type", "commercial_use", "source", "source_url"):
+        value = _str_or_none(section.get(key))
+        if value and value.strip():
+            normalized[key] = value.strip()
     return normalized or None
 
 
@@ -943,6 +989,7 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     if row.language_support_marker is not None
                     else parameters.language_support_marker,
                     "links": row.links if row.links is not None else parameters.links,
+                    "license": row.license if row.license is not None else parameters.license,
                 }
             )
         )
@@ -1467,6 +1514,11 @@ def compute_leaderboard_rows(
     }
     complete_rows = [row for row in rows if row.model_name in complete_models]
     borda_scores = _borda_scores(complete_rows)
+    borda_score_z_values = (
+        _borda_score_z_values(borda_scores=borda_scores, rows=complete_rows)
+        if show_task_z_scores
+        else {}
+    )
     metric_columns = metric_columns or []
     z_values_by_model = (
         _metric_z_values_by_model(
@@ -1523,6 +1575,7 @@ def compute_leaderboard_rows(
                 model_name=model_name,
                 model_type=first.model_type,
                 borda_score=_mean(borda_scores[model_name]),
+                borda_score_z=borda_score_z_values.get(model_name),
                 mean_score=mean_score,
                 mean_score_z=aggregate_z_values.get("mean_score"),
                 macro_mean=macro_mean if is_overall else None,
@@ -1623,6 +1676,36 @@ def _borda_scores(rows: list[TaskScore]) -> dict[str, list[float]]:
             )
             scores_by_model[row.model_name].append(score)
     return scores_by_model
+
+
+def _borda_score_z_values(
+    *,
+    borda_scores: dict[str, list[float]],
+    rows: list[TaskScore],
+) -> dict[str, float]:
+    aggregate_scores = {
+        model_name: _mean(scores)
+        for model_name, scores in borda_scores.items()
+        if scores
+    }
+    base_model_names = {
+        row.model_name
+        for row in rows
+        if row.embedding_variant_name is None
+    }
+    base_scores = [
+        score
+        for model_name, score in aggregate_scores.items()
+        if model_name in base_model_names
+    ]
+    stddev = _population_stddev(base_scores)
+    if stddev is None or stddev <= 0.0:
+        return {}
+    mean = _mean(base_scores)
+    return {
+        model_name: (score - mean) / stddev
+        for model_name, score in aggregate_scores.items()
+    }
 
 
 def _rank_desc(items: Iterable[tuple[str, float]]) -> dict[str, float]:
@@ -2167,6 +2250,64 @@ def _has_task_length_filters(
     )
 
 
+def _has_parameter_filters(
+    *,
+    active_params_min_millions: float | None,
+    active_params_max_millions: float | None,
+    total_params_min_millions: float | None,
+    total_params_max_millions: float | None,
+) -> bool:
+    return any(
+        value is not None
+        for value in (
+            active_params_min_millions,
+            active_params_max_millions,
+            total_params_min_millions,
+            total_params_max_millions,
+        )
+    )
+
+
+def _filter_rows_by_parameters(
+    rows: list[TaskScore],
+    *,
+    active_params_min_millions: float | None,
+    active_params_max_millions: float | None,
+    total_params_min_millions: float | None,
+    total_params_max_millions: float | None,
+) -> list[TaskScore]:
+    return [
+        row
+        for row in rows
+        if _parameter_value_matches(
+            row.active_parameters,
+            minimum_millions=active_params_min_millions,
+            maximum_millions=active_params_max_millions,
+        )
+        and _parameter_value_matches(
+            row.total_parameters,
+            minimum_millions=total_params_min_millions,
+            maximum_millions=total_params_max_millions,
+        )
+    ]
+
+
+def _parameter_value_matches(
+    value: int | None,
+    *,
+    minimum_millions: float | None,
+    maximum_millions: float | None,
+) -> bool:
+    if minimum_millions is None and maximum_millions is None:
+        return True
+    if value is None:
+        return False
+    value_millions = value / 1_000_000
+    if minimum_millions is not None and value_millions < minimum_millions:
+        return False
+    return maximum_millions is None or value_millions <= maximum_millions
+
+
 def _filter_rows_by_task_lengths(
     rows: list[TaskScore],
     *,
@@ -2278,6 +2419,26 @@ def _overall_metric_score_group(
         return None
     return ScoreGroupConfig(
         name="benchmark_macro", label="Benchmark Macro", group_by="benchmark"
+    )
+
+
+def _custom_single_component_metric_score_group(
+    config: ViewerConfig, overall: OverallConfig
+) -> ScoreGroupConfig | None:
+    if overall.name != CUSTOM_SCOPE_NAME or len(overall.benchmark_components) != 1:
+        return None
+    component = overall.benchmark_components[0]
+    if component.group_by is None:
+        return None
+    benchmark = config.benchmark_for_view(component.name)
+    if benchmark is not None:
+        for group in benchmark.resolved_score_groups:
+            if group.group_by == component.group_by:
+                return group
+    return ScoreGroupConfig(
+        name=f"{component.name}_{component.group_by}",
+        label=component.group_by.replace("_", " ").title(),
+        group_by=component.group_by,
     )
 
 

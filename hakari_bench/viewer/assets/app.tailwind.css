@@ -7,21 +7,21 @@
     color-scheme: light;
     --hakari-bg: #f7fdff;
     --hakari-surface: #ffffff;
-    --hakari-surface-muted: #e9f5f8;
-    --hakari-surface-faint: #f2fbfd;
-    --hakari-border: #bedbe3;
+    --hakari-surface-muted: #e0f1f5;
+    --hakari-surface-faint: #edf8fb;
+    --hakari-border: #a9ccd6;
     --hakari-border-strong: #85bdcc;
     --hakari-grid: rgb(0 168 200 / 0.11);
     --hakari-text: #243036;
-    --hakari-text-muted: #637078;
-    --hakari-text-faint: #87949a;
+    --hakari-text-muted: #52626b;
+    --hakari-text-faint: #6f7f87;
     --hakari-accent: #0077aa;
     --hakari-accent-strong: #005f88;
     --hakari-accent-soft: rgb(0 119 170 / 0.1);
     --hakari-accent-border: #85bdcc;
-    --hakari-control-bg: #edf8fb;
-    --hakari-control-hover: #e4f3f7;
-    --hakari-control-active: #d9eef4;
+    --hakari-control-bg: #e3f2f6;
+    --hakari-control-hover: #d5eaf0;
+    --hakari-control-active: #c3e0e9;
     --hakari-warn-bg: #fff6df;
     --hakari-warn-border: #d8b56b;
     --hakari-warn-text: #a96b00;
@@ -372,11 +372,22 @@
   }
 
   .leaderboard-table-scroll {
+    --hakari-index-col-width: 2.25rem;
     --hakari-model-col-width: clamp(18rem, 40vw, 36rem);
-    --hakari-rank-col-width: 4rem;
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 82%, var(--hakari-surface));
     border-color: transparent;
     border-radius: var(--hakari-radius-lg);
+  }
+
+  /* Leading display-order rank column (1, 2, 3 ...), pinned left like the model
+     column. Header is intentionally empty. */
+  .leaderboard-col-index {
+    box-sizing: border-box;
+    background-color: inherit;
+    left: 0;
+    width: var(--hakari-index-col-width);
+    min-width: var(--hakari-index-col-width);
+    max-width: var(--hakari-index-col-width);
   }
 
   .leaderboard-table {
@@ -403,7 +414,7 @@
   .leaderboard-col-model {
     box-sizing: border-box;
     background-color: inherit;
-    left: 0;
+    left: var(--hakari-index-col-width);
     max-width: var(--hakari-model-col-width);
     min-width: var(--hakari-model-col-width);
     overflow: hidden;
@@ -429,18 +440,18 @@
   }
 
   :root.dark .borda-score-bar {
-    opacity: 0.16;
+    opacity: 0.13;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not(.light) .borda-score-bar {
-      opacity: 0.16;
+      opacity: 0.13;
     }
   }
 
   .leaderboard-row:hover .borda-score-bar,
   .leaderboard-col-model:hover .borda-score-bar {
-    opacity: 0.3;
+    opacity: 0.28;
   }
 
   .borda-score-bar::-webkit-progress-bar {
@@ -457,11 +468,13 @@
     border-radius: 0 4px 4px 0;
   }
 
-  .leaderboard-col-rank {
-    box-sizing: border-box;
-    max-width: var(--hakari-rank-col-width);
-    min-width: var(--hakari-rank-col-width);
-    width: var(--hakari-rank-col-width);
+
+  .model-type-badge,
+  .dimension-badge,
+  .variant-badge,
+  .quantization-badge {
+    background-color: color-mix(in srgb, var(--hakari-control-active) 88%, transparent);
+    border: 0;
   }
 
   .benchmark-doc h1 {
@@ -633,8 +646,8 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    border: 1px solid rgb(29 27 24 / 0.14);
-    border-radius: var(--hakari-radius-sm);
+    border: 0;
+    background-color: transparent;
     line-height: 1;
     padding: 0.1rem 0.3rem;
     text-align: right;
@@ -787,84 +800,72 @@
     color: inherit;
   }
 
+  /* Light-mode heat ramps keep a clear green/red hue across the whole range so
+     the strongest cells still read as colored, not near-black. Darkness still
+     increases with magnitude for emphasis, and legibility stays high on the
+     light surfaces. Dark-mode overrides (emerald/rose) follow below. */
   .task-z-pos-025 {
-    background-color: #eaf6ef;
-    color: #326247;
+    color: #2f9e60;
   }
 
   .task-z-pos-050 {
-    background-color: #d8eddf;
-    color: #28573e;
+    color: #259356;
   }
 
   .task-z-pos-075 {
-    background-color: #c2e1cc;
-    color: #1f4b36;
+    color: #1d884e;
   }
 
   .task-z-pos-100 {
-    background-color: #a6d0b5;
-    color: #173d2b;
+    color: #167d46;
   }
 
   .task-z-pos-125 {
-    background-color: #82bb97;
-    color: #103322;
+    color: #0f723e;
   }
 
   .task-z-pos-150 {
-    background-color: #5fa578;
-    color: #f4fff8;
+    color: #0a6837;
   }
 
   .task-z-pos-175 {
-    background-color: #438b61;
-    color: #f4fff8;
+    color: #075e30;
   }
 
   .task-z-pos-200 {
-    background-color: #2f704d;
-    color: #f4fff8;
+    color: #06552b;
   }
 
   .task-z-neg-025 {
-    background-color: #f7ebe4;
-    color: #87513e;
+    color: #c83d31;
   }
 
   .task-z-neg-050 {
-    background-color: #efd8cb;
-    color: #7a4234;
+    color: #be372c;
   }
 
   .task-z-neg-075 {
-    background-color: #e5c0ae;
-    color: #6e342c;
+    color: #b33227;
   }
 
   .task-z-neg-100 {
-    background-color: #d99f88;
-    color: #55251f;
+    color: #a82d22;
   }
 
   .task-z-neg-125 {
-    background-color: #c97c63;
-    color: #3a1714;
+    color: #9d281e;
   }
 
   .task-z-neg-150 {
-    background-color: #ad5d4d;
-    color: #fffaf0;
+    color: #912319;
   }
 
   .task-z-neg-175 {
-    background-color: #924436;
-    color: #fffaf0;
+    color: #861f15;
   }
 
   .task-z-neg-200 {
-    background-color: #733126;
-    color: #fffaf0;
+    color: #7a1b12;
   }
 
   @keyframes hakari-leaderboard-spin {
@@ -885,6 +886,12 @@
     .loading-spinner {
       animation: none;
     }
+
+    .doc-card,
+    .docs-brand,
+    .hakari-modal-close {
+      transition: none;
+    }
   }
 
   :root.dark .shadow-sm {
@@ -901,88 +908,68 @@
     color: var(--hakari-text);
   }
 
-  :root.dark .task-z-score {
-    border-color: rgb(241 251 255 / 0.22);
-  }
-
   :root.dark .task-z-pos-025 {
-    background-color: theme("colors.emerald.950");
-    color: theme("colors.emerald.200");
+    color: theme("colors.emerald.300");
   }
 
   :root.dark .task-z-pos-050 {
-    background-color: theme("colors.emerald.900");
-    color: theme("colors.emerald.100");
+    color: theme("colors.emerald.300");
   }
 
   :root.dark .task-z-pos-075 {
-    background-color: theme("colors.emerald.800");
-    color: theme("colors.emerald.50");
+    color: theme("colors.emerald.200");
   }
 
   :root.dark .task-z-pos-100 {
-    background-color: theme("colors.emerald.700");
-    color: theme("colors.white");
+    color: theme("colors.emerald.200");
   }
 
   :root.dark .task-z-pos-125 {
-    background-color: theme("colors.emerald.600");
-    color: theme("colors.white");
+    color: theme("colors.emerald.100");
   }
 
   :root.dark .task-z-pos-150 {
-    background-color: theme("colors.emerald.500");
-    color: theme("colors.emerald.950");
+    color: theme("colors.emerald.100");
   }
 
   :root.dark .task-z-pos-175 {
-    background-color: theme("colors.emerald.400");
-    color: theme("colors.emerald.950");
+    color: theme("colors.emerald.50");
   }
 
   :root.dark .task-z-pos-200 {
-    background-color: theme("colors.emerald.300");
-    color: theme("colors.emerald.950");
+    color: theme("colors.emerald.50");
   }
 
   :root.dark .task-z-neg-025 {
-    background-color: theme("colors.rose.950");
-    color: theme("colors.rose.200");
+    color: theme("colors.rose.300");
   }
 
   :root.dark .task-z-neg-050 {
-    background-color: theme("colors.rose.900");
-    color: theme("colors.rose.100");
+    color: theme("colors.rose.300");
   }
 
   :root.dark .task-z-neg-075 {
-    background-color: theme("colors.rose.800");
-    color: theme("colors.rose.50");
+    color: theme("colors.rose.200");
   }
 
   :root.dark .task-z-neg-100 {
-    background-color: theme("colors.rose.700");
-    color: theme("colors.white");
+    color: theme("colors.rose.200");
   }
 
   :root.dark .task-z-neg-125 {
-    background-color: theme("colors.rose.600");
-    color: theme("colors.white");
+    color: theme("colors.rose.100");
   }
 
   :root.dark .task-z-neg-150 {
-    background-color: theme("colors.rose.500");
-    color: theme("colors.white");
+    color: theme("colors.rose.100");
   }
 
   :root.dark .task-z-neg-175 {
-    background-color: theme("colors.rose.600");
-    color: theme("colors.white");
+    color: theme("colors.rose.50");
   }
 
   :root.dark .task-z-neg-200 {
-    background-color: theme("colors.rose.700");
-    color: theme("colors.white");
+    color: theme("colors.rose.50");
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1004,88 +991,378 @@
       color: var(--hakari-text);
     }
 
-    :root:not(.light) .task-z-score {
-      border-color: rgb(241 251 255 / 0.22);
-    }
-
     :root:not(.light) .task-z-pos-025 {
-      background-color: theme("colors.emerald.950");
-      color: theme("colors.emerald.200");
+      color: theme("colors.emerald.300");
     }
 
     :root:not(.light) .task-z-pos-050 {
-      background-color: theme("colors.emerald.900");
-      color: theme("colors.emerald.100");
+      color: theme("colors.emerald.300");
     }
 
     :root:not(.light) .task-z-pos-075 {
-      background-color: theme("colors.emerald.800");
-      color: theme("colors.emerald.50");
+      color: theme("colors.emerald.200");
     }
 
     :root:not(.light) .task-z-pos-100 {
-      background-color: theme("colors.emerald.700");
-      color: theme("colors.white");
+      color: theme("colors.emerald.200");
     }
 
     :root:not(.light) .task-z-pos-125 {
-      background-color: theme("colors.emerald.600");
-      color: theme("colors.white");
+      color: theme("colors.emerald.100");
     }
 
     :root:not(.light) .task-z-pos-150 {
-      background-color: theme("colors.emerald.500");
-      color: theme("colors.emerald.950");
+      color: theme("colors.emerald.100");
     }
 
     :root:not(.light) .task-z-pos-175 {
-      background-color: theme("colors.emerald.400");
-      color: theme("colors.emerald.950");
+      color: theme("colors.emerald.50");
     }
 
     :root:not(.light) .task-z-pos-200 {
-      background-color: theme("colors.emerald.300");
-      color: theme("colors.emerald.950");
+      color: theme("colors.emerald.50");
     }
 
     :root:not(.light) .task-z-neg-025 {
-      background-color: theme("colors.rose.950");
-      color: theme("colors.rose.200");
+      color: theme("colors.rose.300");
     }
 
     :root:not(.light) .task-z-neg-050 {
-      background-color: theme("colors.rose.900");
-      color: theme("colors.rose.100");
+      color: theme("colors.rose.300");
     }
 
     :root:not(.light) .task-z-neg-075 {
-      background-color: theme("colors.rose.800");
-      color: theme("colors.rose.50");
+      color: theme("colors.rose.200");
     }
 
     :root:not(.light) .task-z-neg-100 {
-      background-color: theme("colors.rose.700");
-      color: theme("colors.white");
+      color: theme("colors.rose.200");
     }
 
     :root:not(.light) .task-z-neg-125 {
-      background-color: theme("colors.rose.600");
-      color: theme("colors.white");
+      color: theme("colors.rose.100");
     }
 
     :root:not(.light) .task-z-neg-150 {
-      background-color: theme("colors.rose.500");
-      color: theme("colors.white");
+      color: theme("colors.rose.100");
     }
 
     :root:not(.light) .task-z-neg-175 {
-      background-color: theme("colors.rose.600");
-      color: theme("colors.white");
+      color: theme("colors.rose.50");
     }
 
     :root:not(.light) .task-z-neg-200 {
-      background-color: theme("colors.rose.700");
-      color: theme("colors.white");
+      color: theme("colors.rose.50");
     }
+  }
+}
+
+/* ===================================================================
+   Help / detail modals and benchmark documentation pages.
+   These are hand-authored component rules placed after the Tailwind
+   utilities layer so they win over generic utility resets. Rebuild
+   app.css with `uv run python scripts/build_viewer_css.py`.
+   =================================================================== */
+
+/* --- Documentation page chrome --------------------------------------- */
+
+.docs-brand {
+  color: var(--hakari-text-muted);
+  transition: color 140ms ease;
+}
+
+.docs-brand:hover {
+  color: var(--hakari-accent);
+}
+
+.doc-card-grid {
+  display: grid;
+  gap: 0.625rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .doc-card-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.doc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--hakari-surface);
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-lg);
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.doc-card:hover {
+  border-color: var(--hakari-accent-border);
+  background-color: color-mix(in srgb, var(--hakari-surface) 92%, var(--hakari-accent) 8%);
+}
+
+.doc-card-title {
+  color: var(--hakari-accent);
+}
+
+.doc-card:hover .doc-card-title {
+  color: var(--hakari-accent-strong);
+}
+
+/* Stretch the title link across the whole card so the card is clickable. */
+.doc-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.doc-card-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  color: var(--hakari-text-muted);
+}
+
+/* --- Documentation article ------------------------------------------- */
+
+.benchmark-doc table {
+  min-width: 100%;
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-md);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.benchmark-doc tbody tr:first-child td {
+  background-color: var(--hakari-surface-muted);
+  color: var(--hakari-text);
+  font-weight: 600;
+  border-top: 0;
+}
+
+.benchmark-doc tbody tr:nth-child(2n) td {
+  background-color: var(--hakari-surface-faint);
+}
+
+.benchmark-doc blockquote {
+  border-left: 3px solid var(--hakari-accent-border);
+  border-radius: var(--hakari-radius-sm);
+  background-color: var(--hakari-surface-faint);
+  padding: 0.5rem 0.75rem;
+  color: var(--hakari-text-muted);
+}
+
+.benchmark-doc pre {
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-code-bg);
+}
+
+.benchmark-doc :not(pre) > code {
+  border: 1px solid color-mix(in srgb, var(--hakari-border) 55%, transparent);
+  border-radius: var(--hakari-radius-sm);
+  background-color: var(--hakari-code-bg);
+  padding: 0.04rem 0.32rem;
+  font-size: 0.85em;
+}
+
+.benchmark-doc a code {
+  color: inherit;
+}
+
+.machine-readable-metadata {
+  border-radius: var(--hakari-radius-md);
+}
+
+/* --- Help / detail modals (dialog) ----------------------------------- */
+
+.hakari-modal {
+  width: min(92vw, 42rem);
+  padding: 0;
+  border: 1px solid var(--hakari-border-strong);
+  border-radius: var(--hakari-radius-lg);
+  background-color: var(--hakari-surface);
+  color: var(--hakari-text);
+  box-shadow: 0 1.5rem 3.5rem rgb(15 23 42 / 0.22);
+}
+
+:root.dark .hakari-modal {
+  box-shadow: 0 1.5rem 3.5rem rgb(0 0 0 / 0.55);
+}
+
+.hakari-modal::backdrop {
+  background-color: rgb(15 23 42 / 0.34);
+  backdrop-filter: blur(2px);
+}
+
+:root.dark .hakari-modal::backdrop {
+  background-color: rgb(8 11 12 / 0.62);
+}
+
+.hakari-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--hakari-border);
+  padding: 0.75rem 1rem;
+}
+
+.hakari-modal-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--hakari-text);
+}
+
+.hakari-modal-title .hakari-icon {
+  flex: 0 0 auto;
+  color: var(--hakari-accent);
+}
+
+.hakari-modal-close {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.3rem;
+  border: 0;
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-control-bg);
+  padding: 0.25rem 0.6rem;
+  color: var(--hakari-text-muted);
+  font-family: var(--hakari-font);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.hakari-modal-close:hover,
+.hakari-modal-close:focus-visible {
+  background-color: var(--hakari-accent-soft);
+  color: var(--hakari-accent);
+}
+
+.hakari-modal-body {
+  padding: 0.875rem 1rem 1.125rem;
+}
+
+.hakari-modal-lead {
+  color: var(--hakari-text);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.hakari-modal-text {
+  margin-top: 0.625rem;
+  color: var(--hakari-text-muted);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.hakari-modal-link {
+  color: var(--hakari-accent);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+
+.hakari-modal-link:hover {
+  text-decoration-color: var(--hakari-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .hakari-modal {
+    box-shadow: 0 1.5rem 3.5rem rgb(0 0 0 / 0.55);
+  }
+
+  :root:not(.light) .hakari-modal::backdrop {
+    background-color: rgb(8 11 12 / 0.62);
+  }
+}
+
+/* --- Toggle chips (display / variant checkboxes styled as control chips) --- */
+
+.toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-control-bg);
+  padding: 0.2rem 0.6rem;
+  color: var(--hakari-text-muted);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 140ms ease;
+}
+
+.toggle-chip:hover {
+  background-color: var(--hakari-accent-soft);
+}
+
+.toggle-chip:has(input[type="checkbox"]:checked) {
+  background-color: var(--hakari-control-active);
+  color: var(--hakari-accent);
+}
+
+.toggle-chip:has(input[type="checkbox"]:focus-visible) {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--hakari-accent) 42%, transparent);
+}
+
+.toggle-chip input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-chip {
+    transition: none;
+  }
+}
+
+/* --- Floating sticky column header (JS-driven, see viewer.js) -------------- */
+
+.leaderboard-sticky-head {
+  position: fixed;
+  top: 0;
+  z-index: 40;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--hakari-surface-muted) 70%, var(--hakari-surface));
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.14);
+  pointer-events: none;
+}
+
+.leaderboard-sticky-head[hidden] {
+  display: none;
+}
+
+.leaderboard-sticky-head table {
+  margin: 0;
+}
+
+:root.dark .leaderboard-sticky-head {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .leaderboard-sticky-head {
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.45);
   }
 }

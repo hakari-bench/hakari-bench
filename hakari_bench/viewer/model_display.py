@@ -268,6 +268,7 @@ def _model_metadata(
         "language_support_languages": list(row.language_support_languages),
         "language_support_label": _language_support_label(row),
         "links": row.links or None,
+        "license": row.license or None,
     }
 
 
@@ -287,14 +288,14 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
         badges.append(
             _render_badge(
                 label=model_view.model_type_badge_label,
-                classes="border-zinc-300 bg-zinc-100 text-zinc-700",
+                classes="model-type-badge bg-zinc-100 text-zinc-700",
             )
         )
     if model_view.dimension_label is not None:
         badges.append(
             _render_badge(
                 label=model_view.dimension_label,
-                classes="dimension-badge border-cyan-200 bg-cyan-50 text-cyan-800",
+                classes="dimension-badge bg-zinc-100 text-cyan-800",
                 tooltip=model_view.dimension_tooltip,
             )
         )
@@ -302,7 +303,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
         badges.append(
             _render_badge(
                 label=model_view.variant_label,
-                classes="dimension-badge truncate-dim-badge border-cyan-200 bg-cyan-50 text-cyan-800",
+                classes="dimension-badge truncate-dim-badge bg-zinc-100 text-cyan-800",
                 tooltip=model_view.variant_tooltip,
             )
         )
@@ -310,14 +311,14 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
         badges.append(
             _render_badge(
                 label=row.quantization,
-                classes="border-amber-200 bg-amber-50 text-amber-800",
+                classes="quantization-badge bg-zinc-100 text-amber-800",
             )
         )
     if model_view.variant_label and model_view.truncated_embedding_dim is None:
         badges.append(
             _render_badge(
                 label=model_view.variant_label,
-                classes="truncate-dim-badge border-violet-200 bg-violet-50 text-violet-800",
+                classes="variant-badge bg-zinc-100 text-cyan-800",
                 tooltip=model_view.variant_tooltip,
             )
         )
@@ -364,15 +365,15 @@ def _render_badge(*, label: str, classes: str, tooltip: str | None = None) -> st
 
 def render_model_detail_modal() -> str:
     return """
-<dialog id="model-detail-modal" class="w-[min(92vw,42rem)] border border-zinc-300 bg-white p-0 text-zinc-950 backdrop:bg-zinc-950/35">
+<dialog id="model-detail-modal" class="hakari-modal">
   <form method="dialog">
-    <div class="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
-      <h3 class="text-base font-semibold">Model Details</h3>
-      <button type="submit" class="border border-zinc-300 px-2 py-1 text-sm text-zinc-700 hover:border-cyan-600 hover:text-cyan-700">Close</button>
+    <div class="hakari-modal-header">
+      <h3 class="hakari-modal-title"><span>Model Details</span></h3>
+      <button type="submit" class="hakari-modal-close">Close</button>
     </div>
   </form>
-  <div class="px-4 py-3">
-    <a id="model-detail-title" class="break-all font-mono text-sm font-semibold text-zinc-900 underline-offset-2 hover:underline" target="_blank" rel="noopener noreferrer"></a>
+  <div class="hakari-modal-body">
+    <a id="model-detail-title" class="hakari-modal-link break-all font-mono text-sm font-semibold" target="_blank" rel="noopener noreferrer"></a>
     <dl id="model-detail-fields" class="mt-3 grid grid-cols-[10rem_1fr] gap-x-3 gap-y-2 text-sm"></dl>
   </div>
 </dialog>

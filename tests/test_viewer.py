@@ -724,9 +724,14 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert response.status_code == 200
     assert "<title>HAKARI-Bench leaderboard</title>" in response.text
     assert "HAKARI-Bench leaderboard" in response.text
-    assert '<h1 class="flex min-w-0 items-center gap-2 text-2xl font-semibold">' in response.text
-    assert '<img src="/assets/favicon.png?' in response.text
-    assert 'alt="" aria-hidden="true" class="h-8 w-8 shrink-0">' in response.text
+    assert '<div class="flex items-center justify-between gap-3">' in response.text
+    assert '<h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">' in response.text
+    assert 'data-icon="hakari-bench"' in response.text
+    assert 'id="hakari-github-link"' in response.text
+    assert 'href="https://github.com/hakari-bench/hakari-bench"' in response.text
+    assert 'target="_blank" rel="noopener noreferrer"' in response.text
+    assert 'aria-label="Open hakari-bench/hakari-bench on GitHub"' in response.text
+    assert 'data-icon="github"' in response.text
     assert 'id="hakari-docs-link"' in response.text
     assert 'href="/docs/"' in response.text
     assert 'aria-label="Open documentation"' in response.text
@@ -735,6 +740,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'aria-label="Toggle color theme"' in response.text
     assert 'data-icon="moon"' in response.text
     assert 'data-icon="sun"' in response.text
+    assert response.text.index('id="hakari-github-link"') < response.text.index('id="hakari-docs-link"')
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-Bench leaderboard</p>' not in response.text
     assert (
         "🚧 WIP: This leaderboard is currently under active implementation, "
@@ -746,6 +752,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'data-icon="bar-chart-3"' not in response.text
     assert 'data-testid="summary-card-models"' not in response.text
     assert re.search(r'<link rel="stylesheet" href="/assets/app\.css\?v=[0-9a-f]{12}">', response.text)
+    assert re.search(r'<link rel="icon" type="image/svg\+xml" href="/assets/favicon-white\.svg\?v=[0-9a-f]{12}">', response.text)
     assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
     assert (
         '<meta name="htmx-config" content=\'{"allowEval":false,"allowScriptTags":false,'
@@ -830,6 +837,18 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert response.headers["content-type"].startswith("image/png")
     assert response.content.startswith(b"\x89PNG\r\n\x1a\n")
 
+    svg_response = client.get("/assets/favicon.svg")
+    assert svg_response.status_code == 200
+    assert svg_response.headers["content-type"].startswith("image/svg+xml")
+    assert 'stroke="currentColor"' in svg_response.text
+    assert "<circle" in svg_response.text
+
+    white_svg_response = client.get("/assets/favicon-white.svg")
+    assert white_svg_response.status_code == 200
+    assert white_svg_response.headers["content-type"].startswith("image/svg+xml")
+    assert 'stroke="#fff"' in white_svg_response.text
+    assert 'stroke="currentColor"' not in white_svg_response.text
+
     css_response = client.get("/assets/app.css")
     assert css_response.status_code == 200
     assert css_response.headers["content-type"].startswith("text/css")
@@ -849,7 +868,7 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "border-radius:var(--hakari-radius-lg)" in css_response.text
     assert 'nav[aria-label="Leaderboard configuration"]' in css_response.text
     assert "border-color:transparent" in css_response.text
-    assert ".leaderboard-table-scroll{--hakari-model-col-width" in css_response.text
+    assert ".leaderboard-table-scroll{--hakari-index-col-width" in css_response.text
     assert "border-color:var(--hakari-border)" in css_response.text
     assert "[data-leaderboard-pending=true]" in css_response.text
     assert "button[data-leaderboard-pending=true]:after" not in css_response.text
@@ -858,14 +877,15 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".model-tooltip" not in css_response.text
     assert ".doc-summary-trigger{background-color:transparent" in css_response.text
     assert ".doc-summary-trigger:hover" in css_response.text
-    assert ".leaderboard-col-model{box-sizing:border-box;left:0" in css_response.text
+    assert ".leaderboard-col-model{box-sizing:border-box;left:var(--hakari-index-col-width)" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
+    assert ".leaderboard-col-index{box-sizing:border-box;background-color:inherit;left:0" in css_response.text
     assert ".borda-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
     assert "top:2px;bottom:2px;left:2px;border:0;display:block;width:calc(100% - 2px);height:calc(100% - 4px)" in css_response.text
     assert "background-color:transparent;color:var(--hakari-accent);opacity:.1;pointer-events:none" in css_response.text
-    assert ":root.dark .borda-score-bar{opacity:.16}" in css_response.text
-    assert ":root:not(.light) .borda-score-bar{opacity:.16}" in css_response.text
-    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.3}" in css_response.text
+    assert ":root.dark .borda-score-bar{opacity:.13}" in css_response.text
+    assert ":root:not(.light) .borda-score-bar{opacity:.13}" in css_response.text
+    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.28}" in css_response.text
     assert ".borda-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
@@ -906,6 +926,11 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert legacy_favicon_response.status_code == 200
     assert legacy_favicon_response.headers["content-type"].startswith("image/png")
     assert legacy_favicon_response.content.startswith(b"\x89PNG\r\n\x1a\n")
+
+    svg_favicon_response = client.get("/favicon.svg")
+    assert svg_favicon_response.status_code == 200
+    assert svg_favicon_response.headers["content-type"].startswith("image/svg+xml")
+    assert 'stroke="#fff"' in svg_favicon_response.text
 
     browser_default_favicon_response = client.get("/favicon.ico")
     assert browser_default_favicon_response.status_code == 200
@@ -1021,7 +1046,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
     assert (
-        'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_rank&amp;direction=asc'
+        'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_score&amp;direction=desc'
         '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
     ) in response.text
     scope_section = response.text.split("Benchmark scope", 1)[1].split("Efficiency variants", 1)[0]
@@ -1032,9 +1057,10 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Code retrieval" not in response.text
     assert "Specialized domains" not in response.text
     assert "leaderboard-col-model sticky" in response.text
-    assert "leaderboard-col-rank" in response.text
-    assert "leaderboard-col-borda sticky" not in response.text
-    assert "leaderboard-col-mean sticky" not in response.text
+    assert "leaderboard-col-index sticky" in response.text
+    assert "leaderboard-col-rank" not in response.text
+    assert ">Borda<" not in response.text
+    assert ">Mean<" not in response.text
     assert "z-20" in response.text
 
 
@@ -1184,6 +1210,45 @@ overalls:
     assert task_result.rows[0].mean_score == pytest.approx(70.0)
     assert lang_result.rows[0].mean_score == pytest.approx(50.0)
 
+    task_columns_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:task_mean",),
+        show_task_scores=True,
+    )
+    lang_columns_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:lang_mean",),
+        show_task_scores=True,
+    )
+
+    assert task_columns_result.metric_columns == ["arguana", "fever"]
+    assert task_columns_result.rows[0].metric_values == {
+        "arguana": pytest.approx(50.0),
+        "fever": pytest.approx(90.0),
+    }
+    assert lang_columns_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
+    assert lang_columns_result.rows[0].metric_values == {
+        "NanoBEIR-en": pytest.approx(90.0),
+        "NanoBEIR-ja": pytest.approx(10.0),
+    }
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    client = TestClient(app)
+    task_response = client.get("/leaderboard?view=Custom&bench=MNanoBEIR%3Atask_mean&task_scores=1")
+    lang_response = client.get("/leaderboard?view=Custom&bench=MNanoBEIR%3Alang_mean&task_scores=1")
+
+    assert task_response.status_code == 200
+    assert lang_response.status_code == 200
+    assert 'name="bench" value="MNanoBEIR:task_mean"' in task_response.text
+    assert 'name="bench" value="MNanoBEIR:lang_mean"' in lang_response.text
+    assert 'data-metric-column-full-name="arguana"' in task_response.text
+    assert 'data-metric-column-full-name="fever"' in task_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-en"' not in task_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-ja"' not in task_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-en"' in lang_response.text
+    assert 'data-metric-column-full-name="NanoBEIR-ja"' in lang_response.text
+    assert 'data-metric-column-full-name="fever"' not in lang_response.text
+
 
 def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -> None:
     result = LeaderboardResult(
@@ -1215,7 +1280,7 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
 
     assert "Core (EN)" in html
     assert "Clear" in html
-    assert 'class="benchmark-scope-divider mb-2 border-t border-zinc-200" aria-hidden="true"' in html
+    assert 'class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"' in html
     assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
     core_en_button = html.split(">Core (EN)</button>", 1)[0].rsplit("<button", 1)[1]
     clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
@@ -1376,7 +1441,8 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert "top-100 hybrid candidates" in response.text
     assert "optional rank-101 safeguard positive" in response.text
     assert "usually produced by BM25" not in response.text
-    assert response.text.index("model/b") < response.text.index("bm25") < response.text.index("model/a")
+    # Default sort is now Borda Score (desc); the bm25 baseline sorts by its score.
+    assert response.text.index("model/b") < response.text.index("model/a") < response.text.index("bm25")
 
 
 def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: Path) -> None:
@@ -1431,7 +1497,7 @@ def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: P
     response = TestClient(app).get("/leaderboard?view=BenchA&target=reranking&quantization=1")
 
     assert response.status_code == 200
-    assert 'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quantization" value="1" checked' in response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims, uint8)&quot;" in response.text
 
 
@@ -1837,7 +1903,7 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "More languages" in response.text
     assert 'data-language-page="ja"' in response.text
     assert (
-        'hx-push-url="/?view=BenchA&amp;sort=borda_rank&amp;direction=asc&amp;group=task'
+        'hx-push-url="/?view=BenchA&amp;sort=borda_score&amp;direction=desc&amp;group=task'
         '&amp;task_z_scores=0&amp;lang_filter=en"'
     ) in response.text
     assert 'aria-label="Task facets"' in response.text
@@ -2180,7 +2246,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "model/a" in response.text
     assert "bg-cyan-50" in response.text
     assert "768d" in response.text
-    assert "bg-amber-50" in response.text
+    assert "quantization-badge bg-zinc-100 text-amber-800" in response.text
     assert "uint8" in response.text
     assert "binary_rescore" not in response.text
     assert "Δ vs Base" in response.text
@@ -2197,8 +2263,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'name="dim_filter" value="256" class="h-4 w-4 accent-cyan-700" checked' not in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
-    base_head = render_table_head(result=base_result, sort="borda_rank", direction="asc")
-    quantization_head = render_table_head(result=quantization_result, sort="borda_rank", direction="asc")
+    base_head = render_table_head(result=base_result, sort="borda_score", direction="asc")
+    quantization_head = render_table_head(result=quantization_result, sort="borda_score", direction="asc")
     score_desc_head = render_table_head(result=base_result, sort="borda_score", direction="desc")
     assert ">Quant</span>" not in base_head
     assert ">Quant</span>" in quantization_head
@@ -2224,7 +2290,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     )
 
     assert facet_response.status_code == 200
-    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="other_variant" value="1" checked' in facet_response.text
     assert 'name="dim_filter" value="768" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
     assert "1025~ dims" in facet_response.text
@@ -2251,7 +2317,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     )
 
     assert explicit_truncate_off_response.status_code == 200
-    assert 'name="truncate" value="1" class="h-4 w-4 accent-cyan-700" checked' not in explicit_truncate_off_response.text
+    assert 'name="truncate" value="1" checked' not in explicit_truncate_off_response.text
     assert "384 dims" not in explicit_truncate_off_response.text
 
     explicit_quantization_off_response = TestClient(app).get(
@@ -2260,7 +2326,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     assert explicit_quantization_off_response.status_code == 200
     assert (
-        'name="quantization" value="1" class="h-4 w-4 accent-cyan-700" checked'
+        'name="quantization" value="1" checked'
         not in explicit_quantization_off_response.text
     )
     assert ">uint8</td>" not in explicit_quantization_off_response.text
@@ -2268,14 +2334,14 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     rescore_response = TestClient(app).get("/leaderboard?view=BenchA&rescore=1")
 
     assert rescore_response.status_code == 200
-    assert 'name="rescore" value="1" class="h-4 w-4 accent-cyan-700" checked' in rescore_response.text
+    assert 'name="rescore" value="1" checked' in rescore_response.text
     assert "binary_rescore" in rescore_response.text
     assert "Δ vs Base" in rescore_response.text
 
     other_variant_response = TestClient(app).get("/leaderboard?view=BenchA&other_variant=1")
 
     assert other_variant_response.status_code == 200
-    assert 'name="other_variant" value="1" class="h-4 w-4 accent-cyan-700" checked' in other_variant_response.text
+    assert 'name="other_variant" value="1" checked' in other_variant_response.text
     assert "Δ vs Base" in other_variant_response.text
 
 
@@ -2799,7 +2865,7 @@ def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> 
     assert body.count(">55.00</td>") >= 2
 
 
-def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: Path) -> None:
+def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     long_task = "legal_bench_corporate_lobbying"
     _write_task_results(
@@ -2816,26 +2882,32 @@ def test_leaderboard_table_keeps_model_name_as_leftmost_sticky_column(tmp_path: 
     service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
     result = service.get_leaderboard("BenchA", show_task_scores=True)
 
-    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    head = render_table_head(result=result, sort="borda_score", direction="desc")
     body = render_table_body(result=result)
 
-    assert head.index("Model Name") < head.index("Borda")
-    assert body.index("model-a") < body.index(">1</td>")
+    assert head.index("Model Name") < head.index("Borda Score")
+    # The leading display-order rank index is the leftmost (pinned) column, ahead
+    # of the model name, which is itself pinned to the right of the index column.
+    assert head.index('data-column-key="index"') < head.index('data-column-key="model_name"')
+    assert body.index("leaderboard-col-index") < body.index("leaderboard-col-model")
+    assert (
+        'class="leaderboard-col-index sticky z-10 bg-inherit px-1.5 py-1 text-right tabular-nums text-zinc-500">1</td>'
+    ) in body
     assert 'data-column-key="model_name"' in head
     assert (
-        'data-column-key="model_name" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
+        'data-column-key="index" '
+        'class="leaderboard-col-index sticky z-30 bg-zinc-100 px-1.5 py-1 text-right text-[0.6875rem] font-normal text-zinc-600"'
+    ) in head
+    assert (
+        'data-column-key="model_name" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 '
         'text-left px-2 uppercase leaderboard-col-model sticky z-20'
     ) in head
+    # Borda and Mean rank columns were removed; the leading rank index replaces them.
+    assert 'data-column-key="borda_rank"' not in head
+    assert 'data-column-key="mean_rank"' not in head
+    assert "leaderboard-col-rank" not in head
     assert (
-        'data-column-key="borda_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
-        'text-left px-2 uppercase leaderboard-col-rank'
-    ) in head
-    assert (
-        'data-column-key="mean_rank" class="bg-zinc-100 py-1 text-xs font-semibold text-zinc-600 '
-        'text-left px-2 uppercase leaderboard-col-rank'
-    ) in head
-    assert (
-        '<span class="min-w-0 text-left leading-tight block max-w-full truncate tooltip-trigger cursor-pointer" '
+        '<span class="min-w-0 text-left leading-tight font-normal block max-w-full truncate tooltip-trigger cursor-pointer" '
         f'data-metric-column-full-name="{long_task}"'
     ) in head
     assert body.count('class="borda-score-bar"') == 2
@@ -2916,6 +2988,46 @@ def test_leaderboard_model_name_borda_score_bar_scales_to_visible_max_score() ->
     assert 'class="borda-score-bar" value="3.75" max="100"' in body
     assert filtered_body.count('class="borda-score-bar"') == 1
     assert 'class="borda-score-bar" value="100.00" max="100"' in filtered_body
+
+
+def test_leaderboard_table_hides_task_count_column() -> None:
+    rows = [
+        LeaderboardRow(
+            borda_rank=1,
+            mean_rank=1,
+            model_name="model/a",
+            borda_score=100.0,
+            mean_score=0.9,
+            task_count=2,
+        ),
+        LeaderboardRow(
+            borda_rank=2,
+            mean_rank=2,
+            model_name="model/b",
+            borda_score=50.0,
+            mean_score=0.8,
+            task_count=1,
+        ),
+    ]
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=2,
+        rows=rows,
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+    body = render_table_body(result=result)
+
+    assert 'data-column-key="task_count"' not in head
+    assert ">Tasks</span>" not in head
+    assert '<td class="px-2 py-1 text-left tabular-nums">2</td>' not in body
+    assert '<td class="px-2 py-1 text-left tabular-nums">1</td>' not in body
 
 
 def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:
@@ -3070,8 +3182,8 @@ def test_leaderboard_table_hides_sparse_dimension_values() -> None:
     assert ">sparse</span>" in body
     assert '<tr class="leaderboard-row odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
-    assert '<td class="leaderboard-col-rank px-2 py-1 text-left tabular-nums">' in body
-    assert "leaderboard-col-borda sticky" not in body
+    assert '<td class="leaderboard-col-index sticky z-10' in body
+    assert "leaderboard-col-rank" not in body
     assert "leaderboard-col-mean sticky" not in body
     assert '<td class="px-2 py-1 text-left tabular-nums">' in body
 
@@ -3320,9 +3432,9 @@ benchmarks:
     assert 'aria-label="Score groups"' not in response.text
     assert "group=task_mean" in response.text
     assert "group=lang_mean" in response.text
-    assert ">Tasks</span>" in response.text
+    assert ">Tasks</span>" not in response.text
     assert "Task score columns" not in response.text
-    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_scores" value="1" checked' in response.text
     assert "Mean Score" in response.text
     assert ">BEIR-ja</span>" in response.text
     assert "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]" in response.text
@@ -3841,6 +3953,8 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert mean_only_result.show_task_scores is False
     assert mean_only_result.show_task_z_scores is True
     assert mean_only_result.metric_columns == []
+    assert mean_only_rows_by_name["model/a"].borda_score_z == pytest.approx(1.0)
+    assert mean_only_rows_by_name["model/b"].borda_score_z == pytest.approx(-1.0)
     assert mean_only_rows_by_name["model/a"].mean_score_z == pytest.approx(1.0)
     assert mean_only_rows_by_name["model/b"].mean_score_z == pytest.approx(-1.0)
     assert mean_only_rows_by_name["model/a"].metric_z_values == {}
@@ -3855,12 +3969,15 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
 
     assert result.show_task_scores is True
     assert result.show_task_z_scores is True
+    assert rows_by_name["model/a"].borda_score_z == pytest.approx(1.0)
+    assert rows_by_name["model/b"].borda_score_z == pytest.approx(-1.0)
     assert rows_by_name["model/a"].mean_score_z == pytest.approx(1.0)
     assert rows_by_name["model/b"].mean_score_z == pytest.approx(-1.0)
     assert rows_by_name["model/a"].metric_values["arguana"] == 90.0
     assert rows_by_name["model/a"].metric_z_values["arguana"] == pytest.approx(1.0)
     assert rows_by_name["model/b"].metric_z_values["arguana"] == pytest.approx(-1.0)
     variant_row = next(row for row in result.rows if row.embedding_variant_name == "truncate_dim_256")
+    assert variant_row.borda_score_z == pytest.approx(0.0)
     assert variant_row.mean_score_z == pytest.approx(0.27)
     assert variant_row.metric_z_values["arguana"] == pytest.approx(0.27)
     assert "fever" not in variant_row.metric_z_values
@@ -3872,9 +3989,10 @@ def test_task_z_score_columns_use_base_variant_task_stddev(tmp_path: Path) -> No
     assert "Table display" in response.text
     assert "<span>STD</span>" in response.text
     assert "Task std display" not in response.text
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_z_scores" value="1" checked' in response.text
     assert "task-z-score task-z-pos-100" in response.text
     assert "task-z-score task-z-neg-100" in response.text
+    assert '<span class="task-z-score-value">100.00</span>' in response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in response.text
     assert "metric%3Aarguana" not in response.text
 
@@ -3928,8 +4046,8 @@ def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "<span>Task ranks</span>" in response.text
-    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
-    assert 'name="task_ranks" value="1" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="task_scores" value="1" checked' in response.text
+    assert 'name="task_ranks" value="1" checked' in response.text
     assert 'name="task_scores" value="1"' in response.text
     assert '<span class="task-rank-label">[1]</span>' not in response.text
     assert '<span class="task-rank-label">[T2]</span>' not in response.text
@@ -4071,8 +4189,8 @@ def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_
     default_response = client.get("/leaderboard?view=BenchA")
 
     assert default_response.status_code == 200
-    assert 'name="task_scores" value="1" class="h-4 w-4 accent-cyan-700">' in default_response.text
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' not in default_response.text
+    assert 'name="task_scores" value="1">' in default_response.text
+    assert 'name="task_z_scores" value="1" checked' not in default_response.text
     assert '<input type="hidden" name="task_z_scores" value="0">' in default_response.text
     assert "task-z-score" not in default_response.text
     assert "metric%3Aa1" not in default_response.text
@@ -4080,7 +4198,7 @@ def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_
     enabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=1")
 
     assert enabled_response.status_code == 200
-    assert 'name="task_z_scores" value="1" class="h-4 w-4 accent-cyan-700" checked' in enabled_response.text
+    assert 'name="task_z_scores" value="1" checked' in enabled_response.text
     assert '<span class="task-z-score-delta">+1.00σ</span>' in enabled_response.text
     assert "task_z_scores=1" in enabled_response.text
 
@@ -4111,25 +4229,55 @@ def test_task_z_score_heatmap_css_defines_light_and_dark_buckets() -> None:
             assert css_source.count(selector) == 3
 
 
-def test_task_z_score_heatmap_css_uses_intuitive_positive_negative_colors() -> None:
+def test_task_z_score_text_css_uses_intuitive_positive_negative_colors() -> None:
     css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
 
-    assert re.search(r"\.task-z-score\s*{[^}]*border: 1px solid rgb\(29 27 24 / 0\.14\);", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-score\s*{[^}]*border-radius: var\(--hakari-radius-sm\);", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*border: 0;", css_source, flags=re.DOTALL)
+    assert re.search(r"\.task-z-score\s*{[^}]*background-color: transparent;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-size: 0\.8125rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-size: 0\.5625rem;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-value\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
     assert re.search(r"\.task-z-score-delta\s*{[^}]*font-weight: 400;", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-score\s*{[^}]*border-color: rgb\(241 251 255 / 0\.22\);", css_source, flags=re.DOTALL)
-    assert re.search(r"\.task-z-pos-025\s*{\s*background-color: #eaf6ef;", css_source)
-    assert re.search(r"\.task-z-pos-200\s*{\s*background-color: #2f704d;", css_source)
-    assert re.search(r"\.task-z-neg-025\s*{\s*background-color: #f7ebe4;", css_source)
-    assert re.search(r"\.task-z-neg-200\s*{\s*background-color: #733126;", css_source)
-    assert re.search(r'\.task-z-pos-025\s*{\s*background-color: theme\("colors\.emerald\.950"\);', css_source)
-    assert re.search(r'\.task-z-pos-200\s*{\s*background-color: theme\("colors\.emerald\.300"\);', css_source)
-    assert re.search(r'\.task-z-neg-150\s*{\s*background-color: theme\("colors\.rose\.500"\);', css_source)
-    assert re.search(r'\.task-z-neg-175\s*{\s*background-color: theme\("colors\.rose\.600"\);', css_source)
-    assert re.search(r'\.task-z-neg-200\s*{\s*background-color: theme\("colors\.rose\.700"\);', css_source)
+    assert "task-z-score {\n    border-color:" not in css_source
+    assert re.search(r"\.task-z-pos-025\s*{\s*color: #2f9e60;", css_source)
+    assert re.search(r"\.task-z-pos-200\s*{\s*color: #06552b;", css_source)
+    assert re.search(r"\.task-z-neg-025\s*{\s*color: #c83d31;", css_source)
+    assert re.search(r"\.task-z-neg-200\s*{\s*color: #7a1b12;", css_source)
+    assert re.search(r'\.task-z-pos-025\s*{\s*color: theme\("colors\.emerald\.300"\);', css_source)
+    assert re.search(r'\.task-z-pos-200\s*{\s*color: theme\("colors\.emerald\.50"\);', css_source)
+    assert "background-color: theme(\"colors.emerald" not in css_source
+    assert "background-color: theme(\"colors.rose" not in css_source
+
+
+def test_variant_badge_css_uses_visible_shared_background() -> None:
+    css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
+
+    shared_badge_selector = (
+        r"\.model-type-badge,\s*"
+        r"\.dimension-badge,\s*"
+        r"\.variant-badge,\s*"
+        r"\.quantization-badge\s*{[^}]*"
+        r"background-color: color-mix\(in srgb, var\(--hakari-control-active\) 88%, transparent\);"
+        r"[^}]*border: 0;"
+    )
+    assert re.search(shared_badge_selector, css_source, flags=re.DOTALL)
+
+
+def test_light_theme_tokens_keep_control_contrast() -> None:
+    css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
+
+    expected_tokens = {
+        "--hakari-surface-muted": "#e0f1f5",
+        "--hakari-surface-faint": "#edf8fb",
+        "--hakari-border": "#a9ccd6",
+        "--hakari-text-muted": "#52626b",
+        "--hakari-text-faint": "#6f7f87",
+        "--hakari-control-bg": "#e3f2f6",
+        "--hakari-control-hover": "#d5eaf0",
+        "--hakari-control-active": "#c3e0e9",
+    }
+    for token, value in expected_tokens.items():
+        assert re.search(rf"{token}: {value};", css_source)
 
 
 def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: Path) -> None:
@@ -4167,6 +4315,31 @@ def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: 
     assert result.metric_columns == ["short"]
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
     assert result.rows[0].mean_score == pytest.approx(90.0)
+
+
+def test_leaderboard_filters_models_by_parameter_counts_in_millions(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = [
+        ("model/small", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 99_000_000, 150_000_000, 8192),
+        ("model/border", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.80, 100_000_000, 250_000_000, 8192),
+        ("model/large", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 101_000_000, 300_000_000, 8192),
+        ("model/missing", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.99, None, 90_000_000, 8192),
+    ]
+    _write_task_results(db_path, rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "BenchA",
+        active_params_max_millions=100,
+        total_params_min_millions=100,
+    )
+
+    assert [row.model_name for row in result.rows] == ["model/small", "model/border"]
+    assert result.rows[0].active_parameters == 99_000_000
+    assert result.rows[1].active_parameters == 100_000_000
 
 
 def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> None:
@@ -4343,6 +4516,37 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     assert "52.5" not in ranking_response.text
 
 
+def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/small", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 99_000_000, 150_000_000, 8192),
+            ("model/large", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 101_000_000, 300_000_000, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&filters=1&active_params_max=100")
+
+    assert response.status_code == 200
+    assert response.text.index(">Params</span>") < response.text.index(">Length</span>")
+    assert "Active Params ≤" in response.text
+    assert "Total Params ≤" in response.text
+    assert 'data-help-title="Parameter filters"' in response.text
+    assert "using parameter metadata measured in millions of parameters" in response.text
+    assert "at most 100M active parameters" in response.text
+    assert 'name="active_params_max" value="100"' in response.text
+    assert "model/small" in response.text
+    assert "model/large" not in response.text
+
+
 def test_metric_column_label_omits_nano_prefix_only_for_display() -> None:
     assert _metric_column_label("NanoAILAStatutes") == "AILAStatutes"
     assert _metric_column_label("NanoBEIR-ja") == "BEIR-ja"
@@ -4372,7 +4576,7 @@ def test_task_score_column_headers_strip_repeated_suite_prefix_from_subtask() ->
 
     head = render_table_head(result=result, sort="borda_rank", direction="asc")
 
-    assert '<span class="block w-full truncate">NanoBRIGHT</span>' in head
+    assert '<span class="block w-full truncate font-normal">NanoBRIGHT</span>' in head
     assert '<span class="block max-w-full truncate font-normal">FooBar</span>' in head
     assert '<span class="block max-w-full truncate font-normal">NanoBRIGHTFooBar</span>' not in head
 
@@ -4583,8 +4787,8 @@ benchmarks:
 
     assert response.status_code == 200
     assert 'scope="colgroup"' not in response.text
-    assert '<span class="block w-full truncate">NanoBEIR-ar</span>' in response.text
-    assert '<span class="block w-full truncate">NanoBEIR-ja</span>' in response.text
+    assert '<span class="block w-full truncate font-normal">NanoBEIR-ar</span>' in response.text
+    assert '<span class="block w-full truncate font-normal">NanoBEIR-ja</span>' in response.text
     assert '<span class="block max-w-full truncate font-normal">arguana</span>' in response.text
     assert (
         '<span class="block max-w-full truncate font-normal">climatefever</span>'

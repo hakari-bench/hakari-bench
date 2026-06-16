@@ -879,12 +879,19 @@ Task score columns are also controlled by an explicit display flag. The viewer
 does not render per-task or per-score-group metric columns by default. When
 `task_scores=1` is present, the leaderboard computes columns for the current
 selection: the selected score group for benchmark views, Nano-set columns for
-overall `score=macro`, or task-level columns when no score group is available.
+overall `score=macro`, the selected component score group for a single Custom
+benchmark selection such as `MNanoBEIR:task_mean` or `MNanoBEIR:lang_mean`, or
+task-level columns when no score group is available.
 By default, `model_filter` only hides rendered model rows,
 `task_filter` only narrows displayed task score columns, and facet filters such
 as model type, dimensions, quantization, dtype, attention implementation, and
 prompt mode only hide rendered model rows. Model type filters use `dense`,
 `sparse`, `late-interaction`, and `reranker`; BM25 is grouped under `sparse`.
+Parameter filter query parameters `active_params_min`, `active_params_max`,
+`total_params_min`, and `total_params_max` are interpreted in millions of
+parameters and filter rows using `active_parameters` and `total_parameters`.
+For example, `active_params_max=100` keeps rows with at most 100M active
+parameters and excludes rows missing active-parameter metadata.
 When `rank_filtered=1` is present, those active filters narrow the ranked
 population before Borda, mean scores, task counts, and task score columns are
 computed. With a ranking task filter, the viewer ranks
@@ -1049,7 +1056,10 @@ choices:
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
   `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall`, `Core`,
   and `Core (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
-  inside the same leaderboard configuration panel.
+  inside the same leaderboard configuration panel. When one grouped benchmark
+  is selected in Custom and `task_scores=1` is enabled, displayed task columns
+  follow that selection key: `MNanoBEIR(task)` displays BEIR source-task means
+  and `MNanoBEIR(lang)` displays language/dataset means.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -1113,9 +1123,9 @@ flags
 the UI label `Sparse pruning` and means sparse active-dimension cap variants,
 not arbitrary uncategorized variants. The viewer uses this
 mart when language filters, task-score columns, task text filters, length
-filters, macro overall aggregation, and custom `bench=` selection are not
-active. Those interactive, macro, and custom cases still fall back to the normal
-`LeaderboardService` computation from task-score rows.
+filters, parameter filters, macro overall aggregation, and custom `bench=`
+selection are not active. Those interactive, macro, and custom cases still fall
+back to the normal `LeaderboardService` computation from task-score rows.
 For `score_target = 'reranking'`, the viewer uses this mart only when the
 materialized rows already include a BM25 baseline row. Older DuckDB builds that
 lack that row fall back to dynamic task-score computation so Borda and mean ranks

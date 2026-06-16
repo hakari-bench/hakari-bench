@@ -233,11 +233,7 @@ By default, this does the following:
    `https://huggingface.co/datasets/hakari-bench/results` at
    `~/.cache/hakari-bench/hf-datasets/hakari-bench__results`.
 2. Runs `git lfs pull` so the latest `.json.xz` payloads are present locally.
-3. Materializes missing BM25 baseline result JSON from
-   `task_docs/metadata/**.json`, using the stored Nano-set
-   `candidate_subsets.bm25` scores. It does not load candidate parquet files,
-   run `evaluate bm25`, or recompute BM25 with `bm25s`.
-4. Rebuilds:
+3. Rebuilds the DuckDB from the synced Hugging Face result JSON only:
 
    ```bash
    uv run python scripts/build_results_database_and_report.py \
@@ -249,6 +245,13 @@ The dataset repo is private, so authenticate before syncing, for example with
 `hf auth login` or a configured Hugging Face git credential. If the checkout
 already exists and you only want to rebuild from local files, pass
 `--skip-git-sync`.
+
+The helper does not generate missing BM25 baseline JSON by default. If you need
+to backfill `hakari-results/bm25/**/*.json.xz` from local
+`task_docs/metadata/**.json`, opt in explicitly with
+`--materialize-bm25-baseline-from-metadata`. That path uses the stored Nano-set
+`candidate_subsets.bm25` scores; it does not load candidate parquet files, run
+`evaluate bm25`, or recompute BM25 with `bm25s`.
 
 The helper also supports a Hugging Face Hub snapshot backend:
 
@@ -271,7 +274,7 @@ parallelism with `--snapshot-max-workers`; the default is `32`. The helper sets
 Useful variants:
 
 ```bash
-# Rebuild from an existing checkout and keep the standard BM25 baseline fill.
+# Rebuild from an existing checkout without syncing new remote files.
 uv run python scripts/sync_remote_results_and_rebuild.py \
   --skip-git-sync
 ```
@@ -279,14 +282,16 @@ uv run python scripts/sync_remote_results_and_rebuild.py \
 ```bash
 # Refresh only a metadata-backed BM25 subset before rebuilding.
 uv run python scripts/sync_remote_results_and_rebuild.py \
+  --materialize-bm25-baseline-from-metadata \
   --bm25-dataset NanoBEIR-en \
   --bm25-split NanoArguAna
 ```
 
 ```bash
-# Rebuild without touching BM25 baseline JSON.
+# Regenerate all metadata-backed BM25 baseline JSON before rebuilding.
 uv run python scripts/sync_remote_results_and_rebuild.py \
-  --no-bm25-baseline
+  --materialize-bm25-baseline-from-metadata \
+  --bm25-overwrite
 ```
 
 ## Append New Results

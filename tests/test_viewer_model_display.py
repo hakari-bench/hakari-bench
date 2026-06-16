@@ -40,6 +40,9 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert ">768d</span>" in html
     assert ">binary</span>" in html
     assert ">binary_rescore</span>" in html
+    assert "quantization-badge bg-zinc-100 text-amber-800" in html
+    assert "variant-badge bg-zinc-100 text-cyan-800" in html
+    assert "variant-badge bg-zinc-100 text-amber-800" not in html
 
 
 def test_render_model_name_cell_allows_long_visible_model_name_to_wrap() -> None:
@@ -91,7 +94,8 @@ def test_render_model_name_cell_uses_compact_truncate_dimension_badge_with_toolt
 
     html = render_model_name_cell(truncated, model_view)
 
-    assert "dimension-badge truncate-dim-badge border-cyan-200 bg-cyan-50 text-cyan-800" in html
+    assert "dimension-badge truncate-dim-badge bg-zinc-100 text-cyan-800" in html
+    assert "dimension-badge truncate-dim-badge bg-zinc-100 text-amber-800" not in html
     assert ">768d &lt;- 1024</span>" in html
     assert ">768d</span>" not in html
     assert ">truncate_dim_768</span>" not in html
@@ -118,6 +122,7 @@ def test_render_model_name_cell_shows_sparse_type_without_dimension_badge() -> N
     html = render_model_name_cell(row, model_view)
 
     assert model_view.metadata["model_type"] == "Sparse"
+    assert "model-type-badge bg-zinc-100 text-zinc-700" in html
     assert ">sparse</span>" in html
     assert ">1024d</span>" not in html
 
@@ -141,6 +146,8 @@ def test_render_model_name_cell_shortens_sparse_active_dim_variant_with_tooltip(
     html = render_model_name_cell(row, model_view)
 
     assert model_view.variant_label == "q32d d256d"
+    assert "variant-badge bg-zinc-100 text-cyan-800" in html
+    assert "variant-badge bg-zinc-100 text-amber-800" not in html
     assert ">q32d d256d</span>" in html
     assert "Sparse active dimension cap." in html
     assert "Query max active dims: 32." in html

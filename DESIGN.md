@@ -11,19 +11,19 @@ colors:
   light:
     bg: "#f7fdff"
     surface: "#ffffff"
-    surface-muted: "#e9f5f8"
-    surface-faint: "#f2fbfd"
-    border: "#bedbe3"
+    surface-muted: "#e0f1f5"
+    surface-faint: "#edf8fb"
+    border: "#a9ccd6"
     border-strong: "#85bdcc"
     text: "#243036"
-    text-muted: "#637078"
-    text-faint: "#87949a"
+    text-muted: "#52626b"
+    text-faint: "#6f7f87"
     accent: "#0077aa"
     accent-strong: "#005f88"
     accent-soft: "rgb(0 119 170 / 0.10)"
-    control-bg: "#edf8fb"
-    control-hover: "#e4f3f7"
-    control-active: "#d9eef4"
+    control-bg: "#e3f2f6"
+    control-hover: "#d5eaf0"
+    control-active: "#c3e0e9"
     warn-bg: "#fff6df"
     warn-text: "#a96b00"
     danger: "#ff5888"
@@ -84,8 +84,12 @@ spacing:
   xl: 32px
 components:
   app-header:
-    purpose: Brand, current mode, docs, and theme toggle.
-    treatment: Compact horizontal row; controls stay on the right.
+    purpose: Brand, repository link, docs, and theme toggle.
+    treatment: Compact horizontal row; title and right-side controls share the
+      same vertical center line. The title uses the same body-scale typography,
+      color, weight, and font family as the short product description below it.
+      The brand mark is a single-color inline SVG that follows the same
+      stroke-based icon style as header actions.
   leaderboard-configuration:
     purpose: Select evaluation mode, benchmark scope, metrics, task facets, display,
       variants, and filters.
@@ -96,7 +100,18 @@ components:
     treatment: Rounded low-contrast fill by default; subtle hover; clearer active fill.
   help-modal:
     purpose: Explain technical controls without adding permanent copy to the page.
-    treatment: Modal header uses the target concept name, not generic "Help".
+    treatment: Shared `.hakari-modal` shell on surface color with a strong border,
+      soft shadow, and a blurred dimmed backdrop. The header pairs a small accent
+      icon with the target concept name (not generic "Help"); the close control is
+      a quiet ghost chip. Body uses a stronger lead line over muted detail text.
+      Help, benchmark-doc summary, and model-detail dialogs all reuse this shell.
+  docs-page:
+    purpose: Standalone benchmark and task documentation rendered from Markdown.
+    treatment: Shares the leaderboard chrome (brand mark linking home, GitHub link,
+      theme toggle) and loads viewer.js so theme choice persists. Article sits on a
+      surface card; tables get a header row, light row striping, and a rounded
+      border; inline code reads as a subtle chip. The index lists groups as a
+      two-column grid of clickable cards with three-line clamped summaries.
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
@@ -163,6 +178,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep clickable-but-secondary controls visible without shouting. Default
   button fills should read as actionable, while active state should be clearly
   stronger.
+- Light-mode controls need a distinct visual step from panel backgrounds:
+  default controls should be visibly clickable, and active controls should read
+  one level stronger without adding hard borders.
 - Prefer surface color and background tint over hard borders. Borders are useful
   for the table and precision controls, but panel chrome should stay quiet.
 - Use green/emerald heat colors for strong positive score cells and rose/red for
@@ -177,11 +195,14 @@ read as an analytical instrument rather than a general-purpose dashboard.
   change. The table density depends on predictable text metrics.
 - Use the monospaced stack for model names, task names, scores, labels, and
   compact controls. This supports scanning and numeric comparison.
+- Table headers use a compact 11px regular weight. Standard columns and
+  multi-line task columns should keep the same size, color, and weight so
+  benchmark/task or benchmark/language labels scan as one label.
 - Use `font-variant-numeric: tabular-nums` for ranks, scores, z-scores, counts,
   dimensions, dates, and parameter values.
 - Keep letter spacing at 0. Do not use negative tracking for this viewer.
-- Avoid hero-scale text. Even the page title should remain compact because the
-  leaderboard table is the main content.
+- Avoid hero-scale text. The page title should match the product description's
+  compact text treatment because the leaderboard table is the main content.
 
 ## Layout Principles
 
@@ -197,6 +218,13 @@ read as an analytical instrument rather than a general-purpose dashboard.
   parallel and compact, such as Table display and Efficiency variants.
 - Benchmark scope should keep all Nano suite choices visible on desktop.
   Collapsing them hides the primary navigation model.
+- Keep the configuration panel vertically tight so the leaderboard reaches the
+  first screen. Prefer small, consistent section padding and gaps over generous
+  spacing; do not buy compactness by hiding suite choices or shrinking control
+  hit targets below a comfortable size.
+- Keep the page top chrome tight: the brand row should sit close to the viewport
+  top, and intro/status copy should use compact margins and padding so the
+  leaderboard remains the first meaningful surface.
 - Use help modals rather than permanent explanatory copy for technical controls.
   The control area should remain compact.
 - Avoid nested cards. Sections should be low-border surfaces or full-width
@@ -208,12 +236,25 @@ read as an analytical instrument rather than a general-purpose dashboard.
   background fill, rounded radius, and enough padding to create a stable target.
 - Active controls should use the stronger active surface and accent text or
   border.
+- Boolean display and variant toggles (Task columns, STD, Task ranks, Dims,
+  Quantization, Rescore, Sparse pruning) use the `.toggle-chip` style: a control
+  chip whose checked state adopts the active surface and accent text, matching the
+  selection chips rather than a raw native checkbox. Keep the real checkbox for
+  form submission and focus, visually hidden, with a visible focus ring on the
+  chip.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
   such as All/Core/Group or Safeguard positives.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
+- In Refine results, Params sits above Length and uses compact numeric inputs
+  in millions for Active Params and Total Params bounds.
+- Keep the HAKARI-Bench brand mark as a simple single-color balance icon with
+  `currentColor` stroke so it can inherit the viewer accent color in both
+  themes.
+- Use a separate white SVG for the browser favicon, while keeping the in-page
+  brand mark theme-aware.
 - Loading indicators should be animated but small. Initial page loading can be
   centered and spacious; incremental loading should stay in the corner or near
   the affected control.
@@ -232,11 +273,54 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Model and task text filters should document multi-keyword matching. For
   example, `jina bge` matches rows containing either `jina` or `bge`; task
   filters work similarly, and short task names such as `nq` must be supported.
+- All in-page dialogs (help, benchmark-doc summary, model detail) share the
+  `.hakari-modal` shell so they read as one component family in both themes. Use
+  surface background, a strong border, a soft shadow, and a blurred dimmed
+  backdrop. Keep an accent icon beside the header concept name and a quiet ghost
+  close chip. Because viewer.js sets dialog text with `textContent`, keep the
+  scripted id on an inner `<span>` so the static header icon survives updates.
+
+## Documentation Pages
+
+- The standalone `/docs` pages are part of the product, not a separate site:
+  reuse the leaderboard chrome so they feel continuous.
+- Give every docs page the same header: brand mark linking back to the
+  leaderboard, GitHub link, and theme toggle. Load viewer.js so the stored theme
+  applies and the toggle works; do not rely on inline scripts because the page
+  CSP forbids them.
+- Keep both themes intentional here too. Docs colors come from the same tokens as
+  the leaderboard; never let docs fall back to a fixed light palette.
+- Render documentation tables with a distinct header row, light row striping, and
+  a rounded border so dense metadata stays scannable. Inline code should read as a
+  subtle bordered chip, and code blocks use the faint code background.
+- The docs index is a two-column grid of clickable cards. Clamp group summaries
+  to a few lines so the index stays short and comparable; the full text lives on
+  the group page.
 
 ## Leaderboard Table
 
 - The table is the primary interface. Optimize it before optimizing surrounding
   chrome.
+- The first column is a leading display-order rank (1, 2, 3 ...) shown before the
+  model name, with an empty header. It numbers the visible rows in the current
+  sort order. Because this leading rank already communicates standing, the table
+  does not carry separate Borda or Mean rank columns; the default sort is Borda
+  Score (descending) and that column is the visible sort anchor. The rank index
+  pins to the left alongside the model column; hidden/filtered rows are skipped so
+  the numbers stay contiguous.
+- Scroll axes are split: vertical scrolling is the browser/page, horizontal
+  scrolling stays inside the table via an `overflow-x: auto` wrapper. This keeps
+  the surrounding chrome (config panel, footer) fixed while only the table pans
+  horizontally. The rank-index and model columns pin to the left during that
+  horizontal scroll.
+- On page scroll, a JS-driven floating header (viewer.js) pins a copy of the
+  column-header row to the viewport top. It mirrors the table's internal
+  horizontal scroll and column widths and keeps the rank-index and model columns
+  pinned left; it is read-only (`pointer-events: none`) to avoid duplicate
+  controls. This is necessary because the horizontal `overflow` wrapper also
+  becomes the vertical scroll context, so pure CSS sticky cannot pin the header on
+  page scroll. Do not "fix" this by removing the horizontal wrapper — that makes a
+  wide table scroll the whole page and drags the footer/chrome off-screen.
 - Keep model name sticky and readable during horizontal scroll.
 - Keep task columns compact. Repeated suite prefixes may be removed from the
   subtask line when the remaining label is non-empty.
@@ -256,6 +340,10 @@ read as an analytical instrument rather than a general-purpose dashboard.
 ## Score Cells
 
 - Score cells must remain compact and numerically aligned.
+- Standing is shown only by the leading rank-index column, not by dedicated Borda
+  or Mean rank columns. Keep Borda Score as the visible, default-sorted aggregate.
+- Do not show the Tasks column in the leaderboard table. Keep task counts
+  available in CSV export.
 - When only task ranks are shown, render ranks plainly like Borda rank values.
 - When z-score and task rank are both shown, keep rank and score inside the same
   cell without changing the score's perceived font size. The z-score should stay
@@ -264,12 +352,26 @@ read as an analytical instrument rather than a general-purpose dashboard.
   and it improves comparison. Avoid decorative rank badges.
 - Positive z-score in light mode should read as green but not saturated enough
   to dominate the table.
+- The light-mode heat ramp must keep a clear green (positive) or red (negative)
+  hue across its whole range. Increase darkness with magnitude for emphasis, but
+  the strongest cells must still read as colored, not collapse to near-black —
+  otherwise the best and worst results lose their signal exactly where it matters.
+- Light-mode z-score colors should be dark enough to remain legible at compact
+  table font sizes because STD uses text color without a filled background.
+- STD/z-score display should not use filled backgrounds or borders. Preserve a
+  stable numeric width, and express positive/negative strength through the text
+  color of the score and sigma string.
 
 ## Variant Labels
 
 - Keep row metadata short. Prefer `Dims`, `Quant`, `Rescore`, and
   `Sparse pruning` over longer technical labels when the displayed values are
   compact.
+- Model type, dimension, variant, and quantization labels use the same
+  semi-transparent active-control background so light-mode labels stay visible
+  against both white and faint-cyan table rows. Dimension and variant labels
+  keep the accent-blue text treatment, and all of these labels stay borderless
+  so they read as metadata rather than separate controls.
 - Sparse active-dimension variants should use short labels such as `q16d` and
   `d256d`, with the full setting and explanation in help or model detail UI.
 - CSV export may include longer descriptive fields such as Variant Label and
