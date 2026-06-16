@@ -158,6 +158,7 @@ uv run hakari-bench evaluate dense \
 Applies to:
 
 - `Qwen/Qwen3-Embedding-0.6B`
+- `Qwen/Qwen3-Embedding-4B`
 
 Use the Sentence Transformers prompt configuration:
 
@@ -181,11 +182,26 @@ uv run hakari-bench evaluate dense \
   --document-prompt-name document
 ```
 
+When evaluating `Qwen/Qwen3-Embedding-4B` through TEI or another API backend
+that does not load the Sentence Transformers prompt registry, pass the prompt
+strings explicitly. Use the query instruction and no document prefix:
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model Qwen/Qwen3-Embedding-4B \
+  --query-prompt $'Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:' \
+  --document-prompt ''
+```
+
 Truncation notes:
 
 - The model supports user-defined embedding dimensions from 32 to 1024.
 - Use `--embedding-variant truncate:768,512,256,128,64,32` when measuring
-  dimensional trade-offs.
+  dimensional trade-offs for `Qwen/Qwen3-Embedding-0.6B`.
+- `Qwen/Qwen3-Embedding-4B` supports user-defined embedding dimensions from 32
+  to 2560.
+- Use `--embedding-variant truncate:2048,1536,1024,768,512,256,128,64,32`
+  when measuring dimensional trade-offs for `Qwen/Qwen3-Embedding-4B`.
 
 ## Google EmbeddingGemma
 

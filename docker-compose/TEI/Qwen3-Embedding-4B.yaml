@@ -1,0 +1,93 @@
+x-tei-qwen3-embedding-4b-base: &tei-qwen3-embedding-4b-base
+  image: ghcr.io/huggingface/text-embeddings-inference:120-1.9
+  restart: unless-stopped
+  volumes:
+    - tei-model-cache:/data
+  command:
+    - --dtype
+    - float16
+    - --model-id
+    - Qwen/Qwen3-Embedding-4B
+    - --max-batch-tokens
+    - "40960"
+    - --max-client-batch-size
+    - "128"
+    - --payload-limit
+    - "64000000"
+
+services:
+  # 1 GPU configuration (enabled).
+  tei-qwen3-embedding-4b:
+    <<: *tei-qwen3-embedding-4b-base
+    container_name: tei-qwen3-embedding-4b
+    ports:
+      - "8080:80"
+    environment:
+      HUGGING_FACE_HUB_CACHE: /data
+      HUGGINGFACE_HUB_CACHE: /data
+      # The selected physical GPU is re-indexed to cuda:0 inside the container.
+      CUDA_VISIBLE_DEVICES: "0"
+      NVIDIA_VISIBLE_DEVICES: "0"
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids:
+                - "0"
+              capabilities:
+                - gpu
+
+  # 2 GPU configuration (disabled).
+  # TEI 1.9 does not expose a tensor-parallel shard option for this backend, so
+  # run one TEI process per GPU and choose the endpoint at the client side.
+  #
+  # tei-qwen3-embedding-4b-gpu0:
+  #   <<: *tei-qwen3-embedding-4b-base
+  #   container_name: tei-qwen3-embedding-4b-gpu0
+  #   ports:
+  #     - "8093:80"
+  #   environment:
+  #     HUGGING_FACE_HUB_CACHE: /data
+  #     HUGGINGFACE_HUB_CACHE: /data
+  #     # The selected physical GPU is re-indexed to cuda:0 inside the container.
+  #     CUDA_VISIBLE_DEVICES: "0"
+  #     NVIDIA_VISIBLE_DEVICES: "0"
+  #     NVIDIA_DRIVER_CAPABILITIES: compute,utility
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             device_ids:
+  #               - "0"
+  #             capabilities:
+  #               - gpu
+  #
+  # tei-qwen3-embedding-4b-gpu1:
+  #   <<: *tei-qwen3-embedding-4b-base
+  #   container_name: tei-qwen3-embedding-4b-gpu1
+  #   ports:
+  #     - "8094:80"
+  #   environment:
+  #     HUGGING_FACE_HUB_CACHE: /data
+  #     HUGGINGFACE_HUB_CACHE: /data
+  #     # The selected physical GPU is re-indexed to cuda:0 inside the container.
+  #     CUDA_VISIBLE_DEVICES: "0"
+  #     NVIDIA_VISIBLE_DEVICES: "1"
+  #     NVIDIA_DRIVER_CAPABILITIES: compute,utility
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             device_ids:
+  #               - "1"
+  #             capabilities:
+  #               - gpu
+
+volumes:
+  tei-model-cache:
+    external: true
+    name: tei-ruri-bge_tei-reranker-data
