@@ -21,11 +21,14 @@ DEFAULT_RESULTS_REPO_ID = "hakari-bench/results"
 DEFAULT_CACHE_ROOT = Path.home() / ".cache" / "hakari-bench" / "hf-datasets"
 DEFAULT_RESULTS_SUBDIR = "hakari-results"
 DEFAULT_DUCKDB_NAME = "hakari_bench.duckdb"
+DEFAULT_CLEAN_DUCKDB_ROOT = Path("output/clean-hf-results-duckdb")
 BM25_BASELINE_MODEL_ID = "bm25"
 TASK_METADATA_ROOT = Path("task_docs/metadata")
 EvaluationScopeChoice = Literal["standard", "all"]
-SyncBackend = Literal["git", "snapshot"]
+SyncBackend = Literal["git", "snapshot", "xet"]
 SNAPSHOT_CACHE_MARKER = ".hakari_bench_snapshot_cache"
+LFS_SKIP_SMUDGE_ENV = {"GIT_LFS_SKIP_SMUDGE": "1"}
+XET_ENV = {"HF_XET_HIGH_PERFORMANCE": "1"}
 
 
 @dataclass(frozen=True)
@@ -67,10 +70,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--repo-id", default=DEFAULT_RESULTS_REPO_ID, help="Hugging Face dataset repo id.")
     parser.add_argument(
         "--sync-backend",
-        choices=["git", "snapshot"],
+        choices=["git", "snapshot", "xet"],
         default="git",
         help=(
             "How to sync the Hugging Face dataset repo. 'git' uses a git/LFS checkout. "
+            "'xet' uses a git checkout with git-xet as the Git LFS transfer agent. "
             "'snapshot' uses huggingface_hub.snapshot_download(), which can use hf_xet."
         ),
     )
@@ -119,7 +123,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--no-xet-high-performance",
         dest="xet_high_performance",
         action="store_false",
-        help="Do not set HF_XET_HIGH_PERFORMANCE=1 for snapshot downloads.",
+        help="Do not set HF_XET_HIGH_PERFORMANCE=1 for git-xet or snapshot downloads.",
     )
     parser.set_defaults(xet_high_performance=True)
     bm25_materialization = parser.add_mutually_exclusive_group()
@@ -191,7 +195,7 @@ def resolve_plan(args: argparse.Namespace) -> SyncRebuildPlan:
     sync_backend = cast(SyncBackend, args.sync_backend)
     repo_dir = args.repo_dir or _default_repo_dir(args.cache_root, args.repo_id, sync_backend=sync_backend)
     results_dir = repo_dir / args.results_subdir
-    duckdb_path = args.duckdb_path or results_dir / DEFAULT_DUCKDB_NAME
+    duckdb_path = args.duckdb_path or _default_duckdb_path(repo_dir)
     return SyncRebuildPlan(
         repo_id=args.repo_id,
         repo_dir=repo_dir,
@@ -228,15 +232,38 @@ def sync_repo(plan: SyncRebuildPlan) -> None:
     if plan.sync_backend == "snapshot":
         _sync_snapshot_repo(plan)
         return
+    _sync_git_repo(plan)
+
+
+def _sync_git_repo(plan: SyncRebuildPlan) -> None:
     if (plan.repo_dir / ".git").is_dir():
-        _run(_git_command(["-C", str(plan.repo_dir), "pull", "--ff-only", "origin", plan.revision]))
+        _run_git_without_lfs_smudge(["-C", str(plan.repo_dir), "fetch", "origin", plan.revision])
+        _run_git_without_lfs_smudge(["-C", str(plan.repo_dir), "reset", "--hard", "FETCH_HEAD"])
     else:
         plan.repo_dir.parent.mkdir(parents=True, exist_ok=True)
-        _run(_git_command(["clone", _hf_dataset_git_url(plan.repo_id), str(plan.repo_dir)]))
+        _run_git_without_lfs_smudge(["clone", _hf_dataset_git_url(plan.repo_id), str(plan.repo_dir)])
         if plan.revision != "main":
-            _run(_git_command(["-C", str(plan.repo_dir), "checkout", plan.revision]))
+            _run_git_without_lfs_smudge(["-C", str(plan.repo_dir), "checkout", plan.revision])
+        _run_git_without_lfs_smudge(["-C", str(plan.repo_dir), "reset", "--hard", "HEAD"])
+    if plan.sync_backend == "xet":
+        _install_git_xet_transfer(plan)
+    _run(_git_command(["-C", str(plan.repo_dir), "clean", "-fdx"]))
     if not plan.skip_lfs_pull:
-        _run(_git_command(["-C", str(plan.repo_dir), "lfs", "pull"]))
+        _run(
+            _git_command(
+                [
+                    "-C",
+                    str(plan.repo_dir),
+                    "lfs",
+                    "pull",
+                    "--include",
+                    f"{plan.results_subdir}/**",
+                    "--exclude",
+                    "",
+                ]
+            ),
+            env=_xet_env(plan) if plan.sync_backend == "xet" else None,
+        )
 
 
 def _sync_snapshot_repo(plan: SyncRebuildPlan) -> None:
@@ -506,8 +533,12 @@ def _validate_bm25_materialization_args(args: argparse.Namespace) -> None:
 
 
 def _default_repo_dir(cache_root: Path, repo_id: str, *, sync_backend: SyncBackend = "git") -> Path:
-    suffix = "" if sync_backend == "git" else "__snapshot"
+    suffix = "" if sync_backend == "git" else f"__{sync_backend}"
     return cache_root / f"{repo_id.replace('/', '__')}{suffix}"
+
+
+def _default_duckdb_path(repo_dir: Path) -> Path:
+    return DEFAULT_CLEAN_DUCKDB_ROOT / repo_dir.name / DEFAULT_DUCKDB_NAME
 
 
 def _hf_dataset_git_url(repo_id: str) -> str:
@@ -525,14 +556,27 @@ def _git_command(args: list[str]) -> list[str]:
     return ["git", "-c", f"credential.helper={helper}", *args]
 
 
+def _run_git_without_lfs_smudge(args: list[str]) -> None:
+    _run(_git_command(args), env=LFS_SKIP_SMUDGE_ENV)
+
+
+def _install_git_xet_transfer(plan: SyncRebuildPlan) -> None:
+    _run(["git", "xet", "install", "--local", "--path", str(plan.repo_dir)], env=_xet_env(plan))
+
+
+def _xet_env(plan: SyncRebuildPlan) -> dict[str, str] | None:
+    return XET_ENV if plan.xet_high_performance else None
+
+
 def _ensure_hf_auth() -> None:
     _run([str(Path(sys.executable).with_name("hf")), "auth", "whoami"])
 
 
-def _run(command: list[str]) -> None:
+def _run(command: list[str], *, env: dict[str, str] | None = None) -> None:
     printable = " ".join(command)
     print(f"+ {printable}", flush=True)
-    subprocess.run(command, check=True)
+    merged_env = None if env is None else {**os.environ, **env}
+    subprocess.run(command, check=True, env=merged_env)
 
 
 def main() -> None:

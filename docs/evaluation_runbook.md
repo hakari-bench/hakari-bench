@@ -224,27 +224,39 @@ when refreshing the published leaderboard data.
 Use the helper for the standard path:
 
 ```bash
-uv run python scripts/sync_remote_results_and_rebuild.py
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend xet
 ```
 
 By default, this does the following:
 
-1. Clones or fast-forwards
-   `https://huggingface.co/datasets/hakari-bench/results` at
-   `~/.cache/hakari-bench/hf-datasets/hakari-bench__results`.
-2. Runs `git lfs pull` so the latest `.json.xz` payloads are present locally.
-3. Rebuilds the DuckDB from the synced Hugging Face result JSON only:
+1. Keeps a git checkout of `https://huggingface.co/datasets/hakari-bench/results`
+   at `~/.cache/hakari-bench/hf-datasets/hakari-bench__results__xet`.
+2. Fetches the requested revision with LFS smudge disabled, resets the checkout
+   with `git reset --hard FETCH_HEAD`, then runs
+   `git xet install --local --path ...` so Git LFS can use the Xet transfer
+   agent for Xet-backed payloads.
+3. Removes untracked/stale files with `git clean -fdx`, then runs
+   `git lfs pull --include hakari-results/** --exclude ''`. Git LFS/Xet reuses
+   existing local cache objects and downloads only missing payloads for the
+   requested revision.
+4. Rebuilds the DuckDB from the synced Hugging Face result JSON only:
 
    ```bash
    uv run python scripts/build_results_database_and_report.py \
-     --results-dir ~/.cache/hakari-bench/hf-datasets/hakari-bench__results/hakari-results \
-     --duckdb-path ~/.cache/hakari-bench/hf-datasets/hakari-bench__results/hakari-results/hakari_bench.duckdb
+     --results-dir ~/.cache/hakari-bench/hf-datasets/hakari-bench__results__xet/hakari-results \
+     --duckdb-path output/clean-hf-results-duckdb/hakari-bench__results__xet/hakari_bench.duckdb
    ```
 
 The dataset repo is private, so authenticate before syncing, for example with
 `hf auth login` or a configured Hugging Face git credential. If the checkout
-already exists and you only want to rebuild from local files, pass
-`--skip-git-sync`.
+already exists and you only want to rebuild from local files without refreshing
+or cleaning it, pass `--skip-git-sync`.
+
+The default DuckDB path is outside the cached dataset checkout:
+`output/clean-hf-results-duckdb/{checkout-name}/hakari_bench.duckdb`. This keeps
+the Hugging Face results checkout git-clean after a rebuild while making clear
+that the database was rebuilt from the clean synced result JSON.
 
 The helper does not generate missing BM25 baseline JSON by default. If you need
 to backfill `hakari-results/bm25/**/*.json.xz` from local
@@ -253,23 +265,35 @@ to backfill `hakari-results/bm25/**/*.json.xz` from local
 `candidate_subsets.bm25` scores; it does not load candidate parquet files, run
 `evaluate bm25`, or recompute BM25 with `bm25s`.
 
-The helper also supports a Hugging Face Hub snapshot backend:
+The helper also supports the older `snapshot` backend name:
 
 ```bash
 uv run python scripts/sync_remote_results_and_rebuild.py \
   --sync-backend snapshot
 ```
 
-This uses `huggingface_hub.snapshot_download()` and can use `hf_xet` when the
-`hf_xet` package or `git-xet` integration is available. The default snapshot
-cache is separate from the git/LFS checkout:
+This uses `huggingface_hub.snapshot_download()` instead of git commands. The
+default snapshot cache is separate from the git/LFS and named Xet checkouts:
 `~/.cache/hakari-bench/hf-datasets/hakari-bench__results__snapshot`. The helper
 cleans this managed directory by default before downloading so files deleted
 from the remote dataset do not remain locally. Use `--no-snapshot-clean` only
 when intentionally resuming or reusing an incomplete local snapshot. Tune
 parallelism with `--snapshot-max-workers`; the default is `32`. The helper sets
-`HF_XET_HIGH_PERFORMANCE=1` for snapshot downloads unless
+`HF_XET_HIGH_PERFORMANCE=1` for git-xet and snapshot downloads unless
 `--no-xet-high-performance` is passed.
+
+Use the git/LFS backend only when you specifically need a git checkout:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend git
+```
+
+The plain git backend fetches the requested revision with LFS smudge disabled, runs
+`git reset --hard FETCH_HEAD`, removes stale untracked files with
+`git clean -fdx`, then runs
+`git lfs pull --include hakari-results/** --exclude ''` without first running
+`git xet install`. Existing LFS objects are reused from the local git/LFS cache.
 
 Useful variants:
 

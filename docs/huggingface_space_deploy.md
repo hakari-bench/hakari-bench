@@ -84,8 +84,20 @@ refreshed:
 7. Verify both public URLs and compare CSV output when possible.
 
 The result sync helper can build the DuckDB directly from the private results
-dataset. The snapshot backend uses `huggingface_hub.snapshot_download()` and
-can use `hf_xet` when available:
+dataset. Prefer the Xet backend for the large result dataset; it uses
+a git checkout with `git xet install --local`, reuses the local Git LFS/Xet
+cache, and rebuilds from that clean checkout:
+
+```bash
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend xet
+```
+
+The rebuilt clean DuckDB is written under
+`output/clean-hf-results-duckdb/hakari-bench__results__xet/hakari_bench.duckdb`
+by default, outside the cached results checkout.
+
+The `snapshot` backend uses the Hub snapshot path instead of git commands:
 
 ```bash
 uv run python scripts/sync_remote_results_and_rebuild.py \

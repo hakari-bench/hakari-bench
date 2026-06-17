@@ -185,6 +185,22 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 - DuckDB builds default to streaming result rows into DuckDB. Use
   `--materialize-results-in-python` only for the legacy materialized path or
   `--html-output` when a static HTML report is required.
+- When rebuilding the canonical leaderboard DuckDB from the latest Hugging Face
+  dataset results, use `scripts/sync_remote_results_and_rebuild.py` instead of
+  pointing the builder at ad hoc local result directories. Prefer
+  `--sync-backend xet` for the large Hugging Face results dataset; it keeps a
+  git checkout under
+  `~/.cache/hakari-bench/hf-datasets/hakari-bench__results__xet`, fetches with
+  LFS smudge disabled, runs `git reset --hard FETCH_HEAD`, installs the local
+  Git Xet transfer agent with `git xet install --local --path ...`, removes
+  stale untracked files with `git clean -fdx`, and pulls only
+  `hakari-results/**` LFS payloads. Existing local Git LFS/Xet cache objects
+  should be reused. The rebuilt DuckDB should be written outside the checkout
+  under `output/clean-hf-results-duckdb/{checkout-name}/hakari_bench.duckdb` so
+  the cached Hugging Face results repo remains git-clean. The plain `git`
+  backend remains available when Git Xet must not be installed. Use
+  `--skip-git-sync` only when intentionally rebuilding from the existing local
+  cache without cleaning or syncing.
 - Use `--append-results-dir` when adding a separate root containing only new
   model-task JSON to an existing DuckDB. This mode is append-only and should
   reject duplicate result paths or duplicate logical model-task rows.

@@ -108,27 +108,34 @@ uv run python scripts/build_results_database_and_report.py \
 To refresh the canonical remote result JSON first, run:
 
 ```bash
-uv run python scripts/sync_remote_results_and_rebuild.py
+uv run python scripts/sync_remote_results_and_rebuild.py \
+  --sync-backend xet
 ```
 
-That helper clones or fast-forwards the private Hugging Face results dataset,
-runs `git lfs pull`, and rebuilds the DuckDB from the synced result JSON. It
-does not generate missing BM25 baseline JSON by default, run a BM25 evaluation,
-or recompute BM25 with `bm25s`. See
+That helper syncs the private Hugging Face results dataset into
+`~/.cache/hakari-bench/hf-datasets/hakari-bench__results__xet` as a git
+checkout, runs `git xet install --local` in that checkout, then pulls only
+`hakari-results/**` through Git LFS using the Xet transfer agent when the remote
+supports it. Existing local Xet/LFS cache objects are reused and only missing
+payloads for the requested revision are downloaded. The plain `git` backend
+remains available for normal git/LFS checkouts and also disables LFS smudge
+during reset before pulling only `hakari-results/**`. The helper does not
+generate missing BM25 baseline JSON by default, run a BM25 evaluation, or
+recompute BM25 with `bm25s`. The rebuilt clean DuckDB is written outside the
+checkout under `output/clean-hf-results-duckdb/` so the cached dataset repo can
+remain git-clean. See
 [`docs/evaluation_runbook.md`](docs/evaluation_runbook.md) for the detailed
 sync/rebuild workflow.
 
-For a Hugging Face Hub snapshot download path, use:
+For the older snapshot backend name, use:
 
 ```bash
 uv run python scripts/sync_remote_results_and_rebuild.py \
   --sync-backend snapshot
 ```
 
-The snapshot backend uses `huggingface_hub.snapshot_download()` and can use
-`hf_xet` when available. It stores files in a separate managed cache directory
-ending in `__snapshot`, cleans that directory by default so upstream deletions
-are reflected locally, then rebuilds the DuckDB from the synced result JSON.
+The `snapshot` backend uses `huggingface_hub.snapshot_download()` and stores
+files in a separate managed cache directory ending in `__snapshot`.
 
 To merge historical or separate result roots, repeat `--results-dir` in
 priority order. If the same model-task JSON exists in more than one root, the

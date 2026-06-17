@@ -18,7 +18,7 @@ def test_resolve_plan_defaults_to_cached_huggingface_results_repo(tmp_path: Path
     assert plan.repo_id == "hakari-bench/results"
     assert plan.repo_dir == tmp_path / "hakari-bench__results"
     assert plan.results_dir == tmp_path / "hakari-bench__results" / "hakari-results"
-    assert plan.duckdb_path == plan.results_dir / "hakari_bench.duckdb"
+    assert plan.duckdb_path == Path("output/clean-hf-results-duckdb/hakari-bench__results/hakari_bench.duckdb")
     assert plan.materialize_bm25_baseline_from_metadata is False
     assert plan.sync_backend == "git"
 
@@ -72,6 +72,18 @@ def test_resolve_plan_snapshot_backend_uses_separate_managed_cache(tmp_path: Pat
     assert plan.xet_high_performance is True
 
 
+def test_resolve_plan_xet_backend_uses_named_git_checkout_cache(tmp_path: Path) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(["--cache-root", str(tmp_path), "--sync-backend", "xet"])
+
+    plan = sync_rebuild.resolve_plan(args)
+
+    assert plan.sync_backend == "xet"
+    assert plan.repo_dir == tmp_path / "hakari-bench__results__xet"
+    assert plan.results_dir == plan.repo_dir / "hakari-results"
+    assert plan.duckdb_path == Path("output/clean-hf-results-duckdb/hakari-bench__results__xet/hakari_bench.duckdb")
+    assert plan.xet_high_performance is True
+
+
 def test_prepare_snapshot_local_dir_refuses_unmanaged_directory(tmp_path: Path) -> None:
     repo_dir = tmp_path / "snapshot"
     repo_dir.mkdir()
@@ -121,6 +133,94 @@ def test_sync_snapshot_repo_downloads_results_with_xet_env(
     ]
     assert (plan.repo_dir / sync_rebuild.SNAPSHOT_CACHE_MARKER).exists()
     assert __import__("os").environ["HF_XET_HIGH_PERFORMANCE"] == "1"
+
+
+def test_sync_xet_repo_uses_git_checkout_with_git_xet_transfer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(
+        ["--cache-root", str(tmp_path), "--sync-backend", "xet", "--revision", "main"]
+    )
+    plan = sync_rebuild.resolve_plan(args)
+    (plan.repo_dir / ".git").mkdir(parents=True)
+    calls: list[tuple[list[str], dict[str, str] | None]] = []
+
+    def fake_run(command: list[str], env: dict[str, str] | None = None) -> None:
+        calls.append((command, env))
+
+    monkeypatch.delenv("HF_XET_HIGH_PERFORMANCE", raising=False)
+    monkeypatch.setattr(sync_rebuild, "_ensure_hf_auth", lambda: None)
+    monkeypatch.setattr(sync_rebuild, "_run", fake_run)
+
+    sync_rebuild.sync_repo(plan)
+
+    assert calls == [
+        (
+            sync_rebuild._git_command(["-C", str(plan.repo_dir), "fetch", "origin", "main"]),
+            sync_rebuild.LFS_SKIP_SMUDGE_ENV,
+        ),
+        (
+            sync_rebuild._git_command(["-C", str(plan.repo_dir), "reset", "--hard", "FETCH_HEAD"]),
+            sync_rebuild.LFS_SKIP_SMUDGE_ENV,
+        ),
+        (["git", "xet", "install", "--local", "--path", str(plan.repo_dir)], sync_rebuild.XET_ENV),
+        (sync_rebuild._git_command(["-C", str(plan.repo_dir), "clean", "-fdx"]), None),
+        (
+            sync_rebuild._git_command(
+                ["-C", str(plan.repo_dir), "lfs", "pull", "--include", "hakari-results/**", "--exclude", ""]
+            ),
+            sync_rebuild.XET_ENV,
+        ),
+    ]
+
+
+def test_sync_git_repo_resets_existing_checkout_to_clean_remote_revision(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(["--cache-root", str(tmp_path), "--revision", "main"])
+    plan = sync_rebuild.resolve_plan(args)
+    (plan.repo_dir / ".git").mkdir(parents=True)
+    calls: list[tuple[list[str], dict[str, str] | None]] = []
+
+    def fake_run(command: list[str], env: dict[str, str] | None = None) -> None:
+        calls.append((command, env))
+
+    monkeypatch.setattr(sync_rebuild, "_ensure_hf_auth", lambda: None)
+    monkeypatch.setattr(sync_rebuild, "_run", fake_run)
+
+    sync_rebuild.sync_repo(plan)
+
+    assert calls == [
+        (
+            sync_rebuild._git_command(["-C", str(plan.repo_dir), "fetch", "origin", "main"]),
+            sync_rebuild.LFS_SKIP_SMUDGE_ENV,
+        ),
+        (
+            sync_rebuild._git_command(["-C", str(plan.repo_dir), "reset", "--hard", "FETCH_HEAD"]),
+            sync_rebuild.LFS_SKIP_SMUDGE_ENV,
+        ),
+        (sync_rebuild._git_command(["-C", str(plan.repo_dir), "clean", "-fdx"]), None),
+        (
+            sync_rebuild._git_command(
+                ["-C", str(plan.repo_dir), "lfs", "pull", "--include", "hakari-results/**", "--exclude", ""]
+            ),
+            None,
+        ),
+    ]
+
+
+def test_sync_git_repo_skip_sync_does_not_clean_existing_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    args = sync_rebuild.build_arg_parser().parse_args(["--cache-root", str(tmp_path), "--skip-git-sync"])
+    plan = sync_rebuild.resolve_plan(args)
+    calls: list[list[str]] = []
+
+    monkeypatch.setattr(sync_rebuild, "_run", lambda command: calls.append(command))
+
+    sync_rebuild.sync_repo(plan)
+
+    assert calls == []
 
 
 def test_materialize_bm25_baseline_uses_task_metadata(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
