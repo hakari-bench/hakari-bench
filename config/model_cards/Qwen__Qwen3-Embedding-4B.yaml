@@ -24,6 +24,14 @@ parameters:
   input_embedding: 388262400
   active: 3633511936
 embedding:
+  output_dimension: 2560
+  user_defined_output_dimensions:
+    min: 32
+    max: 2560
+  mrl_support: true
+  pooling: last_token
+  normalize: true
+  include_prompt: true
   truncate_dims:
   - 32
   - 64
@@ -35,7 +43,7 @@ embedding:
   - 1536
   - 2048
 runtime:
-  max_seq_length: 40960
+  max_seq_length: 32768
   dtype: bf16
   trust_remote_code: false
   attn_implementation: flash_attention_2
@@ -110,3 +118,13 @@ target:
   - hakari-bench/NanoRTEB
   - hakari-bench/NanoRuMTEB
   - hakari-bench/NanoVNMTEB
+notes:
+- The Hugging Face config has max_position_embeddings 40960 from the Qwen3 base
+  architecture, but the Qwen3-Embedding-4B model overview documents 32k as the
+  embedding model context length; the model card uses 32768 for evaluation.
+- Qwen documents user-defined output dimensions from 32 to 2560 with MRL
+  support. HAKARI evaluates sub-full truncation dimensions and keeps the
+  2560-dimensional output as the base embedding row.
+- Sentence Transformers metadata defines the query prompt name as `query`, the
+  document prompt name as `document`, cosine similarity, last-token pooling, and
+  output normalization.

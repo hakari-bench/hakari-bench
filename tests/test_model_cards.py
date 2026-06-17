@@ -455,6 +455,37 @@ def test_static_model_card_language_support_keeps_most_rerankers_english_only() 
         assert "languages" not in cards[model_id]["language_support"]
 
 
+def test_static_qwen3_embedding_4b_card_matches_official_embedding_metadata() -> None:
+    card = model_cards.load_model_cards(Path("config/model_cards"))["Qwen/Qwen3-Embedding-4B"]
+
+    assert card["runtime"]["max_seq_length"] == 32768
+    assert card["runtime"]["similarity_fn_name"] == "cosine"
+    assert card["prompts"] == {
+        "query_prompt_name": "query",
+        "document_prompt_name": "document",
+    }
+    assert card["embedding"]["output_dimension"] == 2560
+    assert card["embedding"]["user_defined_output_dimensions"] == {
+        "min": 32,
+        "max": 2560,
+    }
+    assert card["embedding"]["mrl_support"] is True
+    assert card["embedding"]["pooling"] == "last_token"
+    assert card["embedding"]["normalize"] is True
+    assert card["embedding"]["include_prompt"] is True
+    assert card["embedding"]["truncate_dims"] == [
+        32,
+        64,
+        128,
+        256,
+        512,
+        768,
+        1024,
+        1536,
+        2048,
+    ]
+
+
 def _write_result(
     path: Path,
     *,
