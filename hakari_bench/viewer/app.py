@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 import re
 from typing import Iterable, Sequence, TypedDict, cast
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 from pydantic import BaseModel, ConfigDict
 
@@ -62,7 +62,7 @@ from hakari_bench.viewer.state import (
     state_payload,
     task_length_bounds,
 )
-from hakari_bench.viewer.store import LocalDuckDbStore
+from hakari_bench.viewer.store import DuckDbSyncStatus, LocalDuckDbStore
 from hakari_bench.viewer.variant_display import (
     is_sparse_dims_variant_name,
     variant_category,
@@ -276,6 +276,16 @@ def create_app(
             raise HTTPException(status_code=404, detail="Benchmark task documentation not found.")
         return HTMLResponse(render_markdown_page(doc=doc, chrome=_docs_page_chrome()))
 
+    @app.get("/duckdb-sync-status", response_class=HTMLResponse)
+    def duckdb_sync_status(next: str = Query(default="/leaderboard")) -> HTMLResponse:  # noqa: A002
+        status = store.sync_status()
+        if status.state == "idle":
+            status = store.start_background_sync()
+        next_url = _safe_duckdb_sync_next_url(next)
+        if status.state == "ready" and store.path.exists():
+            return HTMLResponse(render_duckdb_sync_complete(next_url=next_url))
+        return HTMLResponse(render_duckdb_sync_progress(status, next_url=next_url))
+
     @app.get("/", response_class=HTMLResponse)
     def index(
         view: str = Query(default=viewer_config.overall.name),
@@ -315,7 +325,7 @@ def create_app(
         doc_len_max: str = Query(default=""),
     ) -> str:
         with timed_operation("viewer.http.request", route="index") as request_timing:
-            store.ensure_current()
+            store.start_background_sync()
             initial_query = normalize_query_state(
                 viewer_config=viewer_config,
                 view=view,
@@ -459,7 +469,6 @@ def create_app(
         doc_len_max: str = Query(default=""),
     ) -> HTMLResponse:
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
-            store.ensure_current()
             state_query = normalize_query_state(
                 viewer_config=viewer_config,
                 view=view,
@@ -498,6 +507,14 @@ def create_app(
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
             )
+            sync_status = store.start_background_sync()
+            if _duckdb_sync_blocks_leaderboard(store, sync_status):
+                return HTMLResponse(
+                    render_duckdb_sync_progress(
+                        sync_status,
+                        next_url=_leaderboard_url(urlencode(state_query, doseq=True)),
+                    )
+                )
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
                 content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)
@@ -597,6 +614,20 @@ def create_app(
             )
 
     return app
+
+
+def _duckdb_sync_blocks_leaderboard(store: LocalDuckDbStore, status: DuckDbSyncStatus) -> bool:
+    if store.location.hf_source is None and store.location.source_path is None:
+        return False
+    if status.state == "error":
+        return not store.path.exists()
+    return status.active or not store.path.exists()
+
+
+def _safe_duckdb_sync_next_url(next_url: str) -> str:
+    if next_url == "/leaderboard" or next_url.startswith("/leaderboard?"):
+        return next_url
+    return "/leaderboard"
 
 
 def _content_security_policy() -> str:
@@ -716,6 +747,74 @@ def render_leaderboard_loading_toast() -> str:
       <span>Loading leaderboard...</span>
     </div>
     """
+
+
+def render_duckdb_sync_progress(status: DuckDbSyncStatus, *, next_url: str) -> str:
+    progress_percent = status.progress_percent
+    progress_value = "" if progress_percent is None else f' value="{progress_percent:.0f}" max="100"'
+    progress_label = _duckdb_sync_progress_label(status)
+    error_html = (
+        f'<p class="mt-1 text-xs text-amber-800 [overflow-wrap:anywhere]">{escape(status.error)}</p>'
+        if status.error
+        else ""
+    )
+    return f"""
+    <div id="duckdb-sync-progress"
+         class="leaderboard-initial-loading duckdb-sync-loading border border-zinc-200 bg-white text-sm font-medium text-zinc-700"
+         role="status" aria-live="polite" aria-atomic="true"
+         hx-get="/duckdb-sync-status?next={quote(next_url, safe='')}"
+         hx-trigger="every 1s"
+         hx-target="#leaderboard-panel"
+         hx-swap="innerHTML">
+      <div class="duckdb-sync-content">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <span>{escape(status.message)}</span>
+        <progress class="duckdb-sync-progress" aria-label="DuckDB download progress"{progress_value}></progress>
+        <span class="duckdb-sync-progress-label text-xs text-zinc-500">{escape(progress_label)}</span>
+        {error_html}
+      </div>
+    </div>
+    """
+
+
+def render_duckdb_sync_complete(*, next_url: str) -> str:
+    return f"""
+    <div id="duckdb-sync-complete"
+         class="leaderboard-initial-loading border border-zinc-200 bg-white text-sm font-medium text-zinc-700"
+         role="status" aria-live="polite" aria-atomic="true"
+         hx-get="{escape(next_url, quote=True)}"
+         hx-trigger="load"
+         hx-target="#leaderboard-panel"
+         hx-swap="innerHTML">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Loading leaderboard...</span>
+    </div>
+    """
+
+
+def _duckdb_sync_progress_label(status: DuckDbSyncStatus) -> str:
+    percent = status.progress_percent
+    if status.downloaded_bytes is None:
+        return "Preparing download..."
+    downloaded = _fmt_bytes(status.downloaded_bytes)
+    if status.total_bytes is None:
+        return f"{downloaded} downloaded"
+    label = f"{downloaded} / {_fmt_bytes(status.total_bytes)}"
+    if percent is not None:
+        label = f"{label} ({percent:.1f}%)"
+    return label
+
+
+def _fmt_bytes(value: int) -> str:
+    units = ("B", "KiB", "MiB", "GiB")
+    amount = float(value)
+    for unit in units:
+        if amount < 1024 or unit == units[-1]:
+            if unit == "B":
+                return f"{int(amount)} {unit}"
+            return f"{amount:.1f} {unit}"
+        amount /= 1024
+    return f"{value} B"
 
 
 def render_global_tooltip() -> str:

@@ -594,6 +594,41 @@
     text-align: center;
   }
 
+  .duckdb-sync-loading {
+    flex-direction: column;
+  }
+
+  .duckdb-sync-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: min(24rem, 100%);
+  }
+
+  .duckdb-sync-progress {
+    background-color: var(--hakari-surface-muted);
+    border: 0;
+    border-radius: 9999px;
+    height: 0.5rem;
+    overflow: hidden;
+    width: min(20rem, 100%);
+  }
+
+  .duckdb-sync-progress::-webkit-progress-bar {
+    background-color: var(--hakari-surface-muted);
+  }
+
+  .duckdb-sync-progress::-webkit-progress-value {
+    background-color: var(--hakari-accent);
+    border-radius: 9999px;
+  }
+
+  .duckdb-sync-progress::-moz-progress-bar {
+    background-color: var(--hakari-accent);
+    border-radius: 9999px;
+  }
+
   .leaderboard-loading-toast {
     align-items: center;
     background-color: color-mix(in srgb, var(--hakari-surface) 90%, transparent);

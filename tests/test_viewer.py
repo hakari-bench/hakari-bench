@@ -6,6 +6,7 @@ import os
 import re
 import time
 from pathlib import Path
+from typing import Any, cast
 
 import duckdb
 from fastapi.testclient import TestClient
@@ -45,6 +46,7 @@ from hakari_bench.viewer import store as viewer_store
 from hakari_bench.viewer.model_display import model_cell_views
 from hakari_bench.viewer.store import (
     DuckDbLocation,
+    DuckDbSyncStatus,
     HuggingFaceDuckDbSource,
     LocalDuckDbStore,
     resolve_duckdb_location,
@@ -936,6 +938,92 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert browser_default_favicon_response.status_code == 200
     assert browser_default_favicon_response.headers["content-type"].startswith("image/png")
     assert browser_default_favicon_response.content == response.content
+
+
+def test_viewer_leaderboard_endpoint_shows_duckdb_sync_progress_when_database_is_missing(
+    tmp_path: Path,
+) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "missing.duckdb"
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    class ProgressStore:
+        path = db_path
+        location = DuckDbLocation(
+            local_path=db_path,
+            hf_source=HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database"),
+        )
+
+        def start_background_sync(self) -> DuckDbSyncStatus:
+            return DuckDbSyncStatus(
+                state="downloading",
+                message="Downloading leaderboard DuckDB...",
+                downloaded_bytes=25,
+                total_bytes=100,
+                local_path=db_path,
+            )
+
+        def sync_status(self) -> DuckDbSyncStatus:
+            return self.start_background_sync()
+
+        def ensure_current(self) -> bool:
+            raise AssertionError("leaderboard should not block on synchronous DuckDB download")
+
+    app = create_app(store=cast(Any, ProgressStore()), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA")
+
+    assert response.status_code == 200
+    assert 'id="duckdb-sync-progress"' in response.text
+    assert 'hx-get="/duckdb-sync-status?next=%2Fleaderboard%3Fview%3DBenchA' in response.text
+    assert 'hx-trigger="every 1s"' in response.text
+    assert "<progress" in response.text
+    assert 'value="25"' in response.text
+    assert "25.0%" in response.text
+    assert "Downloading leaderboard DuckDB..." in response.text
+    assert "leaderboard-table-scroll" not in response.text
+
+
+def test_viewer_duckdb_sync_status_reloads_leaderboard_when_ready(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "ready.duckdb"
+    db_path.write_bytes(b"duckdb")
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    class ReadyStore:
+        path = db_path
+        location = DuckDbLocation(local_path=db_path)
+
+        def start_background_sync(self) -> DuckDbSyncStatus:
+            return self.sync_status()
+
+        def sync_status(self) -> DuckDbSyncStatus:
+            return DuckDbSyncStatus(
+                state="ready",
+                message="Leaderboard DuckDB is ready.",
+                downloaded_bytes=100,
+                total_bytes=100,
+                local_path=db_path,
+            )
+
+        def ensure_current(self) -> bool:
+            return False
+
+    app = create_app(store=cast(Any, ReadyStore()), config_dir=config_dir)
+    response = TestClient(app).get("/duckdb-sync-status?next=%2Fleaderboard%3Fview%3DBenchA")
+
+    assert response.status_code == 200
+    assert 'id="duckdb-sync-complete"' in response.text
+    assert 'hx-get="/leaderboard?view=BenchA"' in response.text
+    assert 'hx-trigger="load"' in response.text
+    assert "Loading leaderboard..." in response.text
 
 
 def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -4950,6 +5038,46 @@ def test_local_duckdb_store_downloads_hf_dataset_source(
     assert calls == [source]
 
 
+def test_local_duckdb_store_background_sync_reports_download_progress(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    downloaded = tmp_path / "remote_latest.duckdb"
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    progress_events: list[tuple[str, int, int | None]] = []
+
+    def fake_download(
+        source: HuggingFaceDuckDbSource,
+        progress_callback=None,
+    ) -> Path:
+        assert source.repo_id == "hakari-bench/leaderboard_database"
+        if progress_callback is not None:
+            progress_callback("downloading", 2, 10)
+            progress_events.append(("downloading", 2, 10))
+            progress_callback("downloading", 10, 10)
+            progress_events.append(("downloading", 10, 10))
+        downloaded.write_bytes(b"0123456789")
+        return downloaded
+
+    monkeypatch.setattr("hakari_bench.viewer.store._download_hf_duckdb", fake_download)
+    store = LocalDuckDbStore(
+        DuckDbLocation(
+            local_path=local,
+            hf_source=HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database"),
+        )
+    )
+
+    initial_status = store.start_background_sync()
+    assert initial_status.state in {"checking", "downloading", "copying", "ready"}
+    final_status = store.wait_for_background_sync(timeout=2)
+
+    assert final_status.state == "ready"
+    assert final_status.downloaded_bytes == 10
+    assert final_status.total_bytes == 10
+    assert final_status.progress_percent == 100
+    assert local.read_bytes() == b"0123456789"
+    assert progress_events == [("downloading", 2, 10), ("downloading", 10, 10)]
+
+
 def test_local_duckdb_store_skips_hf_source_check_within_ttl(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -5037,6 +5165,45 @@ def test_download_hf_duckdb_uses_remote_latest_cache_metadata(
     assert cache_path.read_bytes() == b"remote-db"
     assert viewer_store._download_hf_duckdb(source) == cache_path
     assert calls == [source]
+
+
+def test_download_hf_duckdb_reports_progress_callback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    cache_path = tmp_path / "remote_latest_hakari_bench.duckdb"
+    metadata_path = tmp_path / "remote_latest_hakari_bench.duckdb.metadata.json"
+    source = HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database")
+    events: list[tuple[str, int, int | None]] = []
+
+    def fake_download_to_path(
+        _source: HuggingFaceDuckDbSource,
+        _remote_metadata: dict[str, str | int | None],
+        destination: Path,
+        progress_callback,
+    ) -> None:
+        progress_callback("downloading", 4, 12)
+        progress_callback("downloading", 12, 12)
+        destination.write_bytes(b"remote-duckdb")
+
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_PATH_ENV, str(cache_path))
+    monkeypatch.setenv(viewer_store.REMOTE_LATEST_DUCKDB_METADATA_PATH_ENV, str(metadata_path))
+    monkeypatch.setattr(
+        viewer_store,
+        "_fetch_hf_duckdb_metadata",
+        lambda _source: {
+            "etag": "etag-1",
+            "commit_hash": "commit-1",
+            "size": len(b"remote-duckdb"),
+            "location": "https://example.test/duckdb",
+        },
+    )
+    monkeypatch.setattr(viewer_store, "_download_hf_duckdb_to_path", fake_download_to_path)
+
+    path = viewer_store._download_hf_duckdb(source, progress_callback=lambda *event: events.append(event))
+
+    assert path == cache_path
+    assert cache_path.read_bytes() == b"remote-duckdb"
+    assert events == [("downloading", 4, 12), ("downloading", 12, 12)]
 
 
 def test_download_hf_duckdb_falls_back_to_existing_remote_latest_cache(

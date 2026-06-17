@@ -295,11 +295,14 @@ HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID=hakari-bench/leaderboard_database
 HAKARI_BENCH_VIEWER_HF_DATASET_PATH=duckdb/hakari_bench.duckdb
 ```
 
-When the viewer uses the Hugging Face dataset source, it checks/downloads the
-DuckDB source at startup and then caches the source check for 10 minutes per
-running process. Requests served within that window use the already-local
-`/data/viewer/hakari_bench.duckdb` file and do not call `hf_hub_download()`.
-Remote DuckDB downloads are first synchronized into a shared remote latest cache
+When the viewer uses the Hugging Face dataset source, it starts the DuckDB source
+check/download in the background instead of blocking application startup. If the
+local DuckDB is missing or a newer remote file is being installed, the
+leaderboard panel shows a centered progress bar and polls
+`/duckdb-sync-status` with htmx until the local database is ready. Requests
+served within the 10-minute source-check TTL use the already-local
+`/data/viewer/hakari_bench.duckdb` file. Remote DuckDB downloads are first
+synchronized into a shared remote latest cache
 (`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default)
 using Hugging Face file metadata and a sidecar SHA-1 to avoid repeated downloads
 or local copies when the content has not changed.

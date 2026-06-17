@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-import os
 import hashlib
 import json
+import os
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
+import threading
 from time import monotonic
+from typing import Callable
 
 
 DEFAULT_DUCKDB_NAME = "hakari_bench.duckdb"
@@ -15,6 +17,7 @@ DEFAULT_HF_SOURCE_CHECK_TTL_SECONDS = 600.0
 DEFAULT_REMOTE_LATEST_DUCKDB_PATH = Path.home() / ".cache" / "hakari-bench" / "duckdb" / "remote_latest_hakari_bench.duckdb"
 REMOTE_LATEST_DUCKDB_PATH_ENV = "HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH"
 REMOTE_LATEST_DUCKDB_METADATA_PATH_ENV = "HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH"
+DuckDbProgressCallback = Callable[[str, int, int | None], None]
 
 
 @dataclass(frozen=True)
@@ -31,21 +34,45 @@ class DuckDbLocation:
     hf_source: HuggingFaceDuckDbSource | None = None
 
 
+@dataclass(frozen=True)
+class DuckDbSyncStatus:
+    state: str = "idle"
+    message: str = "Leaderboard DuckDB sync has not started."
+    downloaded_bytes: int | None = None
+    total_bytes: int | None = None
+    local_path: Path | None = None
+    error: str | None = None
+    changed: bool = False
+
+    @property
+    def progress_percent(self) -> float | None:
+        if self.downloaded_bytes is None or not self.total_bytes:
+            return None
+        return min(100.0, max(0.0, self.downloaded_bytes / self.total_bytes * 100.0))
+
+    @property
+    def active(self) -> bool:
+        return self.state in {"checking", "downloading", "copying"}
+
+
 class LocalDuckDbStore:
     """Keeps a local DuckDB copy current before each page render."""
 
     def __init__(self, location: DuckDbLocation) -> None:
         self.location = location
         self._last_hf_source_check_at: float | None = None
+        self._sync_lock = threading.Lock()
+        self._sync_thread: threading.Thread | None = None
+        self._sync_status = DuckDbSyncStatus(local_path=location.local_path)
 
     @property
     def path(self) -> Path:
         return self.location.local_path
 
-    def ensure_current(self) -> bool:
+    def ensure_current(self, progress_callback: DuckDbProgressCallback | None = None) -> bool:
         if self._hf_source_check_is_fresh():
             return False
-        source = self._source_path()
+        source = self._source_path(progress_callback=progress_callback)
         self._mark_hf_source_checked()
         destination = self.location.local_path
         if source is None or not source.exists():
@@ -55,14 +82,103 @@ class LocalDuckDbStore:
         if destination.exists() and _file_sha1(destination) == _file_sha1(source):
             return False
         destination.parent.mkdir(parents=True, exist_ok=True)
-        temp_path = destination.with_suffix(destination.suffix + ".tmp")
-        shutil.copy2(source, temp_path)
-        temp_path.replace(destination)
+        _copy_file_atomic(source, destination, stage="copying", progress_callback=progress_callback)
         return True
 
-    def _source_path(self) -> Path | None:
+    def start_background_sync(self) -> DuckDbSyncStatus:
+        with self._sync_lock:
+            if self._sync_thread is not None and self._sync_thread.is_alive():
+                return self._sync_status
+            if self.location.hf_source is None and self.location.source_path is None:
+                self._sync_status = DuckDbSyncStatus(
+                    state="ready",
+                    message="Leaderboard DuckDB is ready.",
+                    downloaded_bytes=self.location.local_path.stat().st_size if self.location.local_path.exists() else None,
+                    total_bytes=self.location.local_path.stat().st_size if self.location.local_path.exists() else None,
+                    local_path=self.location.local_path,
+                )
+                return self._sync_status
+            if self._hf_source_check_is_fresh():
+                size = self.location.local_path.stat().st_size if self.location.local_path.exists() else None
+                self._sync_status = DuckDbSyncStatus(
+                    state="ready",
+                    message="Leaderboard DuckDB is ready.",
+                    downloaded_bytes=size,
+                    total_bytes=size,
+                    local_path=self.location.local_path,
+                )
+                return self._sync_status
+            self._sync_status = DuckDbSyncStatus(
+                state="checking",
+                message="Checking leaderboard DuckDB source...",
+                local_path=self.location.local_path,
+            )
+            self._sync_thread = threading.Thread(target=self._run_background_sync, daemon=True)
+            self._sync_thread.start()
+            return self._sync_status
+
+    def sync_status(self) -> DuckDbSyncStatus:
+        with self._sync_lock:
+            return self._sync_status
+
+    def wait_for_background_sync(self, *, timeout: float | None = None) -> DuckDbSyncStatus:
+        thread = self._sync_thread
+        if thread is not None:
+            thread.join(timeout)
+        return self.sync_status()
+
+    def _run_background_sync(self) -> None:
+        try:
+            changed = self.ensure_current(progress_callback=self._update_progress)
+        except Exception as exc:
+            self._set_sync_status(
+                DuckDbSyncStatus(
+                    state="error",
+                    message="Failed to synchronize leaderboard DuckDB.",
+                    local_path=self.location.local_path,
+                    error=str(exc),
+                )
+            )
+            return
+        current = self.sync_status()
+        self._set_sync_status(
+            DuckDbSyncStatus(
+                state="ready",
+                message="Leaderboard DuckDB is ready.",
+                downloaded_bytes=current.downloaded_bytes,
+                total_bytes=current.total_bytes,
+                local_path=self.location.local_path,
+                changed=changed,
+            )
+        )
+
+    def _update_progress(self, stage: str, downloaded_bytes: int, total_bytes: int | None) -> None:
+        message = (
+            "Downloading leaderboard DuckDB..."
+            if stage == "downloading"
+            else "Installing leaderboard DuckDB..."
+            if stage == "copying"
+            else "Synchronizing leaderboard DuckDB..."
+        )
+        self._set_sync_status(
+            DuckDbSyncStatus(
+                state=stage,
+                message=message,
+                downloaded_bytes=downloaded_bytes,
+                total_bytes=total_bytes,
+                local_path=self.location.local_path,
+            )
+        )
+
+    def _set_sync_status(self, status: DuckDbSyncStatus) -> None:
+        with self._sync_lock:
+            self._sync_status = status
+
+    def _source_path(self, progress_callback: DuckDbProgressCallback | None = None) -> Path | None:
         if self.location.hf_source is not None:
-            return _download_hf_duckdb(self.location.hf_source)
+            if progress_callback is None:
+                return _download_hf_duckdb(self.location.hf_source)
+            return _download_hf_duckdb(self.location.hf_source, progress_callback=progress_callback)
         return self.location.source_path
 
     def _hf_source_check_is_fresh(self) -> bool:
@@ -129,15 +245,26 @@ def _resolve_hf_source(
     return HuggingFaceDuckDbSource(repo_id=repo_id, filename=filename, revision=revision)
 
 
-def _download_hf_duckdb(source: HuggingFaceDuckDbSource) -> Path:
+def _download_hf_duckdb(
+    source: HuggingFaceDuckDbSource,
+    progress_callback: DuckDbProgressCallback | None = None,
+) -> Path:
     cache_path = _remote_latest_duckdb_path()
     metadata_path = _remote_latest_duckdb_metadata_path(cache_path)
     remote_metadata = _fetch_hf_duckdb_metadata(source)
     if _remote_latest_cache_matches(cache_path, metadata_path, remote_metadata):
+        size = cache_path.stat().st_size
+        if progress_callback is not None:
+            progress_callback("downloading", size, size)
         return cache_path
 
     try:
-        downloaded_path = _download_hf_duckdb_to_hub_cache(source)
+        if progress_callback is None:
+            downloaded_path = _download_hf_duckdb_to_hub_cache(source)
+        else:
+            downloaded_path = cache_path.with_suffix(cache_path.suffix + ".download")
+            downloaded_path.parent.mkdir(parents=True, exist_ok=True)
+            _download_hf_duckdb_to_path(source, remote_metadata, downloaded_path, progress_callback)
     except Exception:
         if cache_path.exists():
             return cache_path
@@ -146,9 +273,12 @@ def _download_hf_duckdb(source: HuggingFaceDuckDbSource) -> Path:
     downloaded_sha1 = _file_sha1(downloaded_path)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     if not cache_path.exists() or _file_sha1(cache_path) != downloaded_sha1:
-        temp_path = cache_path.with_suffix(cache_path.suffix + ".tmp")
-        shutil.copy2(downloaded_path, temp_path)
-        temp_path.replace(cache_path)
+        if downloaded_path == cache_path.with_suffix(cache_path.suffix + ".download"):
+            downloaded_path.replace(cache_path)
+        else:
+            _copy_file_atomic(downloaded_path, cache_path, stage="copying", progress_callback=progress_callback)
+    elif downloaded_path == cache_path.with_suffix(cache_path.suffix + ".download"):
+        downloaded_path.unlink(missing_ok=True)
     _write_remote_latest_metadata(
         metadata_path,
         {
@@ -162,6 +292,35 @@ def _download_hf_duckdb(source: HuggingFaceDuckDbSource) -> Path:
         },
     )
     return cache_path
+
+
+def _download_hf_duckdb_to_path(
+    source: HuggingFaceDuckDbSource,
+    remote_metadata: dict[str, str | int | None],
+    destination: Path,
+    progress_callback: DuckDbProgressCallback,
+) -> None:
+    location = remote_metadata.get("location")
+    if not isinstance(location, str) or not location:
+        downloaded_path = _download_hf_duckdb_to_hub_cache(source)
+        _copy_file_atomic(downloaded_path, destination, stage="downloading", progress_callback=progress_callback)
+        return
+
+    from huggingface_hub.file_download import http_get
+
+    total = remote_metadata.get("size")
+    expected_size = total if isinstance(total, int) else None
+    temp_path = destination.with_suffix(destination.suffix + ".tmp")
+    temp_path.unlink(missing_ok=True)
+    with temp_path.open("wb") as file:
+        http_get(
+            location,
+            file,
+            expected_size=expected_size,
+            displayed_filename=Path(source.filename).name,
+            tqdm_class=_progress_tqdm_class(progress_callback),
+        )
+    temp_path.replace(destination)
 
 
 def _download_hf_duckdb_to_hub_cache(source: HuggingFaceDuckDbSource) -> Path:
@@ -196,8 +355,55 @@ def _fetch_hf_duckdb_metadata(source: HuggingFaceDuckDbSource) -> dict[str, str 
     return {
         "etag": metadata.etag,
         "commit_hash": metadata.commit_hash,
+        "location": metadata.location,
         "size": metadata.size,
     }
+
+
+def _copy_file_atomic(
+    source: Path,
+    destination: Path,
+    *,
+    stage: str,
+    progress_callback: DuckDbProgressCallback | None = None,
+) -> None:
+    total = source.stat().st_size
+    copied = 0
+    temp_path = destination.with_suffix(destination.suffix + ".tmp")
+    temp_path.parent.mkdir(parents=True, exist_ok=True)
+    with source.open("rb") as source_file, temp_path.open("wb") as destination_file:
+        for chunk in iter(lambda: source_file.read(1024 * 1024), b""):
+            destination_file.write(chunk)
+            copied += len(chunk)
+            if progress_callback is not None:
+                progress_callback(stage, copied, total)
+    shutil.copystat(source, temp_path)
+    temp_path.replace(destination)
+
+
+def _progress_tqdm_class(progress_callback: DuckDbProgressCallback):
+    class ProgressTqdm:
+        def __init__(self, *args: object, total: int | None = None, initial: int = 0, **kwargs: object) -> None:
+            del args, kwargs
+            self.total = total
+            self.n = initial
+            progress_callback("downloading", self.n, self.total)
+
+        def update(self, n: int = 1) -> None:
+            self.n += n
+            progress_callback("downloading", self.n, self.total)
+
+        def close(self) -> None:
+            pass
+
+        def __enter__(self) -> "ProgressTqdm":
+            return self
+
+        def __exit__(self, exc_type: object, exc: object, traceback: object) -> None:
+            del exc_type, exc, traceback
+            self.close()
+
+    return ProgressTqdm
 
 
 def _remote_latest_duckdb_path() -> Path:

@@ -17,5 +17,5 @@ def create_space_app():
         source_duckdb_path=None,
     )
     store = LocalDuckDbStore(location)
-    store.ensure_current()
+    store.start_background_sync()
     return create_app(store=store, config_dir=config_dir)
