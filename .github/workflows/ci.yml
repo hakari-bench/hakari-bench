@@ -21,6 +21,7 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
+          cache-dependency-glob: uv.lock
 
       - name: Run unit, lint, and type checks
         run: uv run tox
@@ -38,6 +39,7 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
+          cache-dependency-glob: uv.lock
 
       - name: Install lightweight viewer browser test dependencies
         run: uv sync --only-group viewer-browser-test --frozen

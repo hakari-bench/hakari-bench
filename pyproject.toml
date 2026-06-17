@@ -157,13 +157,19 @@ legacy_tox_ini = """
 requires = tox-uv>=1.29.0
 parallel = auto
 parallel_show_output = true
-env_list = py312, lint, type
+env_list = py312, lint
 
 [testenv]
-dependency_groups = all
-commands = python -m pytest {posargs:-m "not browser"}
+dependency_groups =
+    dev
+    viewer
+commands =
+    python -m pytest {posargs:-m "not browser"}
+    ty check
 
 [testenv:lint]
+dependency_groups = dev
+skip_install = true
 commands = ruff check .
 
 [testenv:type]

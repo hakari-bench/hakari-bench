@@ -38,6 +38,7 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
+          cache-dependency-glob: uv.lock
 
       - name: Run validation
         run: uv run tox
@@ -60,8 +61,8 @@ jobs:
           context: .
           load: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=leaderboard-image
+          cache-to: type=gha,scope=leaderboard-image,mode=max
 
       - name: Run viewer import smoke test
         run: |
