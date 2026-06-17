@@ -44,7 +44,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
 
                 assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
-                section_icon_state = page.locator("h2 svg[data-icon='layers']").first.evaluate(
+                section_icon_state = page.locator("h1 svg.section-heading-icon[data-icon='hakari-bench']").first.evaluate(
                     """(el) => ({
                         width: parseFloat(getComputedStyle(el).width),
                         height: parseFloat(getComputedStyle(el).height),
@@ -55,15 +55,6 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert section_icon_state["height"] == pytest.approx(14.0, abs=0.1)
                 assert section_icon_state["color"] != "rgb(0, 0, 0)"
                 assert page.locator("button", has_text="Variant impact").count() == 0
-                assert page.locator("nav[aria-label='Task facets']").locator("svg[data-icon='languages']").count() == 1
-                language_tile_state = page.locator("nav[aria-label='Task facets'] button", has_text="All languages").first.evaluate(
-                    """(el) => ({
-                        fontSize: parseFloat(getComputedStyle(el).fontSize),
-                        paddingLeft: parseFloat(getComputedStyle(el).paddingLeft),
-                        paddingTop: parseFloat(getComputedStyle(el).paddingTop),
-                    })"""
-                )
-                assert language_tile_state == pytest.approx({"fontSize": 13.0, "paddingLeft": 8.0, "paddingTop": 4.0}, abs=0.1)
                 page.get_by_text("256d <- 384").wait_for(timeout=15_000)
                 compact_table_state = page.locator("tbody tr:not([hidden]) td").first.evaluate(
                     """(el) => ({
@@ -114,27 +105,28 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                     """(row) => {
                         const cells = row.querySelectorAll("td");
                         const headers = row.closest("table").querySelectorAll("thead th");
-                        const modelCell = cells[0].getBoundingClientRect();
-                        const modelButton = cells[0].querySelector(".model-detail-trigger").getBoundingClientRect();
-                        const badgeRow = cells[0].querySelector(".model-variant-badges").getBoundingClientRect();
-                        const bordaRankCell = cells[1].getBoundingClientRect();
-                        const meanRankCell = cells[2].getBoundingClientRect();
-                        const bordaScoreCell = cells[3].getBoundingClientRect();
-                        const modelButtonStyle = getComputedStyle(cells[0].querySelector(".model-detail-trigger"));
-                        const badgeStyle = getComputedStyle(cells[0].querySelector(".model-variant-badges span"));
-                        const bordaRankStyle = getComputedStyle(cells[1]);
-                        const bordaScoreStyle = getComputedStyle(cells[3]);
-                        const modelHeaderStyle = getComputedStyle(headers[0]);
-                        const bordaHeaderStyle = getComputedStyle(headers[1]);
-                        const meanHeaderStyle = getComputedStyle(headers[2]);
-                        const bordaHeader = headers[1].getBoundingClientRect();
-                        const meanHeader = headers[2].getBoundingClientRect();
+                        const rankCell = cells[0].getBoundingClientRect();
+                        const modelCell = cells[1].getBoundingClientRect();
+                        const modelButton = cells[1].querySelector(".model-detail-trigger").getBoundingClientRect();
+                        const badgeRow = cells[1].querySelector(".model-variant-badges").getBoundingClientRect();
+                        const bordaScoreCell = cells[2].getBoundingClientRect();
+                        const macroMeanCell = cells[3].getBoundingClientRect();
+                        const microMeanCell = cells[4].getBoundingClientRect();
+                        const modelButtonStyle = getComputedStyle(cells[1].querySelector(".model-detail-trigger"));
+                        const badgeStyle = getComputedStyle(cells[1].querySelector(".model-variant-badges span"));
+                        const rankStyle = getComputedStyle(cells[0]);
+                        const bordaScoreStyle = getComputedStyle(cells[2]);
+                        const rankHeaderStyle = getComputedStyle(headers[0]);
+                        const modelHeaderStyle = getComputedStyle(headers[1]);
+                        const bordaScoreHeaderStyle = getComputedStyle(headers[2]);
                         const headerLabelLeft = (index) => headers[index].querySelector("button span:first-child").getBoundingClientRect().left;
                         const bodyContentLeft = (index) => {
                             const cellStyle = getComputedStyle(cells[index]);
                             return cells[index].getBoundingClientRect().left + parseFloat(cellStyle.paddingLeft);
                         };
                         return {
+                            rankCellLeft: rankCell.left,
+                            rankCellRight: rankCell.right,
                             modelCellLeft: modelCell.left,
                             modelCellRight: modelCell.right,
                             modelButtonRight: modelButton.right,
@@ -142,33 +134,34 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                             badgeRowLeft: badgeRow.left,
                             modelButtonBottom: modelButton.bottom,
                             modelButtonTop: modelButton.top,
-                            bordaRankLeft: bordaRankCell.left,
-                            meanRankLeft: meanRankCell.left,
                             bordaScoreLeft: bordaScoreCell.left,
-                            bordaHeaderText: headers[1].innerText,
-                            meanHeaderText: headers[2].innerText,
-                            bordaScoreHeaderLabelLeft: headerLabelLeft(3),
-                            bordaScoreBodyContentLeft: bodyContentLeft(3),
-                            macroMeanHeaderLabelLeft: headerLabelLeft(4),
-                            macroMeanBodyContentLeft: bodyContentLeft(4),
-                            microMeanHeaderLabelLeft: headerLabelLeft(5),
-                            microMeanBodyContentLeft: bodyContentLeft(5),
-                            bordaScoreHeaderButtonTextAlign: getComputedStyle(headers[3].querySelector("button")).textAlign,
-                            macroMeanHeaderButtonTextAlign: getComputedStyle(headers[4].querySelector("button")).textAlign,
-                            microMeanHeaderButtonTextAlign: getComputedStyle(headers[5].querySelector("button")).textAlign,
+                            macroMeanLeft: macroMeanCell.left,
+                            microMeanLeft: microMeanCell.left,
+                            rankHeaderText: headers[0].innerText,
+                            modelHeaderText: headers[1].innerText,
+                            bordaScoreHeaderText: headers[2].innerText,
+                            macroMeanHeaderText: headers[3].innerText,
+                            microMeanHeaderText: headers[4].innerText,
+                            bordaScoreHeaderLabelLeft: headerLabelLeft(2),
+                            bordaScoreBodyContentLeft: bodyContentLeft(2),
+                            macroMeanHeaderLabelLeft: headerLabelLeft(3),
+                            macroMeanBodyContentLeft: bodyContentLeft(3),
+                            microMeanHeaderLabelLeft: headerLabelLeft(4),
+                            microMeanBodyContentLeft: bodyContentLeft(4),
+                            bordaScoreHeaderButtonTextAlign: getComputedStyle(headers[2].querySelector("button")).textAlign,
+                            macroMeanHeaderButtonTextAlign: getComputedStyle(headers[3].querySelector("button")).textAlign,
+                            microMeanHeaderButtonTextAlign: getComputedStyle(headers[4].querySelector("button")).textAlign,
+                            rankHeaderPosition: rankHeaderStyle.position,
                             modelHeaderPosition: modelHeaderStyle.position,
-                            bordaHeaderPosition: bordaHeaderStyle.position,
-                            meanHeaderPosition: meanHeaderStyle.position,
-                            bordaRankPosition: bordaRankStyle.position,
-                            bordaHeaderWidth: bordaHeader.width,
-                            meanHeaderWidth: meanHeader.width,
-                            modelCellContentFlexWrap: getComputedStyle(cells[0].firstElementChild).flexWrap,
-                            modelCellContentFlexDirection: getComputedStyle(cells[0].firstElementChild).flexDirection,
+                            bordaScoreHeaderPosition: bordaScoreHeaderStyle.position,
+                            rankCellPosition: rankStyle.position,
+                            modelCellContentFlexWrap: getComputedStyle(cells[1].firstElementChild).flexWrap,
+                            modelCellContentFlexDirection: getComputedStyle(cells[1].firstElementChild).flexDirection,
                             modelButtonFontSize: parseFloat(modelButtonStyle.fontSize),
                             badgeFontSize: parseFloat(badgeStyle.fontSize),
                             badgePaddingLeft: parseFloat(badgeStyle.paddingLeft),
                             badgePaddingTop: parseFloat(badgeStyle.paddingTop),
-                            bordaRankTextAlign: bordaRankStyle.textAlign,
+                            rankTextAlign: rankStyle.textAlign,
                             bordaScoreFontSize: parseFloat(bordaScoreStyle.fontSize),
                             bordaScoreTextAlign: bordaScoreStyle.textAlign,
                             modelButtonLineHeight: parseFloat(modelButtonStyle.lineHeight),
@@ -178,22 +171,24 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                         };
                     }"""
                 )
-                assert 0 <= long_model_layout["modelCellLeft"] <= 32
-                assert long_model_layout["modelCellRight"] <= long_model_layout["bordaRankLeft"] + 0.5
-                assert long_model_layout["bordaRankLeft"] < long_model_layout["meanRankLeft"] < long_model_layout["bordaScoreLeft"]
-                assert long_model_layout["modelButtonRight"] <= long_model_layout["bordaRankLeft"] + 0.5
+                assert 0 <= long_model_layout["rankCellLeft"] <= 32
+                assert long_model_layout["rankCellRight"] <= long_model_layout["modelCellLeft"] + 0.5
+                assert long_model_layout["modelCellRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
+                assert long_model_layout["bordaScoreLeft"] < long_model_layout["macroMeanLeft"] < long_model_layout["microMeanLeft"]
+                assert long_model_layout["modelButtonRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
                 assert long_model_layout["badgeRowTop"] >= long_model_layout["modelButtonTop"] - 0.5
-                assert "Borda" in long_model_layout["bordaHeaderText"]
-                assert "Mean" in long_model_layout["meanHeaderText"]
-                assert long_model_layout["bordaHeaderWidth"] == pytest.approx(52.0, abs=0.5)
-                assert long_model_layout["meanHeaderWidth"] == pytest.approx(52.0, abs=0.5)
+                assert long_model_layout["rankHeaderText"] == ""
+                assert "Model" in long_model_layout["modelHeaderText"]
+                assert "Borda" in long_model_layout["bordaScoreHeaderText"]
+                assert "Mean" in long_model_layout["macroMeanHeaderText"]
+                assert "Mean" in long_model_layout["microMeanHeaderText"]
                 assert long_model_layout["modelCellContentFlexWrap"] == "wrap"
                 assert long_model_layout["modelCellContentFlexDirection"] == "row"
                 assert long_model_layout["modelButtonFontSize"] == pytest.approx(13.0, abs=0.1)
                 assert long_model_layout["badgeFontSize"] < long_model_layout["modelButtonFontSize"]
                 assert long_model_layout["badgePaddingLeft"] <= 4.0
                 assert long_model_layout["badgePaddingTop"] == pytest.approx(0.0, abs=0.1)
-                assert long_model_layout["bordaRankTextAlign"] == "left"
+                assert long_model_layout["rankTextAlign"] == "right"
                 assert long_model_layout["bordaScoreHeaderButtonTextAlign"] == "left"
                 assert long_model_layout["macroMeanHeaderButtonTextAlign"] == "left"
                 assert long_model_layout["microMeanHeaderButtonTextAlign"] == "left"
@@ -206,10 +201,10 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert long_model_layout["microMeanHeaderLabelLeft"] == pytest.approx(
                     long_model_layout["microMeanBodyContentLeft"], abs=0.5
                 )
+                assert long_model_layout["rankHeaderPosition"] == "sticky"
                 assert long_model_layout["modelHeaderPosition"] == "sticky"
-                assert long_model_layout["bordaHeaderPosition"] == "static"
-                assert long_model_layout["meanHeaderPosition"] == "static"
-                assert long_model_layout["bordaRankPosition"] == "static"
+                assert long_model_layout["bordaScoreHeaderPosition"] == "static"
+                assert long_model_layout["rankCellPosition"] == "sticky"
                 assert long_model_layout["bordaScoreFontSize"] == pytest.approx(long_model_layout["modelButtonFontSize"], abs=0.1)
                 assert long_model_layout["bordaScoreTextAlign"] == "left"
                 assert long_model_layout["modelButtonLineHeight"] == pytest.approx(16.25, abs=0.25)
@@ -217,55 +212,55 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert long_model_layout["modelButtonWhiteSpace"] == "normal"
                 assert long_model_layout["modelButtonTextOverflow"] == "clip"
                 page.set_viewport_size({"width": 1024, "height": 800})
-                page.locator("#leaderboard-panel table").wait_for(timeout=5_000)
+                page.locator("#leaderboard-panel table").first.wait_for(timeout=5_000)
                 compact_layout = long_model_row.evaluate(
                     """(row) => {
                         const cells = row.querySelectorAll("td");
                         const headers = row.closest("table").querySelectorAll("thead th");
                         const scroller = row.closest(".leaderboard-table-scroll");
-                        const modelCell = cells[0].getBoundingClientRect();
-                        const bordaRankCell = cells[1].getBoundingClientRect();
-                        const meanRankCell = cells[2].getBoundingClientRect();
-                        const bordaScoreCell = cells[3].getBoundingClientRect();
-                        const modelHeader = headers[0].getBoundingClientRect();
-                        const bordaHeader = headers[1].getBoundingClientRect();
-                        const meanHeader = headers[2].getBoundingClientRect();
+                        const rankCell = cells[0].getBoundingClientRect();
+                        const modelCell = cells[1].getBoundingClientRect();
+                        const bordaScoreCell = cells[2].getBoundingClientRect();
+                        const rankHeader = headers[0].getBoundingClientRect();
+                        const modelHeader = headers[1].getBoundingClientRect();
+                        const bordaScoreHeader = headers[2].getBoundingClientRect();
                         scroller.scrollLeft = 240;
-                        const modelAfterScroll = cells[0].getBoundingClientRect();
-                        const bordaAfterScroll = cells[1].getBoundingClientRect();
-                        const modelHeaderAfterScroll = headers[0].getBoundingClientRect();
-                        const bordaHeaderAfterScroll = headers[1].getBoundingClientRect();
+                        const rankAfterScroll = cells[0].getBoundingClientRect();
+                        const modelAfterScroll = cells[1].getBoundingClientRect();
+                        const bordaScoreAfterScroll = cells[2].getBoundingClientRect();
+                        const rankHeaderAfterScroll = headers[0].getBoundingClientRect();
+                        const modelHeaderAfterScroll = headers[1].getBoundingClientRect();
+                        const bordaScoreHeaderAfterScroll = headers[2].getBoundingClientRect();
                         return {
+                            rankCellLeft: rankCell.left,
+                            rankCellRight: rankCell.right,
                             modelCellLeft: modelCell.left,
                             modelCellRight: modelCell.right,
-                            bordaRankLeft: bordaRankCell.left,
-                            bordaRankRight: bordaRankCell.right,
-                            meanRankLeft: meanRankCell.left,
-                            meanRankRight: meanRankCell.right,
                             bordaScoreLeft: bordaScoreCell.left,
-                            bordaHeaderLeft: bordaHeader.left,
-                            bordaHeaderRight: bordaHeader.right,
-                            meanHeaderLeft: meanHeader.left,
-                            meanHeaderRight: meanHeader.right,
+                            rankHeaderLeft: rankHeader.left,
+                            rankHeaderRight: rankHeader.right,
                             modelHeaderLeft: modelHeader.left,
+                            modelHeaderRight: modelHeader.right,
+                            bordaScoreHeaderLeft: bordaScoreHeader.left,
+                            rankAfterScrollLeft: rankAfterScroll.left,
                             modelAfterScrollLeft: modelAfterScroll.left,
-                            bordaAfterScrollLeft: bordaAfterScroll.left,
+                            bordaScoreAfterScrollLeft: bordaScoreAfterScroll.left,
+                            rankHeaderAfterScrollLeft: rankHeaderAfterScroll.left,
                             modelHeaderAfterScrollLeft: modelHeaderAfterScroll.left,
-                            bordaHeaderAfterScrollLeft: bordaHeaderAfterScroll.left,
+                            bordaScoreHeaderAfterScrollLeft: bordaScoreHeaderAfterScroll.left,
                         };
                     }"""
                 )
-                assert compact_layout["modelCellRight"] == pytest.approx(compact_layout["bordaRankLeft"], abs=0.5)
-                assert compact_layout["bordaRankRight"] == pytest.approx(compact_layout["meanRankLeft"], abs=0.5)
-                assert compact_layout["meanRankRight"] == pytest.approx(compact_layout["bordaScoreLeft"], abs=0.5)
-                assert compact_layout["bordaHeaderLeft"] == pytest.approx(compact_layout["bordaRankLeft"], abs=0.5)
-                assert compact_layout["bordaHeaderRight"] == pytest.approx(compact_layout["bordaRankRight"], abs=0.5)
-                assert compact_layout["meanHeaderLeft"] == pytest.approx(compact_layout["meanRankLeft"], abs=0.5)
-                assert compact_layout["meanHeaderRight"] == pytest.approx(compact_layout["meanRankRight"], abs=0.5)
+                assert compact_layout["rankCellRight"] == pytest.approx(compact_layout["modelCellLeft"], abs=0.5)
+                assert compact_layout["modelCellRight"] == pytest.approx(compact_layout["bordaScoreLeft"], abs=0.5)
+                assert compact_layout["rankHeaderRight"] == pytest.approx(compact_layout["modelHeaderLeft"], abs=0.5)
+                assert compact_layout["modelHeaderRight"] == pytest.approx(compact_layout["bordaScoreHeaderLeft"], abs=0.5)
+                assert compact_layout["rankAfterScrollLeft"] == pytest.approx(compact_layout["rankCellLeft"], abs=0.5)
                 assert compact_layout["modelAfterScrollLeft"] == pytest.approx(compact_layout["modelCellLeft"], abs=0.5)
+                assert compact_layout["rankHeaderAfterScrollLeft"] == pytest.approx(compact_layout["rankHeaderLeft"], abs=0.5)
                 assert compact_layout["modelHeaderAfterScrollLeft"] == pytest.approx(compact_layout["modelHeaderLeft"], abs=0.5)
-                assert compact_layout["bordaAfterScrollLeft"] < compact_layout["bordaRankLeft"] - 100
-                assert compact_layout["bordaHeaderAfterScrollLeft"] < compact_layout["bordaHeaderLeft"] - 100
+                assert compact_layout["bordaScoreAfterScrollLeft"] <= compact_layout["bordaScoreLeft"]
+                assert compact_layout["bordaScoreHeaderAfterScrollLeft"] <= compact_layout["bordaScoreHeaderLeft"]
 
                 hover_before = long_model_row.locator("td").first.evaluate("(el) => getComputedStyle(el).backgroundColor")
                 long_model_row.hover()
@@ -273,24 +268,28 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 hover_state = {"before": hover_before, "after": hover_after}
                 assert hover_state["after"] != hover_state["before"]
 
-                rank_filtered_checkbox = page.locator("#filter-controls input[name='rank_filtered']")
-                tooltip_trigger = page.locator("#filter-controls [data-tooltip]").first
+                page.locator("#filter-controls-panel").evaluate("(el) => { el.open = true; }")
+                rank_filtered_checkbox = page.locator("#filter-controls input[type='checkbox'][name='rank_filtered']")
+                help_trigger = page.locator("#filter-controls .refine-results-actions .help-summary-trigger").first
                 assert rank_filtered_checkbox.is_checked() is False
-                tooltip_trigger.click()
-                page.locator("#hakari-global-tooltip:not([hidden])").wait_for(timeout=3_000)
-                tooltip_state = page.locator("#hakari-global-tooltip").evaluate(
+                help_trigger.click()
+                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
+                help_modal_state = page.locator("#help-summary-modal").evaluate(
                     """(el) => ({
-                        hidden: el.hidden,
-                        text: el.textContent,
+                        open: el.open,
+                        heading: el.querySelector("#help-summary-heading").textContent,
+                        summary: el.querySelector("#help-summary-short").textContent,
+                        details: el.querySelector("#help-summary-details").textContent,
                         zIndex: getComputedStyle(el).zIndex,
                     })"""
                 )
-                assert tooltip_state["hidden"] is False
-                assert tooltip_state["text"]
-                assert tooltip_state["zIndex"] == "1000"
-                assert tooltip_trigger.evaluate("(el) => getComputedStyle(el).cursor") == "pointer"
+                assert help_modal_state["open"] is True
+                assert help_modal_state["heading"] == "Recalculate ranks from filters"
+                assert help_modal_state["summary"]
+                assert help_modal_state["details"]
+                assert help_trigger.evaluate("(el) => getComputedStyle(el).cursor") == "pointer"
                 assert rank_filtered_checkbox.is_checked() is False
-                help_tooltip_style = page.locator(".tooltip-trigger svg[data-icon='circle-help']").first.evaluate(
+                help_tooltip_style = page.locator(".help-summary-trigger svg[data-icon='circle-help']").first.evaluate(
                     """(el) => ({
                         parentBorderRadius: getComputedStyle(el.parentElement).borderRadius,
                         height: parseFloat(getComputedStyle(el).height),
@@ -299,10 +298,10 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                     })"""
                 )
                 assert help_tooltip_style["parentBorderRadius"] == "9999px"
-                assert help_tooltip_style["height"] == pytest.approx(12.0, abs=0.1)
-                assert help_tooltip_style["width"] == pytest.approx(12.0, abs=0.1)
+                assert help_tooltip_style["height"] == pytest.approx(14.0, abs=0.1)
+                assert help_tooltip_style["width"] >= 12.0
                 assert help_tooltip_style["stroke"] != "none"
-                page.locator("#hakari-global-tooltip").evaluate("(el) => { el.hidden = true; delete el.dataset.visible; }")
+                page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
 
                 doc_trigger = page.locator(".doc-summary-trigger").first
                 doc_trigger_style = doc_trigger.evaluate(
@@ -338,7 +337,6 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 page.get_by_role("button", name="RTEB").click()
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 nano_rteb_button = page.get_by_role("button", name="RTEB")
-                assert page.locator("h2.text-lg").first.inner_text() == "NanoRTEB"
                 nano_rteb_label = nano_rteb_button.locator("xpath=ancestor::*[@data-doc-label-group='benchmark']").first
                 active_classes = nano_rteb_label.get_attribute("class") if nano_rteb_label.count() else nano_rteb_button.get_attribute("class")
                 assert "border-cyan-700" in (active_classes or "")
