@@ -72,6 +72,13 @@ under `config/datasets/`, and dataset collection definitions live under
 - When updating viewer UI design, check `@DESIGN.md` before editing and update
   it when the design direction, tokens, layout rules, or component behavior
   changes.
+- When changing viewer design, layout, interactive controls, or generated HTML,
+  run the browser smoke test whenever practical:
+
+  ```bash
+  uv run --only-group viewer-browser-test pytest -q -m browser tests/test_viewer_browser.py
+  ```
+
 - When updating the leaderboard viewer in this project, keep
   `docs/duckdb_schema.md` in sync. Update it when DuckDB schema, viewer queries,
   leaderboard semantics, score grouping, variant handling, or required columns
