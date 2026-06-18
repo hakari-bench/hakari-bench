@@ -193,9 +193,8 @@ When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `meta_database`, `schema_change_log`,
 `ingestion_batches`, `source_load_state`, `result_extensions`, `runs`,
 `dim_model`, `dim_task`, `dim_variant`, `dim_metric`, `task_results`,
-`fact_task_score`, `fact_metric_score`, optional `metrics_long`,
-`retrieval_rankings`, `task_diagnostics`, `dataset_metadata`,
-`viewer_task_results`,
+`fact_task_score`, `fact_metric_score`, `retrieval_rankings`,
+`task_diagnostics`, `dataset_metadata`, `viewer_task_results`,
 `viewer_filter_values`, `viewer_leaderboard_rows`,
 `viewer_leaderboard_language_options`, `model_scores`, and `borda_task_scores`.
 These files are intended for notebooks,
@@ -586,14 +585,13 @@ completeness displays.
 
 ### `metrics_long`
 
-`metrics_long` is an optional long-format representation of metrics computed
-while building DuckDB. The builder reads each result's top-ranking artifact,
-combines the ranked corpus ids with artifact qrels, and computes the viewer
-metric set for the selected full-corpus, reranking, and embedding-variant
-rankings. The small task JSON `metrics` and `rerank_metrics` dictionaries are
-fallback inputs for summary values, not the source of the full viewer metric
-set. Current append logic can operate without this table by inserting new
-metric rows directly into `fact_metric_score` and `dim_metric`.
+`metrics_long` is a legacy optional long-format representation of metrics
+computed while building DuckDB. Current default builds do not persist this
+table; they store metrics in `fact_metric_score` and `dim_metric` instead. When
+present in an older DuckDB, append still maintains `metrics_long` for backward
+compatibility. The small task JSON `metrics` and `rerank_metrics` dictionaries
+are fallback inputs for summary values, not the source of the full viewer metric
+set.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -1247,7 +1245,8 @@ directly in DuckDB. In a real viewer, build `selected_benchmarks` and
 ```sql
 DESCRIBE task_results;
 DESCRIBE runs;
-DESCRIBE metrics_long;
+DESCRIBE dim_metric;
+DESCRIBE fact_metric_score;
 DESCRIBE task_diagnostics;
 DESCRIBE dataset_metadata;
 DESCRIBE model_scores;

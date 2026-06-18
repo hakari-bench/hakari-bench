@@ -245,7 +245,6 @@ WAREHOUSE_TABLES = (
     "task_results",
     "fact_task_score",
     "fact_metric_score",
-    "metrics_long",
     "retrieval_rankings",
     "task_diagnostics",
     "dataset_metadata",
@@ -256,6 +255,7 @@ WAREHOUSE_TABLES = (
     "model_scores",
     "borda_task_scores",
 )
+OPTIONAL_WAREHOUSE_TABLES = ("metrics_long",)
 TASK_RESULT_COLUMNS = (
     "model_dir",
     "model_name",
@@ -3582,7 +3582,7 @@ def write_duckdb_streaming_results(
 
     con = duckdb.connect(str(db_path))
     try:
-        for table in WAREHOUSE_TABLES:
+        for table in (*WAREHOUSE_TABLES, *OPTIONAL_WAREHOUSE_TABLES):
             con.execute(f"DROP TABLE IF EXISTS {table}")
         for table in (
             "task_results_raw",
@@ -3640,6 +3640,7 @@ def write_duckdb_streaming_results(
         _materialize_streamed_result_tables(con)
         _create_metric_dimension_and_fact_tables(con)
         _create_fact_task_score_table(con)
+        con.execute("DROP TABLE IF EXISTS metrics_long")
         _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
         _create_viewer_filter_values_table(con)
@@ -4012,7 +4013,7 @@ def write_duckdb(
     changed_count = sum(1 for row in source_rows if previous_source_hashes.get(row["result_path"]) != row["payload_sha256"])
     con = duckdb.connect(str(db_path))
     try:
-        for table in WAREHOUSE_TABLES:
+        for table in (*WAREHOUSE_TABLES, *OPTIONAL_WAREHOUSE_TABLES):
             con.execute(f"DROP TABLE IF EXISTS {table}")
         _create_schema_evolution_tables(
             con,
@@ -4291,6 +4292,7 @@ def write_duckdb(
                 (row.duckdb_values() for row in normalized_diagnostic_rows),
             )
         _create_fact_task_score_table(con)
+        con.execute("DROP TABLE IF EXISTS metrics_long")
         con.execute(
             """
             CREATE TABLE dataset_metadata (

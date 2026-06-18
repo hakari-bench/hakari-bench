@@ -852,7 +852,9 @@ def test_load_results_reuses_incremental_duckdb_rows_without_metrics_long(
     )
     con = duckdb.connect(str(db_path))
     try:
-        con.execute("DROP TABLE metrics_long")
+        assert con.execute(
+            "SELECT 1 FROM duckdb_tables() WHERE table_name = 'metrics_long'"
+        ).fetchone() is None
     finally:
         con.close()
     monkeypatch.setattr(
@@ -1574,7 +1576,8 @@ def test_write_duckdb_streaming_results_matches_materialized_build(tmp_path: Pat
         for table in [
             "runs",
             "task_results",
-            "metrics_long",
+            "dim_metric",
+            "fact_metric_score",
             "task_diagnostics",
             "dataset_metadata",
             "viewer_task_results",
@@ -1587,18 +1590,11 @@ def test_write_duckdb_streaming_results_matches_materialized_build(tmp_path: Pat
                 f"SELECT count(*) FROM (SELECT * FROM streaming.{table} EXCEPT SELECT * FROM materialized.{table})"
             ).fetchone() == (0,)
         assert con.execute(
-            """
-            SELECT result_path
-            FROM streaming.metrics_long
-            """
-        ).fetchall() == con.execute(
-            """
-            SELECT result_path
-            FROM streaming.metrics_long
-            ORDER BY result_path, metric_name, score_target, embedding_variant_name,
-                     model_name, benchmark, dataset_id, task_name
-            """
-        ).fetchall()
+            "SELECT 1 FROM duckdb_tables() WHERE database_name = 'materialized' AND table_name = 'metrics_long'"
+        ).fetchone() is None
+        assert con.execute(
+            "SELECT 1 FROM duckdb_tables() WHERE database_name = 'streaming' AND table_name = 'metrics_long'"
+        ).fetchone() is None
     finally:
         con.close()
 
@@ -2094,9 +2090,9 @@ def test_append_duckdb_results_matches_metrics_long_build_when_metrics_long_is_a
             standings={},
             borda_rows=[],
         )
-    con = duckdb.connect(str(without_metrics_db))
+    con = duckdb.connect(str(with_metrics_db))
     try:
-        con.execute("DROP TABLE metrics_long")
+        _restore_legacy_metrics_long_table(con)
     finally:
         con.close()
 
@@ -2957,6 +2953,30 @@ def _duckdb_table_exists(db_path: Path, table_name: str) -> bool:
         ).fetchone() is not None
     finally:
         con.close()
+
+
+def _restore_legacy_metrics_long_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE metrics_long AS
+        SELECT
+            fms.model_dir,
+            fms.model_name,
+            fms.benchmark,
+            fms.dataset_id,
+            fms.task_name,
+            dm.metric_name,
+            fms.metric_value,
+            fms.result_path,
+            fms.score_target,
+            fms.embedding_variant_name
+        FROM fact_metric_score AS fms
+        JOIN dim_metric AS dm
+          ON dm.metric_id = fms.metric_id
+        ORDER BY result_path, metric_name, score_target, embedding_variant_name,
+                 model_name, benchmark, dataset_id, task_name
+        """
+    )
 
 
 def _ordered_table_rows(db_path: Path, table_name: str) -> list[tuple[object, ...]]:
@@ -4303,7 +4323,6 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "fact_task_score.parquet",
         "ingestion_batches.parquet",
         "meta_database.parquet",
-        "metrics_long.parquet",
         "model_scores.parquet",
         "result_extensions.parquet",
         "retrieval_rankings.parquet",
