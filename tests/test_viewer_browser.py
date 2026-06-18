@@ -573,5 +573,9 @@ def _launch_chromium_or_skip(playwright: Any, playwright_error: type[Exception])
     except playwright_error as exc:
         message = str(exc)
         if "Executable doesn't exist" in message or "playwright install" in message:
-            pytest.skip("Playwright Chromium is not installed; run `uv run playwright install chromium`.")
+            pytest.skip(
+                "Playwright Chromium is not installed; run "
+                "`uv run --only-group viewer-browser-test playwright install chromium` "
+                "or `uv run tox -e browser`."
+            )
         raise

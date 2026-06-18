@@ -60,7 +60,7 @@ class BenchmarkDocs:
         path = self._task_doc_path(view_name=view_name, metric_column=metric_column)
         if path is None:
             return None
-        return self._doc_from_path(path, url_parts=(view_name, path.stem))
+        return self._doc_from_path(path, url_parts=(path.parent.name, path.stem))
 
     def route_doc(self, *, benchmark: str, task: str | None = None) -> BenchmarkDoc | None:
         benchmark_segment = _safe_segment(benchmark)

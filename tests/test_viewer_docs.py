@@ -359,6 +359,70 @@ def test_real_benchmark_task_summary_links_resolve_to_existing_docs() -> None:
     assert broken_links == []
 
 
+def test_real_benchmark_docs_routes_cover_all_markdown_files() -> None:
+    docs_dir = Path("task_docs/docs")
+    docs = BenchmarkDocs(docs_dir)
+    broken_routes: list[str] = []
+    route_count = 0
+
+    for index_path in sorted(docs_dir.glob("*/index.md")):
+        route_count += 1
+        benchmark = index_path.parent.name
+        doc = docs.route_doc(benchmark=benchmark)
+        if doc is None:
+            broken_routes.append(f"{index_path}: group route is missing")
+            continue
+        expected_url = f"/docs/benchmark-tasks/{benchmark}"
+        if doc.url != expected_url:
+            broken_routes.append(f"{index_path}: expected {expected_url}, got {doc.url}")
+
+    for task_path in sorted(docs_dir.glob("*/*.md")):
+        if task_path.name == "index.md":
+            continue
+        route_count += 1
+        benchmark = task_path.parent.name
+        task = task_path.stem
+        doc = docs.route_doc(benchmark=benchmark, task=task)
+        if doc is None:
+            broken_routes.append(f"{task_path}: task route is missing")
+            continue
+        expected_url = f"/docs/benchmark-tasks/{benchmark}/{task}"
+        if doc.url != expected_url:
+            broken_routes.append(f"{task_path}: expected {expected_url}, got {doc.url}")
+
+    assert route_count >= 500
+    assert broken_routes == []
+
+
+def test_real_benchmark_task_doc_trigger_urls_resolve_for_all_task_docs() -> None:
+    docs_dir = Path("task_docs/docs")
+    docs = BenchmarkDocs(docs_dir)
+    broken_urls: list[str] = []
+    doc_count = 0
+
+    for task_path in sorted(docs_dir.glob("*/*.md")):
+        if task_path.name == "index.md":
+            continue
+        doc_count += 1
+        benchmark = task_path.parent.name
+        dataset, task = task_path.stem.rsplit("__", 1) if "__" in task_path.stem else ("", task_path.stem)
+        metric_column = f"{benchmark}::{dataset}::{task}" if dataset else f"{benchmark}::{task}"
+        doc = docs.task_doc(view_name="Custom", metric_column=metric_column)
+        if doc is None:
+            broken_urls.append(f"{task_path}: doc trigger URL is missing")
+            continue
+        expected_url = f"/docs/benchmark-tasks/{benchmark}/{task_path.stem}"
+        if doc.url != expected_url:
+            broken_urls.append(f"{task_path}: expected {expected_url}, got {doc.url}")
+            continue
+        route_doc = docs.route_doc(benchmark=benchmark, task=task_path.stem)
+        if route_doc is None:
+            broken_urls.append(f"{task_path}: trigger URL does not resolve through docs route")
+
+    assert doc_count >= 500
+    assert broken_urls == []
+
+
 def test_language_specific_group_overviews_start_with_language_axis_context() -> None:
     docs = BenchmarkDocs(Path("task_docs/docs"))
 
@@ -620,3 +684,72 @@ def test_leaderboard_renders_nanobeir_task_doc_triggers_for_short_task_keys(tmp_
     assert response.status_code == 200
     assert 'data-doc-title="MNanoBEIR / NanoBEIR-ja / NanoArguAna"' in response.text
     assert 'data-doc-url="/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna"' in response.text
+
+
+def test_leaderboard_custom_task_doc_trigger_links_resolve_to_existing_docs(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "NanoHotpotQA",
+                "NanoHotpotQA",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::NanoHotpotQA",
+                0.90,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/b",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "NanoHotpotQA",
+                "NanoHotpotQA",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::NanoHotpotQA",
+                0.80,
+                20,
+                24,
+                4096,
+            ),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """
+benchmarks:
+  - name: MNanoBEIR
+    score_groups:
+      - name: task_key
+        label: Task Key
+        group_by: task_key
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n", encoding="utf-8")
+    docs_dir = tmp_path / "task_docs" / "docs"
+    group_dir = docs_dir / "MNanoBEIR"
+    group_dir.mkdir(parents=True)
+    (group_dir / "NanoBEIR-ja__NanoHotpotQA.md").write_text(
+        "# MNanoBEIR / NanoBEIR-ja / NanoHotpotQA\n\n## Overview\n\nHotpotQA overview.\n",
+        encoding="utf-8",
+    )
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
+    client = TestClient(app)
+
+    response = client.get("/leaderboard?view=Custom&bench=MNanoBEIR%3Atask_key&task_scores=1")
+
+    assert response.status_code == 200
+    match = re.search(r'data-doc-url="([^"]*NanoBEIR-ja__NanoHotpotQA)"', response.text)
+    assert match is not None
+    assert match.group(1) == "/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoHotpotQA"
+    doc_urls = re.findall(r'data-doc-url="([^"]+)"', response.text)
+    assert doc_urls
+    broken_urls = [url for url in doc_urls if client.get(url).status_code != 200]
+    assert broken_urls == []
