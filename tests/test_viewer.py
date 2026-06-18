@@ -30,7 +30,7 @@ from hakari_bench.viewer.app import (
     render_table_body,
     render_table_head,
 )
-from hakari_bench.viewer.analytics import ViewerSummary
+from hakari_bench.viewer.summary import ViewerSummary
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.filters import row_filter_context
@@ -4911,6 +4911,39 @@ def test_local_duckdb_store_copies_newer_source_on_page_load(tmp_path: Path) -> 
     assert local.read_bytes() == b"new"
 
 
+def test_local_duckdb_store_installs_slim_viewer_duckdb_cache(tmp_path: Path) -> None:
+    source = tmp_path / "source.duckdb"
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    con = duckdb.connect(str(source))
+    try:
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES ('8')")
+        con.execute("CREATE TABLE viewer_task_results (model_name VARCHAR, score DOUBLE)")
+        con.execute("INSERT INTO viewer_task_results VALUES ('model/a', 0.9)")
+        con.execute("CREATE TABLE task_results (model_name VARCHAR, score DOUBLE)")
+        con.execute("INSERT INTO task_results VALUES ('model/a', 0.9)")
+        con.execute("CREATE TABLE task_diagnostics (model_name VARCHAR, wall_seconds DOUBLE)")
+        con.execute("INSERT INTO task_diagnostics VALUES ('model/a', 1.2)")
+        con.execute("CREATE TABLE metrics_long (model_name VARCHAR, metric_name VARCHAR, metric_value DOUBLE)")
+        con.execute("INSERT INTO metrics_long VALUES ('model/a', 'ndcg@10', 0.9)")
+    finally:
+        con.close()
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
+
+    assert store.ensure_current() is True
+
+    con = duckdb.connect(str(local), read_only=True)
+    try:
+        assert _duckdb_table_exists(con, "meta_database")
+        assert _duckdb_table_exists(con, "viewer_task_results")
+        assert not _duckdb_table_exists(con, "task_results")
+        assert not _duckdb_table_exists(con, "task_diagnostics")
+        assert not _duckdb_table_exists(con, "metrics_long")
+        assert con.execute("SELECT model_name, score FROM viewer_task_results").fetchall() == [("model/a", 0.9)]
+    finally:
+        con.close()
+
+
 def test_resolve_duckdb_location_defaults_to_hakari_bench_name(tmp_path: Path) -> None:
     location = resolve_duckdb_location(
         data_dir=tmp_path,
@@ -5201,6 +5234,14 @@ def test_local_duckdb_store_skips_copy_when_source_content_matches(tmp_path: Pat
 
     assert store.ensure_current() is False
     assert local.stat().st_mtime == 1
+
+
+def _duckdb_table_exists(con: duckdb.DuckDBPyConnection, table_name: str) -> bool:
+    row = con.execute(
+        "SELECT count(*) FROM information_schema.tables WHERE table_name = ?",
+        [table_name],
+    ).fetchone()
+    return bool(row[0]) if row is not None else False
 
 
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
