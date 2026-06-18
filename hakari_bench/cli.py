@@ -18,12 +18,18 @@ from hakari_bench.bm25 import (
     run_or_load_bm25_task,
 )
 from hakari_bench.batch import (
+    BatchIndex,
+    BatchMetadata,
     DEFAULT_BATCH_WORKSPACE_ROOT,
     PrecomputedDenseEmbeddingModel,
+    batch_index_path,
+    cleanup_batch_download_files,
     collect_openai_batch_embeddings,
+    collect_openai_batch_task_embeddings,
+    load_batch_index,
     load_batch_metadata,
     refresh_openai_batch_files,
-    register_openai_embedding_batch,
+    register_openai_embedding_task_batches,
     wait_for_openai_batch,
 )
 from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
@@ -162,6 +168,8 @@ def build_parser() -> argparse.ArgumentParser:
     _add_prompt_args(batch_dense_register)
     _add_execution_args(batch_dense_register)
     _add_openai_batch_args(batch_dense_register)
+    batch_dense_register.add_argument("--results-dir", default=DEFAULT_RESULTS_DIR)
+    batch_dense_register.add_argument("--result-format", default="json.xz", choices=["json.xz", "json"])
     batch_dense_register.add_argument("--overwrite", action="store_true")
 
     batch_dense_fetch = batch_dense_actions.add_parser("fetch", help="Refresh batch status and download output files.")
@@ -178,6 +186,21 @@ def build_parser() -> argparse.ArgumentParser:
     _add_embedding_variant_args(batch_dense_materialize)
     _add_candidate_args(batch_dense_materialize)
     _add_output_args(batch_dense_materialize, results_default=DEFAULT_RESULTS_DIR)
+
+    batch_dense_process = batch_dense_actions.add_parser(
+        "process",
+        help="Fetch completed task batches, materialize results, and remove downloaded provider files.",
+    )
+    _add_batch_common_args(batch_dense_process)
+    _add_openai_batch_auth_args(batch_dense_process)
+    _add_embedding_variant_args(batch_dense_process)
+    _add_candidate_args(batch_dense_process)
+    _add_output_args(batch_dense_process, results_default=DEFAULT_RESULTS_DIR)
+    batch_dense_process.add_argument(
+        "--keep-downloaded-batch-files",
+        action="store_true",
+        help="Keep downloaded provider output/error JSONL files after successful materialization.",
+    )
 
     web = subparsers.add_parser("web", help="Run the HAKARI-Bench result viewer.")
     web.add_argument("--host", default="127.0.0.1", help="Bind host. Use 0.0.0.0 to allow remote access.")
@@ -639,7 +662,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         elif args.batch_action == "fetch":
             if args.poll_seconds <= 0:
                 parser.error("--poll-seconds must be positive.")
-        elif args.batch_action == "materialize":
+        elif args.batch_action in {"materialize", "process"}:
             try:
                 args.embedding_variants = dense_embedding_variants(
                     args.embedding_variant_values,
@@ -1427,6 +1450,28 @@ def _dataset_values_for_args(args: argparse.Namespace, registry: DatasetRegistry
     return args.dataset
 
 
+def _existing_readable_result_path(
+    *,
+    output_dir: Path,
+    model_id: str,
+    task: EvalTask,
+    result_format: str | None,
+) -> Path | None:
+    path = existing_result_path_for_task(
+        output_dir=output_dir,
+        model_id=model_id,
+        task=task,
+        result_format=result_format,
+    )
+    if path is None:
+        return None
+    try:
+        read_result_json(path)
+    except Exception:
+        return None
+    return path
+
+
 def run_batch(args: argparse.Namespace) -> dict[str, Any]:
     if args.batch_model_type != "dense":
         raise ValueError("Only batch dense is supported.")
@@ -1434,6 +1479,8 @@ def run_batch(args: argparse.Namespace) -> dict[str, Any]:
         return run_batch_dense_register(args)
     if args.batch_action == "fetch":
         return run_batch_dense_fetch(args)
+    if args.batch_action == "process":
+        return run_batch_dense_process(args)
     if args.batch_action == "materialize":
         return run_batch_dense_materialize(args)
     raise ValueError(f"Unsupported batch action: {args.batch_action}")
@@ -1450,27 +1497,116 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
     )
     if args.provider != "openai":
         raise ValueError(f"Unsupported dense batch provider: {args.provider}")
-    metadata = register_openai_embedding_batch(
-        target=args.target,
-        workspace_root=Path(args.workspace_root),
+    workspace_root = Path(args.workspace_root)
+    index_path = batch_index_path(target=args.target, workspace_root=workspace_root)
+    if index_path.exists() and not args.overwrite:
+        raise FileExistsError(f"Batch index already exists: {index_path}. Use --overwrite to replace it.")
+    output_dir = Path(args.results_dir)
+    task_groups: list[dict[str, Any]] = []
+    skipped_existing_results: list[dict[str, Any]] = []
+    for task in tasks:
+        existing_result = _existing_readable_result_path(
+            output_dir=output_dir,
+            model_id=args.model,
+            task=task,
+            result_format=args.result_format,
+        )
+        if existing_result is not None and not args.overwrite:
+            skipped_existing_results.append(
+                {
+                    "dataset_id": task.dataset_id,
+                    "dataset_name": task.dataset_name,
+                    "split_name": task.split_name,
+                    "task_name": task.task_name,
+                    "task_key": f"{task.dataset_id}::{task.split_name}",
+                    "result_path": str(existing_result),
+                }
+            )
+            continue
+        dataset = _load_dataset_for_args(args, task)
+        metadatas = register_openai_embedding_task_batches(
+            target=args.target,
+            workspace_root=workspace_root,
+            model=args.model,
+            task=task,
+            dataset=dataset,
+            batch_size=args.batch_size,
+            max_input_tokens=args.max_input_tokens,
+            max_request_tokens=args.max_request_tokens,
+            max_embedding_inputs=args.max_embedding_inputs,
+            query_prompt=args.query_prompt,
+            document_prompt=args.document_prompt,
+            dataset_revision=getattr(args, "dataset_revision", None),
+            dotenv_path=args.dotenv_path,
+            api_key_env=args.api_key_env,
+            base_url=args.base_url,
+            organization=args.organization,
+            project=args.project,
+            overwrite=args.overwrite,
+        )
+        task_payload = dict(metadatas[0].tasks[0]) if metadatas else {
+            "dataset_id": task.dataset_id,
+            "dataset_name": task.dataset_name,
+            "split_name": task.split_name,
+            "task_name": task.task_name,
+            "task_key": f"{task.dataset_id}::{task.split_name}",
+        }
+        task_groups.append(
+            {
+                **task_payload,
+                "batches": [
+                    {
+                        "target": metadata.target,
+                        "metadata_path": str(metadata.metadata_path),
+                        "batch_id": metadata.batch_id,
+                        "status": metadata.status,
+                        "embedding_input_count": metadata.embedding_input_count,
+                    }
+                    for metadata in metadatas
+                ],
+            }
+        )
+    index = BatchIndex(
+        schema_version=1,
+        provider=args.provider,
+        model_type="dense",
         model=args.model,
-        tasks=tasks,
-        dataset_loader=lambda eval_task: _load_dataset_for_args(args, eval_task),
-        batch_size=args.batch_size,
-        max_input_tokens=args.max_input_tokens,
-        max_request_tokens=args.max_request_tokens,
-        max_embedding_inputs=args.max_embedding_inputs,
-        query_prompt=args.query_prompt,
-        document_prompt=args.document_prompt,
+        target=args.target,
+        workspace_path=workspace_root / safe_path_part(args.target),
+        index_path=index_path,
+        tasks=task_groups,
+        skipped_existing_results=skipped_existing_results,
         dataset_revision=getattr(args, "dataset_revision", None),
-        dotenv_path=args.dotenv_path,
-        api_key_env=args.api_key_env,
-        base_url=args.base_url,
-        organization=args.organization,
-        project=args.project,
-        overwrite=args.overwrite,
+        config={
+            "batch_size": args.batch_size,
+            "max_input_tokens": args.max_input_tokens,
+            "max_request_tokens": args.max_request_tokens,
+            "max_embedding_inputs": args.max_embedding_inputs,
+            "query_prompt": args.query_prompt,
+            "document_prompt": args.document_prompt,
+            "results_dir": str(output_dir),
+            "result_format": args.result_format,
+            "dimension_reduction": "full_embedding_prefix_l2_normalize",
+        },
+        api={
+            "endpoint": "/v1/embeddings",
+            "completion_window": "24h",
+            "input_purpose": "batch",
+        },
     )
-    payload = _batch_summary(metadata)
+    index.write()
+    payload = {
+        "target": args.target,
+        "provider": args.provider,
+        "model": args.model,
+        "index_path": str(index.index_path),
+        "registered_task_count": len(task_groups),
+        "registered_batch_count": sum(len(group["batches"]) for group in task_groups),
+        "skipped_existing_result_count": len(skipped_existing_results),
+        "embedding_input_count": sum(
+            int(batch["embedding_input_count"]) for group in task_groups for batch in group["batches"]
+        ),
+    }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return payload
 
@@ -1499,6 +1635,117 @@ def run_batch_dense_fetch(args: argparse.Namespace) -> dict[str, Any]:
             project=args.project,
         )
     payload = _batch_summary(metadata)
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return payload
+
+
+def run_batch_dense_process(args: argparse.Namespace) -> dict[str, Any]:
+    index = load_batch_index(target=args.target, workspace_root=Path(args.workspace_root))
+    if index.provider != "openai":
+        raise ValueError(f"Unsupported batch provider for process: {index.provider}")
+    args.model = index.model
+    args.model_id = index.model
+    args.model_source = {"type": index.provider, "name": index.model}
+    args.model_loader = f"{index.provider}-batch"
+    args.model_revision = None
+    args.dtype = "fp32"
+    args.device = None
+    args.attn_implementation = None
+    args.flash_attn2 = False
+    args.trust_remote_code = False
+    args.model_max_seq_length = (index.config or {}).get("max_input_tokens")
+    args.dataset_revision = index.dataset_revision
+
+    environment = collect_runtime_environment()
+    registry = DatasetRegistry.load_builtin()
+    results: list[TaskRunResult] = []
+    processed_count = 0
+    pending_count = 0
+    failed_count = 0
+    skipped_existing_result_count = 0
+    cleaned_file_count = 0
+    for task_group in index.tasks:
+        task = _task_from_batch_payload(registry, task_group)
+        existing_result = _existing_readable_result_path(
+            output_dir=Path(args.output_dir),
+            model_id=index.model,
+            task=task,
+            result_format=args.result_format,
+        )
+        if existing_result is not None and not args.override:
+            skipped_existing_result_count += 1
+            continue
+        metadatas = [BatchMetadata.from_path(Path(batch["metadata_path"])) for batch in task_group["batches"]]
+        refreshed = [
+            refresh_openai_batch_files(
+                metadata=metadata,
+                dotenv_path=args.dotenv_path,
+                api_key_env=args.api_key_env,
+                base_url=args.base_url,
+                organization=args.organization,
+                project=args.project,
+                download_files=False,
+            )
+            for metadata in metadatas
+        ]
+        statuses = {metadata.status for metadata in refreshed}
+        if statuses - {"completed"}:
+            if statuses & {"failed", "cancelled", "expired"}:
+                failed_count += 1
+            else:
+                pending_count += 1
+            continue
+        downloaded = [
+            refresh_openai_batch_files(
+                metadata=metadata,
+                dotenv_path=args.dotenv_path,
+                api_key_env=args.api_key_env,
+                base_url=args.base_url,
+                organization=args.organization,
+                project=args.project,
+                download_files=True,
+            )
+            for metadata in refreshed
+        ]
+        task_embeddings = collect_openai_batch_task_embeddings(downloaded)
+        dataset = _load_dataset_for_args(args, task)
+        result = _materialize_precomputed_batch_task(
+            args=args,
+            environment=environment,
+            task=task,
+            dataset=dataset,
+            task_embeddings=task_embeddings,
+            metadata=downloaded[0],
+        )
+        results.append(result)
+        processed_count += 1
+        if not args.keep_downloaded_batch_files and not result.cache_hit:
+            for metadata in downloaded:
+                cleaned_file_count += len(cleanup_batch_download_files(metadata))
+    payload: dict[str, Any] = {
+        "target": index.target,
+        "provider": index.provider,
+        "model": index.model,
+        "processed_count": processed_count,
+        "pending_count": pending_count,
+        "failed_count": failed_count,
+        "skipped_existing_result_count": skipped_existing_result_count,
+        "cleaned_file_count": cleaned_file_count,
+        "result_count": len(results),
+        "index_path": str(index.index_path),
+    }
+    if results:
+        summary = build_run_summary_payload(
+            args=args,
+            environment=environment,
+            model_metadata=results[-1].payload.get("model", {}),
+            results=results,
+            run_started_at_utc=datetime.now(timezone.utc).isoformat(),
+            run_finished_at_utc=datetime.now(timezone.utc).isoformat(),
+            run_wall_seconds=0.0,
+        )
+        payload["primary_metric"] = args.aggregate_metric
+        payload["primary_metric_mean"] = summary["totals"]["aggregate_metric_mean"]
     print(json.dumps(payload, ensure_ascii=False, indent=2))
     return payload
 
@@ -1590,6 +1837,52 @@ def run_batch_dense_materialize(args: argparse.Namespace) -> dict[str, Any]:
         )
     )
     return summary
+
+
+def _materialize_precomputed_batch_task(
+    *,
+    args: argparse.Namespace,
+    environment: dict[str, Any],
+    task: EvalTask,
+    dataset: LoadedIrDataset,
+    task_embeddings: dict[str, Any],
+    metadata: BatchMetadata,
+) -> TaskRunResult:
+    query_ids = list(dataset.queries)
+    corpus_ids = list(dataset.corpus)
+    if query_ids != task_embeddings["query_ids"]:
+        raise ValueError(f"Query id order mismatch for {task.dataset_id}::{task.split_name}.")
+    if corpus_ids != task_embeddings["corpus_ids"]:
+        raise ValueError(f"Corpus id order mismatch for {task.dataset_id}::{task.split_name}.")
+    args.model_loader_kwargs = {
+        "batch_id": metadata.batch_id,
+        "target": metadata.target,
+        "workspace_path": str(metadata.workspace_path),
+    }
+    model = PrecomputedDenseEmbeddingModel(
+        query_embeddings=task_embeddings["query_embeddings"],
+        corpus_embeddings=task_embeddings["corpus_embeddings"],
+        model_name=metadata.model,
+        max_seq_length=args.model_max_seq_length,
+        backend_metadata={
+            "provider": metadata.provider,
+            "api_endpoint": (metadata.api or {}).get("endpoint"),
+            "batch_id": metadata.batch_id,
+            "batch_target": metadata.target,
+            "input_file_id": metadata.input_file_id,
+            "output_file_id": metadata.output_file_id,
+            "dimension_reduction": (metadata.config or {}).get("dimension_reduction"),
+        },
+    )
+    model_metadata = collect_model_metadata(model, args)
+    return run_or_load_task(
+        task=task,
+        model=model,
+        args=args,
+        environment=environment,
+        model_metadata=model_metadata,
+        dataset_loader=lambda _task: dataset,
+    )
 
 
 def _task_from_batch_payload(registry: DatasetRegistry, payload: dict[str, Any]) -> EvalTask:

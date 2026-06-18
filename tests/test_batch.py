@@ -8,8 +8,11 @@ import numpy as np
 from hakari_bench.batch import (
     BatchMetadata,
     PrecomputedDenseEmbeddingModel,
+    cleanup_batch_download_files,
     collect_openai_batch_embeddings,
+    collect_openai_batch_task_embeddings,
     register_openai_embedding_batch,
+    write_openai_embedding_task_batch_files,
     write_openai_embedding_batch_files,
 )
 from hakari_bench.cli import parse_args
@@ -161,6 +164,141 @@ def test_collect_openai_batch_embeddings_restores_output_by_custom_id(tmp_path: 
     ]
 
 
+def test_write_openai_embedding_task_batch_files_splits_large_task(tmp_path: Path) -> None:
+    batches = write_openai_embedding_task_batch_files(
+        target="tiny-openai",
+        workspace_root=tmp_path,
+        model="text-embedding-3-small",
+        task=_task(),
+        dataset=_dataset(),
+        encoding=_WhitespaceEncoding(),
+        batch_size=2,
+        max_input_tokens=8100,
+        max_request_tokens=100,
+        max_embedding_inputs=3,
+        query_prompt=None,
+        document_prompt=None,
+        dataset_revision=None,
+    )
+
+    assert [metadata.target for metadata in batches] == [
+        "tiny-openai__TinyNano__TinyTask__part000",
+        "tiny-openai__TinyNano__TinyTask__part001",
+    ]
+    assert [metadata.embedding_input_count for metadata in batches] == [2, 3]
+    assert all(len(metadata.tasks) == 1 for metadata in batches)
+    custom_ids = [request["custom_id"] for metadata in batches for request in metadata.requests]
+    assert custom_ids == [
+        "TinyNano__TinyTask__query__000000",
+        "TinyNano__TinyTask__document__000000",
+        "TinyNano__TinyTask__document__000002",
+    ]
+
+
+def test_collect_openai_batch_task_embeddings_restores_split_task(tmp_path: Path) -> None:
+    batches = write_openai_embedding_task_batch_files(
+        target="tiny-openai",
+        workspace_root=tmp_path,
+        model="text-embedding-3-small",
+        task=_task(),
+        dataset=_dataset(),
+        encoding=_WhitespaceEncoding(),
+        batch_size=2,
+        max_input_tokens=8100,
+        max_request_tokens=100,
+        max_embedding_inputs=3,
+        query_prompt=None,
+        document_prompt=None,
+        dataset_revision=None,
+    )
+    batches[0].output_file_path.write_text(
+        json.dumps(
+            {
+                "custom_id": "TinyNano__TinyTask__query__000000",
+                "response": {
+                    "status_code": 200,
+                    "body": {
+                        "data": [
+                            {"index": 0, "embedding": [1.0, 0.0]},
+                            {"index": 1, "embedding": [0.0, 1.0]},
+                        ]
+                    },
+                },
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    batches[1].output_file_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "custom_id": "TinyNano__TinyTask__document__000000",
+                        "response": {
+                            "status_code": 200,
+                            "body": {
+                                "data": [
+                                    {"index": 0, "embedding": [1.0, 1.0]},
+                                    {"index": 1, "embedding": [2.0, 2.0]},
+                                ]
+                            },
+                        },
+                    }
+                ),
+                json.dumps(
+                    {
+                        "custom_id": "TinyNano__TinyTask__document__000002",
+                        "response": {
+                            "status_code": 200,
+                            "body": {"data": [{"index": 0, "embedding": [3.0, 3.0]}]},
+                        },
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    embeddings = collect_openai_batch_task_embeddings(batches)
+
+    task_key = "tiny/nano::TinyTask"
+    assert embeddings["task_key"] == task_key
+    assert embeddings["query_ids"] == ["q1", "q2"]
+    assert embeddings["corpus_ids"] == ["d1", "d2", "d3"]
+    assert embeddings["query_embeddings"].tolist() == [[1.0, 0.0], [0.0, 1.0]]
+    assert embeddings["corpus_embeddings"].tolist() == [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]
+
+
+def test_cleanup_batch_download_files_removes_large_provider_outputs(tmp_path: Path) -> None:
+    metadata = write_openai_embedding_batch_files(
+        target="tiny-openai",
+        workspace_root=tmp_path,
+        model="text-embedding-3-small",
+        tasks=[_task()],
+        dataset_loader=lambda _task: _dataset(),
+        encoding=_WhitespaceEncoding(),
+        batch_size=2,
+        max_input_tokens=8100,
+        max_request_tokens=100,
+        query_prompt=None,
+        document_prompt=None,
+        dataset_revision=None,
+    )
+    metadata.output_file_path.write_text("{}\n", encoding="utf-8")
+    metadata.error_file_path.write_text("{}\n", encoding="utf-8")
+    tmp_output = metadata.output_file_path.with_name(f"{metadata.output_file_path.name}.tmp")
+    tmp_output.write_text("partial", encoding="utf-8")
+
+    removed = cleanup_batch_download_files(metadata)
+
+    assert sorted(path.name for path in removed) == ["errors.jsonl", "output.jsonl", "output.jsonl.tmp"]
+    assert not metadata.output_file_path.exists()
+    assert not metadata.error_file_path.exists()
+    assert not tmp_output.exists()
+
+
 def test_register_openai_embedding_batch_enforces_embedding_input_limit(
     monkeypatch,
     tmp_path: Path,
@@ -246,14 +384,16 @@ def test_parse_args_accepts_dense_batch_commands() -> None:
         [
             "batch",
             "dense",
-            "materialize",
+            "process",
             "--target",
             "openai-small-nanobeir",
             "--embedding-variant",
             "truncate:256",
+            "--keep-downloaded-batch-files",
         ]
     )
-    assert materialize.batch_action == "materialize"
+    assert materialize.batch_action == "process"
+    assert materialize.keep_downloaded_batch_files is True
     assert [variant["name"] for variant in materialize.embedding_variants[:2]] == [
         "truncate_dim_256",
         "int8",

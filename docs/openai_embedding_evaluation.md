@@ -146,18 +146,13 @@ HAKARI's batch command workflow is documented in
 
 ```bash
 uv run --group openai hakari-bench batch dense register \
-  --target openai-small-nanobeir-en-a \
+  --target openai-small-nanobeir-en \
   --provider openai \
   --model text-embedding-3-small \
   --dataset hakari-bench/NanoBEIR-en
 
-uv run --group openai hakari-bench batch dense fetch \
-  --target openai-small-nanobeir-en-a \
-  --wait \
-  --poll-seconds 900
-
-uv run --group openai hakari-bench batch dense materialize \
-  --target openai-small-nanobeir-en-a \
+uv run --group openai hakari-bench batch dense process \
+  --target openai-small-nanobeir-en \
   --results-dir output/openai-batch \
   --embedding-variant truncate:256,512,1024
 ```

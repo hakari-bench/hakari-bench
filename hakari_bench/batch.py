@@ -112,6 +112,60 @@ class BatchMetadata:
         return BatchMetadata.from_path(self.metadata_path)
 
 
+@dataclass(frozen=True)
+class BatchIndex:
+    schema_version: int
+    provider: str
+    model_type: str
+    model: str
+    target: str
+    workspace_path: Path
+    index_path: Path
+    tasks: list[dict[str, Any]]
+    skipped_existing_results: list[dict[str, Any]]
+    dataset_revision: str | None = None
+    config: dict[str, Any] | None = None
+    api: dict[str, Any] | None = None
+
+    @classmethod
+    def from_path(cls, path: Path) -> BatchIndex:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        return cls(
+            schema_version=int(payload["schema_version"]),
+            provider=str(payload["provider"]),
+            model_type=str(payload["model_type"]),
+            model=str(payload["model"]),
+            target=str(payload["target"]),
+            workspace_path=Path(payload["workspace_path"]),
+            index_path=Path(payload.get("index_path") or path),
+            tasks=list(payload["tasks"]),
+            skipped_existing_results=list(payload.get("skipped_existing_results", [])),
+            dataset_revision=payload.get("dataset_revision"),
+            config=payload.get("config"),
+            api=payload.get("api"),
+        )
+
+    def to_payload(self) -> dict[str, Any]:
+        return {
+            "schema_version": self.schema_version,
+            "provider": self.provider,
+            "model_type": self.model_type,
+            "model": self.model,
+            "target": self.target,
+            "workspace_path": str(self.workspace_path),
+            "index_path": str(self.index_path),
+            "tasks": self.tasks,
+            "skipped_existing_results": self.skipped_existing_results,
+            "dataset_revision": self.dataset_revision,
+            "config": self.config or {},
+            "api": self.api or {},
+        }
+
+    def write(self) -> None:
+        self.index_path.parent.mkdir(parents=True, exist_ok=True)
+        self.index_path.write_text(json.dumps(self.to_payload(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
 class PrecomputedDenseEmbeddingModel:
     similarity_fn_name = "cosine"
     default_prompt_name = None
@@ -169,8 +223,16 @@ def batch_metadata_path(*, target: str, workspace_root: Path | str = DEFAULT_BAT
     return Path(workspace_root) / safe_path_part(target) / "batch_metadata.json"
 
 
+def batch_index_path(*, target: str, workspace_root: Path | str = DEFAULT_BATCH_WORKSPACE_ROOT) -> Path:
+    return Path(workspace_root) / safe_path_part(target) / "batch_index.json"
+
+
 def load_batch_metadata(*, target: str, workspace_root: Path | str = DEFAULT_BATCH_WORKSPACE_ROOT) -> BatchMetadata:
     return BatchMetadata.from_path(batch_metadata_path(target=target, workspace_root=workspace_root))
+
+
+def load_batch_index(*, target: str, workspace_root: Path | str = DEFAULT_BATCH_WORKSPACE_ROOT) -> BatchIndex:
+    return BatchIndex.from_path(batch_index_path(target=target, workspace_root=workspace_root))
 
 
 def write_openai_embedding_batch_files(
@@ -256,6 +318,158 @@ def write_openai_embedding_batch_files(
             f"OpenAI embeddings batch has {embedding_input_count:,} inputs, exceeding the "
             f"{max_embedding_inputs:,} input limit. Register fewer tasks or splits for this target."
         )
+    return _write_openai_embedding_batch_payload(
+        target=target,
+        workspace_path=workspace_path,
+        input_file_path=input_file_path,
+        output_file_path=output_file_path,
+        error_file_path=error_file_path,
+        metadata_path=metadata_path,
+        model=model,
+        requests=requests,
+        tasks=task_payloads,
+        request_lines=request_lines,
+        embedding_input_count=embedding_input_count,
+        batch_size=batch_size,
+        max_input_tokens=max_input_tokens,
+        max_request_tokens=max_request_tokens,
+        max_embedding_inputs=max_embedding_inputs,
+        query_prompt=query_prompt,
+        document_prompt=document_prompt,
+        dataset_revision=dataset_revision,
+    )
+
+
+def write_openai_embedding_task_batch_files(
+    *,
+    target: str,
+    workspace_root: Path,
+    model: str,
+    task: EvalTask,
+    dataset: LoadedIrDataset,
+    encoding: Any,
+    batch_size: int,
+    max_input_tokens: int,
+    max_request_tokens: int,
+    max_embedding_inputs: int,
+    query_prompt: str | None,
+    document_prompt: str | None,
+    dataset_revision: str | None,
+    overwrite: bool = False,
+) -> list[BatchMetadata]:
+    if max_embedding_inputs <= 0:
+        raise ValueError("OpenAI max_embedding_inputs must be positive.")
+    index_workspace_path = workspace_root / safe_path_part(target)
+    task_key = _task_key(task)
+    task_payload = {
+        "dataset_name": task.dataset_name,
+        "dataset_id": task.dataset_id,
+        "split_name": task.split_name,
+        "task_name": task.task_name,
+        "task_key": task_key,
+        "query_count": len(dataset.queries),
+        "corpus_count": len(dataset.corpus),
+        "dataset_revision": resolve_dataset_revision(task.dataset_id, requested_revision=dataset_revision),
+    }
+    requests: list[dict[str, Any]] = []
+    request_lines: list[str] = []
+    request_lines.extend(
+        _openai_embedding_request_lines_for_role(
+            model=model,
+            task=task,
+            task_key=task_key,
+            role="query",
+            ids=list(dataset.queries),
+            texts=list(dataset.queries.values()),
+            prompt=query_prompt,
+            encoding=encoding,
+            batch_size=batch_size,
+            max_input_tokens=max_input_tokens,
+            max_request_tokens=max_request_tokens,
+            requests=requests,
+        )
+    )
+    request_lines.extend(
+        _openai_embedding_request_lines_for_role(
+            model=model,
+            task=task,
+            task_key=task_key,
+            role="document",
+            ids=list(dataset.corpus),
+            texts=[dataset.corpus[corpus_id] for corpus_id in dataset.corpus],
+            prompt=document_prompt,
+            encoding=encoding,
+            batch_size=batch_size,
+            max_input_tokens=max_input_tokens,
+            max_request_tokens=max_request_tokens,
+            requests=requests,
+        )
+    )
+    shard_pairs = _split_openai_embedding_requests(
+        requests=requests,
+        request_lines=request_lines,
+        max_embedding_inputs=max_embedding_inputs,
+    )
+    metadatas: list[BatchMetadata] = []
+    task_suffix = f"{safe_path_part(task.dataset_name)}__{safe_path_part(task.split_name)}"
+    for shard_index, pairs in enumerate(shard_pairs):
+        shard_target = f"{target}__{task_suffix}__part{shard_index:03d}"
+        workspace_path = index_workspace_path / "batches" / safe_path_part(shard_target)
+        input_file_path = workspace_path / "requests.jsonl"
+        output_file_path = workspace_path / "output.jsonl"
+        error_file_path = workspace_path / "errors.jsonl"
+        metadata_path = workspace_path / "batch_metadata.json"
+        if metadata_path.exists() and not overwrite:
+            raise FileExistsError(f"Batch metadata already exists: {metadata_path}. Use --overwrite to replace it.")
+        shard_requests = [request for request, _line in pairs]
+        shard_lines = [line for _request, line in pairs]
+        metadatas.append(
+            _write_openai_embedding_batch_payload(
+                target=shard_target,
+                workspace_path=workspace_path,
+                input_file_path=input_file_path,
+                output_file_path=output_file_path,
+                error_file_path=error_file_path,
+                metadata_path=metadata_path,
+                model=model,
+                requests=shard_requests,
+                tasks=[task_payload],
+                request_lines=shard_lines,
+                embedding_input_count=sum(len(request["ids"]) for request in shard_requests),
+                batch_size=batch_size,
+                max_input_tokens=max_input_tokens,
+                max_request_tokens=max_request_tokens,
+                max_embedding_inputs=max_embedding_inputs,
+                query_prompt=query_prompt,
+                document_prompt=document_prompt,
+                dataset_revision=dataset_revision,
+            )
+        )
+    return metadatas
+
+
+def _write_openai_embedding_batch_payload(
+    *,
+    target: str,
+    workspace_path: Path,
+    input_file_path: Path,
+    output_file_path: Path,
+    error_file_path: Path,
+    metadata_path: Path,
+    model: str,
+    requests: list[dict[str, Any]],
+    tasks: list[dict[str, Any]],
+    request_lines: list[str],
+    embedding_input_count: int,
+    batch_size: int,
+    max_input_tokens: int,
+    max_request_tokens: int,
+    max_embedding_inputs: int | None,
+    query_prompt: str | None,
+    document_prompt: str | None,
+    dataset_revision: str | None,
+) -> BatchMetadata:
+    workspace_path.mkdir(parents=True, exist_ok=True)
     input_file_path.write_text("\n".join(request_lines) + ("\n" if request_lines else ""), encoding="utf-8")
     metadata = BatchMetadata(
         schema_version=1,
@@ -269,7 +483,7 @@ def write_openai_embedding_batch_files(
         output_file_path=output_file_path,
         error_file_path=error_file_path,
         requests=requests,
-        tasks=task_payloads,
+        tasks=tasks,
         request_count=len(requests),
         embedding_input_count=embedding_input_count,
         status="prepared",
@@ -291,6 +505,35 @@ def write_openai_embedding_batch_files(
     )
     metadata.write()
     return metadata
+
+
+def _split_openai_embedding_requests(
+    *,
+    requests: list[dict[str, Any]],
+    request_lines: list[str],
+    max_embedding_inputs: int,
+) -> list[list[tuple[dict[str, Any], str]]]:
+    if len(requests) != len(request_lines):
+        raise ValueError("OpenAI batch request metadata and JSONL line counts differ.")
+    shards: list[list[tuple[dict[str, Any], str]]] = []
+    current: list[tuple[dict[str, Any], str]] = []
+    current_count = 0
+    for request, line in zip(requests, request_lines, strict=True):
+        request_count = len(request["ids"])
+        if request_count > max_embedding_inputs:
+            raise ValueError(
+                f"OpenAI embeddings request {request['custom_id']} has {request_count:,} inputs, "
+                f"exceeding the {max_embedding_inputs:,} input shard limit."
+            )
+        if current and current_count + request_count > max_embedding_inputs:
+            shards.append(current)
+            current = []
+            current_count = 0
+        current.append((request, line))
+        current_count += request_count
+    if current:
+        shards.append(current)
+    return shards
 
 
 def register_openai_embedding_batch(
@@ -366,6 +609,84 @@ def register_openai_embedding_batch(
     )
 
 
+def register_openai_embedding_task_batches(
+    *,
+    target: str,
+    workspace_root: Path,
+    model: str,
+    task: EvalTask,
+    dataset: LoadedIrDataset,
+    batch_size: int,
+    max_input_tokens: int,
+    max_request_tokens: int,
+    max_embedding_inputs: int,
+    query_prompt: str | None,
+    document_prompt: str | None,
+    dataset_revision: str | None,
+    dotenv_path: str | None,
+    api_key_env: str,
+    base_url: str | None,
+    organization: str | None,
+    project: str | None,
+    overwrite: bool = False,
+) -> list[BatchMetadata]:
+    adapter = OpenAIEmbeddingAdapter(
+        model_name=model,
+        dotenv_path=dotenv_path,
+        api_key_env=api_key_env,
+        base_url=base_url,
+        organization=organization,
+        project=project,
+        max_input_tokens=max_input_tokens,
+        max_request_tokens=max_request_tokens,
+    )
+    metadatas = write_openai_embedding_task_batch_files(
+        target=target,
+        workspace_root=workspace_root,
+        model=model,
+        task=task,
+        dataset=dataset,
+        encoding=adapter._tokenizer(),
+        batch_size=batch_size,
+        max_input_tokens=max_input_tokens,
+        max_request_tokens=max_request_tokens,
+        max_embedding_inputs=max_embedding_inputs,
+        query_prompt=query_prompt,
+        document_prompt=document_prompt,
+        dataset_revision=dataset_revision,
+        overwrite=overwrite,
+    )
+    client = _openai_client(
+        dotenv_path=dotenv_path,
+        api_key_env=api_key_env,
+        base_url=base_url,
+        organization=organization,
+        project=project,
+    )
+    registered: list[BatchMetadata] = []
+    for metadata in metadatas:
+        with metadata.input_file_path.open("rb") as file:
+            input_file = client.files.create(file=file, purpose="batch")
+        batch = client.batches.create(
+            input_file_id=_object_id(input_file),
+            endpoint=OPENAI_EMBEDDINGS_BATCH_ENDPOINT,
+            completion_window=DEFAULT_BATCH_COMPLETION_WINDOW,
+            metadata={
+                "hakari_target": metadata.target[:512],
+                "hakari_model_type": "dense",
+                "hakari_provider": "openai",
+            },
+        )
+        registered.append(
+            metadata.replace(
+                status=str(getattr(batch, "status", "submitted")),
+                input_file_id=_object_id(input_file),
+                batch_id=_object_id(batch),
+            )
+        )
+    return registered
+
+
 def refresh_openai_batch_files(
     *,
     metadata: BatchMetadata,
@@ -374,6 +695,7 @@ def refresh_openai_batch_files(
     base_url: str | None,
     organization: str | None,
     project: str | None,
+    download_files: bool = True,
 ) -> BatchMetadata:
     if metadata.batch_id is None:
         raise ValueError("Batch metadata does not contain batch_id.")
@@ -387,9 +709,9 @@ def refresh_openai_batch_files(
     batch = client.batches.retrieve(metadata.batch_id)
     output_file_id = getattr(batch, "output_file_id", None)
     error_file_id = getattr(batch, "error_file_id", None)
-    if output_file_id and not metadata.output_file_path.exists():
+    if download_files and output_file_id and not metadata.output_file_path.exists():
         _download_openai_file(client, output_file_id, metadata.output_file_path)
-    if error_file_id and not metadata.error_file_path.exists():
+    if download_files and error_file_id and not metadata.error_file_path.exists():
         _download_openai_file(client, error_file_id, metadata.error_file_path)
     return metadata.replace(
         status=str(getattr(batch, "status", metadata.status)),
@@ -475,6 +797,72 @@ def collect_openai_batch_embeddings(*, metadata: BatchMetadata, output_path: Pat
             "corpus_embeddings": np.asarray([values[task_key]["document"][doc_id] for doc_id in corpus_ids], dtype=np.float32),
         }
     return results
+
+
+def collect_openai_batch_task_embeddings(metadatas: list[BatchMetadata]) -> dict[str, Any]:
+    if not metadatas:
+        raise ValueError("No batch metadata files were provided for task embedding collection.")
+    task_keys = {str(task["task_key"]) for metadata in metadatas for task in metadata.tasks}
+    if len(task_keys) != 1:
+        raise ValueError(f"Expected one task across batch shards, got {sorted(task_keys)}.")
+    task_key = next(iter(task_keys))
+    request_by_custom_id = {str(request["custom_id"]): request for metadata in metadatas for request in metadata.requests}
+    values: dict[str, dict[str, dict[str, list[float]]]] = {}
+    for metadata in metadatas:
+        if not metadata.output_file_path.exists():
+            raise FileNotFoundError(f"Batch output file does not exist: {metadata.output_file_path}")
+        with metadata.output_file_path.open("rt", encoding="utf-8") as file:
+            for line_number, line in enumerate(file, 1):
+                if not line.strip():
+                    continue
+                _collect_openai_batch_output_line(
+                    line=line,
+                    line_number=line_number,
+                    request_by_custom_id=request_by_custom_id,
+                    values=values,
+                )
+    query_requests = [
+        request
+        for metadata in metadatas
+        for request in metadata.requests
+        if request["task_key"] == task_key and request["role"] == "query"
+    ]
+    doc_requests = [
+        request
+        for metadata in metadatas
+        for request in metadata.requests
+        if request["task_key"] == task_key and request["role"] == "document"
+    ]
+    query_ids = [str(item) for request in query_requests for item in request["ids"]]
+    corpus_ids = [str(item) for request in doc_requests for item in request["ids"]]
+    missing_queries = [query_id for query_id in query_ids if query_id not in values.get(task_key, {}).get("query", {})]
+    missing_docs = [doc_id for doc_id in corpus_ids if doc_id not in values.get(task_key, {}).get("document", {})]
+    if missing_queries or missing_docs:
+        raise ValueError(
+            f"Batch output is incomplete for {task_key}: "
+            f"missing_queries={len(missing_queries)}, missing_docs={len(missing_docs)}"
+        )
+    return {
+        "task_key": task_key,
+        "query_ids": query_ids,
+        "corpus_ids": corpus_ids,
+        "query_embeddings": np.asarray([values[task_key]["query"][query_id] for query_id in query_ids], dtype=np.float32),
+        "corpus_embeddings": np.asarray([values[task_key]["document"][doc_id] for doc_id in corpus_ids], dtype=np.float32),
+    }
+
+
+def cleanup_batch_download_files(metadata: BatchMetadata) -> list[Path]:
+    removed: list[Path] = []
+    for path in (
+        metadata.output_file_path,
+        metadata.error_file_path,
+        metadata.output_file_path.with_name(f"{metadata.output_file_path.name}.tmp"),
+        metadata.error_file_path.with_name(f"{metadata.error_file_path.name}.tmp"),
+    ):
+        if path.exists():
+            path.unlink()
+            removed.append(path)
+    return removed
 
 
 def _collect_openai_batch_output_line(
