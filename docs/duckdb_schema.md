@@ -33,6 +33,12 @@ analysis, and `model_scores` /
 current HTMX viewer does not expose the analysis-oriented `task_diagnostics`
 surface and does not read `model_scores`.
 
+When the web viewer installs its local cache from a source DuckDB, it writes a
+viewer-only copy that omits `task_results` and `task_diagnostics`. The source
+DuckDB remains the canonical warehouse for rebuilds, append workflows, Parquet
+exports, and offline analysis; the local viewer cache keeps only the tables
+needed to render the current leaderboard surfaces.
+
 ## Generation
 
 Build the DuckDB database from benchmark JSON output:
@@ -252,11 +258,12 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 | --- | --- | --- |
 | Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores. The `reranking_hybrid` candidate set is the RRF top-100 over BM25 and dense candidate rankings; BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them. The BM25 row shown in Reranking is a candidate-order baseline, not the source of the reranking candidate set. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive when a query's hybrid top-100 has no qrels-positive candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 
-The page header also reads `task_results` for the latest available evaluation
-timestamp. Configured scope presets (`Overall`, `Core`, and `Core (EN)`) expand
-to their configured benchmark components before querying the leaderboard.
-`Custom` expands from repeated `bench=` query parameters. Empty `view=Custom`
-with no `bench=` values represents the cleared benchmark set.
+The page header reads `meta_database.built_at_utc` for the latest available
+database timestamp and summary counts from `viewer_task_results`. Configured
+scope presets (`Overall`, `Core`, and `Core (EN)`) expand to their configured
+benchmark components before querying the leaderboard. `Custom` expands from
+repeated `bench=` query parameters. Empty `view=Custom` with no `bench=` values
+represents the cleared benchmark set.
 
 ## Table Overview
 
