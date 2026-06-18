@@ -307,8 +307,9 @@ synchronized into a shared remote latest cache
 using Hugging Face file metadata and a sidecar SHA-1 to avoid repeated downloads
 or local copies when the content has not changed. The shared remote latest cache
 keeps the full source DuckDB. The viewer's local `/data/viewer` copy is
-installed as a smaller viewer-only DuckDB that omits `task_results` and
-`task_diagnostics`, which are not needed by the current leaderboard UI.
+installed as a smaller viewer-only DuckDB that omits `task_results`,
+`task_diagnostics`, and `metrics_long`, which are not needed by the current
+leaderboard UI.
 
 The same viewer can be pointed at a different source locally or in a Space with:
 

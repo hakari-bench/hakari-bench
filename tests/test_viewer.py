@@ -4959,6 +4959,8 @@ def test_local_duckdb_store_installs_slim_viewer_duckdb_cache(tmp_path: Path) ->
         con.execute("INSERT INTO task_results VALUES ('model/a', 0.9)")
         con.execute("CREATE TABLE task_diagnostics (model_name VARCHAR, wall_seconds DOUBLE)")
         con.execute("INSERT INTO task_diagnostics VALUES ('model/a', 1.2)")
+        con.execute("CREATE TABLE metrics_long (model_name VARCHAR, metric_name VARCHAR, metric_value DOUBLE)")
+        con.execute("INSERT INTO metrics_long VALUES ('model/a', 'ndcg@10', 0.9)")
     finally:
         con.close()
     store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
@@ -4971,6 +4973,7 @@ def test_local_duckdb_store_installs_slim_viewer_duckdb_cache(tmp_path: Path) ->
         assert _duckdb_table_exists(con, "viewer_task_results")
         assert not _duckdb_table_exists(con, "task_results")
         assert not _duckdb_table_exists(con, "task_diagnostics")
+        assert not _duckdb_table_exists(con, "metrics_long")
         assert con.execute("SELECT model_name, score FROM viewer_task_results").fetchall() == [("model/a", 0.9)]
     finally:
         con.close()

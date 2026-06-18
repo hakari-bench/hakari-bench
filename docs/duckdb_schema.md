@@ -23,8 +23,10 @@ no-filter raw-task display modes, plus
 The HTMX leaderboard requires the current schema and reads these mart tables or
 computes from `viewer_task_results`.
 `runs` contains run-level metadata,
-`metrics_long` contains task metrics recomputed from top-ranking artifacts for
-full-corpus, reranking, and embedding-variant rows, `retrieval_rankings` contains
+`fact_metric_score` and `dim_metric` contain task metrics recomputed from
+top-ranking artifacts for full-corpus, reranking, and embedding-variant rows,
+`metrics_long` may also be present as the legacy long-format build/source
+table, `retrieval_rankings` contains
 per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
@@ -34,8 +36,9 @@ current HTMX viewer does not expose the analysis-oriented `task_diagnostics`
 surface and does not read `model_scores`.
 
 When the web viewer installs its local cache from a source DuckDB, it writes a
-viewer-only copy that omits `task_results` and `task_diagnostics`. The source
-DuckDB remains the canonical warehouse for rebuilds, append workflows, Parquet
+viewer-only copy that omits `task_results`, `task_diagnostics`, and
+`metrics_long`. The source DuckDB remains the canonical warehouse for rebuilds,
+append workflows, Parquet
 exports, and offline analysis; the local viewer cache keeps only the tables
 needed to render the current leaderboard surfaces.
 
@@ -103,6 +106,9 @@ separate result root and the existing DuckDB should be reused directly, use
 new canonical rows into the existing DuckDB, updates `source_load_state`, and
 rebuilds SQL-derived viewer marts. It rejects duplicate result paths and
 duplicate logical `(model_name, benchmark, dataset_id, task_key)` base rows.
+Append uses `fact_metric_score` plus `dim_metric` as the canonical metric store;
+if a legacy `metrics_long` table is present it is still maintained, but append
+does not require that table.
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
@@ -187,8 +193,9 @@ When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `meta_database`, `schema_change_log`,
 `ingestion_batches`, `source_load_state`, `result_extensions`, `runs`,
 `dim_model`, `dim_task`, `dim_variant`, `dim_metric`, `task_results`,
-`fact_task_score`, `fact_metric_score`, `metrics_long`, `retrieval_rankings`,
-`task_diagnostics`, `dataset_metadata`, `viewer_task_results`,
+`fact_task_score`, `fact_metric_score`, optional `metrics_long`,
+`retrieval_rankings`, `task_diagnostics`, `dataset_metadata`,
+`viewer_task_results`,
 `viewer_filter_values`, `viewer_leaderboard_rows`,
 `viewer_leaderboard_language_options`, `model_scores`, and `borda_task_scores`.
 These files are intended for notebooks,
@@ -471,10 +478,11 @@ rows with different embedding dimensions do not collide.
 
 ### `dim_metric`
 
-`dim_metric` contains one deterministic row for each metric name in
-`metrics_long`. The writer parses common IR metric names into a metric family
-and cutoff, so new cutoffs such as `recall@100` can be stored without adding
-columns. Reranking metric names keep their original `_reranking_hybrid_top..._rerank_`
+`dim_metric` contains one deterministic row for each metric name in the
+canonical metric facts. The writer parses common IR metric names into a metric
+family and cutoff, so new cutoffs such as `recall@100` can be stored without
+adding columns. Reranking metric names keep their original
+`_reranking_hybrid_top..._rerank_`
 marker so the viewer can distinguish them from full-corpus metrics with the
 same family and cutoff while allowing the candidate subset depth to vary.
 
@@ -578,12 +586,14 @@ completeness displays.
 
 ### `metrics_long`
 
-`metrics_long` is a long-format representation of metrics computed while
-building DuckDB. The builder reads each result's top-ranking artifact, combines
-the ranked corpus ids with artifact qrels, and computes the viewer metric set
-for the selected full-corpus, reranking, and embedding-variant rankings. The
-small task JSON `metrics` and `rerank_metrics` dictionaries are fallback inputs
-for summary values, not the source of the full viewer metric set.
+`metrics_long` is an optional long-format representation of metrics computed
+while building DuckDB. The builder reads each result's top-ranking artifact,
+combines the ranked corpus ids with artifact qrels, and computes the viewer
+metric set for the selected full-corpus, reranking, and embedding-variant
+rankings. The small task JSON `metrics` and `rerank_metrics` dictionaries are
+fallback inputs for summary values, not the source of the full viewer metric
+set. Current append logic can operate without this table by inserting new
+metric rows directly into `fact_metric_score` and `dim_metric`.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -600,9 +610,9 @@ for summary values, not the source of the full viewer metric set.
 
 ### `fact_metric_score`
 
-`fact_metric_score` is the normalized metric-value fact table derived from
-`metrics_long` and `dim_metric`. It keeps detailed metrics separate from the
-primary leaderboard score in `fact_task_score`. In `Retrieval` mode, the viewer
+`fact_metric_score` is the normalized metric-value fact table joined to
+`dim_metric`. It keeps detailed metrics separate from the primary leaderboard
+score in `fact_task_score`. In `Retrieval` mode, the viewer
 uses metric names that do not contain `_reranking_hybrid_top`. In `Reranking`
 mode, with or without the safeguard toggle, the viewer uses
 metric rows with the selected reranking `score_target` and metric names that

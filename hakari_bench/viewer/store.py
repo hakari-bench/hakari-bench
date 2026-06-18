@@ -17,7 +17,7 @@ DEFAULT_HF_SOURCE_CHECK_TTL_SECONDS = 600.0
 DEFAULT_REMOTE_LATEST_DUCKDB_PATH = Path.home() / ".cache" / "hakari-bench" / "duckdb" / "remote_latest_hakari_bench.duckdb"
 REMOTE_LATEST_DUCKDB_PATH_ENV = "HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH"
 REMOTE_LATEST_DUCKDB_METADATA_PATH_ENV = "HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH"
-VIEWER_CACHE_EXCLUDED_TABLES = frozenset({"task_results", "task_diagnostics"})
+VIEWER_CACHE_EXCLUDED_TABLES = frozenset({"task_results", "task_diagnostics", "metrics_long"})
 DuckDbProgressCallback = Callable[[str, int, int | None], None]
 
 
