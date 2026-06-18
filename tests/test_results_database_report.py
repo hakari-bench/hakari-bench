@@ -3790,6 +3790,118 @@ def test_build_viewer_leaderboard_mart_materializes_display_modes(tmp_path: Path
         con.close()
 
 
+def test_build_viewer_leaderboard_mart_materializes_overall_en_scope(tmp_path: Path) -> None:
+    en_row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="BenchA",
+        dataset_id="bench/a",
+        dataset_name="BenchA",
+        split_name="task-en",
+        task_name="task-en",
+        task_key="BenchA::bench/a::task-en",
+        score=0.60,
+        aggregate_metric="ndcg@10",
+        result_path="en.json",
+    )
+    ja_row = en_row.model_copy(
+        update={
+            "split_name": "task-ja",
+            "task_name": "task-ja",
+            "task_key": "BenchA::bench/a::task-ja",
+            "score": 0.40,
+            "result_path": "ja.json",
+        }
+    )
+    db_path = tmp_path / "results.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[en_row, ja_row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "BenchA",
+                "dataset_id": "bench/a",
+                "task_name": "task-en",
+                "metric_name": "task-en_ndcg@10",
+                "metric_value": 0.60,
+                "result_path": "en.json",
+            },
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "BenchA",
+                "dataset_id": "bench/a",
+                "task_name": "task-ja",
+                "metric_name": "task-ja_ndcg@10",
+                "metric_value": 0.40,
+                "result_path": "ja.json",
+            },
+        ],
+        dataset_metadata_rows=[
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name="task-en",
+                task_name="task-en",
+                task_key="BenchA::bench/a::task-en",
+                language="en",
+                languages=["en"],
+                primary_languages=["en"],
+            ),
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name="task-ja",
+                task_name="task-ja",
+                task_key="BenchA::bench/a::task-ja",
+                language="ja",
+                languages=["ja"],
+                primary_languages=["ja"],
+            ),
+        ],
+        standings={},
+        borda_rows=[],
+    )
+    viewer_config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[
+            OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"]),
+            OverallConfig(name="Overall (EN)", label="Overall (EN)", benchmarks=["BenchA"]),
+        ],
+    )
+
+    report.build_viewer_leaderboard_mart(
+        db_path,
+        viewer_config=viewer_config,
+        view_names=["Overall", "Overall (EN)"],
+    )
+
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            """
+            SELECT view_name, expected_tasks, model_name, mean_score, task_count
+            FROM viewer_leaderboard_rows
+            WHERE score_target = 'all'
+              AND include_quantization_variants = false
+              AND include_truncate_variants = false
+              AND include_rescore_variants = false
+              AND include_other_variants = false
+            ORDER BY view_name
+            """
+        ).fetchall() == [
+            ("Overall", 2, "example/model", 50.0, 2),
+            ("Overall (EN)", 1, "example/model", 60.0, 1),
+        ]
+    finally:
+        con.close()
+
+
 def test_cached_viewer_leaderboard_mart_rows_match_service_path(tmp_path: Path) -> None:
     def task_row(
         *,

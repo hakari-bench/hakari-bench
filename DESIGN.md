@@ -209,7 +209,7 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - The first screen should be the usable leaderboard, not explanatory content.
 - Group controls by workflow:
   - Evaluation mode: Retrieval or Reranking.
-  - Benchmark scope: All, Core, Group, and Nano suite selection.
+  - Benchmark scope: Overall, Overall (EN), Clear, and Nano suite selection.
   - Table shape: Metric, task facets, task scores, ranks, z-scores, and visible
     aggregation.
   - Efficiency variants: Dims, Quant, Rescore, Sparse pruning.
@@ -245,7 +245,7 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
-  such as All/Core/Group or Safeguard positives.
+  such as Overall/Overall (EN) or Safeguard positives.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
 - In Refine results, Params sits above Length and uses compact numeric inputs

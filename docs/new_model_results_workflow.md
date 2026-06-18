@@ -23,7 +23,7 @@ documents:
 - [`late_interaction_evaluation.md`](late_interaction_evaluation.md): extra
   notes for ColBERT/PyLate-style models.
 - [`leaderboard_metrics.md`](leaderboard_metrics.md): metric policy for the
-  leaderboard and Core summaries.
+  leaderboard and Overall summaries.
 
 ## 1. Research The Model Before Running
 
@@ -259,7 +259,7 @@ uv run python scripts/generate_results_pr_template.py \
 
 Fill every TODO in the generated Markdown. The PR body should include the exact
 command or job manifest, model revision, dataset revisions, method, runtime
-options, Core `nDCG@10` summary, package/CUDA environment, retries, batch-size
+options, Overall `nDCG@10` summary, package/CUDA environment, retries, batch-size
 changes, and any intentional partial coverage or non-default variant choice.
 
 ## 7. Open The GitHub Code PR

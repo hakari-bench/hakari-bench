@@ -238,6 +238,36 @@ def test_empty_custom_benchmark_selection_stays_custom_and_resets_language() -> 
     assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc"}
 
 
+def test_overall_en_view_normalizes_to_en_language_filter() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall (EN)",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        lang_filter=["ja"],
+    )
+
+    assert query == {
+        "view": "Overall (EN)",
+        "sort": "borda_rank",
+        "direction": "asc",
+        "lang_filter": ["en"],
+    }
+
+
 def test_legacy_clear_view_normalizes_to_empty_custom() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
@@ -480,5 +510,8 @@ def _viewer_config() -> ViewerConfig:
                 ],
             ),
         ],
-        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+        overalls=[
+            OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"]),
+            OverallConfig(name="Overall (EN)", label="Overall (EN)", benchmarks=["BenchA"]),
+        ],
     )

@@ -74,7 +74,7 @@ reproduce the measurement:
   max sequence length, prompt settings, candidate ranking, and rerank top-k.
 - Machine environment: GPU, CUDA, Python, torch, transformers,
   sentence-transformers, and datasets versions.
-- Core set `nDCG@10` summary.
+- Overall `nDCG@10` summary.
 - Notes about retries, resumed tasks, memory pressure, batch-size changes, or
   any intentionally non-default setting.
 
@@ -105,8 +105,8 @@ uv run python scripts/generate_results_pr_template.py \
 
 The generated template includes:
 
-- Overall Core set `nDCG@10`.
-- Per-Core-component `nDCG@10`.
+- Overall `nDCG@10`.
+- Per-Overall-component `nDCG@10`.
 - Result file counts.
 - Model, dataset, runtime, package, CUDA, and timestamp metadata extracted from
   the result JSON.
@@ -225,7 +225,7 @@ should include at least:
 - model id and result directory,
 - result file count,
 - evaluation method,
-- Core `nDCG@10` summary,
+- Overall `nDCG@10` summary,
 - exact model revision,
 - runtime options such as dtype, device, batch size, attention implementation,
   trust-remote-code, max sequence length, candidate ranking, and rerank top-k,
@@ -236,7 +236,7 @@ should include at least:
   included.
 
 PR #2 is a concrete example of the expected shape: it reported the sparse
-`hotchpotch/japanese-splade-v2` result count, Core `nDCG@10`, grouped Core
+`hotchpotch/japanese-splade-v2` result count, Overall `nDCG@10`, grouped Overall
 component scores, model revision, runtime environment, a reconstructed command,
 and submitter notes explaining that one task used a smaller batch size.
 
@@ -289,7 +289,7 @@ Reviewers should check:
 - The files are compressed result JSON files, plus only expected small sidecar
   metadata files when applicable.
 - The generated PR summary matches the submitted files.
-- The Core set score has enough task coverage for the claim being made.
+- The Overall score has enough task coverage for the claim being made.
 - The result metadata records model revision, dataset revision, runtime options,
   package versions, and CUDA information.
 - Any non-default prompt, max sequence length, attention implementation,

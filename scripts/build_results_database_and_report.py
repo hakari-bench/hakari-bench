@@ -36,12 +36,14 @@ from hakari_bench.viewer.store import (
     _download_hf_duckdb,
 )
 from hakari_bench.viewer.leaderboard import (
+    LanguageFilterPolicy,
     LeaderboardService,
     _aggregate_overall_scores,
     _aggregate_benchmark_score_group_scores,
     _append_missing_bm25_task_scores,
     _exclude_configured_tasks,
     _exclude_reranker_task_scores,
+    _filter_rows_by_languages,
     _language_filter_mode_for_view,
     _language_options,
     _language_page_languages_for_view,
@@ -5720,6 +5722,15 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                     mode=language_filter_mode,
                     allowed_languages=language_page_languages,
                 )
+                if view_name == "Overall (EN)":
+                    rows = _filter_rows_by_languages(
+                        rows,
+                        ("en",),
+                        policy=LanguageFilterPolicy(
+                            default_mode=language_filter_mode,
+                            default_allowed_languages=tuple(language_page_languages),
+                        ),
+                    )
                 metric_score_group = None
                 if overall is not None:
                     rows = _aggregate_overall_scores(
