@@ -919,7 +919,10 @@ def _redact_sensitive_payload(value: Any) -> Any:
 
 def _is_sensitive_key(key: str) -> bool:
     normalized = key.lower()
-    return any(marker in normalized for marker in ("api_key", "apikey", "token", "secret", "password", "credential"))
+    if any(marker in normalized for marker in ("api_key", "apikey", "secret", "password", "credential")):
+        return True
+    token_keys = ("token", "access_token", "auth_token", "bearer_token", "api_token")
+    return normalized in token_keys or any(normalized.endswith(f"_{token_key}") for token_key in token_keys)
 
 
 def _consistent_task_model_metadata(results: list[TaskRunResult]) -> dict[str, Any] | None:

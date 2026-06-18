@@ -660,6 +660,40 @@ Compatibility notes:
   `_text_length` before encoding. With that compatibility shim, NanoMIRACL/en
   succeeded with `tf5-sdpa`.
 
+## OpenAI Embedding Models
+
+Applies to:
+
+- `text-embedding-3-small`
+- `text-embedding-3-large`
+
+Use the built-in OpenAI dense loader:
+
+```bash
+uv run --group openai hakari-bench evaluate dense \
+  --model text-embedding-3-small \
+  --model-loader openai
+```
+
+Operational notes:
+
+- Store `OPENAI_API_KEY` in `.env`; `.env.sample` is committed as the template.
+- The adapter uses `AsyncOpenAI` internally. Set
+  `--model-loader-kwargs-json '{"max_concurrency":8}'` to control in-flight
+  embeddings requests.
+- `--truncate-dim` and `--embedding-variant truncate:DIM` use full OpenAI
+  embeddings followed by `full[:DIM]` and L2 normalization. This is very close to
+  API-side `dimensions`, but not bit-identical, and avoids extra API calls for
+  each truncation condition.
+- The OpenAI adapter token-truncates inputs above 8100 counted tokens by default,
+  leaving headroom below the provider's 8192-token hard limit; set
+  `--model-loader-kwargs-json '{"truncate_input_tokens":false}'` to fail
+  instead.
+- Attention implementation, dtype, device, and multi-process encode devices do
+  not apply to this hosted API backend.
+- See `docs/openai_embedding_evaluation.md` for the API-vs-local dimension
+  check and the cost-estimation workflow.
+
 ## Sentence Transformers Static Similarity MRL
 
 Applies to:

@@ -17,6 +17,15 @@ from hakari_bench.bm25 import (
     collect_bm25_metadata,
     run_or_load_bm25_task,
 )
+from hakari_bench.batch import (
+    DEFAULT_BATCH_WORKSPACE_ROOT,
+    PrecomputedDenseEmbeddingModel,
+    collect_openai_batch_embeddings,
+    load_batch_metadata,
+    refresh_openai_batch_files,
+    register_openai_embedding_batch,
+    wait_for_openai_batch,
+)
 from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
 from hakari_bench.task_docs import validate_task_docs
 from hakari_bench.datasets import DatasetRegistry, EvalTask, resolve_eval_tasks
@@ -140,6 +149,36 @@ def build_parser() -> argparse.ArgumentParser:
     build_bm25.add_argument("--show-progress", action="store_true")
     _add_bm25_args(build_bm25)
 
+    batch = subparsers.add_parser("batch", help="Register, fetch, and materialize batch inference jobs.")
+    batch_methods = batch.add_subparsers(dest="batch_model_type", required=True)
+    batch_dense = batch_methods.add_parser("dense", help="Batch workflow for dense embedding models.")
+    batch_dense_actions = batch_dense.add_subparsers(dest="batch_action", required=True)
+
+    batch_dense_register = batch_dense_actions.add_parser("register", help="Create and submit a dense batch job.")
+    _add_batch_common_args(batch_dense_register)
+    batch_dense_register.add_argument("--provider", choices=["openai"], default="openai")
+    batch_dense_register.add_argument("--model", required=True)
+    _add_dataset_args(batch_dense_register, action="evaluate")
+    _add_prompt_args(batch_dense_register)
+    _add_execution_args(batch_dense_register)
+    _add_openai_batch_args(batch_dense_register)
+    batch_dense_register.add_argument("--overwrite", action="store_true")
+
+    batch_dense_fetch = batch_dense_actions.add_parser("fetch", help="Refresh batch status and download output files.")
+    _add_batch_common_args(batch_dense_fetch)
+    _add_openai_batch_auth_args(batch_dense_fetch)
+    batch_dense_fetch.add_argument("--wait", action="store_true", help="Poll until the batch reaches a terminal state.")
+    batch_dense_fetch.add_argument("--poll-seconds", type=int, default=900)
+
+    batch_dense_materialize = batch_dense_actions.add_parser(
+        "materialize",
+        help="Build normal per-task result JSON from completed dense batch output.",
+    )
+    _add_batch_common_args(batch_dense_materialize)
+    _add_embedding_variant_args(batch_dense_materialize)
+    _add_candidate_args(batch_dense_materialize)
+    _add_output_args(batch_dense_materialize, results_default=DEFAULT_RESULTS_DIR)
+
     web = subparsers.add_parser("web", help="Run the HAKARI-Bench result viewer.")
     web.add_argument("--host", default="127.0.0.1", help="Bind host. Use 0.0.0.0 to allow remote access.")
     web.add_argument("--port", type=int, default=8000)
@@ -195,8 +234,9 @@ def _add_evaluate_model_args(parser: argparse.ArgumentParser) -> None:
         "--model-loader",
         default=None,
         help=(
-            "Optional custom model loader in module:function form. The callable receives ModelLoadConfig "
-            "and must return an object matching the evaluation method's duck-typed interface."
+            "Optional built-in or custom model loader. Use 'openai' for OpenAI embeddings, or module:function "
+            "for a custom callable that receives ModelLoadConfig and returns an object matching the "
+            "evaluation method's duck-typed interface."
         ),
     )
     parser.add_argument(
@@ -395,6 +435,31 @@ def _add_output_args(parser: argparse.ArgumentParser, *, results_default: str) -
     parser.add_argument("--primary-metric", default="ndcg@10")
 
 
+def _add_batch_common_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--target", required=True, help="Stable local batch workspace target name.")
+    parser.add_argument("--workspace-root", default=DEFAULT_BATCH_WORKSPACE_ROOT)
+
+
+def _add_openai_batch_auth_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--dotenv-path", default=".env")
+    parser.add_argument("--api-key-env", default="OPENAI_API_KEY")
+    parser.add_argument("--base-url", default=None)
+    parser.add_argument("--organization", default=None)
+    parser.add_argument("--project", default=None)
+
+
+def _add_openai_batch_args(parser: argparse.ArgumentParser) -> None:
+    _add_openai_batch_auth_args(parser)
+    parser.add_argument("--max-input-tokens", type=int, default=8100)
+    parser.add_argument("--max-request-tokens", type=int, default=290_000)
+    parser.add_argument(
+        "--max-embedding-inputs",
+        type=int,
+        default=50_000,
+        help="Maximum embedding inputs per OpenAI batch. The OpenAI embeddings batch limit is 50,000.",
+    )
+
+
 def _add_bm25_args(parser: argparse.ArgumentParser, *, include_source: bool = False) -> None:
     if include_source:
         parser.add_argument(
@@ -455,6 +520,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                     args.embedding_variant_values,
                     args.embedding_variant_grid_values,
                     include_defaults=not args.no_default_embedding_variants,
+                    normalize_truncate=getattr(args, "model_loader", None) == "openai",
                 )
             elif args.model_type == "sparse":
                 args.embedding_variants = sparse_embedding_variants(
@@ -522,11 +588,73 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--model-loader and --model-loader-kwargs-json are not supported for evaluate bm25.")
         if args.model_loader is None and args.model_loader_kwargs:
             parser.error("--model-loader-kwargs-json requires --model-loader.")
+        if args.model_loader == "openai" and args.model_type != "dense":
+            parser.error("--model-loader openai requires evaluate dense.")
+        if args.model_loader == "openai" and args.encode_devices:
+            parser.error("--encode-devices is not supported with --model-loader openai.")
     if args.command == "build-candidates":
         try:
             _apply_build_candidates_params_json(args)
         except ValueError as exc:
             parser.error(str(exc))
+    if args.command == "batch":
+        if args.batch_model_type != "dense":
+            parser.error("Only batch dense is supported.")
+        if args.batch_action == "register":
+            _bridge_new_batch_register_args(args)
+            try:
+                args.encode_kwargs = _parse_json_object_arg(
+                    getattr(args, "encode_kwargs_json", None),
+                    option_name="--encode-kwargs-json",
+                )
+                args.query_encode_kwargs = _parse_json_object_arg(
+                    getattr(args, "query_encode_kwargs_json", None),
+                    option_name="--query-encode-kwargs-json",
+                )
+                args.document_encode_kwargs = _parse_json_object_arg(
+                    getattr(args, "document_encode_kwargs_json", None),
+                    option_name="--document-encode-kwargs-json",
+                )
+            except ValueError as exc:
+                parser.error(str(exc))
+            if args.encode_kwargs or args.query_encode_kwargs or args.document_encode_kwargs:
+                parser.error("batch dense register currently supports explicit prompts only, not encode kwargs.")
+            for attr in ("encode_kwargs_json", "query_encode_kwargs_json", "document_encode_kwargs_json"):
+                if hasattr(args, attr):
+                    delattr(args, attr)
+            _validate_all_target_args(args, parser)
+            _validate_evaluation_scope_arg(args, parser)
+            if args.dataset is None and not args.collection:
+                args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
+            elif args.dataset is None:
+                args.dataset = []
+            if args.batch_size <= 0:
+                parser.error("--batch-size must be positive.")
+            if args.max_input_tokens <= 0:
+                parser.error("--max-input-tokens must be positive.")
+            if args.max_request_tokens <= 0:
+                parser.error("--max-request-tokens must be positive.")
+            if args.max_embedding_inputs <= 0:
+                parser.error("--max-embedding-inputs must be positive.")
+        elif args.batch_action == "fetch":
+            if args.poll_seconds <= 0:
+                parser.error("--poll-seconds must be positive.")
+        elif args.batch_action == "materialize":
+            try:
+                args.embedding_variants = dense_embedding_variants(
+                    args.embedding_variant_values,
+                    args.embedding_variant_grid_values,
+                    include_defaults=not args.no_default_embedding_variants,
+                    normalize_truncate=True,
+                )
+            except ValueError as exc:
+                parser.error(str(exc))
+            _apply_score_device_to_quantized_variants(args.embedding_variants, score_device="auto")
+            delattr(args, "embedding_variant_values")
+            delattr(args, "embedding_variant_grid_values")
+            _bridge_new_batch_materialize_args(args)
+            if args.rerank_top_k is not None and args.rerank_top_k <= 0:
+                parser.error("--rerank-top-k must be positive.")
     if args.command == "evaluate":
         truncate_sparse_values = {
             "--sparse-query-max-active-dims": getattr(args, "sparse_query_max_active_dims", None),
@@ -574,6 +702,42 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     elif args.command == "build-candidates" and args.dataset is None:
         args.dataset = []
     return args
+
+
+def _bridge_new_batch_register_args(args: argparse.Namespace) -> None:
+    args.all = getattr(args, "all", False)
+    args.collection = getattr(args, "collection", [])
+    args.split = getattr(args, "split", [])
+    args.evaluation_scope = getattr(args, "evaluation_scope", "standard")
+    args.query_prompt = getattr(args, "query_prompt", None)
+    args.document_prompt = getattr(args, "document_prompt", None)
+
+
+def _bridge_new_batch_materialize_args(args: argparse.Namespace) -> None:
+    args.model_type = "dense"
+    args.output_dir = getattr(args, "results_dir", DEFAULT_RESULTS_DIR)
+    args.result_format = getattr(args, "result_format", "json.xz")
+    args.override = getattr(args, "overwrite", False)
+    args.aggregate_metric = getattr(args, "primary_metric", "ndcg@10")
+    args.show_progress = getattr(args, "show_progress", False)
+    args.batch_size = getattr(args, "batch_size", 32)
+    args.truncate_dim = None
+    args.truncate_sparse_query_max_dims = None
+    args.truncate_sparse_docs_max_dims = None
+    args.score_device = "auto"
+    args.encode_devices = None
+    args.encode_chunk_size = None
+    args.encode_kwargs = {}
+    args.query_encode_kwargs = {}
+    args.document_encode_kwargs = {}
+    args.query_prompt = None
+    args.corpus_prompt = None
+    args.query_prompt_name = None
+    args.corpus_prompt_name = None
+    args.query_task = None
+    args.corpus_task = None
+    args.candidate_subset_name = getattr(args, "candidate_ranking", DEFAULT_CANDIDATE_RANKING)
+    args.rerank_top_n = getattr(args, "rerank_top_k", DEFAULT_RERANK_TOP_K)
 
 
 def _bridge_new_evaluate_args(args: argparse.Namespace) -> None:
@@ -653,6 +817,8 @@ def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[st
     args.model = str(source_name or model_id)
     args.model_alias = model_id
     args.model_revision = _model_card_revision(source)
+    if isinstance(source, dict) and source.get("type") == "openai":
+        args.model_loader = "openai"
     runtime = card.get("runtime")
     if isinstance(runtime, dict):
         _apply_model_card_runtime(args, runtime, provided_options=provided_options)
@@ -814,6 +980,10 @@ def _apply_model_identity(args: argparse.Namespace) -> None:
     model = getattr(args, "model", None)
     alias = getattr(args, "model_alias", None)
     if not model:
+        return
+    if getattr(args, "model_loader", None) == "openai":
+        args.model_id = alias or model
+        args.model_source = {"type": "openai", "name": model}
         return
     is_local = _is_local_model_path(model)
     args.model_id = _model_id_for(model, alias=alias, is_local=is_local)
@@ -1257,6 +1427,201 @@ def _dataset_values_for_args(args: argparse.Namespace, registry: DatasetRegistry
     return args.dataset
 
 
+def run_batch(args: argparse.Namespace) -> dict[str, Any]:
+    if args.batch_model_type != "dense":
+        raise ValueError("Only batch dense is supported.")
+    if args.batch_action == "register":
+        return run_batch_dense_register(args)
+    if args.batch_action == "fetch":
+        return run_batch_dense_fetch(args)
+    if args.batch_action == "materialize":
+        return run_batch_dense_materialize(args)
+    raise ValueError(f"Unsupported batch action: {args.batch_action}")
+
+
+def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
+    registry = DatasetRegistry.load_builtin()
+    tasks = resolve_eval_tasks(
+        registry=registry,
+        dataset_values=_dataset_values_for_args(args, registry),
+        collection_values=args.collection,
+        split_values=args.split,
+        evaluation_scope=args.evaluation_scope,
+    )
+    if args.provider != "openai":
+        raise ValueError(f"Unsupported dense batch provider: {args.provider}")
+    metadata = register_openai_embedding_batch(
+        target=args.target,
+        workspace_root=Path(args.workspace_root),
+        model=args.model,
+        tasks=tasks,
+        dataset_loader=lambda eval_task: _load_dataset_for_args(args, eval_task),
+        batch_size=args.batch_size,
+        max_input_tokens=args.max_input_tokens,
+        max_request_tokens=args.max_request_tokens,
+        max_embedding_inputs=args.max_embedding_inputs,
+        query_prompt=args.query_prompt,
+        document_prompt=args.document_prompt,
+        dataset_revision=getattr(args, "dataset_revision", None),
+        dotenv_path=args.dotenv_path,
+        api_key_env=args.api_key_env,
+        base_url=args.base_url,
+        organization=args.organization,
+        project=args.project,
+        overwrite=args.overwrite,
+    )
+    payload = _batch_summary(metadata)
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return payload
+
+
+def run_batch_dense_fetch(args: argparse.Namespace) -> dict[str, Any]:
+    metadata = load_batch_metadata(target=args.target, workspace_root=Path(args.workspace_root))
+    if metadata.provider != "openai":
+        raise ValueError(f"Unsupported batch provider for fetch: {metadata.provider}")
+    if args.wait:
+        metadata = wait_for_openai_batch(
+            metadata=metadata,
+            poll_seconds=args.poll_seconds,
+            dotenv_path=args.dotenv_path,
+            api_key_env=args.api_key_env,
+            base_url=args.base_url,
+            organization=args.organization,
+            project=args.project,
+        )
+    else:
+        metadata = refresh_openai_batch_files(
+            metadata=metadata,
+            dotenv_path=args.dotenv_path,
+            api_key_env=args.api_key_env,
+            base_url=args.base_url,
+            organization=args.organization,
+            project=args.project,
+        )
+    payload = _batch_summary(metadata)
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return payload
+
+
+def run_batch_dense_materialize(args: argparse.Namespace) -> dict[str, Any]:
+    metadata = load_batch_metadata(target=args.target, workspace_root=Path(args.workspace_root))
+    if metadata.provider != "openai":
+        raise ValueError(f"Unsupported batch provider for materialize: {metadata.provider}")
+    embeddings_by_task = collect_openai_batch_embeddings(metadata=metadata)
+    args.model = metadata.model
+    args.model_id = metadata.model
+    args.model_source = {"type": metadata.provider, "name": metadata.model}
+    args.model_loader = f"{metadata.provider}-batch"
+    args.model_loader_kwargs = {
+        "batch_id": metadata.batch_id,
+        "target": metadata.target,
+        "workspace_path": str(metadata.workspace_path),
+    }
+    args.model_revision = None
+    args.dtype = "fp32"
+    args.device = None
+    args.attn_implementation = None
+    args.flash_attn2 = False
+    args.trust_remote_code = False
+    args.model_max_seq_length = (metadata.config or {}).get("max_input_tokens")
+    args.dataset_revision = metadata.dataset_revision
+
+    environment = collect_runtime_environment()
+    registry = DatasetRegistry.load_builtin()
+    tasks = [_task_from_batch_payload(registry, task_payload) for task_payload in metadata.tasks]
+    results: list[TaskRunResult] = []
+    model_metadata: dict[str, Any] | None = None
+    for task in tasks:
+        dataset = _load_dataset_for_args(args, task)
+        task_embeddings = embeddings_by_task[f"{task.dataset_id}::{task.split_name}"]
+        query_ids = list(dataset.queries)
+        corpus_ids = list(dataset.corpus)
+        if query_ids != task_embeddings["query_ids"]:
+            raise ValueError(f"Query id order mismatch for {task.dataset_id}::{task.split_name}.")
+        if corpus_ids != task_embeddings["corpus_ids"]:
+            raise ValueError(f"Corpus id order mismatch for {task.dataset_id}::{task.split_name}.")
+        model = PrecomputedDenseEmbeddingModel(
+            query_embeddings=task_embeddings["query_embeddings"],
+            corpus_embeddings=task_embeddings["corpus_embeddings"],
+            model_name=metadata.model,
+            max_seq_length=args.model_max_seq_length,
+            backend_metadata={
+                "provider": metadata.provider,
+                "api_endpoint": (metadata.api or {}).get("endpoint"),
+                "batch_id": metadata.batch_id,
+                "batch_target": metadata.target,
+                "input_file_id": metadata.input_file_id,
+                "output_file_id": metadata.output_file_id,
+                "dimension_reduction": (metadata.config or {}).get("dimension_reduction"),
+            },
+        )
+        model_metadata = collect_model_metadata(model, args)
+        results.append(
+            run_or_load_task(
+                task=task,
+                model=model,
+                args=args,
+                environment=environment,
+                model_metadata=model_metadata,
+                dataset_loader=lambda _task, dataset=dataset: dataset,
+            )
+        )
+    if model_metadata is None:
+        raise ValueError("No batch tasks were materialized.")
+    summary = build_run_summary_payload(
+        args=args,
+        environment=environment,
+        model_metadata=model_metadata,
+        results=results,
+        run_started_at_utc=datetime.now(timezone.utc).isoformat(),
+        run_finished_at_utc=datetime.now(timezone.utc).isoformat(),
+        run_wall_seconds=0.0,
+    )
+    print(
+        json.dumps(
+            {
+                "primary_metric": args.aggregate_metric,
+                "primary_metric_mean": summary["totals"]["aggregate_metric_mean"],
+                "evaluated_count": summary["totals"]["evaluated_count"],
+                "cache_hit_count": summary["totals"]["cache_hit_count"],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
+    return summary
+
+
+def _task_from_batch_payload(registry: DatasetRegistry, payload: dict[str, Any]) -> EvalTask:
+    spec = registry.get_dataset(str(payload["dataset_id"]))
+    return EvalTask(
+        dataset=spec,
+        split_name=str(payload["split_name"]),
+        task_name=str(payload["task_name"]),
+    )
+
+
+def _batch_summary(metadata: Any) -> dict[str, Any]:
+    return {
+        "target": metadata.target,
+        "provider": metadata.provider,
+        "model_type": metadata.model_type,
+        "model": metadata.model,
+        "status": metadata.status,
+        "batch_id": metadata.batch_id,
+        "input_file_id": metadata.input_file_id,
+        "output_file_id": metadata.output_file_id,
+        "error_file_id": metadata.error_file_id,
+        "request_count": metadata.request_count,
+        "embedding_input_count": metadata.embedding_input_count,
+        "workspace_path": str(metadata.workspace_path),
+        "metadata_path": str(metadata.metadata_path),
+        "input_file_path": str(metadata.input_file_path),
+        "output_file_path": str(metadata.output_file_path),
+        "error_file_path": str(metadata.error_file_path),
+    }
+
+
 def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     run_started_at = datetime.now(timezone.utc)
     run_start = time.perf_counter()
@@ -1403,6 +1768,8 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
 
 def _warn_if_missing_attention_implementation(args: argparse.Namespace) -> None:
     if args.model_type == "bm25":
+        return
+    if getattr(args, "model_loader", None) == "openai":
         return
     if args.flash_attn2 or args.attn_implementation is not None:
         return
@@ -1575,6 +1942,9 @@ def main(argv: list[str] | None = None) -> None:
         return
     if args.command == "build-candidates":
         run_build_bm25(args)
+        return
+    if args.command == "batch":
+        run_batch(args)
         return
     if args.command == "web":
         run_web(args)

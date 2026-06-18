@@ -150,6 +150,10 @@ tf4-fa2 = [
     { include-group = "flash-attn" },
     "transformers>=4.57,<5",
 ]
+openai = [
+    "openai>=2.41.1",
+    "tiktoken>=0.13.0",
+]
 
 [tool.tox]
 legacy_tox_ini = """

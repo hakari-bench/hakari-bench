@@ -1,14 +1,20 @@
 from __future__ import annotations
 
+import asyncio
 import importlib
 import importlib.metadata
+import inspect
+import os
 import platform
 import string
 import sys
 from dataclasses import dataclass
 from functools import lru_cache
+from pathlib import Path
+from threading import Thread
 from typing import Any
 
+import numpy as np
 import torch
 
 from hakari_bench.model_protocols import validate_model_capabilities
@@ -375,6 +381,338 @@ class ColbertLateInteractionAdapter(torch.nn.Module):
         return 0
 
 
+class OpenAIEmbeddingAdapter:
+    similarity_fn_name = "cosine"
+    max_seq_length = 8100
+
+    _BASE_DIMENSIONS = {
+        "text-embedding-3-small": 1536,
+        "text-embedding-3-large": 3072,
+    }
+
+    def __init__(
+        self,
+        *,
+        model_name: str,
+        api_key_env: str = "OPENAI_API_KEY",
+        dotenv_path: str | None = ".env",
+        load_dotenv: bool = True,
+        base_url: str | None = None,
+        organization: str | None = None,
+        project: str | None = None,
+        timeout: float | None = None,
+        max_retries: int | None = None,
+        max_input_tokens: int = 8100,
+        truncate_input_tokens: bool = True,
+        max_request_tokens: int = 290_000,
+        max_concurrency: int = 4,
+        encoding_model: str | None = None,
+    ) -> None:
+        if max_input_tokens <= 0:
+            raise ValueError("OpenAI max_input_tokens must be positive.")
+        if max_request_tokens <= 0:
+            raise ValueError("OpenAI max_request_tokens must be positive.")
+        if max_concurrency <= 0:
+            raise ValueError("OpenAI max_concurrency must be positive.")
+        self.model_name_or_path = model_name
+        self.model_name = model_name
+        self.api_key_env = api_key_env
+        self.dotenv_path = dotenv_path
+        self.load_dotenv = load_dotenv
+        self.base_url = base_url
+        self.organization = organization
+        self.project = project
+        self.timeout = timeout
+        self.max_retries = max_retries
+        self.max_seq_length = int(max_input_tokens)
+        self.truncate_input_tokens = bool(truncate_input_tokens)
+        self.max_request_tokens = int(max_request_tokens)
+        self.max_concurrency = int(max_concurrency)
+        self.encoding_model = encoding_model or model_name
+        self.default_prompt_name = None
+        self.prompts = None
+        self._encoding: Any | None = None
+
+    @property
+    def base_dimensions(self) -> int | None:
+        return self._BASE_DIMENSIONS.get(self.model_name)
+
+    def encode_query(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return self.encode(sentences, **kwargs)
+
+    def encode_document(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return self.encode(sentences, **kwargs)
+
+    def encode(
+        self,
+        sentences: list[str] | str,
+        *,
+        batch_size: int = 32,
+        show_progress_bar: bool | None = None,
+        convert_to_numpy: bool = True,
+        convert_to_tensor: bool = False,
+        truncate_dim: int | None = None,
+        dimensions: int | None = None,
+        prompt: str | None = None,
+        prompt_name: str | None = None,
+        task: str | None = None,
+        **_: Any,
+    ) -> Any:
+        return _run_async_from_sync(
+            self.aencode(
+                sentences,
+                batch_size=batch_size,
+                show_progress_bar=show_progress_bar,
+                convert_to_numpy=convert_to_numpy,
+                convert_to_tensor=convert_to_tensor,
+                truncate_dim=truncate_dim,
+                dimensions=dimensions,
+                prompt=prompt,
+                prompt_name=prompt_name,
+                task=task,
+            )
+        )
+
+    async def aencode_query(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return await self.aencode(sentences, **kwargs)
+
+    async def aencode_document(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return await self.aencode(sentences, **kwargs)
+
+    async def aencode(
+        self,
+        sentences: list[str] | str,
+        *,
+        batch_size: int = 32,
+        show_progress_bar: bool | None = None,
+        convert_to_numpy: bool = True,
+        convert_to_tensor: bool = False,
+        truncate_dim: int | None = None,
+        dimensions: int | None = None,
+        prompt: str | None = None,
+        prompt_name: str | None = None,
+        task: str | None = None,
+        **_: Any,
+    ) -> Any:
+        del task
+        if batch_size <= 0:
+            raise ValueError("OpenAI embedding batch_size must be positive.")
+        if prompt_name is not None:
+            raise ValueError("OpenAI embedding adapter does not support prompt_name; pass an explicit prompt string.")
+        requested_dimensions = dimensions if dimensions is not None else truncate_dim
+        self._validate_dimensions(requested_dimensions)
+
+        input_was_string = isinstance(sentences, str)
+        raw_texts = [sentences] if input_was_string else list(sentences)
+        texts = [str(sentence) for sentence in raw_texts]
+        if prompt is not None:
+            texts = [f"{prompt}{text}" for text in texts]
+
+        prepared = self._prepare_inputs(texts)
+        ranges = list(self._request_ranges(prepared, batch_size=batch_size))
+        vectors = await self._fetch_embedding_batches(
+            prepared=prepared,
+            ranges=ranges,
+            show_progress_bar=bool(show_progress_bar),
+        )
+
+        array = np.asarray(vectors, dtype=np.float32)
+        if requested_dimensions is not None:
+            array = _truncate_and_l2_normalize_array(array, dim=requested_dimensions)
+        if convert_to_tensor:
+            result: Any = torch.as_tensor(array)
+        elif convert_to_numpy:
+            result = array
+        else:
+            result = array.tolist()
+        return result[0] if input_was_string else result
+
+    def metadata(self) -> dict[str, Any]:
+        return {
+            "backend_library": "openai",
+            "provider": "openai",
+            "api_endpoint": "/v1/embeddings",
+            "model": self.model_name,
+            "base_dimensions": self.base_dimensions,
+            "max_input_tokens": self.max_seq_length,
+            "truncate_input_tokens": self.truncate_input_tokens,
+            "max_request_tokens": self.max_request_tokens,
+            "max_concurrency": self.max_concurrency,
+            "encoding_model": self.encoding_model,
+            "dimension_reduction": "full_embedding_prefix_l2_normalize",
+            "dotenv_path": self.dotenv_path if self.load_dotenv else None,
+            "api_key_env": self.api_key_env,
+            "base_url": self.base_url,
+            "organization": self.organization,
+            "project": self.project,
+        }
+
+    async def _fetch_embedding_batches(
+        self,
+        *,
+        prepared: list[tuple[str, int]],
+        ranges: list[tuple[int, int]],
+        show_progress_bar: bool,
+    ) -> list[list[float]]:
+        if not ranges:
+            return []
+        client = self._async_client()
+        semaphore = asyncio.Semaphore(self.max_concurrency)
+        progress = None
+        if show_progress_bar:
+            tqdm = getattr(importlib.import_module("tqdm.auto"), "tqdm")
+            progress = tqdm(total=len(ranges), desc="OpenAI embedding batches")
+        try:
+            tasks = [
+                asyncio.create_task(
+                    self._fetch_embedding_batch(
+                        client=client,
+                        semaphore=semaphore,
+                        prepared=prepared,
+                        start=start,
+                        end=end,
+                    )
+                )
+                for start, end in ranges
+            ]
+            batches_by_start: dict[int, list[list[float]]] = {}
+            for task in asyncio.as_completed(tasks):
+                start, vectors = await task
+                batches_by_start[start] = vectors
+                if progress is not None:
+                    progress.update(1)
+            ordered_vectors: list[list[float]] = []
+            for start, _end in ranges:
+                ordered_vectors.extend(batches_by_start[start])
+            return ordered_vectors
+        finally:
+            if progress is not None:
+                progress.close()
+            close = getattr(client, "close", None)
+            if callable(close):
+                result = close()
+                if inspect.isawaitable(result):
+                    await result
+
+    async def _fetch_embedding_batch(
+        self,
+        *,
+        client: Any,
+        semaphore: asyncio.Semaphore,
+        prepared: list[tuple[str, int]],
+        start: int,
+        end: int,
+    ) -> tuple[int, list[list[float]]]:
+        request_kwargs: dict[str, Any] = {
+            "model": self.model_name,
+            "input": [text for text, _token_count in prepared[start:end]],
+        }
+        async with semaphore:
+            response = await client.embeddings.create(**request_kwargs)
+        return start, [list(item.embedding) for item in response.data]
+
+    def _async_client(self) -> Any:
+        client_cls = getattr(importlib.import_module("openai"), "AsyncOpenAI")
+        return client_cls(**self._client_kwargs())
+
+    def _client_kwargs(self) -> dict[str, Any]:
+        if self.load_dotenv and self.dotenv_path:
+            _load_dotenv_file(Path(self.dotenv_path))
+        kwargs: dict[str, Any] = {}
+        api_key = os.environ.get(self.api_key_env)
+        if api_key:
+            kwargs["api_key"] = api_key
+        if self.base_url is not None:
+            kwargs["base_url"] = self.base_url
+        if self.organization is not None:
+            kwargs["organization"] = self.organization
+        if self.project is not None:
+            kwargs["project"] = self.project
+        if self.timeout is not None:
+            kwargs["timeout"] = self.timeout
+        if self.max_retries is not None:
+            kwargs["max_retries"] = self.max_retries
+        return kwargs
+
+    def _tokenizer(self) -> Any:
+        if self._encoding is not None:
+            return self._encoding
+        tiktoken = importlib.import_module("tiktoken")
+        try:
+            self._encoding = tiktoken.encoding_for_model(self.encoding_model)
+        except KeyError:
+            self._encoding = tiktoken.get_encoding("cl100k_base")
+        return self._encoding
+
+    def _prepare_inputs(self, texts: list[str]) -> list[tuple[str, int]]:
+        encoding = self._tokenizer()
+        prepared: list[tuple[str, int]] = []
+        for text in texts:
+            tokens = encoding.encode(text, disallowed_special=())
+            if len(tokens) > self.max_seq_length:
+                if not self.truncate_input_tokens:
+                    raise ValueError(
+                        f"OpenAI embedding input has {len(tokens)} tokens, exceeding the "
+                        f"{self.max_seq_length} token limit for {self.model_name}."
+                    )
+                tokens = tokens[: self.max_seq_length]
+                text = str(encoding.decode(tokens))
+            prepared.append((text, len(tokens)))
+        return prepared
+
+    def _request_ranges(self, prepared: list[tuple[str, int]], *, batch_size: int) -> list[tuple[int, int]]:
+        ranges: list[tuple[int, int]] = []
+        start = 0
+        while start < len(prepared):
+            token_total = 0
+            end = start
+            while end < len(prepared) and end - start < batch_size:
+                next_tokens = prepared[end][1]
+                if end > start and token_total + next_tokens > self.max_request_tokens:
+                    break
+                token_total += next_tokens
+                end += 1
+            ranges.append((start, end))
+            start = end
+        return ranges
+
+    def _validate_dimensions(self, dimensions: int | None) -> None:
+        if dimensions is None:
+            return
+        if not isinstance(dimensions, int) or dimensions <= 0:
+            raise ValueError("OpenAI embedding dimensions/truncate_dim must be a positive integer.")
+        base_dimensions = self.base_dimensions
+        if base_dimensions is not None and dimensions > base_dimensions:
+            raise ValueError(
+                f"OpenAI embedding dimensions={dimensions} exceeds {self.model_name} base dimension {base_dimensions}."
+            )
+
+
+def load_openai_embedding_model(config: ModelLoadConfig) -> OpenAIEmbeddingAdapter:
+    if config.model_type != "dense":
+        raise ValueError("The built-in OpenAI model loader supports evaluate dense only.")
+    kwargs = dict(config.model_loader_kwargs or {})
+    allowed = {
+        "api_key_env",
+        "dotenv_path",
+        "load_dotenv",
+        "base_url",
+        "organization",
+        "project",
+        "timeout",
+        "max_retries",
+        "max_input_tokens",
+        "truncate_input_tokens",
+        "max_request_tokens",
+        "max_concurrency",
+        "encoding_model",
+    }
+    unknown = sorted(set(kwargs) - allowed)
+    if unknown:
+        raise ValueError(f"Unsupported OpenAI loader kwargs: {', '.join(unknown)}")
+    return OpenAIEmbeddingAdapter(model_name=config.model_name_or_path, **kwargs)
+
+
 def load_model(config: ModelLoadConfig) -> Any:
     if config.model_loader is not None:
         model = _load_custom_model(config)
@@ -485,6 +823,8 @@ def _load_custom_model(config: ModelLoadConfig) -> Any:
 
 
 def _import_loader_factory(loader: str) -> Any:
+    if loader == "openai":
+        return load_openai_embedding_model
     module_name, separator, attr_name = loader.partition(":")
     if not separator or not module_name or not attr_name:
         raise ValueError("--model-loader must use 'module:function' syntax.")
@@ -493,6 +833,74 @@ def _import_loader_factory(loader: str) -> Any:
     if not callable(factory):
         raise TypeError(f"Custom model loader {loader!r} is not callable.")
     return factory
+
+
+def _run_async_from_sync(coro: Any) -> Any:
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+
+    result: dict[str, Any] = {}
+    error: dict[str, BaseException] = {}
+
+    def run_in_thread() -> None:
+        try:
+            result["value"] = asyncio.run(coro)
+        except BaseException as exc:
+            error["value"] = exc
+
+    thread = Thread(target=run_in_thread)
+    thread.start()
+    thread.join()
+    if error:
+        raise error["value"]
+    return result.get("value")
+
+
+def _truncate_and_l2_normalize_array(array: np.ndarray, *, dim: int) -> np.ndarray:
+    if dim <= 0:
+        raise ValueError("OpenAI embedding dimensions/truncate_dim must be a positive integer.")
+    if array.ndim == 1:
+        if dim > array.shape[0]:
+            raise ValueError(f"Cannot truncate OpenAI embedding with dimension {array.shape[0]} to {dim}.")
+        truncated = array[:dim]
+        norm = float(np.linalg.norm(truncated))
+        return truncated if norm == 0.0 else (truncated / norm).astype(np.float32, copy=False)
+    if array.ndim != 2:
+        raise ValueError(f"OpenAI embeddings must be 1D or 2D, got shape {list(array.shape)}.")
+    if dim > array.shape[1]:
+        raise ValueError(f"Cannot truncate OpenAI embeddings with dimension {array.shape[1]} to {dim}.")
+    truncated = array[:, :dim]
+    norms = np.linalg.norm(truncated, ord=2, axis=1, keepdims=True)
+    return np.divide(
+        truncated,
+        norms,
+        out=np.array(truncated, dtype=np.float32, copy=True),
+        where=norms != 0.0,
+    )
+
+
+def _load_dotenv_file(path: Path) -> None:
+    path = path.expanduser()
+    if not path.exists() or not path.is_file():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export ") :].strip()
+        key, separator, value = line.partition("=")
+        if not separator:
+            continue
+        key = key.strip()
+        if not key or key in os.environ:
+            continue
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        os.environ[key] = value
 
 
 def _tokenizer_default_max_length(tokenizer: Any) -> int | None:
@@ -782,7 +1190,10 @@ def _redact_sensitive_payload(value: Any) -> Any:
 
 def _is_sensitive_key(key: str) -> bool:
     normalized = key.lower()
-    return any(marker in normalized for marker in ("api_key", "apikey", "token", "secret", "password", "credential"))
+    if any(marker in normalized for marker in ("api_key", "apikey", "secret", "password", "credential")):
+        return True
+    token_keys = ("token", "access_token", "auth_token", "bearer_token", "api_token")
+    return normalized in token_keys or any(normalized.endswith(f"_{token_key}") for token_key in token_keys)
 
 
 def _model_source_with_revision(source: Any, *, requested_revision: str | None) -> Any:

@@ -70,8 +70,11 @@ def dense_embedding_variants(
     cross_values: list[list[str]] | None = None,
     *,
     include_defaults: bool = True,
+    normalize_truncate: bool = False,
 ) -> list[dict[str, Any]]:
     variants = parse_embedding_variants(values, cross_values)
+    if normalize_truncate:
+        variants = _normalize_truncate_variants(variants)
     if not include_defaults:
         return variants
 
@@ -79,7 +82,7 @@ def dense_embedding_variants(
     default_variants = default_dense_quantized_embedding_variants()
     auto_variants = [
         *default_variants,
-        *_default_truncate_embedding_variants(truncate_dims),
+        *_default_truncate_embedding_variants(truncate_dims, normalize_truncate=normalize_truncate),
         *_default_truncate_quantized_embedding_variants(truncate_dims),
     ]
     return _dedupe_variants([*variants, *auto_variants])
@@ -97,10 +100,11 @@ def sparse_embedding_variants(
     return _dedupe_variants([*variants, *default_sparse_truncation_embedding_variants()])
 
 
-def _default_truncate_embedding_variants(dims: list[int]) -> list[dict[str, Any]]:
+def _default_truncate_embedding_variants(dims: list[int], *, normalize_truncate: bool = False) -> list[dict[str, Any]]:
     if not dims:
         return []
-    return parse_embedding_variants(["truncate:" + ",".join(str(dim) for dim in dims)])
+    variants = parse_embedding_variants(["truncate:" + ",".join(str(dim) for dim in dims)])
+    return _normalize_truncate_variants(variants) if normalize_truncate else variants
 
 
 def _default_truncate_quantized_embedding_variants(dims: list[int]) -> list[dict[str, Any]]:
@@ -147,6 +151,36 @@ def _dedupe_variants(variants: list[dict[str, Any]]) -> list[dict[str, Any]]:
         seen_names.add(name)
         deduped.append(variant)
     return deduped
+
+
+def _normalize_truncate_variants(variants: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    normalized: list[dict[str, Any]] = []
+    for variant in variants:
+        copied = copy.deepcopy(variant)
+        transform = copied.get("transform")
+        if not isinstance(transform, dict) or transform.get("type") != "pipeline":
+            normalized.append(copied)
+            continue
+        steps = transform.get("steps")
+        if not isinstance(steps, list):
+            normalized.append(copied)
+            continue
+        transform["steps"] = _insert_normalize_after_truncate_steps(steps)
+        normalized.append(copied)
+    return normalized
+
+
+def _insert_normalize_after_truncate_steps(steps: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    normalized_steps: list[dict[str, Any]] = []
+    for index, step in enumerate(steps):
+        normalized_steps.append(step)
+        if step.get("type") != "truncate":
+            continue
+        next_step = steps[index + 1] if index + 1 < len(steps) else None
+        if isinstance(next_step, dict) and _is_normalize_step(next_step):
+            continue
+        normalized_steps.append(_normalize_step())
+    return _dedupe_adjacent_normalize_steps(normalized_steps)
 
 
 def _split_tokens(value: str) -> list[str]:

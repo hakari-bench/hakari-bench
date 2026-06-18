@@ -273,6 +273,49 @@ def test_parse_args_accepts_custom_model_loader_options() -> None:
     assert args.document_encode_kwargs == {"input_type": "document"}
 
 
+def test_parse_args_accepts_builtin_openai_model_loader() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "text-embedding-3-small",
+            "--model-loader",
+            "openai",
+            "--model-loader-kwargs-json",
+            '{"dotenv_path":".env","truncate_input_tokens":true}',
+            "--truncate-dim",
+            "256",
+        ]
+    )
+
+    assert args.model_id == "text-embedding-3-small"
+    assert args.model_source == {"type": "openai", "name": "text-embedding-3-small"}
+    assert args.model_loader == "openai"
+    assert args.model_loader_kwargs == {"dotenv_path": ".env", "truncate_input_tokens": True}
+    assert args.truncate_dim == 256
+
+
+def test_parse_args_rejects_openai_loader_encode_devices() -> None:
+    try:
+        parse_args(
+            [
+                "evaluate",
+                "dense",
+                "--model",
+                "text-embedding-3-small",
+                "--model-loader",
+                "openai",
+                "--encode-devices",
+                "cuda:0",
+            ]
+        )
+    except SystemExit as exc:
+        assert exc.code == 2
+    else:
+        raise AssertionError("Expected OpenAI loader with encode devices to be rejected.")
+
+
 def test_parse_args_accepts_custom_model_loader_params_json() -> None:
     args = parse_args(
         [
@@ -363,6 +406,58 @@ target:
     assert args.split == ["arguana"]
     assert args.batch_size == 8
     assert args.embedding_variants[:1] == [_pipeline_variant("truncate_dim_768", _truncate_step(768))]
+
+
+def test_parse_args_from_openai_model_card_sets_builtin_loader(tmp_path) -> None:
+    model_card = tmp_path / "openai__text-embedding-3-small.yaml"
+    model_card.write_text(
+        """
+id: text-embedding-3-small
+source:
+  type: openai
+  name: text-embedding-3-small
+method: dense
+embedding:
+  truncate_dims:
+    - 256
+runtime:
+  max_seq_length: 8192
+  backend_library: openai
+  similarity_fn_name: cosine
+""".strip(),
+        encoding="utf-8",
+    )
+
+    args = parse_args(["evaluate", "from-model-card", "--model-card", str(model_card)])
+
+    assert args.model_type == "dense"
+    assert args.model == "text-embedding-3-small"
+    assert args.model_id == "text-embedding-3-small"
+    assert args.model_loader == "openai"
+    assert args.model_source == {"type": "openai", "name": "text-embedding-3-small"}
+    assert args.embedding_variants[:1] == [
+        _pipeline_variant("truncate_dim_256", _truncate_step(256), _normalize_step())
+    ]
+
+
+def test_parse_args_normalizes_truncate_variants_for_openai_loader() -> None:
+    args = parse_args(
+        [
+            "evaluate",
+            "dense",
+            "--model",
+            "text-embedding-3-large",
+            "--model-loader",
+            "openai",
+            "--embedding-variant",
+            "truncate:512",
+            "--no-default-embedding-variants",
+        ]
+    )
+
+    assert args.embedding_variants == [
+        _pipeline_variant("truncate_dim_512", _truncate_step(512), _normalize_step())
+    ]
 
 
 def test_parse_args_from_model_card_sets_prompt_and_late_interaction_model_options(tmp_path) -> None:

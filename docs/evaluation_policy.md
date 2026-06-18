@@ -252,6 +252,11 @@ model encoding.
 No-op truncation variants whose requested dimension equals the base embedding
 dimension are skipped with a warning.
 
+For the built-in OpenAI embedding loader, truncation uses full API embeddings
+followed by `full[:DIM]` and L2 normalization. This normalized-prefix path is
+the repository policy for OpenAI truncation variants even though pure API
+`dimensions=DIM` responses are not bit-identical.
+
 ## Sparse Evaluation
 
 Use `evaluate sparse` for SentenceTransformers `SparseEncoder` models:

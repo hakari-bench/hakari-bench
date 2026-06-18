@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import asyncio
 from types import SimpleNamespace
 from typing import Any
 
@@ -14,9 +15,11 @@ from hakari_bench.model_loaders import (
 from hakari_bench.models import (
     ColbertLateInteractionAdapter,
     ModelLoadConfig,
+    OpenAIEmbeddingAdapter,
     _patch_pylate_dense_missing_activation_function,
     collect_model_metadata,
     load_model,
+    load_openai_embedding_model,
     resolve_model_revision,
     resolve_attn_implementation,
     resolve_torch_dtype,
@@ -182,6 +185,175 @@ def test_load_model_uses_custom_loader() -> None:
     assert model.metadata()["backend_library"] == "hakari-dummy"
     assert model.metadata()["backend_name"] == "test-dummy"
     assert model.scale == 2.0
+
+
+def test_load_model_uses_builtin_openai_loader() -> None:
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="text-embedding-3-small",
+            model_type="dense",
+            model_loader="openai",
+            model_loader_kwargs={"truncate_input_tokens": False},
+        )
+    )
+
+    assert isinstance(model, OpenAIEmbeddingAdapter)
+    assert model.model_name == "text-embedding-3-small"
+    assert model.truncate_input_tokens is False
+    assert model.metadata()["backend_library"] == "openai"
+
+
+def test_openai_loader_rejects_unknown_kwargs() -> None:
+    with pytest.raises(ValueError, match="Unsupported OpenAI loader kwargs"):
+        load_openai_embedding_model(
+            ModelLoadConfig(
+                model_name_or_path="text-embedding-3-small",
+                model_type="dense",
+                model_loader_kwargs={"unexpected": True},
+            )
+        )
+
+
+def test_openai_embedding_adapter_truncates_inputs_and_normalizes_prefix(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path,
+) -> None:
+    calls: list[dict[str, object]] = []
+    client_kwargs: list[dict[str, object]] = []
+
+    class FakeEncoding:
+        def encode(self, text: str, **_: object) -> list[int]:
+            return [ord(char) for char in text]
+
+        def decode(self, tokens: list[int]) -> str:
+            return "".join(chr(token) for token in tokens)
+
+    class FakeTiktoken:
+        @staticmethod
+        def encoding_for_model(_model: str) -> FakeEncoding:
+            return FakeEncoding()
+
+    class FakeEmbeddingData:
+        def __init__(self, embedding: list[float]) -> None:
+            self.embedding = embedding
+
+    class FakeEmbeddings:
+        async def create(self, **kwargs: object) -> object:
+            raw_inputs = kwargs["input"]
+            assert isinstance(raw_inputs, list)
+            inputs = raw_inputs
+            calls.append(dict(kwargs))
+            return SimpleNamespace(
+                data=[FakeEmbeddingData([3.0, 4.0, 12.0]) for _text in inputs]
+            )
+
+    class FakeAsyncOpenAI:
+        def __init__(self, **kwargs: object) -> None:
+            client_kwargs.append(kwargs)
+            self.embeddings = FakeEmbeddings()
+
+        async def close(self) -> None:
+            return None
+
+    def fake_import_module(name: str) -> object:
+        if name == "tiktoken":
+            return FakeTiktoken
+        if name == "openai":
+            return SimpleNamespace(AsyncOpenAI=FakeAsyncOpenAI)
+        raise AssertionError(f"unexpected import: {name}")
+
+    dotenv_path = tmp_path / ".env"
+    dotenv_path.write_text("OPENAI_API_KEY=test-key\n", encoding="utf-8")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr("hakari_bench.models.importlib.import_module", fake_import_module)
+
+    model = OpenAIEmbeddingAdapter(
+        model_name="text-embedding-3-small",
+        dotenv_path=str(dotenv_path),
+        max_input_tokens=4,
+        max_request_tokens=8,
+    )
+    embeddings = model.encode(["abcdef", "xy", "wxyz"], batch_size=8, truncate_dim=2)
+
+    assert embeddings.shape == (3, 2)
+    assert [row.tolist() for row in embeddings] == [pytest.approx([0.6, 0.8])] * 3
+    assert client_kwargs == [{"api_key": "test-key"}]
+    assert calls == [
+        {
+            "model": "text-embedding-3-small",
+            "input": ["abcd", "xy"],
+        },
+        {
+            "model": "text-embedding-3-small",
+            "input": ["wxyz"],
+        },
+    ]
+
+
+def test_openai_embedding_adapter_respects_max_concurrency(monkeypatch: pytest.MonkeyPatch) -> None:
+    active_requests = 0
+    max_active_requests = 0
+    calls: list[list[str]] = []
+
+    class FakeEncoding:
+        def encode(self, text: str, **_: object) -> list[int]:
+            return [1 for _char in text]
+
+        def decode(self, tokens: list[int]) -> str:
+            return "a" * len(tokens)
+
+    class FakeTiktoken:
+        @staticmethod
+        def encoding_for_model(_model: str) -> FakeEncoding:
+            return FakeEncoding()
+
+    class FakeEmbeddingData:
+        def __init__(self, embedding: list[float]) -> None:
+            self.embedding = embedding
+
+    class FakeEmbeddings:
+        async def create(self, **kwargs: object) -> object:
+            nonlocal active_requests, max_active_requests
+            raw_inputs = kwargs["input"]
+            assert isinstance(raw_inputs, list)
+            calls.append([str(item) for item in raw_inputs])
+            active_requests += 1
+            max_active_requests = max(max_active_requests, active_requests)
+            await asyncio.sleep(0.01)
+            active_requests -= 1
+            return SimpleNamespace(
+                data=[
+                    FakeEmbeddingData([float(ord(str(text)[0]))])
+                    for text in raw_inputs
+                ]
+            )
+
+    class FakeAsyncOpenAI:
+        def __init__(self, **_kwargs: object) -> None:
+            self.embeddings = FakeEmbeddings()
+
+        async def close(self) -> None:
+            return None
+
+    def fake_import_module(name: str) -> object:
+        if name == "tiktoken":
+            return FakeTiktoken
+        if name == "openai":
+            return SimpleNamespace(AsyncOpenAI=FakeAsyncOpenAI)
+        raise AssertionError(f"unexpected import: {name}")
+
+    monkeypatch.setattr("hakari_bench.models.importlib.import_module", fake_import_module)
+
+    model = OpenAIEmbeddingAdapter(
+        model_name="text-embedding-3-small",
+        load_dotenv=False,
+        max_concurrency=2,
+    )
+    embeddings = model.encode(["a", "b", "c", "d"], batch_size=1)
+
+    assert embeddings.tolist() == [[97.0], [98.0], [99.0], [100.0]]
+    assert max_active_requests == 2
+    assert sorted(calls) == [["a"], ["b"], ["c"], ["d"]]
 
 
 def test_load_model_validates_custom_loader_capabilities(monkeypatch: pytest.MonkeyPatch) -> None:

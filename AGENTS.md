@@ -64,6 +64,12 @@ under `config/datasets/`, and dataset collection definitions live under
 - After benchmark runs, audit result coverage before reporting or rebuilding
   leaderboard comparisons. Confirm base task completeness and verify that every
   intended variant category exists for each model.
+- When comparing a new run against existing model data, prefer the cached remote
+  DuckDB, such as
+  `~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` or the synced
+  Hugging Face snapshot DuckDB, instead of reading raw result JSON or `.json.xz`
+  files directly. Direct JSON reads are rarely needed for existing remote
+  results and should be reserved for local run outputs or schema/debug work.
 
 ## Leaderboard Viewer
 

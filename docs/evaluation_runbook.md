@@ -114,6 +114,11 @@ for how to choose the variant plan.
 Use `--no-default-embedding-variants` only when those automatic variants should
 be intentionally omitted.
 
+For offline dense embedding providers such as OpenAI Batch API, use the
+three-step `batch dense register/fetch/materialize` workflow documented in
+[`batch_inference.md`](batch_inference.md). Materialized batch outputs use the
+same per-task result JSON format as direct evaluation.
+
 Sparse, reranker, late-interaction, and BM25 baselines use their matching
 subcommands:
 
