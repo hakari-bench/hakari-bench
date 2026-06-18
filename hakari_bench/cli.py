@@ -21,6 +21,7 @@ from hakari_bench.batch import (
     BatchIndex,
     BatchMetadata,
     DEFAULT_BATCH_WORKSPACE_ROOT,
+    DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     PrecomputedDenseEmbeddingModel,
     batch_index_path,
     cleanup_batch_download_files,
@@ -481,6 +482,15 @@ def _add_openai_batch_args(parser: argparse.ArgumentParser) -> None:
         default=50_000,
         help="Maximum embedding inputs per OpenAI batch. The OpenAI embeddings batch limit is 50,000.",
     )
+    parser.add_argument(
+        "--max-input-file-bytes",
+        type=int,
+        default=DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
+        help=(
+            "Maximum OpenAI batch input JSONL file size in bytes. Defaults below the "
+            "200 MiB provider limit to avoid validation failures."
+        ),
+    )
 
 
 def _add_bm25_args(parser: argparse.ArgumentParser, *, include_source: bool = False) -> None:
@@ -659,6 +669,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                 parser.error("--max-request-tokens must be positive.")
             if args.max_embedding_inputs <= 0:
                 parser.error("--max-embedding-inputs must be positive.")
+            if args.max_input_file_bytes <= 0:
+                parser.error("--max-input-file-bytes must be positive.")
         elif args.batch_action == "fetch":
             if args.poll_seconds <= 0:
                 parser.error("--poll-seconds must be positive.")
@@ -1534,6 +1546,7 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
             max_input_tokens=args.max_input_tokens,
             max_request_tokens=args.max_request_tokens,
             max_embedding_inputs=args.max_embedding_inputs,
+            max_input_file_bytes=args.max_input_file_bytes,
             query_prompt=args.query_prompt,
             document_prompt=args.document_prompt,
             dataset_revision=getattr(args, "dataset_revision", None),
@@ -1582,6 +1595,7 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
             "max_input_tokens": args.max_input_tokens,
             "max_request_tokens": args.max_request_tokens,
             "max_embedding_inputs": args.max_embedding_inputs,
+            "max_input_file_bytes": args.max_input_file_bytes,
             "query_prompt": args.query_prompt,
             "document_prompt": args.document_prompt,
             "results_dir": str(output_dir),

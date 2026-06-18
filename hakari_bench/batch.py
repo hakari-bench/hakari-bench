@@ -18,6 +18,7 @@ from hakari_bench.results import safe_path_part
 OPENAI_EMBEDDINGS_BATCH_ENDPOINT = "/v1/embeddings"
 DEFAULT_BATCH_WORKSPACE_ROOT = "tmp/batch_workspace"
 DEFAULT_BATCH_COMPLETION_WINDOW = "24h"
+DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES = 190_000_000
 TERMINAL_BATCH_STATUSES = {"completed", "failed", "cancelled", "expired"}
 
 
@@ -247,6 +248,7 @@ def write_openai_embedding_batch_files(
     max_input_tokens: int,
     max_request_tokens: int,
     max_embedding_inputs: int | None = None,
+    max_input_file_bytes: int = DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     query_prompt: str | None,
     document_prompt: str | None,
     dataset_revision: str | None,
@@ -318,6 +320,12 @@ def write_openai_embedding_batch_files(
             f"OpenAI embeddings batch has {embedding_input_count:,} inputs, exceeding the "
             f"{max_embedding_inputs:,} input limit. Register fewer tasks or splits for this target."
         )
+    input_file_bytes = sum(_jsonl_line_size_bytes(line) for line in request_lines)
+    if input_file_bytes > max_input_file_bytes:
+        raise ValueError(
+            f"OpenAI embeddings batch input file would be {input_file_bytes:,} bytes, exceeding the "
+            f"{max_input_file_bytes:,} byte limit. Register fewer tasks or splits for this target."
+        )
     return _write_openai_embedding_batch_payload(
         target=target,
         workspace_path=workspace_path,
@@ -334,6 +342,7 @@ def write_openai_embedding_batch_files(
         max_input_tokens=max_input_tokens,
         max_request_tokens=max_request_tokens,
         max_embedding_inputs=max_embedding_inputs,
+        max_input_file_bytes=max_input_file_bytes,
         query_prompt=query_prompt,
         document_prompt=document_prompt,
         dataset_revision=dataset_revision,
@@ -352,6 +361,7 @@ def write_openai_embedding_task_batch_files(
     max_input_tokens: int,
     max_request_tokens: int,
     max_embedding_inputs: int,
+    max_input_file_bytes: int = DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     query_prompt: str | None,
     document_prompt: str | None,
     dataset_revision: str | None,
@@ -359,6 +369,8 @@ def write_openai_embedding_task_batch_files(
 ) -> list[BatchMetadata]:
     if max_embedding_inputs <= 0:
         raise ValueError("OpenAI max_embedding_inputs must be positive.")
+    if max_input_file_bytes <= 0:
+        raise ValueError("OpenAI max_input_file_bytes must be positive.")
     index_workspace_path = workspace_root / safe_path_part(target)
     task_key = _task_key(task)
     task_payload = {
@@ -409,6 +421,7 @@ def write_openai_embedding_task_batch_files(
         requests=requests,
         request_lines=request_lines,
         max_embedding_inputs=max_embedding_inputs,
+        max_input_file_bytes=max_input_file_bytes,
     )
     metadatas: list[BatchMetadata] = []
     task_suffix = f"{safe_path_part(task.dataset_name)}__{safe_path_part(task.split_name)}"
@@ -440,6 +453,7 @@ def write_openai_embedding_task_batch_files(
                 max_input_tokens=max_input_tokens,
                 max_request_tokens=max_request_tokens,
                 max_embedding_inputs=max_embedding_inputs,
+                max_input_file_bytes=max_input_file_bytes,
                 query_prompt=query_prompt,
                 document_prompt=document_prompt,
                 dataset_revision=dataset_revision,
@@ -465,6 +479,7 @@ def _write_openai_embedding_batch_payload(
     max_input_tokens: int,
     max_request_tokens: int,
     max_embedding_inputs: int | None,
+    max_input_file_bytes: int = DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     query_prompt: str | None,
     document_prompt: str | None,
     dataset_revision: str | None,
@@ -493,6 +508,7 @@ def _write_openai_embedding_batch_payload(
             "max_input_tokens": max_input_tokens,
             "max_request_tokens": max_request_tokens,
             "max_embedding_inputs": max_embedding_inputs,
+            "max_input_file_bytes": max_input_file_bytes,
             "query_prompt": query_prompt,
             "document_prompt": document_prompt,
             "dimension_reduction": "full_embedding_prefix_l2_normalize",
@@ -512,28 +528,45 @@ def _split_openai_embedding_requests(
     requests: list[dict[str, Any]],
     request_lines: list[str],
     max_embedding_inputs: int,
+    max_input_file_bytes: int,
 ) -> list[list[tuple[dict[str, Any], str]]]:
     if len(requests) != len(request_lines):
         raise ValueError("OpenAI batch request metadata and JSONL line counts differ.")
     shards: list[list[tuple[dict[str, Any], str]]] = []
     current: list[tuple[dict[str, Any], str]] = []
     current_count = 0
+    current_bytes = 0
     for request, line in zip(requests, request_lines, strict=True):
         request_count = len(request["ids"])
+        request_bytes = _jsonl_line_size_bytes(line)
         if request_count > max_embedding_inputs:
             raise ValueError(
                 f"OpenAI embeddings request {request['custom_id']} has {request_count:,} inputs, "
                 f"exceeding the {max_embedding_inputs:,} input shard limit."
             )
-        if current and current_count + request_count > max_embedding_inputs:
+        if request_bytes > max_input_file_bytes:
+            raise ValueError(
+                f"OpenAI embeddings request {request['custom_id']} is {request_bytes:,} bytes, "
+                f"exceeding the {max_input_file_bytes:,} input file byte limit."
+            )
+        if current and (
+            current_count + request_count > max_embedding_inputs
+            or current_bytes + request_bytes > max_input_file_bytes
+        ):
             shards.append(current)
             current = []
             current_count = 0
+            current_bytes = 0
         current.append((request, line))
         current_count += request_count
+        current_bytes += request_bytes
     if current:
         shards.append(current)
     return shards
+
+
+def _jsonl_line_size_bytes(line: str) -> int:
+    return len(line.encode("utf-8")) + 1
 
 
 def register_openai_embedding_batch(
@@ -547,6 +580,7 @@ def register_openai_embedding_batch(
     max_input_tokens: int,
     max_request_tokens: int,
     max_embedding_inputs: int | None,
+    max_input_file_bytes: int = DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     query_prompt: str | None,
     document_prompt: str | None,
     dataset_revision: str | None,
@@ -578,6 +612,7 @@ def register_openai_embedding_batch(
         max_input_tokens=max_input_tokens,
         max_request_tokens=max_request_tokens,
         max_embedding_inputs=max_embedding_inputs,
+        max_input_file_bytes=max_input_file_bytes,
         query_prompt=query_prompt,
         document_prompt=document_prompt,
         dataset_revision=dataset_revision,
@@ -620,6 +655,7 @@ def register_openai_embedding_task_batches(
     max_input_tokens: int,
     max_request_tokens: int,
     max_embedding_inputs: int,
+    max_input_file_bytes: int = DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     query_prompt: str | None,
     document_prompt: str | None,
     dataset_revision: str | None,
@@ -651,6 +687,7 @@ def register_openai_embedding_task_batches(
         max_input_tokens=max_input_tokens,
         max_request_tokens=max_request_tokens,
         max_embedding_inputs=max_embedding_inputs,
+        max_input_file_bytes=max_input_file_bytes,
         query_prompt=query_prompt,
         document_prompt=document_prompt,
         dataset_revision=dataset_revision,
@@ -1024,36 +1061,45 @@ def _openai_client(
 def _download_openai_file(client: Any, file_id: str, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = path.with_name(f"{path.name}.tmp")
-    if tmp_path.exists():
-        tmp_path.unlink()
+    retry_delays_seconds = (5.0, 15.0, 30.0, 60.0, 120.0)
+    for attempt in range(len(retry_delays_seconds) + 1):
+        if tmp_path.exists():
+            tmp_path.unlink()
+        try:
+            _download_openai_file_once(client, file_id, tmp_path)
+            tmp_path.replace(path)
+            return
+        except Exception:
+            if tmp_path.exists():
+                tmp_path.unlink()
+            if attempt >= len(retry_delays_seconds):
+                raise
+            time.sleep(retry_delays_seconds[attempt])
+
+
+def _download_openai_file_once(client: Any, file_id: str, tmp_path: Path) -> None:
     streaming = getattr(getattr(client.files, "with_streaming_response", None), "content", None)
     if callable(streaming):
         with streaming(file_id) as response:
             response.stream_to_file(tmp_path)
-        tmp_path.replace(path)
         return
     content = client.files.content(file_id)
     write_to_file = getattr(content, "write_to_file", None)
     if callable(write_to_file):
         write_to_file(tmp_path)
-        tmp_path.replace(path)
         return
     data = getattr(content, "content", None)
     if isinstance(data, bytes):
         tmp_path.write_bytes(data)
-        tmp_path.replace(path)
         return
     text = getattr(content, "text", None)
     if isinstance(text, str):
         tmp_path.write_text(text, encoding="utf-8")
-        tmp_path.replace(path)
         return
     if isinstance(content, bytes):
         tmp_path.write_bytes(content)
-        tmp_path.replace(path)
         return
     tmp_path.write_text(str(content), encoding="utf-8")
-    tmp_path.replace(path)
 
 
 def _object_id(value: Any) -> str:

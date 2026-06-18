@@ -7,10 +7,12 @@ import numpy as np
 
 from hakari_bench.batch import (
     BatchMetadata,
+    DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     PrecomputedDenseEmbeddingModel,
     cleanup_batch_download_files,
     collect_openai_batch_embeddings,
     collect_openai_batch_task_embeddings,
+    _download_openai_file,
     register_openai_embedding_batch,
     write_openai_embedding_task_batch_files,
     write_openai_embedding_batch_files,
@@ -50,6 +52,45 @@ class _WhitespaceEncoding:
 
     def decode(self, tokens: list[int]) -> str:
         return " ".join(f"tok{token}" for token in tokens)
+
+
+def test_download_openai_file_retries_and_removes_partial_tmp(tmp_path: Path, monkeypatch) -> None:
+    sleeps: list[float] = []
+
+    class _StreamingResponse:
+        calls = 0
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_exc: object) -> None:
+            return None
+
+        def stream_to_file(self, path: Path) -> None:
+            type(self).calls += 1
+            if type(self).calls == 1:
+                path.write_text("partial", encoding="utf-8")
+                raise RuntimeError("temporary gateway timeout")
+            path.write_text("complete", encoding="utf-8")
+
+    class _StreamingFiles:
+        def content(self, _file_id: str) -> _StreamingResponse:
+            return _StreamingResponse()
+
+    class _Files:
+        with_streaming_response = _StreamingFiles()
+
+    class _Client:
+        files = _Files()
+
+    monkeypatch.setattr("hakari_bench.batch.time.sleep", lambda seconds: sleeps.append(seconds))
+
+    output_path = tmp_path / "output.jsonl"
+    _download_openai_file(_Client(), "file-1", output_path)
+
+    assert output_path.read_text(encoding="utf-8") == "complete"
+    assert not output_path.with_name("output.jsonl.tmp").exists()
+    assert sleeps == [5.0]
 
 
 def test_write_openai_embedding_batch_files_links_custom_ids_to_task_inputs(tmp_path: Path) -> None:
@@ -193,6 +234,79 @@ def test_write_openai_embedding_task_batch_files_splits_large_task(tmp_path: Pat
         "TinyNano__TinyTask__document__000000",
         "TinyNano__TinyTask__document__000002",
     ]
+
+
+def test_write_openai_embedding_task_batch_files_splits_large_task_by_input_file_bytes(tmp_path: Path) -> None:
+    dataset = LoadedIrDataset(
+        queries={"q1": "query one"},
+        corpus={
+            "d1": "document " + ("alpha " * 20),
+            "d2": "document " + ("beta " * 20),
+            "d3": "document " + ("gamma " * 20),
+        },
+        qrels={"q1": {"d1"}},
+        candidates=None,
+        evaluator_name="TinyNano_tiny_task",
+    )
+
+    batches = write_openai_embedding_task_batch_files(
+        target="tiny-openai",
+        workspace_root=tmp_path,
+        model="text-embedding-3-small",
+        task=_task(),
+        dataset=dataset,
+        encoding=_WhitespaceEncoding(),
+        batch_size=1,
+        max_input_tokens=8100,
+        max_request_tokens=100,
+        max_embedding_inputs=100,
+        max_input_file_bytes=700,
+        query_prompt=None,
+        document_prompt=None,
+        dataset_revision=None,
+    )
+
+    assert len(batches) > 1
+    assert sum(metadata.embedding_input_count for metadata in batches) == 4
+    assert all(metadata.input_file_path.stat().st_size <= 700 for metadata in batches)
+    assert [request["custom_id"] for metadata in batches for request in metadata.requests] == [
+        "TinyNano__TinyTask__query__000000",
+        "TinyNano__TinyTask__document__000000",
+        "TinyNano__TinyTask__document__000001",
+        "TinyNano__TinyTask__document__000002",
+    ]
+
+
+def test_write_openai_embedding_task_batch_files_rejects_single_request_over_input_file_bytes(tmp_path: Path) -> None:
+    dataset = LoadedIrDataset(
+        queries={"q1": "query one"},
+        corpus={"d1": "document " + ("alpha " * 100)},
+        qrels={"q1": {"d1"}},
+        candidates=None,
+        evaluator_name="TinyNano_tiny_task",
+    )
+
+    try:
+        write_openai_embedding_task_batch_files(
+            target="tiny-openai",
+            workspace_root=tmp_path,
+            model="text-embedding-3-small",
+            task=_task(),
+            dataset=dataset,
+            encoding=_WhitespaceEncoding(),
+            batch_size=1,
+            max_input_tokens=8100,
+            max_request_tokens=100,
+            max_embedding_inputs=100,
+            max_input_file_bytes=100,
+            query_prompt=None,
+            document_prompt=None,
+            dataset_revision=None,
+        )
+    except ValueError as exc:
+        assert "input file byte limit" in str(exc)
+    else:
+        raise AssertionError("Expected oversized OpenAI batch request line to be rejected.")
 
 
 def test_collect_openai_batch_task_embeddings_restores_split_task(tmp_path: Path) -> None:
@@ -379,6 +493,26 @@ def test_parse_args_accepts_dense_batch_commands() -> None:
     assert register.batch_action == "register"
     assert register.provider == "openai"
     assert register.target == "openai-small-nanobeir"
+    assert register.max_input_file_bytes == DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES
+
+    register_with_file_limit = parse_args(
+        [
+            "batch",
+            "dense",
+            "register",
+            "--provider",
+            "openai",
+            "--target",
+            "openai-small-nanobeir",
+            "--model",
+            "text-embedding-3-small",
+            "--dataset",
+            "hakari-bench/NanoBEIR-en",
+            "--max-input-file-bytes",
+            "1000000",
+        ]
+    )
+    assert register_with_file_limit.max_input_file_bytes == 1_000_000
 
     materialize = parse_args(
         [

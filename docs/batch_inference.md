@@ -36,9 +36,11 @@ limit, it is split into multiple provider batches for that task. The target name
 is the recovery handle for later commands.
 
 OpenAI embedding batches currently enforce the provider limit of 50,000
-embedding inputs per provider batch by default. Inputs are truncated with
-`tiktoken` to 8100 tokens by default, leaving headroom below the 8192-token
-embedding input limit.
+embedding inputs per provider batch by default. They also split task batches by
+input JSONL file size, using a 190,000,000-byte default limit to stay below the
+provider's 200 MiB input file limit. Inputs are truncated with `tiktoken` to
+8100 tokens by default, leaving headroom below the 8192-token embedding input
+limit.
 
 If a readable result JSON already exists for a selected Nano-set task, register
 skips that task by default. Pass `--overwrite` to force a new batch registration
