@@ -30,7 +30,7 @@ from hakari_bench.viewer.app import (
     render_table_body,
     render_table_head,
 )
-from hakari_bench.viewer.analytics import ViewerSummary
+from hakari_bench.viewer.summary import ViewerSummary
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.filters import row_filter_context

@@ -15,7 +15,6 @@ from urllib.parse import quote, urlencode
 
 from pydantic import BaseModel, ConfigDict
 
-from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
 from hakari_bench.viewer.config import (
     CLEAR_SCOPE_NAME,
     CUSTOM_SCOPE_NAME,
@@ -63,6 +62,7 @@ from hakari_bench.viewer.state import (
     task_length_bounds,
 )
 from hakari_bench.viewer.store import DuckDbSyncStatus, LocalDuckDbStore
+from hakari_bench.viewer.summary import ViewerSummary, ViewerSummaryRepository
 from hakari_bench.viewer.variant_display import (
     is_sparse_dims_variant_name,
     variant_category,
@@ -366,7 +366,7 @@ def create_app(
             )
             if not task_z_scores:
                 initial_query["task_z_scores"] = "0"
-            summary = ViewerAnalyticsRepository(store.path).fetch_summary()
+            summary = ViewerSummaryRepository(store.path).fetch_summary()
             with timed_operation("viewer.render", operation="render_page"):
                 content = render_page(
                     viewer_config=viewer_config,
