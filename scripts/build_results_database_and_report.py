@@ -1172,6 +1172,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
             viewer_config=viewer_config,
             view_names=[overall.name for overall in viewer_config.overalls],
         )
+        _compact_duckdb_database(plan.duckdb_path)
         if plan.parquet_output_dir is not None:
             export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)
         memory_monitor.sample("complete")

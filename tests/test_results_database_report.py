@@ -248,6 +248,7 @@ def test_run_warehouse_build_append_plan_uses_shared_loader(
     monkeypatch.setattr(report, "_load_results_for_plan", load_for_plan)
     monkeypatch.setattr(report, "append_duckdb_results", lambda duckdb_path, **_: calls.append(("append", duckdb_path)))
     monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda duckdb_path, **_: calls.append(("mart", duckdb_path)))
+    monkeypatch.setattr(report, "_compact_duckdb_database", lambda duckdb_path: calls.append(("compact", duckdb_path)))
 
     report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
 
@@ -265,6 +266,7 @@ def test_run_warehouse_build_append_plan_uses_shared_loader(
         ),
         ("append", duckdb_path),
         ("mart", duckdb_path),
+        ("compact", duckdb_path),
     ]
 
 
@@ -296,6 +298,7 @@ def test_run_warehouse_build_append_plan_copies_base_duckdb_to_output(
     monkeypatch.setattr(report, "_load_results_for_plan", lambda *_, **__: ([], [], [], [], [], [], {}))
     monkeypatch.setattr(report, "append_duckdb_results", lambda duckdb_path, **_: calls.append(("append", duckdb_path)))
     monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda duckdb_path, **_: calls.append(("mart", duckdb_path)))
+    monkeypatch.setattr(report, "_compact_duckdb_database", lambda duckdb_path: calls.append(("compact", duckdb_path)))
 
     report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
 
@@ -303,6 +306,7 @@ def test_run_warehouse_build_append_plan_copies_base_duckdb_to_output(
     assert calls == [
         ("append", output_db),
         ("mart", output_db),
+        ("compact", output_db),
     ]
 
 
@@ -334,6 +338,7 @@ def test_run_warehouse_build_append_plan_downloads_latest_when_target_duckdb_is_
     monkeypatch.setattr(report, "_load_results_for_plan", lambda *_, **__: ([], [], [], [], [], [], {}))
     monkeypatch.setattr(report, "append_duckdb_results", lambda *_args, **_kwargs: None)
     monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(report, "_compact_duckdb_database", lambda _duckdb_path: None)
 
     report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
 
