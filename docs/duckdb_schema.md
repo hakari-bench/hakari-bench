@@ -23,8 +23,10 @@ no-filter raw-task display modes, plus
 The HTMX leaderboard requires the current schema and reads these mart tables or
 computes from `viewer_task_results`.
 `runs` contains run-level metadata,
-`metrics_long` contains task metrics recomputed from top-ranking artifacts for
-full-corpus, reranking, and embedding-variant rows, `retrieval_rankings` contains
+`fact_metric_score` and `dim_metric` contain task metrics recomputed from
+top-ranking artifacts for full-corpus, reranking, and embedding-variant rows,
+`metrics_long` may also be present as the legacy long-format build/source
+table, `retrieval_rankings` contains
 per-query top-100 retrieved document ids, `task_diagnostics` contains
 analysis-oriented rerank, candidate, and latency fields, `dataset_metadata`
 exposes YAML task metadata for language, category, citation, and text-stat
@@ -32,6 +34,13 @@ analysis, and `model_scores` /
 `borda_task_scores` are precomputed tables used by the static HTML report. The
 current HTMX viewer does not expose the analysis-oriented `task_diagnostics`
 surface and does not read `model_scores`.
+
+When the web viewer installs its local cache from a source DuckDB, it writes a
+viewer-only copy that omits `task_results`, `task_diagnostics`, and
+`metrics_long`. The source DuckDB remains the canonical warehouse for rebuilds,
+append workflows, Parquet
+exports, and offline analysis; the local viewer cache keeps only the tables
+needed to render the current leaderboard surfaces.
 
 ## Generation
 
@@ -97,6 +106,9 @@ separate result root and the existing DuckDB should be reused directly, use
 new canonical rows into the existing DuckDB, updates `source_load_state`, and
 rebuilds SQL-derived viewer marts. It rejects duplicate result paths and
 duplicate logical `(model_name, benchmark, dataset_id, task_key)` base rows.
+Append uses `fact_metric_score` plus `dim_metric` as the canonical metric store;
+if a legacy `metrics_long` table is present it is still maintained, but append
+does not require that table.
 
 ```bash
 uv run python scripts/build_results_database_and_report.py \
@@ -181,7 +193,7 @@ When `--parquet-output-dir` is provided, the generator also writes Parquet
 snapshots for the canonical tables: `meta_database`, `schema_change_log`,
 `ingestion_batches`, `source_load_state`, `result_extensions`, `runs`,
 `dim_model`, `dim_task`, `dim_variant`, `dim_metric`, `task_results`,
-`fact_task_score`, `fact_metric_score`, `metrics_long`, `retrieval_rankings`,
+`fact_task_score`, `fact_metric_score`, `retrieval_rankings`,
 `task_diagnostics`, `dataset_metadata`, `viewer_task_results`,
 `viewer_filter_values`, `viewer_leaderboard_rows`,
 `viewer_leaderboard_language_options`, `model_scores`, and `borda_task_scores`.
@@ -252,11 +264,12 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 | --- | --- | --- |
 | Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores. The `reranking_hybrid` candidate set is the RRF top-100 over BM25 and dense candidate rankings; BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them. The BM25 row shown in Reranking is a candidate-order baseline, not the source of the reranking candidate set. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive when a query's hybrid top-100 has no qrels-positive candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 
-The page header also reads `task_results` for the latest available evaluation
-timestamp. Configured scope presets (`Overall`, `Core`, and `Core (EN)`) expand
-to their configured benchmark components before querying the leaderboard.
-`Custom` expands from repeated `bench=` query parameters. Empty `view=Custom`
-with no `bench=` values represents the cleared benchmark set.
+The page header reads `meta_database.built_at_utc` for the latest available
+database timestamp and summary counts from `viewer_task_results`. Configured
+scope presets (`Overall` and `Overall (EN)`) expand to their configured
+benchmark components before querying the leaderboard. `Custom` expands from
+repeated `bench=` query parameters. Empty `view=Custom` with no `bench=` values
+represents the cleared benchmark set.
 
 ## Table Overview
 
@@ -464,10 +477,11 @@ rows with different embedding dimensions do not collide.
 
 ### `dim_metric`
 
-`dim_metric` contains one deterministic row for each metric name in
-`metrics_long`. The writer parses common IR metric names into a metric family
-and cutoff, so new cutoffs such as `recall@100` can be stored without adding
-columns. Reranking metric names keep their original `_reranking_hybrid_top..._rerank_`
+`dim_metric` contains one deterministic row for each metric name in the
+canonical metric facts. The writer parses common IR metric names into a metric
+family and cutoff, so new cutoffs such as `recall@100` can be stored without
+adding columns. Reranking metric names keep their original
+`_reranking_hybrid_top..._rerank_`
 marker so the viewer can distinguish them from full-corpus metrics with the
 same family and cutoff while allowing the candidate subset depth to vary.
 
@@ -571,12 +585,13 @@ completeness displays.
 
 ### `metrics_long`
 
-`metrics_long` is a long-format representation of metrics computed while
-building DuckDB. The builder reads each result's top-ranking artifact, combines
-the ranked corpus ids with artifact qrels, and computes the viewer metric set
-for the selected full-corpus, reranking, and embedding-variant rankings. The
-small task JSON `metrics` and `rerank_metrics` dictionaries are fallback inputs
-for summary values, not the source of the full viewer metric set.
+`metrics_long` is a legacy optional long-format representation of metrics
+computed while building DuckDB. Current default builds do not persist this
+table; they store metrics in `fact_metric_score` and `dim_metric` instead. When
+present in an older DuckDB, append still maintains `metrics_long` for backward
+compatibility. The small task JSON `metrics` and `rerank_metrics` dictionaries
+are fallback inputs for summary values, not the source of the full viewer metric
+set.
 
 | column | type | meaning |
 | --- | --- | --- |
@@ -593,9 +608,9 @@ for summary values, not the source of the full viewer metric set.
 
 ### `fact_metric_score`
 
-`fact_metric_score` is the normalized metric-value fact table derived from
-`metrics_long` and `dim_metric`. It keeps detailed metrics separate from the
-primary leaderboard score in `fact_task_score`. In `Retrieval` mode, the viewer
+`fact_metric_score` is the normalized metric-value fact table joined to
+`dim_metric`. It keeps detailed metrics separate from the primary leaderboard
+score in `fact_task_score`. In `Retrieval` mode, the viewer
 uses metric names that do not contain `_reranking_hybrid_top`. In `Reranking`
 mode, with or without the safeguard toggle, the viewer uses
 metric rows with the selected reranking `score_target` and metric names that
@@ -731,7 +746,7 @@ the viewer uses competition rank (`1, 2, 2, 4`) for leaderboard ranks.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | Configured scope preset, such as `Overall` or `Core`, or a benchmark view name. |
+| `view_name` | `VARCHAR` | Configured scope preset, such as `Overall` or `Overall (EN)`, or a benchmark view name. |
 | `model_name` | `VARCHAR` | Model name. |
 | `task_count` | `INTEGER` | Number of tasks used for ranking. |
 | `mean_score` | `DOUBLE` | Mean score on a 0 to 100 scale. |
@@ -754,7 +769,7 @@ HTML report. The current HTMX viewer does not use it.
 
 | column | type | meaning |
 | --- | --- | --- |
-| `view_name` | `VARCHAR` | Configured scope preset, such as `Overall` or `Core`, or a benchmark view name. |
+| `view_name` | `VARCHAR` | Configured scope preset, such as `Overall` or `Overall (EN)`, or a benchmark view name. |
 | `model_name` | `VARCHAR` | Model name. |
 | `benchmark` | `VARCHAR` | Benchmark group. |
 | `task_key` | `VARCHAR` | Task identity. |
@@ -813,17 +828,9 @@ For overall scope presets:
 - `Overall`: the default and broadest leaderboard scope. It includes all
   configured benchmark views before language, model, task, and variant filters
   are applied.
-- `Core`: a compact curated set covering broad multilingual retrieval,
-  multilingual BEIR, English RTEB domains, multilingual long-document
-  retrieval, reasoning-heavy retrieval, and code retrieval
-  (`MNanoBEIR`, `NanoMMTEB-v2`, `NanoRTEB`, `NanoMLDR`, `NanoBRIGHT`, and
-  `NanoCoIR`).
-- `Core (EN)`: an English-oriented core preset. It uses the `EN` task facet and
-  keeps English-relevant retrieval anchors from the compact Core idea:
-  `MNanoBEIR` grouped by `task_name`, `NanoRTEB`, `NanoMLDR`, `NanoMIRACL`,
-  `NanoBRIGHT`, `NanoCoIR`, and `NanoMTEB-v2`. `NanoMIRACL` is included because
-  the other Core (EN) components do not otherwise provide the canonical MIRACL
-  passage retrieval task.
+- `Overall (EN)`: the English-focused counterpart to Overall. It uses the same
+  benchmark components as `Overall`, then applies the `EN` task facet so
+  multilingual suites contribute their English slices.
 - `Custom`: a dynamic scope built from repeated `bench=` query parameters.
   Nano-set labels in the viewer toggle membership in this selected set. When
   `view=Custom` has no `bench=` values, it is the empty custom state: no
@@ -1044,21 +1051,22 @@ choices:
   `primary_languages` to keep auxiliary detector languages from cross-language
   tasks out of the selector; for example, `NanoMTEB-Dutch` exposes `nl`
   but not English, and `NanoCMTEB` exposes `zh` but not Japanese.
-- Viewer benchmark scope exposes `Overall`, `Core`, `Core (EN)`, a `Clear`
+- Viewer benchmark scope exposes `Overall`, `Overall (EN)`, a `Clear`
   action button, then the individual NanoSet labels. Scope preset buttons
-  carry inline help explaining their aggregation semantics. `Overall` and
-  `Core` reset Task facets to All languages when selected; `Core (EN)` selects
-  the `EN` facet; `Clear` pushes `view=Custom` with no `bench=` values, resets
-  to All languages, is not itself selected, and shows no rows. Overall, Core,
-  Core (EN), and Custom scopes expose a Score selector for `micro` and `macro`.
+  carry inline help explaining their aggregation semantics. `Overall` resets
+  Task facets to All languages when selected; `Overall (EN)` selects the `EN`
+  facet and is represented as `view=Overall (EN)&lang_filter=en`; `Clear`
+  pushes `view=Custom` with no `bench=` values, resets to All languages, is not
+  itself selected, and shows no rows. Overall, Overall (EN), and Custom scopes
+  expose a Score selector for `micro` and `macro`.
   NanoSet labels toggle a `Custom` selection through repeated `bench=` query
   parameters, so small combinations such as `NanoJMTEB-v2` plus `NanoMTEB-v2`
   are represented directly in the URL. `MNanoBEIR` is special:
   combined scopes expose `MNanoBEIR:task_mean` as `MNanoBEIR(task)` and
   `MNanoBEIR:lang_mean` as `MNanoBEIR(lang)`. These two selection keys are
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
-  `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall`, `Core`,
-  and `Core (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
+  `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall` and
+  `Overall (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
   inside the same leaderboard configuration panel. When one grouped benchmark
   is selected in Custom and `task_scores=1` is enabled, displayed task columns
   follow that selection key: `MNanoBEIR(task)` displays BEIR source-task means
@@ -1230,7 +1238,8 @@ directly in DuckDB. In a real viewer, build `selected_benchmarks` and
 ```sql
 DESCRIBE task_results;
 DESCRIBE runs;
-DESCRIBE metrics_long;
+DESCRIBE dim_metric;
+DESCRIBE fact_metric_score;
 DESCRIBE task_diagnostics;
 DESCRIBE dataset_metadata;
 DESCRIBE model_scores;
@@ -1493,8 +1502,8 @@ The final result should return both `macro_mean` and `micro_mean`. In
 
 ### 4. Overall Macro Leaderboard
 
-Overall views using `score=macro`, including the compact `Core` and `Core (EN)`
-leaderboards and dynamic `Custom` `bench=` selections, first average raw tasks
+Overall views using `score=macro`, including `Overall`, `Overall (EN)`, and
+dynamic `Custom` `bench=` selections, first average raw tasks
 into one score row per Nano-set, then compute Borda, means, and Nano-set metric
 columns. Components with a `group_by` setting, such as `MNanoBEIR` grouped by
 `task_name`, first average those inner units before the final Nano-set score is

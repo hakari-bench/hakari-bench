@@ -825,6 +825,56 @@ def test_load_results_reuses_unchanged_incremental_duckdb_rows(
     assert cached_ranking_rows == []
 
 
+def test_load_results_reuses_incremental_duckdb_rows_without_metrics_long(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    results_dir = tmp_path / "results"
+    task_path = results_dir / "model" / "hakari-bench__NanoJMTEB-v2" / "ja_cwir.json"
+    _write_minimal_task_result(
+        task_path,
+        model_id="example/model",
+        task_name="ja_cwir",
+        score=0.42,
+    )
+    rows, runs, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows = report.load_results(results_dir)
+    db_path = tmp_path / "hakari_bench.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=runs,
+        rows=rows,
+        metric_rows=metric_rows,
+        diagnostic_rows=diagnostic_rows,
+        dataset_metadata_rows=dataset_metadata_rows,
+        ranking_rows=ranking_rows,
+        standings={},
+        borda_rows=[],
+    )
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            "SELECT 1 FROM duckdb_tables() WHERE table_name = 'metrics_long'"
+        ).fetchone() is None
+    finally:
+        con.close()
+    monkeypatch.setattr(
+        report,
+        "_read_json",
+        lambda path: pytest.fail(f"unchanged incremental cache should not parse {path}"),
+    )
+
+    cached_rows, cached_runs, cached_metric_rows, cached_diagnostic_rows, cached_dataset_metadata_rows, cached_ranking_rows = (
+        report.load_results(results_dir, incremental_db_path=db_path)
+    )
+
+    assert cached_rows == rows
+    assert cached_runs == runs
+    assert cached_metric_rows == metric_rows
+    assert cached_diagnostic_rows == diagnostic_rows
+    assert cached_dataset_metadata_rows == dataset_metadata_rows
+    assert cached_ranking_rows == []
+
+
 def test_read_top_rankings_stream_keeps_only_selected_metric_rankings(tmp_path: Path) -> None:
     path = tmp_path / "result.json"
     payload = {
@@ -1526,7 +1576,8 @@ def test_write_duckdb_streaming_results_matches_materialized_build(tmp_path: Pat
         for table in [
             "runs",
             "task_results",
-            "metrics_long",
+            "dim_metric",
+            "fact_metric_score",
             "task_diagnostics",
             "dataset_metadata",
             "viewer_task_results",
@@ -1539,18 +1590,11 @@ def test_write_duckdb_streaming_results_matches_materialized_build(tmp_path: Pat
                 f"SELECT count(*) FROM (SELECT * FROM streaming.{table} EXCEPT SELECT * FROM materialized.{table})"
             ).fetchone() == (0,)
         assert con.execute(
-            """
-            SELECT result_path
-            FROM streaming.metrics_long
-            """
-        ).fetchall() == con.execute(
-            """
-            SELECT result_path
-            FROM streaming.metrics_long
-            ORDER BY result_path, metric_name, score_target, embedding_variant_name,
-                     model_name, benchmark, dataset_id, task_name
-            """
-        ).fetchall()
+            "SELECT 1 FROM duckdb_tables() WHERE database_name = 'materialized' AND table_name = 'metrics_long'"
+        ).fetchone() is None
+        assert con.execute(
+            "SELECT 1 FROM duckdb_tables() WHERE database_name = 'streaming' AND table_name = 'metrics_long'"
+        ).fetchone() is None
     finally:
         con.close()
 
@@ -1992,6 +2036,81 @@ def test_main_appends_results_dir_to_existing_duckdb_without_reading_existing_js
         ]
     finally:
         con.close()
+
+
+def test_append_duckdb_results_matches_metrics_long_build_when_metrics_long_is_absent(tmp_path: Path) -> None:
+    base_dir = tmp_path / "base"
+    append_dir = tmp_path / "append"
+    _write_augmented_result_json(
+        base_dir / "dense_base" / "hakari-bench__NanoMIRACL" / "en.json.xz",
+        model_id="example/dense-base",
+        model_method="dense",
+        task_name="en",
+        score=0.42,
+        variant_name="int8",
+        variant_score=0.40,
+        rerank_score=0.50,
+    )
+    for model_dir, model_id, method, task_name, score, variant_name in [
+        ("dense_added", "example/dense-added", "dense", "ja", 0.52, "truncate:128"),
+        ("sparse_added", "example/sparse-added", "sparse", "en", 0.62, None),
+        ("late_added", "example/late-added", "late-interaction", "ja", 0.72, "truncate:64"),
+        ("reranker_added", "cross-encoder/reranker-added", "reranker", "en", 0.82, None),
+    ]:
+        _write_augmented_result_json(
+            append_dir / model_dir / "hakari-bench__NanoMIRACL" / f"{task_name}.json.xz",
+            model_id=model_id,
+            model_method=method,
+            task_name=task_name,
+            score=score,
+            variant_name=variant_name,
+            variant_score=score - 0.02 if variant_name else None,
+            rerank_score=score + 0.05,
+        )
+
+    base_rows, base_runs, base_metric_rows, base_diagnostic_rows, base_metadata_rows, base_ranking_rows = report.load_results(
+        base_dir,
+        include_retrieval_rankings=True,
+    )
+    append_rows, _, append_metric_rows, append_diagnostic_rows, append_metadata_rows, append_ranking_rows = report.load_results(
+        append_dir,
+        include_retrieval_rankings=True,
+    )
+    with_metrics_db = tmp_path / "with_metrics_long.duckdb"
+    without_metrics_db = tmp_path / "without_metrics_long.duckdb"
+    for db_path in [with_metrics_db, without_metrics_db]:
+        report.write_duckdb(
+            db_path,
+            runs=base_runs,
+            rows=base_rows,
+            metric_rows=base_metric_rows,
+            diagnostic_rows=base_diagnostic_rows,
+            dataset_metadata_rows=base_metadata_rows,
+            ranking_rows=base_ranking_rows,
+            standings={},
+            borda_rows=[],
+        )
+    con = duckdb.connect(str(with_metrics_db))
+    try:
+        _restore_legacy_metrics_long_table(con)
+    finally:
+        con.close()
+
+    for db_path in [with_metrics_db, without_metrics_db]:
+        report.append_duckdb_results(
+            db_path,
+            rows=append_rows,
+            metric_rows=append_metric_rows,
+            ranking_rows=append_ranking_rows,
+            diagnostic_rows=append_diagnostic_rows,
+            dataset_metadata_rows=append_metadata_rows,
+            loaded_at_utc="2026-06-18T00:00:00+00:00",
+        )
+
+    assert _duckdb_table_exists(with_metrics_db, "metrics_long")
+    assert not _duckdb_table_exists(without_metrics_db, "metrics_long")
+    for table_name in ["task_results", "dim_metric", "fact_metric_score", "fact_task_score", "viewer_task_results"]:
+        assert _ordered_table_rows(without_metrics_db, table_name) == _ordered_table_rows(with_metrics_db, table_name)
 
 
 def test_load_results_merges_multiple_results_dirs_by_argument_order(tmp_path: Path) -> None:
@@ -2664,6 +2783,210 @@ def _write_minimal_task_result(path: Path, *, model_id: str, task_name: str, sco
         ),
         encoding="utf-8",
     )
+
+
+def _write_augmented_result_json(
+    path: Path,
+    *,
+    model_id: str,
+    model_method: str,
+    task_name: str,
+    score: float,
+    variant_name: str | None,
+    variant_score: float | None,
+    rerank_score: float,
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    embedding_evaluations: list[dict[str, object]] = [
+        {
+            "name": "base",
+            "aggregate_metric": "ndcg@10",
+            "aggregate_metric_value": score,
+            "best_score_name": "cosine",
+            "embedding_dim": 768,
+            "precision": "float32",
+        }
+    ]
+    rankings: list[dict[str, object]] = [
+        {
+            "name": "base",
+            "ranking_kind": "retrieval",
+            "embedding_variant_name": None,
+            "distance": "cosine",
+            "score_name": "cosine",
+            "query_id": "q1",
+            "corpus_ids": ["d1", "d2"],
+        },
+        {
+            "name": "base_rerank",
+            "ranking_kind": "candidate_rerank",
+            "embedding_variant_name": None,
+            "distance": "cosine",
+            "score_name": "cosine_reranking_hybrid_top100_rerank",
+            "query_id": "q1",
+            "corpus_ids": ["d2", "d1"],
+            "safeguard_corpus_id": "d2",
+        },
+    ]
+    metrics = {
+        f"NanoMIRACL_{task_name}_cosine_ndcg@10": score,
+        f"NanoMIRACL_{task_name}_cosine_recall@100": 1.0,
+    }
+    if variant_name is not None and variant_score is not None:
+        variant_score_name = f"{variant_name}_cosine"
+        embedding_evaluations.append(
+            {
+                "name": variant_name,
+                "aggregate_metric": "ndcg@10",
+                "aggregate_metric_value": variant_score,
+                "best_score_name": variant_score_name,
+                "embedding_dim": 128,
+                "precision": "int8" if "int8" in variant_name else "float32",
+            }
+        )
+        rankings.extend(
+            [
+                {
+                    "name": variant_name,
+                    "ranking_kind": "retrieval",
+                    "embedding_variant_name": variant_name,
+                    "distance": "cosine",
+                    "score_name": variant_score_name,
+                    "query_id": "q1",
+                    "corpus_ids": ["d1", "d2"],
+                },
+                {
+                    "name": f"{variant_name}_rerank",
+                    "ranking_kind": "candidate_rerank",
+                    "embedding_variant_name": variant_name,
+                    "distance": "cosine",
+                    "score_name": f"{variant_name}_cosine_reranking_hybrid_top100_rerank",
+                    "query_id": "q1",
+                    "corpus_ids": ["d2", "d1"],
+                    "safeguard_corpus_id": "d2",
+                },
+            ]
+        )
+    model_payload: dict[str, object] = {
+        "id": model_id,
+        "method": model_method,
+        "active_parameters": 1000,
+        "total_parameters": 1200,
+        "max_seq_length": 8192,
+        "dtype": "bf16",
+        "attn_implementation": "sdpa",
+    }
+    if model_method == "late-interaction":
+        model_payload["late_interaction"] = {
+            "query_length": 48,
+            "document_length": 512,
+            "query_prefix": "[Q] ",
+            "document_prefix": "[D] ",
+            "do_query_expansion": False,
+            "attend_to_expansion_tokens": False,
+        }
+    payload = {
+        "model": model_payload,
+        "config": {
+            "candidate_ranking": "reranking_hybrid",
+            "rerank_top_k": 100,
+            "query_prompt": "query: ",
+            "document_prompt": "passage: ",
+        },
+        "target": {
+            "dataset_name": "NanoMIRACL",
+            "dataset_id": "hakari-bench/NanoMIRACL",
+            "split_name": task_name,
+            "task_name": task_name,
+        },
+        "evaluation": {
+            "aggregate_metric": "ndcg@10",
+            "aggregate_metric_value": score,
+            "rerank_aggregate_metric_value": rerank_score,
+            "embedding_evaluations": embedding_evaluations,
+            "reranking_evaluations": [
+                {
+                    "name": "reranking_hybrid_top_100",
+                    "source": "dataset_candidate_subset",
+                    "status": "available",
+                    "rerank_top_n": 100,
+                    "aggregate_metric": "ndcg@10",
+                    "aggregate_metric_value": rerank_score,
+                    "best_score_name": "cosine_reranking_hybrid_top100_rerank",
+                    "candidate_coverage": {
+                        "top_k": 100,
+                        "query_count": 1,
+                        "query_with_relevance_count": 1,
+                        "covered_query_count": 1,
+                        "query_coverage": 1.0,
+                        "relevant_count": 1,
+                        "covered_relevant_count": 1,
+                        "relevant_coverage": 1.0,
+                    },
+                }
+            ],
+        },
+        "metrics": metrics,
+        "rerank_metrics": {f"NanoMIRACL_{task_name}_cosine_reranking_hybrid_top100_rerank_ndcg@10": rerank_score},
+        "artifacts": {
+            "top_rankings": {
+                "schema_version": 2,
+                "top_k": 100,
+                "qrels": [{"query_id": "q1", "relevant_corpus_ids": ["d2"]}],
+                "rankings": rankings,
+            }
+        },
+    }
+    if path.suffix == ".xz":
+        with lzma.open(path, "wt", encoding="utf-8") as file:
+            json.dump(payload, file)
+    else:
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+
+def _duckdb_table_exists(db_path: Path, table_name: str) -> bool:
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        return con.execute(
+            "SELECT 1 FROM information_schema.tables WHERE table_schema = 'main' AND table_name = ?",
+            [table_name],
+        ).fetchone() is not None
+    finally:
+        con.close()
+
+
+def _restore_legacy_metrics_long_table(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute(
+        """
+        CREATE TABLE metrics_long AS
+        SELECT
+            fms.model_dir,
+            fms.model_name,
+            fms.benchmark,
+            fms.dataset_id,
+            fms.task_name,
+            dm.metric_name,
+            fms.metric_value,
+            fms.result_path,
+            fms.score_target,
+            fms.embedding_variant_name
+        FROM fact_metric_score AS fms
+        JOIN dim_metric AS dm
+          ON dm.metric_id = fms.metric_id
+        ORDER BY result_path, metric_name, score_target, embedding_variant_name,
+                 model_name, benchmark, dataset_id, task_name
+        """
+    )
+
+
+def _ordered_table_rows(db_path: Path, table_name: str) -> list[tuple[object, ...]]:
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        columns = [row[1] for row in con.execute(f"PRAGMA table_info('{table_name}')").fetchall()]
+        order_by = ", ".join(f'"{column}"' for column in columns)
+        return con.execute(f'SELECT * FROM "{table_name}" ORDER BY {order_by}').fetchall()
+    finally:
+        con.close()
 
 
 def test_task_result_row_schema_rejects_unknown_fields() -> None:
@@ -3790,6 +4113,118 @@ def test_build_viewer_leaderboard_mart_materializes_display_modes(tmp_path: Path
         con.close()
 
 
+def test_build_viewer_leaderboard_mart_materializes_overall_en_scope(tmp_path: Path) -> None:
+    en_row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="BenchA",
+        dataset_id="bench/a",
+        dataset_name="BenchA",
+        split_name="task-en",
+        task_name="task-en",
+        task_key="BenchA::bench/a::task-en",
+        score=0.60,
+        aggregate_metric="ndcg@10",
+        result_path="en.json",
+    )
+    ja_row = en_row.model_copy(
+        update={
+            "split_name": "task-ja",
+            "task_name": "task-ja",
+            "task_key": "BenchA::bench/a::task-ja",
+            "score": 0.40,
+            "result_path": "ja.json",
+        }
+    )
+    db_path = tmp_path / "results.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[en_row, ja_row],
+        metric_rows=[
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "BenchA",
+                "dataset_id": "bench/a",
+                "task_name": "task-en",
+                "metric_name": "task-en_ndcg@10",
+                "metric_value": 0.60,
+                "result_path": "en.json",
+            },
+            {
+                "model_dir": "model",
+                "model_name": "example/model",
+                "benchmark": "BenchA",
+                "dataset_id": "bench/a",
+                "task_name": "task-ja",
+                "metric_name": "task-ja_ndcg@10",
+                "metric_value": 0.40,
+                "result_path": "ja.json",
+            },
+        ],
+        dataset_metadata_rows=[
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name="task-en",
+                task_name="task-en",
+                task_key="BenchA::bench/a::task-en",
+                language="en",
+                languages=["en"],
+                primary_languages=["en"],
+            ),
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name="task-ja",
+                task_name="task-ja",
+                task_key="BenchA::bench/a::task-ja",
+                language="ja",
+                languages=["ja"],
+                primary_languages=["ja"],
+            ),
+        ],
+        standings={},
+        borda_rows=[],
+    )
+    viewer_config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[
+            OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"]),
+            OverallConfig(name="Overall (EN)", label="Overall (EN)", benchmarks=["BenchA"]),
+        ],
+    )
+
+    report.build_viewer_leaderboard_mart(
+        db_path,
+        viewer_config=viewer_config,
+        view_names=["Overall", "Overall (EN)"],
+    )
+
+    con = duckdb.connect(str(db_path))
+    try:
+        assert con.execute(
+            """
+            SELECT view_name, expected_tasks, model_name, mean_score, task_count
+            FROM viewer_leaderboard_rows
+            WHERE score_target = 'all'
+              AND include_quantization_variants = false
+              AND include_truncate_variants = false
+              AND include_rescore_variants = false
+              AND include_other_variants = false
+            ORDER BY view_name
+            """
+        ).fetchall() == [
+            ("Overall", 2, "example/model", 50.0, 2),
+            ("Overall (EN)", 1, "example/model", 60.0, 1),
+        ]
+    finally:
+        con.close()
+
+
 def test_cached_viewer_leaderboard_mart_rows_match_service_path(tmp_path: Path) -> None:
     def task_row(
         *,
@@ -4000,7 +4435,6 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "fact_task_score.parquet",
         "ingestion_batches.parquet",
         "meta_database.parquet",
-        "metrics_long.parquet",
         "model_scores.parquet",
         "result_extensions.parquet",
         "retrieval_rankings.parquet",

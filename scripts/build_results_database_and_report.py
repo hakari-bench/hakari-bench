@@ -36,12 +36,14 @@ from hakari_bench.viewer.store import (
     _download_hf_duckdb,
 )
 from hakari_bench.viewer.leaderboard import (
+    LanguageFilterPolicy,
     LeaderboardService,
     _aggregate_overall_scores,
     _aggregate_benchmark_score_group_scores,
     _append_missing_bm25_task_scores,
     _exclude_configured_tasks,
     _exclude_reranker_task_scores,
+    _filter_rows_by_languages,
     _language_filter_mode_for_view,
     _language_options,
     _language_page_languages_for_view,
@@ -245,7 +247,6 @@ WAREHOUSE_TABLES = (
     "task_results",
     "fact_task_score",
     "fact_metric_score",
-    "metrics_long",
     "retrieval_rankings",
     "task_diagnostics",
     "dataset_metadata",
@@ -256,6 +257,7 @@ WAREHOUSE_TABLES = (
     "model_scores",
     "borda_task_scores",
 )
+OPTIONAL_WAREHOUSE_TABLES = ("metrics_long",)
 TASK_RESULT_COLUMNS = (
     "model_dir",
     "model_name",
@@ -1603,19 +1605,22 @@ def _load_cached_warehouse_rows(
     # source rows are loaded and changed files are parsed by load_results().
     con = duckdb.connect(str(db_path), read_only=True)
     try:
-        required_tables = ("meta_database", "runs", "task_results", "metrics_long", "task_diagnostics", "dataset_metadata")
+        required_tables = (
+            "meta_database",
+            "runs",
+            "task_results",
+            "dim_metric",
+            "fact_metric_score",
+            "task_diagnostics",
+            "dataset_metadata",
+        )
         if not all(_duckdb_table_exists(con, table) for table in required_tables):
             return None
         if con.execute("SELECT schema_version FROM meta_database").fetchone() != (WAREHOUSE_SCHEMA_VERSION,):
             return None
         rows = _filter_rows_by_result_path(_fetch_task_result_rows(con), result_paths)
         runs = _fetch_dict_rows(con, "runs")
-        metric_rows = _fetch_model_rows(
-            con,
-            "metrics_long",
-            MetricLongRow,
-            METRIC_LONG_COLUMNS,
-        )
+        metric_rows = _fetch_metric_long_rows(con)
         metric_rows = _filter_rows_by_result_path(metric_rows, result_paths)
         diagnostic_rows = _fetch_model_rows(
             con,
@@ -2296,6 +2301,38 @@ def _fetch_model_rows(
 ) -> Any:
     column_sql = ", ".join(columns)
     return [model_class.model_validate(dict(zip(columns, row, strict=True))) for row in con.execute(f"SELECT {column_sql} FROM {table_name}").fetchall()]
+
+
+def _fetch_metric_long_rows(con: duckdb.DuckDBPyConnection) -> list[MetricLongRow]:
+    if _duckdb_table_exists(con, "metrics_long"):
+        return _fetch_model_rows(
+            con,
+            "metrics_long",
+            MetricLongRow,
+            METRIC_LONG_COLUMNS,
+        )
+    rows = con.execute(
+        """
+        SELECT
+            fms.model_dir,
+            fms.model_name,
+            fms.benchmark,
+            fms.dataset_id,
+            fms.task_name,
+            dm.metric_name,
+            fms.metric_value,
+            fms.result_path,
+            fms.score_target,
+            fms.embedding_variant_name
+        FROM fact_metric_score AS fms
+        JOIN dim_metric AS dm
+          ON dm.metric_id = fms.metric_id
+        """
+    ).fetchall()
+    return [
+        MetricLongRow.model_validate(dict(zip(METRIC_LONG_COLUMNS, row, strict=True)))
+        for row in rows
+    ]
 
 
 def _fetch_dict_rows(con: duckdb.DuckDBPyConnection, table_name: str) -> list[dict[str, Any]]:
@@ -3547,7 +3584,7 @@ def write_duckdb_streaming_results(
 
     con = duckdb.connect(str(db_path))
     try:
-        for table in WAREHOUSE_TABLES:
+        for table in (*WAREHOUSE_TABLES, *OPTIONAL_WAREHOUSE_TABLES):
             con.execute(f"DROP TABLE IF EXISTS {table}")
         for table in (
             "task_results_raw",
@@ -3605,6 +3642,7 @@ def write_duckdb_streaming_results(
         _materialize_streamed_result_tables(con)
         _create_metric_dimension_and_fact_tables(con)
         _create_fact_task_score_table(con)
+        con.execute("DROP TABLE IF EXISTS metrics_long")
         _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
         _create_viewer_filter_values_table(con)
@@ -3977,7 +4015,7 @@ def write_duckdb(
     changed_count = sum(1 for row in source_rows if previous_source_hashes.get(row["result_path"]) != row["payload_sha256"])
     con = duckdb.connect(str(db_path))
     try:
-        for table in WAREHOUSE_TABLES:
+        for table in (*WAREHOUSE_TABLES, *OPTIONAL_WAREHOUSE_TABLES):
             con.execute(f"DROP TABLE IF EXISTS {table}")
         _create_schema_evolution_tables(
             con,
@@ -4256,6 +4294,7 @@ def write_duckdb(
                 (row.duckdb_values() for row in normalized_diagnostic_rows),
             )
         _create_fact_task_score_table(con)
+        con.execute("DROP TABLE IF EXISTS metrics_long")
         con.execute(
             """
             CREATE TABLE dataset_metadata (
@@ -4444,12 +4483,15 @@ def append_duckdb_results(
         if rows:
             _insert_duckdb_rows(con, "task_results", TASK_RESULT_COLUMNS, (row.duckdb_values() for row in rows))
         if normalized_metric_rows:
-            _insert_duckdb_rows(
-                con,
-                "metrics_long",
-                METRIC_LONG_COLUMNS,
-                (row.duckdb_values() for row in normalized_metric_rows),
-            )
+            if _duckdb_table_exists(con, "metrics_long"):
+                _insert_duckdb_rows(
+                    con,
+                    "metrics_long",
+                    METRIC_LONG_COLUMNS,
+                    (row.duckdb_values() for row in normalized_metric_rows),
+                )
+            else:
+                _insert_metric_fact_rows(con, normalized_metric_rows)
         if normalized_ranking_rows:
             _insert_duckdb_rows(
                 con,
@@ -4511,7 +4553,8 @@ def _validate_appendable_duckdb(con: duckdb.DuckDBPyConnection) -> None:
         "source_load_state",
         "runs",
         "task_results",
-        "metrics_long",
+        "dim_metric",
+        "fact_metric_score",
         "retrieval_rankings",
         "task_diagnostics",
         "dataset_metadata",
@@ -4557,23 +4600,96 @@ def _ensure_append_rows_are_new(
         raise ValueError(f"Cannot append duplicate model-task results: {', '.join(sorted(duplicate_tasks))}")
 
 
+def _insert_metric_fact_rows(con: duckdb.DuckDBPyConnection, metric_rows: Sequence[MetricLongRow]) -> None:
+    if not metric_rows:
+        return
+    con.execute("DROP TABLE IF EXISTS append_metrics_long")
+    _create_metrics_long_table(con, "append_metrics_long")
+    try:
+        _insert_duckdb_rows(
+            con,
+            "append_metrics_long",
+            METRIC_LONG_COLUMNS,
+            (row.duckdb_values() for row in metric_rows),
+        )
+        con.execute(
+            """
+            INSERT INTO dim_metric
+            WITH missing_metric_values AS (
+                SELECT DISTINCT
+                    aml.metric_name,
+                    nullif(lower(regexp_extract(aml.metric_name, '([A-Za-z]+)@[0-9]+$', 1)), '') AS metric_family,
+                    try_cast(regexp_extract(aml.metric_name, '@([0-9]+)$', 1) AS INTEGER) AS cutoff
+                FROM append_metrics_long AS aml
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM dim_metric AS dm
+                    WHERE dm.metric_name = aml.metric_name
+                )
+            )
+            SELECT
+                COALESCE((SELECT max(metric_id) FROM dim_metric), 0)
+                    + row_number() OVER (ORDER BY metric_name) AS metric_id,
+                metric_name,
+                metric_family,
+                cutoff
+            FROM missing_metric_values
+            ORDER BY metric_id
+            """
+        )
+        con.execute(
+            """
+            INSERT INTO fact_metric_score
+            SELECT
+                dm.metric_id,
+                aml.model_dir,
+                aml.model_name,
+                aml.benchmark,
+                aml.dataset_id,
+                aml.task_name,
+                aml.metric_value,
+                aml.result_path,
+                aml.score_target,
+                aml.embedding_variant_name
+            FROM append_metrics_long AS aml
+            JOIN dim_metric AS dm
+              ON dm.metric_name = aml.metric_name
+            ORDER BY
+                aml.benchmark,
+                aml.dataset_id,
+                aml.task_name,
+                aml.model_name,
+                aml.score_target,
+                aml.embedding_variant_name,
+                dm.metric_id
+            """
+        )
+    finally:
+        con.execute("DROP TABLE IF EXISTS append_metrics_long")
+
+
 def _rebuild_duckdb_cached_tables(con: duckdb.DuckDBPyConnection) -> None:
+    has_metrics_long = _duckdb_table_exists(con, "metrics_long")
     for table in (
         "viewer_leaderboard_language_options",
         "viewer_leaderboard_rows",
         "viewer_filter_values",
         "viewer_task_results",
         "fact_task_score",
-        "fact_metric_score",
-        "dim_metric",
         "dim_variant",
         "dim_task",
         "dim_model",
         "runs",
     ):
         con.execute(f"DROP TABLE IF EXISTS {table}")
+    if has_metrics_long:
+        for table in ("fact_metric_score", "dim_metric"):
+            con.execute(f"DROP TABLE IF EXISTS {table}")
     _create_runs_table_from_task_results(con)
-    _create_metric_dimension_and_fact_tables(con)
+    if has_metrics_long:
+        _create_metric_dimension_and_fact_tables(con)
+    else:
+        _rebuild_metric_dimension_from_fact_scores(con)
     _create_fact_task_score_table(con)
     _create_canonical_dimension_tables(con)
     _create_viewer_task_results_table(con)
@@ -4584,6 +4700,80 @@ def _rebuild_duckdb_cached_tables(con: duckdb.DuckDBPyConnection) -> None:
         con.execute("DELETE FROM model_scores")
     if _duckdb_table_exists(con, "borda_task_scores"):
         con.execute("DELETE FROM borda_task_scores")
+
+
+def _rebuild_metric_dimension_from_fact_scores(con: duckdb.DuckDBPyConnection) -> None:
+    con.execute("DROP TABLE IF EXISTS fact_metric_score_with_names")
+    try:
+        con.execute(
+            """
+            CREATE TABLE fact_metric_score_with_names AS
+            SELECT
+                dm.metric_name,
+                fms.model_dir,
+                fms.model_name,
+                fms.benchmark,
+                fms.dataset_id,
+                fms.task_name,
+                fms.metric_value,
+                fms.result_path,
+                fms.score_target,
+                fms.embedding_variant_name
+            FROM fact_metric_score AS fms
+            JOIN dim_metric AS dm
+              ON dm.metric_id = fms.metric_id
+            """
+        )
+        con.execute("DROP TABLE fact_metric_score")
+        con.execute("DROP TABLE dim_metric")
+        con.execute(
+            """
+            CREATE TABLE dim_metric AS
+            WITH metric_values AS (
+                SELECT DISTINCT
+                    metric_name,
+                    nullif(lower(regexp_extract(metric_name, '([A-Za-z]+)@[0-9]+$', 1)), '') AS metric_family,
+                    try_cast(regexp_extract(metric_name, '@([0-9]+)$', 1) AS INTEGER) AS cutoff
+                FROM fact_metric_score_with_names
+            )
+            SELECT
+                row_number() OVER (ORDER BY metric_name) AS metric_id,
+                metric_name,
+                metric_family,
+                cutoff
+            FROM metric_values
+            ORDER BY metric_id
+            """
+        )
+        con.execute(
+            """
+            CREATE TABLE fact_metric_score AS
+            SELECT
+                dm.metric_id,
+                fms.model_dir,
+                fms.model_name,
+                fms.benchmark,
+                fms.dataset_id,
+                fms.task_name,
+                fms.metric_value,
+                fms.result_path,
+                fms.score_target,
+                fms.embedding_variant_name
+            FROM fact_metric_score_with_names AS fms
+            JOIN dim_metric AS dm
+              ON dm.metric_name = fms.metric_name
+            ORDER BY
+                fms.benchmark,
+                fms.dataset_id,
+                fms.task_name,
+                fms.model_name,
+                fms.score_target,
+                fms.embedding_variant_name,
+                dm.metric_id
+            """
+        )
+    finally:
+        con.execute("DROP TABLE IF EXISTS fact_metric_score_with_names")
 
 
 def _create_runs_table_from_task_results(con: duckdb.DuckDBPyConnection) -> None:
@@ -5204,8 +5394,8 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.task_name,
             tr.task_key,
             'reranking' AS score_target,
-            ml.metric_value AS score,
-            ml.metric_value * 100.0 AS score_100,
+            fms.metric_value AS score,
+            fms.metric_value * 100.0 AS score_100,
             tr.aggregate_metric,
             tr.result_path,
             tr.experiment_fingerprint,
@@ -5232,24 +5422,24 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.late_interaction_attend_to_expansion_tokens,
             'dataset_candidate_subset' AS candidate_source,
             'reranking_hybrid' AS candidate_ranking,
-            try_cast(regexp_extract(ml.metric_name, '_top([0-9]+)_rerank_', 1) AS INTEGER) AS rerank_top_k,
+            try_cast(regexp_extract(dm.metric_name, '_top([0-9]+)_rerank_', 1) AS INTEGER) AS rerank_top_k,
             'available' AS rerank_status,
             tr.started_at_utc,
             tr.finished_at_utc,
             tr.evaluated_at_utc
         FROM task_results AS tr
-        JOIN metrics_long AS ml
-          ON ml.model_dir = tr.model_dir
-         AND ml.model_name = tr.model_name
-         AND ml.benchmark = tr.benchmark
-         AND ml.dataset_id = tr.dataset_id
-         AND ml.task_name = tr.task_name
-         AND ml.result_path = tr.result_path
-         AND ml.embedding_variant_name IS NOT DISTINCT FROM tr.embedding_variant_name
+        JOIN fact_metric_score AS fms
+          ON fms.model_dir = tr.model_dir
+         AND fms.model_name = tr.model_name
+         AND fms.benchmark = tr.benchmark
+         AND fms.dataset_id = tr.dataset_id
+         AND fms.task_name = tr.task_name
+         AND fms.result_path = tr.result_path
+         AND fms.embedding_variant_name IS NOT DISTINCT FROM tr.embedding_variant_name
         JOIN dim_metric AS dm
-          ON dm.metric_name = ml.metric_name
+          ON dm.metric_id = fms.metric_id
         WHERE tr.embedding_variant_name IS NOT NULL
-          AND ml.score_target = 'reranking'
+          AND fms.score_target = 'reranking'
           AND dm.metric_family = nullif(lower(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '([A-Za-z]+)@[0-9]+$', 1)), '')
           AND dm.cutoff = try_cast(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '@([0-9]+)$', 1) AS INTEGER)
 
@@ -5269,8 +5459,8 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.task_name,
             tr.task_key,
             'reranking_without_safeguard' AS score_target,
-            ml.metric_value AS score,
-            ml.metric_value * 100.0 AS score_100,
+            fms.metric_value AS score,
+            fms.metric_value * 100.0 AS score_100,
             tr.aggregate_metric,
             tr.result_path,
             tr.experiment_fingerprint,
@@ -5303,17 +5493,17 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
             tr.finished_at_utc,
             tr.evaluated_at_utc
         FROM task_results AS tr
-        JOIN metrics_long AS ml
-          ON ml.model_dir = tr.model_dir
-         AND ml.model_name = tr.model_name
-         AND ml.benchmark = tr.benchmark
-         AND ml.dataset_id = tr.dataset_id
-         AND ml.task_name = tr.task_name
-         AND ml.result_path = tr.result_path
-         AND ml.embedding_variant_name IS NOT DISTINCT FROM tr.embedding_variant_name
+        JOIN fact_metric_score AS fms
+          ON fms.model_dir = tr.model_dir
+         AND fms.model_name = tr.model_name
+         AND fms.benchmark = tr.benchmark
+         AND fms.dataset_id = tr.dataset_id
+         AND fms.task_name = tr.task_name
+         AND fms.result_path = tr.result_path
+         AND fms.embedding_variant_name IS NOT DISTINCT FROM tr.embedding_variant_name
         JOIN dim_metric AS dm
-          ON dm.metric_name = ml.metric_name
-        WHERE ml.score_target = 'reranking_without_safeguard'
+          ON dm.metric_id = fms.metric_id
+        WHERE fms.score_target = 'reranking_without_safeguard'
           AND dm.metric_family = nullif(lower(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '([A-Za-z]+)@[0-9]+$', 1)), '')
           AND dm.cutoff = try_cast(regexp_extract(COALESCE(tr.aggregate_metric, 'ndcg@10'), '@([0-9]+)$', 1) AS INTEGER)
         ) AS scores
@@ -5720,6 +5910,15 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                     mode=language_filter_mode,
                     allowed_languages=language_page_languages,
                 )
+                if view_name == "Overall (EN)":
+                    rows = _filter_rows_by_languages(
+                        rows,
+                        ("en",),
+                        policy=LanguageFilterPolicy(
+                            default_mode=language_filter_mode,
+                            default_allowed_languages=tuple(language_page_languages),
+                        ),
+                    )
                 metric_score_group = None
                 if overall is not None:
                     rows = _aggregate_overall_scores(

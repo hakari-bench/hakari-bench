@@ -4,6 +4,10 @@ Research date: 2026-05-21 JST
 
 Selection update: 2026-05-22 JST
 
+Historical note: the Core and Core (EN) viewer presets were retired. The
+current viewer exposes `Overall` and `Overall (EN)` as the top-level scope
+presets, with ad hoc smaller scopes built through Custom NanoSet selection.
+
 ## Abstract
 
 The HAKARI Core set is the small, curated leaderboard view intended to answer a

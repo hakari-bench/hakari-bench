@@ -17,6 +17,7 @@ DEFAULT_HF_SOURCE_CHECK_TTL_SECONDS = 600.0
 DEFAULT_REMOTE_LATEST_DUCKDB_PATH = Path.home() / ".cache" / "hakari-bench" / "duckdb" / "remote_latest_hakari_bench.duckdb"
 REMOTE_LATEST_DUCKDB_PATH_ENV = "HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH"
 REMOTE_LATEST_DUCKDB_METADATA_PATH_ENV = "HAKARI_BENCH_REMOTE_LATEST_DUCKDB_METADATA_PATH"
+VIEWER_CACHE_EXCLUDED_TABLES = frozenset({"task_results", "task_diagnostics", "metrics_long"})
 DuckDbProgressCallback = Callable[[str, int, int | None], None]
 
 
@@ -82,7 +83,7 @@ class LocalDuckDbStore:
         if destination.exists() and _file_sha1(destination) == _file_sha1(source):
             return False
         destination.parent.mkdir(parents=True, exist_ok=True)
-        _copy_file_atomic(source, destination, stage="copying", progress_callback=progress_callback)
+        _install_viewer_duckdb_atomic(source, destination, progress_callback=progress_callback)
         return True
 
     def start_background_sync(self) -> DuckDbSyncStatus:
@@ -379,6 +380,71 @@ def _copy_file_atomic(
                 progress_callback(stage, copied, total)
     shutil.copystat(source, temp_path)
     temp_path.replace(destination)
+
+
+def _install_viewer_duckdb_atomic(
+    source: Path,
+    destination: Path,
+    *,
+    progress_callback: DuckDbProgressCallback | None = None,
+) -> None:
+    if not _copy_slim_viewer_duckdb_atomic(source, destination, progress_callback=progress_callback):
+        _copy_file_atomic(source, destination, stage="copying", progress_callback=progress_callback)
+
+
+def _copy_slim_viewer_duckdb_atomic(
+    source: Path,
+    destination: Path,
+    *,
+    progress_callback: DuckDbProgressCallback | None = None,
+) -> bool:
+    import duckdb
+
+    temp_path = destination.with_suffix(destination.suffix + ".tmp")
+    temp_wal_path = temp_path.with_name(f"{temp_path.name}.wal")
+    temp_path.unlink(missing_ok=True)
+    temp_wal_path.unlink(missing_ok=True)
+    try:
+        con = duckdb.connect(str(temp_path))
+        try:
+            con.execute(f"ATTACH {_duckdb_path_literal(source)} AS source_db (READ_ONLY)")
+            table_names = [
+                str(row[0])
+                for row in con.execute(
+                    """
+                    SELECT table_name
+                    FROM duckdb_tables()
+                    WHERE database_name = 'source_db'
+                      AND schema_name = 'main'
+                    ORDER BY table_name
+                    """
+                ).fetchall()
+            ]
+            if not table_names:
+                raise ValueError("source DuckDB has no main tables")
+            for table_name in table_names:
+                if table_name in VIEWER_CACHE_EXCLUDED_TABLES:
+                    continue
+                escaped = table_name.replace('"', '""')
+                con.execute(f'CREATE TABLE "{escaped}" AS SELECT * FROM source_db."{escaped}"')
+            con.execute("CHECKPOINT")
+        finally:
+            con.close()
+    except Exception:
+        temp_path.unlink(missing_ok=True)
+        temp_wal_path.unlink(missing_ok=True)
+        return False
+    shutil.copystat(source, temp_path)
+    temp_path.replace(destination)
+    temp_wal_path.unlink(missing_ok=True)
+    if progress_callback is not None:
+        size = source.stat().st_size
+        progress_callback("copying", size, size)
+    return True
+
+
+def _duckdb_path_literal(path: Path) -> str:
+    return "'" + str(path).replace("'", "''") + "'"
 
 
 def _progress_tqdm_class(progress_callback: DuckDbProgressCallback):

@@ -305,7 +305,11 @@ served within the 10-minute source-check TTL use the already-local
 synchronized into a shared remote latest cache
 (`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` by default)
 using Hugging Face file metadata and a sidecar SHA-1 to avoid repeated downloads
-or local copies when the content has not changed.
+or local copies when the content has not changed. The shared remote latest cache
+keeps the full source DuckDB. The viewer's local `/data/viewer` copy is
+installed as a smaller viewer-only DuckDB that omits `task_results`,
+`task_diagnostics`, and `metrics_long`, which are not needed by the current
+leaderboard UI.
 
 The same viewer can be pointed at a different source locally or in a Space with:
 
@@ -370,7 +374,7 @@ iframe, while the `hf.space` URL serves the app directly:
 ```bash
 curl -L -sS https://huggingface.co/spaces/hakari-bench/leaderboard | rg "HAKARI-Bench Leaderboard|hakari-bench-leaderboard.hf.space"
 curl -L -sS https://hakari-bench-leaderboard.hf.space/ | rg "HAKARI-Bench leaderboard|/assets/app.css|/assets/viewer.js|/assets/favicon.png|/assets/htmx.min.js"
-curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=Overall' | rg "Overall|Core \\(EN\\)|Micro|Macro|Task facets"
+curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard?view=Overall' | rg "Overall|Overall \\(EN\\)|Micro|Macro|Task facets"
 curl -L -sS 'https://hakari-bench-leaderboard.hf.space/leaderboard.csv' -o /tmp/hakari_space_leaderboard.csv
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/favicon.png -o /tmp/hakari_favicon.png
 curl -L -sS -D - https://hakari-bench-leaderboard.hf.space/assets/app.css -o /tmp/hakari_app.css

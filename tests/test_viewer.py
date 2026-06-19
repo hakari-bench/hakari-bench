@@ -30,7 +30,7 @@ from hakari_bench.viewer.app import (
     render_table_body,
     render_table_head,
 )
-from hakari_bench.viewer.analytics import ViewerSummary
+from hakari_bench.viewer.summary import ViewerSummary
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerConfig, load_viewer_config
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.filters import row_filter_context
@@ -55,7 +55,7 @@ from hakari_bench.viewer.state import FilterState
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
-def test_viewer_config_uses_core_and_overall_scope_views() -> None:
+def test_viewer_config_uses_overall_scope_views() -> None:
     config = load_viewer_config()
     language_nanomteb_benchmarks = [
         "NanoMTEB-Dutch",
@@ -72,23 +72,6 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         "NanoVNMTEB",
         "NanoMTEB-Misc",
     ]
-    core_benchmarks = [
-        "MNanoBEIR",
-        "NanoMMTEB-v2",
-        "NanoRTEB",
-        "NanoMLDR",
-        "NanoBRIGHT",
-        "NanoCoIR",
-    ]
-    core_en_benchmarks = [
-        "MNanoBEIR",
-        "NanoRTEB",
-        "NanoMLDR",
-        "NanoMIRACL",
-        "NanoBRIGHT",
-        "NanoCoIR",
-        "NanoMTEB-v2",
-    ]
     all_benchmarks = [benchmark.name for benchmark in config.benchmarks]
 
     assert config.overall.name == "Overall"
@@ -100,33 +83,19 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
         None,
         "task_name",
     ]
-    core_overall = config.overall_for_view("Core")
-    assert core_overall is not None
-    assert core_overall.benchmark_names == core_benchmarks
-    assert [component.group_by for component in core_overall.benchmark_components] == [
+    overall_en = config.overall_for_view("Overall (EN)")
+    assert overall_en is not None
+    assert overall_en.benchmark_names == all_benchmarks
+    assert [component.group_by for component in overall_en.benchmark_components[:3]] == [
+        None,
+        None,
         "task_name",
-        None,
-        None,
-        None,
-        None,
-        None,
     ]
-    core_en_overall = config.overall_for_view("Core (EN)")
-    assert core_en_overall is not None
-    assert core_en_overall.benchmark_names == core_en_benchmarks
-    assert [component.group_by for component in core_en_overall.benchmark_components] == [
-        "task_name",
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-    ]
-    assert config.view_names[: len(all_benchmarks) + 3] == [
+    assert config.overall_for_view("Core") is None
+    assert config.overall_for_view("Core (EN)") is None
+    assert config.view_names[: len(all_benchmarks) + 2] == [
         "Overall",
-        "Core",
-        "Core (EN)",
+        "Overall (EN)",
         *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
@@ -134,9 +103,9 @@ def test_viewer_config_uses_core_and_overall_scope_views() -> None:
     assert "NanoDAPFAM" in config.view_names
     assert all(benchmark in config.view_names for benchmark in language_nanomteb_benchmarks)
     assert all(benchmark in overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
-    assert all(benchmark not in core_overall.benchmark_names for benchmark in language_nanomteb_benchmarks)
+    assert all(benchmark in overall_en.benchmark_names for benchmark in language_nanomteb_benchmarks)
     assert "NanoMIRACL" in overall.benchmark_names
-    assert "NanoMIRACL" not in core_overall.benchmark_names
+    assert "NanoMIRACL" in overall_en.benchmark_names
     assert "NanoCMTEB" in config.view_names
     assert "NanoCMTEB" in overall.benchmark_names
     nano_cmteb = config.benchmark_for_view("NanoCMTEB")
@@ -218,8 +187,8 @@ def test_primary_language_view_benchmarks_define_primary_languages() -> None:
 
 def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
     assert _view_group("All") == "Scope presets"
-    assert _view_group("Core") == "Scope presets"
-    assert _view_group("Core (EN)") == "Scope presets"
+    assert _view_group("Overall") == "Scope presets"
+    assert _view_group("Overall (EN)") == "Scope presets"
     assert _view_group("Clear") == "Scope presets"
     assert _view_group("Custom") == "Scope presets"
     assert _view_group("Group") == "Scope presets"
@@ -1174,12 +1143,8 @@ overalls:
     label: Overall
     benchmarks:
       - BenchA
-  - name: Core
-    label: Core
-    benchmarks:
-      - BenchA
-  - name: Core (EN)
-    label: Core (EN)
+  - name: Overall (EN)
+    label: Overall (EN)
     benchmarks:
       - BenchB
 """.strip(),
@@ -1345,11 +1310,10 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
         is_overall=True,
         expected_tasks=0,
         rows=[],
-        available_views=["Overall", "Core", "Core (EN)", "BenchA", "BenchB", "BenchC"],
+        available_views=["Overall", "Overall (EN)", "BenchA", "BenchB", "BenchC"],
         available_view_labels={
             "Overall": "Overall",
-            "Core": "Core",
-            "Core (EN)": "Core (EN)",
+            "Overall (EN)": "Overall (EN)",
             "BenchA": "BenchA",
             "BenchB": "BenchB",
             "BenchC": "BenchC",
@@ -1366,14 +1330,15 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
         filter_state=FilterState(language_filters=("ja",)),
     )
 
-    assert "Core (EN)" in html
+    assert "Overall (EN)" in html
+    assert "Core" not in html
     assert "Clear" in html
     assert 'class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"' in html
-    assert 'hx-get="/leaderboard?view=Core&amp;sort=borda_rank&amp;direction=asc' in html
-    core_en_button = html.split(">Core (EN)</button>", 1)[0].rsplit("<button", 1)[1]
+    assert 'hx-get="/leaderboard?view=Overall&amp;sort=borda_rank&amp;direction=asc' in html
+    overall_en_button = html.split(">Overall (EN)</button>", 1)[0].rsplit("<button", 1)[1]
     clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
-    assert "view=Core+%28EN%29" in core_en_button
-    assert "lang_filter=en" in core_en_button
+    assert "view=Overall+%28EN%29" in overall_en_button
+    assert "lang_filter=en" in overall_en_button
     assert 'data-icon="eraser"' in clear_button
     assert 'data-icon="rotate-ccw"' not in clear_button
     assert 'hx-get="/leaderboard?view=Custom&amp;sort=borda_rank&amp;direction=asc' in clear_button
@@ -1404,10 +1369,10 @@ def test_display_controls_preserve_custom_benchmark_selection() -> None:
         is_overall=True,
         expected_tasks=0,
         rows=[],
-        available_views=["Overall", "Core", "MNanoBEIR", "NanoJMTEB-v2"],
+        available_views=["Overall", "Overall (EN)", "MNanoBEIR", "NanoJMTEB-v2"],
         available_view_labels={
             "Overall": "Overall",
-            "Core": "Core",
+            "Overall (EN)": "Overall (EN)",
             "MNanoBEIR": "MNanoBEIR",
             "NanoJMTEB-v2": "JMTEB-v2",
         },
@@ -1437,10 +1402,10 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
         is_overall=True,
         expected_tasks=0,
         rows=[],
-        available_views=["Overall", "Core", "MNanoBEIR", "BenchA"],
+        available_views=["Overall", "Overall (EN)", "MNanoBEIR", "BenchA"],
         available_view_labels={
             "Overall": "Overall",
-            "Core": "Core",
+            "Overall (EN)": "Overall (EN)",
             "MNanoBEIR": "MNanoBEIR",
             "BenchA": "BenchA",
         },
@@ -4946,6 +4911,39 @@ def test_local_duckdb_store_copies_newer_source_on_page_load(tmp_path: Path) -> 
     assert local.read_bytes() == b"new"
 
 
+def test_local_duckdb_store_installs_slim_viewer_duckdb_cache(tmp_path: Path) -> None:
+    source = tmp_path / "source.duckdb"
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    con = duckdb.connect(str(source))
+    try:
+        con.execute("CREATE TABLE meta_database (schema_version VARCHAR)")
+        con.execute("INSERT INTO meta_database VALUES ('8')")
+        con.execute("CREATE TABLE viewer_task_results (model_name VARCHAR, score DOUBLE)")
+        con.execute("INSERT INTO viewer_task_results VALUES ('model/a', 0.9)")
+        con.execute("CREATE TABLE task_results (model_name VARCHAR, score DOUBLE)")
+        con.execute("INSERT INTO task_results VALUES ('model/a', 0.9)")
+        con.execute("CREATE TABLE task_diagnostics (model_name VARCHAR, wall_seconds DOUBLE)")
+        con.execute("INSERT INTO task_diagnostics VALUES ('model/a', 1.2)")
+        con.execute("CREATE TABLE metrics_long (model_name VARCHAR, metric_name VARCHAR, metric_value DOUBLE)")
+        con.execute("INSERT INTO metrics_long VALUES ('model/a', 'ndcg@10', 0.9)")
+    finally:
+        con.close()
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
+
+    assert store.ensure_current() is True
+
+    con = duckdb.connect(str(local), read_only=True)
+    try:
+        assert _duckdb_table_exists(con, "meta_database")
+        assert _duckdb_table_exists(con, "viewer_task_results")
+        assert not _duckdb_table_exists(con, "task_results")
+        assert not _duckdb_table_exists(con, "task_diagnostics")
+        assert not _duckdb_table_exists(con, "metrics_long")
+        assert con.execute("SELECT model_name, score FROM viewer_task_results").fetchall() == [("model/a", 0.9)]
+    finally:
+        con.close()
+
+
 def test_resolve_duckdb_location_defaults_to_hakari_bench_name(tmp_path: Path) -> None:
     location = resolve_duckdb_location(
         data_dir=tmp_path,
@@ -5236,6 +5234,14 @@ def test_local_duckdb_store_skips_copy_when_source_content_matches(tmp_path: Pat
 
     assert store.ensure_current() is False
     assert local.stat().st_mtime == 1
+
+
+def _duckdb_table_exists(con: duckdb.DuckDBPyConnection, table_name: str) -> bool:
+    row = con.execute(
+        "SELECT count(*) FROM information_schema.tables WHERE table_name = ?",
+        [table_name],
+    ).fetchone()
+    return bool(row[0]) if row is not None else False
 
 
 def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:

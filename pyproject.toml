@@ -184,4 +184,10 @@ description = Verify hakari_bench/viewer/assets/app.css matches its Tailwind sou
 skip_install = true
 allowlist_externals = npx
 commands = python scripts/build_viewer_css.py --check
+
+[testenv:browser]
+description = Run leaderboard viewer browser smoke tests with Playwright Chromium.
+dependency_groups = viewer-browser-test
+commands_pre = python -m playwright install chromium
+commands = python -m pytest -q -m browser tests/test_viewer_browser.py
 """

@@ -16,7 +16,7 @@ from hakari_bench.viewer.task_names import canonical_task_key, canonical_task_na
 
 
 RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
-CORE_VIEW_NAME = "Core"
+SUMMARY_VIEW_NAME = "Overall"
 PRIMARY_METRIC = "ndcg@10"
 
 
@@ -69,7 +69,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--config-dir",
         type=Path,
         default=Path("config/viewer"),
-        help="Viewer config directory used to resolve Core benchmark grouping.",
+        help="Viewer config directory used to resolve Overall benchmark grouping.",
     )
     return parser
 
@@ -123,17 +123,21 @@ def generate_pr_template(
         raise ValueError(f"No result JSON files found under {result_dir}")
 
     viewer_config = load_viewer_config(config_dir)
-    core = viewer_config.overall_for_view(CORE_VIEW_NAME)
-    if core is None:
-        raise ValueError(f"{config_dir} does not define a {CORE_VIEW_NAME} overall view")
+    summary_scope = viewer_config.overall_for_view(SUMMARY_VIEW_NAME)
+    if summary_scope is None:
+        raise ValueError(f"{config_dir} does not define an {SUMMARY_VIEW_NAME} overall view")
 
     payloads = [(path, load_result_payload(path)) for path in paths]
     first_payload = payloads[0][1]
     model_dir = result_dir.name
     repo_path = repo_path or f"PROJECT_ROOT/hakari-results/{model_dir}"
     model_name = _model_name(first_payload, model_dir=model_dir)
-    core_rows = _core_task_scores(payloads, benchmark_configs=viewer_config.benchmarks, core_components=core.benchmark_components)
-    core_summary = summarize_core_scores(core_rows, core_components=core.benchmark_components)
+    core_rows = _core_task_scores(
+        payloads,
+        benchmark_configs=viewer_config.benchmarks,
+        core_components=summary_scope.benchmark_components,
+    )
+    core_summary = summarize_core_scores(core_rows, core_components=summary_scope.benchmark_components)
 
     metadata = _metadata_summary(payloads, result_dir=result_dir, repo_path=repo_path, model_dir=model_dir)
     return _render_markdown(
@@ -325,12 +329,12 @@ def _render_markdown(
 | Target path | `{repo_path}` |
 | Result files | {metadata["result_files"]} total, {metadata["json_xz_files"]} `.json.xz` |
 | Evaluation method | {metadata["model_method"]} |
-| Core nDCG@10 | {core_score} |
-| Core score units | {core_summary.score_unit_count} grouped units from {core_summary.raw_task_count} raw task results |
+| Overall nDCG@10 | {core_score} |
+| Overall score units | {core_summary.score_unit_count} grouped units from {core_summary.raw_task_count} raw task results |
 
-## Core nDCG@10
+## Overall nDCG@10
 
-| Core component | nDCG@10 | Score units | Raw task results |
+| Overall component | nDCG@10 | Score units | Raw task results |
 | --- | ---: | ---: | ---: |
 {benchmark_rows}
 
@@ -379,7 +383,7 @@ def _render_markdown(
 - [ ] Result files are committed under `{repo_path}/`.
 - [ ] Result files are compressed `.json.xz`; no caches, DuckDB files, HTML reports, or local scratch artifacts are included.
 - [ ] The result JSON records model revision, dataset revision, runtime configuration, and package versions.
-- [ ] Core nDCG@10 above was generated from the submitted result files.
+- [ ] Overall nDCG@10 above was generated from the submitted result files.
 - [ ] Any non-default prompt, sequence length, attention implementation, candidate ranking, or reranker setting is documented above.
 """
 

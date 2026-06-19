@@ -7,7 +7,7 @@ from pathlib import Path
 from scripts import generate_results_pr_template as template
 
 
-def test_generate_pr_template_summarizes_core_scores_from_xz_results(tmp_path: Path) -> None:
+def test_generate_pr_template_summarizes_overall_scores_from_xz_results(tmp_path: Path) -> None:
     result_dir = tmp_path / "Example__model"
     _write_result(
         result_dir / "hakari-bench__NanoBEIR-en" / "arguana.json.xz",
@@ -40,7 +40,7 @@ def test_generate_pr_template_summarizes_core_scores_from_xz_results(tmp_path: P
 
     rendered = template.generate_pr_template(result_dir, repo_path="PROJECT_ROOT/hakari-results/Example__model")
 
-    assert "| Core nDCG@10 | 0.5333 |" in rendered
+    assert "| Overall nDCG@10 | 0.5333 |" in rendered
     assert "| MNanoBEIR | 0.7000 | 1 | 2 |" in rendered
     assert "| NanoRTEB | 0.4000 | 1 | 1 |" in rendered
     assert "| NanoCoIR | 0.5000 | 1 | 1 |" in rendered

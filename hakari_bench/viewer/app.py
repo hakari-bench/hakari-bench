@@ -15,7 +15,6 @@ from urllib.parse import quote, urlencode
 
 from pydantic import BaseModel, ConfigDict
 
-from hakari_bench.viewer.analytics import ViewerAnalyticsRepository, ViewerSummary
 from hakari_bench.viewer.config import (
     CLEAR_SCOPE_NAME,
     CUSTOM_SCOPE_NAME,
@@ -63,6 +62,7 @@ from hakari_bench.viewer.state import (
     task_length_bounds,
 )
 from hakari_bench.viewer.store import DuckDbSyncStatus, LocalDuckDbStore
+from hakari_bench.viewer.summary import ViewerSummary, ViewerSummaryRepository
 from hakari_bench.viewer.variant_display import (
     is_sparse_dims_variant_name,
     variant_category,
@@ -366,7 +366,7 @@ def create_app(
             )
             if not task_z_scores:
                 initial_query["task_z_scores"] = "0"
-            summary = ViewerAnalyticsRepository(store.path).fetch_summary()
+            summary = ViewerSummaryRepository(store.path).fetch_summary()
             with timed_operation("viewer.render", operation="render_page"):
                 content = render_page(
                     viewer_config=viewer_config,
@@ -1416,7 +1416,7 @@ def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
     if CLEAR_SCOPE_NAME in available_views:
         return available_views
     views = list(available_views)
-    insert_after = "Core (EN)" if "Core (EN)" in views else "Core" if "Core" in views else "Overall"
+    insert_after = "Overall (EN)" if "Overall (EN)" in views else "Overall"
     if insert_after in views:
         views.insert(views.index(insert_after) + 1, CLEAR_SCOPE_NAME)
     else:
@@ -1451,9 +1451,9 @@ def _scope_preset_query_payload(
     filter_state: FilterState,
 ) -> QueryState:
     scope_filter_state = filter_state
-    if view_name in {"Overall", "Core", CLEAR_SCOPE_NAME}:
+    if view_name in {"Overall", CLEAR_SCOPE_NAME}:
         scope_filter_state = _filter_state_with_languages(filter_state, ())
-    elif view_name == "Core (EN)":
+    elif view_name == "Overall (EN)":
         scope_filter_state = _filter_state_with_languages(filter_state, ("en",))
     query_payload = state_payload(
         result=result,
@@ -1546,15 +1546,10 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
             "Shows every benchmark family available in the viewer.",
             "Overall is the default and broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any language, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Micro when you want every raw task row to contribute equally, or Macro when you want each NanoSet to contribute equally.",
         ),
-        "Core": (
-            "Benchmark scope: Core",
-            "Shows the compact core benchmark set.",
-            "Core is a compact scope for the main leaderboard. It includes MNanoBEIR, NanoMMTEB-v2, NanoRTEB, NanoMLDR, NanoBRIGHT, and NanoCoIR.\n\nUse Core when you want a smaller HAKARI-Bench comparison before drilling into a specific Nano suite or language. With Macro scoring, MNanoBEIR is first averaged by BEIR source task across languages, then contributes as one NanoSet.",
-        ),
-        "Core (EN)": (
-            "Benchmark scope: Core (EN)",
-            "Shows the English-oriented core benchmark set.",
-            "Core (EN) starts from the compact Core idea and keeps the English-relevant retrieval anchors: MNanoBEIR task mean, NanoRTEB, NanoMLDR, NanoMIRACL, NanoBRIGHT, NanoCoIR, and NanoMTEB-v2. It is intended for an English-focused main leaderboard while keeping the same Micro and Macro score controls.\n\nSelecting Core (EN) also switches Task facets to EN so multilingual suites contribute their English slices.",
+        "Overall (EN)": (
+            "Benchmark scope: Overall (EN)",
+            "Shows the full benchmark scope filtered to English task facets.",
+            "Overall (EN) uses the same benchmark families as Overall, then applies the EN task facet. It is the English-focused counterpart to the broad Overall leaderboard, not a smaller curated subset.\n\nUse Overall (EN) when you want English task comparisons while keeping the same Micro and Macro score controls. Selecting it switches Task facets to EN so multilingual suites contribute their English slices.",
         ),
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
@@ -1738,7 +1733,7 @@ def _score_metric_label(metric: str) -> str:
 
 
 def _view_group(view_name: str) -> str:
-    overall_views = {"All", "Core", "Core (EN)", "Group", "Overall", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
+    overall_views = {"All", "Group", "Overall", "Overall (EN)", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
     if view_name in overall_views or view_name.startswith("Overall"):
         return "Scope presets"
     return "Nano suites"
@@ -1747,10 +1742,9 @@ def _view_group(view_name: str) -> str:
 def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
     priority = {
         "Overall": 0,
-        "Core": 1,
-        "Core (EN)": 2,
-        CLEAR_SCOPE_NAME: 3,
-        CUSTOM_SCOPE_NAME: 4,
+        "Overall (EN)": 1,
+        CLEAR_SCOPE_NAME: 2,
+        CUSTOM_SCOPE_NAME: 3,
         "MNanoBEIR": 0,
         "NanoMMTEB-v2": 1,
         "NanoRTEB": 2,

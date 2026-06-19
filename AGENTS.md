@@ -79,11 +79,15 @@ under `config/datasets/`, and dataset collection definitions live under
   it when the design direction, tokens, layout rules, or component behavior
   changes.
 - When changing viewer design, layout, interactive controls, or generated HTML,
-  run the browser smoke test whenever practical:
+  install Playwright Chromium and run the browser smoke test whenever practical:
 
   ```bash
+  uv run --only-group viewer-browser-test playwright install chromium
   uv run --only-group viewer-browser-test pytest -q -m browser tests/test_viewer_browser.py
   ```
+
+  `uv run tox -e browser` is the CI-style shortcut for the same workflow; it
+  installs Chromium before running the smoke test.
 
 - When updating the leaderboard viewer in this project, keep
   `docs/duckdb_schema.md` in sync. Update it when DuckDB schema, viewer queries,
