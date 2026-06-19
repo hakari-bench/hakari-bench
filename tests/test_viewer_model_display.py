@@ -211,7 +211,7 @@ def test_render_model_name_cell_places_variant_badges_inline_after_model_name() 
     assert html.index(">int8</span>") > html.index("</button>")
 
 
-def test_render_model_name_cell_infers_reranker_type_without_dimension_badge() -> None:
+def test_render_model_name_cell_uses_explicit_reranker_type_without_dimension_badge() -> None:
     row = LeaderboardRow(
         borda_rank=1,
         mean_rank=1,
@@ -219,6 +219,7 @@ def test_render_model_name_cell_infers_reranker_type_without_dimension_badge() -
         borda_score=100,
         mean_score=90,
         task_count=1,
+        model_type="reranker",
     )
     model_view = model_cell_views([row])[row.model_name]
 
@@ -226,6 +227,25 @@ def test_render_model_name_cell_infers_reranker_type_without_dimension_badge() -
 
     assert model_view.metadata["model_type"] == "Cross-encoder reranker"
     assert ">reranker</span>" in html
+
+
+def test_render_model_name_cell_does_not_infer_reranker_type_from_model_name() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="mixedbread-ai/mxbai-rerank-base-v2",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        max_seq_length=32768,
+    )
+    model_view = model_cell_views([row])[row.model_name]
+
+    html = render_model_name_cell(row, model_view)
+
+    assert model_view.metadata["model_type"] == "Dense"
+    assert model_view.metadata["model_type_key"] == "dense"
+    assert ">reranker</span>" not in html
 
 
 def test_model_cell_views_include_late_interaction_metadata_for_details_modal() -> None:

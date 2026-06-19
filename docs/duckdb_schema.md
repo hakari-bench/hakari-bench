@@ -4,9 +4,10 @@ This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 
 The current warehouse schema version is `8`. Version `8` adds canonical
-`primary_languages` metadata for language-page routing. The viewer can still
-read schema `7` files by falling back to legacy language metadata, but new
-DuckDB builds should use schema `8`.
+`primary_languages` metadata for language-page routing and stores model-card
+derived `model_type` values for retrieval family display and filtering. The
+viewer can still read schema `7` files by falling back to legacy language
+metadata, but new DuckDB builds should use schema `8`.
 
 The canonical source table for benchmark results is `task_results`. New DuckDB
 builds also materialize `meta_database`, `schema_change_log`, and
@@ -363,6 +364,7 @@ one model, one benchmark task, and one embedding variant. Base results use
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/hakari-results/{model_dir}`. |
 | `model_name` | `VARCHAR` | `model.id` from result JSON, or `model_dir` when absent. |
+| `model_type` | `VARCHAR` | Evaluation method from the matching model card, such as `dense`, `sparse`, `reranker`, `late-interaction`, or `bm25`. |
 | `model_revision` | `VARCHAR` | Resolved Hugging Face model revision, stored as a short commit SHA when available. Existing result JSON may leave this `NULL`. |
 | `model_revision_requested` | `VARCHAR` | Requested Hugging Face model revision from the run, or `NULL` when not specified or unavailable. |
 | `benchmark` | `VARCHAR` | Viewer benchmark group, such as `MNanoBEIR` or `NanoJMTEB`. |
@@ -417,6 +419,7 @@ rebuilding the same inputs produces stable ids.
 | `model_id` | `BIGINT` | Deterministic model dimension id. |
 | `model_dir` | `VARCHAR` | Directory name under `output/hakari-results/{model_dir}`. |
 | `model_name` | `VARCHAR` | Model name from result JSON. |
+| `model_type` | `VARCHAR` | Model-card evaluation method for the model identity. |
 | `model_revision` | `VARCHAR` | Resolved model revision, when available. |
 | `model_revision_requested` | `VARCHAR` | Requested model revision, when available. |
 | `active_parameters` | `BIGINT` | Active parameter count. |
@@ -514,6 +517,7 @@ already materialized BM25 rows for `score_target = 'reranking'`.
 | --- | --- | --- |
 | `model_dir` | `VARCHAR` | Directory name under `output/hakari-results/{model_dir}`. |
 | `model_name` | `VARCHAR` | Model display/name identity. |
+| `model_type` | `VARCHAR` | Evaluation method copied from `task_results.model_type`. |
 | `model_revision` | `VARCHAR` | Resolved model revision, when available. |
 | `model_revision_requested` | `VARCHAR` | Requested model revision, when available. |
 | `benchmark` | `VARCHAR` | Viewer benchmark group. |
@@ -919,12 +923,13 @@ variant labels such as `binary_rescore` as badges instead of duplicating them in
 the visible model text. Full-dimension rows render compact dimension badges such
 as `384d`. Truncation variants render the truncated dimension first, followed by
 the source dimension, such as `256d <- 384`, and expose the truncation details in
-a tooltip. If a DuckDB build provides an optional `model_type` column, the
-viewer uses it for model-type display; older databases fall back to conservative
-model-name inference for `dense`, `sparse`, `reranker`, `late-interaction`, and
-`bm25`. Non-default neural model types such as sparse encoders, late-interaction
-retrievers, and cross-encoder rerankers render a compact badge. Dense and BM25
-rows stay unbadged in the table. Sparse models can have very large sparse
+a tooltip. Current DuckDB builds provide a `model_type` column derived from
+model cards, and the viewer uses that explicit value for model-type display and
+filtering instead of inferring retrieval family from the model name. Older
+databases that lack the column are treated as dense except for explicit BM25
+identity rows. Non-default neural model types such as sparse encoders,
+late-interaction retrievers, and cross-encoder rerankers render a compact badge.
+Dense and BM25 rows stay unbadged in the table. Sparse models can have very large sparse
 vocabulary dimensions, so the table intentionally suppresses sparse `XXXd`
 dimension badges. Runtime fields such as model type, dtype,
 attention implementation, prompt mode, and `trust_remote_code` are carried in a
@@ -1153,6 +1158,7 @@ are recalculated with BM25 in the reranking population.
 | `expected_tasks` | `INTEGER` | Number of expected complete tasks for the materialized view. |
 | `borda_rank`, `mean_rank` | `DOUBLE` | Precomputed display ranks. |
 | `model_name` | `VARCHAR` | Display model label, including variant details when needed. |
+| `model_type` | `VARCHAR` | Model-card evaluation method used by model family display and filters. |
 | `borda_score`, `mean_score`, `macro_mean`, `micro_mean` | `DOUBLE` | Precomputed leaderboard scores on the 0 to 100 display scale. |
 | `task_count` | `INTEGER` | Number of tasks for the complete row. |
 | `active_parameters`, `total_parameters`, `max_seq_length` | `BIGINT` / `INTEGER` | Model size and sequence length metadata. If older DuckDB materializations have `NULL` values here, the viewer fills missing display values from matching `config/model_cards/*.yaml` entries at runtime without overwriting non-`NULL` DuckDB values. |

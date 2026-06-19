@@ -71,7 +71,7 @@ class LocalDuckDbStore:
         return self.location.local_path
 
     def ensure_current(self, progress_callback: DuckDbProgressCallback | None = None) -> bool:
-        if self._hf_source_check_is_fresh():
+        if self._source_check_is_fresh():
             return False
         source = self._source_path(progress_callback=progress_callback)
         self._mark_hf_source_checked()
@@ -99,7 +99,7 @@ class LocalDuckDbStore:
                     local_path=self.location.local_path,
                 )
                 return self._sync_status
-            if self._hf_source_check_is_fresh():
+            if self._source_check_is_fresh():
                 size = self.location.local_path.stat().st_size if self.location.local_path.exists() else None
                 self._sync_status = DuckDbSyncStatus(
                     state="ready",
@@ -194,6 +194,28 @@ class LocalDuckDbStore:
     def _mark_hf_source_checked(self) -> None:
         if self.location.hf_source is not None:
             self._last_hf_source_check_at = monotonic()
+
+    def _source_check_is_fresh(self) -> bool:
+        if self._hf_source_check_is_fresh():
+            return True
+        source = self.location.source_path
+        destination = self.location.local_path
+        if source is None:
+            return False
+        if not destination.exists():
+            return False
+        if not source.exists():
+            return True
+        try:
+            destination_stat = destination.stat()
+            source_stat = source.stat()
+        except OSError:
+            return False
+        if destination_stat.st_mtime >= source_stat.st_mtime:
+            return True
+        if destination_stat.st_size == source_stat.st_size:
+            return _file_sha1(destination) == _file_sha1(source)
+        return False
 
 
 def resolve_duckdb_location(

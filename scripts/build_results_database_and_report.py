@@ -261,6 +261,7 @@ OPTIONAL_WAREHOUSE_TABLES = ("metrics_long",)
 TASK_RESULT_COLUMNS = (
     "model_dir",
     "model_name",
+    "model_type",
     "model_revision",
     "model_revision_requested",
     "benchmark",
@@ -1999,6 +2000,7 @@ def _process_result_rows(
     common: dict[str, Any] = {
         "model_dir": model_dir,
         "model_name": model_name,
+        "model_type": _str_or_none(model.get("method")) if isinstance(model, dict) else None,
         "model_revision": model_revision,
         "model_revision_requested": model_revision_requested,
         "benchmark": benchmark,
@@ -2881,11 +2883,20 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
         model.get("method") == "bm25" or (isinstance(source, dict) and source.get("type") == "bm25")
     ):
         card = model_cards.get("bm25")
+    updated = dict(model)
     if card is None:
-        return model
+        return updated
+    method = card.get("method")
+    if isinstance(method, str) and method:
+        model_method = model.get("method")
+        if isinstance(model_method, str) and model_method and model_method != method:
+            raise ValueError(
+                f"Model card method {method!r} conflicts with result method {model_method!r} for {model_id!r}."
+            )
+        updated["method"] = method
     parameters = card.get("parameters")
     if not isinstance(parameters, dict):
-        return model
+        return updated
     total_parameters = _int_or_none(model.get("total_parameters"))
     card_total_parameters = _int_or_none(parameters.get("total"))
     if (
@@ -2893,7 +2904,7 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
         and card_total_parameters is not None
         and total_parameters != card_total_parameters
     ):
-        return model
+        return updated
     active_parameters = _int_or_none(model.get("active_parameters"))
     card_active_parameters = _int_or_none(parameters.get("active"))
     if (
@@ -2901,8 +2912,7 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
         and card_active_parameters is not None
         and active_parameters != card_active_parameters
     ):
-        return model
-    updated = dict(model)
+        return updated
     input_embedding_parameters = _int_or_none(parameters.get("input_embedding"))
     if total_parameters is None and card_total_parameters is not None:
         updated["total_parameters"] = card_total_parameters
@@ -3448,7 +3458,7 @@ def _create_task_results_table(con: duckdb.DuckDBPyConnection, table_name: str =
     con.execute(
         f"""
         CREATE TABLE {table_name} (
-            model_dir VARCHAR, model_name VARCHAR,
+            model_dir VARCHAR, model_name VARCHAR, model_type VARCHAR,
             model_revision VARCHAR, model_revision_requested VARCHAR,
             benchmark VARCHAR,
             dataset_id VARCHAR, dataset_revision VARCHAR, dataset_revision_requested VARCHAR,
@@ -4096,7 +4106,7 @@ def write_duckdb(
         con.execute(
             """
             CREATE TABLE task_results (
-                model_dir VARCHAR, model_name VARCHAR,
+                model_dir VARCHAR, model_name VARCHAR, model_type VARCHAR,
                 model_revision VARCHAR, model_revision_requested VARCHAR,
                 benchmark VARCHAR,
                 dataset_id VARCHAR, dataset_revision VARCHAR, dataset_revision_requested VARCHAR,
@@ -4126,6 +4136,7 @@ def write_duckdb(
             (
                 "model_dir",
                 "model_name",
+                "model_type",
                 "model_revision",
                 "model_revision_requested",
                 "benchmark",
@@ -5099,6 +5110,7 @@ def _create_canonical_dimension_tables(con: duckdb.DuckDBPyConnection) -> None:
             SELECT
                 model_dir,
                 model_name,
+                max(model_type) AS model_type,
                 model_revision,
                 model_revision_requested,
                 max(active_parameters) AS active_parameters,
@@ -5119,8 +5131,9 @@ def _create_canonical_dimension_tables(con: duckdb.DuckDBPyConnection) -> None:
         SELECT
             row_number() OVER (
                 ORDER BY
-                    model_name,
-                    model_dir,
+                model_name,
+                model_type,
+                model_dir,
                     COALESCE(model_revision, ''),
                     COALESCE(model_revision_requested, '')
             ) AS model_id,
@@ -5271,6 +5284,7 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
         SELECT
             tr.model_dir,
             tr.model_name,
+            tr.model_type,
             tr.model_revision,
             tr.model_revision_requested,
             tr.benchmark,
@@ -5323,6 +5337,7 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
         SELECT
             tr.model_dir,
             tr.model_name,
+            tr.model_type,
             tr.model_revision,
             tr.model_revision_requested,
             tr.benchmark,
@@ -5384,6 +5399,7 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
         SELECT
             tr.model_dir,
             tr.model_name,
+            tr.model_type,
             tr.model_revision,
             tr.model_revision_requested,
             tr.benchmark,
@@ -5449,6 +5465,7 @@ def _create_fact_task_score_table(con: duckdb.DuckDBPyConnection) -> None:
         SELECT
             tr.model_dir,
             tr.model_name,
+            tr.model_type,
             tr.model_revision,
             tr.model_revision_requested,
             tr.benchmark,
@@ -5526,6 +5543,7 @@ def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
         CREATE TABLE viewer_task_results AS
         SELECT
             fts.model_name,
+            fts.model_type,
             fts.benchmark,
             fts.dataset_id,
             fts.dataset_name,
@@ -5658,6 +5676,7 @@ VIEWER_LEADERBOARD_ROW_COLUMNS = (
     "borda_rank",
     "mean_rank",
     "model_name",
+    "model_type",
     "borda_score",
     "mean_score",
     "macro_mean",
@@ -5705,6 +5724,7 @@ def _create_empty_viewer_leaderboard_rows_table(con: duckdb.DuckDBPyConnection) 
             borda_rank DOUBLE,
             mean_rank DOUBLE,
             model_name VARCHAR,
+            model_type VARCHAR,
             borda_score DOUBLE,
             mean_score DOUBLE,
             macro_mean DOUBLE,
@@ -5821,6 +5841,7 @@ def _viewer_leaderboard_mart_rows_from_service(
                         row.borda_rank,
                         row.mean_rank,
                         row.model_name,
+                        row.model_type,
                         row.borda_score,
                         row.mean_score,
                         row.macro_mean,
@@ -5969,6 +5990,7 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                         row.borda_rank,
                         row.mean_rank,
                         row.model_name,
+                        row.model_type,
                         row.borda_score,
                         row.mean_score,
                         row.macro_mean,

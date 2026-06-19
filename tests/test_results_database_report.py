@@ -2516,6 +2516,7 @@ def test_load_results_backfills_missing_parameters_from_model_card_yaml(tmp_path
         """
 models:
   - id: jinaai/jina-embeddings-v3
+    method: dense
     source:
       type: huggingface
       name: jinaai/jina-embeddings-v3
@@ -2566,6 +2567,7 @@ def test_load_model_cards_reads_one_file_per_model_from_directory(tmp_path: Path
     (model_cards_dir / "BAAI__bge-m3.yaml").write_text(
         """
 id: BAAI/bge-m3
+method: dense
 source:
   type: huggingface
   name: BAAI/bge-m3
@@ -2579,6 +2581,7 @@ parameters:
     (model_cards_dir / "jinaai__jina-embeddings-v3.yaml").write_text(
         """
 id: jinaai/jina-embeddings-v3
+method: dense
 parameters:
   total: 572310396
   input_embedding: 256002048
@@ -2599,6 +2602,7 @@ def test_model_cards_directory_state_changes_when_card_is_added(tmp_path: Path) 
     (model_cards_dir / "first.yaml").write_text(
         """
 id: example/first
+method: dense
 parameters:
   total: 10
   active: 4
@@ -2609,6 +2613,7 @@ parameters:
     (model_cards_dir / "second.yaml").write_text(
         """
 id: example/second
+method: dense
 parameters:
   total: 20
   active: 8
@@ -2647,6 +2652,7 @@ def test_load_results_incremental_reparses_when_model_card_yaml_changes(tmp_path
         """
 models:
   - id: example/model
+    method: dense
     parameters:
       total: 10
       input_embedding: 6
@@ -2675,6 +2681,7 @@ models:
         """
 models:
   - id: example/model
+    method: dense
     parameters:
       total: 10
       input_embedding: 5
@@ -2716,6 +2723,33 @@ def test_model_card_metadata_fills_missing_parameter_fields_without_overwriting(
     assert updated["active_parameters"] == 4
     assert updated["embedding_parameters"] == 6
     assert updated["transformer_parameters"] == 4
+
+
+def test_model_card_metadata_fills_method_from_model_card() -> None:
+    model = {"id": "mixedbread-ai/mxbai-rerank-base-v2"}
+    model_cards = {
+        "mixedbread-ai/mxbai-rerank-base-v2": {
+            "method": "reranker",
+            "parameters": {},
+        },
+    }
+
+    updated = report._with_model_card_metadata(model, model_cards=model_cards)
+
+    assert updated["method"] == "reranker"
+
+
+def test_model_card_metadata_rejects_result_method_conflict() -> None:
+    model = {"id": "mixedbread-ai/mxbai-rerank-base-v2", "method": "dense"}
+    model_cards = {
+        "mixedbread-ai/mxbai-rerank-base-v2": {
+            "method": "reranker",
+            "parameters": {},
+        },
+    }
+
+    with pytest.raises(ValueError, match="conflicts with result method"):
+        report._with_model_card_metadata(model, model_cards=model_cards)
 
 
 def test_model_card_metadata_backfills_zero_total_parameters() -> None:

@@ -10,6 +10,7 @@ class WarehouseModel(BaseModel):
 class TaskResultRow(WarehouseModel):
     model_dir: str
     model_name: str
+    model_type: str | None = None
     model_revision: str | None = None
     model_revision_requested: str | None = None
     benchmark: str
@@ -62,6 +63,7 @@ class TaskResultRow(WarehouseModel):
         return (
             self.model_dir,
             self.model_name,
+            self.model_type,
             self.model_revision,
             self.model_revision_requested,
             self.benchmark,

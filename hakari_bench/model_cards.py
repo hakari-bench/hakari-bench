@@ -13,6 +13,9 @@ import yaml
 from hakari_bench.models import ModelLoadConfig, collect_model_metadata, load_model
 
 
+MODEL_CARD_METHODS = frozenset({"dense", "sparse", "reranker", "late-interaction", "bm25"})
+
+
 @dataclass(frozen=True)
 class ModelCardOverrides:
     display_name: str | None = None
@@ -105,6 +108,7 @@ def model_card_from_metadata(
     model_id = str(metadata.get("id") or metadata.get("model_id") or "")
     if not model_id:
         raise ValueError("Model metadata must include a non-empty id.")
+    method = validate_model_card_method(metadata.get("method"), model_id=model_id)
     source = _source_payload(metadata.get("source"), model_id=model_id, overrides=overrides)
     parameters = {
         "total": _override_or_metadata(overrides.total_parameters, metadata.get("total_parameters")),
@@ -127,7 +131,7 @@ def model_card_from_metadata(
     card: dict[str, Any] = {
         "id": model_id,
         "source": source,
-        "method": _clean_scalar(metadata.get("method")),
+        "method": method,
         "parameters": _drop_none(parameters),
         "embedding": {"truncate_dims": truncate_dims},
         "runtime": _drop_none(runtime),
@@ -206,6 +210,8 @@ def write_model_card(card: dict[str, Any], *, output_dir: Path, overwrite: bool)
     model_id = card.get("id")
     if not isinstance(model_id, str) or not model_id:
         raise ValueError("Model card requires a non-empty string id.")
+    card = dict(card)
+    card["method"] = validate_model_card_method(card.get("method"), model_id=model_id)
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{safe_model_card_stem(model_id)}.yaml"
     if output_path.exists() and not overwrite:
@@ -251,6 +257,16 @@ def model_card_yaml_paths(model_cards_path: Path) -> list[Path]:
 
 def safe_model_card_stem(model_id: str) -> str:
     return model_id.replace("/", "__")
+
+
+def validate_model_card_method(value: Any, *, model_id: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"Model card {model_id!r} requires a non-empty method.")
+    method = value.strip().casefold().replace("_", "-")
+    if method not in MODEL_CARD_METHODS:
+        allowed = ", ".join(sorted(MODEL_CARD_METHODS))
+        raise ValueError(f"Model card {model_id!r} has unsupported method {value!r}; expected one of: {allowed}.")
+    return method
 
 
 _ALLOWED_LINK_KEYS = ("huggingface", "github", "papers")
@@ -322,7 +338,9 @@ def _load_model_card_yaml(model_cards_path: Path) -> dict[str, dict[str, Any]]:
     if not isinstance(payload, dict):
         raise ValueError(f"Model cards YAML must contain a mapping: {model_cards_path}")
     if isinstance(payload.get("id"), str):
-        return {str(payload["id"]): payload}
+        model_id = str(payload["id"])
+        validate_model_card_method(payload.get("method"), model_id=model_id)
+        return {model_id: payload}
     models = payload.get("models", [])
     if not isinstance(models, list):
         raise ValueError(f"Model cards YAML 'models' must be a list: {model_cards_path}")
@@ -333,6 +351,7 @@ def _load_model_card_yaml(model_cards_path: Path) -> dict[str, dict[str, Any]]:
         model_id = item.get("id")
         if not isinstance(model_id, str) or not model_id:
             raise ValueError(f"Model card entries require a non-empty string id: {model_cards_path}")
+        validate_model_card_method(item.get("method"), model_id=model_id)
         cards[model_id] = item
     return cards
 

@@ -52,6 +52,28 @@ def test_model_card_from_metadata_applies_parameter_overrides() -> None:
     assert card["target"] == {"datasets": ["hakari-bench/NanoBEIR-en"]}
 
 
+def test_model_card_from_metadata_requires_method() -> None:
+    metadata = {
+        "id": "BAAI/bge-m3",
+        "source": {"type": "huggingface", "name": "BAAI/bge-m3"},
+    }
+
+    with pytest.raises(ValueError, match="requires a non-empty method"):
+        model_cards.model_card_from_metadata(
+            metadata,
+            truncate_dims=[768],
+            overrides=model_cards.ModelCardOverrides(),
+        )
+
+
+def test_load_model_cards_rejects_missing_method(tmp_path: Path) -> None:
+    path = tmp_path / "model.yaml"
+    path.write_text("id: BAAI/bge-m3\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="requires a non-empty method"):
+        model_cards.load_model_cards(path)
+
+
 def test_model_card_from_metadata_preserves_late_interaction_settings() -> None:
     metadata = {
         "method": "late-interaction",
@@ -168,7 +190,7 @@ def test_collect_model_cards_from_results_reads_each_json_once(tmp_path: Path, m
 
 
 def test_write_model_card_uses_safe_filename(tmp_path: Path) -> None:
-    card = {"id": "BAAI/bge-m3", "parameters": {"total": 10}}
+    card = {"id": "BAAI/bge-m3", "method": "dense", "parameters": {"total": 10}}
 
     output_path = model_cards.write_model_card(card, output_dir=tmp_path, overwrite=False)
 
@@ -308,6 +330,14 @@ def test_static_model_cards_cover_latest_leaderboard_models() -> None:
             assert card["late_interaction"]["architecture"] == "colbert"
             assert card["late_interaction"]["scoring"] == "maxsim"
         assert card["parameters"]["active"] >= 0
+
+
+def test_static_model_cards_all_declare_supported_method() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+
+    assert cards
+    for model_id, card in cards.items():
+        assert model_cards.validate_model_card_method(card.get("method"), model_id=model_id) == card["method"]
 
 
 def test_static_model_cards_include_language_support_evidence() -> None:

@@ -22,7 +22,7 @@ from hakari_bench.viewer.config import (
     ViewerConfig,
     normalize_benchmark_selection_values,
 )
-from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_exists
+from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_columns, _table_exists
 from hakari_bench.viewer.model_types import (
     is_bm25_model,
     is_reranker_model,
@@ -1109,13 +1109,16 @@ def _load_precomputed_leaderboard_rows(
     try:
         if not _table_exists(con, "viewer_leaderboard_rows"):
             return None
+        leaderboard_columns = _table_columns(con, "viewer_leaderboard_rows")
+        model_type_expr = "model_type" if "model_type" in leaderboard_columns else "NULL AS model_type"
         rows = con.execute(
-            """
+            f"""
             SELECT
                 expected_tasks,
                 borda_rank,
                 mean_rank,
                 model_name,
+                {model_type_expr},
                 borda_score,
                 mean_score,
                 macro_mean,
@@ -1184,7 +1187,7 @@ def _load_precomputed_leaderboard_rows(
         rows = [
             row
             for row in rows
-            if not _is_reranker_model(model_name=str(row[3]), model_type=None)
+            if not _is_reranker_model(model_name=str(row[3]), model_type=str(row[4]) if row[4] is not None else None)
         ]
     elif score_target == "reranking" and not _precomputed_rows_include_bm25(rows):
         return None
@@ -1196,28 +1199,29 @@ def _load_precomputed_leaderboard_rows(
             borda_rank=float(row[1]),
             mean_rank=float(row[2]),
             model_name=str(row[3]),
-            borda_score=float(row[4]),
+            model_type=str(row[4]) if row[4] is not None else None,
+            borda_score=float(row[5]),
             mean_score=_precomputed_mean_score(
-                stored_mean_score=float(row[5]),
-                macro_mean=float(row[6]) if row[6] is not None else None,
-                micro_mean=float(row[7]) if row[7] is not None else None,
+                stored_mean_score=float(row[6]),
+                macro_mean=float(row[7]) if row[7] is not None else None,
+                micro_mean=float(row[8]) if row[8] is not None else None,
                 score_aggregation=score_aggregation,
             ),
-            macro_mean=float(row[6]) if row[6] is not None else None,
-            micro_mean=float(row[7]) if row[7] is not None else None,
-            task_count=int(row[8]),
-            active_parameters=int(row[9]) if row[9] is not None else None,
-            total_parameters=int(row[10]) if row[10] is not None else None,
-            max_seq_length=int(row[11]) if row[11] is not None else None,
-            dtype=str(row[12]) if row[12] is not None else None,
-            attn_implementation=str(row[13]) if row[13] is not None else None,
-            prompt_summary=str(row[14]) if row[14] is not None else None,
-            trust_remote_code=bool(row[15]) if row[15] is not None else None,
-            embedding_variant_name=str(row[16]) if row[16] is not None else None,
-            embedding_dim=int(row[17]) if row[17] is not None else None,
-            quantization=str(row[18]) if row[18] is not None else None,
-            source_model_name=str(row[19]) if row[19] is not None else None,
-            base_score_delta_percent=float(row[20]) if row[20] is not None else None,
+            macro_mean=float(row[7]) if row[7] is not None else None,
+            micro_mean=float(row[8]) if row[8] is not None else None,
+            task_count=int(row[9]),
+            active_parameters=int(row[10]) if row[10] is not None else None,
+            total_parameters=int(row[11]) if row[11] is not None else None,
+            max_seq_length=int(row[12]) if row[12] is not None else None,
+            dtype=str(row[13]) if row[13] is not None else None,
+            attn_implementation=str(row[14]) if row[14] is not None else None,
+            prompt_summary=str(row[15]) if row[15] is not None else None,
+            trust_remote_code=bool(row[16]) if row[16] is not None else None,
+            embedding_variant_name=str(row[17]) if row[17] is not None else None,
+            embedding_dim=int(row[18]) if row[18] is not None else None,
+            quantization=str(row[19]) if row[19] is not None else None,
+            source_model_name=str(row[20]) if row[20] is not None else None,
+            base_score_delta_percent=float(row[21]) if row[21] is not None else None,
         )
         for row in rows
     ]
@@ -1312,7 +1316,10 @@ def _task_score_identity(
 
 def _precomputed_rows_include_bm25(rows: list[tuple[Any, ...]]) -> bool:
     return any(
-        _is_bm25_model(model_name=str(row[19] or row[3]), model_type=None)
+        _is_bm25_model(
+            model_name=str(row[20] or row[3]),
+            model_type=str(row[4]) if row[4] is not None else None,
+        )
         for row in rows
     )
 

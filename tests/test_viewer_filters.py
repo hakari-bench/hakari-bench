@@ -54,9 +54,9 @@ def test_visible_row_count_uses_same_context_as_row_visibility() -> None:
 def test_model_type_filter_groups_bm25_with_sparse_models() -> None:
     rows = [
         _row("model/dense", embedding_dim=768, quantization=None, dtype=None, attn=None, prompt=None),
-        _row("org/sparse-encoder", embedding_dim=30000, quantization=None, dtype=None, attn=None, prompt=None),
+        _row("org/sparse-encoder", embedding_dim=30000, quantization=None, dtype=None, attn=None, prompt=None, model_type="sparse"),
         _row("bm25", embedding_dim=None, quantization=None, dtype=None, attn=None, prompt=None),
-        _row("cross-encoder/ms-marco", embedding_dim=None, quantization=None, dtype=None, attn=None, prompt=None),
+        _row("cross-encoder/ms-marco", embedding_dim=None, quantization=None, dtype=None, attn=None, prompt=None, model_type="reranker"),
     ]
     context = row_filter_context(
         rows,
@@ -124,11 +124,13 @@ def _row(
     dtype: str | None,
     attn: str | None,
     prompt: str | None,
+    model_type: str | None = None,
 ) -> LeaderboardRow:
     return LeaderboardRow(
         borda_rank=1,
         mean_rank=1,
         model_name=model_name,
+        model_type=model_type,
         borda_score=100,
         mean_score=100,
         task_count=1,

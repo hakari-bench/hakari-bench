@@ -232,6 +232,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 borda_rank DOUBLE,
                 mean_rank DOUBLE,
                 model_name VARCHAR,
+                model_type VARCHAR,
                 borda_score DOUBLE,
                 mean_score DOUBLE,
                 macro_mean DOUBLE,
@@ -253,7 +254,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             """
         )
         con.execute(
-            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 "Overall",
                 "all",
@@ -265,6 +266,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 1.0,
                 1.0,
                 "model/a (768 dims, int8)",
+                "dense",
                 99.0,
                 98.0,
                 98.0,
@@ -285,7 +287,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             ],
         )
         con.execute(
-            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 "Overall",
                 "all",
@@ -297,6 +299,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 2.0,
                 2.0,
                 "cross-encoder/example-reranker",
+                "reranker",
                 88.0,
                 87.0,
                 87.0,
@@ -317,7 +320,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             ],
         )
         con.execute(
-            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 "Overall",
                 "all",
@@ -328,6 +331,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 3,
                 3.0,
                 3.0,
+                "bm25",
                 "bm25",
                 44.0,
                 43.0,
@@ -349,7 +353,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             ],
         )
         con.execute(
-            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 "Overall",
                 "reranking",
@@ -361,6 +365,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 1.0,
                 1.0,
                 "model/reranker-output",
+                "reranker",
                 90.0,
                 89.0,
                 89.0,
@@ -381,7 +386,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
             ],
         )
         con.execute(
-            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 "Overall",
                 "reranking",
@@ -392,6 +397,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 3,
                 2.0,
                 2.0,
+                "bm25",
                 "bm25",
                 44.0,
                 43.0,
@@ -446,6 +452,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
     (model_cards_dir / "model__a.yaml").write_text(
         """
 id: model/a
+method: dense
 parameters:
   total: 1234
   active: 123
@@ -1567,8 +1574,17 @@ def test_leaderboard_target_all_excludes_reranker_models(tmp_path: Path) -> None
         task_diagnostics_rows=[
             ("cross-encoder/example-reranker", "BenchA", "bench/a", "a1", "BenchA::a1", 0.70, 0.95, 0.25, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
             ("cross-encoder/example-reranker", "BenchA", "bench/a", "a2", "BenchA::a2", 0.60, 0.85, 0.25, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
-        ],
-    )
+            ],
+        )
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute("ALTER TABLE viewer_task_results ADD COLUMN model_type VARCHAR")
+        con.execute(
+            "UPDATE viewer_task_results SET model_type = 'reranker' WHERE model_name = ?",
+            ["cross-encoder/example-reranker"],
+        )
+    finally:
+        con.close()
     config = ViewerConfig(
         benchmarks=[BenchmarkConfig(name="BenchA")],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
@@ -4504,6 +4520,15 @@ def test_leaderboard_service_recalculates_ranking_with_model_type_filter(tmp_pat
             ("org/sparse-encoder", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.70, 20, 24, 8192),
         ],
     )
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute("ALTER TABLE viewer_task_results ADD COLUMN model_type VARCHAR")
+        con.execute(
+            "UPDATE viewer_task_results SET model_type = 'sparse' WHERE model_name = ?",
+            ["org/sparse-encoder"],
+        )
+    finally:
+        con.close()
     config_dir = tmp_path / "config"
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
@@ -5074,6 +5099,25 @@ def test_local_duckdb_store_background_sync_reports_download_progress(
     assert final_status.progress_percent == 100
     assert local.read_bytes() == b"0123456789"
     assert progress_events == [("downloading", 2, 10), ("downloading", 10, 10)]
+
+
+def test_local_duckdb_store_does_not_restart_background_sync_for_current_local_source(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "source.duckdb"
+    source.write_bytes(b"source")
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
+
+    initial_status = store.start_background_sync()
+    assert initial_status.state in {"checking", "copying", "ready"}
+    assert store.wait_for_background_sync(timeout=2).state == "ready"
+
+    next_status = store.start_background_sync()
+
+    assert next_status.state == "ready"
+    assert next_status.changed is False
+    assert store.sync_status().state == "ready"
 
 
 def test_local_duckdb_store_skips_hf_source_check_within_ttl(

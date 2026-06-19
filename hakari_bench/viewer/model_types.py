@@ -23,12 +23,6 @@ def normalized_model_type(*, model_name: str, model_type: str | None = None) -> 
     name = model_name.casefold()
     if name == "bm25" or name.startswith("bm25/") or name.endswith("/bm25"):
         return "bm25"
-    if name.startswith("cross-encoder/") or "reranker" in name:
-        return "reranker"
-    if "splade" in name or "sparse" in name:
-        return "sparse"
-    if "colbert" in name or "late-interaction" in name:
-        return "late-interaction"
     return "dense"
 
 
