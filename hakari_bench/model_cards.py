@@ -1,9 +1,16 @@
+"""Helpers for HAKARI model-card generation and validation.
+
+The canonical model-card schema and workflow live in ``docs/model_cards.md``.
+Keep behavior changes here and user-facing schema guidance there in sync.
+"""
+
 from __future__ import annotations
 
 import argparse
 import json
 import lzma
 import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -14,6 +21,43 @@ from hakari_bench.models import ModelLoadConfig, collect_model_metadata, load_mo
 
 
 MODEL_CARD_METHODS = frozenset({"dense", "sparse", "reranker", "late-interaction", "bm25"})
+MODEL_CARD_DOCS_PATH = "docs/model_cards.md"
+
+_LANGUAGE_SUPPORT_CLASSIFICATION_POLICY = (
+    "model identity first; use broad score evidence only for models without explicit language identity"
+)
+_LANGUAGE_SUPPORT_BENCHMARKS = ["NanoMIRACL", "MNanoBEIR"]
+_HIGH_NON_ENGLISH_SCORE_THRESHOLD = 0.6
+_MIN_LANGUAGE_SUPPORT_EVIDENCE_LANGUAGES = 8
+_NANOBEIR_LANGUAGE_RE = re.compile(r"(?:^|/)NanoBEIR-([a-z]{2,3})(?:$|[,_/.-])")
+_LANGUAGE_CODE_RE = re.compile(r"^[a-z]{2,3}$")
+
+_LANGUAGE_FAMILIES = {
+    "ar": "semitic",
+    "de": "germanic",
+    "en": "germanic",
+    "es": "romance",
+    "fr": "romance",
+    "it": "romance",
+    "no": "germanic",
+    "pt": "romance",
+    "sv": "germanic",
+    "ja": "japonic",
+    "ko": "koreanic",
+    "zh": "sinitic",
+    "th": "kra-dai",
+    "vi": "austroasiatic",
+    "ru": "slavic",
+    "sr": "slavic",
+    "bn": "indo-aryan",
+    "fa": "iranian",
+    "fi": "finnic",
+    "hi": "indo-aryan",
+    "id": "austronesian",
+    "sw": "bantu",
+    "te": "dravidian",
+    "yo": "volta-niger",
+}
 
 
 @dataclass(frozen=True)
@@ -163,6 +207,7 @@ def collect_model_cards_from_results(
     exclude_model_substrings: list[str] | None = None,
     exclude_model_ids: list[str] | None = None,
     existing_cards: dict[str, dict[str, Any]] | None = None,
+    infer_language_support: bool = False,
 ) -> dict[str, dict[str, Any]]:
     excluded_ids = set(exclude_model_ids or [])
     excluded_substrings = [item.lower() for item in exclude_model_substrings or []]
@@ -170,6 +215,7 @@ def collect_model_cards_from_results(
     metadata_by_model: dict[str, dict[str, Any]] = {}
     truncate_dims_by_model: dict[str, set[int]] = {}
     datasets_by_model: dict[str, set[str]] = {}
+    language_scores_by_model: dict[str, dict[str, list[float]]] = {}
     for result_path in _result_json_paths(results_dir):
         payload = _read_json(result_path)
         if not isinstance(payload, dict):
@@ -190,6 +236,11 @@ def collect_model_cards_from_results(
         dataset_id = target.get("dataset_id") if isinstance(target, dict) else None
         if isinstance(dataset_id, str) and dataset_id:
             datasets_by_model.setdefault(model_id, set()).add(dataset_id)
+        if infer_language_support:
+            language_score = _language_score_from_result_payload(payload)
+            if language_score is not None:
+                language, score = language_score
+                language_scores_by_model.setdefault(model_id, {}).setdefault(language, []).append(score)
 
     cards: dict[str, dict[str, Any]] = {}
     for model_id in sorted(metadata_by_model):
@@ -202,8 +253,71 @@ def collect_model_cards_from_results(
             overrides=ModelCardOverrides(),
             target=_drop_empty({"datasets": sorted(datasets_by_model.get(model_id, set()))}),
         )
+        if infer_language_support and not _has_language_support(existing_card):
+            language_support = infer_language_support_from_scores(
+                model_id=model_id,
+                language_scores=language_scores_by_model.get(model_id, {}),
+            )
+            if language_support is not None:
+                generated_card["language_support"] = language_support
         cards[model_id] = _merge_existing_card_fields(generated_card, existing_card)
     return cards
+
+
+def infer_language_support_from_scores(
+    *,
+    model_id: str,
+    language_scores: dict[str, list[float]],
+) -> dict[str, Any] | None:
+    """Build a conservative ``language_support`` suggestion from benchmark scores.
+
+    This is a bootstrap helper for ``scripts/generate_model_cards.py --from-results``.
+    The model-card policy in ``docs/model_cards.md`` still treats manually reviewed
+    model identity as authoritative.
+    """
+    language_means = _language_mean_scores(language_scores)
+    if len(language_means) < _MIN_LANGUAGE_SUPPORT_EVIDENCE_LANGUAGES:
+        return None
+    english_score = language_means.get("en")
+    non_english_scores = [score for language, score in language_means.items() if language != "en"]
+    non_english_mean = _mean(non_english_scores)
+    high_non_english_languages = [
+        language
+        for language, score in language_means.items()
+        if language != "en" and score >= _HIGH_NON_ENGLISH_SCORE_THRESHOLD
+    ]
+    high_non_english_families = {
+        _LANGUAGE_FAMILIES.get(language, language) for language in high_non_english_languages
+    }
+    category, languages, reason = _language_support_identity_hint(model_id)
+    if category is None:
+        category, languages, reason = _language_support_score_hint(
+            english_score=english_score,
+            non_english_mean=non_english_mean,
+            high_non_english_language_count=len(high_non_english_languages),
+        )
+    if category is None:
+        return None
+
+    evidence = {
+        "benchmarks": list(_LANGUAGE_SUPPORT_BENCHMARKS),
+        "score_target": "all",
+        "classification_policy": _LANGUAGE_SUPPORT_CLASSIFICATION_POLICY,
+        "classification_reason": reason,
+        "high_non_english_score_threshold": _HIGH_NON_ENGLISH_SCORE_THRESHOLD,
+        "high_non_english_language_count": len(high_non_english_languages),
+        "high_non_english_family_count": len(high_non_english_families),
+        "evaluated_language_count": len(language_means),
+    }
+    if english_score is not None:
+        evidence["english_score"] = round(english_score, 3)
+    if non_english_mean is not None:
+        evidence["non_english_mean_score"] = round(non_english_mean, 3)
+
+    language_support: dict[str, Any] = {"category": category, "evidence": evidence}
+    if category != "multilingual":
+        language_support["languages"] = languages or ["en"]
+    return language_support
 
 
 def write_model_card(card: dict[str, Any], *, output_dir: Path, overwrite: bool) -> Path:
@@ -410,6 +524,104 @@ def _read_json(path: Path) -> Any:
         return None
 
 
+def _language_score_from_result_payload(payload: dict[str, Any]) -> tuple[str, float] | None:
+    language = _language_from_result_target(payload.get("target"))
+    if language is None:
+        return None
+    score = _aggregate_score_from_result_payload(payload)
+    if score is None:
+        return None
+    return language, score
+
+
+def _language_from_result_target(target: Any) -> str | None:
+    if not isinstance(target, dict):
+        return None
+    candidates = [
+        target.get("dataset_name"),
+        target.get("dataset_id"),
+    ]
+    for candidate in candidates:
+        if not isinstance(candidate, str):
+            continue
+        match = _NANOBEIR_LANGUAGE_RE.search(candidate)
+        if match is not None:
+            return match.group(1)
+    dataset_name = target.get("dataset_name")
+    if dataset_name == "NanoMIRACL":
+        for key in ("task_name", "split_name"):
+            value = target.get(key)
+            if isinstance(value, str) and _LANGUAGE_CODE_RE.fullmatch(value):
+                return value
+    return None
+
+
+def _aggregate_score_from_result_payload(payload: dict[str, Any]) -> float | None:
+    evaluation = payload.get("evaluation")
+    if not isinstance(evaluation, dict):
+        return None
+    return _finite_float_or_none(evaluation.get("aggregate_metric_value"))
+
+
+def _language_mean_scores(language_scores: dict[str, list[float]]) -> dict[str, float]:
+    means: dict[str, float] = {}
+    for language, scores in language_scores.items():
+        mean_score = _mean(scores)
+        if mean_score is not None:
+            means[language] = mean_score
+    return means
+
+
+def _mean(values: list[float]) -> float | None:
+    finite_values = [value for value in values if math.isfinite(value)]
+    if not finite_values:
+        return None
+    return sum(finite_values) / len(finite_values)
+
+
+def _finite_float_or_none(value: Any) -> float | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    try:
+        parsed = float(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed if math.isfinite(parsed) else None
+
+
+def _language_support_identity_hint(model_id: str) -> tuple[str | None, list[str] | None, str | None]:
+    lowered = model_id.casefold()
+    if any(token in lowered for token in ("multilingual", "bilingual", "bge-m3", "mmarco")):
+        return "multilingual", None, "model_identity_multilingual_or_bilingual"
+    if any(token in lowered for token in ("japanese", "ruri")):
+        return "english_plus", ["ja", "en"], "model_identity_japanese_or_ruri"
+    if any(token in lowered for token in ("english", "-en-", "-en.", "-en_", "/all-minilm", "/all-mpnet")):
+        return "english_only", ["en"], "model_identity_english_only"
+    return None, None, None
+
+
+def _language_support_score_hint(
+    *,
+    english_score: float | None,
+    non_english_mean: float | None,
+    high_non_english_language_count: int,
+) -> tuple[str | None, list[str] | None, str | None]:
+    if non_english_mean is not None and (
+        high_non_english_language_count >= 4
+        or non_english_mean >= 0.55
+        or (high_non_english_language_count >= 3 and non_english_mean >= 0.4)
+    ):
+        return "multilingual", None, "broad_multilingual_score_evidence"
+    if (
+        english_score is not None
+        and english_score >= 0.45
+        and (non_english_mean is None or non_english_mean <= 0.4)
+        and high_non_english_language_count <= 1
+    ):
+        return "english_only", ["en"], "score_evidence_english_only"
+    return None, None, None
+
+
 def _result_json_paths(results_dir: Path) -> list[Path]:
     return sorted(
         path
@@ -531,4 +743,10 @@ def _merge_existing_card_fields(generated_card: dict[str, Any], existing_card: d
     for key, value in existing_card.items():
         if key not in merged:
             merged[key] = value
+    if "language_support" in existing_card:
+        merged["language_support"] = existing_card["language_support"]
     return merged
+
+
+def _has_language_support(card: dict[str, Any] | None) -> bool:
+    return isinstance(card, dict) and isinstance(card.get("language_support"), dict)

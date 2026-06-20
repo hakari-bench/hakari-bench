@@ -8,6 +8,53 @@ model id with `__` in the filename, for example:
 config/model_cards/BAAI__bge-m3.yaml
 ```
 
+The implementation lives in `hakari_bench/model_cards.py`, and the CLI entry
+point is `scripts/generate_model_cards.py`. Keep this document, those Python
+files, and the real YAML files under `config/model_cards/` synchronized when the
+schema or generation policy changes.
+
+## Schema
+
+Model cards are YAML mappings. The common top-level fields are:
+
+| Field | Required | Purpose |
+| --- | --- | --- |
+| `id` | yes | Canonical model id, usually the Hugging Face id. It is also the viewer lookup key. |
+| `source` | yes | Model source metadata. Use `type: huggingface`, `name`, optional pinned `revision`, and optional `revision_requested`. |
+| `method` | yes | One of `dense`, `sparse`, `reranker`, `late-interaction`, or `bm25`. |
+| `license` | yes for static cards | Display and compliance metadata for the model or baseline. |
+| `links` | recommended | Canonical model, repository, and paper links shown in the Model Details dialog. |
+| `parameters` | recommended | Parameter counts: `total`, `trainable`, `input_embedding`, and `active`. |
+| `embedding` | method-specific | Dense embedding metadata, including `truncate_dims` and optional output/normalization details. |
+| `runtime` | recommended | Model loading defaults such as sequence length, dtype, attention implementation, backend, and trust-remote-code review state. |
+| `prompts` | optional | Prompt names or prompt text required for correct model use. |
+| `late_interaction` | late-interaction only | ColBERT/PyLate architecture and query/document token settings. |
+| `language_support` | recommended | Static display classification for intended language coverage. |
+| `target` | optional | Datasets, collections, splits, and scope the card was prepared for. |
+| `notes` | optional | Reviewed operational notes that do not fit structured fields. |
+
+`parameters.active` is the count used for size-aware leaderboard display when
+available. For transformer embedding models, it is usually total parameters
+minus input embedding parameters. Keep overrides in the card when automatic
+metadata collection cannot recover the correct value.
+
+Dense `embedding` fields may include:
+
+- `truncate_dims`: every reviewed truncation dimension that should be evaluated,
+  or `null` when truncation is not supported.
+- `output_dimension`: the native embedding dimension.
+- `user_defined_output_dimensions`: the supported dynamic output-dimension
+  range, when the model officially exposes one.
+- `mrl_support`: whether the model is intended to support Matryoshka/prefix
+  truncation.
+- `pooling`, `normalize`, and `include_prompt`: official embedding behavior
+  needed to interpret the score and reproduce evaluation.
+
+`runtime.trust_remote_code: true` is executable-code metadata, not a display
+decoration. Static cards that set it must also set
+`runtime.remote_code_approved: true` and pin `source.revision` to the reviewed
+40-character Hugging Face commit SHA.
+
 Generate a card by loading a model:
 
 ```bash
@@ -156,6 +203,30 @@ language_support:
     evaluated_language_count: 20
 ```
 
+Allowed categories are:
+
+| Category | Viewer label | Use when |
+| --- | --- | --- |
+| `multilingual` | `Multilingual` | The model identity, official card, paper, or broad language-score evidence indicates multilingual or cross-lingual intent. Omit `languages`. |
+| `english_only` | `English only` | The model identity or training/evaluation intent is English-only. Include `languages: [en]`, even when weak transfer scores exist. |
+| `english_plus` | language list such as `ja, en` | The model has explicit limited-language intent, such as Japanese plus English. Include the reviewed list in `languages`. |
+
+The `evidence` mapping records why the classification was chosen:
+
+- `benchmarks`: currently `NanoMIRACL` and `MNanoBEIR` for score evidence.
+- `score_target`: usually `all`, matching retrieval mode in the result DB.
+- `classification_policy`: the fixed policy string used by tests and the
+  generator.
+- `classification_reason`: concise reason such as
+  `model_identity_multilingual_or_bilingual`, `model_identity_english_only`,
+  `model_identity_japanese_or_ruri`, or `broad_multilingual_score_evidence`.
+- `english_score`, `non_english_mean_score`, `high_non_english_*`, and
+  `evaluated_language_count`: score-derived support values when available.
+- `official_supported_languages`: optional language-code list copied from an
+  official model card or paper. This lives under `evidence` so `multilingual`
+  cards can preserve the official list while still omitting top-level
+  `languages` for viewer display.
+
 Use `english_only` for models that appear English-only by name, model family, or
 known benchmark intent even if they show weak non-English transfer. Use
 `english_plus` for explicit limited-language cases such as Japanese-focused
@@ -221,6 +292,7 @@ default `.json.xz` task files and legacy or explicitly plain `.json` files:
 uv run python scripts/generate_model_cards.py \
   --from-results output/hakari-results \
   --output-dir config/model_cards \
+  --infer-language-support \
   --overwrite
 ```
 
@@ -228,3 +300,11 @@ The result-based mode is intended for bootstrapping the current leaderboard
 models. It skips `bm25` and model ids containing `bekko` by default, infers
 truncate dimensions from recorded embedding variants, and preserves manual
 top-level fields such as `notes` from existing cards.
+
+`--infer-language-support` reads finished result JSON and proposes
+`language_support` only when the existing card does not already define it. It
+uses NanoBEIR language-slice results such as `NanoBEIR-en` and NanoMIRACL task
+languages, computes per-language mean scores, and writes a conservative
+classification. The generated value is an initial review aid; update it manually
+when the model card, paper, or model family gives a clearer language identity
+than the score-only heuristic.

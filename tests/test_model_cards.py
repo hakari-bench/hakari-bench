@@ -189,6 +189,72 @@ def test_collect_model_cards_from_results_reads_each_json_once(tmp_path: Path, m
     ]
 
 
+def test_collect_model_cards_from_results_can_infer_language_support_from_scores(tmp_path: Path) -> None:
+    scores = {
+        "en": 0.64,
+        "ar": 0.61,
+        "de": 0.62,
+        "es": 0.63,
+        "fr": 0.64,
+        "ja": 0.65,
+        "ko": 0.60,
+        "pt": 0.62,
+    }
+    for language, score in scores.items():
+        _write_result(
+            tmp_path / "LiquidAI__LFM2.5-Embedding-350M" / f"hakari-bench__NanoBEIR-{language}" / "arguana.json",
+            model={"method": "dense", "id": "LiquidAI/LFM2.5-Embedding-350M"},
+            dataset_id=f"hakari-bench/NanoBEIR-{language}",
+            score=score,
+        )
+
+    cards = model_cards.collect_model_cards_from_results(tmp_path, infer_language_support=True)
+
+    language_support = cards["LiquidAI/LFM2.5-Embedding-350M"]["language_support"]
+    assert language_support["category"] == "multilingual"
+    assert "languages" not in language_support
+    assert language_support["evidence"]["classification_reason"] == "broad_multilingual_score_evidence"
+    assert language_support["evidence"]["english_score"] == 0.64
+    assert language_support["evidence"]["high_non_english_language_count"] == 7
+    assert language_support["evidence"]["evaluated_language_count"] == 8
+
+
+def test_collect_model_cards_from_results_keeps_existing_language_support(tmp_path: Path) -> None:
+    for language in ["en", "ar", "de", "es", "fr", "ja", "ko", "pt"]:
+        _write_result(
+            tmp_path / "model__a" / f"hakari-bench__NanoBEIR-{language}" / "arguana.json",
+            model={"method": "dense", "id": "model/a"},
+            dataset_id=f"hakari-bench/NanoBEIR-{language}",
+            score=0.7,
+        )
+    existing_cards = {
+        "model/a": {
+            "id": "model/a",
+            "language_support": {
+                "category": "english_only",
+                "languages": ["en"],
+                "evidence": {
+                    "benchmarks": ["NanoMIRACL", "MNanoBEIR"],
+                    "score_target": "all",
+                    "classification_policy": (
+                        "model identity first; use broad score evidence only for models without explicit language identity"
+                    ),
+                    "classification_reason": "manual_review",
+                    "evaluated_language_count": 8,
+                },
+            },
+        }
+    }
+
+    cards = model_cards.collect_model_cards_from_results(
+        tmp_path,
+        existing_cards=existing_cards,
+        infer_language_support=True,
+    )
+
+    assert cards["model/a"]["language_support"] == existing_cards["model/a"]["language_support"]
+
+
 def test_write_model_card_uses_safe_filename(tmp_path: Path) -> None:
     card = {"id": "BAAI/bge-m3", "method": "dense", "parameters": {"total": 10}}
 
@@ -459,6 +525,13 @@ def test_static_model_card_language_support_uses_model_identity() -> None:
     assert "languages" not in cards["Lajavaness/bilingual-embedding-small"]["language_support"]
     assert cards["codefuse-ai/F2LLM-v2-80M"]["language_support"]["category"] == "multilingual"
     assert "languages" not in cards["codefuse-ai/F2LLM-v2-80M"]["language_support"]
+    assert cards["LiquidAI/LFM2.5-ColBERT-350M"]["language_support"]["category"] == "multilingual"
+    assert "languages" not in cards["LiquidAI/LFM2.5-ColBERT-350M"]["language_support"]
+    assert cards["LiquidAI/LFM2.5-Embedding-350M"]["language_support"]["category"] == "multilingual"
+    assert "languages" not in cards["LiquidAI/LFM2.5-Embedding-350M"]["language_support"]
+    assert cards["LiquidAI/LFM2.5-Embedding-350M"]["language_support"]["evidence"][
+        "official_supported_languages"
+    ] == ["en", "es", "de", "fr", "it", "pt", "ar", "sv", "no", "ja", "ko"]
 
 
 def test_static_model_card_language_support_keeps_most_rerankers_english_only() -> None:
@@ -522,6 +595,7 @@ def _write_result(
     model: dict[str, object],
     embedding_evaluations: list[dict[str, object]] | None = None,
     dataset_id: str = "hakari-bench/NanoBEIR-en",
+    score: float = 0.5,
 ) -> None:
     path.parent.mkdir(parents=True)
     path.write_text(
@@ -531,7 +605,7 @@ def _write_result(
                 "target": {"dataset_id": dataset_id},
                 "evaluation": {
                     "aggregate_metric": "ndcg@10",
-                    "aggregate_metric_value": 0.5,
+                    "aggregate_metric_value": score,
                     "embedding_evaluations": embedding_evaluations or [{"name": "base"}],
                 },
             }

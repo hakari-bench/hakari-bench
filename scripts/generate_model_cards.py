@@ -1,3 +1,9 @@
+"""Generate HAKARI model-card YAML.
+
+Schema and review guidance: docs/model_cards.md. Keep CLI behavior here and
+that document synchronized when model-card fields change.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -5,6 +11,7 @@ import re
 from pathlib import Path
 
 from hakari_bench.model_cards import (
+    MODEL_CARD_DOCS_PATH,
     ModelCardOverrides,
     build_model_card_from_loaded_model,
     collect_model_cards_from_results,
@@ -18,7 +25,10 @@ _FULL_HF_REVISION_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Generate static HAKARI model-card YAML files.")
+    parser = argparse.ArgumentParser(
+        description="Generate static HAKARI model-card YAML files.",
+        epilog=f"Model-card schema and review policy: {MODEL_CARD_DOCS_PATH}",
+    )
     parser.add_argument("--model", default=None, help="Hugging Face model id or local model path to load.")
     parser.add_argument("--model-id", default=None, help="Canonical model id written to the card. Defaults to --model.")
     parser.add_argument("--model-type", default="dense", choices=["dense", "sparse", "reranker", "late-interaction"])
@@ -54,6 +64,14 @@ def main() -> None:
         help="Case-insensitive model id substring to skip in --from-results mode.",
     )
     parser.add_argument("--model-revision", default=None)
+    parser.add_argument(
+        "--infer-language-support",
+        action="store_true",
+        help=(
+            "In --from-results mode, add a conservative language_support suggestion "
+            "from NanoMIRACL/MNanoBEIR language scores when the existing card does not define one."
+        ),
+    )
     parser.add_argument("--dtype", default="bf16", choices=["bf16", "fp16", "fp32"])
     parser.add_argument("--attn-implementation", default=None)
     parser.add_argument("--flash-attn2", action="store_true")
@@ -94,6 +112,7 @@ def main() -> None:
             exclude_model_substrings=args.exclude_model_substring,
             exclude_model_ids=args.exclude_model,
             existing_cards=load_model_cards(existing_cards_path),
+            infer_language_support=args.infer_language_support,
         )
         for card in cards.values():
             output_path = write_model_card(card, output_dir=args.output_dir, overwrite=args.overwrite)

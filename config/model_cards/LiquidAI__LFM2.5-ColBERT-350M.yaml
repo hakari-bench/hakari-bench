@@ -1,0 +1,121 @@
+id: LiquidAI/LFM2.5-ColBERT-350M
+source:
+  type: huggingface
+  name: LiquidAI/LFM2.5-ColBERT-350M
+  revision_requested: 59633c2e31717b3502343ff566bee9fda3261943
+  revision: 59633c2e31717b3502343ff566bee9fda3261943
+method: late-interaction
+license:
+  id: lfm1.0
+  label: LFM Open License v1.0
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: huggingface_model_card
+  source_url: https://huggingface.co/LiquidAI/LFM2.5-ColBERT-350M
+links:
+  huggingface: https://huggingface.co/LiquidAI/LFM2.5-ColBERT-350M
+  papers:
+  - title: LFM2 Technical Report
+    url: https://arxiv.org/abs/2511.23404
+parameters:
+  total: 353453824
+  trainable: 353453824
+  input_embedding: 65947648
+  active: 287506176
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 511
+  dtype: fp32
+  trust_remote_code: true
+  remote_code_approved: true
+  attn_implementation: sdpa
+  backend_library: pylate
+  similarity_fn_name: MaxSim
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_prefix: '[Q] '
+  document_prefix: '[D] '
+  query_length: 48
+  document_length: 512
+  do_query_expansion: true
+  attend_to_expansion_tokens: false
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoVNMTEB
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: huggingface_model_card_multilingual_11_languages
+    official_supported_languages:
+    - en
+    - es
+    - de
+    - fr
+    - it
+    - pt
+    - ar
+    - sv
+    - 'no'
+    - ja
+    - ko
+    high_non_english_score_threshold: 0.6
+    high_non_english_language_count: 13
+    high_non_english_family_count: 10
+    evaluated_language_count: 24
+    english_score: 0.697
+    non_english_mean_score: 0.553
