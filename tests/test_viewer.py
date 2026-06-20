@@ -2740,6 +2740,8 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "Language" in viewer_js_response.text
     assert "model_url" in viewer_js_response.text
+    assert 'return key === "active_parameters" || key === "total_parameters";' in viewer_js_response.text
+    assert 'const value = shouldShowUnknownModelDetailValue(key, rawValue) ? "Unknown"' in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
     assert 'event.target.id === "model-detail-modal"' in viewer_js_response.text
     assert "modal.close();" in viewer_js_response.text
@@ -4883,7 +4885,7 @@ def test_max_len_uses_compact_k_display_for_1k_and_above() -> None:
 
 
 def test_parameter_counts_use_compact_rounded_display() -> None:
-    assert _fmt_params(None) == ""
+    assert _fmt_params(None) == "Unknown"
     assert _fmt_params(310_300_000) == "310M"
     assert _fmt_params(310_500_000) == "311M"
     assert _fmt_params(999_499_999) == "999M"
@@ -4969,6 +4971,25 @@ def test_resolve_duckdb_location_uses_source_results_dir(tmp_path: Path) -> None
     )
 
     assert location.source_path == source_duckdb
+
+
+def test_resolve_duckdb_location_does_not_auto_discover_source_for_explicit_duckdb(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    local = tmp_path / "explicit.duckdb"
+    discovered = tmp_path / "discovered.duckdb"
+    discovered.write_bytes(b"duckdb")
+    monkeypatch.setattr(viewer_store, "_discover_source_duckdb", lambda: discovered)
+
+    location = resolve_duckdb_location(
+        data_dir=tmp_path / "viewer",
+        duckdb_path=local,
+        source_results_dir=None,
+        source_duckdb_path=None,
+    )
+
+    assert location.local_path == local
+    assert location.source_path is None
 
 
 def test_resolve_duckdb_location_uses_environment_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -5234,6 +5255,26 @@ def test_local_duckdb_store_skips_copy_when_source_content_matches(tmp_path: Pat
 
     assert store.ensure_current() is False
     assert local.stat().st_mtime == 1
+
+
+def test_local_duckdb_store_does_not_restart_sync_immediately_after_ready_source_check(tmp_path: Path) -> None:
+    source = tmp_path / "source.duckdb"
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    source.write_bytes(b"same")
+    local.parent.mkdir()
+    local.write_bytes(b"same")
+    os.utime(local, (1, 1))
+    os.utime(source, (2, 2))
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
+
+    first = store.start_background_sync()
+    assert first.active
+    status = store.wait_for_background_sync(timeout=5)
+    assert status.state == "ready"
+
+    second = store.start_background_sync()
+    assert second.state == "ready"
+    assert not second.active
 
 
 def _duckdb_table_exists(con: duckdb.DuckDBPyConnection, table_name: str) -> bool:

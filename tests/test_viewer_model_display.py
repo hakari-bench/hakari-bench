@@ -228,6 +228,29 @@ def test_render_model_name_cell_infers_reranker_type_without_dimension_badge() -
     assert ">reranker</span>" in html
 
 
+def test_model_cell_views_use_openai_metadata_for_openai_embedding_models() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="openai/text-embedding-3-small",
+        model_type="dense",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        active_parameters=123,
+        total_parameters=456,
+        max_seq_length=8100,
+    )
+
+    model_view = model_cell_views([row])[row.model_name]
+
+    assert model_view.metadata["model_url"] == "https://developers.openai.com/api/docs/models/text-embedding-3-small"
+    assert model_view.metadata["model_type"] == "Dense"
+    assert model_view.metadata["active_parameters"] is None
+    assert model_view.metadata["total_parameters"] is None
+    assert model_view.metadata["max_seq_length"] == 8192
+
+
 def test_model_cell_views_include_late_interaction_metadata_for_details_modal() -> None:
     row = LeaderboardRow(
         borda_rank=1,

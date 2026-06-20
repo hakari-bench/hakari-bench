@@ -222,6 +222,11 @@
     return String(value);
   }
 
+  function shouldShowUnknownModelDetailValue(key, value) {
+    if (value !== null && value !== undefined && value !== "") return false;
+    return key === "active_parameters" || key === "total_parameters";
+  }
+
   function createModelDetailLink(url, text) {
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -333,7 +338,8 @@
       }
       list.replaceChildren();
       for (const [label, key] of modelDetailFields) {
-        const value = formatModelDetailValue(metadata[key]);
+        const rawValue = metadata[key];
+        const value = shouldShowUnknownModelDetailValue(key, rawValue) ? "Unknown" : formatModelDetailValue(rawValue);
         if (!value) continue;
         const dt = document.createElement("dt");
         dt.className = "font-medium text-zinc-600";

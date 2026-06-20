@@ -12,6 +12,18 @@ from hakari_bench.viewer.leaderboard import LeaderboardRow
 from hakari_bench.viewer.model_types import normalized_model_type
 
 
+_OPENAI_EMBEDDING_MODELS = {
+    "openai/text-embedding-3-small": {
+        "url": "https://developers.openai.com/api/docs/models/text-embedding-3-small",
+        "max_seq_length": 8192,
+    },
+    "openai/text-embedding-3-large": {
+        "url": "https://developers.openai.com/api/docs/models/text-embedding-3-large",
+        "max_seq_length": 8192,
+    },
+}
+
+
 class ModelCellView(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -238,6 +250,7 @@ def _model_metadata(
     truncated_embedding_dim: int | None,
 ) -> dict[str, Any]:
     model_type_view = _model_type_view(row=row, full_model_name=full_model_name)
+    openai_metadata = _OPENAI_EMBEDDING_MODELS.get(full_model_name)
     return {
         "model_name": full_model_name,
         "model_url": _model_url(full_model_name),
@@ -251,9 +264,9 @@ def _model_metadata(
         "truncated_embedding_dim": truncated_embedding_dim,
         "quantization": row.quantization,
         "base_score_delta_percent": row.base_score_delta_percent,
-        "active_parameters": row.active_parameters,
-        "total_parameters": row.total_parameters,
-        "max_seq_length": row.max_seq_length,
+        "active_parameters": None if openai_metadata is not None else row.active_parameters,
+        "total_parameters": None if openai_metadata is not None else row.total_parameters,
+        "max_seq_length": openai_metadata["max_seq_length"] if openai_metadata is not None else row.max_seq_length,
         "dtype": row.dtype,
         "attention": row.attn_implementation,
         "prompt": row.prompt_summary,
@@ -347,6 +360,8 @@ def _language_support_label(row: LeaderboardRow) -> str | None:
 
 
 def _model_url(model_name: str) -> str | None:
+    if model_name in _OPENAI_EMBEDDING_MODELS:
+        return str(_OPENAI_EMBEDDING_MODELS[model_name]["url"])
     owner, separator, name = model_name.partition("/")
     if not owner or not separator or not name:
         return None

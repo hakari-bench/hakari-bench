@@ -3203,7 +3203,7 @@ def _z_score_bucket_class(value: float) -> str:
 
 def _fmt_params(value: int | None) -> str:
     if value is None:
-        return ""
+        return "Unknown"
     if value >= 1_000_000_000:
         raw_billions = value / 1_000_000_000
         if raw_billions >= 100:
