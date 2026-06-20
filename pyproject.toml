@@ -94,7 +94,7 @@ exclude = ["tests*"]
 
 [tool.uv]
 package = true
-exclude-newer = "1 week"
+exclude-newer = "3 days"
 conflicts = [
     [
         { group = "pylate" },
