@@ -527,6 +527,48 @@ runtime:
     assert result.rows[0].max_seq_length == 2048
 
 
+def test_leaderboard_service_backfills_model_type_from_model_cards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "mixedbread-ai/mxbai-rerank-base-v2",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "BenchA::a1",
+                0.90,
+                None,
+                None,
+                None,
+            ),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "mixedbread-ai__mxbai-rerank-base-v2.yaml").write_text(
+        """
+id: mixedbread-ai/mxbai-rerank-base-v2
+method: reranker
+parameters: {}
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+
+    assert result.rows[0].model_type == "reranker"
+    assert model_cell_views(result.rows)[result.rows[0].model_name].metadata["model_type"] == "Cross-encoder reranker"
+
+
 def test_leaderboard_service_backfills_language_support_from_model_cards(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(

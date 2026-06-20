@@ -5800,7 +5800,7 @@ def _viewer_leaderboard_mart_rows_from_service(
     view_names: Sequence[str] | None = None,
 ) -> tuple[list[tuple[Any, ...]], list[tuple[Any, ...]]]:
     display_flag_sets = list(product((False, True), repeat=4))
-    service = LeaderboardService(duckdb_path=db_path, config=viewer_config, use_precomputed=False)
+    service = LeaderboardService(duckdb_path=db_path, config=viewer_config, model_cards_path=None, use_precomputed=False)
     mart_rows: list[tuple[Any, ...]] = []
     language_rows: list[tuple[Any, ...]] = []
     for view_name in view_names or viewer_config.view_names:
@@ -5872,7 +5872,7 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
     view_names: Sequence[str] | None = None,
 ) -> tuple[list[tuple[Any, ...]], list[tuple[Any, ...]]]:
     display_flag_sets = list(product((False, True), repeat=4))
-    service = LeaderboardService(duckdb_path=db_path, config=viewer_config, use_precomputed=False)
+    service = LeaderboardService(duckdb_path=db_path, config=viewer_config, model_cards_path=None, use_precomputed=False)
     mart_rows: list[tuple[Any, ...]] = []
     language_rows: list[tuple[Any, ...]] = []
     all_variant_flags = VariantDisplayFlags(quantization=True, truncate=True, rescore=True, other=True)

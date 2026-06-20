@@ -42,6 +42,7 @@ DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 
 @dataclass(frozen=True)
 class ModelCardParameters:
+    model_type: str | None = None
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
@@ -777,6 +778,7 @@ def _cached_model_card_parameters(
         late_interaction = _late_interaction_card_section(card)
         language_support = _language_support_card_section(card)
         parameters_by_model[model_id] = ModelCardParameters(
+            model_type=_str_or_none(card.get("method")),
             active_parameters=_int_or_none(parameters.get("active")),
             total_parameters=_int_or_none(parameters.get("total")),
             max_seq_length=_int_or_none(runtime.get("max_seq_length")),
@@ -897,6 +899,9 @@ def _with_model_card_parameters_for_task_scores(
     return [
         replace(
             row,
+            model_type=row.model_type
+            if row.model_type is not None
+            else _model_card_parameters(row, parameters_by_model).model_type,
             active_parameters=row.active_parameters
             if row.active_parameters is not None
             else _model_card_parameters(row, parameters_by_model).active_parameters,
@@ -956,6 +961,9 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     "active_parameters": row.active_parameters
                     if row.active_parameters is not None
                     else parameters.active_parameters,
+                    "model_type": row.model_type
+                    if row.model_type is not None
+                    else parameters.model_type,
                     "total_parameters": row.total_parameters
                     if row.total_parameters is not None
                     else parameters.total_parameters,
