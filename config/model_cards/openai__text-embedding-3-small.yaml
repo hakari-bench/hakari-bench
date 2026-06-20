@@ -1,4 +1,4 @@
-id: text-embedding-3-small
+id: openai/text-embedding-3-small
 display_name: OpenAI text-embedding-3-small
 source:
   type: openai
@@ -11,7 +11,9 @@ license:
   commercial_use: permitted_with_terms
   source: provider_terms
   source_url: https://openai.com/policies/service-terms/
-parameters: {}
+parameters:
+  total:
+  active:
 embedding:
   dimensions: 1536
   api_dimensions_supported: true
@@ -25,7 +27,7 @@ embedding:
   - 512
   - 1024
 runtime:
-  max_seq_length: 8100
+  max_seq_length: 8192
   backend_library: openai
   similarity_fn_name: cosine
 language_support:

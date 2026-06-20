@@ -228,7 +228,9 @@ def resolve_duckdb_location(
     hf_dataset_path: str | None = None,
     hf_dataset_revision: str | None = None,
 ) -> DuckDbLocation:
-    local_path = duckdb_path or _env_path("HAKARI_BENCH_VIEWER_DUCKDB_PATH") or data_dir / DEFAULT_DUCKDB_NAME
+    env_duckdb_path = _env_path("HAKARI_BENCH_VIEWER_DUCKDB_PATH")
+    local_path = duckdb_path or env_duckdb_path or data_dir / DEFAULT_DUCKDB_NAME
+    local_path_is_explicit = duckdb_path is not None or env_duckdb_path is not None
     source_results_dir = source_results_dir or _env_path("HAKARI_BENCH_VIEWER_SOURCE_RESULTS_DIR")
     hf_source = _resolve_hf_source(
         repo_id=hf_dataset_repo_id,
@@ -240,7 +242,7 @@ def resolve_duckdb_location(
         or _env_path("HAKARI_BENCH_VIEWER_SOURCE_DUCKDB_PATH")
         or _source_from_results_dir(source_results_dir)
     )
-    if source_path is None and hf_source is None:
+    if source_path is None and hf_source is None and not local_path_is_explicit:
         source_path = _discover_source_duckdb()
     if source_path is not None and source_path.resolve() == local_path.resolve():
         source_path = None
