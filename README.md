@@ -277,6 +277,19 @@ NanoBEIR evaluation implementation in
 [Sentence Transformers](https://github.com/huggingface/sentence-transformers/)
 was a reference for this project.
 
+## Disclaimer
+
+HAKARI-Bench results are provided for informational and comparative purposes
+only. Scores may be incomplete, inaccurate, or affected by dataset sampling,
+upstream dataset changes, model or runtime configuration, library versions,
+hardware, or implementation issues.
+
+HAKARI-Bench, its maintainers, and contributors provide the software,
+leaderboard data, and benchmark results "as is", without warranty of any kind.
+To the maximum extent permitted by applicable law, they are not liable for any
+loss, damage, or other consequence arising from use of, reliance on, or
+interpretation of HAKARI-Bench results.
+
 ## License
 
 MIT License. See [LICENSE](LICENSE).
