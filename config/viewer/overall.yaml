@@ -41,13 +41,3 @@ overalls:
   - name: Overall (EN)
     label: Overall (EN)
     benchmarks: *overall_benchmarks
-  - name: Overall (short)
-    label: Overall (short)
-    max_query_mean_chars: 100
-    max_document_mean_chars: 2000
-    benchmarks: *overall_benchmarks
-  - name: Overall (EN, short)
-    label: Overall (EN, short)
-    max_query_mean_chars: 100
-    max_document_mean_chars: 2000
-    benchmarks: *overall_benchmarks

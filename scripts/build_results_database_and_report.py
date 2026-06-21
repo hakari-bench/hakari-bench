@@ -36,17 +36,17 @@ from hakari_bench.viewer.store import (
     _download_hf_duckdb,
 )
 from hakari_bench.viewer.leaderboard import (
+    LanguageFilterPolicy,
     LeaderboardService,
     _aggregate_overall_scores,
     _aggregate_benchmark_score_group_scores,
     _append_missing_bm25_task_scores,
-    _default_language_filters_for_view,
     _exclude_configured_tasks,
     _exclude_reranker_task_scores,
     _filter_rows_by_languages,
-    _filter_rows_by_overall_task_lengths,
-    _language_filter_policy_for_view,
+    _language_filter_mode_for_view,
     _language_options,
+    _language_page_languages_for_view,
     _overall_metric_score_group,
     _score_groups_for_view,
     _select_score_group,
@@ -5902,13 +5902,13 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
         benchmarks = viewer_config.benchmarks_for_view(view_name)
         overall = viewer_config.overall_for_view(view_name)
         is_overall = overall is not None
-        language_filter_policy = _language_filter_policy_for_view(viewer_config, view_name, overall=overall)
-        default_language_filters = _default_language_filters_for_view(view_name)
         selected_score_group = (
             None
             if is_overall
             else _select_score_group(_score_groups_for_view(viewer_config, view_name), None)
         )
+        language_filter_mode = _language_filter_mode_for_view(viewer_config, view_name)
+        language_page_languages = _language_page_languages_for_view(viewer_config, view_name)
         for score_target in ("all", "reranking"):
             records = service.task_results_repository.fetch_task_result_rows(
                 benchmarks=benchmarks,
@@ -5949,24 +5949,20 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                 elif score_target == "reranking":
                     rows = _append_missing_bm25_task_scores(rows, bm25_task_scores)
                 rows = _exclude_configured_tasks(rows, viewer_config)
-                if overall is not None:
-                    rows = _filter_rows_by_overall_task_lengths(rows, overall)
                 available_languages = _language_options(
                     rows,
-                    policy=language_filter_policy,
+                    mode=language_filter_mode,
+                    allowed_languages=language_page_languages,
                 )
-                if default_language_filters:
-                    selected_languages = tuple(
-                        language
-                        for language in default_language_filters
-                        if any(option.code == language for option in available_languages)
+                if view_name == "Overall (EN)":
+                    rows = _filter_rows_by_languages(
+                        rows,
+                        ("en",),
+                        policy=LanguageFilterPolicy(
+                            default_mode=language_filter_mode,
+                            default_allowed_languages=tuple(language_page_languages),
+                        ),
                     )
-                    if selected_languages:
-                        rows = _filter_rows_by_languages(
-                            rows,
-                            selected_languages,
-                            policy=language_filter_policy,
-                        )
                 metric_score_group = None
                 if overall is not None:
                     rows = _aggregate_overall_scores(

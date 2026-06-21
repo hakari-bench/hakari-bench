@@ -91,23 +91,11 @@ def test_viewer_config_uses_overall_scope_views() -> None:
         None,
         "task_name",
     ]
-    overall_short = config.overall_for_view("Overall (short)")
-    assert overall_short is not None
-    assert overall_short.benchmark_names == all_benchmarks
-    assert overall_short.max_query_mean_chars == 100
-    assert overall_short.max_document_mean_chars == 2000
-    overall_en_short = config.overall_for_view("Overall (EN, short)")
-    assert overall_en_short is not None
-    assert overall_en_short.benchmark_names == all_benchmarks
-    assert overall_en_short.max_query_mean_chars == 100
-    assert overall_en_short.max_document_mean_chars == 2000
     assert config.overall_for_view("Core") is None
     assert config.overall_for_view("Core (EN)") is None
-    assert config.view_names[: len(all_benchmarks) + 4] == [
+    assert config.view_names[: len(all_benchmarks) + 2] == [
         "Overall",
         "Overall (EN)",
-        "Overall (short)",
-        "Overall (EN, short)",
         *all_benchmarks,
     ]
     assert "NanoCodeSearchNet" not in config.view_names
@@ -201,8 +189,6 @@ def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
     assert _view_group("All") == "Scope presets"
     assert _view_group("Overall") == "Scope presets"
     assert _view_group("Overall (EN)") == "Scope presets"
-    assert _view_group("Overall (short)") == "Scope presets"
-    assert _view_group("Overall (EN, short)") == "Scope presets"
     assert _view_group("Clear") == "Scope presets"
     assert _view_group("Custom") == "Scope presets"
     assert _view_group("Group") == "Scope presets"
@@ -4503,65 +4489,6 @@ def test_leaderboard_filters_tasks_by_query_and_document_mean_lengths(tmp_path: 
     assert result.metric_columns == ["short"]
     assert [row.model_name for row in result.rows] == ["model/a", "model/b"]
     assert result.rows[0].mean_score == pytest.approx(90.0)
-
-
-def test_overall_short_views_filter_by_task_mean_lengths(tmp_path: Path) -> None:
-    db_path = tmp_path / "results.duckdb"
-    rows = [
-        ("model/a", "BenchA", "bench/a", "BenchA", "short-en", "short-en", "BenchA::short-en", 0.90, 10, 12, 8192),
-        ("model/a", "BenchA", "bench/a", "BenchA", "short-ja", "short-ja", "BenchA::short-ja", 0.70, 10, 12, 8192),
-        ("model/a", "BenchA", "bench/a", "BenchA", "query-border", "query-border", "BenchA::query-border", 0.10, 10, 12, 8192),
-        ("model/a", "BenchA", "bench/a", "BenchA", "doc-border", "doc-border", "BenchA::doc-border", 0.20, 10, 12, 8192),
-        ("model/a", "BenchA", "bench/a", "BenchA", "long-doc", "long-doc", "BenchA::long-doc", 0.30, 10, 12, 8192),
-    ]
-    _write_task_results(
-        db_path,
-        rows,
-        dataset_metadata_rows=[
-            ("BenchA", "bench/a", "BenchA", "short-en", "short-en", "BenchA::short-en", "en", ["en"], 99.0, 1999.0),
-            ("BenchA", "bench/a", "BenchA", "short-ja", "short-ja", "BenchA::short-ja", "ja", ["ja"], 50.0, 1000.0),
-            ("BenchA", "bench/a", "BenchA", "query-border", "query-border", "BenchA::query-border", "en", ["en"], 100.0, 1000.0),
-            ("BenchA", "bench/a", "BenchA", "doc-border", "doc-border", "BenchA::doc-border", "en", ["en"], 99.0, 2000.0),
-            ("BenchA", "bench/a", "BenchA", "long-doc", "long-doc", "BenchA::long-doc", "en", ["en"], 50.0, 2001.0),
-        ],
-    )
-    config_dir = tmp_path / "config"
-    config_dir.mkdir()
-    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
-    (config_dir / "overall.yaml").write_text(
-        """
-overalls:
-  - name: Overall
-    label: Overall
-    benchmarks:
-      - BenchA
-  - name: Overall (short)
-    label: Overall (short)
-    max_query_mean_chars: 100
-    max_document_mean_chars: 2000
-    benchmarks:
-      - BenchA
-  - name: Overall (EN, short)
-    label: Overall (EN, short)
-    max_query_mean_chars: 100
-    max_document_mean_chars: 2000
-    benchmarks:
-      - BenchA
-""".strip(),
-        encoding="utf-8",
-    )
-
-    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir), use_precomputed=False)
-    overall_short = service.get_leaderboard("Overall (short)", show_task_scores=True)
-    overall_en_short = service.get_leaderboard("Overall (EN, short)", show_task_scores=True)
-
-    assert overall_short.expected_tasks == 2
-    assert overall_short.metric_columns == ["BenchA::short-en", "BenchA::short-ja"]
-    assert overall_short.rows[0].mean_score == pytest.approx(80.0)
-    assert overall_en_short.selected_languages == ("en",)
-    assert overall_en_short.expected_tasks == 1
-    assert overall_en_short.metric_columns == ["BenchA::short-en"]
-    assert overall_en_short.rows[0].mean_score == pytest.approx(90.0)
 
 
 def test_leaderboard_filters_models_by_parameter_counts_in_millions(tmp_path: Path) -> None:
