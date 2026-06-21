@@ -1425,7 +1425,12 @@ def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
     if CLEAR_SCOPE_NAME in available_views:
         return available_views
     views = list(available_views)
-    insert_after = "Overall (EN)" if "Overall (EN)" in views else "Overall"
+    if "Overall (EN, short)" in views:
+        insert_after = "Overall (EN, short)"
+    elif "Overall (EN)" in views:
+        insert_after = "Overall (EN)"
+    else:
+        insert_after = "Overall"
     if insert_after in views:
         views.insert(views.index(insert_after) + 1, CLEAR_SCOPE_NAME)
     else:
@@ -1460,9 +1465,9 @@ def _scope_preset_query_payload(
     filter_state: FilterState,
 ) -> QueryState:
     scope_filter_state = filter_state
-    if view_name in {"Overall", CLEAR_SCOPE_NAME}:
+    if view_name in {"Overall", "Overall (short)", CLEAR_SCOPE_NAME}:
         scope_filter_state = _filter_state_with_languages(filter_state, ())
-    elif view_name == "Overall (EN)":
+    elif view_name in {"Overall (EN)", "Overall (EN, short)"}:
         scope_filter_state = _filter_state_with_languages(filter_state, ("en",))
     query_payload = state_payload(
         result=result,
@@ -1559,6 +1564,16 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
             "Benchmark scope: Overall (EN)",
             "Shows the full benchmark scope filtered to English task facets.",
             "Overall (EN) uses the same benchmark families as Overall, then applies the EN task facet. It is the English-focused counterpart to the broad Overall leaderboard, not a smaller curated subset.\n\nUse Overall (EN) when you want English task comparisons while keeping the same Micro and Macro score controls. Selecting it switches Task facets to EN so multilingual suites contribute their English slices.",
+        ),
+        "Overall (short)": (
+            "Benchmark scope: Overall (short)",
+            "Shows Overall restricted to short-query and short-document tasks.",
+            "Overall (short) uses the same benchmark families as Overall, then keeps only tasks whose average query length is below 100 characters and average document length is below 2,000 characters.\n\nUse it when you want a broad leaderboard that excludes long-context retrieval tasks before model, task, language, or variant filters are applied.",
+        ),
+        "Overall (EN, short)": (
+            "Benchmark scope: Overall (EN, short)",
+            "Shows English short-task facets from the Overall benchmark scope.",
+            "Overall (EN, short) combines the English task facet with the short-task filter: average query length below 100 characters and average document length below 2,000 characters.\n\nUse it when you want English-focused comparisons without long-query or long-document tasks.",
         ),
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
@@ -1742,7 +1757,16 @@ def _score_metric_label(metric: str) -> str:
 
 
 def _view_group(view_name: str) -> str:
-    overall_views = {"All", "Group", "Overall", "Overall (EN)", CUSTOM_SCOPE_NAME, CLEAR_SCOPE_NAME}
+    overall_views = {
+        "All",
+        "Group",
+        "Overall",
+        "Overall (EN)",
+        "Overall (short)",
+        "Overall (EN, short)",
+        CUSTOM_SCOPE_NAME,
+        CLEAR_SCOPE_NAME,
+    }
     if view_name in overall_views or view_name.startswith("Overall"):
         return "Scope presets"
     return "Nano suites"
@@ -1752,8 +1776,10 @@ def _view_group_sort_key(*, view_name: str, fallback: int) -> int:
     priority = {
         "Overall": 0,
         "Overall (EN)": 1,
-        CLEAR_SCOPE_NAME: 2,
-        CUSTOM_SCOPE_NAME: 3,
+        "Overall (short)": 2,
+        "Overall (EN, short)": 3,
+        CLEAR_SCOPE_NAME: 4,
+        CUSTOM_SCOPE_NAME: 5,
         "MNanoBEIR": 0,
         "NanoMMTEB-v2": 1,
         "NanoRTEB": 2,

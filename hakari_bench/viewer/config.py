@@ -67,6 +67,8 @@ class OverallConfig(BaseModel):
 
     name: str = "Overall"
     label: str = "Overall"
+    max_query_mean_chars: float | None = None
+    max_document_mean_chars: float | None = None
     benchmarks: list[str | OverallBenchmarkConfig] = Field(default_factory=list)
 
     @property

@@ -1144,10 +1144,17 @@ the query-time `ORDER BY` when reading it.
 If an older database has these length columns only in `dataset_metadata`, the
 repository falls back to a metadata join so `query_len_min`, `query_len_max`,
 `doc_len_min`, and `doc_len_max` viewer filters still work.
+The configured `Overall (short)` and `Overall (EN, short)` scopes also use
+these mean-length columns. They keep only tasks where `query_mean_chars < 100`
+and `document_mean_chars < 2000`; tasks without length metadata are excluded
+from those short scopes.
 
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Configured
 overall rows in this mart use the default raw-task `score=micro` semantics.
+The short overall scopes are materialized after applying their fixed mean text
+length thresholds, and the English short scope is then filtered to the `en` task
+facet.
 DuckDB builds also materialize benchmark views whose language filter policy can
 use the standard `languages` list without a fixed language-page constraint.
 Benchmark views that use `primary_language` semantics, such as MNanoBEIR and
@@ -1162,10 +1169,13 @@ flags
 `include_rescore_variants`, and `include_other_variants`. The last flag backs
 the UI label `Sparse pruning` and means sparse active-dimension cap variants,
 not arbitrary uncategorized variants. The viewer uses this
-mart when language filters, task-score columns, task text filters, length
+mart when custom language filters, task-score columns, task text filters, length
 filters, parameter filters, macro overall aggregation, and custom `bench=`
 selection are not active. Those interactive, macro, and custom cases still fall
 back to the normal `LeaderboardService` computation from task-score rows.
+For fixed English scopes such as `Overall (EN)` and `Overall (EN, short)`, the
+precomputed rows already include the `en` facet and remain eligible for the fast
+path.
 For `score_target = 'reranking'`, the viewer uses this mart only when the
 materialized rows already include a BM25 baseline row. Older DuckDB builds that
 lack that row fall back to dynamic task-score computation so Borda and mean ranks

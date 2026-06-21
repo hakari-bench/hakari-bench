@@ -339,6 +339,9 @@ class LeaderboardService:
             language_filter_policy = _language_filter_policy_for_view(
                 self.config, view_name, overall=overall
             )
+            default_language_filters = _default_language_filters_for_view(view_name)
+            effective_language_filters = default_language_filters or tuple(language_filters)
+            has_custom_language_filters = bool(language_filters) and tuple(language_filters) != default_language_filters
             available_views = _available_view_names(self.config)
             available_view_labels = {
                 view: self.config.label_for_view(view)
@@ -387,7 +390,7 @@ class LeaderboardService:
             )
             if (
                 self.use_precomputed
-                and not language_filters
+                and not has_custom_language_filters
                 and not show_task_scores
                 and not show_task_z_scores
                 and not show_task_ranks
@@ -468,6 +471,8 @@ class LeaderboardService:
                 )
                 phase_timing["task_score_count"] = len(rows)
             rows = _exclude_configured_tasks(rows, self.config)
+            if overall is not None:
+                rows = _filter_rows_by_overall_task_lengths(rows, overall)
             if _score_metric_cutoff(selected_score_metric) == 100:
                 rows = _exclude_bm25_task_scores(rows)
             if ranking_model_filter_terms:
@@ -528,7 +533,7 @@ class LeaderboardService:
                 policy=language_filter_policy,
             )
             selected_languages = _selected_languages(
-                language_filters, available_languages
+                effective_language_filters, available_languages
             )
             if selected_languages:
                 with timed_operation(
@@ -2369,6 +2374,17 @@ def _filter_rows_by_task_lengths(
     ]
 
 
+def _filter_rows_by_overall_task_lengths(rows: list[TaskScore], overall: OverallConfig) -> list[TaskScore]:
+    if overall.max_query_mean_chars is None and overall.max_document_mean_chars is None:
+        return rows
+    return [
+        row
+        for row in rows
+        if _length_value_below(row.query_mean_chars, maximum=overall.max_query_mean_chars)
+        and _length_value_below(row.document_mean_chars, maximum=overall.max_document_mean_chars)
+    ]
+
+
 def _length_value_matches(
     value: float | None, *, minimum: float | None, maximum: float | None
 ) -> bool:
@@ -2379,6 +2395,12 @@ def _length_value_matches(
     if minimum is not None and value < minimum:
         return False
     return maximum is None or value <= maximum
+
+
+def _length_value_below(value: float | None, *, maximum: float | None) -> bool:
+    if maximum is None:
+        return True
+    return value is not None and value < maximum
 
 
 def _language_label(language: str) -> str:
@@ -2443,6 +2465,10 @@ def _language_filter_policy_supports_precomputed(policy: LanguageFilterPolicy) -
         and not policy.modes_by_benchmark
         and not policy.allowed_languages_by_benchmark
     )
+
+
+def _default_language_filters_for_view(view_name: str) -> tuple[str, ...]:
+    return ("en",) if view_name in {"Overall (EN)", "Overall (EN, short)"} else ()
 
 
 def _available_view_names(config: ViewerConfig) -> list[str]:
