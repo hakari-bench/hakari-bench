@@ -173,6 +173,26 @@ def test_resolve_warehouse_build_plan_rejects_append_output_without_base() -> No
         report.resolve_warehouse_build_plan(args)
 
 
+def test_viewer_leaderboard_mart_view_names_include_precomputable_benchmark_views() -> None:
+    viewer_config = ViewerConfig(
+        benchmarks=[
+            BenchmarkConfig(name="BenchA"),
+            BenchmarkConfig(name="BenchPrimary", language_filter_mode="primary_language"),
+            BenchmarkConfig(name="BenchLangPage", language_page_languages=["ja"]),
+        ],
+        overalls=[
+            OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"]),
+            OverallConfig(name="Overall (EN)", label="Overall (EN)", benchmarks=["BenchA"]),
+        ],
+    )
+
+    assert report._viewer_leaderboard_mart_view_names(viewer_config) == [
+        "Overall",
+        "Overall (EN)",
+        "BenchA",
+    ]
+
+
 def test_run_warehouse_build_stream_plan_uses_streaming_writer(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -182,7 +202,10 @@ def test_run_warehouse_build_stream_plan_uses_streaming_writer(
     )
     plan = report.resolve_warehouse_build_plan(args)
     viewer_config = ViewerConfig(
-        benchmarks=[],
+        benchmarks=[
+            BenchmarkConfig(name="BenchA"),
+            BenchmarkConfig(name="BenchPrimary", language_filter_mode="primary_language"),
+        ],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=[])],
     )
     calls: list[tuple[str, object]] = []
@@ -193,14 +216,18 @@ def test_run_warehouse_build_stream_plan_uses_streaming_writer(
         "write_duckdb_streaming_results",
         lambda results_dirs, db_path, **_: calls.append(("stream", (results_dirs, db_path))),
     )
-    monkeypatch.setattr(report, "build_viewer_leaderboard_mart", lambda duckdb_path, **_: calls.append(("mart", duckdb_path)))
+    monkeypatch.setattr(
+        report,
+        "build_viewer_leaderboard_mart",
+        lambda duckdb_path, **kwargs: calls.append(("mart", (duckdb_path, kwargs["view_names"]))),
+    )
     monkeypatch.setattr(report, "load_results", lambda *_, **__: pytest.fail("stream plan should not materialize rows"))
 
     report.run_warehouse_build(plan, memory_monitor=report.MemoryMonitor(log_path=None))
 
     assert calls == [
         ("stream", ([Path("results")], tmp_path / "out.duckdb")),
-        ("mart", tmp_path / "out.duckdb"),
+        ("mart", (tmp_path / "out.duckdb", ["Overall", "BenchA"])),
     ]
 
 

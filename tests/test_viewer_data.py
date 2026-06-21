@@ -6,7 +6,12 @@ from pathlib import Path
 import duckdb
 import pytest
 
-from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION, TaskResultRecord, TaskResultsRepository
+from hakari_bench.viewer.data import (
+    CURRENT_DUCKDB_SCHEMA_VERSION,
+    TaskResultFacetFilters,
+    TaskResultRecord,
+    TaskResultsRepository,
+)
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
@@ -462,6 +467,110 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
     assert [record.embedding_variant_name for record in other_records] == [
         None,
         "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",
+    ]
+
+
+def test_task_results_repository_pushes_facet_filters_into_sql(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.90,
+                10,
+                12,
+                8192,
+                None,
+                768,
+                None,
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                None,
+                None,
+                None,
+                None,
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "quantize_uint8_docs",
+                768,
+                "uint8",
+                "bf16",
+                "flash_attention_2",
+                None,
+                None,
+                "query",
+                None,
+                None,
+                None,
+                None,
+            ),
+            (
+                "model/b",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
+                0.70,
+                10,
+                12,
+                8192,
+                "truncate_dim_384",
+                384,
+                None,
+                "fp16",
+                "sdpa",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ),
+        ],
+        include_model_type_column=True,
+        row_model_types=["dense", "dense", "dense"],
+    )
+
+    records = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(quantization=True, truncate=True),
+        facet_filters=TaskResultFacetFilters(
+            dim_filters=("768",),
+            quant_filters=("uint8",),
+            model_type_filters=("dense",),
+            dtype_filters=("bf16",),
+            attn_filters=("flash_attention_2",),
+            prompt_filters=("prompt_names",),
+        ),
+    )
+
+    assert [(record.model_name, record.embedding_variant_name, record.quantization) for record in records] == [
+        ("model/a", "quantize_uint8_docs", "uint8")
     ]
 
 
@@ -1046,6 +1155,21 @@ def _viewer_task_result_row(
     quantization = None
     if len(remaining) == 3:
         embedding_variant_name, embedding_dim, quantization = remaining
+    elif len(remaining) == 12:
+        (
+            embedding_variant_name,
+            embedding_dim,
+            quantization,
+            dtype,
+            attn_implementation,
+            query_prompt,
+            document_prompt,
+            query_prompt_name,
+            document_prompt_name,
+            query_encode_task,
+            document_encode_task,
+            trust_remote_code,
+        ) = remaining
     elif len(remaining) == 9:
         (
             dtype,

@@ -1146,10 +1146,32 @@ def _append_base_duckdb_arg(value: str | None) -> AppendBaseDuckDb | None:
     return Path(value)
 
 
+def _viewer_leaderboard_mart_view_names(viewer_config: ViewerConfig) -> list[str]:
+    view_names: list[str] = []
+    seen: set[str] = set()
+
+    def append_once(view_name: str) -> None:
+        if view_name not in seen:
+            seen.add(view_name)
+            view_names.append(view_name)
+
+    for overall in viewer_config.overalls:
+        append_once(overall.name)
+    for benchmark in viewer_config.benchmarks:
+        if _benchmark_view_supports_precomputed_mart(benchmark):
+            append_once(benchmark.name)
+    return view_names
+
+
+def _benchmark_view_supports_precomputed_mart(benchmark: BenchmarkConfig) -> bool:
+    return benchmark.language_filter_mode == "languages" and not benchmark.language_page_languages
+
+
 def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonitor) -> None:
     viewer_config = load_viewer_config(plan.viewer_config_dir)
     benchmark_configs = viewer_config.benchmarks
     target_benchmarks = target_benchmark_names(benchmark_configs)
+    mart_view_names = _viewer_leaderboard_mart_view_names(viewer_config)
     if plan.mode == "append":
         _prepare_append_duckdb(plan)
         rows, _, metric_rows, diagnostic_rows, dataset_metadata_rows, ranking_rows, source_hashes = _load_results_for_plan(
@@ -1171,7 +1193,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
         build_viewer_leaderboard_mart(
             plan.duckdb_path,
             viewer_config=viewer_config,
-            view_names=[overall.name for overall in viewer_config.overalls],
+            view_names=mart_view_names,
         )
         _compact_duckdb_database(plan.duckdb_path)
         if plan.parquet_output_dir is not None:
@@ -1215,7 +1237,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
         build_viewer_leaderboard_mart(
             plan.duckdb_path,
             viewer_config=viewer_config,
-            view_names=[overall.name for overall in viewer_config.overalls],
+            view_names=mart_view_names,
         )
         if plan.parquet_output_dir is not None:
             export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)
@@ -1253,7 +1275,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
     build_viewer_leaderboard_mart(
         plan.duckdb_path,
         viewer_config=viewer_config,
-        view_names=[overall.name for overall in viewer_config.overalls],
+        view_names=mart_view_names,
     )
     if plan.parquet_output_dir is not None:
         export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)

@@ -176,6 +176,29 @@ class TaskResultRow:
         return "model default"
 
 
+@dataclass(frozen=True, slots=True)
+class TaskResultFacetFilters:
+    dim_filters: tuple[str, ...] = ()
+    quant_filters: tuple[str, ...] = ()
+    model_type_filters: tuple[str, ...] = ()
+    dtype_filters: tuple[str, ...] = ()
+    attn_filters: tuple[str, ...] = ()
+    prompt_filters: tuple[str, ...] = ()
+
+    @property
+    def any_enabled(self) -> bool:
+        return any(
+            (
+                self.dim_filters,
+                self.quant_filters,
+                self.model_type_filters,
+                self.dtype_filters,
+                self.attn_filters,
+                self.prompt_filters,
+            )
+        )
+
+
 TTaskResultItem = TypeVar("TTaskResultItem", TaskResultRecord, TaskResultRow)
 
 
@@ -190,6 +213,7 @@ class TaskResultsRepository:
         score_target: str = "all",
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
+        facet_filters: TaskResultFacetFilters | None = None,
     ) -> list[TaskResultRecord]:
         """Fetch leaderboard source rows from `viewer_task_results`.
 
@@ -204,6 +228,7 @@ class TaskResultsRepository:
             score_target=score_target,
             include_embedding_variants=include_embedding_variants,
             variant_display_flags=variant_display_flags,
+            facet_filters=facet_filters,
             item_factory=_task_result_record,
             transform_operation="fetch_task_results.records",
         )
@@ -216,12 +241,14 @@ class TaskResultsRepository:
         score_metric: str = "ndcg@10",
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
+        facet_filters: TaskResultFacetFilters | None = None,
     ) -> list[TaskResultRow]:
         if score_metric != "ndcg@10":
             return self._fetch_metric_task_result_items(
                 benchmarks=benchmarks,
                 score_target=score_target,
                 score_metric=score_metric,
+                facet_filters=facet_filters,
                 item_factory=_task_result_row,
                 transform_operation="fetch_task_result_rows.metric_records",
             )
@@ -230,6 +257,7 @@ class TaskResultsRepository:
             score_target=score_target,
             include_embedding_variants=include_embedding_variants,
             variant_display_flags=variant_display_flags,
+            facet_filters=facet_filters,
             item_factory=_task_result_row,
             transform_operation="fetch_task_result_rows.records",
         )
@@ -264,6 +292,7 @@ class TaskResultsRepository:
         benchmarks: list[str],
         score_target: str,
         score_metric: str,
+        facet_filters: TaskResultFacetFilters | None,
         item_factory: Callable[[list[str], tuple[Any, ...]], TTaskResultItem],
         transform_operation: str,
     ) -> list[TTaskResultItem]:
@@ -350,6 +379,7 @@ class TaskResultsRepository:
                 if score_target != "all"
                 else f"AND NOT contains(lower(dm.metric_name), '{rerank_metric_marker}')"
             )
+            facet_filter, facet_params = _facet_filter_sql(columns, facet_filters)
             query = f"""
                 SELECT
                     tr.model_name,
@@ -405,10 +435,12 @@ class TaskResultsRepository:
                   AND dm.metric_family = ?
                   AND dm.cutoff = ?
                   AND {variant_name_expr} IS NULL
+                  {facet_filter}
                   {rerank_metric_filter}
                 ORDER BY tr.model_name, tr.benchmark, tr.dataset_id, tr.task_key
             """  # nosec B608
             query_params: list[Any] = [*benchmarks, score_target, metric_family, cutoff]
+            query_params.extend(facet_params)
             if score_target != "all":
                 query_params.extend([metric_family, cutoff])
             with timed_operation(
@@ -441,6 +473,7 @@ class TaskResultsRepository:
         score_target: str,
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None,
+        facet_filters: TaskResultFacetFilters | None,
         item_factory: Callable[[list[str], tuple[Any, ...]], TTaskResultItem],
         transform_operation: str,
     ) -> list[TTaskResultItem]:
@@ -462,7 +495,6 @@ class TaskResultsRepository:
             score_expr = qualified_column("tr", "score", allowed_columns=columns)
             target_filter = "AND tr.score_target = ?"
             query_params: list[Any] = list(benchmarks)
-            query_params.append(score_target)
             language_expr = qualified_column("tr", "language", allowed_columns=columns)
             languages_expr = qualified_column("tr", "languages", allowed_columns=columns)
             primary_languages_expr = (
@@ -498,6 +530,7 @@ class TaskResultsRepository:
                 variant_filter = "AND tr.embedding_variant_name IS NULL"
             elif "embedding_variant_name" in columns and variant_display_flags is not None:
                 variant_filter = _variant_filter_sql(columns, variant_display_flags)
+            facet_filter, facet_params = _facet_filter_sql(columns, facet_filters)
             placeholders = ", ".join("?" for _ in benchmarks)
             # Dynamic identifiers in viewer SQL are produced only by allowlisted helpers in viewer.sql.
             query = f"""
@@ -542,8 +575,11 @@ class TaskResultsRepository:
                 WHERE tr.benchmark IN ({placeholders})
                   AND {score_expr} IS NOT NULL
                   {variant_filter}
+                  {facet_filter}
                   {target_filter}
             """  # nosec B608
+            query_params.extend(facet_params)
+            query_params.append(score_target)
             with timed_operation(
                 "viewer.duckdb.query",
                 operation="fetch_task_results",
@@ -706,6 +742,109 @@ def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
             f"({non_rescore} AND NOT {quantization_category} AND NOT {truncate_category} AND {sparse_dims_category})"
         )
     return "AND (" + " OR ".join(clauses) + ")"
+
+
+def _facet_filter_sql(columns: set[str], filters: TaskResultFacetFilters | None) -> tuple[str, list[Any]]:
+    if filters is None or not filters.any_enabled:
+        return "", []
+    clauses: list[str] = []
+    params: list[Any] = []
+    _append_filter_clause(clauses, params, expression=_dim_bucket_sql(columns), values=filters.dim_filters)
+    _append_filter_clause(clauses, params, expression=_quant_bucket_sql(columns), values=filters.quant_filters)
+    _append_filter_clause(
+        clauses,
+        params,
+        expression=_model_type_filter_key_sql(columns),
+        values=filters.model_type_filters,
+    )
+    _append_filter_clause(clauses, params, expression=_nullable_text_bucket_sql(columns, "dtype"), values=filters.dtype_filters)
+    _append_filter_clause(
+        clauses,
+        params,
+        expression=_nullable_text_bucket_sql(columns, "attn_implementation"),
+        values=filters.attn_filters,
+    )
+    _append_filter_clause(clauses, params, expression=_prompt_bucket_sql(columns), values=filters.prompt_filters)
+    if not clauses:
+        return "", []
+    return "AND " + " AND ".join(clauses), params
+
+
+def _append_filter_clause(
+    clauses: list[str],
+    params: list[Any],
+    *,
+    expression: str,
+    values: tuple[str, ...],
+) -> None:
+    if not values:
+        return
+    placeholders = ", ".join("?" for _ in values)
+    clauses.append(f"{expression} IN ({placeholders})")
+    params.extend(values)
+
+
+def _dim_bucket_sql(columns: set[str]) -> str:
+    value = _column_or_null(columns, "embedding_dim")
+    return f"""
+        CASE
+            WHEN {value} IS NULL THEN '__unknown__'
+            WHEN {value} >= 1025 THEN '1025+'
+            ELSE CAST({value} AS VARCHAR)
+        END
+    """
+
+
+def _quant_bucket_sql(columns: set[str]) -> str:
+    return f"coalesce({_column_or_null(columns, 'quantization')}, '__none__')"
+
+
+def _nullable_text_bucket_sql(columns: set[str], column: str) -> str:
+    return f"coalesce({_column_or_null(columns, column)}, '__unknown__')"
+
+
+def _model_type_filter_key_sql(columns: set[str]) -> str:
+    model_type = _column_or_null(columns, "model_type")
+    normalized_type = f"lower(replace(trim(CAST({model_type} AS VARCHAR)), '_', '-'))"
+    model_name = f"lower({qualified_column('tr', 'model_name', allowed_columns=columns)})"
+    return f"""
+        CASE
+            WHEN {normalized_type} IN ('sparse', 'bm25') THEN 'sparse'
+            WHEN {normalized_type} IN ('dense', 'reranker', 'late-interaction') THEN {normalized_type}
+            WHEN {normalized_type} IN ('cross-encoder', 'crossencoder', 'cross-encoder-reranker') THEN 'reranker'
+            WHEN {normalized_type} IN ('late-interaction-retriever', 'colbert') THEN 'late-interaction'
+            WHEN {model_name} = 'bm25' OR starts_with({model_name}, 'bm25/') OR ends_with({model_name}, '/bm25') THEN 'sparse'
+            ELSE 'dense'
+        END
+    """
+
+
+def _prompt_bucket_sql(columns: set[str]) -> str:
+    query_prompt = _present_text_sql(columns, "query_prompt")
+    document_prompt = _present_text_sql(columns, "document_prompt")
+    query_prompt_name = _present_text_sql(columns, "query_prompt_name")
+    document_prompt_name = _present_text_sql(columns, "document_prompt_name")
+    query_encode_task = _present_text_sql(columns, "query_encode_task")
+    document_encode_task = _present_text_sql(columns, "document_encode_task")
+    has_explicit_prompt = f"({query_prompt} OR {document_prompt})"
+    has_prompt_name = f"({query_prompt_name} OR {document_prompt_name})"
+    has_encode_task = f"({query_encode_task} OR {document_encode_task})"
+    return f"""
+        CASE
+            WHEN {has_explicit_prompt} THEN 'explicit_prefixes'
+            WHEN {has_prompt_name} AND {has_encode_task} THEN 'prompt_names_encode_tasks'
+            WHEN {has_prompt_name} THEN 'prompt_names'
+            WHEN {has_encode_task} THEN 'encode_tasks'
+            ELSE 'model_default'
+        END
+    """
+
+
+def _present_text_sql(columns: set[str], column: str) -> str:
+    if column not in columns:
+        return "false"
+    value = qualified_column("tr", column, allowed_columns=columns)
+    return f"NULLIF({value}, '') IS NOT NULL"
 
 
 def _quantize_or_truncate_variant_filter(

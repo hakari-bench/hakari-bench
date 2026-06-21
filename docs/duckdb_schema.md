@@ -1098,11 +1098,27 @@ aggregation, or row rendering.
 
 Leaderboard task-score loading uses an in-process LRU cache keyed by the
 resolved DuckDB path, file `mtime_ns`, file size, benchmark tuple, target, and
-variant flags. This lets repeated HTMX requests reuse the expensive DuckDB read
-and row-to-`TaskScore` conversion while still invalidating automatically when a
-new DuckDB file is downloaded or otherwise modified. The cache emits
+variant flags. When `rank_filtered=1`, the refinement facet filters for
+embedding dimension, quantization, model type, dtype, attention implementation,
+and prompt bucket are also pushed into the DuckDB `WHERE` clause before rows are
+fetched. The Python facet filter still runs after loading as a final consistency
+guard, but the SQL pushdown keeps variant-heavy views from materializing
+unneeded task rows. This lets repeated HTMX requests reuse the expensive DuckDB
+read and row-to-`TaskScore` conversion while still invalidating automatically
+when a new DuckDB file is downloaded or otherwise modified. The cache emits
 `viewer.leaderboard.cache` log records with `hit`, `size`, and
 `task_score_count` fields.
+
+The latest production DuckDB equivalence/performance check is intentionally
+opt-in because it requires a local full DuckDB. Run it with:
+
+```bash
+HAKARI_BENCH_RUN_DUCKDB_PERF_TESTS=1 uv run --group all pytest -q -s \
+  tests/test_viewer_duckdb_performance.py
+```
+
+Set `HAKARI_BENCH_VIEWER_PERF_DUCKDB_PATH=/path/to/hakari_bench.duckdb` to test
+a specific database.
 
 DB build scripts create `viewer_task_results` as a physical table after
 `dataset_metadata` and `fact_task_score` are written. It selects only the
@@ -1132,6 +1148,11 @@ repository falls back to a metadata join so `query_len_min`, `query_len_max`,
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Configured
 overall rows in this mart use the default raw-task `score=micro` semantics.
+DuckDB builds also materialize benchmark views whose language filter policy can
+use the standard `languages` list without a fixed language-page constraint.
+Benchmark views that use `primary_language` semantics, such as MNanoBEIR and
+language-specific NanoMTEB-family pages, stay on the dynamic task-score path so
+their task facet semantics are computed from the current viewer configuration.
 `score=macro` overall leaderboards and `Custom` `bench=` selections, including
 empty Custom, are computed dynamically from `viewer_task_results` so the Nano-set
 aggregation policy is always applied from the current YAML configuration. It is keyed by
