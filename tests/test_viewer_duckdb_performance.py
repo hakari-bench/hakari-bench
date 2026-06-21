@@ -2,17 +2,22 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import shutil
 import time
 
 import pytest
 
+from hakari_bench.viewer.config import load_viewer_config
 from hakari_bench.viewer.data import TaskResultFacetFilters
 from hakari_bench.viewer.leaderboard import (
+    LeaderboardRow,
+    LeaderboardService,
     TaskScore,
     _filter_rows_by_facets,
     _load_task_scores_uncached,
 )
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
+from scripts.build_results_database_and_report import build_viewer_leaderboard_mart
 
 
 def test_latest_duckdb_rank_facet_pushdown_matches_python_filter_and_is_not_slower() -> None:
@@ -88,6 +93,38 @@ def test_latest_duckdb_rank_facet_pushdown_matches_python_filter_and_is_not_slow
     )
 
 
+def test_latest_duckdb_precomputed_benchmark_mart_matches_dynamic_path_and_is_faster(tmp_path: Path) -> None:
+    if os.getenv("HAKARI_BENCH_RUN_DUCKDB_PERF_TESTS") != "1":
+        pytest.skip("Set HAKARI_BENCH_RUN_DUCKDB_PERF_TESTS=1 to run latest DuckDB performance checks.")
+    duckdb_path = _latest_duckdb_path()
+    if duckdb_path is None:
+        pytest.skip("No latest leaderboard DuckDB found. Set HAKARI_BENCH_VIEWER_PERF_DUCKDB_PATH.")
+
+    mart_duckdb_path = tmp_path / "hakari_bench.duckdb"
+    shutil.copy2(duckdb_path, mart_duckdb_path)
+    viewer_config = load_viewer_config(Path("config/viewer"))
+    build_viewer_leaderboard_mart(mart_duckdb_path, viewer_config=viewer_config, view_names=["NanoMLDR"])
+
+    baseline_seconds, baseline_rows = _measure_leaderboard_view(
+        mart_duckdb_path,
+        viewer_config=viewer_config,
+        use_precomputed=False,
+    )
+    mart_seconds, mart_rows = _measure_leaderboard_view(
+        mart_duckdb_path,
+        viewer_config=viewer_config,
+        use_precomputed=True,
+    )
+
+    assert _leaderboard_row_signature(mart_rows) == _leaderboard_row_signature(baseline_rows)
+    assert mart_seconds <= baseline_seconds * 0.75
+    print(
+        "latest DuckDB precomputed benchmark mart: "
+        f"dynamic={baseline_seconds:.3f}s/{len(baseline_rows)} rows, "
+        f"mart={mart_seconds:.3f}s/{len(mart_rows)} rows"
+    )
+
+
 def _latest_duckdb_path() -> Path | None:
     configured = os.getenv("HAKARI_BENCH_VIEWER_PERF_DUCKDB_PATH")
     candidates = [
@@ -99,6 +136,44 @@ def _latest_duckdb_path() -> Path | None:
         if candidate is not None and candidate.is_file():
             return candidate
     return None
+
+
+def _measure_leaderboard_view(
+    duckdb_path: Path,
+    *,
+    viewer_config,
+    use_precomputed: bool,
+) -> tuple[float, list[LeaderboardRow]]:
+    service = LeaderboardService(
+        duckdb_path=duckdb_path,
+        config=viewer_config,
+        model_cards_path=None,
+        use_precomputed=use_precomputed,
+    )
+    start = time.perf_counter()
+    result = service.get_leaderboard(
+        "NanoMLDR",
+        score_target="all",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+    )
+    return time.perf_counter() - start, result.rows
+
+
+def _leaderboard_row_signature(rows: list[LeaderboardRow]) -> list[tuple[object, ...]]:
+    return sorted(
+        (
+            row.model_name,
+            row.source_model_name,
+            row.model_type,
+            row.mean_score,
+            row.task_count,
+            row.embedding_variant_name,
+            row.embedding_dim,
+            row.quantization,
+        )
+        for row in rows
+    )
 
 
 def _task_score_signature(rows: list[TaskScore]) -> list[tuple[object, ...]]:

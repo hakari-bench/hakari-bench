@@ -1148,6 +1148,11 @@ repository falls back to a metadata join so `query_len_min`, `query_len_max`,
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Configured
 overall rows in this mart use the default raw-task `score=micro` semantics.
+DuckDB builds also materialize benchmark views whose language filter policy can
+use the standard `languages` list without a fixed language-page constraint.
+Benchmark views that use `primary_language` semantics, such as MNanoBEIR and
+language-specific NanoMTEB-family pages, stay on the dynamic task-score path so
+their task facet semantics are computed from the current viewer configuration.
 `score=macro` overall leaderboards and `Custom` `bench=` selections, including
 empty Custom, are computed dynamically from `viewer_task_results` so the Nano-set
 aggregation policy is always applied from the current YAML configuration. It is keyed by
