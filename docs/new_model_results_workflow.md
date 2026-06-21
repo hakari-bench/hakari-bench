@@ -262,6 +262,7 @@ MODEL_DIR=MODEL_ID_WITH_DOUBLE_UNDERSCORE
 
 uv run python scripts/generate_results_pr_template.py \
   output/hakari-results/${MODEL_DIR} \
+  --comparison-duckdb-path tmp/latest/hakari_bench.duckdb \
   --output tmp/${MODEL_DIR}_results_pr.md
 ```
 
@@ -269,6 +270,23 @@ Fill every TODO in the generated Markdown. The PR body should include the exact
 command or job manifest, model revision, dataset revisions, method, runtime
 options, Overall `nDCG@10` summary, package/CUDA environment, retries, batch-size
 changes, and any intentional partial coverage or non-default variant choice.
+When a local DuckDB is supplied, the PR body also includes a Nano-set comparison
+table. The default comparison models are the submitted model,
+`Qwen/Qwen3-Embedding-0.6B`, `jinaai/jina-embeddings-v5-text-small`,
+`BAAI/bge-m3`, `intfloat/e5-small-v2`, and `bm25`; repeat
+`--comparison-model` to choose a different comparison set.
+
+After a Hugging Face Dataset PR exists, regenerate and update its first comment
+with:
+
+```bash
+uv run python scripts/update_results_pr_body.py \
+  output/hakari-results/${MODEL_DIR} \
+  --repo-path hakari-results/${MODEL_DIR} \
+  --comparison-duckdb-path tmp/latest/hakari_bench.duckdb \
+  --discussion-num PR_NUMBER \
+  --output tmp/${MODEL_DIR}_results_pr.md
+```
 
 ## 7. Open The GitHub Code PR
 

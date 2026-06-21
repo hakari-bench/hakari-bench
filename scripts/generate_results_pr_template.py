@@ -19,7 +19,7 @@ RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
 SUMMARY_VIEW_NAME = "Overall"
 PRIMARY_METRIC = "ndcg@10"
 DEFAULT_COMPARISON_MODELS = (
-    "Qwen/Qwen3-Embedding-4B",
+    "Qwen/Qwen3-Embedding-0.6B",
     "jinaai/jina-embeddings-v5-text-small",
     "BAAI/bge-m3",
     "intfloat/e5-small-v2",
