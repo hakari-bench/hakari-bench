@@ -1,5 +1,11 @@
 # New Model Evaluation To Results PR Workflow
 
+> [!NOTE]
+> 新しいモデルの投稿は基本的に welcome ですが、既存モデルを若干改善したものや
+> バリエーションが多いものは、場合によっては取り込みを行わない、または一部モデル
+> のみ取り込みを行う場合があります。また、評価結果に再現性がない場合、たとえば別
+> 環境で評価結果が大きく異なる場合なども、取り込みを行わない場合があります。
+
 This document is the end-to-end checklist for evaluating a new model with
 HAKARI-Bench and submitting its `.json.xz` result files for review.
 
