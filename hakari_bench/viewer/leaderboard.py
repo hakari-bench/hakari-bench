@@ -22,7 +22,13 @@ from hakari_bench.viewer.config import (
     ViewerConfig,
     normalize_benchmark_selection_values,
 )
-from hakari_bench.viewer.data import TaskResultRow, TaskResultsRepository, _table_columns, _table_exists
+from hakari_bench.viewer.data import (
+    TaskResultFacetFilters,
+    TaskResultRow,
+    TaskResultsRepository,
+    _table_columns,
+    _table_exists,
+)
 from hakari_bench.viewer.model_types import (
     is_bm25_model,
     is_reranker_model,
@@ -291,6 +297,18 @@ class LeaderboardService:
                 attn_filters=ranking_attn_filters,
                 prompt_filters=ranking_prompt_filters,
             )
+            ranking_facet_filters = (
+                TaskResultFacetFilters(
+                    dim_filters=ranking_dim_filters,
+                    quant_filters=ranking_quant_filters,
+                    model_type_filters=ranking_model_type_filters,
+                    dtype_filters=ranking_dtype_filters,
+                    attn_filters=ranking_attn_filters,
+                    prompt_filters=ranking_prompt_filters,
+                )
+                if has_rank_facet_filters
+                else None
+            )
             view_name, overall, benchmarks = self._resolve_scope(
                 view_name, selected_benchmarks=selected_benchmarks
             )
@@ -447,6 +465,7 @@ class LeaderboardService:
                     include_truncate_variants=include_truncate_variants,
                     include_rescore_variants=include_rescore_variants,
                     include_other_variants=include_other_variants,
+                    facet_filters=ranking_facet_filters,
                 )
                 phase_timing["task_score_count"] = len(rows)
             rows = _exclude_configured_tasks(rows, self.config)
@@ -693,6 +712,7 @@ class LeaderboardService:
         include_truncate_variants: bool,
         include_rescore_variants: bool,
         include_other_variants: bool,
+        facet_filters: TaskResultFacetFilters | None = None,
     ) -> list[TaskScore]:
         include_any_variants = (
             include_quantization_variants
@@ -723,6 +743,7 @@ class LeaderboardService:
                 variant_flags.truncate,
                 variant_flags.rescore,
                 variant_flags.other,
+                facet_filters,
             )
         )
         cache_after = _cached_task_scores.cache_info()
@@ -1045,6 +1066,7 @@ def _load_task_scores_uncached(
     score_metric: str,
     include_any_variants: bool,
     variant_flags: VariantDisplayFlags,
+    facet_filters: TaskResultFacetFilters | None = None,
 ) -> tuple[TaskScore, ...]:
     records = TaskResultsRepository(duckdb_path).fetch_task_result_rows(
         benchmarks=list(benchmarks),
@@ -1052,6 +1074,7 @@ def _load_task_scores_uncached(
         score_metric=score_metric,
         include_embedding_variants=include_any_variants,
         variant_display_flags=variant_flags,
+        facet_filters=facet_filters,
     )
     task_scores = _task_scores_from_records(
         records, include_any_variants=include_any_variants, variant_flags=variant_flags
@@ -1082,6 +1105,7 @@ def _cached_task_scores(
     include_truncate_variants: bool,
     include_rescore_variants: bool,
     include_other_variants: bool,
+    facet_filters: TaskResultFacetFilters | None,
 ) -> tuple[TaskScore, ...]:
     del duckdb_mtime_ns, duckdb_size
     return _load_task_scores_uncached(
@@ -1096,6 +1120,7 @@ def _cached_task_scores(
             rescore=include_rescore_variants,
             other=include_other_variants,
         ),
+        facet_filters=facet_filters,
     )
 
 

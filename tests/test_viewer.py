@@ -1779,16 +1779,18 @@ def test_leaderboard_service_reuses_task_score_cache_across_instances(
         score_metric: str = "ndcg@10",
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
+        facet_filters=None,
     ):
         nonlocal fetch_count
         fetch_count += 1
         return original_fetch(
             self,
-                benchmarks=benchmarks,
-                score_target=score_target,
-                score_metric=score_metric,
-                include_embedding_variants=include_embedding_variants,
+            benchmarks=benchmarks,
+            score_target=score_target,
+            score_metric=score_metric,
+            include_embedding_variants=include_embedding_variants,
             variant_display_flags=variant_display_flags,
+            facet_filters=facet_filters,
         )
 
     monkeypatch.setattr(TaskResultsRepository, "fetch_task_result_rows", counted_fetch)
@@ -1833,16 +1835,18 @@ def test_leaderboard_service_cache_invalidates_when_duckdb_file_changes(
         score_metric: str = "ndcg@10",
         include_embedding_variants: bool,
         variant_display_flags: VariantDisplayFlags | None = None,
+        facet_filters=None,
     ):
         nonlocal fetch_count
         fetch_count += 1
         return original_fetch(
             self,
-                benchmarks=benchmarks,
-                score_target=score_target,
-                score_metric=score_metric,
-                include_embedding_variants=include_embedding_variants,
+            benchmarks=benchmarks,
+            score_target=score_target,
+            score_metric=score_metric,
+            include_embedding_variants=include_embedding_variants,
             variant_display_flags=variant_display_flags,
+            facet_filters=facet_filters,
         )
 
     monkeypatch.setattr(TaskResultsRepository, "fetch_task_result_rows", counted_fetch)
