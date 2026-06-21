@@ -102,7 +102,7 @@ directory and set the final Hub path explicitly:
 uv run python scripts/generate_results_pr_template.py \
   output/results_nano_reranking_hybrid_full_late_rerun_20260603_json_xz/{model_dir} \
   --repo-path PROJECT_ROOT/hakari-results/{model_dir} \
-  --comparison-duckdb-path tmp/latest/hakari_bench.duckdb \
+  --comparison-duckdb-path ~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb \
   --output tmp/{model_dir}_results_pr.md
 ```
 
@@ -119,20 +119,22 @@ default comparison columns are the submitted model, `Qwen/Qwen3-Embedding-0.6B`,
 uv run python scripts/generate_results_pr_template.py \
   output/hakari-results/${MODEL_DIR} \
   --repo-path hakari-results/${MODEL_DIR} \
-  --comparison-duckdb-path tmp/latest/hakari_bench.duckdb \
+  --comparison-duckdb-path ~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb \
   --comparison-model Qwen/Qwen3-Embedding-0.6B \
   --comparison-model BAAI/bge-m3 \
   --output tmp/${MODEL_DIR}_results_pr.md
 ```
 
 To regenerate and update an existing Hugging Face Dataset PR comment in one
-step, use:
+step, use `scripts/update_results_pr_body.py`. It uses
+`$HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH` when set, otherwise the shared latest
+cache at `~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb` when
+that file exists:
 
 ```bash
 uv run python scripts/update_results_pr_body.py \
   output/hakari-results/${MODEL_DIR} \
   --repo-path hakari-results/${MODEL_DIR} \
-  --comparison-duckdb-path tmp/latest/hakari_bench.duckdb \
   --discussion-num 10 \
   --output tmp/${MODEL_DIR}_results_pr.md
 ```

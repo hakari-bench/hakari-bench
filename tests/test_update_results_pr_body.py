@@ -85,3 +85,20 @@ def test_update_results_pr_body_edits_first_discussion_comment(tmp_path: Path, m
     assert edits["edit_kwargs"]["comment_id"] == "comment-1"
     assert edits["edit_kwargs"]["new_content"] == "generated body"
 
+
+def test_update_results_pr_body_defaults_to_remote_latest_cache_path(tmp_path: Path, monkeypatch) -> None:
+    result_dir = tmp_path / "results"
+    duckdb_path = tmp_path / "remote_latest.duckdb"
+    calls = {}
+
+    def fake_generate_pr_template(**kwargs):
+        calls.update(kwargs)
+        return "generated body"
+
+    monkeypatch.setenv(script.REMOTE_LATEST_DUCKDB_PATH_ENV, str(duckdb_path))
+    monkeypatch.setattr(script, "generate_pr_template", fake_generate_pr_template)
+
+    exit_code = script.main([str(result_dir), "--output", str(tmp_path / "body.md")])
+
+    assert exit_code == 0
+    assert calls["comparison_duckdb_path"] == duckdb_path

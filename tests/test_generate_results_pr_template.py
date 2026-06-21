@@ -157,6 +157,64 @@ def test_generate_pr_template_adds_duckdb_comparison_table(tmp_path: Path) -> No
     assert "| NanoRTEB | 0.4000 | **0.7500** | 0.1000 |" in rendered
 
 
+def test_generate_pr_template_uses_submitted_results_when_duckdb_lacks_model(tmp_path: Path) -> None:
+    result_dir = tmp_path / "Example__model"
+    _write_result(
+        result_dir / "hakari-bench__NanoBEIR-en" / "arguana.json.xz",
+        dataset_name="NanoBEIR-en",
+        dataset_id="hakari-bench/NanoBEIR-en",
+        task_name="arguana",
+        score=0.6,
+    )
+    duckdb_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(duckdb_path))
+    con.execute(
+        """
+        CREATE TABLE task_results (
+            model_name VARCHAR,
+            benchmark VARCHAR,
+            dataset_id VARCHAR,
+            dataset_name VARCHAR,
+            task_name VARCHAR,
+            task_key VARCHAR,
+            score DOUBLE,
+            aggregate_metric VARCHAR,
+            embedding_variant_name VARCHAR,
+            embedding_dim INTEGER,
+            quantization VARCHAR
+        )
+        """
+    )
+    con.execute(
+        """
+        INSERT INTO task_results VALUES (
+            'Other/model',
+            'MNanoBEIR',
+            'hakari-bench/NanoBEIR-en',
+            'NanoBEIR-en',
+            'arguana',
+            'arguana',
+            0.8,
+            'ndcg@10',
+            NULL,
+            768,
+            NULL
+        )
+        """
+    )
+    con.close()
+
+    rendered = template.generate_pr_template(
+        result_dir,
+        repo_path="PROJECT_ROOT/hakari-results/Example__model",
+        comparison_duckdb_path=duckdb_path,
+        comparison_models=["Other/model"],
+    )
+
+    assert "| Overall component | Example/model | Other/model (768 dims) |" in rendered
+    assert "| Overall | 0.6000 | **0.8000** |" in rendered
+
+
 def _write_result(
     path: Path,
     *,

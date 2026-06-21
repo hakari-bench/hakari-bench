@@ -177,6 +177,7 @@ def generate_pr_template(
     comparison_rows = _comparison_rows_from_duckdb(
         comparison_duckdb_path,
         model_name=model_name,
+        submitted_summary=core_summary,
         comparison_models=comparison_models,
         benchmark_configs=viewer_config.benchmarks,
         core_components=summary_scope.benchmark_components,
@@ -479,7 +480,7 @@ def _comparison_table_row(label: str, scores: Sequence[float | None]) -> str:
 
 
 def _comparison_column_label(row: ComparisonRow) -> str:
-    if row.variant_label == "base":
+    if row.variant_label in {"base", "submitted"}:
         return row.model_name
     return f"{row.model_name} ({row.variant_label})"
 
@@ -495,6 +496,7 @@ def _comparison_rows_from_duckdb(
     duckdb_path: Path | None,
     *,
     model_name: str,
+    submitted_summary: CoreSummary,
     comparison_models: Sequence[str] | None,
     benchmark_configs: Sequence[BenchmarkConfig],
     core_components: Sequence[OverallBenchmarkConfig],
@@ -506,19 +508,19 @@ def _comparison_rows_from_duckdb(
     model_ids = _comparison_model_ids(model_name, comparison_models)
     con = duckdb.connect(str(duckdb_path), read_only=True)
     try:
-        return [
-            row
-            for model_id in model_ids
-            if (
-                row := _best_comparison_row_for_model(
+        rows: list[ComparisonRow] = []
+        for model_id in model_ids:
+            row = _best_comparison_row_for_model(
                     con,
                     model_id=model_id,
                     benchmark_configs=benchmark_configs,
                     core_components=core_components,
                 )
-            )
-            is not None
-        ]
+            if row is None and model_id == model_name:
+                row = _comparison_row_from_summary(model_name, submitted_summary)
+            if row is not None:
+                rows.append(row)
+        return rows
     finally:
         con.close()
 
@@ -616,6 +618,23 @@ def _best_comparison_row_for_model(
         if best is None or row.score > best.score:
             best = row
     return best
+
+
+def _comparison_row_from_summary(model_name: str, summary: CoreSummary) -> ComparisonRow | None:
+    if summary.score is None:
+        return None
+    return ComparisonRow(
+        model_name=model_name,
+        score=summary.score,
+        variant_label="submitted",
+        score_unit_count=summary.score_unit_count,
+        raw_task_count=summary.raw_task_count,
+        component_scores={
+            benchmark_summary.benchmark: benchmark_summary.score
+            for benchmark_summary in summary.benchmarks
+            if benchmark_summary.raw_task_count > 0
+        },
+    )
 
 
 def _comparison_variant_label(variant_name: str | None, embedding_dim: int | None) -> str:

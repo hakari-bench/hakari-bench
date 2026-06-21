@@ -262,7 +262,7 @@ MODEL_DIR=MODEL_ID_WITH_DOUBLE_UNDERSCORE
 
 uv run python scripts/generate_results_pr_template.py \
   output/hakari-results/${MODEL_DIR} \
-  --comparison-duckdb-path tmp/latest/hakari_bench.duckdb \
+  --comparison-duckdb-path ~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb \
   --output tmp/${MODEL_DIR}_results_pr.md
 ```
 
@@ -274,16 +274,19 @@ When a local DuckDB is supplied, the PR body also includes a Nano-set comparison
 table. The default comparison models are the submitted model,
 `Qwen/Qwen3-Embedding-0.6B`, `jinaai/jina-embeddings-v5-text-small`,
 `BAAI/bge-m3`, `intfloat/e5-small-v2`, and `bm25`; repeat
-`--comparison-model` to choose a different comparison set.
+`--comparison-model` to choose a different comparison set. The shared latest
+cache path is `~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb`
+by default and can be overridden with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`.
 
 After a Hugging Face Dataset PR exists, regenerate and update its first comment
-with:
+with `scripts/update_results_pr_body.py`. This updater uses
+`$HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH` or the shared latest cache above when
+`--comparison-duckdb-path` is omitted:
 
 ```bash
 uv run python scripts/update_results_pr_body.py \
   output/hakari-results/${MODEL_DIR} \
   --repo-path hakari-results/${MODEL_DIR} \
-  --comparison-duckdb-path tmp/latest/hakari_bench.duckdb \
   --discussion-num PR_NUMBER \
   --output tmp/${MODEL_DIR}_results_pr.md
 ```
