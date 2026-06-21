@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 import csv
 from datetime import datetime, timezone
 from functools import lru_cache
@@ -225,7 +227,13 @@ def create_app(
     if resolved_docs_metadata_dir is None and docs_dir == Path("task_docs/docs"):
         resolved_docs_metadata_dir = Path("task_docs/metadata")
     benchmark_docs = BenchmarkDocs(docs_dir, metadata_dir=resolved_docs_metadata_dir)
-    app = FastAPI(title="HAKARI-Bench leaderboard", docs_url=None, redoc_url=None)
+
+    @asynccontextmanager
+    async def lifespan(_app: object) -> AsyncIterator[None]:
+        store.start_background_sync()
+        yield
+
+    app = FastAPI(title="HAKARI-Bench leaderboard", docs_url=None, redoc_url=None, lifespan=lifespan)
     app.add_middleware(GZipMiddleware, minimum_size=1024)
     app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="assets")
 
