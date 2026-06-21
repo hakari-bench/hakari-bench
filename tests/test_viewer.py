@@ -765,10 +765,8 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'data-icon="sun"' in response.text
     assert response.text.index('id="hakari-github-link"') < response.text.index('id="hakari-docs-link"')
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-Bench leaderboard</p>' not in response.text
-    assert (
-        "🚧 WIP: This leaderboard is currently under active implementation, "
-        "so specifications and data may change significantly."
-    ) in response.text
+    assert "WIP: This leaderboard" not in response.text
+    assert "HAKARI-Bench is a lightweight multilingual information retrieval benchmark" not in response.text
     assert "DuckDB:" not in response.text
     assert f"database: local / {db_path}" not in response.text
     assert "Latest update:" not in response.text
