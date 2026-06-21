@@ -64,7 +64,7 @@ from hakari_bench.viewer.state import (
     task_length_bounds,
 )
 from hakari_bench.viewer.store import DuckDbSyncStatus, LocalDuckDbStore
-from hakari_bench.viewer.summary import ViewerSummary, ViewerSummaryRepository
+from hakari_bench.viewer.summary import ViewerSummary
 from hakari_bench.viewer.variant_display import (
     is_sparse_dims_variant_name,
     variant_category,
@@ -257,6 +257,10 @@ def create_app(
     def favicon_ico() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
 
+    @app.get("/hello")
+    def hello() -> Response:
+        return Response("hello\n", media_type="text/plain; charset=utf-8")
+
     @app.get("/docs")
     @app.get("/docs/")
     def docs_index_redirect() -> RedirectResponse:
@@ -374,15 +378,14 @@ def create_app(
             )
             if not task_z_scores:
                 initial_query["task_z_scores"] = "0"
-            summary = ViewerSummaryRepository(store.path).fetch_summary()
             with timed_operation("viewer.render", operation="render_page"):
                 content = render_page(
                     viewer_config=viewer_config,
                     duckdb_path=store.path,
-                    summary=summary,
+                    summary=None,
                     initial_query=initial_query,
                     benchmark_docs=benchmark_docs,
-                    database_label=_database_footer_label(store),
+                    database_label="",
                 )
             request_timing["view"] = initial_query["view"]
             return content
