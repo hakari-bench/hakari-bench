@@ -1,5 +1,7 @@
 # Model-Specific Benchmarking Notes
 
+This document collects model-family and checkpoint-specific benchmarking decisions that override generic HAKARI-Bench defaults. It records verified prompts, prompt names, attention implementations, dtype choices, max sequence length concerns, trust-remote-code notes, tokenizer quirks, sparse settings, ColBERT/PyLate options, OpenAI settings, and runtime observations for models such as Ruri, E5, Qwen3, EmbeddingGemma, Bekko, Jina, Snowflake Arctic, IBM Granite, F2LLM, Perplexity, GTE, SPLADE, OpenAI embeddings, and static similarity MRL models. Coding agents should use this file when searching for exact model run settings, prompt overrides, attention recommendations, compatibility notes, or reproducibility caveats.
+
 When measuring specific models, follow the notes in this document. These notes
 override generic benchmarking defaults when they are more specific, because some
 models require exact prompts or runtime choices for comparable retrieval scores.

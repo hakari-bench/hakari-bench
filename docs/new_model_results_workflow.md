@@ -1,5 +1,7 @@
 # New Model Evaluation To Results PR Workflow
 
+This document is the end-to-end checklist for evaluating a new model and submitting HAKARI-Bench result files for review. It connects model research, model card creation, small validation runs, full `--all` evaluations, dense and sparse variant policy, reranker and late-interaction settings, coverage and metadata audits, result PR body generation, GitHub code PR expectations, and Hugging Face Dataset result submission. Coding agents should use this file when searching for new model onboarding, evaluation-to-results workflow, result PR preparation, model card review, `.json.xz` submission, contributor expectations, reproducibility checks, or maintainer acceptance caveats for similar model variants.
+
 > [!NOTE]
 > 新しいモデルの投稿は基本的に welcome ですが、既存モデルを若干改善したものや
 > バリエーションが多いものは、場合によっては取り込みを行わない、または一部モデル

@@ -1,5 +1,7 @@
 # HAKARI Core Set Selection Rationale
 
+This document records the historical rationale for the retired HAKARI Core and Core (EN) viewer presets and the evidence used when selecting a compact benchmark scope. It discusses why broad Overall and Overall (EN) presets replaced the smaller curated Core view, how candidate Nano sets were evaluated, and how overlap, saturation, BM25 strength, MTEB registration, source quality, citation evidence, and domain balance influenced selection. Coding agents should use this file when searching for core set decisions, Nano-set pruning, benchmark overlap policy, Core retirement context, NanoLaw and NanoBIRCO analysis, MTEB registration checks, or historical leaderboard scope rationale.
+
 Research date: 2026-05-21 JST
 
 Selection update: 2026-05-22 JST

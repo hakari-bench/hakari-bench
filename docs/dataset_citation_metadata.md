@@ -1,5 +1,7 @@
 # Dataset Citation Metadata
 
+This document is the canonical policy for writing and auditing citation and source metadata in NanoIR dataset YAML definitions. It explains where group-level and task-level metadata live, how to distinguish benchmark wrapper citations from underlying task or dataset sources, how to represent papers, blogs, Hugging Face cards, GitHub repositories, project pages, Zenodo records, licenses, text statistics, language detection, source confidence, and citation usability. Coding agents should use this file when searching for dataset citation fields, reference objects, metadata schema, source confidence labels, citation audits, task-level sources, paper provenance, or validation checklists for `config/datasets/` and collections.
+
 This document is the canonical repository guidance for writing and auditing
 paper/source citation metadata for NanoIR dataset definition files. Do not rely
 on skill-local citation instructions as the source of truth. Skill files may

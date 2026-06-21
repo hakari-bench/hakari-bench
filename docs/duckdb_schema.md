@@ -1,5 +1,7 @@
 # DuckDB Schema and Leaderboard Query Guide
 
+This document is the authoritative guide to the HAKARI-Bench DuckDB result warehouse and leaderboard query semantics. It describes schema versioning, database generation, viewer configuration, HTMX query surfaces, table meanings, columns, dimensions, fact tables, retrieval rankings, diagnostics, dataset metadata, model scores, Borda scores, score targets, complete-model rules, benchmark and Overall views, embedding variant handling, reranking and safeguard behavior, current viewer data access, and SQL recipes. Coding agents should use this file when searching for DuckDB schema, viewer SQL, `task_results`, `fact_metric_score`, `retrieval_rankings`, `score_target`, Overall calculation, variant facets, or leaderboard data model changes.
+
 This document describes how the HAKARI-Bench viewer stores leaderboard
 data in DuckDB and how a viewer should query that data.
 

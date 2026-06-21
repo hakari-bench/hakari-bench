@@ -1,5 +1,7 @@
 # Late-Interaction Evaluation
 
+This document records the repository workflow for ColBERT-style late-interaction models evaluated with PyLate and HAKARI-Bench. It explains why reviewed model cards should drive late-interaction runs, which fields control dtype, attention, prefixes, token lengths, expansion-token attention, query augmentation, reranking candidate settings, and MaxSim scoring, plus runtime and validation expectations. Coding agents should use this file when searching for `evaluate late-interaction`, PyLate ColBERT, MaxSim, query and document prefixes, late-interaction model cards, candidate reranking, truncate variants, ColBERT validation, or model-specific late-interaction benchmark notes.
+
 This document records the current repository workflow for ColBERT-style
 late-interaction models. The canonical end-to-end benchmark procedure is
 [`evaluation_policy.md`](evaluation_policy.md); model-specific prompts and

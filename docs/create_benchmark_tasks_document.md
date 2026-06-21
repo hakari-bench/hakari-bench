@@ -1,5 +1,7 @@
 # Creating Benchmark Task Documents
 
+This document is the writing policy and template for public benchmark task documentation under `task_docs/docs/` and for group index pages that summarize each Nano-set. It specifies what a task page must explain: source benchmark provenance, query and document shapes, domain and language, observed Nano data profile, BM25, dense, and reranking-hybrid retrieval behavior, examples from actual tables, metric interpretation, leakage cautions, and training-data guidance. Coding agents should use this file when searching for task_docs generation rules, benchmark task page structure, metadata JSON requirements, candidate subset descriptions, source policy, examples, or reviewer checks for public retrieval task documentation.
+
 This document defines the policy and template for reader-facing benchmark task
 documentation under `task_docs/docs/`, plus the group index pages that summarize
 each Nano-set.

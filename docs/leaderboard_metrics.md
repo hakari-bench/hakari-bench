@@ -1,5 +1,7 @@
 # Leaderboard Metric Policy
 
+This document defines the default visible metrics in the HAKARI-Bench leaderboard and explains why each metric is shown. It covers the distinction between human-facing search quality and AI-facing candidate retention, the role of `nDCG@10` as the primary ranking score, and why `MRR@10`, `Recall@100`, `Acc@100`, and `MAP@100` complement it while `Precision@10` is not a default viewer metric. Coding agents should use this file when searching for metric policy, visible leaderboard columns, top-10 ranking quality, top-100 candidate coverage, RAG or reranker candidate retention, MAP versus MRR reasoning, or how metrics are stored and recomputed from ranking artifacts.
+
 This document defines the default HAKARI-Bench leaderboard metric set and the
 reasoning behind it.
 

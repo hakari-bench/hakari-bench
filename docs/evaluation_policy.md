@@ -1,5 +1,7 @@
 # Evaluation Policy
 
+This document is the canonical policy for choosing HAKARI-Bench evaluation settings before running models. It covers target selection, `--all`, evaluation scope, prompts, dtype, attention implementation, trust-remote-code review, dense embedding variants, Matryoshka truncation, int8 and binary quantization, sparse max-active-dims, reranker and late-interaction candidate settings, BM25 source behavior, cache and offline hygiene, long benchmark waves, result metadata, and coverage audits. Coding agents should use this file when searching for benchmark protocol decisions, model runtime choices, variant expansion rules, reranking defaults, `reranking_hybrid`, BM25 computed versus dataset source, or final result completeness checks.
+
 This document is the canonical repository guidance for running HAKARI-Bench
 evaluations. Do not rely on skill-local benchmark instructions as the source of
 truth. Skill files may point here, but evaluation setting policy, variant

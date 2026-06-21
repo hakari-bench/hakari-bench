@@ -1,5 +1,7 @@
 # Contributing Result Files
 
+This document is the submission guide for contributing HAKARI-Bench evaluation result files to the private Hugging Face dataset repository `hakari-bench/results`. It explains the expected `hakari-results/{model_dir}/...json.xz` layout, what contributors must check before running evaluations, what metadata reviewers need, how to generate a PR body, and how to open or manually prepare a Hugging Face Dataset pull request. Coding agents should use this file when searching for result contribution workflow, result repository layout, `.json.xz` review requirements, model result PRs, dataset PR refs, staging commits, result submission checklist, or reviewer expectations for reproducible benchmark uploads.
+
 This document defines how external benchmark runs should be submitted to the
 private Hugging Face dataset repository `hakari-bench/results`.
 

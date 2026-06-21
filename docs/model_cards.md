@@ -1,5 +1,7 @@
 # Model Cards
 
+This document defines the static HAKARI-Bench model card schema stored under `config/model_cards/` and explains how model cards drive reproducible evaluation. It covers filename conventions, top-level YAML fields, source revisions, method type, runtime options, dtype, attention implementation, trust-remote-code approval, prompts, embedding truncation dimensions, sparse and late-interaction fields, language support, target coverage, generation scripts, auditing, and synchronization with result metadata. Coding agents should use this file when searching for model card schema, `generate_model_cards.py`, reviewed runtime metadata, prompt configuration, model revisions, truncate dims, language display, or model metadata validation.
+
 Model cards are static HAKARI metadata files stored under
 `config/model_cards/`. Store one model per YAML file and replace `/` in the
 model id with `__` in the filename, for example:

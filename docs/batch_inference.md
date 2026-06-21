@@ -1,5 +1,7 @@
 # Batch Inference
 
+This document is the operational guide for HAKARI-Bench batch inference, especially offline dense embedding evaluation through provider batch APIs. It explains how to register batch jobs, write stable local request files, submit them to a provider such as OpenAI, poll or fetch completed outputs, and materialize normal HAKARI result JSON from returned embeddings. Coding agents should use this file when searching for batch dense evaluation, OpenAI Batch API, provider-aware request manifests, batch target names, materialized result paths, retry behavior, or comparison with direct evaluation. It also captures the legacy single-batch command shape and the intended boundary between batch embedding generation and leaderboard-compatible result JSON creation.
+
 Batch inference is an offline dense-embedding workflow. It writes provider
 request files, registers remote batch jobs, fetches finished provider outputs,
 and materializes normal HAKARI result JSON from the returned embeddings.

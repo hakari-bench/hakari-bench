@@ -1,5 +1,7 @@
 # Creating Nano Datasets
 
+This document is the canonical workflow for creating or recreating upload-ready Nano-set retrieval datasets, including single-task conversions, MTEB-derived Nano families, and reranking-hybrid candidate subsets. It covers supported Hugging Face and local parquet source layouts, qrels positivity rules, corpus sampling, BM25 generation, BM25 top-500 and dense top-500 candidate construction, RRF `reranking_hybrid` top-100 plus rank-101 safeguard policy, MTEB grouping rules, dataset YAML output, README generation, validation, and upload shape. Coding agents should use this file when searching for `create_nano_dataset.py`, `recreate_mteb_nano_datasets.py`, NanoMTEB creation, BM25 tokenizers, candidate coverage, or Nano dataset publishing.
+
 This document is the canonical workflow for recreating Nano-set retrieval
 datasets in this repository, including MTEB-derived Nano families.
 

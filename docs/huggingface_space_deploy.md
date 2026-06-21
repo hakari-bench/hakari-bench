@@ -1,5 +1,7 @@
 # Hugging Face Space Deployment
 
+This document is the deployment and operations guide for the public HAKARI-Bench leaderboard hosted as the Hugging Face Docker Space `hakari-bench/leaderboard`. It describes the Space repository, direct app URL, GitHub Container Registry image, DuckDB database dataset, required permissions, GHCR publishing, end-to-end refresh checklist, Space rebuild steps, Dockerfile and environment variables, DuckDB publishing, runtime configuration, verification, and rollback. Coding agents should use this file when searching for Hugging Face Space deployment, leaderboard Docker image, `DUCKDB_PATH`, GHCR tags, `leaderboard_database`, refresh workflow, Space secrets, or production viewer operations.
+
 This document describes how to deploy the HAKARI-Bench leaderboard viewer to
 the Docker Space at `hakari-bench/leaderboard` and how to publish the DuckDB
 database consumed by that Space.

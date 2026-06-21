@@ -27,6 +27,8 @@ tags:
 
 # {{DATASET_NAME}}
 
+This dataset card describes a HAKARI-Bench Nano-set retrieval dataset and is generated from the repository Nano README template. It summarizes the dataset purpose, source benchmark provenance, Hugging Face Datasets config layout, split statistics, construction steps, qrels policy, corpus sampling, BM25 candidate generation, dense `harrier_oss_v1_270m` candidates, `reranking_hybrid` RRF candidates, optional safeguard positives, split mapping, candidate quality tables, skipped tasks, and license or attribution notes. Coding agents should use this template when searching for Nano dataset README fields, candidate subset policy, BM25 top-k, dense top-k, hybrid top-100, `Recall@100`, metadata placeholders, or upload-ready dataset card requirements.
+
 This dataset is a Nano-set retrieval dataset. Nano-series evaluation can
 be run easily with [HAKARI-Bench](https://github.com/hakari-bench/hakari-bench).
 

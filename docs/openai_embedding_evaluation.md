@@ -1,5 +1,7 @@
 # OpenAI Embedding Evaluation
 
+This document explains how to evaluate OpenAI embedding models in HAKARI-Bench through the dense evaluator and the built-in `openai` model loader. It covers optional dependency setup, `.env` and `OPENAI_API_KEY`, model names, API-provided dimensions versus local truncation, the `dimensions` parameter, token limits, asynchronous concurrency, rate-limit and retry considerations, and when to use normal direct evaluation versus batch inference. Coding agents should use this file when searching for OpenAI embeddings, hosted dense evaluation, `text-embedding-3-small`, `text-embedding-3-large`, API dimension settings, local embedding variants, token budgeting, async concurrency, or OpenAI Batch API links.
+
 HAKARI-Bench can evaluate OpenAI embedding models through the dense evaluator
 using the built-in `openai` model loader.
 

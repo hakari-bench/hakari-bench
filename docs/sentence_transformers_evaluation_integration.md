@@ -1,5 +1,7 @@
 # SentenceTransformers Evaluation Integration
 
+This document explains the `hakari_bench.sentence_transformers` evaluator integration for SentenceTransformers training loops. It covers dense, sparse, reranker, and BM25-compatible evaluators, how Nano targets are selected, what runs during evaluation, default `nDCG@10` and `mAP@10` metrics, combined means, target selection for datasets and collections, dense or sparse training examples, reranker training with candidate subsets, BM25-only evaluation, smoke runs, embedding variants, recorded variant result names, example scripts, and development tests. Coding agents should use this file when searching for training-time evaluators, `HakariNanoEvaluator`, `HakariNanoBM25Evaluator`, Nano targets, or SentenceTransformers feedback loops.
+
 HAKARI-Bench provides SentenceTransformers-compatible evaluators under
 `hakari_bench.sentence_transformers`. They are designed for training-time
 feedback on Nano-set IR datasets while reusing HAKARI dataset definitions,

@@ -1,5 +1,7 @@
 # Evaluation Runbook
 
+This document is the practical command runbook for evaluating models, building or appending DuckDB databases, and opening the HAKARI-Bench leaderboard viewer. It provides runnable examples for full and partial evaluation, dense, sparse, reranker, late-interaction, BM25, custom model backends, result directory handling, remote result sync, Xet or snapshot rebuilds, metadata-backed BM25 materialization, append-only DuckDB updates, and local viewer startup. Coding agents should use this file when searching for concrete CLI commands, `hakari-bench evaluate`, `build_results_database_and_report.py`, `sync_remote_results_and_rebuild.py`, append workflows, viewer URLs, or before-reporting checks.
+
 This guide covers the practical workflow for evaluating a model, adding its
 result JSON to a viewer DuckDB database, and opening the leaderboard viewer.
 

@@ -1,5 +1,7 @@
 # Custom Model Backends
 
+This document explains how to evaluate non-standard dense, sparse, reranker, or late-interaction models in HAKARI-Bench by supplying a custom Python loader instead of the built-in SentenceTransformers, SparseEncoder, CrossEncoder, or PyLate loaders. It defines the duck-typed loader contract, method-specific encode or score interfaces, backend kwargs, params JSON usage, metadata expectations, secrets handling, pre-quantized SentenceTransformers artifact support, and a dummy backend example. Coding agents should use this file when searching for `--model-loader`, hosted embedding APIs, custom reranker wrappers, backend kwargs, parameter metadata, remote providers, or non-SentenceTransformers model integration.
+
 HAKARI-Bench can evaluate model objects that are not implemented with
 SentenceTransformers, as long as they provide the small duck-typed interface
 needed by the selected evaluation method.
