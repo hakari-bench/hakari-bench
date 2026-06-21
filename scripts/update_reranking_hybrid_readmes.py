@@ -25,6 +25,22 @@ DEFAULT_TAGS = [
     "reranking",
     "hakari-bench",
 ]
+NANOBEIR_ORIGINAL_SOURCE_DATASETS = {
+    "NanoBEIR-ar": "lightonai/NanoBEIR-ar",
+    "NanoBEIR-de": "lightonai/NanoBEIR-de",
+    "NanoBEIR-en": "sentence-transformers/NanoBEIR-en",
+    "NanoBEIR-es": "lightonai/NanoBEIR-es",
+    "NanoBEIR-fr": "lightonai/NanoBEIR-fr",
+    "NanoBEIR-it": "lightonai/NanoBEIR-it",
+    "NanoBEIR-ja": "LiquidAI/NanoBEIR-ja",
+    "NanoBEIR-ko": "LiquidAI/NanoBEIR-ko",
+    "NanoBEIR-no": "lightonai/NanoBEIR-no",
+    "NanoBEIR-pt": "lightonai/NanoBEIR-pt",
+    "NanoBEIR-sr": "Serbian-AI-Society/NanoBEIR-sr",
+    "NanoBEIR-sv": "lightonai/NanoBEIR-sv",
+    "NanoBEIR-th": "sionic-ai/NanoBEIR-th",
+    "NanoBEIR-vi": "sionic-ai/NanoBEIR-vi",
+}
 
 
 def main() -> None:
@@ -73,7 +89,11 @@ def render_readme(
     remote = parse_remote_readme(remote_readme or "")
     source_dataset = str(metadata.get("source_dataset") or f"hakari-bench/{dataset_name}")
     frontmatter = render_frontmatter(dataset_dir=dataset_dir, splits=splits, remote_frontmatter=remote.frontmatter)
-    source_links = remote.source_links or [f"- [{source_dataset}](https://huggingface.co/datasets/{source_dataset})"]
+    source_links = source_links_for_dataset(
+        dataset_name=dataset_name,
+        source_dataset=source_dataset,
+        remote_source_links=remote.source_links,
+    )
     overview = remote.overview or f"{dataset_name} is a Nano-style retrieval dataset."
     overview = normalize_hakari_link(overview)
     rows = [split_summary(dataset_dir=dataset_dir, split=split, split_metadata=metadata["splits"][split]) for split in splits]
@@ -165,6 +185,36 @@ Dense means `{HARRIER_MODEL_ID}` with the `web_search_query` prompt and cosine s
 {license_text}
 """
     return normalize_hakari_link(readme)
+
+
+def source_links_for_dataset(
+    *,
+    dataset_name: str,
+    source_dataset: str,
+    remote_source_links: Sequence[str],
+) -> list[str]:
+    original_dataset = NANOBEIR_ORIGINAL_SOURCE_DATASETS.get(dataset_name)
+    if original_dataset is None:
+        return list(remote_source_links) or [dataset_link_line(source_dataset)]
+
+    links: list[str] = []
+    original_line = dataset_link_line(original_dataset, label="Original dataset")
+    if not any(original_dataset in line for line in remote_source_links):
+        links.append(original_line)
+    for line in remote_source_links:
+        if source_dataset in line and original_dataset not in line:
+            continue
+        if line not in links:
+            links.append(line)
+    final_line = dataset_link_line(source_dataset, label="Final dataset")
+    if not any(source_dataset in line for line in links):
+        links.append(final_line)
+    return links
+
+
+def dataset_link_line(dataset_id: str, *, label: str | None = None) -> str:
+    prefix = f"{label}: " if label else ""
+    return f"- {prefix}[{dataset_id}](https://huggingface.co/datasets/{dataset_id})"
 
 
 def render_frontmatter(*, dataset_dir: Path, splits: Sequence[str], remote_frontmatter: Mapping[str, Any]) -> str:

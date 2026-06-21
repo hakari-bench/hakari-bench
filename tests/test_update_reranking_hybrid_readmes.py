@@ -9,6 +9,7 @@ from scripts.update_reranking_hybrid_readmes import (
     parse_remote_readme,
     ranking_metrics,
     render_readme,
+    source_links_for_dataset,
 )
 
 
@@ -126,3 +127,18 @@ Use upstream licenses.
     assert parsed.overview == ""
     assert parsed.source_links == ["- https://example.com/source"]
     assert parsed.license_text == "Use upstream licenses."
+
+
+def test_source_links_for_nanobeir_adds_original_source_when_remote_is_self_only() -> None:
+    links = source_links_for_dataset(
+        dataset_name="NanoBEIR-ja",
+        source_dataset="hakari-bench/NanoBEIR-ja",
+        remote_source_links=[
+            "- Final dataset: [hakari-bench/NanoBEIR-ja](https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja)"
+        ],
+    )
+
+    assert links == [
+        "- Original dataset: [LiquidAI/NanoBEIR-ja](https://huggingface.co/datasets/LiquidAI/NanoBEIR-ja)",
+        "- Final dataset: [hakari-bench/NanoBEIR-ja](https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja)",
+    ]
