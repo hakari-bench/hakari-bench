@@ -1,7 +1,7 @@
 # Creating Nano Datasets
 
 This document is the canonical workflow for recreating Nano-set retrieval
-datasets in this repository.
+datasets in this repository, including MTEB-derived Nano families.
 
 ## Goal
 
@@ -43,7 +43,13 @@ config/datasets/nanoexample.yaml
 
 ## Supported Sources
 
-Use `scripts/create_nano_dataset.py` for new conversions.
+Use `scripts/create_nano_dataset.py` for single-task conversions from a
+Hugging Face or local source. Use
+`scripts/recreate_mteb_nano_datasets.py` for NanoMTEB-family recreation from
+the installed MTEB registry, and use
+`scripts/build_reranking_hybrid_nano_dataset.py` or
+`scripts/build_all_reranking_hybrid_nano_datasets.py` when adding the current
+BM25 top-500, dense top-500, and `reranking_hybrid` candidate subsets.
 
 Supported Hugging Face MTEB/BEIR-style source layout:
 
@@ -220,7 +226,83 @@ Supported tokenizers are the existing HAKARI BM25 tokenizers:
 Use a fixed tokenizer for reproducible dataset creation unless a dataset family
 has a documented reason to vary tokenizers per split.
 
-## Creating From Hugging Face MTEB
+## Creating From MTEB Sources
+
+MTEB-derived Nano datasets should be planned from the installed MTEB registry,
+not only from existing repository YAML. Inspect:
+
+- `task.metadata.name`
+- `task.metadata.dataset["path"]`
+- `task.metadata.dataset["revision"]`
+- `task.metadata.eval_splits`
+- `task.metadata.hf_subsets`
+- `task.metadata.languages`
+- benchmark membership from `mteb.get_benchmarks()`
+
+Group tasks by provenance in this order:
+
+1. official MTEB benchmark family, such as `MTEB(eng, v2)`,
+   `MTEB(Multilingual, v2)`, `JMTEB(v2)`, `MTEB(fas, v2)`,
+   `MTEB(cmn, v1)`, `MTEB(rus, v1.1)`, or `VN-MTEB (vie, v1)`;
+2. independent benchmark or source-family collection, such as MuPLeR or
+   IndicQA;
+3. language-family collection with enough retrieval coverage;
+4. `NanoMTEB-Misc` only as a final fallback.
+
+Use versioned Nano names when the official MTEB benchmark is versioned, for
+example `NanoMTEB-v2`, `NanoMMTEB-v2`, `NanoJMTEB-v2`, and
+`NanoFaMTEB-v2`. Existing v1-compatible names such as `NanoCMTEB`,
+`NanoRuMTEB`, and `NanoVNMTEB` remain unversioned unless a migration explicitly
+changes them.
+
+In uploaded Hugging Face datasets, configs should be source groups rather than
+MTEB task subsets:
+
+- `mteb` for datasets under the official `mteb/` namespace;
+- `{org_or_user}__{dataset_name}` for other Hugging Face namespaces.
+
+Use split names for the source-local evaluation task or slice. Do not expose
+MTEB `hf_subsets` as public Nano configs unless the upstream source dataset
+itself is a distinct data source. Record the MTEB task name, source dataset id,
+source revision, upstream subset/slice, eval split, reference, and license in
+README text and split metadata.
+
+When a base task and a `HardNegatives` task share the same underlying dataset,
+publish one Nano split. Prefer the `HardNegatives` source for Nano creation,
+record the base task as related provenance, and omit `HardNegatives` from the
+public split name unless it is needed to distinguish genuinely different
+retrieval tasks.
+
+For full NanoMTEB-family recreation:
+
+```bash
+uv run python scripts/recreate_mteb_nano_datasets.py \
+  --output-root output/nano_datasets \
+  --config-root config \
+  --top-k 500 \
+  --bm25-tokenizer regex \
+  --plan-json output/nano_datasets/plan.json
+```
+
+Then build current reranking candidates from the built-in Nano dataset registry
+or uploaded Hub datasets:
+
+```bash
+uv run python scripts/build_all_reranking_hybrid_nano_datasets.py \
+  --output-root output/nano_reranking_hybrid \
+  --bm25-top-k 500 \
+  --dense-top-k 500 \
+  --hybrid-top-k 100
+```
+
+Use `scripts/push_mteb_nano_datasets_to_hub.py` only after reviewing the plan,
+generated READMEs, metadata, and deletion/upload target list. The upload script
+can delete replaced Hub datasets when `--delete` is used, so run `--dry-run`
+first.
+
+For a one-off Hugging Face MTEB/BEIR-style source, use
+`scripts/create_nano_dataset.py` directly. Use `--top-k 500` for datasets that
+will feed the current reranking-hybrid candidate pipeline.
 
 Example:
 
@@ -236,7 +318,7 @@ uv run python scripts/create_nano_dataset.py \
   --qrels-split test \
   --query-limit 200 \
   --doc-limit 10000 \
-  --top-k 100 \
+  --top-k 500 \
   --bm25-tokenizer regex
 ```
 
@@ -265,7 +347,7 @@ uv run python scripts/create_nano_dataset.py \
   --dataset-config-dir config/datasets \
   --query-limit 200 \
   --doc-limit 10000 \
-  --top-k 100 \
+  --top-k 500 \
   --bm25-tokenizer whitespace
 ```
 
@@ -287,7 +369,7 @@ benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
-candidate_config: bm25
+candidate_config: reranking_hybrid
 splits:
 - NanoTask
 metadata:
