@@ -398,7 +398,6 @@ class LeaderboardService:
                 and not has_length_filters
                 and selected_score_metric == "ndcg@10"
                 and view_name != CUSTOM_SCOPE_NAME
-                and _language_filter_policy_supports_precomputed(language_filter_policy)
                 and (overall is None or score_aggregation == "micro")
             ):
                 precomputed = _load_precomputed_leaderboard_rows(

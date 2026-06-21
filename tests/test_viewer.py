@@ -444,8 +444,11 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
     finally:
         con.close()
     config = ViewerConfig(
-        benchmarks=[BenchmarkConfig(name="BenchA")],
-        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+        benchmarks=[
+            BenchmarkConfig(name="BenchA"),
+            BenchmarkConfig(name="BenchPrimary", language_filter_mode="primary_language"),
+        ],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA", "BenchPrimary"])],
     )
     model_cards_dir = tmp_path / "model_cards"
     model_cards_dir.mkdir()
