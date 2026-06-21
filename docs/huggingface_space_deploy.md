@@ -140,15 +140,15 @@ Create the Space metadata:
 cat > README.md <<'EOF'
 ---
 title: HAKARI-Bench Leaderboard
-emoji: 📊
+emoji: ⚖️
 colorFrom: blue
 colorTo: gray
 sdk: docker
 app_port: 7860
-pinned: false
+pinned: true
 license: mit
 fullWidth: true
-short_description: HAKARI-Bench retrieval leaderboard
+short_description: Lightweight multilingual IR benchmark & leaderboard
 ---
 
 # HAKARI-Bench Leaderboard
