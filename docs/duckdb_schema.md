@@ -217,12 +217,13 @@ directory containing `hakari_bench.duckdb`, or `--source-duckdb-path` for an
 explicit database path.
 
 When the source is a Hugging Face dataset, the viewer starts the source
-check/download in the background and exposes progress through
-`/duckdb-sync-status`. The initial leaderboard panel polls that endpoint with
-htmx and displays downloaded bytes and percentage while the local DuckDB is
-missing or a newer remote file is being installed. After the local copy is
-ready, the panel reloads `/leaderboard`. During the 10-minute source-check TTL,
-page loads read the local DuckDB copy directly and skip another remote check.
+check/download from the FastAPI lifespan startup and exposes progress through
+`/duckdb-sync-status`. The initial leaderboard panel still calls the same
+background-sync path as a fallback, then polls that endpoint with htmx and
+displays downloaded bytes and percentage while the local DuckDB is missing or a
+newer remote file is being installed. After the local copy is ready, the panel
+reloads `/leaderboard`. During the 10-minute source-check TTL, page loads read
+the local DuckDB copy directly and skip another remote check.
 
 ## Viewer Configuration
 

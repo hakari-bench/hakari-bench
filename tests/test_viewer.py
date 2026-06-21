@@ -1044,6 +1044,45 @@ def test_viewer_duckdb_sync_status_reloads_leaderboard_when_ready(tmp_path: Path
     assert "Loading leaderboard..." in response.text
 
 
+def test_viewer_app_starts_background_duckdb_sync_on_startup(tmp_path: Path) -> None:
+    db_path = tmp_path / "missing.duckdb"
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    class StartupStore:
+        path = db_path
+        location = DuckDbLocation(
+            local_path=db_path,
+            hf_source=HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database"),
+        )
+
+        def __init__(self) -> None:
+            self.start_calls = 0
+
+        def start_background_sync(self) -> DuckDbSyncStatus:
+            self.start_calls += 1
+            return DuckDbSyncStatus(
+                state="checking",
+                message="Checking leaderboard DuckDB source...",
+                local_path=db_path,
+            )
+
+        def sync_status(self) -> DuckDbSyncStatus:
+            return DuckDbSyncStatus(state="idle", local_path=db_path)
+
+        def ensure_current(self) -> bool:
+            raise AssertionError("startup prefetch must not block synchronously")
+
+    store = StartupStore()
+    app = create_app(store=cast(Any, store), config_dir=config_dir)
+
+    assert store.start_calls == 0
+    with TestClient(app):
+        assert store.start_calls == 1
+
+
 def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from fastapi.testclient import TestClient
 
