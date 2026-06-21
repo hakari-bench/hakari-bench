@@ -60,6 +60,7 @@ class ComparisonRow:
     variant_label: str
     score_unit_count: int
     raw_task_count: int
+    component_scores: dict[str, float]
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -361,7 +362,7 @@ def _render_markdown(
         f"| {summary.benchmark} | {_format_score(summary.score)} | {summary.score_unit_count} | {summary.raw_task_count} |"
         for summary in core_summary.benchmarks
     )
-    comparison_section = _render_comparison_section(comparison_rows)
+    comparison_section = _render_comparison_section(comparison_rows, core_summary.benchmarks)
 
     return f"""# Add HAKARI-Bench results for `{model_name}`
 
@@ -434,29 +435,53 @@ def _render_markdown(
 """
 
 
-def _render_comparison_section(rows: Sequence[ComparisonRow]) -> str:
+def _render_comparison_section(
+    rows: Sequence[ComparisonRow],
+    benchmark_summaries: Sequence[CoreBenchmarkSummary],
+) -> str:
     if not rows:
         return ""
-    best_score = max(row.score for row in rows)
+    headers = " | ".join(_comparison_column_label(row) for row in rows)
+    alignments = " | ".join("---:" for _ in rows)
     body = "\n".join(
-        "| {model} | {score} | {variant} | {units} | {raw} |".format(
-            model=row.model_name,
-            score=_format_best_score(row.score, best_score),
-            variant=row.variant_label,
-            units=row.score_unit_count,
-            raw=row.raw_task_count,
-        )
-        for row in rows
+        _comparison_table_row(label, scores)
+        for label, scores in [
+            ("Overall", [row.score for row in rows]),
+            *[
+                (
+                    summary.benchmark,
+                    [row.component_scores.get(summary.benchmark) for row in rows],
+                )
+                for summary in benchmark_summaries
+                if summary.raw_task_count > 0
+            ],
+        ]
     )
-    return f"""## DuckDB Overall Comparison
+    return f"""## DuckDB Nano-set Comparison
 
-Computed from DuckDB `task_results` with the same Overall grouping as this PR body. Quantized and rescore variants are excluded; truncate variants are considered and the best row per model is shown.
+Computed from DuckDB `task_results` with the same Overall grouping as this PR body. Quantized and rescore variants are excluded; truncate variants are considered, and each model column uses that model's best Overall variant.
 
-| Model | Overall nDCG@10 | Variant | Score units | Raw task results |
-| --- | ---: | --- | ---: | ---: |
+| Overall component | {headers} |
+| --- | {alignments} |
 {body}
 
 """
+
+
+def _comparison_table_row(label: str, scores: Sequence[float | None]) -> str:
+    available = [score for score in scores if score is not None and not math.isnan(score)]
+    best_score = max(available) if available else math.nan
+    rendered_scores = [
+        _format_best_score(score, best_score) if score is not None else "not available"
+        for score in scores
+    ]
+    return f"| {label} | {' | '.join(rendered_scores)} |"
+
+
+def _comparison_column_label(row: ComparisonRow) -> str:
+    if row.variant_label == "base":
+        return row.model_name
+    return f"{row.model_name} ({row.variant_label})"
 
 
 def _format_best_score(score: float, best_score: float) -> str:
@@ -582,6 +607,11 @@ def _best_comparison_row_for_model(
             variant_label=_comparison_variant_label(variant_name, embedding_dim),
             score_unit_count=summary.score_unit_count,
             raw_task_count=summary.raw_task_count,
+            component_scores={
+                benchmark_summary.benchmark: benchmark_summary.score
+                for benchmark_summary in summary.benchmarks
+                if benchmark_summary.raw_task_count > 0
+            },
         )
         if best is None or row.score > best.score:
             best = row

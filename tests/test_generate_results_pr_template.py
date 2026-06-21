@@ -143,12 +143,13 @@ def test_generate_pr_template_adds_duckdb_comparison_table(tmp_path: Path) -> No
         comparison_models=["Other/better", "bm25"],
     )
 
-    comparison_index = rendered.index("## DuckDB Overall Comparison")
+    comparison_index = rendered.index("## DuckDB Nano-set Comparison")
     overall_index = rendered.index("## Overall nDCG@10")
     assert comparison_index < overall_index
-    assert "| Example/model | 0.5500 | 768 dims | 2 | 3 |" in rendered
-    assert "| Other/better | **0.8500** | 512 dims | 2 | 3 |" in rendered
-    assert "| bm25 | 0.1750 | base | 2 | 3 |" in rendered
+    assert "| Overall component | Example/model (768 dims) | Other/better (512 dims) | bm25 |" in rendered
+    assert "| Overall | 0.5500 | **0.8500** | 0.1750 |" in rendered
+    assert "| MNanoBEIR | 0.7000 | **0.9500** | 0.2500 |" in rendered
+    assert "| NanoRTEB | 0.4000 | **0.7500** | 0.1000 |" in rendered
 
 
 def _write_result(
