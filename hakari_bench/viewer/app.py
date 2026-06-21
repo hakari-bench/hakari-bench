@@ -257,6 +257,10 @@ def create_app(
     def favicon_ico() -> FileResponse:
         return FileResponse(ASSETS_DIR / "favicon.png", media_type="image/png")
 
+    @app.get("/hello")
+    def hello() -> Response:
+        return Response("hello\n", media_type="text/plain; charset=utf-8")
+
     @app.get("/docs")
     @app.get("/docs/")
     def docs_index_redirect() -> RedirectResponse:

@@ -843,6 +843,21 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert _database_footer_label(remote_store) == "database: remote / 365e94b76ce1"
 
 
+def test_hello_endpoint_is_minimal(tmp_path: Path) -> None:
+    db_path = tmp_path / "missing.duckdb"
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+
+    response = TestClient(app).get("/hello")
+
+    assert response.status_code == 200
+    assert response.text == "hello\n"
+    assert response.headers["content-type"].startswith("text/plain")
+
+
 def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
