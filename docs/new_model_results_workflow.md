@@ -297,36 +297,74 @@ the private Hugging Face dataset repository is:
 hakari-results/{model_dir}/{dataset_id_or_name}/{task}.json.xz
 ```
 
-For small submissions, `hf upload --create-pr` may be enough:
+Recommended submission path: create a clean staging directory that contains
+only the intended `.json.xz` files, then use the Hugging Face Hub CLI to create
+the Dataset PR and attach the result commit in one operation.
 
 ```bash
+MODEL_DIR=MODEL_ID_WITH_DOUBLE_UNDERSCORE
+STAGING_ROOT=tmp/hf-results-${MODEL_DIR}
+
+rm -rf "${STAGING_ROOT}"
+mkdir -p "${STAGING_ROOT}/hakari-results/${MODEL_DIR}"
+rsync -a \
+  --include='*/' \
+  --include='*.json.xz' \
+  --exclude='*' \
+  "output/hakari-results/${MODEL_DIR}/" \
+  "${STAGING_ROOT}/hakari-results/${MODEL_DIR}/"
+
+find "${STAGING_ROOT}/hakari-results" -type f ! -name '*.json.xz' -print
+find "${STAGING_ROOT}/hakari-results" \
+  \( -name '*.duckdb' -o -name '*.duckdb.wal' \) \
+  -print
+find "${STAGING_ROOT}/hakari-results" -type f -name '*.json.xz' | wc -l
+
 PR_BODY="$(cat tmp/${MODEL_DIR}_results_pr.md)"
-hf upload hakari-bench/results \
-  output/hakari-results/${MODEL_DIR} \
-  hakari-results/${MODEL_DIR} \
+uv run hf upload hakari-bench/results \
+  "${STAGING_ROOT}/hakari-results" \
+  hakari-results \
   --repo-type dataset \
   --create-pr \
   --commit-message "Add results for MODEL_ID" \
   --commit-description "$PR_BODY"
 ```
 
-For large submissions, use the Dataset PR section of
-[`contributing_results.md`](contributing_results.md#open-a-hugging-face-dataset-pr).
-Copy only `.json.xz` files, inspect the branch, generate the PR body, and open
-a Hugging Face Dataset PR from the pushed branch.
+The first two `find` commands should print nothing. For related multi-model
+submissions, repeat the `rsync` step for each model under the same staging root
+and use one combined PR body.
+
+If `hf upload --create-pr` fails because of permissions, Hub-side errors, or
+large-folder upload limits, use the manual Dataset PR ref fallback in
+[`contributing_results.md`](contributing_results.md#fallback-manual-dataset-pr-ref-workflow).
+Hugging Face Dataset PRs are backed by `refs/pr/N` refs; the CLI helper creates
+and updates that ref for the recommended path.
 
 If a related GitHub code PR exists, paste that GitHub PR URL into the Hugging
 Face Dataset PR body. After the Hugging Face PR exists, add its URL back to the
 GitHub PR body or a GitHub PR comment.
 
-Before pushing, confirm these commands do not reveal unintended artifacts:
+After upload, confirm the PR diff contains only intended `.json.xz` files:
 
 ```bash
-find "hakari-results/${MODEL_DIR}" -type f | grep -v '\.json\.xz$' || true
-find . -name '*.duckdb' -o -name '*.duckdb.wal'
+PR_NUMBER=8  # replace with your Dataset PR discussion number
+CHECK_DIR=tmp/hf-results-pr-${PR_NUMBER}-check
+
+rm -rf "${CHECK_DIR}"
+mkdir -p "${CHECK_DIR}"
+git -C "${CHECK_DIR}" init -q
+git -C "${CHECK_DIR}" remote add origin \
+  https://huggingface.co/datasets/hakari-bench/results
+git -C "${CHECK_DIR}" fetch --depth=1 --filter=blob:none origin \
+  refs/heads/main:refs/remotes/origin/main \
+  refs/pr/${PR_NUMBER}:refs/remotes/origin/pr
+
+git -C "${CHECK_DIR}" diff --name-only origin/main origin/pr | wc -l
+git -C "${CHECK_DIR}" diff --name-only origin/main origin/pr |
+  grep -v '^hakari-results/.*\.json\.xz$' || true
 ```
 
-Both commands should print nothing for the submitted branch.
+The `grep -v` command should print nothing.
 
 ## Final Checklist
 
@@ -342,5 +380,7 @@ Both commands should print nothing for the submitted branch.
 - GitHub code PR exists for model cards, docs, loaders, viewer/schema changes,
   or other repository changes when needed.
 - GitHub and Hugging Face PRs link to each other when both exist.
+- Hugging Face result commits were created by `hf upload --create-pr`, or were
+  attached manually to the Dataset PR ref when the CLI helper failed.
 - Result PR contains only the intended `.json.xz` files under
   `hakari-results/{model_dir}/`.

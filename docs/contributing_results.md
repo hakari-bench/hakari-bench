@@ -117,48 +117,123 @@ Fill every TODO before opening the PR.
 ## Open a Hugging Face Dataset PR
 
 Use a Hugging Face Dataset PR so reviewers can inspect the change before it is
-merged. A recent reference is
-[`hakari-bench/results` PR #2](https://huggingface.co/datasets/hakari-bench/results/discussions/2),
-which contributed 551 sparse result files for
-`hotchpotch/japanese-splade-v2`.
+merged. A reference for the recommended staging plus `hf upload --create-pr`
+flow is
+[`hakari-bench/results` PR #8](https://huggingface.co/datasets/hakari-bench/results/discussions/8),
+which contributed two related LiquidAI LFM2.5 model result directories in one
+Dataset PR.
 
-For small submissions, `hf upload --create-pr` can work directly:
+The recommended path is to build a clean staging directory that contains only
+the compressed result files, then let the Hub CLI create the Dataset PR and
+attach the file commit in one operation. This works for ordinary one-model
+submissions and for related multi-model submissions that should be reviewed
+together.
 
 ```bash
-PR_BODY="$(cat tmp/{model_dir}_results_pr.md)"
-hf upload hakari-bench/results \
-  PROJECT_ROOT/hakari-results/{model_dir} \
-  PROJECT_ROOT/hakari-results/{model_dir} \
+MODEL_DIR=MODEL_ID_WITH_DOUBLE_UNDERSCORE
+SOURCE_DIR=output/hakari-results/${MODEL_DIR}
+STAGING_ROOT=tmp/hf-results-${MODEL_DIR}
+
+rm -rf "${STAGING_ROOT}"
+mkdir -p "${STAGING_ROOT}/hakari-results/${MODEL_DIR}"
+
+rsync -a \
+  --include='*/' \
+  --include='*.json.xz' \
+  --exclude='*' \
+  "${SOURCE_DIR}/" \
+  "${STAGING_ROOT}/hakari-results/${MODEL_DIR}/"
+
+find "${STAGING_ROOT}/hakari-results" -type f ! -name '*.json.xz' -print
+find "${STAGING_ROOT}/hakari-results" \
+  \( -name '*.duckdb' -o -name '*.duckdb.wal' \) \
+  -print
+find "${STAGING_ROOT}/hakari-results" -type f -name '*.json.xz' | wc -l
+```
+
+The first two `find` commands should print nothing. The final count should
+match the intended result file count from the generated PR body.
+
+Upload the staged tree. Use `uv run hf` when the Hub CLI is installed in this
+project environment rather than on `PATH`:
+
+```bash
+PR_BODY="$(cat tmp/${MODEL_DIR}_results_pr.md)"
+uv run hf upload hakari-bench/results \
+  "${STAGING_ROOT}/hakari-results" \
+  hakari-results \
   --repo-type dataset \
   --create-pr \
   --commit-message "Add results for MODEL_NAME" \
   --commit-description "$PR_BODY"
 ```
 
-If your local directory is not already under `PROJECT_ROOT/hakari-results`, use
-the local evaluation directory as the second argument and keep the Hub path as
-the third argument:
+For a related multi-model PR, create one staging root and repeat the `rsync`
+step for each model directory under `STAGING_ROOT/hakari-results/`. Combine the
+generated per-model PR bodies into one reviewed body before running
+`uv run hf upload --create-pr`.
+
+The upload command returns a commit URL. The matching Dataset PR can be found
+from the repository discussions; it is a pull request backed by a `refs/pr/N`
+ref:
 
 ```bash
-PR_BODY="$(cat tmp/{model_dir}_results_pr.md)"
-hf upload hakari-bench/results \
-  output/results/{model_dir} \
-  PROJECT_ROOT/hakari-results/{model_dir} \
-  --repo-type dataset \
-  --create-pr \
-  --commit-message "Add results for MODEL_NAME" \
-  --commit-description "$PR_BODY"
+uv run python - <<'PY'
+from huggingface_hub import HfApi
+
+api = HfApi()
+for discussion in api.get_repo_discussions(
+    repo_id="hakari-bench/results",
+    repo_type="dataset",
+):
+    if discussion.is_pull_request and discussion.status == "open":
+        print(
+            discussion.num,
+            discussion.title,
+            f"https://huggingface.co/datasets/hakari-bench/results/discussions/{discussion.num}",
+        )
+PY
 ```
+
+After the PR is created, verify that its diff contains only the intended result
+files:
+
+```bash
+PR_NUMBER=8  # replace with your Dataset PR discussion number
+CHECK_DIR=tmp/hf-results-pr-${PR_NUMBER}-check
+
+rm -rf "${CHECK_DIR}"
+mkdir -p "${CHECK_DIR}"
+git -C "${CHECK_DIR}" init -q
+git -C "${CHECK_DIR}" remote add origin \
+  https://huggingface.co/datasets/hakari-bench/results
+git -C "${CHECK_DIR}" fetch --depth=1 --filter=blob:none origin \
+  refs/heads/main:refs/remotes/origin/main \
+  refs/pr/${PR_NUMBER}:refs/remotes/origin/pr
+
+git -C "${CHECK_DIR}" diff --name-only origin/main origin/pr | wc -l
+git -C "${CHECK_DIR}" diff --name-only origin/main origin/pr |
+  grep -v '^hakari-results/.*\.json\.xz$' || true
+```
+
+The `grep -v` command should print nothing. If the first PR comment needs a
+correction after upload, edit it in the Hugging Face web UI or with
+`HfApi.edit_discussion_comment()` when your token has discussion write
+permission.
+
+### Fallback: Manual Dataset PR Ref Workflow
 
 For private or organization-owned dataset repositories, `hf upload --create-pr`
-can fail with a 403 even when normal git push is allowed. Large submissions also
-spend time hashing or uploading before failing. In that case, use the git/Web UI
-workflow below. It is the preferred path for large result directories.
+can fail with a 403 even when normal git push is allowed. Large submissions can
+also fail after spending time hashing or uploading. In that case, use the
+manual Dataset PR ref workflow below: create the Hugging Face Dataset PR first,
+then attach a reviewed git commit to that PR's `refs/pr/{number}` ref.
 
-### Prepare a Results Branch
+### Prepare a Local Staging Commit
 
 Use a no-smudge clone so Git does not download every existing LFS payload in the
-results warehouse:
+results warehouse. The local branch is only a staging branch; it is not the
+final review target.
 
 ```bash
 MODEL_DIR=hotchpotch__japanese-splade-v2
@@ -192,7 +267,7 @@ rsync -a \
   "hakari-results/${MODEL_DIR}/"
 ```
 
-Then inspect, commit, and push the branch:
+Then inspect and commit locally:
 
 ```bash
 git status --short
@@ -203,24 +278,30 @@ find . -name '*.duckdb' -o -name '*.duckdb.wal'
 
 git add "hakari-results/${MODEL_DIR}"
 git commit -m "Add results for MODEL_NAME"
-git push origin "${BRANCH}"
 ```
 
 The two `find` commands should print nothing. Do not include generated DuckDB
 files, `.duckdb.wal` files, viewer artifacts, local caches, temporary reports,
 or model YAML files unless the PR explicitly intends to add metadata.
 
-### Create the Dataset PR from the Web UI
+### Create the Dataset PR
 
-Open the pushed branch in the Hugging Face web UI:
+Create the Hugging Face Dataset PR before pushing the result commit to the PR
+ref. The usual fallback is the Hugging Face web UI: open the dataset
+repository, choose **Contribute**, create a Dataset PR, and paste the generated
+body from `tmp/${MODEL_DIR}_results_pr.md`.
 
-```text
-https://huggingface.co/datasets/hakari-bench/results/tree/{BRANCH}
+If the Web UI requires a branch to start the PR, push an empty or minimal
+staging branch first, create the PR, and treat that branch only as a way to
+obtain the PR number:
+
+```bash
+git push origin "${BRANCH}"
 ```
 
-Use the **Contribute** button to create a Dataset PR. Paste the generated PR
-body from `tmp/{model_dir}_results_pr.md` into the description. The description
-should include at least:
+After the PR exists, note its discussion number from the URL, for example
+`https://huggingface.co/datasets/hakari-bench/results/discussions/2` means
+`PR_NUMBER=2`. The description should include at least:
 
 - model id and result directory,
 - result file count,
@@ -240,15 +321,18 @@ PR #2 is a concrete example of the expected shape: it reported the sparse
 component scores, model revision, runtime environment, a reconstructed command,
 and submitter notes explaining that one task used a smaller batch size.
 
-After the Web UI creates the PR, Hugging Face may show a special PR ref such as
-`refs/pr/2`. If the PR ref is not already at your result commit, fetch that ref
-and push your commit to it:
+### Attach the Commit to the Dataset PR Ref
+
+Hugging Face Dataset PRs are backed by special refs such as `refs/pr/2`. The
+result commit must be on that PR ref. If the PR ref is not already at your
+result commit, fetch it, cherry-pick the local staging commit, and push back to
+the same PR ref:
 
 ```bash
 PR_NUMBER=2
 git fetch origin refs/pr/${PR_NUMBER}:pr/${PR_NUMBER}
 git checkout pr/${PR_NUMBER}
-git cherry-pick "${BRANCH}"
+git cherry-pick "${BRANCH}"  # or cherry-pick the specific local commit SHA
 git push origin pr/${PR_NUMBER}:refs/pr/${PR_NUMBER}
 ```
 
@@ -273,8 +357,8 @@ right permission, but contributors should not rely on API-based body editing as
 part of the required workflow.
 
 Use the Hugging Face web UI's **Publish** button when the PR is ready for
-review or merge. After the PR ref is populated, any temporary normal branch can
-be deleted:
+review or merge. After the PR ref contains the result commit, any temporary
+normal branch can be deleted:
 
 ```bash
 git push origin :"${BRANCH}"
@@ -284,10 +368,11 @@ git push origin :"${BRANCH}"
 
 Reviewers should check:
 
-- The PR modifies only `PROJECT_ROOT/hakari-results/{model_dir}/`.
+- The PR modifies only the intended `hakari-results/{model_dir}/` path or
+  explicitly related model-result paths.
 - The model directory name matches the model ID.
-- The files are compressed result JSON files, plus only expected small sidecar
-  metadata files when applicable.
+- The files are compressed result JSON files; any sidecar metadata is explicitly
+  justified by the PR.
 - The generated PR summary matches the submitted files.
 - The Overall score has enough task coverage for the claim being made.
 - The result metadata records model revision, dataset revision, runtime options,
