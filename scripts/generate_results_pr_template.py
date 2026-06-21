@@ -18,6 +18,13 @@ from hakari_bench.viewer.task_names import canonical_task_key, canonical_task_na
 RESULT_JSON_SUFFIXES = (".json", ".json.gz", ".json.xz")
 SUMMARY_VIEW_NAME = "Overall"
 PRIMARY_METRIC = "ndcg@10"
+DEFAULT_COMPARISON_MODELS = (
+    "Qwen/Qwen3-Embedding-4B",
+    "jinaai/jina-embeddings-v5-text-small",
+    "BAAI/bge-m3",
+    "intfloat/e5-small-v2",
+    "bm25",
+)
 
 
 @dataclass(frozen=True)
@@ -46,6 +53,15 @@ class CoreSummary:
     benchmarks: list[CoreBenchmarkSummary]
 
 
+@dataclass(frozen=True)
+class ComparisonRow:
+    model_name: str
+    score: float
+    variant_label: str
+    score_unit_count: int
+    raw_task_count: int
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Generate a Hugging Face dataset PR description from HAKARI result JSON files.",
@@ -70,6 +86,23 @@ def build_arg_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("config/viewer"),
         help="Viewer config directory used to resolve Overall benchmark grouping.",
+    )
+    parser.add_argument(
+        "--comparison-duckdb-path",
+        type=Path,
+        help=(
+            "Optional result DuckDB used to add an Overall comparison table. "
+            "The table is recomputed from task_results with the same grouping as this PR body."
+        ),
+    )
+    parser.add_argument(
+        "--comparison-model",
+        action="append",
+        dest="comparison_models",
+        help=(
+            "Model id to include in the DuckDB comparison table. Can be repeated. "
+            "Defaults to Qwen3-Embedding-4B, jina v5 small, bge-m3, e5-small-v2, and bm25."
+        ),
     )
     return parser
 
@@ -117,6 +150,8 @@ def generate_pr_template(
     *,
     config_dir: Path = Path("config/viewer"),
     repo_path: str | None = None,
+    comparison_duckdb_path: Path | None = None,
+    comparison_models: Sequence[str] | None = None,
 ) -> str:
     paths = result_json_paths(result_dir)
     if not paths:
@@ -138,6 +173,13 @@ def generate_pr_template(
         core_components=summary_scope.benchmark_components,
     )
     core_summary = summarize_core_scores(core_rows, core_components=summary_scope.benchmark_components)
+    comparison_rows = _comparison_rows_from_duckdb(
+        comparison_duckdb_path,
+        model_name=model_name,
+        comparison_models=comparison_models,
+        benchmark_configs=viewer_config.benchmarks,
+        core_components=summary_scope.benchmark_components,
+    )
 
     metadata = _metadata_summary(payloads, result_dir=result_dir, repo_path=repo_path, model_dir=model_dir)
     return _render_markdown(
@@ -146,6 +188,7 @@ def generate_pr_template(
         repo_path=repo_path,
         metadata=metadata,
         core_summary=core_summary,
+        comparison_rows=comparison_rows,
     )
 
 
@@ -309,6 +352,7 @@ def _render_markdown(
     repo_path: str,
     metadata: dict[str, Any],
     core_summary: CoreSummary,
+    comparison_rows: Sequence[ComparisonRow] = (),
 ) -> str:
     core_score = _format_score(core_summary.score)
     dataset_revisions = metadata["dataset_revisions"]
@@ -317,6 +361,7 @@ def _render_markdown(
         f"| {summary.benchmark} | {_format_score(summary.score)} | {summary.score_unit_count} | {summary.raw_task_count} |"
         for summary in core_summary.benchmarks
     )
+    comparison_section = _render_comparison_section(comparison_rows)
 
     return f"""# Add HAKARI-Bench results for `{model_name}`
 
@@ -332,6 +377,7 @@ def _render_markdown(
 | Overall nDCG@10 | {core_score} |
 | Overall score units | {core_summary.score_unit_count} grouped units from {core_summary.raw_task_count} raw task results |
 
+{comparison_section}
 ## Overall nDCG@10
 
 | Overall component | nDCG@10 | Score units | Raw task results |
@@ -386,6 +432,168 @@ def _render_markdown(
 - [ ] Overall nDCG@10 above was generated from the submitted result files.
 - [ ] Any non-default prompt, sequence length, attention implementation, candidate ranking, or reranker setting is documented above.
 """
+
+
+def _render_comparison_section(rows: Sequence[ComparisonRow]) -> str:
+    if not rows:
+        return ""
+    best_score = max(row.score for row in rows)
+    body = "\n".join(
+        "| {model} | {score} | {variant} | {units} | {raw} |".format(
+            model=row.model_name,
+            score=_format_best_score(row.score, best_score),
+            variant=row.variant_label,
+            units=row.score_unit_count,
+            raw=row.raw_task_count,
+        )
+        for row in rows
+    )
+    return f"""## DuckDB Overall Comparison
+
+Computed from DuckDB `task_results` with the same Overall grouping as this PR body. Quantized and rescore variants are excluded; truncate variants are considered and the best row per model is shown.
+
+| Model | Overall nDCG@10 | Variant | Score units | Raw task results |
+| --- | ---: | --- | ---: | ---: |
+{body}
+
+"""
+
+
+def _format_best_score(score: float, best_score: float) -> str:
+    formatted = _format_score(score)
+    if math.isclose(score, best_score, rel_tol=1e-12, abs_tol=1e-12):
+        return f"**{formatted}**"
+    return formatted
+
+
+def _comparison_rows_from_duckdb(
+    duckdb_path: Path | None,
+    *,
+    model_name: str,
+    comparison_models: Sequence[str] | None,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    core_components: Sequence[OverallBenchmarkConfig],
+) -> list[ComparisonRow]:
+    if duckdb_path is None:
+        return []
+    import duckdb
+
+    model_ids = _comparison_model_ids(model_name, comparison_models)
+    con = duckdb.connect(str(duckdb_path), read_only=True)
+    try:
+        return [
+            row
+            for model_id in model_ids
+            if (
+                row := _best_comparison_row_for_model(
+                    con,
+                    model_id=model_id,
+                    benchmark_configs=benchmark_configs,
+                    core_components=core_components,
+                )
+            )
+            is not None
+        ]
+    finally:
+        con.close()
+
+
+def _comparison_model_ids(model_name: str, comparison_models: Sequence[str] | None) -> list[str]:
+    model_ids = [model_name]
+    model_ids.extend(comparison_models if comparison_models is not None else DEFAULT_COMPARISON_MODELS)
+    deduped: list[str] = []
+    for model_id in model_ids:
+        if model_id not in deduped:
+            deduped.append(model_id)
+    return deduped
+
+
+def _best_comparison_row_for_model(
+    con: Any,
+    *,
+    model_id: str,
+    benchmark_configs: Sequence[BenchmarkConfig],
+    core_components: Sequence[OverallBenchmarkConfig],
+) -> ComparisonRow | None:
+    excluded_tasks = {benchmark.name: set(benchmark.excluded_tasks) for benchmark in benchmark_configs}
+    core_benchmarks = {component.name for component in core_components}
+    rows_by_variant: dict[tuple[str | None, int | None], list[CoreTaskScore]] = defaultdict(list)
+    for (
+        benchmark,
+        dataset_id,
+        dataset_name,
+        task_name,
+        score,
+        embedding_variant_name,
+        embedding_dim,
+    ) in con.execute(
+        """
+        SELECT
+            benchmark,
+            dataset_id,
+            dataset_name,
+            task_name,
+            score,
+            embedding_variant_name,
+            embedding_dim
+        FROM task_results
+        WHERE model_name = ?
+          AND lower(aggregate_metric) = ?
+          AND score IS NOT NULL
+          AND (quantization IS NULL OR quantization = '')
+          AND (embedding_variant_name IS NULL OR embedding_variant_name LIKE 'truncate_dim_%')
+        """,
+        [model_id, PRIMARY_METRIC],
+    ).fetchall():
+        benchmark = str(benchmark or "")
+        if benchmark not in core_benchmarks:
+            continue
+        task_name = canonical_task_name(benchmark, str(task_name or ""))
+        if task_name in excluded_tasks.get(benchmark, set()):
+            continue
+        dataset_id = str(dataset_id or "")
+        dataset_name = str(dataset_name or "")
+        task_key = canonical_task_key(benchmark=benchmark, dataset_id=dataset_id, task_name=task_name)
+        variant_key = (
+            str(embedding_variant_name) if embedding_variant_name else None,
+            int(embedding_dim) if embedding_dim is not None else None,
+        )
+        rows_by_variant[variant_key].append(
+            CoreTaskScore(
+                benchmark=benchmark,
+                dataset_id=dataset_id,
+                dataset_name=dataset_name,
+                task_name=task_name,
+                task_key=task_key,
+                score=float(score),
+            )
+        )
+    if not rows_by_variant:
+        return None
+
+    best: ComparisonRow | None = None
+    for (variant_name, embedding_dim), task_rows in rows_by_variant.items():
+        summary = summarize_core_scores(task_rows, core_components=core_components)
+        if summary.score is None:
+            continue
+        row = ComparisonRow(
+            model_name=model_id,
+            score=summary.score,
+            variant_label=_comparison_variant_label(variant_name, embedding_dim),
+            score_unit_count=summary.score_unit_count,
+            raw_task_count=summary.raw_task_count,
+        )
+        if best is None or row.score > best.score:
+            best = row
+    return best
+
+
+def _comparison_variant_label(variant_name: str | None, embedding_dim: int | None) -> str:
+    if variant_name and variant_name.startswith("truncate_dim_"):
+        return f"{variant_name.removeprefix('truncate_dim_')} dims"
+    if embedding_dim is not None:
+        return f"{embedding_dim} dims"
+    return "base"
 
 
 def _model_name(payload: dict[str, Any], *, model_dir: str) -> str:
@@ -506,7 +714,13 @@ def _format_list(values: Sequence[str], *, max_items: int) -> str:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_arg_parser().parse_args(argv)
-    text = generate_pr_template(args.result_dir, config_dir=args.config_dir, repo_path=args.repo_path)
+    text = generate_pr_template(
+        args.result_dir,
+        config_dir=args.config_dir,
+        repo_path=args.repo_path,
+        comparison_duckdb_path=args.comparison_duckdb_path,
+        comparison_models=args.comparison_models,
+    )
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(text, encoding="utf-8")

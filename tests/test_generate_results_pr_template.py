@@ -4,6 +4,8 @@ import json
 import lzma
 from pathlib import Path
 
+import duckdb
+
 from scripts import generate_results_pr_template as template
 
 
@@ -60,6 +62,93 @@ def test_result_json_paths_accepts_compressed_and_plain_json(tmp_path: Path) -> 
         "b.json.gz",
         "c.json.xz",
     ]
+
+
+def test_generate_pr_template_adds_duckdb_comparison_table(tmp_path: Path) -> None:
+    result_dir = tmp_path / "Example__model"
+    _write_result(
+        result_dir / "hakari-bench__NanoBEIR-en" / "arguana.json.xz",
+        dataset_name="NanoBEIR-en",
+        dataset_id="hakari-bench/NanoBEIR-en",
+        task_name="arguana",
+        score=0.6,
+    )
+    _write_result(
+        result_dir / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz",
+        dataset_name="NanoBEIR-ja",
+        dataset_id="hakari-bench/NanoBEIR-ja",
+        task_name="arguana",
+        score=0.8,
+    )
+    _write_result(
+        result_dir / "hakari-bench__NanoRTEB" / "task-a.json.xz",
+        dataset_name="NanoRTEB",
+        dataset_id="hakari-bench/NanoRTEB",
+        task_name="task-a",
+        score=0.4,
+    )
+
+    duckdb_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(duckdb_path))
+    con.execute(
+        """
+        CREATE TABLE task_results (
+            model_name VARCHAR,
+            benchmark VARCHAR,
+            dataset_id VARCHAR,
+            dataset_name VARCHAR,
+            task_name VARCHAR,
+            task_key VARCHAR,
+            score DOUBLE,
+            aggregate_metric VARCHAR,
+            embedding_variant_name VARCHAR,
+            embedding_dim INTEGER,
+            quantization VARCHAR
+        )
+        """
+    )
+    for model_name, variant, dim, scores in [
+        ("Example/model", None, 768, [0.6, 0.8, 0.4]),
+        ("Other/better", None, 1024, [0.9, 0.9, 0.7]),
+        ("Other/better", "truncate_dim_512", 512, [0.95, 0.95, 0.75]),
+        ("bm25", None, None, [0.2, 0.3, 0.1]),
+    ]:
+        for dataset_id, dataset_name, task_name, score in [
+            ("hakari-bench/NanoBEIR-en", "NanoBEIR-en", "arguana", scores[0]),
+            ("hakari-bench/NanoBEIR-ja", "NanoBEIR-ja", "arguana", scores[1]),
+            ("hakari-bench/NanoRTEB", "NanoRTEB", "task-a", scores[2]),
+        ]:
+            con.execute(
+                """
+                INSERT INTO task_results VALUES (?, ?, ?, ?, ?, ?, ?, 'ndcg@10', ?, ?, NULL)
+                """,
+                [
+                    model_name,
+                    "MNanoBEIR" if "NanoBEIR" in dataset_id else "NanoRTEB",
+                    dataset_id,
+                    dataset_name,
+                    task_name,
+                    task_name,
+                    score,
+                    variant,
+                    dim,
+                ],
+            )
+    con.close()
+
+    rendered = template.generate_pr_template(
+        result_dir,
+        repo_path="PROJECT_ROOT/hakari-results/Example__model",
+        comparison_duckdb_path=duckdb_path,
+        comparison_models=["Other/better", "bm25"],
+    )
+
+    comparison_index = rendered.index("## DuckDB Overall Comparison")
+    overall_index = rendered.index("## Overall nDCG@10")
+    assert comparison_index < overall_index
+    assert "| Example/model | 0.5500 | 768 dims | 2 | 3 |" in rendered
+    assert "| Other/better | **0.8500** | 512 dims | 2 | 3 |" in rendered
+    assert "| bm25 | 0.1750 | base | 2 | 3 |" in rendered
 
 
 def _write_result(
