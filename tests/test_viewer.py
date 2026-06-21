@@ -770,7 +770,8 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
         "so specifications and data may change significantly."
     ) in response.text
     assert "DuckDB:" not in response.text
-    assert f"database: local / {db_path}" in response.text
+    assert f"database: local / {db_path}" not in response.text
+    assert "Latest update:" not in response.text
     assert "Benchmark coverage" not in response.text
     assert 'data-icon="bar-chart-3"' not in response.text
     assert 'data-testid="summary-card-models"' not in response.text
@@ -804,7 +805,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">' in response.text
     footer_html = response.text.split("<footer", 1)[1]
     assert "HAKARI-Bench leaderboard" not in footer_html
-    assert "[overflow-wrap:anywhere]" in response.text
+    assert "[overflow-wrap:anywhere]" not in response.text
     assert response.text.index('id="leaderboard-panel"') < response.text.index("<footer")
 
     leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
@@ -830,6 +831,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert page_with_latest.split("</header>", 1)[0].find("Latest update:") == -1
     assert page_with_latest.index("<footer") < page_with_latest.index("Latest update:")
     assert f"database: local / {db_path}" in page_with_latest
+    assert "[overflow-wrap:anywhere]" in page_with_latest
     assert "Latest result:" not in page_with_latest
 
     remote_db_path = tmp_path / "remote.duckdb"
