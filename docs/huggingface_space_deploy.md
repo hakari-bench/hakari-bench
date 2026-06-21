@@ -224,32 +224,18 @@ Choose the viewer DuckDB file to publish. For example:
 export DUCKDB_PATH=/home/hotchpotch/src/github.com/hakari-bench/hakari-bench-wt/recreate_nano_datasets/output/viewer_combined_20260510_1340/hakari_bench.duckdb
 ```
 
-Upload it to the dataset repo:
+Upload it to the dataset repo. The upload command compares the local DuckDB size
+with the existing remote `duckdb/hakari_bench.duckdb` first. If the local file is
+20% or more larger than the existing remote file, the command stops before
+uploading because that usually indicates an accidental schema/build regression
+or duplicated result ingestion.
 
 ```bash
-uv run --group viewer python - <<'PY'
-import os
-from pathlib import Path
-from huggingface_hub import HfApi
-
-duckdb_path = Path(os.environ["DUCKDB_PATH"])
-api = HfApi()
-api.create_repo(
-    repo_id="hakari-bench/leaderboard_database",
-    repo_type="dataset",
-    exist_ok=True,
-    private=False,
-)
-info = api.upload_file(
-    repo_id="hakari-bench/leaderboard_database",
-    repo_type="dataset",
-    path_or_fileobj=str(duckdb_path),
-    path_in_repo="duckdb/hakari_bench.duckdb",
-    commit_message="Update leaderboard DuckDB",
-)
-print(info)
-PY
+uv run --group viewer python scripts/upload_leaderboard_duckdb.py "$DUCKDB_PATH"
 ```
+
+If the size increase is expected after inspection, rerun with
+`--allow-large-size-increase` and mention the reason in the deployment note.
 
 Verify the uploaded file can be downloaded:
 
