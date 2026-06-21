@@ -273,7 +273,7 @@ changes, and any intentional partial coverage or non-default variant choice.
 When a local DuckDB is supplied, the PR body also includes a Nano-set comparison
 table. The default comparison models are the submitted model,
 `Qwen/Qwen3-Embedding-0.6B`, `jinaai/jina-embeddings-v5-text-small`,
-`BAAI/bge-m3`, `intfloat/e5-small-v2`, and `bm25`; repeat
+`BAAI/bge-m3`, `intfloat/multilingual-e5-small`, and `bm25`; repeat
 `--comparison-model` to choose a different comparison set. The shared latest
 cache path is `~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb`
 by default and can be overridden with `HAKARI_BENCH_REMOTE_LATEST_DUCKDB_PATH`.

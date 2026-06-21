@@ -67,6 +67,8 @@ def test_result_json_paths_accepts_compressed_and_plain_json(tmp_path: Path) -> 
 def test_default_comparison_models_use_qwen_06b() -> None:
     assert template.DEFAULT_COMPARISON_MODELS[0] == "Qwen/Qwen3-Embedding-0.6B"
     assert "Qwen/Qwen3-Embedding-4B" not in template.DEFAULT_COMPARISON_MODELS
+    assert "intfloat/multilingual-e5-small" in template.DEFAULT_COMPARISON_MODELS
+    assert "intfloat/e5-small-v2" not in template.DEFAULT_COMPARISON_MODELS
 
 
 def test_generate_pr_template_adds_duckdb_comparison_table(tmp_path: Path) -> None:

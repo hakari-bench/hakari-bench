@@ -112,8 +112,8 @@ grouping. Quantized and rescore variants are excluded, truncate variants are
 considered, and each model column uses that model's best Overall variant. The
 default comparison columns are the submitted model, `Qwen/Qwen3-Embedding-0.6B`,
 `jinaai/jina-embeddings-v5-text-small`, `BAAI/bge-m3`,
-`intfloat/e5-small-v2`, and `bm25`. Override the comparison set by repeating
-`--comparison-model`:
+`intfloat/multilingual-e5-small`, and `bm25`. Override the comparison set by
+repeating `--comparison-model`:
 
 ```bash
 uv run python scripts/generate_results_pr_template.py \

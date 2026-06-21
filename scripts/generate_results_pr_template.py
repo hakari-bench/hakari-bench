@@ -22,7 +22,7 @@ DEFAULT_COMPARISON_MODELS = (
     "Qwen/Qwen3-Embedding-0.6B",
     "jinaai/jina-embeddings-v5-text-small",
     "BAAI/bge-m3",
-    "intfloat/e5-small-v2",
+    "intfloat/multilingual-e5-small",
     "bm25",
 )
 
@@ -102,7 +102,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         dest="comparison_models",
         help=(
             "Model id to include in the DuckDB comparison table. Can be repeated. "
-            "Defaults to Qwen3-Embedding-4B, jina v5 small, bge-m3, e5-small-v2, and bm25."
+            "Defaults to Qwen3-Embedding-0.6B, jina v5 small, bge-m3, multilingual-e5-small, and bm25."
         ),
     )
     return parser
