@@ -197,17 +197,25 @@
     ["Language", "language_support_label"],
     ["Model type", "model_type"],
     ["Ranking label", "ranking_model_name"],
+    ["Active params", "active_parameters"],
+    ["Total params", "total_parameters"],
+    ["Max len", "max_seq_length"],
+    ["Truncate dims", "truncate_dims"],
+  ];
+
+  const modelDetailFieldsAfterLinks = [
+    ["DType", "dtype"],
+    ["Attention", "attention"],
+    ["Query Prompt", "query_prompt"],
+    ["Query Prompt", "query_prompt_name"],
+    ["Doc Prompt", "document_prompt"],
+    ["Doc Prompt", "document_prompt_name"],
+    ["Prompt", "prompt"],
+    ["HF trust", "trust_remote_code"],
     ["Variant", "embedding_variant_name"],
     ["Dimensions", "embedding_dim"],
     ["Quantization", "quantization"],
     ["Base delta", "base_score_delta_percent"],
-    ["Active params", "active_parameters"],
-    ["Total params", "total_parameters"],
-    ["Max len", "max_seq_length"],
-    ["DType", "dtype"],
-    ["Attention", "attention"],
-    ["Prompt", "prompt"],
-    ["HF trust", "trust_remote_code"],
     ["Query len", "late_interaction_query_length"],
     ["Doc len", "late_interaction_document_length"],
     ["Query expansion", "late_interaction_query_expansion"],
@@ -218,6 +226,10 @@
 
   function formatModelDetailValue(value) {
     if (value === null || value === undefined || value === "") return "";
+    if (Array.isArray(value)) {
+      if (value.length === 0) return "";
+      return value.map((item) => formatModelDetailValue(item)).filter(Boolean).join(", ");
+    }
     if (typeof value === "boolean") return value ? "true" : "false";
     if (typeof value === "number") return value.toLocaleString();
     return String(value);
@@ -262,7 +274,8 @@
       appendModelDetailRow(list, "Hugging Face", createModelDetailLink(links.huggingface, repoId || "Model page"));
     }
     if (typeof links.github === "string" && links.github) {
-      appendModelDetailRow(list, "GitHub", createModelDetailLink(links.github, "Repository"));
+      const repoId = links.github.replace(/^https?:\/\/github\.com\//, "").replace(/\/+$/, "");
+      appendModelDetailRow(list, "GitHub", createModelDetailLink(links.github, repoId || links.github));
     }
     const papers = Array.isArray(links.papers) ? links.papers : [];
     if (papers.length === 0) return;
@@ -352,6 +365,20 @@
       }
       appendModelDetailLicense(list, metadata.license);
       appendModelDetailLinks(list, metadata.links);
+      const renderedLabels = new Set();
+      for (const [label, key] of modelDetailFieldsAfterLinks) {
+        const rawValue = metadata[key];
+        const value = shouldShowUnknownModelDetailValue(key, rawValue) ? "Unknown" : formatModelDetailValue(rawValue);
+        if (!value || renderedLabels.has(label)) continue;
+        renderedLabels.add(label);
+        const dt = document.createElement("dt");
+        dt.className = "font-medium text-zinc-600";
+        dt.textContent = label;
+        const dd = document.createElement("dd");
+        dd.className = "break-all font-mono text-zinc-900";
+        dd.textContent = value;
+        list.append(dt, dd);
+      }
       if (typeof modal.showModal === "function") modal.showModal();
     });
 

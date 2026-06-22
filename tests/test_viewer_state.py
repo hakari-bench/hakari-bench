@@ -397,10 +397,12 @@ def test_task_ranks_force_task_score_columns() -> None:
         prompt_filter=None,
         model_filter="",
         task_ranks=True,
+        other_columns=True,
     )
 
     assert query["task_scores"] == "1"
     assert query["task_ranks"] == "1"
+    assert query["other_columns"] == "1"
 
 
 def test_task_length_filters_are_normalized_into_filter_state() -> None:
@@ -512,6 +514,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         include_quantization_variants=True,
         show_task_z_scores=True,
         show_task_ranks=True,
+        show_other_columns=True,
         include_rescore_variants=True,
         score_groups=[],
         metric_columns=[],
@@ -540,6 +543,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "rescore": "1",
         "task_z_scores": "1",
         "task_ranks": "1",
+        "other_columns": "1",
         "model_filter": "jina",
         "task_filter": "fever",
         "rank_filtered": "1",

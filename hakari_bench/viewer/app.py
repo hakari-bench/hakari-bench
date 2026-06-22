@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
 import csv
 from datetime import datetime, timezone
@@ -324,6 +324,7 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -368,6 +369,7 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -437,6 +439,7 @@ def create_app(
             show_task_scores=state_query.get("task_scores") == "1",
             show_task_z_scores=state_query.get("task_z_scores") == "1",
             show_task_ranks=state_query.get("task_ranks") == "1",
+            show_other_columns=state_query.get("other_columns") == "1",
             rank_filtered=filter_state.rank_filtered,
             model_filter=filter_state.model_filter,
             task_filter=filter_state.task_filter,
@@ -475,6 +478,7 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -518,6 +522,7 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -587,6 +592,7 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
@@ -627,6 +633,7 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
@@ -3027,6 +3034,7 @@ def render_display_controls(
     task_scores_checked = " checked" if result.show_task_scores else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     task_ranks_checked = " checked" if result.show_task_ranks else ""
+    other_columns_checked = " checked" if result.show_other_columns else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -3052,6 +3060,8 @@ def render_display_controls(
         task_score_hidden_fields.append(("task_z_scores", "0"))
     if result.show_task_ranks:
         task_score_hidden_fields.append(("task_ranks", "1"))
+    if result.show_other_columns:
+        task_score_hidden_fields.append(("other_columns", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + variant_filter_fields + task_score_hidden_fields)
     return f"""
@@ -3083,6 +3093,10 @@ def render_display_controls(
             <input type="hidden" name="task_ranks" value="0">
             <input type="checkbox" name="task_ranks" value="1"{task_ranks_checked}>
             <span>Task ranks</span>
+          </label>
+          <label class="toggle-chip">
+            <input type="checkbox" name="other_columns" value="1"{other_columns_checked}>
+            <span>Others</span>
           </label>
         </div>
       </form>
@@ -3707,13 +3721,29 @@ def render_table_head(
         columns.append(("quantization", "Quant", "asc", "left", False, ""))
     if _show_base_delta_column(result):
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
+    if result.show_other_columns:
+        columns.extend(
+            [
+                ("license", "License", "", "left", False, ""),
+                ("model_type", "Model Type", "", "left", False, ""),
+            ]
+        )
     heads = []
     for key, label, default_direction, align, is_metric, full_metric_name in columns:
         align = "left"
-        next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
-        indicator = _render_sort_indicator(active=sort == key, direction=direction)
-        query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
-        query = urlencode(query_payload, doseq=True)
+        sortable = bool(default_direction)
+        next_direction = (
+            _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
+            if sortable
+            else ""
+        )
+        indicator = _render_sort_indicator(active=sort == key, direction=direction) if sortable else ""
+        query_payload = (
+            state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
+            if sortable
+            else {}
+        )
+        query = urlencode(query_payload, doseq=True) if sortable else ""
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = f"{_metric_column_width_class(result)} px-1 normal-case" if is_metric else "px-2 uppercase"
@@ -3762,12 +3792,18 @@ def render_table_head(
                  </span>"""
         else:
             label_markup = escape(label)
-            header_content = f"""
+            if sortable:
+                header_content = f"""
                  <button type="button" class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          {_leaderboard_control_hx_attrs()}>
                    <span class="{label_class}"{label_attrs}>{label_markup}</span>{indicator}
                  </button>"""
+            else:
+                header_content = f"""
+                 <span class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left">
+                   <span class="{label_class}"{label_attrs}>{label_markup}</span>
+                 </span>"""
         heads.append(
             f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 {text_align} {th_spacing} {sticky}">
                  {header_content}
@@ -3820,6 +3856,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_row_embedding_dim(row)}</td>
               {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
+              {_render_other_columns(result=result, model_view=model_views[row.model_name])}
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
@@ -3834,6 +3871,8 @@ def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
         column_count += 1
     if _show_base_delta_column(result):
         column_count += 1
+    if result.show_other_columns:
+        column_count += 2
     return column_count
 
 
@@ -4186,6 +4225,31 @@ def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow)
     return f"""<td class="px-2 py-1 text-left">{escape(row.quantization or "")}</td>"""
 
 
+def _render_other_columns(*, result: LeaderboardResult, model_view: ModelCellView) -> str:
+    if not result.show_other_columns:
+        return ""
+    metadata = model_view.metadata
+    license_label, license_tooltip = _license_table_labels(metadata.get("license"))
+    model_type_label, model_type_tooltip = _model_type_table_labels(metadata)
+    return _render_short_metadata_cell(license_label, license_tooltip) + _render_short_metadata_cell(
+        model_type_label,
+        model_type_tooltip,
+    )
+
+
+def _render_short_metadata_cell(label: str, tooltip: str) -> str:
+    tooltip_class = " tooltip-trigger tooltip-delay cursor-pointer" if tooltip and tooltip != label else ""
+    tooltip_attrs = (
+        f' data-tooltip="{escape(tooltip, quote=True)}" aria-label="{escape(tooltip, quote=True)}"'
+        if tooltip
+        else ""
+    )
+    return (
+        f'<td class="max-w-[7rem] truncate whitespace-nowrap px-2 py-1 text-left{tooltip_class}"{tooltip_attrs}>'
+        f"{escape(label)}</td>"
+    )
+
+
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
     return (
         result.include_quantization_variants
@@ -4369,6 +4433,55 @@ def _fmt_row_embedding_dim(row: LeaderboardRow) -> str:
     if _is_sparse_or_bm25_row(row):
         return "sparse"
     return _fmt_embedding_dim(row.embedding_dim)
+
+
+def _fmt_license(value: object) -> str:
+    return _license_table_labels(value)[1]
+
+
+def _license_table_labels(value: object) -> tuple[str, str]:
+    if not isinstance(value, Mapping):
+        return "", ""
+    license_metadata = cast(Mapping[str, object], value)
+    label = license_metadata.get("label") or license_metadata.get("id")
+    full_label = str(label) if label else ""
+    license_id = str(license_metadata.get("id") or "").strip().casefold()
+    normalized_label = full_label.strip().casefold()
+    short_labels = {
+        "apache-2.0": "Apache",
+        "mit": "MIT",
+        "cc-by-nc-4.0": "CC BY-NC",
+        "openai-service-terms": "OpenAI",
+        "gemma": "Gemma",
+        "lfm1.0": "LFM",
+    }
+    label_prefixes = {
+        "apache 2.0": "Apache",
+        "cc by-nc 4.0": "CC BY-NC",
+        "openai service terms": "OpenAI",
+        "gemma terms": "Gemma",
+        "lfm open license": "LFM",
+    }
+    short_label = short_labels.get(license_id)
+    if short_label is None:
+        short_label = next(
+            (short for prefix, short in label_prefixes.items() if normalized_label.startswith(prefix)),
+            full_label,
+        )
+    return short_label, full_label
+
+
+def _model_type_table_labels(metadata: Mapping[str, object]) -> tuple[str, str]:
+    full_label = str(metadata.get("model_type") or "")
+    key = str(metadata.get("model_type_key") or "").casefold()
+    short_labels = {
+        "dense": "Dense",
+        "sparse": "Sparse",
+        "bm25": "BM25",
+        "reranker": "Reranker",
+        "late-interaction": "Late int.",
+    }
+    return short_labels.get(key, full_label), full_label
 
 
 def _fmt_percent_delta(value: float | None) -> str:

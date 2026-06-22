@@ -634,11 +634,12 @@ def test_static_model_cards_include_license_metadata() -> None:
     assert cards["google/embeddinggemma-300m"]["license"]["type"] == "proprietary"
     assert cards["google/embeddinggemma-300m"]["license"]["commercial_use"] == "permitted_with_terms"
     assert cards["bm25"]["license"] == {
-        "id": "not_applicable",
-        "label": "Not applicable - Okapi BM25 algorithmic baseline",
-        "type": "algorithm",
-        "commercial_use": "not_applicable",
-        "source": "internal_baseline",
+        "id": "mit",
+        "label": "MIT",
+        "type": "permissive",
+        "commercial_use": "allowed",
+        "source": "bm25s_github_repository",
+        "source_url": "https://github.com/xhluca/bm25s",
     }
 
 

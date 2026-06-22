@@ -138,9 +138,9 @@ Use clear labels such as `MIT`, `Apache 2.0`, `CC BY-NC 4.0`, or `Gemma Terms
 of Use`. Set `commercial_use` to `allowed` for permissive licenses,
 `not_allowed` for non-commercial Creative Commons licenses, and
 `permitted_with_terms` for proprietary terms that permit commercial use only
-under model-specific conditions. BM25 is an algorithmic baseline rather than a
-licensed model, so its card uses `id: not_applicable`, `type: algorithm`, and
-the label `Not applicable - Okapi BM25 algorithmic baseline`.
+under model-specific conditions. BM25 is an algorithmic baseline, but HAKARI's
+computed baseline uses the `bm25s` package, so the static BM25 card records the
+`bm25s` library license as MIT.
 
 Model cards may include an optional `links` section that records canonical
 reference URLs for the model. All fields are optional, but including them is

@@ -119,7 +119,19 @@ components:
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
-      they improve scanning.
+      they improve scanning. Table display includes an optional Others toggle
+      for low-frequency metadata columns such as License and Model Type,
+      appended at the far right so the core score columns remain stable. These
+      cells must stay one line using short labels such as Apache, CC BY-NC,
+      OpenAI, and Late int.; expose the full label through hover tooltip and
+      Model Details.
+  model-details:
+    purpose: Modal metadata for a single result row.
+    treatment: Prefer model-card metadata when present. Order fields as Language,
+      Model type, Ranking label, parameter counts, max length, truncate dims,
+      license, Hugging Face, GitHub, papers, then runtime and variant details.
+      GitHub links should show the `owner/repo` label instead of generic copy.
+      Prompt metadata should use Query Prompt and Doc Prompt labels.
   leaderboard-plot:
     purpose: Optional visual comparison surface for score, scale, dimension, and
       compression trade-offs using the same scoped and filtered rows as the table.

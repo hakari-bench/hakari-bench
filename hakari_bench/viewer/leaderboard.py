@@ -63,6 +63,11 @@ class ModelCardParameters:
     language_support_marker: str | None = None
     links: dict[str, Any] | None = None
     license: dict[str, Any] | None = None
+    truncate_dims: tuple[int, ...] = ()
+    query_prompt: str | None = None
+    document_prompt: str | None = None
+    query_prompt_name: str | None = None
+    document_prompt_name: str | None = None
 
 
 @dataclass(frozen=True)
@@ -147,6 +152,11 @@ class LeaderboardRow(BaseModel):
     language_support_marker: str | None = None
     links: dict[str, Any] | None = None
     license: dict[str, Any] | None = None
+    truncate_dims: tuple[int, ...] = ()
+    query_prompt: str | None = None
+    document_prompt: str | None = None
+    query_prompt_name: str | None = None
+    document_prompt_name: str | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
     metric_rank_values: dict[str, float] = Field(default_factory=dict)
@@ -189,6 +199,7 @@ class LeaderboardResult(BaseModel):
     show_task_scores: bool = False
     show_task_z_scores: bool = False
     show_task_ranks: bool = False
+    show_other_columns: bool = False
     rank_filtered: bool = False
     task_filter: str = ""
     score_groups: list[ScoreGroup]
@@ -252,6 +263,7 @@ class LeaderboardService:
         show_task_scores: bool = False,
         show_task_z_scores: bool = False,
         show_task_ranks: bool = False,
+        show_other_columns: bool = False,
         rank_filtered: bool = False,
         model_filter: str = "",
         task_filter: str = "",
@@ -365,6 +377,7 @@ class LeaderboardService:
                     show_task_scores=False,
                     show_task_z_scores=False,
                     show_task_ranks=False,
+                    show_other_columns=show_other_columns,
                     rank_filtered=rank_filtered,
                     task_filter="",
                     score_groups=[],
@@ -435,6 +448,7 @@ class LeaderboardService:
                         show_task_scores=False,
                         show_task_z_scores=False,
                         show_task_ranks=False,
+                        show_other_columns=show_other_columns,
                         task_filter="",
                         score_groups=[
                             ScoreGroup(name=group.name, label=group.display_label)
@@ -656,6 +670,7 @@ class LeaderboardService:
                 show_task_scores=should_show_task_scores,
                 show_task_z_scores=show_task_z_scores,
                 show_task_ranks=show_task_ranks,
+                show_other_columns=show_other_columns,
                 rank_filtered=rank_filtered,
                 task_filter=task_filter.strip(),
                 score_groups=[
@@ -797,6 +812,8 @@ def _cached_model_card_parameters(
             runtime = {}
         late_interaction = _late_interaction_card_section(card)
         language_support = _language_support_card_section(card)
+        embedding = _embedding_card_section(card)
+        prompts = _prompts_card_section(card)
         parameters_by_model[model_id] = ModelCardParameters(
             model_type=_str_or_none(card.get("method")),
             active_parameters=_int_or_none(parameters.get("active")),
@@ -827,6 +844,11 @@ def _cached_model_card_parameters(
             language_support_marker=_str_or_none(language_support.get("marker")),
             links=_links_card_section(card),
             license=_license_card_section(card),
+            truncate_dims=_int_tuple(embedding.get("truncate_dims")),
+            query_prompt=_str_or_none(prompts.get("query_prompt")),
+            document_prompt=_str_or_none(prompts.get("document_prompt")),
+            query_prompt_name=_str_or_none(prompts.get("query_prompt_name")),
+            document_prompt_name=_str_or_none(prompts.get("document_prompt_name")),
         )
     return parameters_by_model
 
@@ -872,6 +894,16 @@ def _late_interaction_card_section(card: dict[str, Any]) -> dict[str, Any]:
 
 def _language_support_card_section(card: dict[str, Any]) -> dict[str, Any]:
     section = card.get("language_support")
+    return section if isinstance(section, dict) else {}
+
+
+def _embedding_card_section(card: dict[str, Any]) -> dict[str, Any]:
+    section = card.get("embedding")
+    return section if isinstance(section, dict) else {}
+
+
+def _prompts_card_section(card: dict[str, Any]) -> dict[str, Any]:
+    section = card.get("prompts")
     return section if isinstance(section, dict) else {}
 
 
@@ -1018,6 +1050,19 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     else parameters.language_support_marker,
                     "links": row.links if row.links is not None else parameters.links,
                     "license": row.license if row.license is not None else parameters.license,
+                    "truncate_dims": row.truncate_dims or parameters.truncate_dims,
+                    "query_prompt": row.query_prompt
+                    if row.query_prompt is not None
+                    else parameters.query_prompt,
+                    "document_prompt": row.document_prompt
+                    if row.document_prompt is not None
+                    else parameters.document_prompt,
+                    "query_prompt_name": row.query_prompt_name
+                    if row.query_prompt_name is not None
+                    else parameters.query_prompt_name,
+                    "document_prompt_name": row.document_prompt_name
+                    if row.document_prompt_name is not None
+                    else parameters.document_prompt_name,
                 }
             )
         )
@@ -1041,6 +1086,17 @@ def _int_or_none(value: Any) -> int | None:
         return int(value)
     except (TypeError, ValueError):
         return None
+
+
+def _int_tuple(value: Any) -> tuple[int, ...]:
+    if not isinstance(value, list):
+        return ()
+    values = []
+    for item in value:
+        normalized = _int_or_none(item)
+        if normalized is not None:
+            values.append(normalized)
+    return tuple(values)
 
 
 def _str_or_none(value: Any) -> str | None:

@@ -576,6 +576,65 @@ parameters: {}
     assert model_cell_views(result.rows)[result.rows[0].model_name].metadata["model_type"] == "Cross-encoder reranker"
 
 
+def test_leaderboard_service_backfills_model_detail_metadata_from_model_cards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "jinaai/jina-embeddings-v3",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "BenchA::a1",
+                0.90,
+                None,
+                None,
+                None,
+            ),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "jinaai__jina-embeddings-v3.yaml").write_text(
+        """
+id: jinaai/jina-embeddings-v3
+method: dense
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+links:
+  huggingface: https://huggingface.co/jinaai/jina-embeddings-v3
+  github: https://github.com/jina-ai/embeddings
+embedding:
+  truncate_dims:
+    - 32
+    - 64
+prompts:
+  query_prompt_name: retrieval.query
+  document_prompt_name: retrieval.passage
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+    metadata = model_cell_views(result.rows)[result.rows[0].model_name].metadata
+
+    assert result.rows[0].license == {"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"}
+    assert result.rows[0].truncate_dims == (32, 64)
+    assert metadata["links"]["github"] == "https://github.com/jina-ai/embeddings"
+    assert metadata["truncate_dims"] == [32, 64]
+    assert metadata["query_prompt_name"] == "retrieval.query"
+    assert metadata["document_prompt_name"] == "retrieval.passage"
+
+
 def test_leaderboard_service_backfills_language_support_from_model_cards(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -2764,6 +2823,103 @@ def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> No
     assert "30,000" not in body
     assert body.count(">sparse</td>") >= 2
     assert body.count(">None</td>") >= 2
+
+
+def test_table_display_others_adds_license_and_model_type_columns() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/sparse-encoder",
+                model_type="sparse",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "mit", "label": "MIT"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        show_other_columns=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    controls = render_display_controls(result=result, sort="borda_score", direction="desc")
+    head = render_table_head(result=result, sort="borda_score", direction="desc")
+    body = render_table_body(result=result)
+
+    assert 'name="other_columns" value="1" checked' in controls
+    assert ">Others</span>" in controls
+    assert 'data-column-key="license"' in head
+    assert 'data-column-key="model_type"' in head
+    assert ">License</span>" in head
+    assert ">Model Type</span>" in head
+    assert ">MIT</td>" in body
+    assert ">Sparse</td>" in body
+
+
+def test_table_display_others_uses_short_labels_with_tooltips() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/apache-model",
+                model_type="dense",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "apache-2.0", "label": "Apache 2.0"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="org/cc-model",
+                model_type="reranker",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                license={"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"},
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="openai/text-embedding-3-small",
+                model_type="late-interaction",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                license={"id": "openai-service-terms", "label": "OpenAI Service Terms"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        show_other_columns=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    body = render_table_body(result=result)
+
+    assert "max-w-[7rem] truncate whitespace-nowrap" in body
+    assert ">Apache</td>" in body
+    assert 'data-tooltip="Apache 2.0"' in body
+    assert ">CC BY-NC</td>" in body
+    assert 'data-tooltip="CC BY-NC 4.0"' in body
+    assert ">OpenAI</td>" in body
+    assert 'data-tooltip="OpenAI Service Terms"' in body
+    assert ">Late int.</td>" in body
+    assert 'data-tooltip="Late interaction"' in body
 
 
 def test_chart_quantization_axis_normalization_enables_quantization_variants() -> None:

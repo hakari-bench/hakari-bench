@@ -98,6 +98,7 @@ def normalize_query_state(
     task_scores: bool = False,
     task_z_scores: bool = False,
     task_ranks: bool = False,
+    other_columns: bool = False,
     task_filter: str = "",
     active_params_min: str = "",
     active_params_max: str = "",
@@ -168,6 +169,8 @@ def normalize_query_state(
         query["task_z_scores"] = "1"
     if task_ranks:
         query["task_ranks"] = "1"
+    if other_columns:
+        query["other_columns"] = "1"
     if display_flags.quantization:
         query["quantization"] = "1"
     if display_flags.truncate:
@@ -287,6 +290,8 @@ def state_payload(
         query_payload["task_z_scores"] = "0"
     if result.show_task_ranks:
         query_payload["task_ranks"] = "1"
+    if result.show_other_columns:
+        query_payload["other_columns"] = "1"
     if result.include_quantization_variants:
         query_payload["quantization"] = "1"
     if result.include_truncate_variants:
