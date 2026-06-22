@@ -2,6 +2,16 @@ name: CI
 
 on:
   pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 env:
@@ -9,7 +19,7 @@ env:
 
 jobs:
   validation:
-    name: Python validation
+    name: Python tests, lint, and types
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -21,13 +31,16 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
-          cache-dependency-glob: uv.lock
+          cache-dependency-glob: |
+            uv.lock
+            pyproject.toml
+          cache-suffix: tox
 
-      - name: Run unit, lint, and type checks
+      - name: Run Python tests, lint, and type checks
         run: uv run tox
 
   browser:
-    name: Viewer browser smoke
+    name: Viewer browser test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -39,7 +52,10 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
-          cache-dependency-glob: uv.lock
+          cache-dependency-glob: |
+            uv.lock
+            pyproject.toml
+          cache-suffix: viewer-browser-test
 
       - name: Restore Playwright browser cache
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -49,11 +65,11 @@ jobs:
           restore-keys: |
             playwright-${{ runner.os }}-
 
-      - name: Install lightweight viewer browser test dependencies
+      - name: Install viewer browser test dependencies
         run: uv sync --only-group viewer-browser-test --frozen
 
       - name: Install Playwright Chromium
         run: uv run --only-group viewer-browser-test playwright install --with-deps chromium
 
-      - name: Run viewer browser smoke test
+      - name: Run viewer browser test
         run: uv run --only-group viewer-browser-test pytest -q -m browser tests/test_viewer_browser.py
