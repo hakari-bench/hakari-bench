@@ -68,6 +68,7 @@ class ModelCardParameters:
     document_prompt: str | None = None
     query_prompt_name: str | None = None
     document_prompt_name: str | None = None
+    notice: str | None = None
 
 
 @dataclass(frozen=True)
@@ -157,6 +158,7 @@ class LeaderboardRow(BaseModel):
     document_prompt: str | None = None
     query_prompt_name: str | None = None
     document_prompt_name: str | None = None
+    notice: str | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
     metric_rank_values: dict[str, float] = Field(default_factory=dict)
@@ -849,6 +851,7 @@ def _cached_model_card_parameters(
             document_prompt=_str_or_none(prompts.get("document_prompt")),
             query_prompt_name=_str_or_none(prompts.get("query_prompt_name")),
             document_prompt_name=_str_or_none(prompts.get("document_prompt_name")),
+            notice=_str_or_none(card.get("notice")),
         )
     return parameters_by_model
 
@@ -1063,6 +1066,7 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     "document_prompt_name": row.document_prompt_name
                     if row.document_prompt_name is not None
                     else parameters.document_prompt_name,
+                    "notice": row.notice if row.notice is not None else parameters.notice,
                 }
             )
         )

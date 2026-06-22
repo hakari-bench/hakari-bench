@@ -800,6 +800,17 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         assert all(dim < known_base_dims[model_id] for dim in truncate_dims), model_id
 
 
+def test_openai_static_model_cards_include_evaluation_notice() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+    notice = (
+        "Max tokens is 8,192, but HAKARI evaluates this model with max tokens "
+        "set to 8,100 for calibration."
+    )
+
+    assert cards["openai/text-embedding-3-small"]["notice"] == notice
+    assert cards["openai/text-embedding-3-large"]["notice"] == notice
+
+
 def _write_result(
     path: Path,
     *,

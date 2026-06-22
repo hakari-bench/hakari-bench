@@ -615,6 +615,7 @@ embedding:
 prompts:
   query_prompt_name: retrieval.query
   document_prompt_name: retrieval.passage
+notice: "Use the provider tokenizer limit for deployment, but HAKARI evaluated this model with a smaller max-token setting."
 """.strip(),
         encoding="utf-8",
     )
@@ -633,6 +634,10 @@ prompts:
     assert metadata["truncate_dims"] == [32, 64]
     assert metadata["query_prompt_name"] == "retrieval.query"
     assert metadata["document_prompt_name"] == "retrieval.passage"
+    assert (
+        metadata["notice"]
+        == "Use the provider tokenizer limit for deployment, but HAKARI evaluated this model with a smaller max-token setting."
+    )
 
 
 def test_leaderboard_service_backfills_language_support_from_model_cards(tmp_path: Path) -> None:

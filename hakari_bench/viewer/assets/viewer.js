@@ -291,6 +291,12 @@
     if (dd.childElementCount > 0) list.append(dt, dd);
   }
 
+  function appendModelDetailNotice(list, notice) {
+    const value = formatModelDetailValue(notice);
+    if (!value) return;
+    appendModelDetailRow(list, "Notice", document.createTextNode(value));
+  }
+
   window.__hakariBindModelDetails = () => {
     if (window.__hakariModelDetailsBound) return;
     window.__hakariModelDetailsBound = true;
@@ -379,6 +385,7 @@
         dd.textContent = value;
         list.append(dt, dd);
       }
+      appendModelDetailNotice(list, metadata.notice);
       if (typeof modal.showModal === "function") modal.showModal();
     });
 

@@ -287,6 +287,7 @@ def _model_metadata(
         "language_support_label": _language_support_label(row),
         "links": row.links or None,
         "license": row.license or None,
+        "notice": row.notice,
     }
 
 

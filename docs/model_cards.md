@@ -33,6 +33,7 @@ Model cards are YAML mappings. The common top-level fields are:
 | `late_interaction` | late-interaction only | ColBERT/PyLate architecture and query/document token settings. |
 | `language_support` | recommended | Static display classification for intended language coverage. |
 | `target` | optional | Datasets, collections, splits, and scope the card was prepared for. |
+| `notice` | optional | Short user-facing caveat shown at the end of the Model Details dialog. |
 | `notes` | optional | Reviewed operational notes that do not fit structured fields. |
 
 `parameters.active` is the count used for size-aware leaderboard display when
@@ -314,6 +315,10 @@ uv run python scripts/generate_model_cards.py \
   --infer-language-support \
   --overwrite
 ```
+
+Use `notice` for one short caveat that should be visible in the leaderboard
+viewer, such as a known difference between provider limits and benchmark
+evaluation settings. Keep longer operational review notes under `notes`.
 
 The result-based mode is intended for bootstrapping the current leaderboard
 models. It skips `bm25` and model ids containing `bekko` by default, infers

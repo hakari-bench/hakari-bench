@@ -131,7 +131,9 @@ components:
       Model type, Ranking label, parameter counts, max length, truncate dims,
       license, Hugging Face, GitHub, papers, then runtime and variant details.
       GitHub links should show the `owner/repo` label instead of generic copy.
-      Prompt metadata should use Query Prompt and Doc Prompt labels.
+      Prompt metadata should use Query Prompt and Doc Prompt labels. Optional
+      model-card notices are short user-facing caveats and render as the final
+      Model Details row.
   leaderboard-plot:
     purpose: Optional visual comparison surface for score, scale, dimension, and
       compression trade-offs using the same scoped and filtered rows as the table.
