@@ -21,15 +21,10 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
-          cache-dependency-glob: uv.lock
-
-      - name: Restore tox environments
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          path: .tox
-          key: tox-${{ runner.os }}-py312-${{ hashFiles('uv.lock', 'pyproject.toml') }}
-          restore-keys: |
-            tox-${{ runner.os }}-py312-
+          cache-dependency-glob: |
+            uv.lock
+            pyproject.toml
+          cache-suffix: tox
 
       - name: Run Python tests, lint, and type checks
         run: uv run tox
@@ -47,7 +42,10 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
-          cache-dependency-glob: uv.lock
+          cache-dependency-glob: |
+            uv.lock
+            pyproject.toml
+          cache-suffix: viewer-browser-test
 
       - name: Restore Playwright browser cache
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
