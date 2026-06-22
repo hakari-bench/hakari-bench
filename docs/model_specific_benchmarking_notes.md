@@ -280,16 +280,15 @@ Truncation notes:
 - `hotchpotch/bekko-embedding-small-beta-unir-v8` documents base dim 384 and
   Matryoshka dims `256,128,64`.
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT` documents supported
-  `truncate_dim` values `384,256,128,64`.
+  Matryoshka dims `256,128,64` below its 384-dimensional base embeddings.
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR` documents supported
-  `truncate_dim` values `384,256,128,64`. Use `256,128,64` for compact
-  comparisons matching the GOR-pt run unless explicitly measuring the
-  standalone 384-dimensional truncation variant.
+  Matryoshka dims `256,128,64` below its 384-dimensional base embeddings.
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR-pt` recommends
   `truncate_dim` values `256,128,64`.
 - `hotchpotch/bekko-embedding-v1-a8m` documents supported `truncate_dim`
-  values `384,256,128,64`. Use Transformers 4.x with Flash Attention 2 and
-  batch size 16 unless a newer validation supersedes the model card.
+  values `256,128,64` below its 384-dimensional base embeddings. Use
+  Transformers 4.x with Flash Attention 2 and batch size 16 unless a newer
+  validation supersedes the model card.
 
 ## Jina Embeddings v5
 

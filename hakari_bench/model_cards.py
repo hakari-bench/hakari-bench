@@ -31,6 +31,24 @@ _HIGH_NON_ENGLISH_SCORE_THRESHOLD = 0.6
 _MIN_LANGUAGE_SUPPORT_EVIDENCE_LANGUAGES = 8
 _NANOBEIR_LANGUAGE_RE = re.compile(r"(?:^|/)NanoBEIR-([a-z]{2,3})(?:$|[,_/.-])")
 _LANGUAGE_CODE_RE = re.compile(r"^[a-z]{2,3}$")
+_PROMPT_KEYS = (
+    "query_prompt",
+    "document_prompt",
+    "query_prompt_name",
+    "document_prompt_name",
+    "query_encode_task",
+    "document_encode_task",
+)
+_LATE_INTERACTION_KEYS = (
+    "architecture",
+    "scoring",
+    "query_prefix",
+    "document_prefix",
+    "query_length",
+    "document_length",
+    "do_query_expansion",
+    "attend_to_expansion_tokens",
+)
 
 _LANGUAGE_FAMILIES = {
     "ar": "semitic",
@@ -180,6 +198,11 @@ def model_card_from_metadata(
         "embedding": {"truncate_dims": truncate_dims},
         "runtime": _drop_none(runtime),
     }
+    prompts = metadata.get("prompts")
+    if isinstance(prompts, dict):
+        prompt_payload = _prompt_card_payload(prompts)
+        if prompt_payload:
+            card["prompts"] = prompt_payload
     late_interaction = metadata.get("late_interaction")
     if isinstance(late_interaction, dict):
         card["late_interaction"] = _drop_none(
@@ -215,6 +238,8 @@ def collect_model_cards_from_results(
     metadata_by_model: dict[str, dict[str, Any]] = {}
     truncate_dims_by_model: dict[str, set[int]] = {}
     datasets_by_model: dict[str, set[str]] = {}
+    prompts_by_model: dict[str, list[dict[str, Any]]] = {}
+    late_interaction_by_model: dict[str, list[dict[str, Any]]] = {}
     language_scores_by_model: dict[str, dict[str, list[float]]] = {}
     for result_path in _result_json_paths(results_dir):
         payload = _read_json(result_path)
@@ -232,6 +257,12 @@ def collect_model_cards_from_results(
         if model_id not in metadata_by_model or _metadata_completeness(model) > _metadata_completeness(metadata_by_model[model_id]):
             metadata_by_model[model_id] = model
         truncate_dims_by_model.setdefault(model_id, set()).update(_truncate_dims_from_result_payload(payload))
+        prompts = _prompts_from_result_payload(payload)
+        if prompts:
+            prompts_by_model.setdefault(model_id, []).append(prompts)
+        late_interaction = _late_interaction_from_result_payload(payload)
+        if late_interaction:
+            late_interaction_by_model.setdefault(model_id, []).append(late_interaction)
         target = payload.get("target")
         dataset_id = target.get("dataset_id") if isinstance(target, dict) else None
         if isinstance(dataset_id, str) and dataset_id:
@@ -246,6 +277,15 @@ def collect_model_cards_from_results(
     for model_id in sorted(metadata_by_model):
         existing_card = existing_cards.get(model_id)
         metadata = _merge_existing_card_metadata(metadata_by_model[model_id], existing_card)
+        prompts = _stable_mapping_from_results(prompts_by_model.get(model_id, []), keys=_PROMPT_KEYS)
+        if prompts:
+            metadata["prompts"] = prompts
+        late_interaction = _stable_mapping_from_results(
+            late_interaction_by_model.get(model_id, []),
+            keys=_LATE_INTERACTION_KEYS,
+        )
+        if late_interaction:
+            metadata["late_interaction"] = late_interaction
         truncate_dims = sorted(truncate_dims_by_model.get(model_id, set())) or None
         generated_card = model_card_from_metadata(
             metadata,
@@ -338,7 +378,7 @@ def write_evaluation_model_card(*, args: Any, model_metadata: dict[str, Any]) ->
     model_id = str(model_metadata.get("id") or getattr(args, "model_id"))
     output_dir = Path(getattr(args, "output_dir")) / safe_model_card_stem(model_id)
     card = model_card_from_metadata(
-        model_metadata,
+        _metadata_with_evaluation_args(model_metadata, args),
         truncate_dims=_truncate_dims_from_embedding_variants(getattr(args, "embedding_variants", [])),
         overrides=ModelCardOverrides(),
         target=target_from_args(args),
@@ -506,6 +546,15 @@ def _clean_scalar(value: Any) -> Any:
     return value
 
 
+def _prompt_card_payload(prompts: dict[str, Any]) -> dict[str, Any]:
+    return {
+        key: value
+        for key in _PROMPT_KEYS
+        for value in [_clean_scalar(prompts.get(key))]
+        if isinstance(value, str) and (value or key.endswith("_prompt"))
+    }
+
+
 def _drop_none(payload: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in payload.items() if value is not None}
 
@@ -659,6 +708,7 @@ def _truncate_dims_from_result_payload(payload: dict[str, Any]) -> set[int]:
         embedding_evaluations = payload.get("embedding_evaluations")
     if not isinstance(embedding_evaluations, list):
         return set()
+    base_dim = _base_embedding_dim_from_embedding_evaluations(embedding_evaluations)
     dims: set[int] = set()
     for item in embedding_evaluations:
         if not isinstance(item, dict):
@@ -673,9 +723,27 @@ def _truncate_dims_from_result_payload(payload: dict[str, Any]) -> set[int]:
             parameters = step.get("parameters")
             dim = parameters.get("dim") if isinstance(parameters, dict) else None
             parsed_dim = _int_or_none(dim)
-            if parsed_dim is not None:
+            if parsed_dim is not None and parsed_dim != base_dim:
                 dims.add(parsed_dim)
     return dims
+
+
+def _base_embedding_dim_from_embedding_evaluations(embedding_evaluations: list[Any]) -> int | None:
+    for item in embedding_evaluations:
+        if not isinstance(item, dict) or item.get("name") != "base":
+            continue
+        embedding_dimensions = item.get("embedding_dimensions")
+        if isinstance(embedding_dimensions, dict):
+            dim = _int_or_none(embedding_dimensions.get("dim"))
+            if dim is not None:
+                return dim
+        embedding_metadata = item.get("embedding_metadata")
+        dimensions = embedding_metadata.get("dimensions") if isinstance(embedding_metadata, dict) else None
+        if isinstance(dimensions, dict):
+            dim = _int_or_none(dimensions.get("dim"))
+            if dim is not None:
+                return dim
+    return None
 
 
 def _truncate_dims_from_embedding_variants(embedding_variants: Any) -> list[int] | None:
@@ -707,6 +775,88 @@ def _truncate_dims_from_transform(transform: Any) -> set[int]:
     return dims
 
 
+def _metadata_with_evaluation_args(metadata: dict[str, Any], args: Any) -> dict[str, Any]:
+    enriched = dict(metadata)
+    prompts = _prompt_card_payload(
+        {
+            "query_prompt": getattr(args, "query_prompt", None),
+            "document_prompt": getattr(args, "corpus_prompt", getattr(args, "document_prompt", None)),
+            "query_prompt_name": getattr(args, "query_prompt_name", None),
+            "document_prompt_name": getattr(args, "corpus_prompt_name", getattr(args, "document_prompt_name", None)),
+            "query_encode_task": getattr(args, "query_task", getattr(args, "query_encode_task", None)),
+            "document_encode_task": getattr(args, "corpus_task", getattr(args, "document_encode_task", None)),
+        }
+    )
+    if prompts:
+        enriched["prompts"] = prompts
+    if validate_model_card_method(enriched.get("method"), model_id=str(enriched.get("id") or "")) == "late-interaction":
+        late_interaction = _drop_none(
+            {
+                "scoring": "maxsim",
+                "query_prefix": getattr(args, "late_interaction_query_prefix", None),
+                "document_prefix": getattr(args, "late_interaction_document_prefix", None),
+                "query_length": _int_or_none(getattr(args, "late_interaction_query_length", None)),
+                "document_length": _int_or_none(getattr(args, "late_interaction_document_length", None)),
+                "do_query_expansion": getattr(args, "late_interaction_do_query_expansion", None),
+                "attend_to_expansion_tokens": getattr(args, "late_interaction_attend_to_expansion_tokens", None),
+            }
+        )
+        if late_interaction:
+            existing_late_interaction = enriched.get("late_interaction")
+            base_late_interaction = dict(existing_late_interaction) if isinstance(existing_late_interaction, dict) else {}
+            enriched["late_interaction"] = {**base_late_interaction, **late_interaction}
+    return enriched
+
+
+def _prompts_from_result_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    config = payload.get("config")
+    if not isinstance(config, dict):
+        return {}
+    return _prompt_card_payload(config)
+
+
+def _late_interaction_from_result_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    config = payload.get("config")
+    if not isinstance(config, dict):
+        return {}
+    late_interaction = config.get("late_interaction")
+    if not isinstance(late_interaction, dict):
+        return {}
+    payload = {
+        "architecture": _clean_scalar(late_interaction.get("architecture")),
+        "scoring": _normalize_late_interaction_scoring(late_interaction.get("scoring")),
+        "query_prefix": _clean_scalar(late_interaction.get("query_prefix")),
+        "document_prefix": _clean_scalar(late_interaction.get("document_prefix")),
+        "query_length": _int_or_none(late_interaction.get("query_length")),
+        "document_length": _int_or_none(late_interaction.get("document_length")),
+        "do_query_expansion": _clean_scalar(late_interaction.get("do_query_expansion")),
+        "attend_to_expansion_tokens": _clean_scalar(late_interaction.get("attend_to_expansion_tokens")),
+    }
+    return _drop_none(payload)
+
+
+def _normalize_late_interaction_scoring(value: Any) -> Any:
+    if value == "exact_maxsim":
+        return "maxsim"
+    return _clean_scalar(value)
+
+
+def _stable_mapping_from_results(
+    values: list[dict[str, Any]],
+    *,
+    keys: tuple[str, ...],
+) -> dict[str, Any]:
+    stable: dict[str, Any] = {}
+    for key in keys:
+        present_values = [item[key] for item in values if key in item]
+        if not present_values:
+            continue
+        first = present_values[0]
+        if all(value == first for value in present_values):
+            stable[key] = first
+    return stable
+
+
 def _merge_existing_card_metadata(metadata: dict[str, Any], existing_card: dict[str, Any] | None) -> dict[str, Any]:
     if existing_card is None:
         return metadata
@@ -725,6 +875,8 @@ def _merge_existing_card_metadata(metadata: dict[str, Any], existing_card: dict[
     runtime = existing_card.get("runtime")
     if isinstance(runtime, dict) and merged.get("max_seq_length") is None:
         merged["max_seq_length"] = runtime.get("max_seq_length")
+    if isinstance(existing_card.get("prompts"), dict) and not isinstance(merged.get("prompts"), dict):
+        merged["prompts"] = existing_card["prompts"]
     if isinstance(existing_card.get("late_interaction"), dict) and not isinstance(merged.get("late_interaction"), dict):
         merged["late_interaction"] = existing_card["late_interaction"]
     return merged
@@ -740,6 +892,10 @@ def _merge_existing_card_fields(generated_card: dict[str, Any], existing_card: d
         for key in ("remote_code_approved",):
             if key in existing_runtime and key not in generated_runtime:
                 generated_runtime[key] = existing_runtime[key]
+    if isinstance(existing_card.get("prompts"), dict):
+        merged["prompts"] = existing_card["prompts"]
+    if isinstance(existing_card.get("late_interaction"), dict):
+        merged["late_interaction"] = existing_card["late_interaction"]
     for key, value in existing_card.items():
         if key not in merged:
             merged[key] = value
