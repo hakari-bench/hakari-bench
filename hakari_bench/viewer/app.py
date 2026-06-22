@@ -345,11 +345,11 @@ def create_app(
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
         doc_len_max: str = Query(default=""),
-        result_view: str = Query(default="table", pattern="^(table|plot)$"),
-        plot_y: str = Query(default="borda_score"),
-        plot_x: str = Query(default="active_parameters"),
-        plot_size: str = Query(default="embedding_dim"),
-        plot_color: str = Query(default="max_seq_length"),
+        result_view: str = Query(default="table", pattern="^(table|chart)$"),
+        chart_y: str = Query(default="borda_score"),
+        chart_x: str = Query(default="active_parameters"),
+        chart_size: str = Query(default="embedding_dim"),
+        chart_color: str = Query(default="max_seq_length"),
     ) -> str:
         with timed_operation("viewer.http.request", route="index") as request_timing:
             store.start_background_sync()
@@ -391,10 +391,10 @@ def create_app(
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
                 result_view=result_view,
-                plot_y=plot_y,
-                plot_x=plot_x,
-                plot_size=plot_size,
-                plot_color=plot_color,
+                chart_y=chart_y,
+                chart_x=chart_x,
+                chart_size=chart_size,
+                chart_color=chart_color,
             )
             if not task_z_scores:
                 initial_query["task_z_scores"] = "0"
@@ -498,11 +498,11 @@ def create_app(
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
         doc_len_max: str = Query(default=""),
-        result_view: str = Query(default="table", pattern="^(table|plot)$"),
-        plot_y: str = Query(default="borda_score"),
-        plot_x: str = Query(default="active_parameters"),
-        plot_size: str = Query(default="embedding_dim"),
-        plot_color: str = Query(default="max_seq_length"),
+        result_view: str = Query(default="table", pattern="^(table|chart)$"),
+        chart_y: str = Query(default="borda_score"),
+        chart_x: str = Query(default="active_parameters"),
+        chart_size: str = Query(default="embedding_dim"),
+        chart_color: str = Query(default="max_seq_length"),
     ) -> HTMLResponse:
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
             state_query = normalize_query_state(
@@ -543,10 +543,10 @@ def create_app(
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
                 result_view=result_view,
-                plot_y=plot_y,
-                plot_x=plot_x,
-                plot_size=plot_size,
-                plot_color=plot_color,
+                chart_y=chart_y,
+                chart_x=chart_x,
+                chart_size=chart_size,
+                chart_color=chart_color,
             )
             sync_status = store.start_background_sync()
             if _duckdb_sync_blocks_leaderboard(store, sync_status):
@@ -565,10 +565,10 @@ def create_app(
                     filter_state=filter_state,
                     benchmark_docs=benchmark_docs,
                     result_view=query_string(state_query.get("result_view", "table")),
-                    plot_y=query_string(state_query.get("plot_y", "borda_score")),
-                    plot_x=query_string(state_query.get("plot_x", "active_parameters")),
-                    plot_size=query_string(state_query.get("plot_size", "embedding_dim")),
-                    plot_color=query_string(state_query.get("plot_color", "max_seq_length")),
+                    plot_y=query_string(state_query.get("chart_y", "borda_score")),
+                    plot_x=query_string(state_query.get("chart_x", "active_parameters")),
+                    plot_size=query_string(state_query.get("chart_size", "embedding_dim")),
+                    plot_color=query_string(state_query.get("chart_color", "max_seq_length")),
                 )
                 content = f"{content}\n{_render_footer_update(store=store)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
@@ -1185,7 +1185,7 @@ def render_leaderboard(
     shown_count = visible_row_count(result.rows, filter_context)
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
     mode_icon, mode_label = _score_target_display(result.score_target)
-    result_view = result_view if result_view in {"table", "plot"} else "table"
+    result_view = result_view if result_view in {"table", "chart"} else "table"
     plot_state = _plot_state_query(
         result_view=result_view,
         plot_y=plot_y,
@@ -1205,7 +1205,7 @@ def render_leaderboard(
             plot_size=plot_size,
             plot_color=plot_color,
         )
-        if result_view == "plot"
+        if result_view == "chart"
         else f"""
   <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
     <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
@@ -1310,9 +1310,9 @@ def render_result_view_tabs(
     plot_color: str = "max_seq_length",
 ) -> str:
     filter_state = filter_state or FilterState()
-    result_view = result_view if result_view in {"table", "plot"} else "table"
+    result_view = result_view if result_view in {"table", "chart"} else "table"
     buttons = []
-    for value, label, icon in [("table", "Table", "table-properties"), ("plot", "Plot", "chart-scatter")]:
+    for value, label, icon in [("table", "Table", "table-properties"), ("chart", "Chart", "chart-scatter")]:
         active = result_view == value
         query_payload = _plot_state_payload(
             result=result,
@@ -1352,7 +1352,7 @@ def render_plot_controls(
         sort=sort,
         direction=direction,
         filter_state=filter_state,
-        result_view="plot",
+        result_view="chart",
     )
     return f"""
     <form id="plot-controls" class="plot-controls flex flex-wrap items-center justify-end gap-2 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700 shadow-sm"
@@ -1360,10 +1360,10 @@ def render_plot_controls(
           {_leaderboard_control_hx_attrs()}
           hx-trigger="change, submit">
       {_hidden_inputs(state_fields)}
-      {_render_plot_select("plot_y", "Y axis", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
-      {_render_plot_select("plot_x", "X axis", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
-      {_render_plot_select("plot_size", "Size", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_size, default="embedding_dim"))}
-      {_render_plot_select("plot_color", "Color", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_color, default="max_seq_length"))}
+      {_render_plot_select("chart_y", "Y axis", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
+      {_render_plot_select("chart_x", "X axis", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
+      {_render_plot_select("chart_size", "Size", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_size, default="embedding_dim"))}
+      {_render_plot_select("chart_color", "Color", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_color, default="max_seq_length"))}
     </form>
 """
 
@@ -1403,13 +1403,13 @@ def _plot_state_payload(
     plot_size = _normalized_plot_channel_field(plot_size, default="embedding_dim")
     plot_color = _normalized_plot_channel_field(plot_color, default="max_seq_length")
     if plot_y != "borda_score":
-        payload["plot_y"] = plot_y
+        payload["chart_y"] = plot_y
     if plot_x != "active_parameters":
-        payload["plot_x"] = plot_x
+        payload["chart_x"] = plot_x
     if plot_size != "embedding_dim":
-        payload["plot_size"] = plot_size
+        payload["chart_size"] = plot_size
     if plot_color != "max_seq_length":
-        payload["plot_color"] = plot_color
+        payload["chart_color"] = plot_color
     if "quantization" in {plot_x, plot_size, plot_color}:
         payload["quantization"] = "1"
     return payload
@@ -1442,22 +1442,22 @@ def _plot_state_query(
     plot_size: str,
     plot_color: str,
 ) -> QueryState:
-    result_view = result_view if result_view in {"table", "plot"} else "table"
+    result_view = result_view if result_view in {"table", "chart"} else "table"
     if result_view == "table":
         return {}
     plot_y = _normalized_plot_score_field(plot_y)
     plot_x = _normalized_plot_axis_field(plot_x)
     plot_size = _normalized_plot_channel_field(plot_size, default="embedding_dim")
     plot_color = _normalized_plot_channel_field(plot_color, default="max_seq_length")
-    payload: QueryState = {"result_view": "plot"}
+    payload: QueryState = {"result_view": "chart"}
     if plot_y != "borda_score":
-        payload["plot_y"] = plot_y
+        payload["chart_y"] = plot_y
     if plot_x != "active_parameters":
-        payload["plot_x"] = plot_x
+        payload["chart_x"] = plot_x
     if plot_size != "embedding_dim":
-        payload["plot_size"] = plot_size
+        payload["chart_size"] = plot_size
     if plot_color != "max_seq_length":
-        payload["plot_color"] = plot_color
+        payload["chart_color"] = plot_color
     if "quantization" in {plot_x, plot_size, plot_color}:
         payload["quantization"] = "1"
     return payload
@@ -1631,7 +1631,7 @@ def render_leaderboard_plot(
     return f"""
   <div class="leaderboard-plot-shell relative border border-zinc-200 bg-white p-2" data-testid="leaderboard-plot">
     <div class="leaderboard-plot-controls-region" style="position:absolute;right:0.75rem;top:0.75rem;z-index:10;">{plot_controls}</div>
-    <div class="leaderboard-plot-mobile-message" role="status">Plot view is available only on wider screens.</div>
+    <div class="leaderboard-plot-mobile-message" role="status">Chart view is available only on wider screens.</div>
     <svg class="leaderboard-plot" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(PLOT_SCORE_OPTIONS[y_field][0])} by {escape(PLOT_AXIS_OPTIONS[x_field][0])}">
       {grid}
       <text x="{left}" y="{top - 8}" class="plot-axis-tick">Circle: {escape(PLOT_CHANNEL_OPTIONS[size_field][0])}</text>

@@ -17,7 +17,7 @@ from hakari_bench.viewer.variant_display import variant_display_flags_from_value
 QueryValue = str | list[str]
 QueryState = dict[str, QueryValue]
 
-RESULT_VIEW_VALUES = {"table", "plot"}
+RESULT_VIEW_VALUES = {"table", "chart"}
 PLOT_SCORE_FIELDS = {"borda_score", "macro_mean", "micro_mean"}
 PLOT_NONE_FIELD = "none"
 PLOT_AXIS_FIELDS = {
@@ -109,10 +109,10 @@ def normalize_query_state(
     doc_len_max: str = "",
     metric: str = "ndcg@10",
     result_view: str = "table",
-    plot_y: str = "borda_score",
-    plot_x: str = "active_parameters",
-    plot_size: str = "embedding_dim",
-    plot_color: str = "max_seq_length",
+    chart_y: str = "borda_score",
+    chart_x: str = "active_parameters",
+    chart_size: str = "embedding_dim",
+    chart_color: str = "max_seq_length",
 ) -> QueryState:
     view = _normalized_view_name(view)
     selected_benchmarks = _normalized_benchmark_values(bench, viewer_config)
@@ -129,11 +129,11 @@ def normalize_query_state(
     if target not in {"all", "reranking", "reranking_without_safeguard"}:
         target = "all"
     result_view = result_view if result_view in RESULT_VIEW_VALUES else "table"
-    plot_y = plot_y if plot_y in PLOT_SCORE_FIELDS else "borda_score"
-    plot_x = plot_x if plot_x in PLOT_AXIS_FIELDS else "active_parameters"
-    plot_size = plot_size if plot_size in PLOT_ENCODING_FIELDS else "embedding_dim"
-    plot_color = plot_color if plot_color in PLOT_ENCODING_FIELDS else "max_seq_length"
-    if "quantization" in {plot_x, plot_size, plot_color}:
+    chart_y = chart_y if chart_y in PLOT_SCORE_FIELDS else "borda_score"
+    chart_x = chart_x if chart_x in PLOT_AXIS_FIELDS else "active_parameters"
+    chart_size = chart_size if chart_size in PLOT_ENCODING_FIELDS else "embedding_dim"
+    chart_color = chart_color if chart_color in PLOT_ENCODING_FIELDS else "max_seq_length"
+    if "quantization" in {chart_x, chart_size, chart_color}:
         quantization = True
     score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
     display_flags = variant_display_flags_from_values(
@@ -147,14 +147,14 @@ def normalize_query_state(
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if result_view != "table":
         query["result_view"] = result_view
-    if plot_y != "borda_score":
-        query["plot_y"] = plot_y
-    if plot_x != "active_parameters":
-        query["plot_x"] = plot_x
-    if plot_size != "embedding_dim":
-        query["plot_size"] = plot_size
-    if plot_color != "max_seq_length":
-        query["plot_color"] = plot_color
+    if chart_y != "borda_score":
+        query["chart_y"] = chart_y
+    if chart_x != "active_parameters":
+        query["chart_x"] = chart_x
+    if chart_size != "embedding_dim":
+        query["chart_size"] = chart_size
+    if chart_color != "max_seq_length":
+        query["chart_color"] = chart_color
     empty_custom_scope = view == CUSTOM_SCOPE_NAME and not selected_benchmarks
     if view == CUSTOM_SCOPE_NAME and selected_benchmarks:
         query["bench"] = selected_benchmarks

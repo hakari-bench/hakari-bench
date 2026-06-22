@@ -1571,7 +1571,7 @@ def test_display_controls_preserve_custom_benchmark_selection() -> None:
     assert 'name="lang_filter" value="ja"' in column_form
 
 
-def test_result_view_tabs_switch_table_and_plot_without_losing_state() -> None:
+def test_result_view_tabs_switch_table_and_chart_without_losing_state() -> None:
     result = LeaderboardResult(
         view_name="Custom",
         view_label="Custom",
@@ -1591,7 +1591,7 @@ def test_result_view_tabs_switch_table_and_plot_without_losing_state() -> None:
         sort="borda_score",
         direction="desc",
         filter_state=FilterState(language_filters=("ja",), model_filter="e5"),
-        result_view="plot",
+        result_view="chart",
         plot_y="borda_score",
         plot_x="active_parameters",
         plot_size="embedding_dim",
@@ -1603,20 +1603,20 @@ def test_result_view_tabs_switch_table_and_plot_without_losing_state() -> None:
     assert 'data-icon="table-properties"' in html
     assert 'data-icon="chart-scatter"' in html
     assert ">Table</span></button>" in html
-    assert ">Plot</span></button>" in html
+    assert ">Chart</span></button>" in html
     assert ">Y axis</span>" not in html
     assert ">X axis</span>" not in html
     assert ">Size</span>" not in html
     assert ">Left</span>" not in html
     assert ">Bottom</span>" not in html
-    assert "result_view=plot" in html
+    assert "result_view=chart" in html
     assert "bench=NanoJMTEB-v2" in html
     assert "lang_filter=ja" in html
     assert "model_filter=e5" in html
     assert "quantization=1" in html
 
 
-def test_plot_controls_render_inside_plot_shell_and_view_switch_precedes_status() -> None:
+def test_chart_controls_render_inside_plot_shell_and_view_switch_precedes_status() -> None:
     result = LeaderboardResult(
         view_name="Overall",
         view_label="Overall",
@@ -1647,7 +1647,7 @@ def test_plot_controls_render_inside_plot_shell_and_view_switch_precedes_status(
         result=result,
         sort="borda_score",
         direction="desc",
-        result_view="plot",
+        result_view="chart",
     )
 
     status_html = html.split('data-shown-count="1"', 1)[1].split("</div>", 1)[0]
@@ -1719,7 +1719,7 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
     )
 
     assert 'data-testid="leaderboard-plot"' in html
-    assert "Plot view is available only on wider screens." in html
+    assert "Chart view is available only on wider screens." in html
     assert "Borda Score" in html
     assert "Active Params" in html
     assert "Dims" in html
@@ -2606,7 +2606,7 @@ def test_leaderboard_plot_param_log_axis_separates_zero_from_smallest_positive()
     assert ">10M</text>" in html
 
 
-def test_plot_state_is_preserved_in_display_and_filter_controls() -> None:
+def test_chart_state_is_preserved_in_display_and_filter_controls() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -2636,7 +2636,7 @@ def test_plot_state_is_preserved_in_display_and_filter_controls() -> None:
         result=result,
         sort="borda_score",
         direction="desc",
-        result_view="plot",
+        result_view="chart",
         plot_y="macro_mean",
         plot_x="total_parameters",
         plot_size="active_parameters",
@@ -2645,17 +2645,17 @@ def test_plot_state_is_preserved_in_display_and_filter_controls() -> None:
 
     variant_form = html.split('id="variant-controls"', 1)[1].split("</form>", 1)[0]
     filter_form = html.split('id="filter-controls"', 1)[1].split("</form>", 1)[0]
-    assert 'name="result_view" value="plot"' in variant_form
-    assert 'name="plot_y" value="macro_mean"' in variant_form
-    assert 'name="plot_x" value="total_parameters"' in variant_form
-    assert 'name="plot_size" value="active_parameters"' in variant_form
-    assert 'name="plot_color" value="embedding_dim"' in variant_form
-    assert 'name="result_view" value="plot"' in filter_form
-    assert 'name="plot_x" value="total_parameters"' in filter_form
-    assert 'name="plot_size" value="active_parameters"' in filter_form
-    assert 'name="plot_color" value="embedding_dim"' in filter_form
-    assert "result_view=plot" in html
-    assert "plot_x=total_parameters" in html
+    assert 'name="result_view" value="chart"' in variant_form
+    assert 'name="chart_y" value="macro_mean"' in variant_form
+    assert 'name="chart_x" value="total_parameters"' in variant_form
+    assert 'name="chart_size" value="active_parameters"' in variant_form
+    assert 'name="chart_color" value="embedding_dim"' in variant_form
+    assert 'name="result_view" value="chart"' in filter_form
+    assert 'name="chart_x" value="total_parameters"' in filter_form
+    assert 'name="chart_size" value="active_parameters"' in filter_form
+    assert 'name="chart_color" value="embedding_dim"' in filter_form
+    assert "result_view=chart" in html
+    assert "chart_x=total_parameters" in html
 
 
 def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> None:
@@ -2708,7 +2708,7 @@ def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> No
     assert body.count(">None</td>") >= 2
 
 
-def test_plot_quantization_axis_normalization_enables_quantization_variants() -> None:
+def test_chart_quantization_axis_normalization_enables_quantization_variants() -> None:
     config = ViewerConfig(
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
         benchmarks=[BenchmarkConfig(name="BenchA")],
@@ -2732,15 +2732,15 @@ def test_plot_quantization_axis_normalization_enables_quantization_variants() ->
         attn_filter=None,
         prompt_filter=None,
         model_filter="",
-        plot_x="quantization",
-        plot_y="borda_score",
-        plot_size="embedding_dim",
-        plot_color="max_seq_length",
-        result_view="plot",
+        chart_x="quantization",
+        chart_y="borda_score",
+        chart_size="embedding_dim",
+        chart_color="max_seq_length",
+        result_view="chart",
     )
 
-    assert query["result_view"] == "plot"
-    assert query["plot_x"] == "quantization"
+    assert query["result_view"] == "chart"
+    assert query["chart_x"] == "quantization"
     assert query["quantization"] == "1"
 
 

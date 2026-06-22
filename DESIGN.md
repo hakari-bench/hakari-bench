@@ -123,8 +123,8 @@ components:
   leaderboard-plot:
     purpose: Optional visual comparison surface for score, scale, dimension, and
       compression trade-offs using the same scoped and filtered rows as the table.
-    treatment: Available as icon-labeled Table / Plot tabs at the start of the
-      result status line before the current scope and evaluation mode. The plot
+    treatment: Available as icon-labeled Table / Chart tabs at the start of the
+      result status line before the current scope and evaluation mode. The chart
       uses compact Y axis, X axis, Size, and Color selectors positioned in the
       graph area's top-right corner, muted grid lines, cyan-tinted bubbles, and
       hover-only tooltips for row metadata. The tooltip preserves line breaks so
@@ -150,11 +150,11 @@ components:
       drive position, size, or color, Size and Color selectors may use None to
       render one constant bubble size or one constant color without extra encoding,
       all leaderboard controls must preserve the
-      current plot view state, and bubble size should use the visible value
+      current chart view state, and bubble size should use the visible value
       distribution with a compact radius range and midrange emphasis so common
       clustered dimensions such as 384, 768, and 1024 remain distinguishable
-      without excessive overlap. Mobile-width viewports should hide the plot and
-      plot controls and show a concise message that plot view requires a wider
+      without excessive overlap. Mobile-width viewports should hide the chart and
+      chart controls and show a concise message that chart view requires a wider
       device.
       BM25-style baselines and static embeddings should remain visible at 0
       params in active/total-parameter plot channels because they do not have
@@ -169,7 +169,7 @@ components:
       solely because color or another plot channel uses Max Tokens. Borda Score
       uses a fixed 0-100 Y axis, while Task Mean scores use the visible score
       minimum and maximum as the Y-axis bounds.
-    status-line: The current benchmark scope sits directly after the Table / Plot
+    status-line: The current benchmark scope sits directly after the Table / Chart
       switch with the same database icon used by the Benchmark scope control;
       avoid a bare slash before the scope label.
   model-score-bar:
@@ -281,7 +281,7 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep the page top chrome tight: the brand row should sit close to the viewport
   top, and intro/status copy should use compact margins and padding so the
   leaderboard remains the first meaningful surface.
-- The Table / Plot switch belongs directly above the result surface. Plot is an
+- The Table / Chart switch belongs directly above the result surface. Chart is an
   inspection mode for the current table rows, not a separate dashboard; it should
   not duplicate the main benchmark, filter, or variant controls.
 - Use help modals rather than permanent explanatory copy for technical controls.
