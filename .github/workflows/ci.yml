@@ -9,7 +9,7 @@ env:
 
 jobs:
   validation:
-    name: Python validation
+    name: Python tests, lint, and types
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -23,11 +23,19 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
 
-      - name: Run unit, lint, and type checks
+      - name: Restore tox environments
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: .tox
+          key: tox-${{ runner.os }}-py312-${{ hashFiles('uv.lock', 'pyproject.toml', '.github/workflows/ci.yml') }}
+          restore-keys: |
+            tox-${{ runner.os }}-py312-
+
+      - name: Run Python tests, lint, and type checks
         run: uv run tox
 
   browser:
-    name: Viewer browser smoke
+    name: Viewer browser test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -49,11 +57,11 @@ jobs:
           restore-keys: |
             playwright-${{ runner.os }}-
 
-      - name: Install lightweight viewer browser test dependencies
+      - name: Install viewer browser test dependencies
         run: uv sync --only-group viewer-browser-test --frozen
 
       - name: Install Playwright Chromium
         run: uv run --only-group viewer-browser-test playwright install --with-deps chromium
 
-      - name: Run viewer browser smoke test
+      - name: Run viewer browser test
         run: uv run --only-group viewer-browser-test pytest -q -m browser tests/test_viewer_browser.py
