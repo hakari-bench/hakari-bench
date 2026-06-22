@@ -120,10 +120,17 @@ components:
     purpose: Optional visual comparison surface for score, scale, dimension, and
       compression trade-offs using the same scoped and filtered rows as the table.
     treatment: Available as a Table / Plot tab above the result surface. The plot
-      uses compact axis selectors, muted grid lines, cyan-tinted bubbles, and
-      hover tooltips for row metadata. It must preserve the current benchmark
-      scope and filters, and quantization axes must automatically include
-      quantization variants.
+      uses compact Y axis, X axis, Size, and Color selectors, muted grid lines,
+      cyan-tinted bubbles, and hover-only tooltips for row metadata. The
+      tooltip preserves line breaks so score/rank and model metadata scan as
+      separate groups. The right-side color legend label is
+      vertical to avoid competing with tick labels. It must preserve the current
+      benchmark scope and filters, quantization axes must automatically include
+      quantization variants, sparse/BM25 rows use a representative average
+      dimension for plotting, rows missing the selected max-token metadata are
+      omitted from that plot, nonnegative measures must not render negative axis
+      or legend labels, and params/dims/tokens use logarithmic scaling where
+      they drive position, size, or color.
   model-score-bar:
     purpose: Show relative Borda strength behind the sticky model name.
     treatment: Subtle background bar scaled by visible max score; never competes with text.

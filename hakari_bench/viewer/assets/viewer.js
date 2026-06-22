@@ -172,12 +172,13 @@
     window.__hakariHideTooltip();
     tooltipPinned = false;
     tooltipTrigger = trigger;
+    const delay = trigger.dataset.tooltipDelay === "0" ? 0 : 1000;
     tooltipTimer = setTimeout(() => {
       tooltip.textContent = text;
       tooltip.hidden = false;
       tooltip.dataset.visible = "true";
       window.__hakariPositionTooltip(trigger);
-    }, 1000);
+    }, delay);
   };
 
   window.__hakariHideTooltip = () => {
@@ -417,6 +418,7 @@
       if (closestElement(event.target, "a, button, summary, input, select, textarea")) return;
       const trigger = closestElement(event.target, "[data-tooltip]");
       if (!trigger) return;
+      if (trigger.dataset.tooltipHoverOnly === "true") return;
       event.preventDefault();
       event.stopPropagation();
       showTooltipNow(trigger);

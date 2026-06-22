@@ -572,7 +572,7 @@
     pointer-events: none;
     text-transform: none;
     transition: opacity 120ms ease-in-out;
-    white-space: normal;
+    white-space: pre-line;
   }
 
   .shadow-sm {
@@ -1417,6 +1417,10 @@
   font-family: var(--hakari-font);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
+}
+
+.plot-legend-label {
+  dominant-baseline: middle;
 }
 
 .leaderboard-plot-point {

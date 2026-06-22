@@ -1203,6 +1203,14 @@ PLOT_AXIS_OPTIONS = {
     "sparse_query_dims": ("Sparse Query Dims", "Sparse query dims"),
     "sparse_document_dims": ("Sparse Doc Dims", "Sparse doc dims"),
 }
+PLOT_LOG_FIELDS = {
+    "active_parameters",
+    "total_parameters",
+    "max_seq_length",
+    "embedding_dim",
+    "sparse_query_dims",
+    "sparse_document_dims",
+}
 
 
 class _PlotPoint(TypedDict):
@@ -1299,9 +1307,9 @@ def render_plot_controls(
           {_leaderboard_control_hx_attrs()}
           hx-trigger="change, submit">
       {_hidden_inputs(state_fields)}
-      {_render_plot_select("plot_y", "Left", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
-      {_render_plot_select("plot_x", "Bottom", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
-      {_render_plot_select("plot_size", "Circle", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_size))}
+      {_render_plot_select("plot_y", "Y axis", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
+      {_render_plot_select("plot_x", "X axis", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
+      {_render_plot_select("plot_size", "Size", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_size))}
       {_render_plot_select("plot_color", "Color", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_color))}
     </form>
 """
@@ -1387,12 +1395,29 @@ def render_leaderboard_plot(
     x_field = _normalized_plot_axis_field(plot_x)
     size_field = _normalized_plot_axis_field(plot_size)
     color_field = _normalized_plot_axis_field(plot_color)
+    visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
+    sparse_embedding_dim = _average_dense_embedding_dim(visible_rows) or _average_dense_embedding_dim(result.rows)
     points: list[_PlotPoint] = [
-        _plot_point_values(row, y_field=y_field, x_field=x_field, size_field=size_field, color_field=color_field)
-        for row in result.rows
-        if filter_context.is_visible(row)
+        _plot_point_values(
+            row,
+            y_field=y_field,
+            x_field=x_field,
+            size_field=size_field,
+            color_field=color_field,
+            sparse_embedding_dim=sparse_embedding_dim,
+        )
+        for row in visible_rows
     ]
-    points = [point for point in points if point["x"] is not None and point["y"] is not None]
+    points = [
+        point
+        for point in points
+        if _plot_point_has_required_values(
+            point,
+            x_field=x_field,
+            size_field=size_field,
+            color_field=color_field,
+        )
+    ]
     if not points:
         return '<div class="leaderboard-plot-empty border border-zinc-200 bg-white px-3 py-5 text-center text-zinc-500">No plottable rows found.</div>'
     width = 1100
@@ -1403,15 +1428,27 @@ def render_leaderboard_plot(
     bottom = 72
     plot_width = width - left - right
     plot_height = height - top - bottom
-    x_log = x_field in {"active_parameters", "total_parameters", "max_seq_length", "embedding_dim", "sparse_query_dims", "sparse_document_dims"}
+    x_log = _plot_field_uses_log(x_field)
+    size_log = _plot_field_uses_log(size_field)
+    color_log = _plot_field_uses_log(color_field)
     x_values = [float(point["x"]) for point in points if point["x"] is not None and (not x_log or float(point["x"]) > 0)]
     y_values = [float(point["y"]) for point in points if point["y"] is not None]
-    color_values = [float(point["color"]) for point in points if point["color"] is not None]
-    size_values = [float(point["size"]) for point in points if point["size"] is not None]
-    x_min, x_max = _plot_extent(x_values, log=x_log)
-    y_min, y_max = _plot_extent(y_values, log=False, pad_fraction=0.08)
-    color_min, color_max = _plot_extent(color_values, log=False) if color_values else (0.0, 1.0)
-    size_min, size_max = _plot_extent(size_values, log=False) if size_values else (0.0, 1.0)
+    color_values = [
+        float(point["color"])
+        for point in points
+        if point["color"] is not None and (not color_log or float(point["color"]) > 0)
+    ]
+    size_values = [
+        float(point["size"])
+        for point in points
+        if point["size"] is not None and (not size_log or float(point["size"]) > 0)
+    ]
+    x_min, x_max = _plot_extent(x_values, log=x_log, nonnegative=True)
+    y_min, y_max = _plot_extent(y_values, log=False, pad_fraction=0.08, nonnegative=True)
+    color_min, color_max = (
+        _plot_extent(color_values, log=color_log, nonnegative=True) if color_values else (0.0, 1.0)
+    )
+    size_min, size_max = _plot_extent(size_values, log=size_log, nonnegative=True) if size_values else (0.0, 1.0)
     grid = _render_plot_grid(
         left=left,
         top=top,
@@ -1437,11 +1474,11 @@ def render_leaderboard_plot(
         y_value = float(y_raw)
         cx = left + _plot_scale(x_value, min_value=x_min, max_value=x_max, log=x_log) * plot_width
         cy = top + (1.0 - _plot_scale(y_value, min_value=y_min, max_value=y_max, log=False)) * plot_height
-        radius = _plot_radius(point["size"], size_min=size_min, size_max=size_max)
-        fill = _plot_color(point["color"], min_value=color_min, max_value=color_max)
+        radius = _plot_radius(point["size"], size_min=size_min, size_max=size_max, log=size_log)
+        fill = _plot_color(point["color"], min_value=color_min, max_value=color_max, log=color_log)
         tooltip = _plot_tooltip(point)
         circles.append(
-            f"""<circle class="leaderboard-plot-point tooltip-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{radius:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
+            f"""<circle class="leaderboard-plot-point tooltip-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{radius:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" data-tooltip-hover-only="true" data-tooltip-delay="0" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
         )
     legend = _render_plot_legend(
         x=width - right + 42,
@@ -1464,18 +1501,38 @@ def render_leaderboard_plot(
 """
 
 
-def _plot_point_values(row: LeaderboardRow, *, y_field: str, x_field: str, size_field: str, color_field: str) -> _PlotPoint:
+def _plot_point_values(
+    row: LeaderboardRow,
+    *,
+    y_field: str,
+    x_field: str,
+    size_field: str,
+    color_field: str,
+    sparse_embedding_dim: float | None,
+) -> _PlotPoint:
     return {
         "row": row,
-        "x": _plot_axis_value(row, x_field),
+        "x": _plot_axis_value(row, x_field, sparse_embedding_dim=sparse_embedding_dim),
         "y": _plot_score_value(row, y_field),
-        "size": _plot_axis_value(row, size_field),
-        "color": _plot_axis_value(row, color_field),
+        "size": _plot_axis_value(row, size_field, sparse_embedding_dim=sparse_embedding_dim),
+        "color": _plot_axis_value(row, color_field, sparse_embedding_dim=sparse_embedding_dim),
         "x_label": PLOT_AXIS_OPTIONS[x_field][1],
         "y_label": PLOT_SCORE_OPTIONS[y_field][1],
         "size_label": PLOT_AXIS_OPTIONS[size_field][1],
         "color_label": PLOT_AXIS_OPTIONS[color_field][1],
     }
+
+
+def _plot_point_has_required_values(point: _PlotPoint, *, x_field: str, size_field: str, color_field: str) -> bool:
+    if point["x"] is None or point["y"] is None:
+        return False
+    if x_field == "max_seq_length" and point["x"] is None:
+        return False
+    if size_field == "max_seq_length" and point["size"] is None:
+        return False
+    if color_field == "max_seq_length" and point["color"] is None:
+        return False
+    return True
 
 
 def _plot_score_value(row: LeaderboardRow, field: str) -> float | None:
@@ -1486,7 +1543,7 @@ def _plot_score_value(row: LeaderboardRow, field: str) -> float | None:
     return row.borda_score
 
 
-def _plot_axis_value(row: LeaderboardRow, field: str) -> float | None:
+def _plot_axis_value(row: LeaderboardRow, field: str, *, sparse_embedding_dim: float | None) -> float | None:
     if field == "active_parameters":
         return float(row.active_parameters) if row.active_parameters is not None else None
     if field == "total_parameters":
@@ -1494,6 +1551,8 @@ def _plot_axis_value(row: LeaderboardRow, field: str) -> float | None:
     if field == "max_seq_length":
         return float(row.max_seq_length) if row.max_seq_length is not None else None
     if field == "embedding_dim":
+        if _is_sparse_or_bm25_row(row):
+            return sparse_embedding_dim
         return float(row.embedding_dim) if row.embedding_dim is not None else None
     if field == "quantization":
         return float(_quantization_numeric_value(row.quantization))
@@ -1515,6 +1574,21 @@ def _quantization_numeric_value(quantization: str | None) -> int:
     return 16
 
 
+def _average_dense_embedding_dim(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.embedding_dim)
+        for row in rows
+        if row.embedding_dim is not None and not _is_sparse_or_bm25_row(row)
+    ]
+    if not values:
+        return None
+    return sum(values) / len(values)
+
+
+def _is_sparse_or_bm25_row(row: LeaderboardRow) -> bool:
+    return model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse"
+
+
 def _sparse_dim_from_variant(embedding_variant_name: str | None, side: str) -> float | None:
     if not embedding_variant_name or not is_sparse_dims_variant_name(embedding_variant_name):
         return None
@@ -1534,7 +1608,17 @@ def _sparse_dim_from_variant(embedding_variant_name: str | None, side: str) -> f
     return float(match.group(1)) if match else None
 
 
-def _plot_extent(values: list[float], *, log: bool, pad_fraction: float = 0.04) -> tuple[float, float]:
+def _plot_field_uses_log(field: str) -> bool:
+    return field in PLOT_LOG_FIELDS
+
+
+def _plot_extent(
+    values: list[float],
+    *,
+    log: bool,
+    pad_fraction: float = 0.04,
+    nonnegative: bool = False,
+) -> tuple[float, float]:
     values = [value for value in values if math.isfinite(value) and (not log or value > 0)]
     if not values:
         return (1.0, 10.0) if log else (0.0, 1.0)
@@ -1544,11 +1628,18 @@ def _plot_extent(values: list[float], *, log: bool, pad_fraction: float = 0.04) 
         if log:
             return minimum / 2.0, maximum * 2.0
         pad = abs(minimum) * 0.1 or 1.0
-        return minimum - pad, maximum + pad
-    if log:
-        return minimum, maximum
-    span = maximum - minimum
-    return minimum - span * pad_fraction, maximum + span * pad_fraction
+        lower = minimum - pad
+        upper = maximum + pad
+    elif log:
+        lower = minimum
+        upper = maximum
+    else:
+        span = maximum - minimum
+        lower = minimum - span * pad_fraction
+        upper = maximum + span * pad_fraction
+    if nonnegative and not log:
+        lower = max(0.0, lower)
+    return lower, upper
 
 
 def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) -> float:
@@ -1561,17 +1652,17 @@ def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) 
     return min(1.0, max(0.0, (value - min_value) / (max_value - min_value)))
 
 
-def _plot_radius(value: object, *, size_min: float, size_max: float) -> float:
+def _plot_radius(value: object, *, size_min: float, size_max: float, log: bool) -> float:
     if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
         return 8.0
-    scaled = _plot_scale(float(value), min_value=size_min, max_value=size_max, log=False)
-    return 5.0 + math.sqrt(scaled) * 15.0
+    scaled = _plot_scale(float(value), min_value=size_min, max_value=size_max, log=log)
+    return 3.0 + math.sqrt(scaled) * 17.0
 
 
-def _plot_color(value: object, *, min_value: float, max_value: float) -> str:
+def _plot_color(value: object, *, min_value: float, max_value: float, log: bool) -> str:
     if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
         return "rgb(127 139 143 / 0.72)"
-    scaled = _plot_scale(float(value), min_value=min_value, max_value=max_value, log=False)
+    scaled = _plot_scale(float(value), min_value=min_value, max_value=max_value, log=log)
     lightness = 38 + scaled * 42
     return f"hsl(190 58% {lightness:.1f}% / 0.72)"
 
@@ -1622,6 +1713,8 @@ def _plot_ticks(min_value: float, max_value: float, *, log: bool) -> list[float]
 
 
 def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: float, max_value: float, field: str) -> str:
+    label_x = x - 14
+    label_y = y + height / 2
     return f"""
       <defs>
         <linearGradient id="plot-color-gradient" x1="0" x2="0" y1="1" y2="0">
@@ -1630,7 +1723,7 @@ def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: f
         </linearGradient>
       </defs>
       <g class="plot-legend">
-        <text x="{x}" y="{y - 8}" class="plot-axis-label">{escape(label)}</text>
+        <text x="{label_x}" y="{label_y:.2f}" class="plot-axis-label plot-legend-label" text-anchor="middle" transform="rotate(-90 {label_x} {label_y:.2f})">{escape(label)}</text>
         <rect x="{x}" y="{y}" width="18" height="{height}" fill="url(#plot-color-gradient)"></rect>
         <text x="{x + 28}" y="{y + 5}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(max_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
         <text x="{x + 28}" y="{y + height}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(min_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
@@ -1640,18 +1733,22 @@ def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: f
 
 def _plot_tooltip(point: _PlotPoint) -> str:
     row = point["row"]
-    lines = [
-        row.model_name,
-        f"{point['y_label']}: {_fmt_score(point['y'])}",
-        f"Active params: {_fmt_int(row.active_parameters)}",
-        f"Total params: {_fmt_int(row.total_parameters)}",
-        f"Max tokens: {_fmt_int(row.max_seq_length)}",
-        f"Embedding dim: {_fmt_int(row.embedding_dim)}",
-        f"Quantization: {row.quantization or 'orig'}",
-        f"Rank: {_fmt_rank(row.borda_rank)}",
-    ]
+    lines = [row.model_name]
     if row.embedding_variant_name:
-        lines.insert(1, f"Variant: {row.embedding_variant_name}")
+        lines.append(f"Variant: {row.embedding_variant_name}")
+    lines.extend(
+        [
+            "",
+            f"{point['y_label']}: {_fmt_score(point['y'])}",
+            f"Rank: {_fmt_rank(row.borda_rank)}",
+            "",
+            f"Active params: {_fmt_int(row.active_parameters)}",
+            f"Total params: {_fmt_int(row.total_parameters)}",
+            f"Max tokens: {_fmt_int(row.max_seq_length)}",
+            f"Embedding dim: {_plot_embedding_dim_label(row)}",
+            f"Quantization: {row.quantization or 'orig'}",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -1673,6 +1770,12 @@ def _fmt_plot_score_tick(value: float) -> str:
 
 def _fmt_int(value: int | None) -> str:
     return "Unknown" if value is None else f"{value:,}"
+
+
+def _plot_embedding_dim_label(row: LeaderboardRow) -> str:
+    if _is_sparse_or_bm25_row(row):
+        return "sparse"
+    return _fmt_int(row.embedding_dim)
 
 
 def _normalized_plot_score_field(value: str) -> str:
@@ -3786,12 +3889,12 @@ def _fmt_max_len(value: int | None) -> str:
 
 
 def _fmt_embedding_dim(value: int | None) -> str:
-    return "" if value is None else f"{value:,}"
+    return "Unknown" if value is None else f"{value:,}"
 
 
 def _fmt_row_embedding_dim(row: LeaderboardRow) -> str:
-    if model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse":
-        return ""
+    if _is_sparse_or_bm25_row(row):
+        return "Unknown"
     return _fmt_embedding_dim(row.embedding_dim)
 
 
