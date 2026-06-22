@@ -1928,11 +1928,22 @@ def test_leaderboard_plot_score_extents_follow_score_semantics() -> None:
         plot_size="embedding_dim",
         plot_color="max_seq_length",
     )
+    micro_html = render_leaderboard_plot(
+        result=result,
+        plot_y="micro_mean",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
 
     assert '>0</text>' in borda_html
     assert '>100</text>' in borda_html
-    assert '>0</text>' in macro_html
+    assert '>0.4</text>' in macro_html
     assert '>0.5</text>' in macro_html
+    assert '>0</text>' not in macro_html
+    assert '>0.4</text>' in micro_html
+    assert '>0.5</text>' in micro_html
+    assert '>0</text>' not in micro_html
     assert '>100</text>' not in macro_html
 
 
@@ -2332,6 +2343,77 @@ def test_leaderboard_plot_param_log_axis_uses_decade_and_minor_tick_labels() -> 
     assert ">5</text>" in html
     assert ">20M</text>" not in html
     assert ">50M</text>" not in html
+
+
+def test_leaderboard_plot_param_log_axis_separates_zero_from_smallest_positive() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="sentence-transformers/static-retrieval-mrl-en-v1",
+                model_type="dense",
+                borda_score=40,
+                mean_score=0.40,
+                task_count=2,
+                active_parameters=None,
+                max_seq_length=None,
+                embedding_dim=1024,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="hotchpotch/bekko-embedding-v1-a8m",
+                model_type="dense",
+                borda_score=63,
+                mean_score=0.63,
+                task_count=2,
+                active_parameters=7_671_168,
+                max_seq_length=8192,
+                embedding_dim=384,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="dense/large",
+                model_type="dense",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                active_parameters=100_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    def cx_for(model_name: str) -> float:
+        match = re.search(rf'<circle[^>]+cx="([0-9.]+)"[^>]+data-tooltip="{re.escape(model_name)}\b', html)
+        assert match
+        return float(match.group(1))
+
+    zero_cx = cx_for("sentence-transformers/static-retrieval-mrl-en-v1")
+    smallest_positive_cx = cx_for("hotchpotch/bekko-embedding-v1-a8m")
+
+    assert smallest_positive_cx - zero_cx > 40
+    assert ">0</text>" in html
+    assert ">10M</text>" in html
 
 
 def test_plot_state_is_preserved_in_display_and_filter_controls() -> None:

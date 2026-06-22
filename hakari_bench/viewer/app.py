@@ -1232,6 +1232,7 @@ PLOT_DIMENSION_COMPRESSED_MAX = 256.0
 PLOT_DIMENSION_COMPRESSED_FRACTION = 0.12
 PLOT_DIMENSION_DENSE_TICK_MAX = 1024.0
 PLOT_DIMENSION_HIGH_TICKS = (2048.0,)
+PLOT_LOG_ZERO_BUCKET_FRACTION = 0.07
 
 
 class _PlotPoint(TypedDict):
@@ -1547,6 +1548,7 @@ def render_leaderboard_plot(
             max_value=x_max,
             log=x_log,
             label=PLOT_AXIS_OPTIONS[x_field][0],
+            has_zero=x_has_zero,
         ) * plot_width
         cy = top + (1.0 - _plot_scale(y_value, min_value=y_min, max_value=y_max, log=False)) * plot_height
         radius = _plot_radius(point["size"], size_domain=size_domain, size_min=size_min, size_max=size_max, log=size_log)
@@ -1868,10 +1870,9 @@ def _plot_score_extent(values: list[float], *, y_field: str) -> tuple[float, flo
         return 0.0, 100.0
     if not finite_values:
         return 0.0, 1.0
+    minimum = min(finite_values)
     maximum = max(finite_values)
-    if maximum <= 0:
-        return 0.0, 1.0
-    return 0.0, maximum
+    return minimum, maximum
 
 
 def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) -> float:
@@ -1884,9 +1885,22 @@ def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) 
     return min(1.0, max(0.0, (value - min_value) / (max_value - min_value)))
 
 
-def _plot_x_scale(value: float, *, min_value: float, max_value: float, log: bool, label: str) -> float:
+def _plot_x_scale(
+    value: float,
+    *,
+    min_value: float,
+    max_value: float,
+    log: bool,
+    label: str,
+    has_zero: bool = False,
+) -> float:
     if label == "Dims":
         return _plot_dimension_scale(value, max_value=max_value)
+    if has_zero and log:
+        if value <= 0:
+            return 0.0
+        scaled = _plot_scale(value, min_value=min_value, max_value=max_value, log=log)
+        return PLOT_LOG_ZERO_BUCKET_FRACTION + scaled * (1.0 - PLOT_LOG_ZERO_BUCKET_FRACTION)
     return _plot_scale(value, min_value=min_value, max_value=max_value, log=log)
 
 
@@ -1981,7 +1995,14 @@ def _render_plot_grid(
     y_ticks = _plot_ticks(y_min, y_max, log=False)
     parts = [f'<rect x="{left}" y="{top}" width="{plot_width}" height="{plot_height}" class="plot-frame"></rect>']
     for tick in x_ticks:
-        x = left + _plot_x_scale(tick, min_value=x_min, max_value=x_max, log=x_log, label=x_label) * plot_width
+        x = left + _plot_x_scale(
+            tick,
+            min_value=x_min,
+            max_value=x_max,
+            log=x_log,
+            label=x_label,
+            has_zero=x_has_zero,
+        ) * plot_width
         parts.append(f'<line x1="{x:.2f}" y1="{top}" x2="{x:.2f}" y2="{top + plot_height}" class="plot-grid-line"></line>')
         tick_label = _fmt_plot_x_tick(tick, x_label, log=x_log)
         parts.append(f'<text x="{x:.2f}" y="{top + plot_height + 24}" class="plot-axis-tick" text-anchor="middle">{escape(tick_label)}</text>')

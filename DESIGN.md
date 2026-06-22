@@ -153,11 +153,14 @@ components:
       model weights in the same sense as neural models. Other rows with unknown
       active/total params, such as hosted API models, should use the visible
       maximum param value for plotting so unknown scale is not confused with
-      zero-weight baselines. Rows without max-token metadata should use the
+      zero-weight baselines. Log-scaled parameter axes that include 0-param rows
+      should reserve a small left bucket for zero so the smallest positive
+      neural model is not drawn on top of the zero baseline. Rows without
+      max-token metadata should use the
       visible maximum max-token value for plotting so they are not dropped
       solely because color or another plot channel uses Max Tokens. Borda Score
-      uses a fixed 0-100 Y axis, while Task Mean scores start at 0 and use the
-      visible maximum as the upper bound.
+      uses a fixed 0-100 Y axis, while Task Mean scores use the visible score
+      minimum and maximum as the Y-axis bounds.
   model-score-bar:
     purpose: Show relative Borda strength behind the sticky model name.
     treatment: Subtle background bar scaled by visible max score; never competes with text.
