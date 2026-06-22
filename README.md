@@ -4,7 +4,7 @@
 > Settings under Unified Conditions
 
 <p align="left">
-  <a href="https://huggingface.co/spaces/hakari-bench/leaderboard">📊 🤗 Leaderboard</a> ·
+  📊 <a href="https://huggingface.co/spaces/hakari-bench/leaderboard">🤗 Leaderboard</a> | 
   📄 Paper [WIP]
 </p>
 
