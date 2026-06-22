@@ -1,13 +1,19 @@
-# ⚖️ HAKARI-Bench: A Lightweight Benchmark for Comparing<br>Retrieval Architectures and Efficiency Settings under Unified Conditions
+# ⚖️ HAKARI-Bench
 
-📊 [🤗 Leaderboard](https://huggingface.co/spaces/hakari-bench/leaderboard) · 📄 Paper [WIP]
+> A Lightweight Benchmark for Comparing Retrieval Architectures and Efficiency
+> Settings under Unified Conditions
+
+<p align="left">
+  <a href="https://huggingface.co/spaces/hakari-bench/leaderboard">📊 🤗 Leaderboard</a> ·
+  📄 Paper [WIP]
+</p>
 
 HAKARI-Bench is a lightweight IR benchmark that rebuilds retrieval tasks as
 small Nano-sets, making model selection, regression checks, quantization,
 truncation, and reranking comparisons practical under the same conditions.
 
-The name comes from Japanese `⚖️ 秤`, a weighing scale, reflecting the goal of
-comparing retrieval systems consistently.
+The name HAKARI refers to `⚖️ 秤` (hakari), the Japanese word for a weighing
+scale.
 
 ## ✨ Highlights
 
