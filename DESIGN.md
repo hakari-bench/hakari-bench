@@ -169,6 +169,9 @@ components:
       solely because color or another plot channel uses Max Tokens. Borda Score
       uses a fixed 0-100 Y axis, while Task Mean scores use the visible score
       minimum and maximum as the Y-axis bounds.
+    status-line: The current benchmark scope sits directly after the Table / Plot
+      switch with the same database icon used by the Benchmark scope control;
+      avoid a bare slash before the scope label.
   model-score-bar:
     purpose: Show relative Borda strength behind the sticky model name.
     treatment: Subtle background bar scaled by visible max score; never competes with text.

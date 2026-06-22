@@ -1596,6 +1596,8 @@ def test_plot_controls_render_inside_plot_shell_and_view_switch_precedes_status(
     assert status_html.index(">Overall</span>") < status_html.index(">Retrieval</span>")
     assert 'data-icon="table-properties"' in status_html
     assert 'data-icon="chart-scatter"' in status_html
+    assert 'data-icon="database"' in status_html
+    assert "/</span>\n      <span" not in status_html.split(">Overall</span>", 1)[0]
     assert html.index('id="plot-controls"') > html.index('class="leaderboard-plot-shell')
     plot_shell = html.split('class="leaderboard-plot-shell', 1)[1].split("</svg>", 1)[0]
     assert 'id="plot-controls"' in plot_shell

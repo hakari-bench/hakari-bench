@@ -1180,8 +1180,10 @@ def render_leaderboard(
   <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
     <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
       {render_result_view_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, result_view=result_view, plot_y=plot_y, plot_x=plot_x, plot_size=plot_size, plot_color=plot_color)}
-      <span class="text-zinc-400">/</span>
-      <span class="font-medium text-zinc-600">{escape(result.view_label)}</span>
+      <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
+        {_icon_svg("database", class_name="hakari-icon h-3.5 w-3.5 shrink-0")}
+        <span>{escape(result.view_label)}</span>
+      </span>
       <span class="text-zinc-400">/</span>
       <span class="inline-flex items-center gap-1 text-zinc-600">
         {_icon_svg(mode_icon, class_name="hakari-icon h-3.5 w-3.5 shrink-0")}
