@@ -4406,7 +4406,7 @@ def _fmt_params(value: int | None) -> str:
 
 def _fmt_max_len(value: int | None) -> str:
     if value is None:
-        return ""
+        return "None"
     if value >= 1_024:
         thousands = math.floor(value / 1_024 + 0.5)
         return f"{thousands}K"
@@ -4419,7 +4419,7 @@ def _fmt_embedding_dim(value: int | None) -> str:
 
 def _fmt_row_embedding_dim(row: LeaderboardRow) -> str:
     if _is_sparse_or_bm25_row(row):
-        return "Unknown"
+        return "sparse"
     return _fmt_embedding_dim(row.embedding_dim)
 
 

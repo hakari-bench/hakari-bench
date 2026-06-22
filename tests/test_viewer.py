@@ -2658,7 +2658,7 @@ def test_plot_state_is_preserved_in_display_and_filter_controls() -> None:
     assert "plot_x=total_parameters" in html
 
 
-def test_sparse_and_bm25_rows_show_unknown_dims_in_table() -> None:
+def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -2684,6 +2684,16 @@ def test_sparse_and_bm25_rows_show_unknown_dims_in_table() -> None:
                 mean_score=90,
                 task_count=1,
             ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="sentence-transformers/static-similarity-mrl-multilingual-v1",
+                model_type="dense",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                embedding_dim=1024,
+            ),
         ],
         available_views=["BenchA"],
         available_view_labels={"BenchA": "Bench A"},
@@ -2694,7 +2704,8 @@ def test_sparse_and_bm25_rows_show_unknown_dims_in_table() -> None:
     body = render_table_body(result=result)
 
     assert "30,000" not in body
-    assert body.count(">Unknown</td>") >= 2
+    assert body.count(">sparse</td>") >= 2
+    assert body.count(">None</td>") >= 2
 
 
 def test_plot_quantization_axis_normalization_enables_quantization_variants() -> None:
@@ -4559,7 +4570,7 @@ language_support:
     assert "border-cyan-200 bg-cyan-50" not in body
 
 
-def test_leaderboard_table_hides_sparse_dimension_values() -> None:
+def test_leaderboard_table_labels_sparse_dimension_values() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -4587,6 +4598,7 @@ def test_leaderboard_table_hides_sparse_dimension_values() -> None:
 
     assert "30,000" not in body
     assert ">sparse</span>" in body
+    assert ">sparse</td>" in body
     assert '<tr class="leaderboard-row odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
     assert '<td class="leaderboard-col-index sticky z-10' in body
@@ -6253,7 +6265,7 @@ def test_max_len_uses_compact_k_display_for_1k_and_above() -> None:
     assert _fmt_max_len(1_536) == "2K"
     assert _fmt_max_len(4_096) == "4K"
     assert _fmt_max_len(8_192) == "8K"
-    assert _fmt_max_len(None) == ""
+    assert _fmt_max_len(None) == "None"
 
 
 def test_parameter_counts_use_compact_rounded_display() -> None:
