@@ -72,8 +72,14 @@ Evaluate a SentenceTransformers-compatible dense embedding model:
 uv run hakari-bench evaluate dense \
   --model intfloat/multilingual-e5-small \
   --dataset hakari-bench/NanoBEIR-en \
+  --query-prompt 'query: ' \
+  --document-prompt 'passage: ' \
   --dtype bf16
 ```
+
+This example uses the retrieval prefixes required by E5 models. For other
+models, check the model card or use the prompt guidance in the
+[evaluation policy](evaluation_policy.md).
 
 Per-task result files are written under:
 
