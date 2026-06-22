@@ -3713,7 +3713,7 @@ def render_table_head(
         [
             ("active_parameters", "Active Params", "asc", "right", False, ""),
             ("total_parameters", "Total Params", "asc", "right", False, ""),
-            ("max_seq_length", "Max Len", "desc", "right", False, ""),
+            ("max_seq_length", "Max Tokens", "desc", "right", False, ""),
             ("embedding_dim", "Dims", "desc", "right", False, ""),
         ]
     )
@@ -3939,7 +3939,7 @@ def _csv_headers(*, result: LeaderboardResult, metric_headers: dict[str, str]) -
             "Model Type Key",
             "Active Params",
             "Total Params",
-            "Max Sequence Length",
+            "Max Tokens",
             "Embedding Dims",
             "Original Embedding Dims",
             "Truncated Embedding Dims",
@@ -3974,7 +3974,7 @@ def _csv_metric_headers(*, result: LeaderboardResult, metric_labels: dict[str, s
         "Model Type Key",
         "Active Params",
         "Total Params",
-        "Max Sequence Length",
+        "Max Tokens",
         "Embedding Dims",
         "Original Embedding Dims",
         "Truncated Embedding Dims",
@@ -4030,7 +4030,7 @@ def _csv_record_for_row(
         "Model Type Key": metadata.get("model_type_key"),
         "Active Params": metadata.get("active_parameters"),
         "Total Params": metadata.get("total_parameters"),
-        "Max Sequence Length": metadata.get("max_seq_length"),
+        "Max Tokens": metadata.get("max_seq_length"),
         "Embedding Dims": metadata.get("embedding_dim"),
         "Original Embedding Dims": metadata.get("original_embedding_dim"),
         "Truncated Embedding Dims": metadata.get("truncated_embedding_dim"),

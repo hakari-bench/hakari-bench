@@ -2863,6 +2863,8 @@ def test_table_display_others_adds_license_and_model_type_columns() -> None:
     assert ">Others</span>" in controls
     assert 'data-column-key="license"' in head
     assert 'data-column-key="model_type"' in head
+    assert ">Max Tokens</span>" in head
+    assert ">Max Len</span>" not in head
     assert ">License</span>" in head
     assert ">Model Type</span>" in head
     assert ">MIT</td>" in body
@@ -7043,6 +7045,8 @@ def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Pat
     assert rows[0]["Model Name"] == "model-a"
     assert rows[0]["Full Model Name"] == "org/model-a"
     assert rows[0]["Ranking Model Name"] == "org/model-a (1024 dims)"
+    assert rows[0]["Max Tokens"] == "1024"
+    assert "Max Sequence Length" not in rows[0]
     assert rows[0]["Embedding Dims"] == "1024"
     assert rows[0]["Original Embedding Dims"] == "1024"
     assert rows[0]["Truncated Embedding Dims"] == ""

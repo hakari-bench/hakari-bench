@@ -199,7 +199,7 @@
     ["Ranking label", "ranking_model_name"],
     ["Active params", "active_parameters"],
     ["Total params", "total_parameters"],
-    ["Max len", "max_seq_length"],
+    ["Max Tokens", "max_seq_length"],
     ["Truncate dims", "truncate_dims"],
   ];
 

@@ -128,7 +128,7 @@ components:
   model-details:
     purpose: Modal metadata for a single result row.
     treatment: Prefer model-card metadata when present. Order fields as Language,
-      Model type, Ranking label, parameter counts, max length, truncate dims,
+      Model type, Ranking label, parameter counts, max tokens, truncate dims,
       license, Hugging Face, GitHub, papers, then runtime and variant details.
       GitHub links should show the `owner/repo` label instead of generic copy.
       Prompt metadata should use Query Prompt and Doc Prompt labels. Optional

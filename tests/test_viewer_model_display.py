@@ -415,7 +415,8 @@ def test_model_detail_script_orders_fields_and_labels_github_repo() -> None:
     script = Path("hakari_bench/viewer/assets/viewer.js").read_text(encoding="utf-8")
 
     assert script.index('["Language", "language_support_label"]') < script.index('["Active params", "active_parameters"]')
-    assert script.index('["Max len", "max_seq_length"]') < script.index("appendModelDetailLicense")
+    assert script.index('["Max Tokens", "max_seq_length"]') < script.index("appendModelDetailLicense")
+    assert '["Max len", "max_seq_length"]' not in script
     click_handler = script.split("list.replaceChildren();", 1)[1]
     assert click_handler.index("appendModelDetailLicense") < click_handler.index("appendModelDetailLinks")
     assert click_handler.index("appendModelDetailLinks") < click_handler.index("modelDetailFieldsAfterLinks")
