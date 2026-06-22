@@ -1658,7 +1658,7 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
     )
 
     assert 'data-testid="leaderboard-plot"' in html
-    assert "plot view は横幅が広い端末のみ表示可能です" in html
+    assert "Plot view is available only on wider screens." in html
     assert "Borda Score" in html
     assert "Active Params" in html
     assert "Dims" in html
@@ -1676,6 +1676,70 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
     assert "Quantization: none" in html
     assert "Quantization: orig" not in html
     assert "model/beta" not in html
+
+
+def test_leaderboard_plot_none_size_and_color_use_single_encoding() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/small",
+                borda_score=60.0,
+                mean_score=0.60,
+                task_count=2,
+                active_parameters=10_000_000,
+                total_parameters=12_000_000,
+                max_seq_length=512,
+                embedding_dim=128,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/large",
+                borda_score=80.0,
+                mean_score=0.80,
+                task_count=2,
+                active_parameters=1_000_000_000,
+                total_parameters=1_200_000_000,
+                max_seq_length=8192,
+                embedding_dim=4096,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="none",
+        plot_color="none",
+    )
+
+    circles = re.findall(r'<circle[^>]+class="leaderboard-plot-point[^"]+"[^>]+>', html)
+
+    def circle_attr(circle: str, name: str) -> str:
+        match = re.search(rf'\b{name}="([^"]+)"', circle)
+        assert match
+        return match.group(1)
+
+    radii = {circle_attr(circle, "r") for circle in circles}
+    fills = {circle_attr(circle, "fill") for circle in circles}
+
+    assert '<option value="none" selected>None</option>' in html
+    assert "Circle: None" in html
+    assert "plot-legend" not in html
+    assert len(circles) == 2
+    assert len(radii) == 1
+    assert len(fills) == 1
 
 
 def test_leaderboard_plot_uses_sparse_average_dims_and_fills_missing_plot_metadata() -> None:
@@ -2345,6 +2409,71 @@ def test_leaderboard_plot_param_log_axis_uses_decade_and_minor_tick_labels() -> 
     assert ">50M</text>" not in html
 
 
+def test_leaderboard_plot_parameter_axes_offer_log_and_linear_labels() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/small",
+                borda_score=50,
+                mean_score=0.50,
+                task_count=2,
+                active_parameters=10_000_000,
+                total_parameters=12_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/large",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                active_parameters=1_000_000_000,
+                total_parameters=1_200_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    log_html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="total_parameters",
+    )
+    linear_html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters_linear",
+        plot_size="total_parameters_linear",
+        plot_color="total_parameters_linear",
+    )
+
+    assert '<option value="active_parameters" selected>Active Params (log scale)</option>' in log_html
+    assert '<option value="active_parameters_linear">Active Params</option>' in log_html
+    assert '<option value="total_parameters">Total Params (log scale)</option>' in log_html
+    assert '<option value="total_parameters_linear">Total Params</option>' in log_html
+    assert ">Active Params (log scale)</text>" in log_html
+    assert ">Total Params (log scale)</text>" in log_html
+    assert '<option value="active_parameters_linear" selected>Active Params</option>' in linear_html
+    assert ">Active Params</text>" in linear_html
+    assert ">Active Params (log scale)</text>" not in linear_html
+    assert ">Total Params</text>" in linear_html
+
+
 def test_leaderboard_plot_param_log_axis_separates_zero_from_smallest_positive() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
@@ -2643,7 +2772,8 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert "optional rank-101 safeguard positive" in response.text
     assert "usually produced by BM25" not in response.text
     # Default sort is now Borda Score (desc); the bm25 baseline sorts by its score.
-    assert response.text.index("model/b") < response.text.index("model/a") < response.text.index("bm25")
+    table_body = response.text.split("<tbody>", 1)[1].split("</tbody>", 1)[0]
+    assert table_body.index("model/b") < table_body.index("model/a") < table_body.index("bm25")
 
 
 def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: Path) -> None:
@@ -5687,7 +5817,15 @@ def test_leaderboard_service_recalculates_ranking_with_model_type_filter(tmp_pat
         model_type_filters=("sparse",),
     )
 
-    assert [row.model_name for row in result.rows] == ["bm25", "org/sparse-encoder"]
+    assert [row.model_name for row in result.rows] == ["org/sparse-encoder"]
+
+    bm25_result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        model_type_filters=("bm25",),
+    )
+
+    assert [row.model_name for row in bm25_result.rows] == ["bm25"]
 
 
 def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:

@@ -19,15 +19,19 @@ QueryState = dict[str, QueryValue]
 
 RESULT_VIEW_VALUES = {"table", "plot"}
 PLOT_SCORE_FIELDS = {"borda_score", "macro_mean", "micro_mean"}
+PLOT_NONE_FIELD = "none"
 PLOT_AXIS_FIELDS = {
     "active_parameters",
+    "active_parameters_linear",
     "total_parameters",
+    "total_parameters_linear",
     "max_seq_length",
     "embedding_dim",
     "quantization",
     "sparse_query_dims",
     "sparse_document_dims",
 }
+PLOT_ENCODING_FIELDS = {*PLOT_AXIS_FIELDS, PLOT_NONE_FIELD}
 
 
 @dataclass(frozen=True)
@@ -127,8 +131,8 @@ def normalize_query_state(
     result_view = result_view if result_view in RESULT_VIEW_VALUES else "table"
     plot_y = plot_y if plot_y in PLOT_SCORE_FIELDS else "borda_score"
     plot_x = plot_x if plot_x in PLOT_AXIS_FIELDS else "active_parameters"
-    plot_size = plot_size if plot_size in PLOT_AXIS_FIELDS else "embedding_dim"
-    plot_color = plot_color if plot_color in PLOT_AXIS_FIELDS else "max_seq_length"
+    plot_size = plot_size if plot_size in PLOT_ENCODING_FIELDS else "embedding_dim"
+    plot_color = plot_color if plot_color in PLOT_ENCODING_FIELDS else "max_seq_length"
     if "quantization" in {plot_x, plot_size, plot_color}:
         quantization = True
     score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
@@ -397,7 +401,7 @@ def _normalized_benchmark_values(values: list[str] | None, viewer_config: Viewer
 
 
 def _normalized_model_type_filter_values(values: list[str] | None) -> list[str]:
-    allowed = {"dense", "sparse", "late-interaction", "reranker"}
+    allowed = {"dense", "bm25", "sparse", "late-interaction", "reranker"}
     return [value for value in _normalized_query_values(values) if value in allowed]
 
 

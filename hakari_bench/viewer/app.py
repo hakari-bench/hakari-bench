@@ -55,6 +55,8 @@ from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
     FilterState,
     PLOT_AXIS_FIELDS,
+    PLOT_ENCODING_FIELDS,
+    PLOT_NONE_FIELD,
     PLOT_SCORE_FIELDS,
     QueryState,
     active_filter_hidden_fields,
@@ -1208,14 +1210,17 @@ PLOT_SCORE_OPTIONS = {
     "micro_mean": ("Task Mean (Micro)", "Task Mean (Micro)"),
 }
 PLOT_AXIS_OPTIONS = {
-    "active_parameters": ("Active Params", "Active params"),
-    "total_parameters": ("Total Params", "Total params"),
+    "active_parameters": ("Active Params (log scale)", "Active params"),
+    "active_parameters_linear": ("Active Params", "Active params"),
+    "total_parameters": ("Total Params (log scale)", "Total params"),
+    "total_parameters_linear": ("Total Params", "Total params"),
     "max_seq_length": ("Max Tokens", "Max tokens"),
     "embedding_dim": ("Dims", "Embedding dim"),
     "quantization": ("Quantization", "Quantization"),
     "sparse_query_dims": ("Sparse Query Dims", "Sparse query dims"),
     "sparse_document_dims": ("Sparse Doc Dims", "Sparse doc dims"),
 }
+PLOT_CHANNEL_OPTIONS = {PLOT_NONE_FIELD: ("None", "None"), **PLOT_AXIS_OPTIONS}
 PLOT_LOG_FIELDS = {
     "active_parameters",
     "total_parameters",
@@ -1315,8 +1320,8 @@ def render_plot_controls(
       {_hidden_inputs(state_fields)}
       {_render_plot_select("plot_y", "Y axis", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
       {_render_plot_select("plot_x", "X axis", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
-      {_render_plot_select("plot_size", "Size", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_size))}
-      {_render_plot_select("plot_color", "Color", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_color))}
+      {_render_plot_select("plot_size", "Size", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_size, default="embedding_dim"))}
+      {_render_plot_select("plot_color", "Color", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_color, default="max_seq_length"))}
     </form>
 """
 
@@ -1353,8 +1358,8 @@ def _plot_state_payload(
         payload["result_view"] = result_view
     plot_y = _normalized_plot_score_field(plot_y)
     plot_x = _normalized_plot_axis_field(plot_x)
-    plot_size = _normalized_plot_axis_field(plot_size)
-    plot_color = _normalized_plot_axis_field(plot_color)
+    plot_size = _normalized_plot_channel_field(plot_size, default="embedding_dim")
+    plot_color = _normalized_plot_channel_field(plot_color, default="max_seq_length")
     if plot_y != "borda_score":
         payload["plot_y"] = plot_y
     if plot_x != "active_parameters":
@@ -1400,8 +1405,8 @@ def _plot_state_query(
         return {}
     plot_y = _normalized_plot_score_field(plot_y)
     plot_x = _normalized_plot_axis_field(plot_x)
-    plot_size = _normalized_plot_axis_field(plot_size)
-    plot_color = _normalized_plot_axis_field(plot_color)
+    plot_size = _normalized_plot_channel_field(plot_size, default="embedding_dim")
+    plot_color = _normalized_plot_channel_field(plot_color, default="max_seq_length")
     payload: QueryState = {"result_view": "plot"}
     if plot_y != "borda_score":
         payload["plot_y"] = plot_y
@@ -1451,8 +1456,8 @@ def render_leaderboard_plot(
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
     y_field = _normalized_plot_score_field(plot_y)
     x_field = _normalized_plot_axis_field(plot_x)
-    size_field = _normalized_plot_axis_field(plot_size)
-    color_field = _normalized_plot_axis_field(plot_color)
+    size_field = _normalized_plot_channel_field(plot_size, default="embedding_dim")
+    color_field = _normalized_plot_channel_field(plot_color, default="max_seq_length")
     visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
     sparse_embedding_dim = _average_dense_embedding_dim(visible_rows) or _average_dense_embedding_dim(result.rows)
     max_active_parameters = _max_plot_active_parameters(visible_rows) or _max_plot_active_parameters(result.rows)
@@ -1558,14 +1563,18 @@ def render_leaderboard_plot(
         circles.append(
             f"""<circle class="leaderboard-plot-point tooltip-trigger model-detail-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{radius:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" data-tooltip-hover-only="true" data-tooltip-delay="0" data-model-metadata="{metadata}" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
         )
-    legend = _render_plot_legend(
-        x=width - right + 42,
-        y=top + 16,
-        height=plot_height - 32,
-        label=PLOT_AXIS_OPTIONS[color_field][0],
-        min_value=color_min,
-        max_value=color_max,
-        field=color_field,
+    legend = (
+        ""
+        if color_field == PLOT_NONE_FIELD
+        else _render_plot_legend(
+            x=width - right + 42,
+            y=top + 16,
+            height=plot_height - 32,
+            label=PLOT_AXIS_OPTIONS[color_field][0],
+            min_value=color_min,
+            max_value=color_max,
+            field=color_field,
+        )
     )
     plot_controls = render_plot_controls(
         result=result,
@@ -1580,10 +1589,10 @@ def render_leaderboard_plot(
     return f"""
   <div class="leaderboard-plot-shell relative border border-zinc-200 bg-white p-2" data-testid="leaderboard-plot">
     <div class="leaderboard-plot-controls-region" style="position:absolute;right:0.75rem;top:0.75rem;z-index:10;">{plot_controls}</div>
-    <div class="leaderboard-plot-mobile-message" role="status">plot view は横幅が広い端末のみ表示可能です</div>
+    <div class="leaderboard-plot-mobile-message" role="status">Plot view is available only on wider screens.</div>
     <svg class="leaderboard-plot" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(PLOT_SCORE_OPTIONS[y_field][0])} by {escape(PLOT_AXIS_OPTIONS[x_field][0])}">
       {grid}
-      <text x="{left}" y="{top - 8}" class="plot-axis-tick">Circle: {escape(PLOT_AXIS_OPTIONS[size_field][0])}</text>
+      <text x="{left}" y="{top - 8}" class="plot-axis-tick">Circle: {escape(PLOT_CHANNEL_OPTIONS[size_field][0])}</text>
       <g>{''.join(circles)}</g>
       {legend}
     </svg>
@@ -1638,8 +1647,8 @@ def _plot_point_values(
         "max_seq_length": plot_max_seq_length,
         "x_label": PLOT_AXIS_OPTIONS[x_field][1],
         "y_label": PLOT_SCORE_OPTIONS[y_field][1],
-        "size_label": PLOT_AXIS_OPTIONS[size_field][1],
-        "color_label": PLOT_AXIS_OPTIONS[color_field][1],
+        "size_label": PLOT_CHANNEL_OPTIONS[size_field][1],
+        "color_label": PLOT_CHANNEL_OPTIONS[color_field][1],
     }
 
 
@@ -1672,9 +1681,9 @@ def _plot_axis_value(
     total_parameters: float | None,
     max_seq_length: float | None,
 ) -> float | None:
-    if field == "active_parameters":
+    if field in {"active_parameters", "active_parameters_linear"}:
         return active_parameters
-    if field == "total_parameters":
+    if field in {"total_parameters", "total_parameters_linear"}:
         return total_parameters
     if field == "max_seq_length":
         return max_seq_length
@@ -1688,6 +1697,8 @@ def _plot_axis_value(
         return _sparse_dim_from_variant(row.embedding_variant_name, "query")
     if field == "sparse_document_dims":
         return _sparse_dim_from_variant(row.embedding_variant_name, "document")
+    if field == PLOT_NONE_FIELD:
+        return 1.0
     return None
 
 
@@ -1793,7 +1804,10 @@ def _uses_regular_embedding_dim_for_plot(row: LeaderboardRow) -> bool:
 
 
 def _is_sparse_or_bm25_row(row: LeaderboardRow) -> bool:
-    return model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse"
+    return model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) in {
+        "bm25",
+        "sparse",
+    }
 
 
 def _is_late_interaction_row(row: LeaderboardRow) -> bool:
@@ -2183,6 +2197,10 @@ def _normalized_plot_score_field(value: str) -> str:
 
 def _normalized_plot_axis_field(value: str) -> str:
     return value if value in PLOT_AXIS_FIELDS else "active_parameters"
+
+
+def _normalized_plot_channel_field(value: str, *, default: str) -> str:
+    return value if value in PLOT_ENCODING_FIELDS else default
 
 
 def _score_target_display(score_target: str) -> tuple[str, str]:
@@ -2762,7 +2780,7 @@ def _render_target_group(
               {_render_help_tooltip(
                   "Evaluation mode",
                   "Switches the leaderboard between retrieval runs and reranking runs.",
-                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, sparse/BM25, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows cross-encoder reranker results on a shared candidate set. Use Reranking when you want to compare how rerankers reorder candidates rather than how retrievers search the full corpus.",
+                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, BM25, sparse, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows cross-encoder reranker results on a shared candidate set. Use Reranking when you want to compare how rerankers reorder candidates rather than how retrievers search the full corpus.",
               )}
               {safeguard_toggle}
             </div>
@@ -3534,7 +3552,7 @@ def _render_model_type_controls(
           {_render_help_tooltip(
               "Model family",
               "Filters rows by the retrieval or reranking family recorded for each model result.",
-              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. Sparse / BM25 rows use lexical or sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
+              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
           )}
         </span>
         {''.join(checkboxes)}

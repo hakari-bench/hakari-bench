@@ -809,11 +809,11 @@ def _model_type_filter_key_sql(columns: set[str]) -> str:
     model_name = f"lower({qualified_column('tr', 'model_name', allowed_columns=columns)})"
     return f"""
         CASE
-            WHEN {normalized_type} IN ('sparse', 'bm25') THEN 'sparse'
+            WHEN {normalized_type} IN ('sparse', 'bm25') THEN {normalized_type}
             WHEN {normalized_type} IN ('dense', 'reranker', 'late-interaction') THEN {normalized_type}
             WHEN {normalized_type} IN ('cross-encoder', 'crossencoder', 'cross-encoder-reranker') THEN 'reranker'
             WHEN {normalized_type} IN ('late-interaction-retriever', 'colbert') THEN 'late-interaction'
-            WHEN {model_name} = 'bm25' OR starts_with({model_name}, 'bm25/') OR ends_with({model_name}, '/bm25') THEN 'sparse'
+            WHEN {model_name} = 'bm25' OR starts_with({model_name}, 'bm25/') OR ends_with({model_name}, '/bm25') THEN 'bm25'
             ELSE 'dense'
         END
     """

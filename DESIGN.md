@@ -95,6 +95,9 @@ components:
     purpose: Select evaluation mode, benchmark scope, metrics, task facets, display,
       variants, and filters.
     treatment: One integrated workspace above the table; no marketing panels.
+      Model family filters expose BM25 separately from Sparse so lexical
+      baselines can be compared or hidden independently from learned sparse
+      retrievers.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.
@@ -140,8 +143,13 @@ components:
       do not consume the same visual width as the more important mid/high range,
       nonnegative measures must not render negative axis or legend labels, quantization
       channels use a fixed 1-16 scale where none is 16,
-      int8 is 8, and binary is 1, params/dims/tokens use logarithmic scaling where they
-      drive position, size, or color, all leaderboard controls must preserve the
+      int8 is 8, and binary is 1. Active Params and Total Params default to
+      explicit log-scale channels and also offer linear channels; log-scale
+      labels should include "(log scale)" in the plotted axis or legend title.
+      Dims and token channels use logarithmic scaling where they
+      drive position, size, or color, Size and Color selectors may use None to
+      render one constant bubble size or one constant color without extra encoding,
+      all leaderboard controls must preserve the
       current plot view state, and bubble size should use the visible value
       distribution with a compact radius range and midrange emphasis so common
       clustered dimensions such as 384, 768, and 1024 remain distinguishable

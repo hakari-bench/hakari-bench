@@ -50,7 +50,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         filters=True,
         dim_filter=["384", ""],
         quant_filter=["int8"],
-        model_type_filter=["sparse", "reranker"],
+        model_type_filter=["bm25", "sparse", "reranker"],
         dtype_filter=["bf16"],
         attn_filter=[],
         prompt_filter=None,
@@ -69,7 +69,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "filters": "1",
         "dim_filter": ["384"],
         "quant_filter": ["int8"],
-        "model_type_filter": ["sparse", "reranker"],
+        "model_type_filter": ["bm25", "sparse", "reranker"],
         "dtype_filter": ["bf16"],
         "attn_filter": [],
         "prompt_filter": [],
@@ -104,6 +104,67 @@ def test_legacy_variants_query_enables_all_variant_flags() -> None:
     assert query["truncate"] == "1"
     assert query["rescore"] == "1"
     assert query["other_variant"] == "1"
+
+
+def test_plot_none_encoding_is_allowed_for_size_and_color_only() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        result_view="plot",
+        plot_x="none",
+        plot_size="none",
+        plot_color="none",
+    )
+
+    assert query["result_view"] == "plot"
+    assert "plot_x" not in query
+    assert query["plot_size"] == "none"
+    assert query["plot_color"] == "none"
+
+
+def test_plot_linear_parameter_axis_is_preserved_in_query_state() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        result_view="plot",
+        plot_x="active_parameters_linear",
+        plot_size="total_parameters_linear",
+        plot_color="total_parameters_linear",
+    )
+
+    assert query["plot_x"] == "active_parameters_linear"
+    assert query["plot_size"] == "total_parameters_linear"
+    assert query["plot_color"] == "total_parameters_linear"
 
 
 def test_task_filter_enables_task_score_columns() -> None:
