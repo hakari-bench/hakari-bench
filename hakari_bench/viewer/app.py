@@ -15,6 +15,7 @@ import re
 from typing import Iterable, Sequence, TypedDict, cast
 from urllib.parse import quote, urlencode
 
+import duckdb
 from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.config import (
@@ -65,6 +66,7 @@ from hakari_bench.viewer.state import (
 )
 from hakari_bench.viewer.store import DuckDbSyncStatus, LocalDuckDbStore
 from hakari_bench.viewer.summary import ViewerSummary
+from hakari_bench.viewer.sql import table_columns, table_exists
 from hakari_bench.viewer.variant_display import (
     is_sparse_dims_variant_name,
     variant_category,
@@ -81,6 +83,7 @@ SECURITY_HEADERS = {
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
 }
+FOOTER_QUERY_TABLES = {"meta_database"}
 Z_SCORE_BUCKET_CLASSES = (
     "task-z-neutral",
     "task-z-pos-025",
@@ -529,6 +532,7 @@ def create_app(
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
                 content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)
+                content = f"{content}\n{_render_footer_update(store=store)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
             request_timing["view"] = result.view_name
             request_timing["leaderboard_row_count"] = len(result.rows)
@@ -886,7 +890,7 @@ def _docs_page_chrome() -> DocsPageChrome:
     )
 
 
-def _render_page_footer(*, latest_update: str, database_label: str) -> str:
+def _render_page_footer(*, latest_update: str, database_label: str, swap_oob: bool = False) -> str:
     meta_items = []
     if latest_update:
         meta_items.append(
@@ -902,17 +906,51 @@ def _render_page_footer(*, latest_update: str, database_label: str) -> str:
       <div class="flex min-w-0 flex-col gap-1 sm:items-end">
         {meta}
       </div>"""
-    return f"""<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">
+    oob_attr = ' hx-swap-oob="outerHTML"' if swap_oob else ""
+    return f"""<footer id="hakari-page-footer" class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6"{oob_attr}>
     <div class="flex min-w-0 justify-end">
       {meta}
     </div>
   </footer>"""
 
 
+def _render_footer_update(*, store: LocalDuckDbStore) -> str:
+    return _render_page_footer(
+        latest_update=_fetch_database_latest_update_label(store.path),
+        database_label=_database_footer_label(store),
+        swap_oob=True,
+    )
+
+
 def _database_footer_label(store: LocalDuckDbStore) -> str:
     if store.location.hf_source is not None:
         return f"database: remote / {_sha1_prefix(store.path)}"
     return f"database: local / {store.path}"
+
+
+def _fetch_database_latest_update_label(duckdb_path: Path) -> str:
+    if not duckdb_path.exists():
+        return ""
+    try:
+        with timed_operation("viewer.duckdb.connection", operation="fetch_footer_latest_update"):
+            con = duckdb.connect(str(duckdb_path), read_only=True)
+    except (duckdb.Error, OSError):
+        return ""
+    try:
+        if not table_exists(con, "meta_database", allowed_tables=FOOTER_QUERY_TABLES):
+            return ""
+        columns = table_columns(con, "meta_database", allowed_tables=FOOTER_QUERY_TABLES)
+        if "built_at_utc" not in columns:
+            return ""
+        with timed_operation("viewer.duckdb.query", operation="fetch_footer_latest_update") as timing:
+            row = con.execute("SELECT max(built_at_utc) FROM meta_database").fetchone()
+            timing["row_count"] = 1 if row is not None else 0
+    except duckdb.Error:
+        return ""
+    finally:
+        con.close()
+    value = row[0] if row is not None else None
+    return _latest_update_label(str(value) if value else None)
 
 
 def _sha1_prefix(path: Path, *, length: int = 12) -> str:
