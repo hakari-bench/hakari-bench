@@ -739,6 +739,9 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
         ],
         dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
     )
+    with duckdb.connect(str(db_path)) as con:
+        con.execute("ALTER TABLE meta_database ADD COLUMN built_at_utc VARCHAR")
+        con.execute("UPDATE meta_database SET built_at_utc = '2026-05-22T20:27:54.839377+00:00'")
     config_dir = tmp_path / "config"
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
@@ -807,7 +810,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
     assert "<footer" in response.text
-    assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">' in response.text
+    assert (
+        '<footer id="hakari-page-footer" '
+        'class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">'
+    ) in response.text
     footer_html = response.text.split("<footer", 1)[1]
     assert "HAKARI-Bench leaderboard" not in footer_html
     assert "[overflow-wrap:anywhere]" not in response.text
@@ -823,6 +829,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "Dataset diagnostics" not in leaderboard_response.text
     assert 'hx-get="/analysis?' not in leaderboard_response.text
     assert "leaderboard-table-scroll" in leaderboard_response.text
+    assert 'id="hakari-page-footer"' in leaderboard_response.text
+    assert 'hx-swap-oob="outerHTML"' in leaderboard_response.text
+    assert "Latest update: 2026-05-22T20:27:54(UTC)" in leaderboard_response.text
+    assert f"database: local / {db_path}" in leaderboard_response.text
     assert TestClient(app).get("/analysis").status_code == 404
 
     page_with_latest = render_page(
@@ -1032,6 +1042,55 @@ def test_viewer_leaderboard_endpoint_shows_duckdb_sync_progress_when_database_is
     assert "25.0%" in response.text
     assert "Downloading leaderboard DuckDB..." in response.text
     assert "leaderboard-table-scroll" not in response.text
+
+
+def test_viewer_leaderboard_endpoint_does_not_reload_for_background_source_check(
+    tmp_path: Path,
+) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    class CheckingStore:
+        path = db_path
+        location = DuckDbLocation(
+            local_path=db_path,
+            hf_source=HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database"),
+        )
+
+        def start_background_sync(self) -> DuckDbSyncStatus:
+            return DuckDbSyncStatus(
+                state="checking",
+                message="Checking leaderboard DuckDB source...",
+                local_path=db_path,
+            )
+
+        def sync_status(self) -> DuckDbSyncStatus:
+            return self.start_background_sync()
+
+        def ensure_current(self) -> bool:
+            raise AssertionError("source checks should stay in the background when a local DuckDB exists")
+
+    app = create_app(store=cast(Any, CheckingStore()), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1")
+
+    assert response.status_code == 200
+    assert "leaderboard-table-scroll" in response.text
+    assert 'id="duckdb-sync-progress"' not in response.text
+    assert "Checking leaderboard DuckDB source..." not in response.text
+    assert 'hx-swap-oob="outerHTML"' in response.text
 
 
 def test_viewer_duckdb_sync_status_reloads_leaderboard_when_ready(tmp_path: Path) -> None:
