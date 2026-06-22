@@ -44,7 +44,7 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: .tox
-          key: tox-${{ runner.os }}-py312-${{ hashFiles('uv.lock', 'pyproject.toml', '.github/workflows/build-leaderboard-image.yml') }}
+          key: tox-${{ runner.os }}-py312-${{ hashFiles('uv.lock', 'pyproject.toml') }}
           restore-keys: |
             tox-${{ runner.os }}-py312-
 
