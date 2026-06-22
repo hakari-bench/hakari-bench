@@ -111,8 +111,7 @@ def normalize_query_state(
     result_view: str = "table",
     chart_y: str = "borda_score",
     chart_x: str = "active_parameters",
-    chart_size: str = "embedding_dim",
-    chart_color: str = "max_seq_length",
+    chart_color: str = "embedding_dim",
 ) -> QueryState:
     view = _normalized_view_name(view)
     selected_benchmarks = _normalized_benchmark_values(bench, viewer_config)
@@ -131,9 +130,8 @@ def normalize_query_state(
     result_view = result_view if result_view in RESULT_VIEW_VALUES else "table"
     chart_y = chart_y if chart_y in PLOT_SCORE_FIELDS else "borda_score"
     chart_x = chart_x if chart_x in PLOT_AXIS_FIELDS else "active_parameters"
-    chart_size = chart_size if chart_size in PLOT_ENCODING_FIELDS else "embedding_dim"
-    chart_color = chart_color if chart_color in PLOT_ENCODING_FIELDS else "max_seq_length"
-    if "quantization" in {chart_x, chart_size, chart_color}:
+    chart_color = chart_color if chart_color in PLOT_ENCODING_FIELDS else "embedding_dim"
+    if "quantization" in {chart_x, chart_color}:
         quantization = True
     score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
     display_flags = variant_display_flags_from_values(
@@ -151,9 +149,7 @@ def normalize_query_state(
         query["chart_y"] = chart_y
     if chart_x != "active_parameters":
         query["chart_x"] = chart_x
-    if chart_size != "embedding_dim":
-        query["chart_size"] = chart_size
-    if chart_color != "max_seq_length":
+    if chart_color != "embedding_dim":
         query["chart_color"] = chart_color
     empty_custom_scope = view == CUSTOM_SCOPE_NAME and not selected_benchmarks
     if view == CUSTOM_SCOPE_NAME and selected_benchmarks:

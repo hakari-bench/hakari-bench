@@ -106,7 +106,7 @@ def test_legacy_variants_query_enables_all_variant_flags() -> None:
     assert query["other_variant"] == "1"
 
 
-def test_chart_none_encoding_is_allowed_for_size_and_color_only() -> None:
+def test_chart_none_encoding_is_allowed_for_color_only() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
         view="BenchA",
@@ -127,13 +127,11 @@ def test_chart_none_encoding_is_allowed_for_size_and_color_only() -> None:
         model_filter="",
         result_view="chart",
         chart_x="none",
-        chart_size="none",
         chart_color="none",
     )
 
     assert query["result_view"] == "chart"
     assert "chart_x" not in query
-    assert query["chart_size"] == "none"
     assert query["chart_color"] == "none"
 
 
@@ -158,12 +156,10 @@ def test_chart_linear_parameter_axis_is_preserved_in_query_state() -> None:
         model_filter="",
         result_view="chart",
         chart_x="active_parameters_linear",
-        chart_size="total_parameters_linear",
         chart_color="total_parameters_linear",
     )
 
     assert query["chart_x"] == "active_parameters_linear"
-    assert query["chart_size"] == "total_parameters_linear"
     assert query["chart_color"] == "total_parameters_linear"
 
 

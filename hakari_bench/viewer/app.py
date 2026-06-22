@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from bisect import bisect_left
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 import csv
@@ -348,8 +347,7 @@ def create_app(
         result_view: str = Query(default="table", pattern="^(table|chart)$"),
         chart_y: str = Query(default="borda_score"),
         chart_x: str = Query(default="active_parameters"),
-        chart_size: str = Query(default="embedding_dim"),
-        chart_color: str = Query(default="max_seq_length"),
+        chart_color: str = Query(default="embedding_dim"),
     ) -> str:
         with timed_operation("viewer.http.request", route="index") as request_timing:
             store.start_background_sync()
@@ -393,7 +391,6 @@ def create_app(
                 result_view=result_view,
                 chart_y=chart_y,
                 chart_x=chart_x,
-                chart_size=chart_size,
                 chart_color=chart_color,
             )
             if not task_z_scores:
@@ -501,8 +498,7 @@ def create_app(
         result_view: str = Query(default="table", pattern="^(table|chart)$"),
         chart_y: str = Query(default="borda_score"),
         chart_x: str = Query(default="active_parameters"),
-        chart_size: str = Query(default="embedding_dim"),
-        chart_color: str = Query(default="max_seq_length"),
+        chart_color: str = Query(default="embedding_dim"),
     ) -> HTMLResponse:
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
             state_query = normalize_query_state(
@@ -545,7 +541,6 @@ def create_app(
                 result_view=result_view,
                 chart_y=chart_y,
                 chart_x=chart_x,
-                chart_size=chart_size,
                 chart_color=chart_color,
             )
             sync_status = store.start_background_sync()
@@ -567,8 +562,7 @@ def create_app(
                     result_view=query_string(state_query.get("result_view", "table")),
                     plot_y=query_string(state_query.get("chart_y", "borda_score")),
                     plot_x=query_string(state_query.get("chart_x", "active_parameters")),
-                    plot_size=query_string(state_query.get("chart_size", "embedding_dim")),
-                    plot_color=query_string(state_query.get("chart_color", "max_seq_length")),
+                    plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
                 )
                 content = f"{content}\n{_render_footer_update(store=store)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
@@ -1178,7 +1172,7 @@ def render_leaderboard(
     plot_y: str = "borda_score",
     plot_x: str = "active_parameters",
     plot_size: str = "embedding_dim",
-    plot_color: str = "max_seq_length",
+    plot_color: str = "embedding_dim",
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = row_filter_context(result.rows, filter_state)
@@ -1271,29 +1265,26 @@ PLOT_LOG_FIELDS = {
     "sparse_query_dims",
     "sparse_document_dims",
 }
-PLOT_RADIUS_MIN = 2.0
-PLOT_RADIUS_MAX = 14.0
-PLOT_RADIUS_CURVE_STEEPNESS = 8.0
+PLOT_POINT_RADIUS = 5.5
 PLOT_DIMENSION_GRID_STEP = 128.0
 PLOT_DIMENSION_COMPRESSED_MAX = 256.0
 PLOT_DIMENSION_COMPRESSED_FRACTION = 0.12
 PLOT_DIMENSION_DENSE_TICK_MAX = 1024.0
 PLOT_DIMENSION_HIGH_TICKS = (2048.0,)
 PLOT_LOG_ZERO_BUCKET_FRACTION = 0.07
+PLOT_COLOR_STOPS = ((79, 70, 229), (8, 145, 178), (245, 158, 11))
 
 
 class _PlotPoint(TypedDict):
     row: LeaderboardRow
     x: float | None
     y: float | None
-    size: float | None
     color: float | None
     active_parameters: float | None
     total_parameters: float | None
     max_seq_length: float | None
     x_label: str
     y_label: str
-    size_label: str
     color_label: str
 
 
@@ -1307,7 +1298,7 @@ def render_result_view_tabs(
     plot_y: str = "borda_score",
     plot_x: str = "active_parameters",
     plot_size: str = "embedding_dim",
-    plot_color: str = "max_seq_length",
+    plot_color: str = "embedding_dim",
 ) -> str:
     filter_state = filter_state or FilterState()
     result_view = result_view if result_view in {"table", "chart"} else "table"
@@ -1344,7 +1335,6 @@ def render_plot_controls(
     filter_state: FilterState,
     plot_y: str,
     plot_x: str,
-    plot_size: str,
     plot_color: str,
 ) -> str:
     state_fields = _plot_state_fields(
@@ -1362,8 +1352,7 @@ def render_plot_controls(
       {_hidden_inputs(state_fields)}
       {_render_plot_select("chart_y", "Y axis", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
       {_render_plot_select("chart_x", "X axis", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
-      {_render_plot_select("chart_size", "Size", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_size, default="embedding_dim"))}
-      {_render_plot_select("chart_color", "Color", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_color, default="max_seq_length"))}
+      {_render_plot_select("chart_color", "Color", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_color, default="embedding_dim"))}
     </form>
 """
 
@@ -1400,17 +1389,14 @@ def _plot_state_payload(
         payload["result_view"] = result_view
     plot_y = _normalized_plot_score_field(plot_y)
     plot_x = _normalized_plot_axis_field(plot_x)
-    plot_size = _normalized_plot_channel_field(plot_size, default="embedding_dim")
-    plot_color = _normalized_plot_channel_field(plot_color, default="max_seq_length")
+    plot_color = _normalized_plot_channel_field(plot_color, default="embedding_dim")
     if plot_y != "borda_score":
         payload["chart_y"] = plot_y
     if plot_x != "active_parameters":
         payload["chart_x"] = plot_x
-    if plot_size != "embedding_dim":
-        payload["chart_size"] = plot_size
-    if plot_color != "max_seq_length":
+    if plot_color != "embedding_dim":
         payload["chart_color"] = plot_color
-    if "quantization" in {plot_x, plot_size, plot_color}:
+    if "quantization" in {plot_x, plot_color}:
         payload["quantization"] = "1"
     return payload
 
@@ -1447,18 +1433,15 @@ def _plot_state_query(
         return {}
     plot_y = _normalized_plot_score_field(plot_y)
     plot_x = _normalized_plot_axis_field(plot_x)
-    plot_size = _normalized_plot_channel_field(plot_size, default="embedding_dim")
-    plot_color = _normalized_plot_channel_field(plot_color, default="max_seq_length")
+    plot_color = _normalized_plot_channel_field(plot_color, default="embedding_dim")
     payload: QueryState = {"result_view": "chart"}
     if plot_y != "borda_score":
         payload["chart_y"] = plot_y
     if plot_x != "active_parameters":
         payload["chart_x"] = plot_x
-    if plot_size != "embedding_dim":
-        payload["chart_size"] = plot_size
-    if plot_color != "max_seq_length":
+    if plot_color != "embedding_dim":
         payload["chart_color"] = plot_color
-    if "quantization" in {plot_x, plot_size, plot_color}:
+    if "quantization" in {plot_x, plot_color}:
         payload["quantization"] = "1"
     return payload
 
@@ -1492,14 +1475,13 @@ def render_leaderboard_plot(
     plot_y: str = "borda_score",
     plot_x: str = "active_parameters",
     plot_size: str = "embedding_dim",
-    plot_color: str = "max_seq_length",
+    plot_color: str = "embedding_dim",
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
     y_field = _normalized_plot_score_field(plot_y)
     x_field = _normalized_plot_axis_field(plot_x)
-    size_field = _normalized_plot_channel_field(plot_size, default="embedding_dim")
-    color_field = _normalized_plot_channel_field(plot_color, default="max_seq_length")
+    color_field = _normalized_plot_channel_field(plot_color, default="embedding_dim")
     visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
     sparse_embedding_dim = _average_dense_embedding_dim(visible_rows) or _average_dense_embedding_dim(result.rows)
     max_active_parameters = _max_plot_active_parameters(visible_rows) or _max_plot_active_parameters(result.rows)
@@ -1510,7 +1492,6 @@ def render_leaderboard_plot(
             row,
             y_field=y_field,
             x_field=x_field,
-            size_field=size_field,
             color_field=color_field,
             sparse_embedding_dim=sparse_embedding_dim,
             max_active_parameters=max_active_parameters,
@@ -1525,7 +1506,6 @@ def render_leaderboard_plot(
         if _plot_point_has_required_values(
             point,
             x_field=x_field,
-            size_field=size_field,
             color_field=color_field,
         )
     ]
@@ -1540,7 +1520,6 @@ def render_leaderboard_plot(
     plot_width = width - left - right
     plot_height = height - top - bottom
     x_log = _plot_field_uses_log(x_field)
-    size_log = _plot_field_uses_log(size_field)
     color_log = _plot_field_uses_log(color_field)
     x_values = [
         float(point["x"])
@@ -1553,17 +1532,10 @@ def render_leaderboard_plot(
         for point in points
         if point["color"] is not None and (not color_log or float(point["color"]) > 0)
     ]
-    size_values = [
-        float(point["size"])
-        for point in points
-        if point["size"] is not None and (not size_log or float(point["size"]) > 0)
-    ]
     x_has_zero = x_log and any(point["x"] == 0 for point in points)
     x_min, x_max = _plot_extent_for_field(x_values, field=x_field, log=x_log)
     y_min, y_max = _plot_score_extent(y_values, y_field=y_field)
     color_min, color_max = _plot_extent_for_field(color_values, field=color_field, log=color_log)
-    size_min, size_max = _plot_extent_for_field(size_values, field=size_field, log=size_log)
-    size_domain = _plot_size_domain(size_values, field=size_field, log=size_log)
     grid = _render_plot_grid(
         left=left,
         top=top,
@@ -1598,12 +1570,11 @@ def render_leaderboard_plot(
             has_zero=x_has_zero,
         ) * plot_width
         cy = top + (1.0 - _plot_scale(y_value, min_value=y_min, max_value=y_max, log=False)) * plot_height
-        radius = _plot_radius(point["size"], size_domain=size_domain, size_min=size_min, size_max=size_max, log=size_log)
         fill = _plot_color(point["color"], min_value=color_min, max_value=color_max, log=color_log)
         tooltip = _plot_tooltip(point)
         metadata = _plot_model_metadata(point["row"], model_views)
         circles.append(
-            f"""<circle class="leaderboard-plot-point tooltip-trigger model-detail-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{radius:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" data-tooltip-hover-only="true" data-tooltip-delay="0" data-model-metadata="{metadata}" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
+            f"""<circle class="leaderboard-plot-point tooltip-trigger model-detail-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{PLOT_POINT_RADIUS:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" data-tooltip-hover-only="true" data-tooltip-delay="0" data-model-metadata="{metadata}" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
         )
     legend = (
         ""
@@ -1625,7 +1596,6 @@ def render_leaderboard_plot(
         filter_state=filter_state,
         plot_y=y_field,
         plot_x=x_field,
-        plot_size=size_field,
         plot_color=color_field,
     )
     return f"""
@@ -1634,7 +1604,6 @@ def render_leaderboard_plot(
     <div class="leaderboard-plot-mobile-message" role="status">Chart view is available only on wider screens.</div>
     <svg class="leaderboard-plot" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(PLOT_SCORE_OPTIONS[y_field][0])} by {escape(PLOT_AXIS_OPTIONS[x_field][0])}">
       {grid}
-      <text x="{left}" y="{top - 8}" class="plot-axis-tick">Circle: {escape(PLOT_CHANNEL_OPTIONS[size_field][0])}</text>
       <g>{''.join(circles)}</g>
       {legend}
     </svg>
@@ -1647,7 +1616,6 @@ def _plot_point_values(
     *,
     y_field: str,
     x_field: str,
-    size_field: str,
     color_field: str,
     sparse_embedding_dim: float | None,
     max_active_parameters: float | None,
@@ -1668,14 +1636,6 @@ def _plot_point_values(
             max_seq_length=plot_max_seq_length,
         ),
         "y": _plot_score_value(row, y_field),
-        "size": _plot_axis_value(
-            row,
-            size_field,
-            sparse_embedding_dim=sparse_embedding_dim,
-            active_parameters=active_parameters,
-            total_parameters=total_parameters,
-            max_seq_length=plot_max_seq_length,
-        ),
         "color": _plot_axis_value(
             row,
             color_field,
@@ -1689,17 +1649,14 @@ def _plot_point_values(
         "max_seq_length": plot_max_seq_length,
         "x_label": PLOT_AXIS_OPTIONS[x_field][1],
         "y_label": PLOT_SCORE_OPTIONS[y_field][1],
-        "size_label": PLOT_CHANNEL_OPTIONS[size_field][1],
         "color_label": PLOT_CHANNEL_OPTIONS[color_field][1],
     }
 
 
-def _plot_point_has_required_values(point: _PlotPoint, *, x_field: str, size_field: str, color_field: str) -> bool:
+def _plot_point_has_required_values(point: _PlotPoint, *, x_field: str, color_field: str) -> bool:
     if point["x"] is None or point["y"] is None:
         return False
     if x_field == "max_seq_length" and point["x"] is None:
-        return False
-    if size_field == "max_seq_length" and point["size"] is None:
         return False
     if color_field == "max_seq_length" and point["color"] is None:
         return False
@@ -1981,53 +1938,21 @@ def _plot_dimension_scale(value: float, *, max_value: float) -> float:
     )
 
 
-def _plot_size_domain(values: list[float], *, field: str, log: bool) -> list[float]:
-    if field == "quantization":
-        return [1.0, 8.0, 16.0]
-    domain = []
-    for value in values:
-        if not math.isfinite(value) or (log and value <= 0):
-            continue
-        domain.append(math.log10(value) if log else value)
-    return sorted(set(domain))
-
-
-def _plot_radius(
-    value: object,
-    *,
-    size_domain: list[float],
-    size_min: float,
-    size_max: float,
-    log: bool,
-) -> float:
-    if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
-        return 8.0
-    numeric_value = float(value)
-    if log and numeric_value <= 0:
-        return 8.0
-    if len(size_domain) > 1:
-        transformed = math.log10(numeric_value) if log else numeric_value
-        rank = bisect_left(size_domain, transformed)
-        scaled = _plot_size_curve(rank / (len(size_domain) - 1))
-    else:
-        scaled = _plot_size_curve(_plot_scale(numeric_value, min_value=size_min, max_value=size_max, log=log))
-    return PLOT_RADIUS_MIN + scaled * (PLOT_RADIUS_MAX - PLOT_RADIUS_MIN)
-
-
-def _plot_size_curve(value: float) -> float:
-    value = min(1.0, max(0.0, value))
-    lower = 1.0 / (1.0 + math.exp(PLOT_RADIUS_CURVE_STEEPNESS / 2.0))
-    upper = 1.0 / (1.0 + math.exp(-PLOT_RADIUS_CURVE_STEEPNESS / 2.0))
-    curved = 1.0 / (1.0 + math.exp(-PLOT_RADIUS_CURVE_STEEPNESS * (value - 0.5)))
-    return (curved - lower) / (upper - lower)
-
-
 def _plot_color(value: object, *, min_value: float, max_value: float, log: bool) -> str:
     if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
-        return "rgb(127 139 143 / 0.72)"
+        return "rgb(115 120 126 / 0.82)"
     scaled = _plot_scale(float(value), min_value=min_value, max_value=max_value, log=log)
-    lightness = 38 + scaled * 42
-    return f"hsl(190 58% {lightness:.1f}% / 0.72)"
+    if scaled <= 0.5:
+        local = scaled * 2.0
+        start, end = PLOT_COLOR_STOPS[0], PLOT_COLOR_STOPS[1]
+    else:
+        local = (scaled - 0.5) * 2.0
+        start, end = PLOT_COLOR_STOPS[1], PLOT_COLOR_STOPS[2]
+    red = round(start[0] + (end[0] - start[0]) * local)
+    green = round(start[1] + (end[1] - start[1]) * local)
+    blue = round(start[2] + (end[2] - start[2]) * local)
+    alpha = 0.88 + scaled * 0.02
+    return f"rgb({red} {green} {blue} / {alpha:.2f})"
 
 
 def _render_plot_grid(
@@ -2111,20 +2036,31 @@ def _plot_dimension_ticks(min_value: float, max_value: float) -> list[float]:
 def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: float, max_value: float, field: str) -> str:
     label_x = x + 84
     label_y = y + height / 2
+    mid_value = _plot_legend_mid_value(min_value=min_value, max_value=max_value, field=field)
     return f"""
       <defs>
         <linearGradient id="plot-color-gradient" x1="0" x2="0" y1="1" y2="0">
-          <stop offset="0%" stop-color="hsl(190 58% 38%)"></stop>
-          <stop offset="100%" stop-color="hsl(190 58% 80%)"></stop>
+          <stop offset="0%" stop-color="#4f46e5"></stop>
+          <stop offset="50%" stop-color="#0891b2"></stop>
+          <stop offset="100%" stop-color="#f59e0b"></stop>
         </linearGradient>
       </defs>
       <g class="plot-legend">
         <text x="{label_x}" y="{label_y:.2f}" class="plot-axis-label plot-legend-label" text-anchor="middle" transform="rotate(-90 {label_x} {label_y:.2f})">{escape(label)}</text>
         <rect x="{x}" y="{y}" width="18" height="{height}" fill="url(#plot-color-gradient)"></rect>
         <text x="{x + 28}" y="{y + 5}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(max_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
+        <text x="{x + 28}" y="{y + height / 2 + 4:.2f}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(mid_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
         <text x="{x + 28}" y="{y + height}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(min_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
       </g>
 """
+
+
+def _plot_legend_mid_value(*, min_value: float, max_value: float, field: str) -> float:
+    if field == "quantization":
+        return 8.0
+    if _plot_field_uses_log(field) and min_value > 0 and max_value > 0:
+        return math.sqrt(min_value * max_value)
+    return min_value + (max_value - min_value) / 2.0
 
 
 def _plot_tooltip(point: _PlotPoint) -> str:
@@ -3105,6 +3041,7 @@ def render_display_controls(
         state_fields.append(("group", result.selected_score_group.name))
     state_fields.extend(_query_state_fields(plot_state))
     sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
+    variant_filter_fields = _variant_filter_hidden_fields(filter_state)
     variant_hidden_fields = _active_variant_hidden_fields(result)
     task_score_hidden_fields = []
     if result.show_task_scores:
@@ -3116,7 +3053,7 @@ def render_display_controls(
     if result.show_task_ranks:
         task_score_hidden_fields.append(("task_ranks", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
-    variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
+    variant_hidden_html = _hidden_inputs(state_fields + variant_filter_fields + task_score_hidden_fields)
     return f"""
     <div class="grid gap-1.5 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
       <form id="column-controls" class="border border-zinc-200 bg-white p-1.5"
@@ -3551,6 +3488,17 @@ def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, 
     if result.include_other_variants:
         fields.append(("other_variant", "1"))
     return fields
+
+
+def _variant_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
+    reset_facet_state = FilterState(
+        model_filter=filter_state.model_filter,
+        task_filter=filter_state.task_filter,
+        language_filters=filter_state.language_filters,
+        filters_active=False,
+        **_task_length_filter_kwargs(filter_state),
+    )
+    return active_filter_hidden_fields(reset_facet_state) + _text_filter_hidden_fields(reset_facet_state)
 
 
 def _selected_benchmark_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:

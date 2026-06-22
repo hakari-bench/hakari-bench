@@ -1594,8 +1594,7 @@ def test_result_view_tabs_switch_table_and_chart_without_losing_state() -> None:
         result_view="chart",
         plot_y="borda_score",
         plot_x="active_parameters",
-        plot_size="embedding_dim",
-        plot_color="max_seq_length",
+        plot_color="embedding_dim",
     )
 
     assert 'aria-label="Result view"' in html
@@ -1714,8 +1713,7 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
         filter_context=filter_context,
         plot_y="borda_score",
         plot_x="active_parameters",
-        plot_size="embedding_dim",
-        plot_color="max_seq_length",
+        plot_color="embedding_dim",
     )
 
     assert 'data-testid="leaderboard-plot"' in html
@@ -1723,7 +1721,7 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
     assert "Borda Score" in html
     assert "Active Params" in html
     assert "Dims" in html
-    assert "Max Tokens" in html
+    assert "Max Tokens" not in html.split('class="plot-legend"', 1)[1].split("</g>", 1)[0]
     assert html.count("leaderboard-plot-point") == 1
     assert 'data-tooltip-hover-only="true"' in html
     assert 'data-tooltip-delay="0"' in html
@@ -1739,7 +1737,7 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
     assert "model/beta" not in html
 
 
-def test_leaderboard_plot_none_size_and_color_use_single_encoding() -> None:
+def test_leaderboard_plot_uses_fixed_circle_size_and_optional_single_color() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -1781,7 +1779,6 @@ def test_leaderboard_plot_none_size_and_color_use_single_encoding() -> None:
         result=result,
         plot_y="borda_score",
         plot_x="active_parameters",
-        plot_size="none",
         plot_color="none",
     )
 
@@ -1796,10 +1793,12 @@ def test_leaderboard_plot_none_size_and_color_use_single_encoding() -> None:
     fills = {circle_attr(circle, "fill") for circle in circles}
 
     assert '<option value="none" selected>None</option>' in html
-    assert "Circle: None" in html
+    assert ">Size</span>" not in html
+    assert "Circle:" not in html
     assert "plot-legend" not in html
     assert len(circles) == 2
     assert len(radii) == 1
+    assert radii == {"5.50"}
     assert len(fills) == 1
 
 
@@ -1984,7 +1983,7 @@ def test_leaderboard_plot_late_interaction_dims_use_token_dims_for_plot_channels
     dense_large_attrs = dense_large_circle.group(0)
     late_interaction_attrs = late_interaction_circle.group(0)
 
-    assert 'r="14.00"' in dense_large_attrs
+    assert 'r="5.50"' in dense_large_attrs
     dense_large_fill = re.search(r'fill="([^"]+)"', dense_large_attrs)
     late_interaction_fill = re.search(
         r'fill="([^"]+)"',
@@ -1993,7 +1992,7 @@ def test_leaderboard_plot_late_interaction_dims_use_token_dims_for_plot_channels
     assert dense_large_fill is not None
     assert late_interaction_fill is not None
     assert dense_large_fill.group(1) != late_interaction_fill.group(1)
-    assert 'r="2.00"' in late_interaction_attrs
+    assert 'r="5.50"' in late_interaction_attrs
     assert "Type: Late interaction" in late_interaction_attrs
     assert "Token dim: 128" in late_interaction_attrs
     assert "Embedding dim: 128" not in late_interaction_attrs
@@ -2184,10 +2183,11 @@ def test_leaderboard_plot_quantization_extent_is_fixed_from_binary_to_none() -> 
 
     legend = html.split('class="plot-legend"', 1)[1].split("</g>", 1)[0]
     assert ">16</text>" in legend
+    assert ">8</text>" in legend
     assert ">1</text>" in legend
 
 
-def test_leaderboard_plot_dims_size_uses_log_scale_with_wider_radius_range() -> None:
+def test_leaderboard_plot_uses_fixed_radius_for_all_points() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -2228,14 +2228,21 @@ def test_leaderboard_plot_dims_size_uses_log_scale_with_wider_radius_range() -> 
         plot_y="borda_score",
         plot_x="active_parameters",
         plot_size="embedding_dim",
-        plot_color="max_seq_length",
+        plot_color="embedding_dim",
     )
 
-    assert 'r="2.00"' in html
-    assert 'r="14.00"' in html
+    circles = re.findall(r'<circle[^>]+class="leaderboard-plot-point[^"]+"[^>]+>', html)
+    radii = set()
+    for circle in circles:
+        radius_match = re.search(r'\br="([^"]+)"', circle)
+        assert radius_match is not None
+        radii.add(radius_match.group(1))
+
+    assert len(circles) == 2
+    assert radii == {"5.50"}
 
 
-def test_leaderboard_plot_dims_size_emphasizes_midrange_distribution() -> None:
+def test_leaderboard_plot_color_uses_high_contrast_palette() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -2265,14 +2272,14 @@ def test_leaderboard_plot_dims_size_emphasizes_midrange_distribution() -> None:
         result=result,
         plot_y="borda_score",
         plot_x="active_parameters",
-        plot_size="embedding_dim",
-        plot_color="max_seq_length",
+        plot_color="embedding_dim",
     )
 
-    assert 'r="2.00"' in html
-    assert 'r="4.37"' in html
-    assert 'r="11.63"' in html
-    assert 'r="14.00"' in html
+    assert 'stop-color="#4f46e5"' in html
+    assert 'stop-color="#0891b2"' in html
+    assert 'stop-color="#f59e0b"' in html
+    assert 'fill="rgb(79 70 229 / 0.88)"' in html
+    assert 'fill="rgb(245 158 11 / 0.90)"' in html
 
 
 def test_leaderboard_plot_dims_x_axis_uses_128_step_grid_ticks() -> None:
@@ -2639,8 +2646,7 @@ def test_chart_state_is_preserved_in_display_and_filter_controls() -> None:
         result_view="chart",
         plot_y="macro_mean",
         plot_x="total_parameters",
-        plot_size="active_parameters",
-        plot_color="embedding_dim",
+        plot_color="max_seq_length",
     )
 
     variant_form = html.split('id="variant-controls"', 1)[1].split("</form>", 1)[0]
@@ -2648,14 +2654,66 @@ def test_chart_state_is_preserved_in_display_and_filter_controls() -> None:
     assert 'name="result_view" value="chart"' in variant_form
     assert 'name="chart_y" value="macro_mean"' in variant_form
     assert 'name="chart_x" value="total_parameters"' in variant_form
-    assert 'name="chart_size" value="active_parameters"' in variant_form
-    assert 'name="chart_color" value="embedding_dim"' in variant_form
+    assert 'name="chart_color" value="max_seq_length"' in variant_form
     assert 'name="result_view" value="chart"' in filter_form
     assert 'name="chart_x" value="total_parameters"' in filter_form
-    assert 'name="chart_size" value="active_parameters"' in filter_form
-    assert 'name="chart_color" value="embedding_dim"' in filter_form
+    assert 'name="chart_color" value="max_seq_length"' in filter_form
     assert "result_view=chart" in html
     assert "chart_x=total_parameters" in html
+
+
+def test_variant_controls_clear_facet_filters_but_keep_text_and_range_filters() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="jina/model",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=1,
+                active_parameters=100_000_000,
+                total_parameters=120_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            )
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=FilterState(
+            model_filter="jina",
+            filters_active=True,
+            dim_filters=("768",),
+            quant_filters=("__none__",),
+            model_type_filters=("dense",),
+            dtype_filters=("bf16",),
+            active_params_max="2000",
+        ),
+    )
+
+    variant_form = html.split('id="variant-controls"', 1)[1].split("</form>", 1)[0]
+    column_form = html.split('id="column-controls"', 1)[1].split("</form>", 1)[0]
+
+    assert 'name="model_filter" value="jina"' in variant_form
+    assert 'name="active_params_max" value="2000"' in variant_form
+    assert 'name="dim_filter"' not in variant_form
+    assert 'name="quant_filter"' not in variant_form
+    assert 'name="model_type_filter"' not in variant_form
+    assert 'name="dtype_filter"' not in variant_form
+    assert 'name="dim_filter" value="768"' in column_form
+    assert 'name="quant_filter" value="__none__"' in column_form
 
 
 def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> None:
@@ -2734,7 +2792,6 @@ def test_chart_quantization_axis_normalization_enables_quantization_variants() -
         model_filter="",
         chart_x="quantization",
         chart_y="borda_score",
-        chart_size="embedding_dim",
         chart_color="max_seq_length",
         result_view="chart",
     )

@@ -125,9 +125,11 @@ components:
       compression trade-offs using the same scoped and filtered rows as the table.
     treatment: Available as icon-labeled Table / Chart tabs at the start of the
       result status line before the current scope and evaluation mode. The chart
-      uses compact Y axis, X axis, Size, and Color selectors positioned in the
-      graph area's top-right corner, muted grid lines, cyan-tinted bubbles, and
-      hover-only tooltips for row metadata. The tooltip preserves line breaks so
+      uses compact Y axis, X axis, and Color selectors positioned in the graph
+      area's top-right corner, muted grid lines, fixed-size circles, and
+      hover-only tooltips for row metadata. Color defaults to Dims and uses a
+      high-contrast violet-to-cyan-to-amber scale that remains distinguishable
+      on both light and dark backgrounds. The tooltip preserves line breaks so
       score/rank and model metadata scan as separate groups. The right-side color
       legend label is vertical and sits
       to the right of the gradient bar and tick labels. It must preserve the current
@@ -146,14 +148,10 @@ components:
       int8 is 8, and binary is 1. Active Params and Total Params default to
       explicit log-scale channels and also offer linear channels; log-scale
       labels should include "(log scale)" in the plotted axis or legend title.
-      Dims and token channels use logarithmic scaling where they
-      drive position, size, or color, Size and Color selectors may use None to
-      render one constant bubble size or one constant color without extra encoding,
-      all leaderboard controls must preserve the
-      current chart view state, and bubble size should use the visible value
-      distribution with a compact radius range and midrange emphasis so common
-      clustered dimensions such as 384, 768, and 1024 remain distinguishable
-      without excessive overlap. Mobile-width viewports should hide the chart and
+      Dims and token channels use logarithmic scaling where they drive position
+      or color, the Color selector may use None to render one constant color
+      without extra encoding, and all leaderboard controls must preserve the
+      current chart view state. Mobile-width viewports should hide the chart and
       chart controls and show a concise message that chart view requires a wider
       device.
       BM25-style baselines and static embeddings should remain visible at 0
