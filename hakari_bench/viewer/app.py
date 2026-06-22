@@ -52,6 +52,8 @@ from hakari_bench.viewer.model_types import model_type_filter_key
 from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
     FilterState,
+    PLOT_AXIS_FIELDS,
+    PLOT_SCORE_FIELDS,
     QueryState,
     active_filter_hidden_fields,
     filter_state_from_query,
@@ -335,6 +337,11 @@ def create_app(
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
         doc_len_max: str = Query(default=""),
+        result_view: str = Query(default="table", pattern="^(table|plot)$"),
+        plot_y: str = Query(default="borda_score"),
+        plot_x: str = Query(default="active_parameters"),
+        plot_size: str = Query(default="embedding_dim"),
+        plot_color: str = Query(default="max_seq_length"),
     ) -> str:
         with timed_operation("viewer.http.request", route="index") as request_timing:
             store.start_background_sync()
@@ -375,6 +382,11 @@ def create_app(
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
+                result_view=result_view,
+                plot_y=plot_y,
+                plot_x=plot_x,
+                plot_size=plot_size,
+                plot_color=plot_color,
             )
             if not task_z_scores:
                 initial_query["task_z_scores"] = "0"
@@ -478,6 +490,11 @@ def create_app(
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
         doc_len_max: str = Query(default=""),
+        result_view: str = Query(default="table", pattern="^(table|plot)$"),
+        plot_y: str = Query(default="borda_score"),
+        plot_x: str = Query(default="active_parameters"),
+        plot_size: str = Query(default="embedding_dim"),
+        plot_color: str = Query(default="max_seq_length"),
     ) -> HTMLResponse:
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
             state_query = normalize_query_state(
@@ -517,6 +534,11 @@ def create_app(
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
+                result_view=result_view,
+                plot_y=plot_y,
+                plot_x=plot_x,
+                plot_size=plot_size,
+                plot_color=plot_color,
             )
             sync_status = store.start_background_sync()
             if _duckdb_sync_blocks_leaderboard(store, sync_status):
@@ -528,7 +550,18 @@ def create_app(
                 )
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
-                content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)
+                content = render_leaderboard(
+                    result=result,
+                    sort=sort,
+                    direction=direction,
+                    filter_state=filter_state,
+                    benchmark_docs=benchmark_docs,
+                    result_view=query_string(state_query.get("result_view", "table")),
+                    plot_y=query_string(state_query.get("plot_y", "borda_score")),
+                    plot_x=query_string(state_query.get("plot_x", "active_parameters")),
+                    plot_size=query_string(state_query.get("plot_size", "embedding_dim")),
+                    plot_color=query_string(state_query.get("plot_color", "max_seq_length")),
+                )
                 render_timing["leaderboard_row_count"] = len(result.rows)
             request_timing["view"] = result.view_name
             request_timing["leaderboard_row_count"] = len(result.rows)
@@ -1094,15 +1127,40 @@ def render_leaderboard(
     direction: str,
     filter_state: FilterState | None = None,
     benchmark_docs: BenchmarkDocs | None = None,
+    result_view: str = "table",
+    plot_y: str = "borda_score",
+    plot_x: str = "active_parameters",
+    plot_size: str = "embedding_dim",
+    plot_color: str = "max_seq_length",
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = row_filter_context(result.rows, filter_state)
     shown_count = visible_row_count(result.rows, filter_context)
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
     mode_icon, mode_label = _score_target_display(result.score_target)
+    result_view = result_view if result_view in {"table", "plot"} else "table"
+    data_surface = (
+        render_leaderboard_plot(
+            result=result,
+            filter_context=filter_context,
+            plot_y=plot_y,
+            plot_x=plot_x,
+            plot_size=plot_size,
+            plot_color=plot_color,
+        )
+        if result_view == "plot"
+        else f"""
+  <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
+    <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
+      {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
+      {render_table_body(result=result, filter_context=filter_context)}
+    </table>
+  </div>"""
+    )
     return f"""
 <div>
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs)}
+  {render_result_view_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, result_view=result_view, plot_y=plot_y, plot_x=plot_x, plot_size=plot_size, plot_color=plot_color)}
   <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
     <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
       <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
@@ -1123,17 +1181,506 @@ def render_leaderboard(
       <span>Download CSV</span>
     </a>
   </div>
-  <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
-    <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
-      {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
-      {render_table_body(result=result, filter_context=filter_context)}
-    </table>
-  </div>
+  {data_surface}
   {render_model_detail_modal()}
   {render_doc_summary_modal()}
   {render_help_summary_modal()}
 </div>
 """
+
+
+PLOT_SCORE_OPTIONS = {
+    "borda_score": ("Borda Score", "Borda score"),
+    "macro_mean": ("Task Mean (Macro)", "Task Mean (Macro)"),
+    "micro_mean": ("Task Mean (Micro)", "Task Mean (Micro)"),
+}
+PLOT_AXIS_OPTIONS = {
+    "active_parameters": ("Active Params", "Active params"),
+    "total_parameters": ("Total Params", "Total params"),
+    "max_seq_length": ("Max Tokens", "Max tokens"),
+    "embedding_dim": ("Dims", "Embedding dim"),
+    "quantization": ("Quantization", "Quantization"),
+    "sparse_query_dims": ("Sparse Query Dims", "Sparse query dims"),
+    "sparse_document_dims": ("Sparse Doc Dims", "Sparse doc dims"),
+}
+
+
+class _PlotPoint(TypedDict):
+    row: LeaderboardRow
+    x: float | None
+    y: float | None
+    size: float | None
+    color: float | None
+    x_label: str
+    y_label: str
+    size_label: str
+    color_label: str
+
+
+def render_result_view_tabs(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+    result_view: str = "table",
+    plot_y: str = "borda_score",
+    plot_x: str = "active_parameters",
+    plot_size: str = "embedding_dim",
+    plot_color: str = "max_seq_length",
+) -> str:
+    filter_state = filter_state or FilterState()
+    result_view = result_view if result_view in {"table", "plot"} else "table"
+    buttons = []
+    for value, label in [("table", "Table"), ("plot", "Plot")]:
+        active = result_view == value
+        query_payload = _plot_state_payload(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            result_view=value,
+            plot_y=plot_y,
+            plot_x=plot_x,
+            plot_size=plot_size,
+            plot_color=plot_color,
+        )
+        query = urlencode(query_payload, doseq=True)
+        buttons.append(
+            f"""<button type="button" role="tab" aria-selected="{str(active).lower()}" class="border px-2 py-1 text-[0.8125rem] leading-tight {_control_button_classes(active=active)}"
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                  {_leaderboard_control_hx_attrs()}>{escape(label)}</button>"""
+        )
+    plot_controls = (
+        render_plot_controls(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            plot_y=plot_y,
+            plot_x=plot_x,
+            plot_size=plot_size,
+            plot_color=plot_color,
+        )
+        if result_view == "plot"
+        else ""
+    )
+    return f"""
+  <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+    <div class="inline-flex items-center gap-2" role="tablist" aria-label="Result view">
+      {''.join(buttons)}
+    </div>
+    {plot_controls}
+  </div>
+"""
+
+
+def render_plot_controls(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_y: str,
+    plot_x: str,
+    plot_size: str,
+    plot_color: str,
+) -> str:
+    state_fields = _plot_state_fields(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        result_view="plot",
+    )
+    return f"""
+    <form id="plot-controls" class="plot-controls flex flex-wrap items-center gap-2 text-[0.8125rem] text-zinc-700"
+          hx-get="/leaderboard" hx-push-url="true"
+          {_leaderboard_control_hx_attrs()}
+          hx-trigger="change, submit">
+      {_hidden_inputs(state_fields)}
+      {_render_plot_select("plot_y", "Left", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
+      {_render_plot_select("plot_x", "Bottom", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
+      {_render_plot_select("plot_size", "Circle", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_size))}
+      {_render_plot_select("plot_color", "Color", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_color))}
+    </form>
+"""
+
+
+def _render_plot_select(name: str, label: str, options: dict[str, tuple[str, str]], selected: str) -> str:
+    option_html = "".join(
+        f'<option value="{escape(value)}"{" selected" if value == selected else ""}>{escape(option_label)}</option>'
+        for value, (option_label, _axis_label) in options.items()
+    )
+    return f"""
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">{escape(label)}</span>
+        <select name="{escape(name)}" class="viewer-select border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900">
+          {option_html}
+        </select>
+      </label>
+"""
+
+
+def _plot_state_payload(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    result_view: str,
+    plot_y: str,
+    plot_x: str,
+    plot_size: str,
+    plot_color: str,
+) -> QueryState:
+    payload = state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state)
+    if result_view != "table":
+        payload["result_view"] = result_view
+    plot_y = _normalized_plot_score_field(plot_y)
+    plot_x = _normalized_plot_axis_field(plot_x)
+    plot_size = _normalized_plot_axis_field(plot_size)
+    plot_color = _normalized_plot_axis_field(plot_color)
+    if plot_y != "borda_score":
+        payload["plot_y"] = plot_y
+    if plot_x != "active_parameters":
+        payload["plot_x"] = plot_x
+    if plot_size != "embedding_dim":
+        payload["plot_size"] = plot_size
+    if plot_color != "max_seq_length":
+        payload["plot_color"] = plot_color
+    if "quantization" in {plot_x, plot_size, plot_color}:
+        payload["quantization"] = "1"
+    return payload
+
+
+def _plot_state_fields(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    result_view: str,
+) -> list[tuple[str, str]]:
+    payload = state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state)
+    payload["result_view"] = result_view
+    fields: list[tuple[str, str]] = []
+    for key, value in payload.items():
+        if isinstance(value, list):
+            fields.extend((key, item) for item in value)
+        else:
+            fields.append((key, value))
+    return fields
+
+
+def render_leaderboard_plot(
+    *,
+    result: LeaderboardResult,
+    filter_context: FilterContext | None = None,
+    plot_y: str = "borda_score",
+    plot_x: str = "active_parameters",
+    plot_size: str = "embedding_dim",
+    plot_color: str = "max_seq_length",
+) -> str:
+    filter_context = filter_context or row_filter_context(result.rows, FilterState())
+    y_field = _normalized_plot_score_field(plot_y)
+    x_field = _normalized_plot_axis_field(plot_x)
+    size_field = _normalized_plot_axis_field(plot_size)
+    color_field = _normalized_plot_axis_field(plot_color)
+    points: list[_PlotPoint] = [
+        _plot_point_values(row, y_field=y_field, x_field=x_field, size_field=size_field, color_field=color_field)
+        for row in result.rows
+        if filter_context.is_visible(row)
+    ]
+    points = [point for point in points if point["x"] is not None and point["y"] is not None]
+    if not points:
+        return '<div class="leaderboard-plot-empty border border-zinc-200 bg-white px-3 py-5 text-center text-zinc-500">No plottable rows found.</div>'
+    width = 1100
+    height = 560
+    left = 82
+    right = 138
+    top = 26
+    bottom = 72
+    plot_width = width - left - right
+    plot_height = height - top - bottom
+    x_log = x_field in {"active_parameters", "total_parameters", "max_seq_length", "embedding_dim", "sparse_query_dims", "sparse_document_dims"}
+    x_values = [float(point["x"]) for point in points if point["x"] is not None and (not x_log or float(point["x"]) > 0)]
+    y_values = [float(point["y"]) for point in points if point["y"] is not None]
+    color_values = [float(point["color"]) for point in points if point["color"] is not None]
+    size_values = [float(point["size"]) for point in points if point["size"] is not None]
+    x_min, x_max = _plot_extent(x_values, log=x_log)
+    y_min, y_max = _plot_extent(y_values, log=False, pad_fraction=0.08)
+    color_min, color_max = _plot_extent(color_values, log=False) if color_values else (0.0, 1.0)
+    size_min, size_max = _plot_extent(size_values, log=False) if size_values else (0.0, 1.0)
+    grid = _render_plot_grid(
+        left=left,
+        top=top,
+        plot_width=plot_width,
+        plot_height=plot_height,
+        x_min=x_min,
+        x_max=x_max,
+        y_min=y_min,
+        y_max=y_max,
+        x_log=x_log,
+        x_label=PLOT_AXIS_OPTIONS[x_field][0],
+        y_label=PLOT_SCORE_OPTIONS[y_field][0],
+    )
+    circles = []
+    for point in points:
+        x_raw = point["x"]
+        y_raw = point["y"]
+        if x_raw is None or y_raw is None:
+            continue
+        x_value = float(x_raw)
+        if x_log and x_value <= 0:
+            continue
+        y_value = float(y_raw)
+        cx = left + _plot_scale(x_value, min_value=x_min, max_value=x_max, log=x_log) * plot_width
+        cy = top + (1.0 - _plot_scale(y_value, min_value=y_min, max_value=y_max, log=False)) * plot_height
+        radius = _plot_radius(point["size"], size_min=size_min, size_max=size_max)
+        fill = _plot_color(point["color"], min_value=color_min, max_value=color_max)
+        tooltip = _plot_tooltip(point)
+        circles.append(
+            f"""<circle class="leaderboard-plot-point tooltip-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{radius:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
+        )
+    legend = _render_plot_legend(
+        x=width - right + 42,
+        y=top + 16,
+        height=plot_height - 32,
+        label=PLOT_AXIS_OPTIONS[color_field][0],
+        min_value=color_min,
+        max_value=color_max,
+        field=color_field,
+    )
+    return f"""
+  <div class="leaderboard-plot-shell border border-zinc-200 bg-white p-2" data-testid="leaderboard-plot">
+    <svg class="leaderboard-plot" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(PLOT_SCORE_OPTIONS[y_field][0])} by {escape(PLOT_AXIS_OPTIONS[x_field][0])}">
+      {grid}
+      <text x="{left}" y="{top - 8}" class="plot-axis-tick">Circle: {escape(PLOT_AXIS_OPTIONS[size_field][0])}</text>
+      <g>{''.join(circles)}</g>
+      {legend}
+    </svg>
+  </div>
+"""
+
+
+def _plot_point_values(row: LeaderboardRow, *, y_field: str, x_field: str, size_field: str, color_field: str) -> _PlotPoint:
+    return {
+        "row": row,
+        "x": _plot_axis_value(row, x_field),
+        "y": _plot_score_value(row, y_field),
+        "size": _plot_axis_value(row, size_field),
+        "color": _plot_axis_value(row, color_field),
+        "x_label": PLOT_AXIS_OPTIONS[x_field][1],
+        "y_label": PLOT_SCORE_OPTIONS[y_field][1],
+        "size_label": PLOT_AXIS_OPTIONS[size_field][1],
+        "color_label": PLOT_AXIS_OPTIONS[color_field][1],
+    }
+
+
+def _plot_score_value(row: LeaderboardRow, field: str) -> float | None:
+    if field == "macro_mean":
+        return row.macro_mean
+    if field == "micro_mean":
+        return row.micro_mean
+    return row.borda_score
+
+
+def _plot_axis_value(row: LeaderboardRow, field: str) -> float | None:
+    if field == "active_parameters":
+        return float(row.active_parameters) if row.active_parameters is not None else None
+    if field == "total_parameters":
+        return float(row.total_parameters) if row.total_parameters is not None else None
+    if field == "max_seq_length":
+        return float(row.max_seq_length) if row.max_seq_length is not None else None
+    if field == "embedding_dim":
+        return float(row.embedding_dim) if row.embedding_dim is not None else None
+    if field == "quantization":
+        return float(_quantization_numeric_value(row.quantization))
+    if field == "sparse_query_dims":
+        return _sparse_dim_from_variant(row.embedding_variant_name, "query")
+    if field == "sparse_document_dims":
+        return _sparse_dim_from_variant(row.embedding_variant_name, "document")
+    return None
+
+
+def _quantization_numeric_value(quantization: str | None) -> int:
+    if not quantization:
+        return 16
+    normalized = quantization.casefold()
+    if "binary" in normalized or normalized in {"bin", "ubinary"}:
+        return 1
+    if "int8" in normalized or "uint8" in normalized or "8" in normalized:
+        return 8
+    return 16
+
+
+def _sparse_dim_from_variant(embedding_variant_name: str | None, side: str) -> float | None:
+    if not embedding_variant_name or not is_sparse_dims_variant_name(embedding_variant_name):
+        return None
+    normalized = embedding_variant_name.lower()
+    patterns = (
+        (rf"{side}[^0-9]*(\d+)", rf"{side[0]}[^0-9]*(\d+)"),
+        (r"query[^0-9]*(\d+)", r"q[^0-9]*(\d+)"),
+    ) if side == "query" else (
+        (r"document[^0-9]*(\d+)", r"doc[^0-9]*(\d+)", r"d[^0-9]*(\d+)"),
+    )
+    for group in patterns:
+        for pattern in group:
+            match = re.search(pattern, normalized)
+            if match:
+                return float(match.group(1))
+    match = re.search(r"(?:max_active_dims|max_dims)[^0-9]*(\d+)", normalized)
+    return float(match.group(1)) if match else None
+
+
+def _plot_extent(values: list[float], *, log: bool, pad_fraction: float = 0.04) -> tuple[float, float]:
+    values = [value for value in values if math.isfinite(value) and (not log or value > 0)]
+    if not values:
+        return (1.0, 10.0) if log else (0.0, 1.0)
+    minimum = min(values)
+    maximum = max(values)
+    if minimum == maximum:
+        if log:
+            return minimum / 2.0, maximum * 2.0
+        pad = abs(minimum) * 0.1 or 1.0
+        return minimum - pad, maximum + pad
+    if log:
+        return minimum, maximum
+    span = maximum - minimum
+    return minimum - span * pad_fraction, maximum + span * pad_fraction
+
+
+def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) -> float:
+    if log:
+        value = math.log10(max(value, 1e-9))
+        min_value = math.log10(max(min_value, 1e-9))
+        max_value = math.log10(max(max_value, 1e-9))
+    if max_value == min_value:
+        return 0.5
+    return min(1.0, max(0.0, (value - min_value) / (max_value - min_value)))
+
+
+def _plot_radius(value: object, *, size_min: float, size_max: float) -> float:
+    if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+        return 8.0
+    scaled = _plot_scale(float(value), min_value=size_min, max_value=size_max, log=False)
+    return 5.0 + math.sqrt(scaled) * 15.0
+
+
+def _plot_color(value: object, *, min_value: float, max_value: float) -> str:
+    if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+        return "rgb(127 139 143 / 0.72)"
+    scaled = _plot_scale(float(value), min_value=min_value, max_value=max_value, log=False)
+    lightness = 38 + scaled * 42
+    return f"hsl(190 58% {lightness:.1f}% / 0.72)"
+
+
+def _render_plot_grid(
+    *,
+    left: int,
+    top: int,
+    plot_width: int,
+    plot_height: int,
+    x_min: float,
+    x_max: float,
+    y_min: float,
+    y_max: float,
+    x_log: bool,
+    x_label: str,
+    y_label: str,
+) -> str:
+    x_ticks = _plot_ticks(x_min, x_max, log=x_log)
+    y_ticks = _plot_ticks(y_min, y_max, log=False)
+    parts = [f'<rect x="{left}" y="{top}" width="{plot_width}" height="{plot_height}" class="plot-frame"></rect>']
+    for tick in x_ticks:
+        x = left + _plot_scale(tick, min_value=x_min, max_value=x_max, log=x_log) * plot_width
+        parts.append(f'<line x1="{x:.2f}" y1="{top}" x2="{x:.2f}" y2="{top + plot_height}" class="plot-grid-line"></line>')
+        parts.append(f'<text x="{x:.2f}" y="{top + plot_height + 24}" class="plot-axis-tick" text-anchor="middle">{escape(_fmt_plot_axis_value(tick, x_label))}</text>')
+    for tick in y_ticks:
+        y = top + (1.0 - _plot_scale(tick, min_value=y_min, max_value=y_max, log=False)) * plot_height
+        parts.append(f'<line x1="{left}" y1="{y:.2f}" x2="{left + plot_width}" y2="{y:.2f}" class="plot-grid-line"></line>')
+        parts.append(f'<text x="{left - 12}" y="{y + 4:.2f}" class="plot-axis-tick" text-anchor="end">{escape(_fmt_plot_score_tick(tick))}</text>')
+    parts.append(f'<text x="{left + plot_width / 2:.2f}" y="{top + plot_height + 56}" class="plot-axis-label" text-anchor="middle">{escape(x_label)}</text>')
+    parts.append(f'<text x="24" y="{top + plot_height / 2:.2f}" class="plot-axis-label" text-anchor="middle" transform="rotate(-90 24 {top + plot_height / 2:.2f})">{escape(y_label)}</text>')
+    return "\n".join(parts)
+
+
+def _plot_ticks(min_value: float, max_value: float, *, log: bool) -> list[float]:
+    if log:
+        start = math.floor(math.log10(max(min_value, 1e-9)))
+        end = math.ceil(math.log10(max(max_value, 1e-9)))
+        ticks = []
+        for exponent in range(start, end + 1):
+            for multiplier in (1, 2, 5):
+                value = multiplier * (10 ** exponent)
+                if min_value <= value <= max_value:
+                    ticks.append(float(value))
+        return ticks or [min_value, max_value]
+    step_count = 5
+    return [min_value + (max_value - min_value) * index / step_count for index in range(step_count + 1)]
+
+
+def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: float, max_value: float, field: str) -> str:
+    return f"""
+      <defs>
+        <linearGradient id="plot-color-gradient" x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0%" stop-color="hsl(190 58% 38%)"></stop>
+          <stop offset="100%" stop-color="hsl(190 58% 80%)"></stop>
+        </linearGradient>
+      </defs>
+      <g class="plot-legend">
+        <text x="{x}" y="{y - 8}" class="plot-axis-label">{escape(label)}</text>
+        <rect x="{x}" y="{y}" width="18" height="{height}" fill="url(#plot-color-gradient)"></rect>
+        <text x="{x + 28}" y="{y + 5}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(max_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
+        <text x="{x + 28}" y="{y + height}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(min_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
+      </g>
+"""
+
+
+def _plot_tooltip(point: _PlotPoint) -> str:
+    row = point["row"]
+    lines = [
+        row.model_name,
+        f"{point['y_label']}: {_fmt_score(point['y'])}",
+        f"Active params: {_fmt_int(row.active_parameters)}",
+        f"Total params: {_fmt_int(row.total_parameters)}",
+        f"Max tokens: {_fmt_int(row.max_seq_length)}",
+        f"Embedding dim: {_fmt_int(row.embedding_dim)}",
+        f"Quantization: {row.quantization or 'orig'}",
+        f"Rank: {_fmt_rank(row.borda_rank)}",
+    ]
+    if row.embedding_variant_name:
+        lines.insert(1, f"Variant: {row.embedding_variant_name}")
+    return "\n".join(lines)
+
+
+def _fmt_plot_axis_value(value: float, label: str) -> str:
+    if "Params" in label:
+        return _fmt_params(int(value))
+    if "Tokens" in label:
+        return _fmt_max_len(int(value))
+    if "Quantization" in label:
+        return f"{value:g}"
+    if value >= 1000:
+        return f"{int(value):,}"
+    return f"{value:.2f}".rstrip("0").rstrip(".")
+
+
+def _fmt_plot_score_tick(value: float) -> str:
+    return f"{value:.0f}" if abs(value) >= 10 else f"{value:.2f}".rstrip("0").rstrip(".")
+
+
+def _fmt_int(value: int | None) -> str:
+    return "Unknown" if value is None else f"{value:,}"
+
+
+def _normalized_plot_score_field(value: str) -> str:
+    return value if value in PLOT_SCORE_FIELDS else "borda_score"
+
+
+def _normalized_plot_axis_field(value: str) -> str:
+    return value if value in PLOT_AXIS_FIELDS else "active_parameters"
 
 
 def _score_target_display(score_target: str) -> tuple[str, str]:

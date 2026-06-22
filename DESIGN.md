@@ -116,6 +116,14 @@ components:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
       they improve scanning.
+  leaderboard-plot:
+    purpose: Optional visual comparison surface for score, scale, dimension, and
+      compression trade-offs using the same scoped and filtered rows as the table.
+    treatment: Available as a Table / Plot tab above the result surface. The plot
+      uses compact axis selectors, muted grid lines, cyan-tinted bubbles, and
+      hover tooltips for row metadata. It must preserve the current benchmark
+      scope and filters, and quantization axes must automatically include
+      quantization variants.
   model-score-bar:
     purpose: Show relative Borda strength behind the sticky model name.
     treatment: Subtle background bar scaled by visible max score; never competes with text.
@@ -225,6 +233,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep the page top chrome tight: the brand row should sit close to the viewport
   top, and intro/status copy should use compact margins and padding so the
   leaderboard remains the first meaningful surface.
+- The Table / Plot switch belongs directly above the result surface. Plot is an
+  inspection mode for the current table rows, not a separate dashboard; it should
+  not duplicate the main benchmark, filter, or variant controls.
 - Use help modals rather than permanent explanatory copy for technical controls.
   The control area should remain compact.
 - Avoid nested cards. Sections should be low-border surfaces or full-width

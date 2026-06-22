@@ -17,6 +17,18 @@ from hakari_bench.viewer.variant_display import variant_display_flags_from_value
 QueryValue = str | list[str]
 QueryState = dict[str, QueryValue]
 
+RESULT_VIEW_VALUES = {"table", "plot"}
+PLOT_SCORE_FIELDS = {"borda_score", "macro_mean", "micro_mean"}
+PLOT_AXIS_FIELDS = {
+    "active_parameters",
+    "total_parameters",
+    "max_seq_length",
+    "embedding_dim",
+    "quantization",
+    "sparse_query_dims",
+    "sparse_document_dims",
+}
+
 
 @dataclass(frozen=True)
 class FilterState:
@@ -92,6 +104,11 @@ def normalize_query_state(
     doc_len_min: str = "",
     doc_len_max: str = "",
     metric: str = "ndcg@10",
+    result_view: str = "table",
+    plot_y: str = "borda_score",
+    plot_x: str = "active_parameters",
+    plot_size: str = "embedding_dim",
+    plot_color: str = "max_seq_length",
 ) -> QueryState:
     view = _normalized_view_name(view)
     selected_benchmarks = _normalized_benchmark_values(bench, viewer_config)
@@ -107,6 +124,13 @@ def normalize_query_state(
         direction = "asc"
     if target not in {"all", "reranking", "reranking_without_safeguard"}:
         target = "all"
+    result_view = result_view if result_view in RESULT_VIEW_VALUES else "table"
+    plot_y = plot_y if plot_y in PLOT_SCORE_FIELDS else "borda_score"
+    plot_x = plot_x if plot_x in PLOT_AXIS_FIELDS else "active_parameters"
+    plot_size = plot_size if plot_size in PLOT_AXIS_FIELDS else "embedding_dim"
+    plot_color = plot_color if plot_color in PLOT_AXIS_FIELDS else "max_seq_length"
+    if "quantization" in {plot_x, plot_size, plot_color}:
+        quantization = True
     score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
     display_flags = variant_display_flags_from_values(
         variants=variants,
@@ -117,6 +141,16 @@ def normalize_query_state(
     )
     task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
+    if result_view != "table":
+        query["result_view"] = result_view
+    if plot_y != "borda_score":
+        query["plot_y"] = plot_y
+    if plot_x != "active_parameters":
+        query["plot_x"] = plot_x
+    if plot_size != "embedding_dim":
+        query["plot_size"] = plot_size
+    if plot_color != "max_seq_length":
+        query["plot_color"] = plot_color
     empty_custom_scope = view == CUSTOM_SCOPE_NAME and not selected_benchmarks
     if view == CUSTOM_SCOPE_NAME and selected_benchmarks:
         query["bench"] = selected_benchmarks

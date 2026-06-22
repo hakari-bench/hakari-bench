@@ -26,7 +26,9 @@ from hakari_bench.viewer.app import (
     render_display_controls,
     render_tabs,
     render_leaderboard_csv,
+    render_leaderboard_plot,
     render_page,
+    render_result_view_tabs,
     render_table_body,
     render_table_head,
 )
@@ -52,6 +54,7 @@ from hakari_bench.viewer.store import (
     resolve_duckdb_location,
 )
 from hakari_bench.viewer.state import FilterState
+from hakari_bench.viewer.state import normalize_query_state
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
@@ -1499,6 +1502,148 @@ def test_display_controls_preserve_custom_benchmark_selection() -> None:
     assert 'name="bench" value="MNanoBEIR:task_mean"' in column_form
     assert 'name="bench" value="NanoJMTEB-v2"' in column_form
     assert 'name="lang_filter" value="ja"' in column_form
+
+
+def test_result_view_tabs_switch_table_and_plot_without_losing_state() -> None:
+    result = LeaderboardResult(
+        view_name="Custom",
+        view_label="Custom",
+        is_overall=True,
+        expected_tasks=0,
+        rows=[],
+        available_views=["Overall", "NanoJMTEB-v2"],
+        available_view_labels={"Overall": "Overall", "NanoJMTEB-v2": "JMTEB-v2"},
+        selected_benchmarks=("NanoJMTEB-v2",),
+        include_quantization_variants=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_result_view_tabs(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=FilterState(language_filters=("ja",), model_filter="e5"),
+        result_view="table",
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert 'aria-label="Result view"' in html
+    assert 'aria-selected="true"' in html
+    assert ">Table</button>" in html
+    assert 'aria-selected="false"' in html
+    assert ">Plot</button>" in html
+    assert "result_view=plot" in html
+    assert "bench=NanoJMTEB-v2" in html
+    assert "lang_filter=ja" in html
+    assert "model_filter=e5" in html
+    assert "quantization=1" in html
+
+
+def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/alpha",
+                borda_score=86.0,
+                mean_score=0.86,
+                macro_mean=0.84,
+                micro_mean=0.86,
+                task_count=2,
+                active_parameters=435_000_000,
+                total_parameters=500_000_000,
+                max_seq_length=8192,
+                embedding_dim=4096,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/beta",
+                borda_score=70.0,
+                mean_score=0.70,
+                macro_mean=0.71,
+                micro_mean=0.70,
+                task_count=2,
+                active_parameters=100_000_000,
+                total_parameters=120_000_000,
+                max_seq_length=2048,
+                embedding_variant_name="truncate:256",
+                embedding_dim=256,
+                quantization="int8",
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        include_quantization_variants=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+    filter_context = row_filter_context(result.rows, FilterState(filters_active=True, model_filter="alpha"))
+
+    html = render_leaderboard_plot(
+        result=result,
+        filter_context=filter_context,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert 'data-testid="leaderboard-plot"' in html
+    assert "Borda Score" in html
+    assert "Active Params" in html
+    assert "Dims" in html
+    assert "Max Tokens" in html
+    assert html.count("leaderboard-plot-point") == 1
+    assert "model/alpha" in html
+    assert "Active params: 435,000,000" in html
+    assert "Embedding dim: 4,096" in html
+    assert "model/beta" not in html
+
+
+def test_plot_quantization_axis_normalization_enables_quantization_variants() -> None:
+    config = ViewerConfig(
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+    )
+
+    query = normalize_query_state(
+        viewer_config=config,
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        plot_x="quantization",
+        plot_y="borda_score",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+        result_view="plot",
+    )
+
+    assert query["result_view"] == "plot"
+    assert query["plot_x"] == "quantization"
+    assert query["quantization"] == "1"
 
 
 def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
