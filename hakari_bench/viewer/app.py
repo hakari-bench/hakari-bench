@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from bisect import bisect_left
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 import csv
@@ -8,6 +9,7 @@ from functools import lru_cache
 import hashlib
 from html import escape
 from io import StringIO
+import json
 import math
 import os
 from pathlib import Path
@@ -48,7 +50,7 @@ from hakari_bench.viewer.model_display import (
     render_model_detail_modal,
     render_model_name_cell,
 )
-from hakari_bench.viewer.model_types import model_type_filter_key
+from hakari_bench.viewer.model_types import is_bm25_model, model_type_filter_key
 from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
     FilterState,
@@ -138,6 +140,7 @@ _ICON_PATHS = {
     ),
     "braces": '<path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2 2 2 0 0 1-2-2V7a2 2 0 0 0-2-2h-1"/>',
     "calendar-days": '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>',
+    "chart-scatter": '<path d="M3 3v18h18"/><circle cx="7.5" cy="7.5" r="1"/><circle cx="18.5" cy="5.5" r="1"/><circle cx="11.5" cy="13.5" r="1"/><circle cx="17.5" cy="17.5" r="1"/>',
     "chevron-right": '<path d="m9 18 6-6-6-6"/>',
     "circle-help": (
         '<circle cx="12" cy="12" r="10"/>'
@@ -737,8 +740,10 @@ def render_page(
     <header class="mb-2">
       <div class="flex items-center justify-between gap-3">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
-          {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
-          <span>HAKARI-Bench leaderboard</span>
+          <a id="hakari-home-link" href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
+            {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
+            <span>HAKARI-Bench leaderboard</span>
+          </a>
         </h1>
         {header_actions}
       </div>
@@ -1139,10 +1144,20 @@ def render_leaderboard(
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
     mode_icon, mode_label = _score_target_display(result.score_target)
     result_view = result_view if result_view in {"table", "plot"} else "table"
+    plot_state = _plot_state_query(
+        result_view=result_view,
+        plot_y=plot_y,
+        plot_x=plot_x,
+        plot_size=plot_size,
+        plot_color=plot_color,
+    )
     data_surface = (
         render_leaderboard_plot(
             result=result,
             filter_context=filter_context,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
             plot_y=plot_y,
             plot_x=plot_x,
             plot_size=plot_size,
@@ -1159,14 +1174,12 @@ def render_leaderboard(
     )
     return f"""
 <div>
-  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs)}
-  {render_result_view_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, result_view=result_view, plot_y=plot_y, plot_x=plot_x, plot_size=plot_size, plot_color=plot_color)}
+  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs, plot_state=plot_state)}
   <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
     <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
-      <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
-        {_icon_svg("table-properties", class_name="hakari-icon control-heading-icon shrink-0")}
-        <span>{escape(result.view_label)}</span>
-      </span>
+      {render_result_view_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, result_view=result_view, plot_y=plot_y, plot_x=plot_x, plot_size=plot_size, plot_color=plot_color)}
+      <span class="text-zinc-400">/</span>
+      <span class="font-medium text-zinc-600">{escape(result.view_label)}</span>
       <span class="text-zinc-400">/</span>
       <span class="inline-flex items-center gap-1 text-zinc-600">
         {_icon_svg(mode_icon, class_name="hakari-icon h-3.5 w-3.5 shrink-0")}
@@ -1211,6 +1224,14 @@ PLOT_LOG_FIELDS = {
     "sparse_query_dims",
     "sparse_document_dims",
 }
+PLOT_RADIUS_MIN = 2.0
+PLOT_RADIUS_MAX = 14.0
+PLOT_RADIUS_CURVE_STEEPNESS = 8.0
+PLOT_DIMENSION_GRID_STEP = 128.0
+PLOT_DIMENSION_COMPRESSED_MAX = 256.0
+PLOT_DIMENSION_COMPRESSED_FRACTION = 0.12
+PLOT_DIMENSION_DENSE_TICK_MAX = 1024.0
+PLOT_DIMENSION_HIGH_TICKS = (2048.0,)
 
 
 class _PlotPoint(TypedDict):
@@ -1219,6 +1240,9 @@ class _PlotPoint(TypedDict):
     y: float | None
     size: float | None
     color: float | None
+    active_parameters: float | None
+    total_parameters: float | None
+    max_seq_length: float | None
     x_label: str
     y_label: str
     size_label: str
@@ -1240,7 +1264,7 @@ def render_result_view_tabs(
     filter_state = filter_state or FilterState()
     result_view = result_view if result_view in {"table", "plot"} else "table"
     buttons = []
-    for value, label in [("table", "Table"), ("plot", "Plot")]:
+    for value, label, icon in [("table", "Table", "table-properties"), ("plot", "Plot", "chart-scatter")]:
         active = result_view == value
         query_payload = _plot_state_payload(
             result=result,
@@ -1255,31 +1279,12 @@ def render_result_view_tabs(
         )
         query = urlencode(query_payload, doseq=True)
         buttons.append(
-            f"""<button type="button" role="tab" aria-selected="{str(active).lower()}" class="border px-2 py-1 text-[0.8125rem] leading-tight {_control_button_classes(active=active)}"
+            f"""<button type="button" role="tab" aria-selected="{str(active).lower()}" class="inline-flex items-center gap-1 border px-2 py-1 text-[0.8125rem] leading-tight {_control_button_classes(active=active)}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                  {_leaderboard_control_hx_attrs()}>{escape(label)}</button>"""
+                  {_leaderboard_control_hx_attrs()}>{_icon_svg(icon, class_name="hakari-icon h-3.5 w-3.5 shrink-0")}<span>{escape(label)}</span></button>"""
         )
-    plot_controls = (
-        render_plot_controls(
-            result=result,
-            sort=sort,
-            direction=direction,
-            filter_state=filter_state,
-            plot_y=plot_y,
-            plot_x=plot_x,
-            plot_size=plot_size,
-            plot_color=plot_color,
-        )
-        if result_view == "plot"
-        else ""
-    )
     return f"""
-  <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
-    <div class="inline-flex items-center gap-2" role="tablist" aria-label="Result view">
-      {''.join(buttons)}
-    </div>
-    {plot_controls}
-  </div>
+      <span class="inline-flex items-center gap-1" role="tablist" aria-label="Result view">{''.join(buttons)}</span>
 """
 
 
@@ -1302,7 +1307,7 @@ def render_plot_controls(
         result_view="plot",
     )
     return f"""
-    <form id="plot-controls" class="plot-controls flex flex-wrap items-center gap-2 text-[0.8125rem] text-zinc-700"
+    <form id="plot-controls" class="plot-controls flex flex-wrap items-center justify-end gap-2 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700 shadow-sm"
           hx-get="/leaderboard" hx-push-url="true"
           {_leaderboard_control_hx_attrs()}
           hx-trigger="change, submit">
@@ -1381,22 +1386,77 @@ def _plot_state_fields(
     return fields
 
 
+def _plot_state_query(
+    *,
+    result_view: str,
+    plot_y: str,
+    plot_x: str,
+    plot_size: str,
+    plot_color: str,
+) -> QueryState:
+    result_view = result_view if result_view in {"table", "plot"} else "table"
+    if result_view == "table":
+        return {}
+    plot_y = _normalized_plot_score_field(plot_y)
+    plot_x = _normalized_plot_axis_field(plot_x)
+    plot_size = _normalized_plot_axis_field(plot_size)
+    plot_color = _normalized_plot_axis_field(plot_color)
+    payload: QueryState = {"result_view": "plot"}
+    if plot_y != "borda_score":
+        payload["plot_y"] = plot_y
+    if plot_x != "active_parameters":
+        payload["plot_x"] = plot_x
+    if plot_size != "embedding_dim":
+        payload["plot_size"] = plot_size
+    if plot_color != "max_seq_length":
+        payload["plot_color"] = plot_color
+    if "quantization" in {plot_x, plot_size, plot_color}:
+        payload["quantization"] = "1"
+    return payload
+
+
+def _apply_plot_state(payload: QueryState, plot_state: QueryState | None) -> QueryState:
+    if not plot_state:
+        return payload
+    payload.update(plot_state)
+    return payload
+
+
+def _query_state_fields(payload: QueryState | None) -> list[tuple[str, str]]:
+    if not payload:
+        return []
+    fields: list[tuple[str, str]] = []
+    for key, value in payload.items():
+        if isinstance(value, list):
+            fields.extend((key, item) for item in value)
+        else:
+            fields.append((key, value))
+    return fields
+
+
 def render_leaderboard_plot(
     *,
     result: LeaderboardResult,
     filter_context: FilterContext | None = None,
+    sort: str = "borda_score",
+    direction: str = "desc",
+    filter_state: FilterState | None = None,
     plot_y: str = "borda_score",
     plot_x: str = "active_parameters",
     plot_size: str = "embedding_dim",
     plot_color: str = "max_seq_length",
 ) -> str:
-    filter_context = filter_context or row_filter_context(result.rows, FilterState())
+    filter_state = filter_state or FilterState()
+    filter_context = filter_context or row_filter_context(result.rows, filter_state)
     y_field = _normalized_plot_score_field(plot_y)
     x_field = _normalized_plot_axis_field(plot_x)
     size_field = _normalized_plot_axis_field(plot_size)
     color_field = _normalized_plot_axis_field(plot_color)
     visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
     sparse_embedding_dim = _average_dense_embedding_dim(visible_rows) or _average_dense_embedding_dim(result.rows)
+    max_active_parameters = _max_plot_active_parameters(visible_rows) or _max_plot_active_parameters(result.rows)
+    max_total_parameters = _max_plot_total_parameters(visible_rows) or _max_plot_total_parameters(result.rows)
+    max_seq_length = _max_plot_seq_length(visible_rows) or _max_plot_seq_length(result.rows)
     points: list[_PlotPoint] = [
         _plot_point_values(
             row,
@@ -1405,6 +1465,9 @@ def render_leaderboard_plot(
             size_field=size_field,
             color_field=color_field,
             sparse_embedding_dim=sparse_embedding_dim,
+            max_active_parameters=max_active_parameters,
+            max_total_parameters=max_total_parameters,
+            max_seq_length=max_seq_length,
         )
         for row in visible_rows
     ]
@@ -1431,7 +1494,11 @@ def render_leaderboard_plot(
     x_log = _plot_field_uses_log(x_field)
     size_log = _plot_field_uses_log(size_field)
     color_log = _plot_field_uses_log(color_field)
-    x_values = [float(point["x"]) for point in points if point["x"] is not None and (not x_log or float(point["x"]) > 0)]
+    x_values = [
+        float(point["x"])
+        for point in points
+        if point["x"] is not None and (not x_log or float(point["x"]) > 0)
+    ]
     y_values = [float(point["y"]) for point in points if point["y"] is not None]
     color_values = [
         float(point["color"])
@@ -1443,12 +1510,12 @@ def render_leaderboard_plot(
         for point in points
         if point["size"] is not None and (not size_log or float(point["size"]) > 0)
     ]
-    x_min, x_max = _plot_extent(x_values, log=x_log, nonnegative=True)
-    y_min, y_max = _plot_extent(y_values, log=False, pad_fraction=0.08, nonnegative=True)
-    color_min, color_max = (
-        _plot_extent(color_values, log=color_log, nonnegative=True) if color_values else (0.0, 1.0)
-    )
-    size_min, size_max = _plot_extent(size_values, log=size_log, nonnegative=True) if size_values else (0.0, 1.0)
+    x_has_zero = x_log and any(point["x"] == 0 for point in points)
+    x_min, x_max = _plot_extent_for_field(x_values, field=x_field, log=x_log)
+    y_min, y_max = _plot_score_extent(y_values, y_field=y_field)
+    color_min, color_max = _plot_extent_for_field(color_values, field=color_field, log=color_log)
+    size_min, size_max = _plot_extent_for_field(size_values, field=size_field, log=size_log)
+    size_domain = _plot_size_domain(size_values, field=size_field, log=size_log)
     grid = _render_plot_grid(
         left=left,
         top=top,
@@ -1459,26 +1526,35 @@ def render_leaderboard_plot(
         y_min=y_min,
         y_max=y_max,
         x_log=x_log,
+        x_has_zero=x_has_zero,
         x_label=PLOT_AXIS_OPTIONS[x_field][0],
         y_label=PLOT_SCORE_OPTIONS[y_field][0],
     )
     circles = []
+    model_views = model_cell_views([point["row"] for point in points])
     for point in points:
         x_raw = point["x"]
         y_raw = point["y"]
         if x_raw is None or y_raw is None:
             continue
         x_value = float(x_raw)
-        if x_log and x_value <= 0:
+        if x_log and x_value < 0:
             continue
         y_value = float(y_raw)
-        cx = left + _plot_scale(x_value, min_value=x_min, max_value=x_max, log=x_log) * plot_width
+        cx = left + _plot_x_scale(
+            x_value,
+            min_value=x_min,
+            max_value=x_max,
+            log=x_log,
+            label=PLOT_AXIS_OPTIONS[x_field][0],
+        ) * plot_width
         cy = top + (1.0 - _plot_scale(y_value, min_value=y_min, max_value=y_max, log=False)) * plot_height
-        radius = _plot_radius(point["size"], size_min=size_min, size_max=size_max, log=size_log)
+        radius = _plot_radius(point["size"], size_domain=size_domain, size_min=size_min, size_max=size_max, log=size_log)
         fill = _plot_color(point["color"], min_value=color_min, max_value=color_max, log=color_log)
         tooltip = _plot_tooltip(point)
+        metadata = _plot_model_metadata(point["row"], model_views)
         circles.append(
-            f"""<circle class="leaderboard-plot-point tooltip-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{radius:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" data-tooltip-hover-only="true" data-tooltip-delay="0" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
+            f"""<circle class="leaderboard-plot-point tooltip-trigger model-detail-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{radius:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" data-tooltip-hover-only="true" data-tooltip-delay="0" data-model-metadata="{metadata}" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
         )
     legend = _render_plot_legend(
         x=width - right + 42,
@@ -1489,8 +1565,20 @@ def render_leaderboard_plot(
         max_value=color_max,
         field=color_field,
     )
+    plot_controls = render_plot_controls(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        plot_y=y_field,
+        plot_x=x_field,
+        plot_size=size_field,
+        plot_color=color_field,
+    )
     return f"""
-  <div class="leaderboard-plot-shell border border-zinc-200 bg-white p-2" data-testid="leaderboard-plot">
+  <div class="leaderboard-plot-shell relative border border-zinc-200 bg-white p-2" data-testid="leaderboard-plot">
+    <div class="leaderboard-plot-controls-region" style="position:absolute;right:0.75rem;top:0.75rem;z-index:10;">{plot_controls}</div>
+    <div class="leaderboard-plot-mobile-message" role="status">plot view は横幅が広い端末のみ表示可能です</div>
     <svg class="leaderboard-plot" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(PLOT_SCORE_OPTIONS[y_field][0])} by {escape(PLOT_AXIS_OPTIONS[x_field][0])}">
       {grid}
       <text x="{left}" y="{top - 8}" class="plot-axis-tick">Circle: {escape(PLOT_AXIS_OPTIONS[size_field][0])}</text>
@@ -1509,13 +1597,43 @@ def _plot_point_values(
     size_field: str,
     color_field: str,
     sparse_embedding_dim: float | None,
+    max_active_parameters: float | None,
+    max_total_parameters: float | None,
+    max_seq_length: float | None,
 ) -> _PlotPoint:
+    active_parameters = _plot_active_parameters(row, fallback=max_active_parameters)
+    total_parameters = _plot_total_parameters(row, fallback=max_total_parameters)
+    plot_max_seq_length = _plot_max_seq_length(row, fallback=max_seq_length)
     return {
         "row": row,
-        "x": _plot_axis_value(row, x_field, sparse_embedding_dim=sparse_embedding_dim),
+        "x": _plot_axis_value(
+            row,
+            x_field,
+            sparse_embedding_dim=sparse_embedding_dim,
+            active_parameters=active_parameters,
+            total_parameters=total_parameters,
+            max_seq_length=plot_max_seq_length,
+        ),
         "y": _plot_score_value(row, y_field),
-        "size": _plot_axis_value(row, size_field, sparse_embedding_dim=sparse_embedding_dim),
-        "color": _plot_axis_value(row, color_field, sparse_embedding_dim=sparse_embedding_dim),
+        "size": _plot_axis_value(
+            row,
+            size_field,
+            sparse_embedding_dim=sparse_embedding_dim,
+            active_parameters=active_parameters,
+            total_parameters=total_parameters,
+            max_seq_length=plot_max_seq_length,
+        ),
+        "color": _plot_axis_value(
+            row,
+            color_field,
+            sparse_embedding_dim=sparse_embedding_dim,
+            active_parameters=active_parameters,
+            total_parameters=total_parameters,
+            max_seq_length=plot_max_seq_length,
+        ),
+        "active_parameters": active_parameters,
+        "total_parameters": total_parameters,
+        "max_seq_length": plot_max_seq_length,
         "x_label": PLOT_AXIS_OPTIONS[x_field][1],
         "y_label": PLOT_SCORE_OPTIONS[y_field][1],
         "size_label": PLOT_AXIS_OPTIONS[size_field][1],
@@ -1543,13 +1661,21 @@ def _plot_score_value(row: LeaderboardRow, field: str) -> float | None:
     return row.borda_score
 
 
-def _plot_axis_value(row: LeaderboardRow, field: str, *, sparse_embedding_dim: float | None) -> float | None:
+def _plot_axis_value(
+    row: LeaderboardRow,
+    field: str,
+    *,
+    sparse_embedding_dim: float | None,
+    active_parameters: float | None,
+    total_parameters: float | None,
+    max_seq_length: float | None,
+) -> float | None:
     if field == "active_parameters":
-        return float(row.active_parameters) if row.active_parameters is not None else None
+        return active_parameters
     if field == "total_parameters":
-        return float(row.total_parameters) if row.total_parameters is not None else None
+        return total_parameters
     if field == "max_seq_length":
-        return float(row.max_seq_length) if row.max_seq_length is not None else None
+        return max_seq_length
     if field == "embedding_dim":
         if _is_sparse_or_bm25_row(row):
             return sparse_embedding_dim
@@ -1561,6 +1687,70 @@ def _plot_axis_value(row: LeaderboardRow, field: str, *, sparse_embedding_dim: f
     if field == "sparse_document_dims":
         return _sparse_dim_from_variant(row.embedding_variant_name, "document")
     return None
+
+
+def _plot_active_parameters(row: LeaderboardRow, *, fallback: float | None) -> float | None:
+    if _plot_unknown_params_as_zero(row):
+        return 0.0
+    if row.active_parameters is not None:
+        return float(row.active_parameters)
+    return fallback
+
+
+def _plot_total_parameters(row: LeaderboardRow, *, fallback: float | None) -> float | None:
+    if _plot_unknown_params_as_zero(row):
+        return 0.0
+    if row.total_parameters is not None:
+        return float(row.total_parameters)
+    return fallback
+
+
+def _plot_unknown_params_as_zero(row: LeaderboardRow) -> bool:
+    return _is_bm25_row(row) or _is_static_embedding_row(row)
+
+
+def _is_bm25_row(row: LeaderboardRow) -> bool:
+    return is_bm25_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+
+
+def _is_static_embedding_row(row: LeaderboardRow) -> bool:
+    model_name = (row.source_model_name or row.model_name).casefold()
+    return model_name.startswith("static-") or "/static-" in model_name or model_name.startswith("static/")
+
+
+def _max_plot_active_parameters(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.active_parameters)
+        for row in rows
+        if row.active_parameters is not None and not _plot_unknown_params_as_zero(row)
+    ]
+    if not values:
+        return None
+    return max(values)
+
+
+def _max_plot_total_parameters(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.total_parameters)
+        for row in rows
+        if row.total_parameters is not None and not _plot_unknown_params_as_zero(row)
+    ]
+    if not values:
+        return None
+    return max(values)
+
+
+def _plot_max_seq_length(row: LeaderboardRow, *, fallback: float | None) -> float | None:
+    if row.max_seq_length is not None:
+        return float(row.max_seq_length)
+    return fallback
+
+
+def _max_plot_seq_length(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [float(row.max_seq_length) for row in rows if row.max_seq_length is not None]
+    if not values:
+        return None
+    return max(values)
 
 
 def _quantization_numeric_value(quantization: str | None) -> int:
@@ -1578,15 +1768,37 @@ def _average_dense_embedding_dim(rows: Iterable[LeaderboardRow]) -> float | None
     values = [
         float(row.embedding_dim)
         for row in rows
-        if row.embedding_dim is not None and not _is_sparse_or_bm25_row(row)
+        if row.embedding_dim is not None and _uses_regular_embedding_dim_for_plot(row)
     ]
     if not values:
         return None
     return sum(values) / len(values)
 
 
+def _max_dense_embedding_dim(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.embedding_dim)
+        for row in rows
+        if row.embedding_dim is not None and _uses_regular_embedding_dim_for_plot(row)
+    ]
+    if not values:
+        return None
+    return max(values)
+
+
+def _uses_regular_embedding_dim_for_plot(row: LeaderboardRow) -> bool:
+    return not _is_sparse_or_bm25_row(row) and not _is_late_interaction_row(row)
+
+
 def _is_sparse_or_bm25_row(row: LeaderboardRow) -> bool:
     return model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse"
+
+
+def _is_late_interaction_row(row: LeaderboardRow) -> bool:
+    return (
+        model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+        == "late-interaction"
+    )
 
 
 def _sparse_dim_from_variant(embedding_variant_name: str | None, side: str) -> float | None:
@@ -1642,6 +1854,26 @@ def _plot_extent(
     return lower, upper
 
 
+def _plot_extent_for_field(values: list[float], *, field: str, log: bool) -> tuple[float, float]:
+    if field == "quantization":
+        return 1.0, 16.0
+    if values:
+        return _plot_extent(values, log=log, nonnegative=True)
+    return (1.0, 10.0) if log else (0.0, 1.0)
+
+
+def _plot_score_extent(values: list[float], *, y_field: str) -> tuple[float, float]:
+    finite_values = [value for value in values if math.isfinite(value)]
+    if y_field == "borda_score":
+        return 0.0, 100.0
+    if not finite_values:
+        return 0.0, 1.0
+    maximum = max(finite_values)
+    if maximum <= 0:
+        return 0.0, 1.0
+    return 0.0, maximum
+
+
 def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) -> float:
     if log:
         value = math.log10(max(value, 1e-9))
@@ -1652,11 +1884,72 @@ def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) 
     return min(1.0, max(0.0, (value - min_value) / (max_value - min_value)))
 
 
-def _plot_radius(value: object, *, size_min: float, size_max: float, log: bool) -> float:
+def _plot_x_scale(value: float, *, min_value: float, max_value: float, log: bool, label: str) -> float:
+    if label == "Dims":
+        return _plot_dimension_scale(value, max_value=max_value)
+    return _plot_scale(value, min_value=min_value, max_value=max_value, log=log)
+
+
+def _plot_dimension_scale(value: float, *, max_value: float) -> float:
+    value = max(0.0, value)
+    max_value = max(value, max_value, PLOT_DIMENSION_COMPRESSED_MAX)
+    if max_value <= PLOT_DIMENSION_COMPRESSED_MAX:
+        return _plot_scale(value, min_value=0.0, max_value=max_value, log=False)
+    if value <= PLOT_DIMENSION_COMPRESSED_MAX:
+        return (value / PLOT_DIMENSION_COMPRESSED_MAX) * PLOT_DIMENSION_COMPRESSED_FRACTION
+    high_min = math.log10(PLOT_DIMENSION_COMPRESSED_MAX)
+    high_max = math.log10(max_value)
+    if math.isclose(high_min, high_max, rel_tol=1e-9, abs_tol=1e-9):
+        return PLOT_DIMENSION_COMPRESSED_FRACTION
+    high_scaled = (math.log10(value) - high_min) / (high_max - high_min)
+    return min(
+        1.0,
+        max(
+            0.0,
+            PLOT_DIMENSION_COMPRESSED_FRACTION + high_scaled * (1.0 - PLOT_DIMENSION_COMPRESSED_FRACTION),
+        ),
+    )
+
+
+def _plot_size_domain(values: list[float], *, field: str, log: bool) -> list[float]:
+    if field == "quantization":
+        return [1.0, 8.0, 16.0]
+    domain = []
+    for value in values:
+        if not math.isfinite(value) or (log and value <= 0):
+            continue
+        domain.append(math.log10(value) if log else value)
+    return sorted(set(domain))
+
+
+def _plot_radius(
+    value: object,
+    *,
+    size_domain: list[float],
+    size_min: float,
+    size_max: float,
+    log: bool,
+) -> float:
     if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
         return 8.0
-    scaled = _plot_scale(float(value), min_value=size_min, max_value=size_max, log=log)
-    return 3.0 + math.sqrt(scaled) * 17.0
+    numeric_value = float(value)
+    if log and numeric_value <= 0:
+        return 8.0
+    if len(size_domain) > 1:
+        transformed = math.log10(numeric_value) if log else numeric_value
+        rank = bisect_left(size_domain, transformed)
+        scaled = _plot_size_curve(rank / (len(size_domain) - 1))
+    else:
+        scaled = _plot_size_curve(_plot_scale(numeric_value, min_value=size_min, max_value=size_max, log=log))
+    return PLOT_RADIUS_MIN + scaled * (PLOT_RADIUS_MAX - PLOT_RADIUS_MIN)
+
+
+def _plot_size_curve(value: float) -> float:
+    value = min(1.0, max(0.0, value))
+    lower = 1.0 / (1.0 + math.exp(PLOT_RADIUS_CURVE_STEEPNESS / 2.0))
+    upper = 1.0 / (1.0 + math.exp(-PLOT_RADIUS_CURVE_STEEPNESS / 2.0))
+    curved = 1.0 / (1.0 + math.exp(-PLOT_RADIUS_CURVE_STEEPNESS * (value - 0.5)))
+    return (curved - lower) / (upper - lower)
 
 
 def _plot_color(value: object, *, min_value: float, max_value: float, log: bool) -> str:
@@ -1678,16 +1971,20 @@ def _render_plot_grid(
     y_min: float,
     y_max: float,
     x_log: bool,
+    x_has_zero: bool,
     x_label: str,
     y_label: str,
 ) -> str:
-    x_ticks = _plot_ticks(x_min, x_max, log=x_log)
+    x_ticks = _plot_x_ticks(x_min, x_max, log=x_log, label=x_label)
+    if x_has_zero:
+        x_ticks = [0.0, *x_ticks]
     y_ticks = _plot_ticks(y_min, y_max, log=False)
     parts = [f'<rect x="{left}" y="{top}" width="{plot_width}" height="{plot_height}" class="plot-frame"></rect>']
     for tick in x_ticks:
-        x = left + _plot_scale(tick, min_value=x_min, max_value=x_max, log=x_log) * plot_width
+        x = left + _plot_x_scale(tick, min_value=x_min, max_value=x_max, log=x_log, label=x_label) * plot_width
         parts.append(f'<line x1="{x:.2f}" y1="{top}" x2="{x:.2f}" y2="{top + plot_height}" class="plot-grid-line"></line>')
-        parts.append(f'<text x="{x:.2f}" y="{top + plot_height + 24}" class="plot-axis-tick" text-anchor="middle">{escape(_fmt_plot_axis_value(tick, x_label))}</text>')
+        tick_label = _fmt_plot_x_tick(tick, x_label, log=x_log)
+        parts.append(f'<text x="{x:.2f}" y="{top + plot_height + 24}" class="plot-axis-tick" text-anchor="middle">{escape(tick_label)}</text>')
     for tick in y_ticks:
         y = top + (1.0 - _plot_scale(tick, min_value=y_min, max_value=y_max, log=False)) * plot_height
         parts.append(f'<line x1="{left}" y1="{y:.2f}" x2="{left + plot_width}" y2="{y:.2f}" class="plot-grid-line"></line>')
@@ -1712,8 +2009,30 @@ def _plot_ticks(min_value: float, max_value: float, *, log: bool) -> list[float]
     return [min_value + (max_value - min_value) * index / step_count for index in range(step_count + 1)]
 
 
+def _plot_x_ticks(min_value: float, max_value: float, *, log: bool, label: str) -> list[float]:
+    if label == "Dims":
+        return _plot_dimension_ticks(min_value, max_value)
+    return _plot_ticks(min_value, max_value, log=log)
+
+
+def _plot_dimension_ticks(min_value: float, max_value: float) -> list[float]:
+    start = math.ceil(min_value / PLOT_DIMENSION_GRID_STEP) * PLOT_DIMENSION_GRID_STEP
+    dense_end = min(max_value, PLOT_DIMENSION_DENSE_TICK_MAX)
+    end = math.floor(dense_end / PLOT_DIMENSION_GRID_STEP) * PLOT_DIMENSION_GRID_STEP
+    ticks = []
+    value = start
+    while value <= end:
+        ticks.append(float(value))
+        value += PLOT_DIMENSION_GRID_STEP
+    for value in (*PLOT_DIMENSION_HIGH_TICKS, max_value):
+        if value > PLOT_DIMENSION_DENSE_TICK_MAX and min_value <= value <= max_value:
+            if not any(math.isclose(value, tick, rel_tol=1e-9, abs_tol=1e-9) for tick in ticks):
+                ticks.append(float(value))
+    return ticks or [min_value, max_value]
+
+
 def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: float, max_value: float, field: str) -> str:
-    label_x = x - 14
+    label_x = x + 84
     label_y = y + height / 2
     return f"""
       <defs>
@@ -1733,23 +2052,43 @@ def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: f
 
 def _plot_tooltip(point: _PlotPoint) -> str:
     row = point["row"]
-    lines = [row.model_name]
+    lines = [row.model_name, f"Type: {_plot_model_type_label(row)}"]
     if row.embedding_variant_name:
         lines.append(f"Variant: {row.embedding_variant_name}")
     lines.extend(
         [
             "",
-            f"{point['y_label']}: {_fmt_score(point['y'])}",
+            f"Borda score: {_fmt_score(row.borda_score)}",
+            f"Mean (Micro): {_fmt_score(row.micro_mean)}",
+            f"Mean (Macro): {_fmt_score(row.macro_mean)}",
             f"Rank: {_fmt_rank(row.borda_rank)}",
             "",
-            f"Active params: {_fmt_int(row.active_parameters)}",
-            f"Total params: {_fmt_int(row.total_parameters)}",
+            f"Active params: {_plot_tooltip_active_parameters_label(row)}",
+            f"Total params: {_plot_tooltip_total_parameters_label(row)}",
             f"Max tokens: {_fmt_int(row.max_seq_length)}",
-            f"Embedding dim: {_plot_embedding_dim_label(row)}",
-            f"Quantization: {row.quantization or 'orig'}",
+            f"{_plot_dimension_tooltip_label(row)}: {_plot_embedding_dim_label(row)}",
+            f"Quantization: {_plot_quantization_label(row.quantization)}",
         ]
     )
     return "\n".join(lines)
+
+
+def _plot_model_metadata(row: LeaderboardRow, model_views: dict[str, ModelCellView]) -> str:
+    model_view = model_views.get(row.model_name)
+    metadata = model_view.metadata if model_view is not None else {"model_name": row.model_name}
+    return escape(json.dumps(metadata, ensure_ascii=False, separators=(",", ":")), quote=True)
+
+
+def _plot_model_type_label(row: LeaderboardRow) -> str:
+    if _is_bm25_row(row):
+        return "BM25"
+    model_type_key = model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+    return {
+        "dense": "Dense",
+        "sparse": "Sparse",
+        "late-interaction": "Late interaction",
+        "reranker": "Reranker",
+    }.get(model_type_key, "Dense")
 
 
 def _fmt_plot_axis_value(value: float, label: str) -> str:
@@ -1764,6 +2103,25 @@ def _fmt_plot_axis_value(value: float, label: str) -> str:
     return f"{value:.2f}".rstrip("0").rstrip(".")
 
 
+def _fmt_plot_x_tick(value: float, label: str, *, log: bool) -> str:
+    if log and "Params" in label:
+        multiplier = _plot_log_tick_multiplier(value)
+        if multiplier in {2, 5}:
+            return str(multiplier)
+    return _fmt_plot_axis_value(value, label)
+
+
+def _plot_log_tick_multiplier(value: float) -> int | None:
+    if value <= 0 or not math.isfinite(value):
+        return None
+    exponent = math.floor(math.log10(value))
+    multiplier = value / (10**exponent)
+    for candidate in (1, 2, 5):
+        if math.isclose(multiplier, candidate, rel_tol=1e-9, abs_tol=1e-9):
+            return candidate
+    return None
+
+
 def _fmt_plot_score_tick(value: float) -> str:
     return f"{value:.0f}" if abs(value) >= 10 else f"{value:.2f}".rstrip("0").rstrip(".")
 
@@ -1772,10 +2130,30 @@ def _fmt_int(value: int | None) -> str:
     return "Unknown" if value is None else f"{value:,}"
 
 
+def _plot_tooltip_active_parameters_label(row: LeaderboardRow) -> str:
+    if _plot_unknown_params_as_zero(row):
+        return "0"
+    return _fmt_int(row.active_parameters)
+
+
+def _plot_tooltip_total_parameters_label(row: LeaderboardRow) -> str:
+    if _plot_unknown_params_as_zero(row):
+        return "0"
+    return _fmt_int(row.total_parameters)
+
+
 def _plot_embedding_dim_label(row: LeaderboardRow) -> str:
     if _is_sparse_or_bm25_row(row):
         return "sparse"
     return _fmt_int(row.embedding_dim)
+
+
+def _plot_dimension_tooltip_label(row: LeaderboardRow) -> str:
+    return "Token dim" if _is_late_interaction_row(row) else "Embedding dim"
+
+
+def _plot_quantization_label(quantization: str | None) -> str:
+    return quantization or "none"
 
 
 def _normalized_plot_score_field(value: str) -> str:
@@ -1800,6 +2178,7 @@ def render_tabs(
     filter_state: FilterState | None = None,
     filter_context: FilterContext | None = None,
     benchmark_docs: BenchmarkDocs | None = None,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
@@ -1815,7 +2194,10 @@ def render_tabs(
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
         group = _view_group(view_name)
         sort_key = _view_group_sort_key(view_name=view_name, fallback=index)
@@ -1827,6 +2209,7 @@ def render_tabs(
                 direction=tab_direction,
                 filter_state=filter_state,
             )
+            query_payload = _apply_plot_state(query_payload, plot_state)
             query_payload.pop("group", None)
             query = urlencode(query_payload, doseq=True)
             grouped_buttons[group].append(
@@ -1850,6 +2233,7 @@ def render_tabs(
             filter_state=filter_state,
             available_views=available_views,
         )
+        query_payload = _apply_plot_state(query_payload, plot_state)
         if view_name == "MNanoBEIR":
             if result.view_name != "MNanoBEIR":
                 for offset, selection_key, label in [
@@ -1866,6 +2250,7 @@ def render_tabs(
                         filter_state=filter_state,
                         available_views=available_views,
                     )
+                    selection_query_payload = _apply_plot_state(selection_query_payload, plot_state)
                     selection_query = urlencode(selection_query_payload, doseq=True)
                     selection_active = _benchmark_selection_active(result=result, selection_key=selection_key)
                     grouped_buttons[group].append(
@@ -1893,6 +2278,7 @@ def render_tabs(
                     direction=tab_direction,
                     filter_state=filter_state,
                 )
+                group_query_payload = _apply_plot_state(group_query_payload, plot_state)
                 group_query_payload["view"] = view_name
                 group_query_payload.pop("bench", None)
                 group_query_payload["group"] = score_group
@@ -1949,9 +2335,9 @@ def render_tabs(
       <div class="grid gap-1.5">
         <div class="border border-zinc-200 bg-white p-1.5">
           <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-            {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-            {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-            {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+            {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+            {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+            {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
           </div>
         </div>
         <div class="grid gap-1.5">
@@ -1965,10 +2351,10 @@ def render_tabs(
             <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
           </div>
-          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True)}
+          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True, plot_state=plot_state)}
         </div>
-        {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-        {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
+        {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+        {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, plot_state=plot_state)}
       </div>
     </nav>
     """
@@ -2226,7 +2612,14 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
     )
 
 
-def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+def _render_score_aggregation_group(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None = None,
+) -> str:
     if not result.is_overall:
         return ""
     buttons = []
@@ -2235,7 +2628,10 @@ def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, dir
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         if score == "micro":
             query_payload.pop("score", None)
         else:
@@ -2277,7 +2673,14 @@ def _render_benchmark_group(*, label: str, description: str, buttons: list[str],
             """
 
 
-def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+def _render_target_group(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None = None,
+) -> str:
     target_options = [
         ("all", "Retrieval", "search"),
         ("reranking", "Reranking", "list-ordered"),
@@ -2288,7 +2691,10 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         if target == "all":
             query_payload.pop("target", None)
         else:
@@ -2307,7 +2713,10 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         safeguard_enabled = result.score_target == "reranking"
         toggle_target = "reranking_without_safeguard" if safeguard_enabled else "reranking"
         checked_attr = " checked" if safeguard_enabled else ""
-        query_payload = state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state),
+            plot_state,
+        )
         query_payload["target"] = toggle_target
         query = urlencode(query_payload, doseq=True)
         safeguard_help = _render_help_tooltip(
@@ -2339,7 +2748,14 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
             """
 
 
-def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+def _render_metric_group(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None = None,
+) -> str:
     if len(result.available_score_metrics) <= 1:
         return ""
     buttons = []
@@ -2348,7 +2764,10 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         if metric == "ndcg@10":
             query_payload.pop("metric", None)
         else:
@@ -2441,6 +2860,7 @@ def render_language_pages(
     direction: str,
     filter_state: FilterState | None = None,
     embedded: bool = False,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     if not result.available_languages:
@@ -2453,6 +2873,7 @@ def render_language_pages(
             sort=sort,
             direction=direction,
             filter_state=filter_state,
+            plot_state=plot_state,
         )
     ]
     visible_options = result.available_languages[:8]
@@ -2464,6 +2885,7 @@ def render_language_pages(
             sort=sort,
             direction=direction,
             filter_state=filter_state,
+            plot_state=plot_state,
         )
         for option in visible_options
     )
@@ -2476,6 +2898,7 @@ def render_language_pages(
                 sort=sort,
                 direction=direction,
                 filter_state=filter_state,
+                plot_state=plot_state,
             )
             for option in more_options
         )
@@ -2519,16 +2942,20 @@ def _language_page_button(
     sort: str,
     direction: str,
     filter_state: FilterState,
+    plot_state: QueryState | None = None,
 ) -> str:
     language_filters = () if option is None else (option.code,)
     active = result.selected_languages == language_filters
     label = "All languages" if option is None else f"{option.label} {option.task_count}"
     classes = _control_button_classes(active=active)
-    query_payload = state_payload(
-        result=result,
-        sort=sort,
-        direction=direction,
-        filter_state=_filter_state_with_languages(filter_state, language_filters),
+    query_payload = _apply_plot_state(
+        state_payload(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=_filter_state_with_languages(filter_state, language_filters),
+        ),
+        plot_state,
     )
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
@@ -2573,6 +3000,7 @@ def render_display_controls(
     sort: str,
     direction: str,
     filter_state: FilterState | None = None,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     quantization_checked = " checked" if result.include_quantization_variants else ""
@@ -2594,6 +3022,7 @@ def render_display_controls(
         state_fields.append(("metric", result.selected_score_metric))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
+    state_fields.extend(_query_state_fields(plot_state))
     sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
     variant_hidden_fields = _active_variant_hidden_fields(result)
     task_score_hidden_fields = []
@@ -2682,6 +3111,7 @@ def render_controls(
     direction: str,
     filter_state: FilterState | None = None,
     filter_context: FilterContext | None = None,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
@@ -2698,6 +3128,7 @@ def render_controls(
         state_fields.append(("metric", result.selected_score_metric))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
+    state_fields.extend(_query_state_fields(plot_state))
     variant_hidden_fields = _active_variant_hidden_fields(result)
     task_score_hidden_fields = []
     if result.show_task_scores:
@@ -2907,6 +3338,19 @@ def render_controls(
             **_task_length_filter_kwargs(filter_state),
         ),
     )
+    for query_payload in (
+        dim_all_query,
+        dim_none_query,
+        quant_all_query,
+        quant_none_query,
+        dtype_all_query,
+        dtype_none_query,
+        attn_all_query,
+        attn_none_query,
+        prompt_all_query,
+        prompt_none_query,
+    ):
+        _apply_plot_state(query_payload, plot_state)
     refine_results_open = (
         bool(filter_state.model_filter.strip())
         or bool(filter_state.task_filter.strip())
@@ -2924,11 +3368,11 @@ def render_controls(
           <span class="inline-flex items-center gap-1.5">
             <span class="details-chevron inline-flex h-4 w-4 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
             <span class="inline-flex items-center gap-1">
-              {_control_label(icon="filter", text="Refine results")}
+              {_control_label(icon="filter", text="Filter results")}
               {_render_help_tooltip(
-                  "Refine results",
+                  "Filter results",
                   "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
-                  "Refine results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
+                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
               )}
             </span>
           </span>
@@ -3002,7 +3446,7 @@ def render_controls(
                   {_render_help_tooltip(
                       "Recalculate ranks from filters",
                       "Recomputes ranking numbers using only the currently filtered result set.",
-                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Refine results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
+                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Filter results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
                   )}
                 </label>
               </div>
@@ -3079,7 +3523,7 @@ def _render_model_type_controls(
 
 def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_class = "text-cyan-700" if filter_state.has_parameter_filters else ""

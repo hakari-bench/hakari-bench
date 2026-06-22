@@ -89,7 +89,8 @@ components:
       same vertical center line. The title uses the same body-scale typography,
       color, weight, and font family as the short product description below it.
       The brand mark is a single-color inline SVG that follows the same
-      stroke-based icon style as header actions.
+      stroke-based icon style as header actions. The brand/title target links to
+      `/` so users can refresh back to the default leaderboard state.
   leaderboard-configuration:
     purpose: Select evaluation mode, benchmark scope, metrics, task facets, display,
       variants, and filters.
@@ -119,18 +120,44 @@ components:
   leaderboard-plot:
     purpose: Optional visual comparison surface for score, scale, dimension, and
       compression trade-offs using the same scoped and filtered rows as the table.
-    treatment: Available as a Table / Plot tab above the result surface. The plot
-      uses compact Y axis, X axis, Size, and Color selectors, muted grid lines,
-      cyan-tinted bubbles, and hover-only tooltips for row metadata. The
-      tooltip preserves line breaks so score/rank and model metadata scan as
-      separate groups. The right-side color legend label is
-      vertical to avoid competing with tick labels. It must preserve the current
+    treatment: Available as icon-labeled Table / Plot tabs at the start of the
+      result status line before the current scope and evaluation mode. The plot
+      uses compact Y axis, X axis, Size, and Color selectors positioned in the
+      graph area's top-right corner, muted grid lines, cyan-tinted bubbles, and
+      hover-only tooltips for row metadata. The tooltip preserves line breaks so
+      score/rank and model metadata scan as separate groups. The right-side color
+      legend label is vertical and sits
+      to the right of the gradient bar and tick labels. It must preserve the current
       benchmark scope and filters, quantization axes must automatically include
       quantization variants, sparse/BM25 rows use a representative average
-      dimension for plotting, rows missing the selected max-token metadata are
-      omitted from that plot, nonnegative measures must not render negative axis
-      or legend labels, and params/dims/tokens use logarithmic scaling where
-      they drive position, size, or color.
+      regular dense dimension for plotting, late-interaction rows use their
+      token-interaction dimension for Dims-driven plot size/color and label it
+      as Token dim in tooltips,
+      Dims on the X axis should render grid/tick marks on 128-dimension
+      boundaries through 1024, then only show major high-dimension markers such
+      as 2048 and the visible maximum to avoid label collisions. Dims X-axis
+      spacing should compress the low-dimension 0-256 range so small dimensions
+      do not consume the same visual width as the more important mid/high range,
+      nonnegative measures must not render negative axis or legend labels, quantization
+      channels use a fixed 1-16 scale where none is 16,
+      int8 is 8, and binary is 1, params/dims/tokens use logarithmic scaling where they
+      drive position, size, or color, all leaderboard controls must preserve the
+      current plot view state, and bubble size should use the visible value
+      distribution with a compact radius range and midrange emphasis so common
+      clustered dimensions such as 384, 768, and 1024 remain distinguishable
+      without excessive overlap. Mobile-width viewports should hide the plot and
+      plot controls and show a concise message that plot view requires a wider
+      device.
+      BM25-style baselines and static embeddings should remain visible at 0
+      params in active/total-parameter plot channels because they do not have
+      model weights in the same sense as neural models. Other rows with unknown
+      active/total params, such as hosted API models, should use the visible
+      maximum param value for plotting so unknown scale is not confused with
+      zero-weight baselines. Rows without max-token metadata should use the
+      visible maximum max-token value for plotting so they are not dropped
+      solely because color or another plot channel uses Max Tokens. Borda Score
+      uses a fixed 0-100 Y axis, while Task Mean scores start at 0 and use the
+      visible maximum as the upper bound.
   model-score-bar:
     purpose: Show relative Borda strength behind the sticky model name.
     treatment: Subtle background bar scaled by visible max score; never competes with text.
@@ -266,7 +293,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
   such as Overall/Overall (EN) or Safeguard positives.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
-- In Refine results, Params sits above Length and uses compact numeric inputs
+- In Filter results, Params sits above Length and uses compact numeric inputs
+  narrow enough not to dominate the filter row
   in millions for Active Params and Total Params bounds.
 - Keep the HAKARI-Bench brand mark as a simple single-color balance icon with
   `currentColor` stroke so it can inherit the viewer accent color in both

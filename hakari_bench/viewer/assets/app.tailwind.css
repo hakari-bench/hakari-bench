@@ -1395,6 +1395,27 @@
   color: var(--hakari-text);
 }
 
+.leaderboard-plot-mobile-message {
+  display: none;
+  min-height: 12rem;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  color: var(--hakari-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .leaderboard-plot,
+  .leaderboard-plot-controls-region {
+    display: none;
+  }
+
+  .leaderboard-plot-mobile-message {
+    display: flex;
+  }
+}
+
 .plot-frame {
   fill: var(--hakari-surface-faint);
   stroke: var(--hakari-border);
