@@ -8,6 +8,58 @@ leaderboard. For complete operational guidance, use the
 
 Use Python 3.12 and [uv](https://docs.astral.sh/uv/).
 
+In the project where you want to use HAKARI-Bench, add it directly from Git:
+
+```bash
+uv add "hakari-bench @ git+https://github.com/hakari-bench/hakari-bench.git"
+```
+
+> [!NOTE]
+> HAKARI-Bench is expected to publish an updated PyPI package in the future.
+> For now, install it from Git so your project uses the current benchmark code.
+
+After that, run `hakari-bench` from your project:
+
+```bash
+uv run hakari-bench --help
+```
+
+### Installation Options
+
+If you want to edit HAKARI-Bench locally while using it from another project,
+clone it and add the local path instead:
+
+```bash
+git clone https://github.com/hakari-bench/hakari-bench.git ../hakari-bench
+uv add --editable ../hakari-bench
+```
+
+Some evaluation families need optional runtime packages that are not part of
+the base install. Add them in the same `uv add` command when you need them.
+For example, late-interaction evaluation requires PyLate:
+
+```bash
+uv add \
+  "hakari-bench @ git+https://github.com/hakari-bench/hakari-bench.git" \
+  "pylate @ git+https://github.com/lightonai/pylate.git@1f1f47cee5df35ebe6fd2286a0a205a1523e4119"
+```
+
+For the local web viewer, add the viewer server packages as well:
+
+```bash
+uv add \
+  "hakari-bench @ git+https://github.com/hakari-bench/hakari-bench.git" \
+  "fastapi>=0.136.1" \
+  "uvicorn[standard]>=0.46.0"
+```
+
+The repository's `all` dependency group is only available when working inside a
+HAKARI-Bench checkout. When HAKARI-Bench is installed as a Git dependency of
+another project, add the optional packages your project needs explicitly.
+
+For benchmark development inside a clone of this repository, install the
+repository dependency groups instead:
+
 ```bash
 uv sync --group all
 ```
