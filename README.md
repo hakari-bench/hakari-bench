@@ -49,6 +49,8 @@ The full command reference and operational details live in the
 
 ## 📚 Documentation
 
+- [Documentation map](docs/index.md): source-of-truth map, workflow routes, and
+  artifact boundaries.
 - [Quick start](docs/quickstart.md): install, evaluate, build DuckDB, and open
   the viewer.
 - [Evaluation policy](docs/evaluation_policy.md): prompts, dtype, attention,
