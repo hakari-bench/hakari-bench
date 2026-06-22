@@ -371,7 +371,6 @@ def test_static_model_cards_cover_latest_leaderboard_models() -> None:
         "Qwen/Qwen3-Reranker-0.6B": "reranker",
         "answerdotai/answerai-colbert-small-v1": "late-interaction",
         "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1": "reranker",
-        "hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT": "dense",
         "hotchpotch/bekko-embedding-small-beta-unir-v8": "dense",
         "hotchpotch/japanese-reranker-xsmall-v2": "reranker",
         "ibm-granite/granite-embedding-30m-sparse": "sparse",

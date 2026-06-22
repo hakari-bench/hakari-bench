@@ -5,11 +5,12 @@ source:
   revision: 26f8161ca92e39de93152e9a8ce76ca9a672c6e6
 method: dense
 license:
-  id: unknown
-  label: unknown
-  type: unknown
-  commercial_use: unknown
-  source: unavailable
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/hotchpotch/bekko-embedding-v1-a8m
 links:
   huggingface: https://huggingface.co/hotchpotch/bekko-embedding-v1-a8m
 parameters:

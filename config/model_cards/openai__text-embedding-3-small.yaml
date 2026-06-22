@@ -47,4 +47,4 @@ notes:
 - "Use `--model-loader openai` and run with `uv run --group openai`."
 - "`--truncate-dim` and `embedding.truncate_dims` use full OpenAI embeddings followed by `full[:DIM]` and L2 normalization."
 - "OpenAI API `dimensions` is supported by the provider, but HAKARI uses normalized-prefix truncation for reusable benchmark variants; this is close to but not bit-identical with API-side `dimensions`."
-- "Inputs over 8100 counted tokens are token-truncated by the built-in OpenAI adapter unless `truncate_input_tokens` is disabled in loader kwargs; the provider API hard limit is 8192 tokens per input."
+- "Inputs over 8192 counted tokens are token-truncated by the built-in OpenAI adapter unless `truncate_input_tokens` is disabled in loader kwargs; the provider API hard limit is 8192 tokens per input."
