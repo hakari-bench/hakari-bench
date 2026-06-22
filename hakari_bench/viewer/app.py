@@ -634,9 +634,11 @@ def create_app(
 def _duckdb_sync_blocks_leaderboard(store: LocalDuckDbStore, status: DuckDbSyncStatus) -> bool:
     if store.location.hf_source is None and store.location.source_path is None:
         return False
+    if store.path.exists():
+        return False
     if status.state == "error":
-        return not store.path.exists()
-    return status.active or not store.path.exists()
+        return True
+    return status.active
 
 
 def _safe_duckdb_sync_next_url(next_url: str) -> str:

@@ -1033,6 +1033,55 @@ def test_viewer_leaderboard_endpoint_shows_duckdb_sync_progress_when_database_is
     assert "leaderboard-table-scroll" not in response.text
 
 
+def test_viewer_leaderboard_endpoint_does_not_reload_for_background_source_check(
+    tmp_path: Path,
+) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    class CheckingStore:
+        path = db_path
+        location = DuckDbLocation(
+            local_path=db_path,
+            hf_source=HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database"),
+        )
+
+        def start_background_sync(self) -> DuckDbSyncStatus:
+            return DuckDbSyncStatus(
+                state="checking",
+                message="Checking leaderboard DuckDB source...",
+                local_path=db_path,
+            )
+
+        def sync_status(self) -> DuckDbSyncStatus:
+            return self.start_background_sync()
+
+        def ensure_current(self) -> bool:
+            raise AssertionError("source checks should stay in the background when a local DuckDB exists")
+
+    app = create_app(store=cast(Any, CheckingStore()), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1")
+
+    assert response.status_code == 200
+    assert "leaderboard-table-scroll" in response.text
+    assert 'id="duckdb-sync-progress"' not in response.text
+    assert "Checking leaderboard DuckDB source..." not in response.text
+    assert 'hx-swap-oob="outerHTML"' in response.text
+
+
 def test_viewer_duckdb_sync_status_reloads_leaderboard_when_ready(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
