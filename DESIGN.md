@@ -97,7 +97,11 @@ components:
     treatment: One integrated workspace above the table; no marketing panels.
       Model family filters expose BM25 separately from Sparse so lexical
       baselines can be compared or hidden independently from learned sparse
-      retrievers.
+      retrievers. License filters include commercial-use buckets derived from
+      model-card license metadata; BM25 rows follow the bm25s MIT license and
+      appear in the commercial bucket. Commercial-use license filters are shown
+      as inline checkboxes, matching Model family rather than hidden inside a
+      secondary disclosure.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.

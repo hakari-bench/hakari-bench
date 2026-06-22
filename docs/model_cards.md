@@ -141,7 +141,8 @@ of Use`. Set `commercial_use` to `allowed` for permissive licenses,
 `permitted_with_terms` for proprietary terms that permit commercial use only
 under model-specific conditions. BM25 is an algorithmic baseline, but HAKARI's
 computed baseline uses the `bm25s` package, so the static BM25 card records the
-`bm25s` library license as MIT.
+`bm25s` library license as MIT and `commercial_use: allowed` for viewer
+commercial-use filtering.
 
 Model cards may include an optional `links` section that records canonical
 reference URLs for the model. All fields are optional, but including them is

@@ -63,6 +63,7 @@ class ModelCardParameters:
     language_support_marker: str | None = None
     links: dict[str, Any] | None = None
     license: dict[str, Any] | None = None
+    license_commercial_use: str | None = None
     truncate_dims: tuple[int, ...] = ()
     query_prompt: str | None = None
     document_prompt: str | None = None
@@ -112,6 +113,7 @@ class TaskScore:
     late_interaction_document_prefix: str | None = None
     late_interaction_query_expansion: bool | None = None
     late_interaction_attend_to_expansion_tokens: bool | None = None
+    license_commercial_use: str | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -271,6 +273,7 @@ class LeaderboardService:
         task_filter: str = "",
         dim_filters: tuple[str, ...] = (),
         quant_filters: tuple[str, ...] = (),
+        commercial_filters: tuple[str, ...] = (),
         model_type_filters: tuple[str, ...] = (),
         dtype_filters: tuple[str, ...] = (),
         attn_filters: tuple[str, ...] = (),
@@ -299,6 +302,7 @@ class LeaderboardService:
             ranking_task_filter_terms = task_filter_terms if rank_filtered else ()
             ranking_dim_filters = dim_filters if rank_filtered else ()
             ranking_quant_filters = quant_filters if rank_filtered else ()
+            ranking_commercial_filters = commercial_filters if rank_filtered else ()
             ranking_model_type_filters = model_type_filters if rank_filtered else ()
             ranking_dtype_filters = dtype_filters if rank_filtered else ()
             ranking_attn_filters = attn_filters if rank_filtered else ()
@@ -306,6 +310,16 @@ class LeaderboardService:
             has_rank_facet_filters = _has_facet_filters(
                 dim_filters=ranking_dim_filters,
                 quant_filters=ranking_quant_filters,
+                commercial_filters=ranking_commercial_filters,
+                model_type_filters=ranking_model_type_filters,
+                dtype_filters=ranking_dtype_filters,
+                attn_filters=ranking_attn_filters,
+                prompt_filters=ranking_prompt_filters,
+            )
+            has_rank_duckdb_facet_filters = _has_facet_filters(
+                dim_filters=ranking_dim_filters,
+                quant_filters=ranking_quant_filters,
+                commercial_filters=(),
                 model_type_filters=ranking_model_type_filters,
                 dtype_filters=ranking_dtype_filters,
                 attn_filters=ranking_attn_filters,
@@ -320,7 +334,7 @@ class LeaderboardService:
                     attn_filters=ranking_attn_filters,
                     prompt_filters=ranking_prompt_filters,
                 )
-                if has_rank_facet_filters
+                if has_rank_duckdb_facet_filters
                 else None
             )
             view_name, overall, benchmarks = self._resolve_scope(
@@ -533,6 +547,7 @@ class LeaderboardService:
                         rows,
                         dim_filters=ranking_dim_filters,
                         quant_filters=ranking_quant_filters,
+                        commercial_filters=ranking_commercial_filters,
                         model_type_filters=ranking_model_type_filters,
                         dtype_filters=ranking_dtype_filters,
                         attn_filters=ranking_attn_filters,
@@ -846,6 +861,7 @@ def _cached_model_card_parameters(
             language_support_marker=_str_or_none(language_support.get("marker")),
             links=_links_card_section(card),
             license=_license_card_section(card),
+            license_commercial_use=_license_commercial_use(card),
             truncate_dims=_int_tuple(embedding.get("truncate_dims")),
             query_prompt=_str_or_none(prompts.get("query_prompt")),
             document_prompt=_str_or_none(prompts.get("document_prompt")),
@@ -945,6 +961,13 @@ def _license_card_section(card: dict[str, Any]) -> dict[str, Any] | None:
     return normalized or None
 
 
+def _license_commercial_use(card: dict[str, Any]) -> str | None:
+    section = card.get("license")
+    if not isinstance(section, dict):
+        return None
+    return _str_or_none(section.get("commercial_use"))
+
+
 def _with_model_card_parameters_for_task_scores(
     rows: list[TaskScore],
     parameters_by_model: dict[str, ModelCardParameters],
@@ -966,6 +989,9 @@ def _with_model_card_parameters_for_task_scores(
             max_seq_length=row.max_seq_length
             if row.max_seq_length is not None
             else _model_card_parameters(row, parameters_by_model).max_seq_length,
+            license_commercial_use=row.license_commercial_use
+            if row.license_commercial_use is not None
+            else _model_card_parameters(row, parameters_by_model).license_commercial_use,
             late_interaction_query_length=row.late_interaction_query_length
             if row.late_interaction_query_length is not None
             else _model_card_parameters(
@@ -2180,6 +2206,7 @@ def _has_facet_filters(
     *,
     dim_filters: tuple[str, ...],
     quant_filters: tuple[str, ...],
+    commercial_filters: tuple[str, ...],
     model_type_filters: tuple[str, ...],
     dtype_filters: tuple[str, ...],
     attn_filters: tuple[str, ...],
@@ -2189,6 +2216,7 @@ def _has_facet_filters(
         (
             dim_filters,
             quant_filters,
+            commercial_filters,
             model_type_filters,
             dtype_filters,
             attn_filters,
@@ -2202,6 +2230,7 @@ def _filter_rows_by_facets(
     *,
     dim_filters: tuple[str, ...],
     quant_filters: tuple[str, ...],
+    commercial_filters: tuple[str, ...],
     model_type_filters: tuple[str, ...],
     dtype_filters: tuple[str, ...],
     attn_filters: tuple[str, ...],
@@ -2209,6 +2238,7 @@ def _filter_rows_by_facets(
 ) -> list[TaskScore]:
     selected_dims = set(dim_filters)
     selected_quants = set(quant_filters)
+    selected_commercial = set(commercial_filters)
     selected_model_types = set(model_type_filters)
     selected_dtypes = set(dtype_filters)
     selected_attn = set(attn_filters)
@@ -2218,6 +2248,10 @@ def _filter_rows_by_facets(
         for row in rows
         if (not selected_dims or _dim_bucket(row.embedding_dim) in selected_dims)
         and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
+        and (
+            not selected_commercial
+            or _commercial_bucket(row.license_commercial_use) in selected_commercial
+        )
         and (
             not selected_model_types
             or model_type_filter_key(
@@ -2247,6 +2281,16 @@ def _dim_bucket(value: int | None) -> str:
 
 def _quant_bucket(value: str | None) -> str:
     return value or "__none__"
+
+
+def _commercial_bucket(value: str | None) -> str:
+    if value in {"allowed", "permitted_with_terms"}:
+        return "commercial"
+    if value == "not_allowed":
+        return "non_commercial"
+    if value == "not_applicable":
+        return "not_applicable"
+    return "unknown"
 
 
 def _dtype_bucket(value: str | None) -> str:

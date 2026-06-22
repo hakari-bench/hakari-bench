@@ -43,6 +43,7 @@ class FilterState:
     filters_active: bool = False
     dim_filters: tuple[str, ...] = ()
     quant_filters: tuple[str, ...] = ()
+    commercial_filters: tuple[str, ...] = ()
     model_type_filters: tuple[str, ...] = ()
     dtype_filters: tuple[str, ...] = ()
     attn_filters: tuple[str, ...] = ()
@@ -87,13 +88,14 @@ def normalize_query_state(
     filters: bool,
     dim_filter: list[str] | None,
     quant_filter: list[str] | None,
-    dtype_filter: list[str] | None,
-    attn_filter: list[str] | None,
-    prompt_filter: list[str] | None,
+    commercial_filter: list[str] | None = None,
+    dtype_filter: list[str] | None = None,
+    attn_filter: list[str] | None = None,
+    prompt_filter: list[str] | None = None,
     model_type_filter: list[str] | None = None,
     lang_filter: list[str] | None = None,
     bench: list[str] | None = None,
-    model_filter: str,
+    model_filter: str = "",
     rank_filtered: bool = False,
     task_scores: bool = False,
     task_z_scores: bool = False,
@@ -200,6 +202,7 @@ def normalize_query_state(
         query["filters"] = "1"
         query["dim_filter"] = _normalized_query_values(dim_filter)
         query["quant_filter"] = _normalized_query_values(quant_filter)
+        query["commercial_filter"] = _normalized_commercial_filter_values(commercial_filter)
         query["model_type_filter"] = _normalized_model_type_filter_values(model_type_filter)
         query["dtype_filter"] = _normalized_query_values(dtype_filter)
         query["attn_filter"] = _normalized_query_values(attn_filter)
@@ -247,6 +250,7 @@ def filter_state_from_query(query: QueryState) -> FilterState:
         filters_active=query.get("filters") == "1",
         dim_filters=tuple(query_values(query.get("dim_filter"))),
         quant_filters=tuple(query_values(query.get("quant_filter"))),
+        commercial_filters=tuple(query_values(query.get("commercial_filter"))),
         model_type_filters=tuple(query_values(query.get("model_type_filter"))),
         dtype_filters=tuple(query_values(query.get("dtype_filter"))),
         attn_filters=tuple(query_values(query.get("attn_filter"))),
@@ -312,6 +316,7 @@ def state_payload(
         query_payload["filters"] = "1"
         query_payload["dim_filter"] = list(filter_state.dim_filters)
         query_payload["quant_filter"] = list(filter_state.quant_filters)
+        query_payload["commercial_filter"] = list(filter_state.commercial_filters)
         query_payload["model_type_filter"] = list(filter_state.model_type_filters)
         query_payload["dtype_filter"] = list(filter_state.dtype_filters)
         query_payload["attn_filter"] = list(filter_state.attn_filters)
@@ -346,6 +351,7 @@ def active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, st
     fields.append(("filters", "1"))
     fields.extend(("dim_filter", value) for value in filter_state.dim_filters)
     fields.extend(("quant_filter", value) for value in filter_state.quant_filters)
+    fields.extend(("commercial_filter", value) for value in filter_state.commercial_filters)
     fields.extend(("model_type_filter", value) for value in filter_state.model_type_filters)
     fields.extend(("dtype_filter", value) for value in filter_state.dtype_filters)
     fields.extend(("attn_filter", value) for value in filter_state.attn_filters)
@@ -403,6 +409,11 @@ def _normalized_benchmark_values(values: list[str] | None, viewer_config: Viewer
 
 def _normalized_model_type_filter_values(values: list[str] | None) -> list[str]:
     allowed = {"dense", "bm25", "sparse", "late-interaction", "reranker"}
+    return [value for value in _normalized_query_values(values) if value in allowed]
+
+
+def _normalized_commercial_filter_values(values: list[str] | None) -> list[str]:
+    allowed = {"commercial", "non_commercial", "not_applicable", "unknown"}
     return [value for value in _normalized_query_values(values) if value in allowed]
 
 

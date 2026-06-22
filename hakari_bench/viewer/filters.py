@@ -16,12 +16,14 @@ FilterOption = tuple[str, str]
 class FilterContext:
     dim_options: list[FilterOption] = field(default_factory=list)
     quant_options: list[FilterOption] = field(default_factory=list)
+    commercial_options: list[FilterOption] = field(default_factory=list)
     dtype_options: list[FilterOption] = field(default_factory=list)
     attn_options: list[FilterOption] = field(default_factory=list)
     prompt_options: list[FilterOption] = field(default_factory=list)
     model_type_options: list[FilterOption] = field(default_factory=list)
     selected_dims: set[str] = field(default_factory=set)
     selected_quants: set[str] = field(default_factory=set)
+    selected_commercial: set[str] = field(default_factory=set)
     selected_dtypes: set[str] = field(default_factory=set)
     selected_attn: set[str] = field(default_factory=set)
     selected_prompts: set[str] = field(default_factory=set)
@@ -33,6 +35,7 @@ class FilterContext:
             bool(self.model_filter_terms and not model_name_matches_filter_terms(row.model_name, self.model_filter_terms))
             or dim_bucket(row.embedding_dim) not in self.selected_dims
             or quant_bucket(row.quantization) not in self.selected_quants
+            or commercial_bucket(row.license) not in self.selected_commercial
             or dtype_bucket(row.dtype) not in self.selected_dtypes
             or attn_bucket(row.attn_implementation) not in self.selected_attn
             or prompt_bucket(row.prompt_summary) not in self.selected_prompts
@@ -44,6 +47,9 @@ class FilterContext:
 
     def ordered_selected_quants(self) -> list[str]:
         return ordered_selected_values(self.quant_options, self.selected_quants)
+
+    def ordered_selected_commercial(self) -> list[str]:
+        return ordered_selected_values(self.commercial_options, self.selected_commercial)
 
     def ordered_selected_dtypes(self) -> list[str]:
         return ordered_selected_values(self.dtype_options, self.selected_dtypes)
@@ -61,6 +67,7 @@ class FilterContext:
 def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) -> FilterContext:
     dim_options = dim_filter_options(rows)
     quant_options = quant_filter_options(rows)
+    commercial_options = commercial_filter_options(rows)
     dtype_options = dtype_filter_options(rows)
     attn_options = attn_filter_options(rows)
     prompt_options = prompt_filter_options(rows)
@@ -68,6 +75,7 @@ def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) ->
     return FilterContext(
         dim_options=dim_options,
         quant_options=quant_options,
+        commercial_options=commercial_options,
         dtype_options=dtype_options,
         attn_options=attn_options,
         prompt_options=prompt_options,
@@ -80,6 +88,11 @@ def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) ->
         selected_quants=selected_filter_values(
             options=quant_options,
             selected=filter_state.quant_filters,
+            filters_active=filter_state.filters_active,
+        ),
+        selected_commercial=selected_filter_values(
+            options=commercial_options,
+            selected=filter_state.commercial_filters,
             filters_active=filter_state.filters_active,
         ),
         selected_dtypes=selected_filter_values(
@@ -140,6 +153,15 @@ def quant_filter_options(rows: list[LeaderboardRow]) -> list[FilterOption]:
         ((bucket, quant_bucket_label(bucket)) for bucket in buckets),
         key=lambda item: quant_bucket_sort_key(item[0]),
     )
+
+
+def commercial_filter_options(rows: list[LeaderboardRow]) -> list[FilterOption]:
+    buckets = {commercial_bucket(row.license) for row in rows}
+    return [
+        (bucket, commercial_bucket_label(bucket))
+        for bucket in ("commercial", "non_commercial", "not_applicable", "unknown")
+        if bucket in buckets
+    ]
 
 
 def dtype_filter_options(rows: list[LeaderboardRow]) -> list[FilterOption]:
@@ -227,6 +249,29 @@ def quant_bucket_label(bucket: str) -> str:
 
 def quant_bucket_sort_key(bucket: str) -> tuple[int, str]:
     return (0, "") if bucket == "__none__" else (1, bucket)
+
+
+def commercial_bucket(license_metadata: dict[str, object] | None) -> str:
+    commercial_use = ""
+    if isinstance(license_metadata, dict):
+        commercial_use = str(license_metadata.get("commercial_use") or "")
+    if commercial_use in {"allowed", "permitted_with_terms"}:
+        return "commercial"
+    if commercial_use == "not_allowed":
+        return "non_commercial"
+    if commercial_use == "not_applicable":
+        return "not_applicable"
+    return "unknown"
+
+
+def commercial_bucket_label(bucket: str) -> str:
+    labels = {
+        "commercial": "Commercial",
+        "non_commercial": "Non-commercial",
+        "not_applicable": "N/A",
+        "unknown": "Unknown",
+    }
+    return labels.get(bucket, bucket)
 
 
 def dtype_bucket(value: str | None) -> str:

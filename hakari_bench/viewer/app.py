@@ -192,6 +192,7 @@ _ICON_PATHS = {
     "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
     "rotate-ccw": '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
     "scan-eye": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="1"/><path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0"/>',
+    "shield-check": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
     "search": '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
     "shapes": '<path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>',
     "sun": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
@@ -328,6 +329,7 @@ def create_app(
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -373,6 +375,7 @@ def create_app(
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -445,6 +448,7 @@ def create_app(
             task_filter=filter_state.task_filter,
             dim_filters=filter_state.dim_filters if filter_state.filters_active else (),
             quant_filters=filter_state.quant_filters if filter_state.filters_active else (),
+            commercial_filters=filter_state.commercial_filters if filter_state.filters_active else (),
             model_type_filters=filter_state.model_type_filters if filter_state.filters_active else (),
             dtype_filters=filter_state.dtype_filters if filter_state.filters_active else (),
             attn_filters=filter_state.attn_filters if filter_state.filters_active else (),
@@ -482,6 +486,7 @@ def create_app(
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -526,6 +531,7 @@ def create_app(
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -596,6 +602,7 @@ def create_app(
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -637,6 +644,7 @@ def create_app(
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -2996,6 +3004,7 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
         filters_active=filter_state.filters_active,
         dim_filters=filter_state.dim_filters,
         quant_filters=filter_state.quant_filters,
+        commercial_filters=filter_state.commercial_filters,
         model_type_filters=filter_state.model_type_filters,
         dtype_filters=filter_state.dtype_filters,
         attn_filters=filter_state.attn_filters,
@@ -3180,12 +3189,14 @@ def render_controls(
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
+    commercial_options = filter_context.commercial_options
     dtype_options = filter_context.dtype_options
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
     model_type_options = filter_context.model_type_options
     selected_dims = filter_context.selected_dims
     selected_quants = filter_context.selected_quants
+    selected_commercial = filter_context.selected_commercial
     selected_dtypes = filter_context.selected_dtypes
     selected_attn = filter_context.selected_attn
     selected_prompts = filter_context.selected_prompts
@@ -3201,6 +3212,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3219,6 +3231,7 @@ def render_controls(
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3237,6 +3250,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(value for value, _ in quant_options),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3255,6 +3269,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3273,6 +3288,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(value for value, _ in dtype_options),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3291,6 +3307,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=(FILTER_NONE_VALUE,),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3309,6 +3326,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(value for value, _ in attn_options),
@@ -3327,6 +3345,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=(FILTER_NONE_VALUE,),
@@ -3345,6 +3364,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3363,6 +3383,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3459,6 +3480,15 @@ def render_controls(
               </div>
               {_render_parameter_filter_inputs(filter_state)}
               {_render_task_length_filter_inputs(filter_state)}
+              <div class="flex flex-wrap items-center gap-2">
+                {_control_label(icon="shield-check", text="License filters")}
+                {_render_help_tooltip(
+                    "License filters",
+                    "Filters rows by whether model-card license metadata permits commercial use.",
+                    "Commercial use groups license metadata from model cards. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where commercial-use classification does not apply. Unknown keeps rows without reviewed commercial-use metadata.",
+                )}
+                {_render_commercial_filter_controls(options=commercial_options, selected_values=selected_commercial)}
+              </div>
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="cpu", text="Run metadata")}
                 {_render_help_tooltip(
@@ -3559,6 +3589,31 @@ def _render_model_type_controls(
               "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
           )}
         </span>
+        {''.join(checkboxes)}
+      </fieldset>
+    """
+
+
+def _render_commercial_filter_controls(
+    *,
+    options: list[tuple[str, str]],
+    selected_values: set[str],
+) -> str:
+    if not options:
+        return ""
+    checkboxes = []
+    for value, label in options:
+        checked = " checked" if value in selected_values else ""
+        checkboxes.append(
+            f"""<label class="inline-flex items-center gap-1.5">
+              <input type="checkbox" name="commercial_filter" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
+              <span>{escape(label)}</span>
+            </label>"""
+        )
+    return f"""
+      <fieldset id="commercial-use-controls" class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <input type="hidden" name="commercial_filter" value="{FILTER_NONE_VALUE}">
+        <span class="inline-flex items-center gap-1 font-medium text-zinc-800">Commercial use</span>
         {''.join(checkboxes)}
       </fieldset>
     """
@@ -4451,6 +4506,7 @@ def _license_table_labels(value: object) -> tuple[str, str]:
         "apache-2.0": "Apache",
         "mit": "MIT",
         "cc-by-nc-4.0": "CC BY-NC",
+        "cc-by-nc-sa-4.0": "CC BY-NC",
         "openai-service-terms": "OpenAI",
         "gemma": "Gemma",
         "lfm1.0": "LFM",
@@ -4458,6 +4514,7 @@ def _license_table_labels(value: object) -> tuple[str, str]:
     label_prefixes = {
         "apache 2.0": "Apache",
         "cc by-nc 4.0": "CC BY-NC",
+        "cc by-nc-sa 4.0": "CC BY-NC",
         "openai service terms": "OpenAI",
         "gemma terms": "Gemma",
         "lfm open license": "LFM",

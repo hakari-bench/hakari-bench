@@ -30,6 +30,7 @@ from hakari_bench.viewer.app import (
     render_leaderboard_plot,
     render_page,
     render_result_view_tabs,
+    render_controls,
     render_table_body,
     render_table_head,
 )
@@ -2908,6 +2909,16 @@ def test_table_display_others_uses_short_labels_with_tooltips() -> None:
                 task_count=1,
                 license={"id": "openai-service-terms", "label": "OpenAI Service Terms"},
             ),
+            LeaderboardRow(
+                borda_rank=4,
+                mean_rank=4,
+                model_name="naver/splade-v3",
+                model_type="sparse",
+                borda_score=70,
+                mean_score=70,
+                task_count=1,
+                license={"id": "cc-by-nc-sa-4.0", "label": "CC BY-NC-SA 4.0"},
+            ),
         ],
         available_views=["BenchA"],
         available_view_labels={"BenchA": "Bench A"},
@@ -2923,10 +2934,87 @@ def test_table_display_others_uses_short_labels_with_tooltips() -> None:
     assert 'data-tooltip="Apache 2.0"' in body
     assert ">CC BY-NC</td>" in body
     assert 'data-tooltip="CC BY-NC 4.0"' in body
+    assert 'data-tooltip="CC BY-NC-SA 4.0"' in body
     assert ">OpenAI</td>" in body
     assert 'data-tooltip="OpenAI Service Terms"' in body
     assert ">Late int.</td>" in body
     assert 'data-tooltip="Late interaction"' in body
+
+
+def test_filter_results_includes_commercial_license_filter() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/apache-model",
+                model_type="dense",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "apache-2.0", "label": "Apache 2.0", "commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="org/cc-model",
+                model_type="dense",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                license={"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0", "commercial_use": "not_allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="bm25",
+                model_type="bm25",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                license={"id": "mit", "label": "MIT", "commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=4,
+                mean_rank=4,
+                model_name="org/not-applicable-baseline",
+                model_type="dense",
+                borda_score=70,
+                mean_score=70,
+                task_count=1,
+                license={"id": "n/a", "label": "N/A", "commercial_use": "not_applicable"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+    filter_state = FilterState(filters_active=True, commercial_filters=("commercial",))
+    filter_context = row_filter_context(result.rows, filter_state)
+
+    controls = render_controls(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=filter_state,
+        filter_context=filter_context,
+    )
+
+    assert 'name="commercial_filter" value="commercial"' in controls
+    assert 'name="commercial_filter" value="non_commercial"' in controls
+    assert 'name="commercial_filter" value="not_applicable"' in controls
+    assert 'id="commercial-use-controls"' in controls
+    assert 'data-filter-detail="commercial_filter"' not in controls
+    assert "Commercial use" in controls
+    assert [row.model_name for row in result.rows if filter_context.is_visible(row)] == [
+        "org/apache-model",
+        "bm25",
+    ]
 
 
 def test_chart_quantization_axis_normalization_enables_quantization_variants() -> None:
@@ -3833,6 +3921,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-icon="ruler"' in response.text
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
+    assert 'id="commercial-use-controls"' in response.text
+    assert 'data-filter-detail="commercial_filter"' not in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
     assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
@@ -6119,6 +6209,102 @@ def test_leaderboard_service_recalculates_ranking_with_model_type_filter(tmp_pat
     )
 
     assert [row.model_name for row in bm25_result.rows] == ["bm25"]
+
+
+def test_leaderboard_service_recalculates_ranking_with_commercial_filter(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("org/apache-model", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 10, 12, 8192),
+            ("org/cc-model", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.80, 0, 0, 0),
+            ("org/not-applicable-baseline", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.70, 0, 0, 0),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "org__apache-model.yaml").write_text(
+        """
+id: org/apache-model
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "org__cc-model.yaml").write_text(
+        """
+id: org/cc-model
+method: dense
+license:
+  id: cc-by-nc-sa-4.0
+  label: CC BY-NC-SA 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "bm25.yaml").write_text(
+        """
+id: bm25
+method: bm25
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "org__not-applicable-baseline.yaml").write_text(
+        """
+id: org/not-applicable-baseline
+method: dense
+license:
+  id: n/a
+  label: N/A
+  type: not_applicable
+  commercial_use: not_applicable
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(
+        duckdb_path=db_path,
+        config=load_viewer_config(config_dir),
+        model_cards_path=model_cards_dir,
+    )
+
+    commercial_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("commercial",),
+    )
+    non_commercial_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("non_commercial",),
+    )
+    not_applicable_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("not_applicable",),
+    )
+
+    assert [row.model_name for row in commercial_result.rows] == ["org/apache-model", "bm25"]
+    assert [row.model_name for row in non_commercial_result.rows] == ["org/cc-model"]
+    assert [row.model_name for row in not_applicable_result.rows] == ["org/not-applicable-baseline"]
 
 
 def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
