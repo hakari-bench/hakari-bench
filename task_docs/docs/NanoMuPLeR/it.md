@@ -62,19 +62,21 @@ Models should learn both Italian legal paraphrase and exact handling of names, r
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Quale opposizione UE in spagnolo riguardò diniego per somiglianza tra segno figurativo di due letter... [100 / 129 chars] | «Marchio comunitario Procedura di opposizione Marchio comunitario figurativo anteriore contenente la combinazione di lettere “NL”Domande di marchi comunitari figurativi contenenti i termini “NLSPORT”,... [200 / 553 chars] |
+| Quale salume il cui nome etimologicamente deriva da termini per cacciatori e indica razioni portatil... [100 / 124 chars] | Il nome kiełbasa myśliwska indica la natura specifica del prodotto. Il carattere specifico del prodotto è testimoniato dall'etimologia del nome che deriva da myśliwy (cacciatore), myślistwo (caccia) e... [200 / 635 chars] |
+| Quale schema d'intervento a tre livelli è proposto insieme a promuovere benessere psicologico, mante... [100 / 144 chars] | Da questo punto di vista va posto l'accento sulla prevenzione, o sulla sua componente primaria, secondaria e terziaria più adatta al settore interessato. Devono essere sviluppati gli interventi di pro... [200 / 600 chars] |
+| Quando è stata notificata alla Commissione europea la spesa cofinanziata per il controllo di patogen... [100 / 132 chars] | L’obiettivo dell’aiuto è l’attuazione del programma di controllo della salmonella negli allevamenti di polli da carne, in conformità alle disposizioni della normativa comunitaria [regolamento (CE) n.... [200 / 683 chars] |
+| Quali razze ovine pure da latte di montagna forniscono il ceppo materno per l'agnello da latte legat... [100 / 124 chars] | L'agnello da latte dei Pirenei nasce da tre razze locali da latte. Le madri sono di pura razza basco-bearnese, Manech testa nera o Manech testa rossa. Grazie alla loro conformazione fisica e morfologi... [200 / 617 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

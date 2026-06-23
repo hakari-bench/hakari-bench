@@ -85,30 +85,6 @@
         "rows_with_101_candidates": 34
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge",
-        "url": "https://arxiv.org/abs/2303.14070",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "lavita/ChatDoctor-HealthCareMagic-100k",
-        "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k",
-        "year": 2023,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -117,6 +93,112 @@
           "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge",
+        "url": "https://arxiv.org/abs/2303.14070",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "lavita/ChatDoctor-HealthCareMagic-100k",
+        "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "000000163",
+        "query": {
+          "text": "My wife that is 31yrs old had a major operation 6mos ago. She had thymic cancer with 3 large maligna",
+          "full_chars": 1183,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Thanks for the query from the history it is quite evident your wife had shad a very tough time but from the diagnosis of malignant Thomas I have to tell you that it means the liver has got metastasis",
+          "full_chars": 418,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "Okay so the past two months I have missed my first birth control pill, I finally got back on track t",
+          "full_chars": 534,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Hello, Thanks for writing to us. Irregular intake of birth control pill & unprotected sex close to your fertile period or ovulation day (occurs 14 days prior to due date) are quite risky for being pre",
+          "full_chars": 396,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "Hi iI have been diagnoed with thymic cancer, I do not like to take the drugs for pain that are presc",
+          "full_chars": 728,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Thy mic cancer causes respiratory distress. After a thy mic tumor is found and tests have been done to get a sense of its Factors important in choosing a treatment include the type and stage of the ca",
+          "full_chars": 676,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "000000189",
+        "query": {
+          "text": "I have some darkened tissue around the left side of the tubercle of the epiglottis, accompanied by e",
+          "full_chars": 728,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Hi, how did you see your epiglottis?endoscopy pictures?symptoms for ca. epiglottis are voice change(most common)pain in throathemoptysisdysphagia and loss of weight(not weight gain)increased appetite",
+          "full_chars": 834,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "000000070",
+        "query": {
+          "text": "hi doctor my wife had recent laparoscopic surgery,i tested my sperm countvolume 2ml,viscocite",
+          "full_chars": 93,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hello, Thanks for the query to Chat Doctor. Forum. I analyze your report as, Volume 2ml (normal 2-5 ml) at borderline level normal. Viscocity normal pH 7.1 (normal 6-8)SPERM COUNT (query) normally it",
+          "full_chars": 946,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

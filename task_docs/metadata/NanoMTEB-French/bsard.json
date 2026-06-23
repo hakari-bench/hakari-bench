@@ -135,15 +135,98 @@
         "url": "https://arxiv.org/abs/2405.20468",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/BSARDRetrieval",
         "url": "https://huggingface.co/datasets/mteb/BSARDRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "841",
+        "document_id": "853",
+        "query": {
+          "text": "Je loue une caravane dans un camping à l'année. Quelles règles s'appliquent à mon bail à Bruxelles ?",
+          "full_chars": 162,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "PrincipesLe présent chapitre s'applique aux baux portant sur le logement que le preneur, avec l'accord exprès ou tacite du bailleur, affecte dès l'entrée en jouissance à sa résidence principale. Est r",
+          "full_chars": 1082,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172",
+        "document_id": "1865",
+        "query": {
+          "text": "J’ai fait un testament. Puis-je le modifier ? Démarches avant décès, Donation et testament, Testamen",
+          "full_chars": 101,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Le testament par acte public est celui qui est reçu par un notaire. Le testament par acte public est celui qui est reçu par un notaire, en présence de deux témoins, ou par deux notaires.",
+          "full_chars": 186,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049",
+        "document_id": "5119",
+        "query": {
+          "text": "Dois-je payer les frais de justice si je conteste une décision d’un organisme de sécurité sociale ?",
+          "full_chars": 99,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "L'indemnité de procédure est une intervention forfaitaire dans les frais et honoraires d'avocat de la partie ayant obtenu gain de cause.Après avoir pris l'avis de l'Ordre des barreaux francophones et",
+          "full_chars": 2341,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "954",
+        "document_id": "841",
+        "query": {
+          "text": "Mon propriétaire ne fait pas les réparations nécessaires, puis-je faire les réparations à sa place à",
+          "full_chars": 215,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Réparations et entretien§ 1er. Le preneur est tenu des réparations locatives, à l'exception de celles qui sont occasionnées par la vétusté ou la force majeure, et des travaux de menu entretien.Les rép",
+          "full_chars": 555,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "39",
+        "document_id": "16571",
+        "query": {
+          "text": "Comment lire et comprendre ma facture d'eau en Wallonie ? Dettes liées à la fourniture d'eau, En Wal",
+          "full_chars": 105,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Une facture annuelle est établie par le distributeur. De plus, des acomptes ou des factures intermédiaires au minimum trimestriels seront établis.En cas de changement d'usager ainsi qu'en cas de modif",
+          "full_chars": 530,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

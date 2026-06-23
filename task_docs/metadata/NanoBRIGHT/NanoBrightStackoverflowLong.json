@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "67",
+        "document_id": "Mmdn_Methods_Properties/Mmdn_methods.txt",
+        "query": {
+          "text": "Sort tbody list which is populated with Javascript getList? I have a router with a DHCP page which i",
+          "full_chars": 12432,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "* Skip to main content * Skip to search * Skip to select language [ MDN Web Docs ](/en-US/) Open main menu * References [ References ](/en-US/docs/Web) * [ Overview / Web Technology Web technology ref",
+          "full_chars": 951658,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "110",
+        "document_id": "WinSCP/WinSCP.txt",
+        "query": {
+          "text": "Copy and delete files from SFTP folder I have to pick (remove) the files with file mask `FileName_A_",
+          "full_chars": 1125,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Menu Toggle search [ ![](https://winscp- static-746341.c.cdn77.org/assets/images/logos/logo.png?v=7032) WinSCP Free SFTP, SCP, S3 and FTP client for Windows ](https://winscp.net/) * [ Home ](/eng/inde",
+          "full_chars": 190917,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "Learn_filter_financial_functions/Learn_filter.txt",
+        "query": {
+          "text": "DAX RLS Function using LOOKUPVALUE Parsing but not working I have a table that I'm trying to impleme",
+          "full_chars": 1525,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to main content This browser is no longer supported. Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support. [ Download Microsoft Edge ](https",
+          "full_chars": 42606,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "79",
+        "document_id": "Openai_Text_Generation/Openai_Text_Generation.txt",
+        "query": {
+          "text": "How can I get LLM to only respond in JSON strings? This is how I am defining the executor ``` const",
+          "full_chars": 1063,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Text generation models OpenAI's text generation models (often called generative pre-trained transformers or large language models) have been trained to understand natural language, code, and images. T",
+          "full_chars": 67273,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25",
+        "document_id": "cpp_utility/cpp_classes.txt",
+        "query": {
+          "text": "How can I initialise a constexpr array with values using std::generate For example, if I wanted a co",
+          "full_chars": 565,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "##### [ cppreference.com ](/) [ Log in ](/mwiki/index.php?title=Special:UserLogin&returnto=cpp%2Futility%2Fpair \"You are encouraged to log in; however, it is not mandatory \\[o\\]\") ##### Namespaces * [",
+          "full_chars": 128018,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Stack Overflow long-document"
+    "source_task": "Stack Overflow long-document",
+    "example_count": 5
   }
 }

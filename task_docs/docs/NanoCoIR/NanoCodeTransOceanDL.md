@@ -70,9 +70,13 @@ Because the corpus is small and recall is already high, the main research target
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeTransOceanDL is documented through CoIR and CodeTransOcean. The WeixiangYan/CodeTransOcean dataset card is the public source reference for the underlying code translation data.
+| Query | Positive document |
+| --- | --- |
+| %matplotlib inline import math from mxnet import np, npx from d2l import mxnet as d2l npx.set_np() d... [100 / 746 chars] | import math import torch from d2l import torch as d2l d2l.set_figsize() gammas = [0.95, 0.9, 0.8, 0.7] for gamma in gammas: x = torch.arange(40).detach().numpy() d2l.plt.plot(x, (1-gamma) * gamma ** x... [200 / 805 chars] |
+| %matplotlib inline import numpy as np import tensorflow as tf from d2l import tensorflow as d2l time... [100 / 3,525 chars] | %matplotlib inline import warnings from d2l import paddle as d2l warnings.filterwarnings("ignore") import numpy as np import paddle from paddle import nn timer = d2l.Timer() A = paddle.zeros((256, 256... [200 / 3,316 chars] |
+| import numpy as np import tensorflow as tf from d2l import tensorflow as d2l num_hiddens, num_heads... [100 / 1,474 chars] | import math import warnings from d2l import paddle as d2l warnings.filterwarnings("ignore") import paddle from paddle import nn num_hiddens, num_heads = 100, 5 attention = d2l.MultiHeadAttention(num_h... [200 / 1,593 chars] |
+| %matplotlib inline import warnings from d2l import paddle as d2l warnings.filterwarnings("ignore") i... [100 / 4,018 chars] | %matplotlib inline import math import torch from torch import nn from torch.optim import lr_scheduler from d2l import torch as d2l def net_fn(): model = nn.Sequential( nn.Conv2d(1, 6, kernel_size=5, p... [200 / 3,912 chars] |
+| import math import warnings import pandas as pd from d2l import paddle as d2l warnings.filterwarning... [100 / 8,099 chars] | import math import pandas as pd from mxnet import autograd, np, npx from mxnet.gluon import nn from d2l import mxnet as d2l npx.set_np() class PositionWiseFFN(nn.Block): def __init__(self, ffn_num_hid... [200 / 7,132 chars] |
 
 ### Source Reference Table
 

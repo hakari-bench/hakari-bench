@@ -103,29 +103,113 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/WikipediaRetrievalMultilingual",
         "url": "https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "url": "https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q20231101.fa_6091897_9",
+        "document_id": "20231101.fa_6091897_9",
+        "query": {
+          "text": "واکنش‌های عاطفی چگونه بدون فرآیندهای شناختی رخ می‌دهند؟",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "«عاطفه» می‌تواند به معنای واکنش غریزی به تحریک باشد که قبل از فرآیندهای شناختی معمولی که برای شکل‌گیری یک احساس پیچیده‌تر ضروری تلقی می‌شوند، رخ می‌دهد. رابرت بی زایونک اظهار می‌دارد که این واکنش به م",
+          "full_chars": 448,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q20231101.fa_15272_48",
+        "document_id": "20231101.fa_15272_48",
+        "query": {
+          "text": "مدرسهٔ تقوی در گرگان چه ویژگی‌های معماری خاصی دارد؟",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "مدرسهٔ تقوی، یکی دیگر از مدارس تاریخی شهر گرگان، مربوط به دورهٔ قاجار و بخشی از مجموعهٔ تقوی است. عمارت تقوی متعلق به یکی از تجار بزرگ استرآباد به نام تقی‌اُف بوده. مدرسهٔ تقوی نیز از جمله نمونه‌های ن",
+          "full_chars": 884,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q20231101.fa_113008_22",
+        "document_id": "20231101.fa_113008_22",
+        "query": {
+          "text": "تکنیک‌های کشاورزی کم خاکورزی یا بی خاکورزی در نواحی میدوسترن ایالات متحده چگونه انجام می‌شوند؟",
+          "full_chars": 94,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "در نواحی میدوسترن ایالات متحده، معمولاً تکنیک‌های کشاورزی کم خاکورزی یا بی خاکورزی استفاده می‌شوند. در کم خاکورزی، مزارع یکبار یا دو بار با یک ابزار شخم زنی قبل از کشت محصول یا بعد از برداشت قبلی خاکو",
+          "full_chars": 624,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q20231101.fa_90339_7",
+        "document_id": "20231101.fa_90339_7",
+        "query": {
+          "text": "چرا املای «رودمهجن» به «رودمعجن» تغییر یافته‌است؟",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "اما از پایان دورهٔ قاجار املای «رودمهجن» به «رودمعجن» تغییر یافته‌است.. ممکن است «رودمهجن» شکل دگرگون‌شدهٔ «رودماه‌جان» و «رودماهگان» باشد.",
+          "full_chars": 139,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q20231101.fa_23507_14",
+        "document_id": "20231101.fa_23507_14",
+        "query": {
+          "text": "فصل‌های اول کتاب پیدایش به چه موضوعاتی اشاره دارد؟",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "یازده فصل اول کتاب پیدایش به «پیدایش» و نظم جهان و تاریخچه ارتباط اولیه بین خداوند و مردم اشاره دارد.",
+          "full_chars": 101,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

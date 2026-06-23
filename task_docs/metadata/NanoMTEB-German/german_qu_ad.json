@@ -145,15 +145,98 @@
         "url": "https://aclanthology.org/2021.mrqa-1.4/",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/germanquad-retrieval",
         "url": "https://huggingface.co/datasets/mteb/germanquad-retrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q41419",
+        "document_id": "c41413",
+        "query": {
+          "text": "Was versuchen die Umweltorganisationen wie CSE in Indien zu verbessern?",
+          "full_chars": 71,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Rajasthan === Umweltorganisationen fördern traditionelles Sammeln von Regenwasser === Umweltorganisationen in Indien, wie das Centre for Science and Environment (CSE), haben vor über 20 Jahren damit b",
+          "full_chars": 1933,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q40368",
+        "document_id": "c40369",
+        "query": {
+          "text": "Wann muss man die Zieletage in seillosen Aufzügen auswählen?",
+          "full_chars": 60,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Aufzugsanlage === Seilloser Aufzug === An der RWTH Aachen im Institut für Elektrische Maschinen wurde ein seilloser Aufzug entwickelt und ein Prototyp aufgebaut. Die Kabine wird hierbei durch zwei ele",
+          "full_chars": 1766,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q36800",
+        "document_id": "c36789",
+        "query": {
+          "text": "Warum sind Schwarze aus Überseegebieten in Frankreich tendenziell besser integriert als Schwarze aus",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Schwarze ==== Frankreich ==== Die Bevölkerung Frankreichs setzt sich aus zahlreichen Ethnien zusammen, darunter sind 2,5 bis 5 Millionen schwarze Menschen. Die meisten von ihnen sind Einwanderer oder",
+          "full_chars": 3198,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q41606",
+        "document_id": "c41606",
+        "query": {
+          "text": "In welcher Klimazone liegt Oklahoma City?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Oklahoma_City === Klima === Die Stadt befindet sich nach Köppen in der feucht-subtropischen Klimazone (Cfa). Dieses liegt in der Form des Ostseitenklimas vor. Das Klima ist ganzjährig humid mit einem",
+          "full_chars": 1293,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q41046",
+        "document_id": "c41056",
+        "query": {
+          "text": "In welcher Jahreszeit wird auf die Sommerzeit umgestellt?",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sommerzeit Frühling: Umstellung von Normalzeit auf Sommerzeit – die Uhr wird um eine Stunde ''vor''gestellt. Herbst: Umstellung von Sommerzeit auf Normalzeit – die Uhr wird um eine Stunde ''zurück''ge",
+          "full_chars": 830,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -171,8 +171,91 @@
         "title": "NFCorpus project page",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-956",
+        "document_id": "MED-2675",
+        "query": {
+          "text": "phương pháp nấu ăn",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "So sánh tiềm năng độc tế bào và đột biến của hương khói thức ăn, ngưng tụ khói thuốc lá và ngưng tụ khói gỗ. Mặc dù các sản phẩm phân hủy nhiệt thường có tính độc và đột biến, nhưng mối quan hệ giữa l",
+          "full_chars": 1687,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1601",
+        "document_id": "MED-2644",
+        "query": {
+          "text": "kí ức",
+          "full_chars": 5,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "p-Nonyl-phenol: một loại xenoestrogen được giải phóng từ \"polystyrene\" \"biến đổi\". Alkylphenols được sử dụng rộng rãi làm chất phụ gia trong nhựa và chất tẩy rửa. Chúng tôi đã xác định một alkylphenol",
+          "full_chars": 1039,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1130",
+        "document_id": "MED-4165",
+        "query": {
+          "text": "ergothioneine",
+          "full_chars": 13,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nguồn chất dinh dưỡng và tác dụng chống oxy hóa của ergothioneine. Ergothioneine là hợp chất thiol không thấm màng bản địa tích lũy đặc hiệu trong tế bào thông qua vận chuyển chất hữu cơ dương. Ở ngườ",
+          "full_chars": 1155,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2343",
+        "document_id": "MED-5108",
+        "query": {
+          "text": "vitamin K",
+          "full_chars": 9,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Khử trùng hiệu quả Mycobacterium avium subsp. paratuberculosis trong sữa tươi bị nhiễm phân từ vật nuôi tự nhiên Hiệu quả của quá trình tiệt trùng nhiệt độ cao thời gian giữ ngắn (HTST) và đồng nhất h",
+          "full_chars": 1444,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2156",
+        "document_id": "MED-4867",
+        "query": {
+          "text": "Stevia",
+          "full_chars": 6,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Đánh giá tác dụng đột biến của Stevioside và Steviol sử dụng sáu xét nghiệm đột biến in vitro và một xét nghiệm đột biến in vivo. Stevioside, một thành phần của Stevia rebaudiana, được sử dụng phổ biế",
+          "full_chars": 1948,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

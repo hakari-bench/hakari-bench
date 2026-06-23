@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "77492",
+        "document_id": "21850",
+        "query": {
+          "text": "Tập tin đặc biệt gây ra lỗi I/O",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tạo ra lỗi đọc lặp đi lặp lại để thử nghiệm? Tôi đang cố gắng thử nghiệm xử lý lỗi trong một số phần mềm, đặc biệt là những gì xảy ra khi có lỗi xảy ra khi đọc từ một tập tin hoặc đường ống. Có cách n",
+          "full_chars": 457,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "121222",
+        "document_id": "125155",
+        "query": {
+          "text": "Xác định gen từ một danh sách các gen",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "So sánh hai tập tin để tìm các dòng trùng khớp và lưu kết quả dương tính Tôi có 2 file. ### File 1: A0001 C001 B0003 C896 A0024 C234 . B1542 C231 . tới 28412 dòng như thế này ### File 2: A0001 A0024 B",
+          "full_chars": 568,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104429",
+        "document_id": "134238",
+        "query": {
+          "text": "Làm thế nào để tôi chỉnh sửa một tập tin như là root?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cách để chỉnh sửa fstab ở Debian Tôi muốn thay đổi tập tin fstab để có thể giải quyết \"lỗi đính kèm\" (tôi đã thử xóa dòng cuối của tập tin fstab) # /etc/fstab: thông tin hệ thống tập tin tĩnh. # # Sử",
+          "full_chars": 1069,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "90299",
+        "document_id": "16387",
+        "query": {
+          "text": "Làm thế nào để có được hỗ trợ 256 màu trong một TTY đăng nhập?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "256 màu trong thực tế console Tôi có trong .bashrc của tôi xuất ra biến môi trường TERM = xterm-256color, nhưng điều này gây ra nhấp nháy tất cả các văn bản màu sắc (ls -- màu sắc, trong vim, v.v.) tr",
+          "full_chars": 636,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16890",
+        "document_id": "77725",
+        "query": {
+          "text": "Cách làm cho một máy tính có thể truy cập được từ LAN sử dụng tên máy chủ",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "định địa chỉ đơn giản trên LAN Tôi đọc câu hỏi này Làm thế nào để tạo một máy tính có thể truy cập từ mạng cục bộ sử dụng tên máy chủ. Cách đơn giản nhất để cho phép các máy chủ Linux trên LAN xác địn",
+          "full_chars": 449,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

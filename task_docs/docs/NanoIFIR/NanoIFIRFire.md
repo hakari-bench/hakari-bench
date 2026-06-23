@@ -70,9 +70,13 @@ For reranking, the key signal is whether the prior judgment would support the cu
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the IFIR paper and the FIRE 2017 IRLeD track overview. The Nano split is published in `hakari-bench/NanoIFIR`.
+| Query | Positive document |
+| --- | --- |
+| The legal case at hand involves an appeal challenging the order of the Calcutta High Court that uphe... [100 / 2,854 chars] | 416; 1985 (2) SCR 621; 1985 (1) SCC 552; 1985 (1) SCALE 108 (18 January 1985) CHANDRACHUD, Y.V. ((CJ) CHANDRACHUD, Y.V. ((CJ) SEN, AMARENDRA NATH (J) CITATION: 1985 AIR 416 1985 SCR (2) 621 1985 SCC (... [200 / 27,331 chars] |
+| The legal case in question involves an appeal filed by the State of Rajasthan against the acquittal... [100 / 3,018 chars] | (5) SCC 518; 1995 (6) JT 437; 1995 (4) SCALE 752 (11 August 1995) AHMADI A.M. (CJ) AHMADI A.M. (CJ) SEN, S.C. (J) CITATION: 1995 AIR 2472 1995 SCC (5) [518 JT 1995] (6) 437 1995 SCALE (4)752 Ahmadi, C... [200 / 12,815 chars] |
+| The legal case involves an appeal against the judgment of acquittal recorded by a Trial Court in a c... [100 / 3,651 chars] | 1988 (2) Suppl.SCR 391; 1988 (4) SCC 302; 1988 (3) JT 544; 1988 (2) SCALE 632 (12 August 1988) VENKATACHALLIAH, M.N. (J) VENKATACHALLIAH, M.N. (J) SEN, A.P. (J) CITATION: 1988 AIR 2154 1988 SCR Supl.... [200 / 33,988 chars] |
+| The legal case revolves around an appellant who was appointed as a Clerk in the State Bank of India... [100 / 4,134 chars] | ANR [1967] INSC 62; AIR 1967 SC 1494; 1967 (3) SCR 163 (13 March 1967) 13/03/1967 MITTER, G.K. MITTER, G.K. SHELAT, J.M. CITATION: 1967 AIR 1494 1967 SCR (3) 163 CITATOR INFO : RF [1969 SC 724] (23, [... [200 / 48,739 chars] |
+| The case of Ispat Industries Ltd. involved an appeal against the decision of the Customs, Excise and... [100 / 3,495 chars] | 194; AIR 1989 SC 2054; 1989 (3) SCR 367; 1989 (4) SCC 21; 1989 Suppl.JT 239; 1989 (2) SCALE 190 (17 May 1989) PATHAK, R.S. (CJ) PATHAK, R.S. (CJ) RANGNATHAN, S. MUKHARJI, SABYASACHI (J) NATRAJAN, S. (... [200 / 24,232 chars] |
 
 ### Source Reference Table
 

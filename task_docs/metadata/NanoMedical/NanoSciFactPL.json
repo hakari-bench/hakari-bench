@@ -142,29 +142,112 @@
         "url": "https://arxiv.org/abs/2305.19840",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language",
         "url": "https://aclanthology.org/2024.lrec-main.194/",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Fact or Fiction: Verifying Scientific Claims",
         "url": "https://arxiv.org/abs/2004.14974",
         "year": 2020,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Fact or Fiction: Verifying Scientific Claims",
         "url": "https://aclanthology.org/2020.emnlp-main.609/",
         "year": 2020,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "770",
+        "document_id": "15476777",
+        "query": {
+          "text": "Rak jelita grubego z przerzutami leczony pojedynczym lekiem fluoropirymidynami skutkował zmniejszoną",
+          "full_chars": 223,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Opcje chemioterapii u starszych i słabych pacjentów z przerzutowym rakiem jelita grubego (MRC FOCUS2): otwarte, randomizowane badanie czynnikowe TŁO Pacjenci w podeszłym wieku i słabi z rakiem, chocia",
+          "full_chars": 3343,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "213",
+        "document_id": "13625993",
+        "query": {
+          "text": "CRP nie pozwala przewidzieć śmiertelności pooperacyjnej po operacji pomostowania aortalno-wieńcowego",
+          "full_chars": 108,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Ocena opłacalności stosowania prognostycznych biomarkerów z modelami decyzyjnymi: studium przypadku w ustalaniu priorytetów pacjentów oczekujących na operację tętnicy wieńcowej CEL Określenie skuteczn",
+          "full_chars": 3169,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "127",
+        "document_id": "21598000",
+        "query": {
+          "text": "Arginina 90 w p150n jest ważna dla interakcji z EB1.",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Strukturalne podstawy do aktywacji składania mikrotubul przez kompleks EB1 i p150Glued. Białka śledzące plus, takie jak EB1 i kompleks dyneina/dynaktyna, regulują dynamikę mikrotubul. Uważa się, że bi",
+          "full_chars": 1210,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "873",
+        "document_id": "1180972",
+        "query": {
+          "text": "O otyłości decydują wyłącznie czynniki środowiskowe.",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Genetyka otyłości u dorosłych adopcyjnych i ich biologicznego rodzeństwa. Przeprowadzono badanie adopcyjne wpływu genetycznego na otyłość w wieku dorosłym, w którym osoby adoptowane oddzielone od swoi",
+          "full_chars": 1465,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "410",
+        "document_id": "14924526",
+        "query": {
+          "text": "Napady gorączkowe zwiększają próg rozwoju padaczki.",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Napady gorączkowe w rozwijającym się mózgu powodują uporczywą modyfikację pobudliwości neuronalnej w obwodach limbicznych Napady gorączkowe (wywołane gorączką) dotykają 3–5% niemowląt i małych dzieci.",
+          "full_chars": 812,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

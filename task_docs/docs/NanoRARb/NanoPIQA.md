@@ -62,17 +62,20 @@ Models should learn goal-to-action compatibility and object affordances. Hard ne
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [PIQA: Reasoning about Physical Commonsense in Natural Language](https://arxiv.org/abs/1911.11641), source task paper.
+| Query | Positive document |
+| --- | --- |
+| How to light a candle with a deep seated wick? [46 chars] | invert the candle upside down and use the lighter to reach into the wick to light it [84 chars] |
+| How to grow a plant. [20 chars] | Bury seed in soil and add 1 cup of water daily. [47 chars] |
+| How can I get free gym memberships? [35 chars] | Check with your health insurance co., many times they'll reimburse your gym costs. [82 chars] |
+| Neatly wrap up an extension cord. [33 chars] | Wrap the cord around your hand and elbow. [41 chars] |
+| napkin [6 chars] | hold ice cream scoop to keep hands warm [39 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| PIQA: Reasoning about Physical Commonsense in Natural Language | 2020 | arXiv paper | https://arxiv.org/abs/1911.11641 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| PIQA: Reasoning about Physical Commonsense in Natural Language | 2020 | arXiv paper | [https://arxiv.org/abs/1911.11641](https://arxiv.org/abs/1911.11641) |
 
 ### Representative Snippets
 

@@ -134,14 +134,97 @@
         "url": "https://arxiv.org/abs/2309.07597",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "definitive_benchmark_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/T2Retrieval",
         "url": "https://huggingface.co/datasets/mteb/T2Retrieval",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "61",
+        "document_id": "50994",
+        "query": {
+          "text": "卢升象雪中悍刀行是谁",
+          "full_chars": 10,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "<br><img><br><img><br>人猫-韩貂寺<br>大内巨宦。本名韩生宣,统领十万宦官二十馀年,人称人猫,王朝内口碑比起徐骁只差不好。左手缠绕三千红丝。皇帝私生子赵楷之师。与徐骁,黄龙士并称为当世三大魔头。因为喜欢虐杀初入一品的高手而被称为魔头。擅以指玄杀天象,陆地神仙境下几乎无敌,指玄境第二,仅次于桃花剑神邓太阿。列入北莽高手后新武评天下第十。<br><img><br>木剑游侠儿—温",
+          "full_chars": 1272,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "127",
+        "document_id": "171092",
+        "query": {
+          "text": "都江堰是哪几条江汇合",
+          "full_chars": 10,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "都江堰渠首枢纽主要由鱼嘴、飞沙堰、宝瓶口三大主体工程构成。三者有机配合,相互制约,协调运行,引水灌田,分洪减灾,具有“分四六,平潦旱”的功效。岷江鱼嘴分水工程鱼嘴分水堤又称“鱼嘴”,是都江堰的分水工程,因其形如鱼嘴而得名,它昂头于岷江江心,包括百丈堤、杩槎、金刚堤等一整套相互配合的设施。其主要作用是把汹涌的岷江分成内外二江,西边叫外江,俗称“金马河”,是岷江正流,主要用于排洪;东边沿山脚的叫内江,",
+          "full_chars": 406,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "622023",
+        "query": {
+          "text": "李字行书怎么写好看",
+          "full_chars": 9,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "<br>李字常用签名一笔写法。<br>如图: 一笔草属狂草,是草书最放纵的一种,笔势相连而圆转,字形狂放多变,在今草的基础上将点画连绵书写,形成“一笔书”,在章法上与今草一脉相承。 在中国古代书论中,不论是对篆、隶、行、楷,还是对草书的论述,大多是以自然景观或某些现象作比,加以形容和描述,读者要靠一种生活感受、生活经验去领悟,才能欣赏和理解。<br>扩展资料: 狂草的特征: 1、草书中最放纵的一种",
+          "full_chars": 475,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9",
+        "document_id": "14",
+        "query": {
+          "text": "桂苓片的功效与作用",
+          "full_chars": 9,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "如对您有帮助,可购买打赏,谢谢 桂苓散的功效与作用 药用价值 用法用量 导语:桂苓散怎么吃?桂苓散虽为中医的一味方剂,但对很多疾病都 是有治疗效果的,那么根据不同的疾病,桂苓散应该怎么吃呢?下面 为大家揭晓答案。 桂苓散怎么吃?桂苓散虽为中医的一味方剂,但对很多疾病都是有 治疗效果的,那么根据不同的疾病,桂苓散应该怎么吃呢?下面为大 家揭晓答案。 【处方】芍药 30 钱,茯苓 30 钱,当归 15",
+          "full_chars": 516,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "165",
+        "document_id": "158476",
+        "query": {
+          "text": "在洗浴中心摔倒怎么起诉",
+          "full_chars": 11,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "<pre>几点看法供参考:<br/>1。从您所述第七天工商召集的调解会议看,足以证明曾经发生过本纠纷案。因此不必担心案件本身被否定。物证就是会议记录,人证就是三方代表。<br/>2。您与洗浴中心的关系,属于消费场所提供者与消费者之间的关系。不论对方是否有合法的经营权都不能改变这个性质。如果对方没有取得合法的经营权,则属于非法经营,那也是另类处理的问题(现在看来仅仅是批文还没有拿到并不完全是非法经营",
+          "full_chars": 395,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

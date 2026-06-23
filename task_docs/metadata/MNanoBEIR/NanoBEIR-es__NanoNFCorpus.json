@@ -148,7 +148,7 @@
         "title": "NFCorpus project page",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -156,7 +156,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -164,15 +164,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Batidos de chocolate saludables",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Objetivo: Estudiar la relación entre el consumo de cerezas y el riesgo de ataques recurrentes de gota en individuos con gota. Métodos: Realizamos un estudio de caso-cruce para examinar las asociacione",
+          "full_chars": 1865,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "ética médica",
+          "full_chars": 12,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ANTECEDENTES: Uno de los principales problemas en el control del colesterol sérico mediante intervención dietética parece ser la necesidad de mejorar la adherencia del paciente. OBJETIVOS: Explorar la",
+          "full_chars": 2091,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "habas",
+          "full_chars": 5,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Durante los últimos 20 años, el creciente interés en la bioquímica, nutrición y farmacología de la L-arginina ha llevado a extensos estudios para explorar sus roles nutricionales y terapéuticos en el",
+          "full_chars": 1398,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-68",
+        "document_id": "MED-2991",
+        "query": {
+          "text": "¿Qué contienen los nuggets de pollo?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "OBJETIVO: Determinar los componentes de las croquetas de pollo de 2 cadenas de comida nacionales. ANTECEDENTES: Las croquetas de pollo se han convertido en un componente importante de la dieta estadou",
+          "full_chars": 852,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2051",
+        "document_id": "MED-4551",
+        "query": {
+          "text": "grasa saturada",
+          "full_chars": 14,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "El interés por la posibilidad de que la ingesta materna de alimentos durante el embarazo pueda influir en el desarrollo de trastornos alérgicos en los niños ha aumentado. El presente estudio prospecti",
+          "full_chars": 2263,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

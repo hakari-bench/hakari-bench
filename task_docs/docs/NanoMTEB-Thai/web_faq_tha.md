@@ -62,19 +62,21 @@ The task rewards balanced retrieval. Sparse term matching should be preserved fo
 
 ## Example Data
 
-### Public Sources
-
-- [WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval](https://arxiv.org/abs/2502.20936), 2025.
-- [PaDaS-Lab/webfaq](https://huggingface.co/datasets/PaDaS-Lab/webfaq), source dataset card.
-- [mteb/WebFAQRetrieval](https://huggingface.co/datasets/mteb/WebFAQRetrieval), MTEB dataset card.
+| Query | Positive document |
+| --- | --- |
+| จากสนามบินเข้าตัวเมืองอย่างไร? [30 chars] | รถบัสสนามบิน LAX FlyAway เป็นวิธีการเดินทางที่รวดเร็วและสะดวกที่สุดจากสนามบินลอสแองเจลิสไปยังตัวเมือง ซึ่งสามารถพาผู้โดยสารตรงไปยังสถานี Union และย่านฮอลลีวูดได้ เนื่องจากไม่มีรถไฟใต้ดินที่สนามบินลอสแ... [200 / 334 chars] |
+| ใช้เวลาในการจัดส่งนานเท่าใด? [28 chars] | โดยปกติ เวลาในการจัดส่งปัจจุบันจะอยู่ภายใน 1 – 3 วัน [52 chars] |
+| ได้รับความนิยม แถวนี้ tracking วัฒนา กรุงเทพมหานคร [50 chars] | รวมข้อมูล แสดงตำแหน่ง ที่ตั้ง และเส้นทาง ไป > tracking วัฒนา กรุงเทพมหานคร [74 chars] |
+| Dolphins Pearl มีเพย์ไลน์กี่เพย์ไลน์? [37 chars] | Dolphins Pearl มี 10 ช่องจ่ายเงิน [33 chars] |
+| Au Grand Hôtel de Sarlat มีสระว่ายน้ำให้บริการไหม [49 chars] | ใช่ มี สระว่ายน้ำกลางแจ้งและสระว่ายน้ำสำหรับเด็ก ผู้เข้าพักสามารถเข้าใช้สระว่ายน้ำได้ตั้งแต่เวลา 7:00 น. - 23:00 น. [115 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval | 2025 | paper | https://arxiv.org/abs/2502.20936 |
-| PaDaS-Lab/webfaq |  | dataset card | https://huggingface.co/datasets/PaDaS-Lab/webfaq |
-| mteb/WebFAQRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/WebFAQRetrieval |
+| WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval | 2025 | paper | [https://arxiv.org/abs/2502.20936](https://arxiv.org/abs/2502.20936) |
+| PaDaS-Lab/webfaq |  | dataset card | [https://huggingface.co/datasets/PaDaS-Lab/webfaq](https://huggingface.co/datasets/PaDaS-Lab/webfaq) |
+| mteb/WebFAQRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/WebFAQRetrieval](https://huggingface.co/datasets/mteb/WebFAQRetrieval) |
 
 ### Representative Snippets
 

@@ -62,9 +62,13 @@ A model targeting this task should balance topic anchoring with argumentative re
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Touché 2020 argument retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Da li je domaći zadatak koristan? [33 chars] | Prvo, postoje tri argumenta zašto je domaći zadatak odličan i trebalo bi da se nastavi u modernim školama. 1. Domaći zadatak pomaže učenicima koji uče kroz praksu. Opšte je prihvaćeno da postoje tri t... [200 / 3,651 chars] |
+| Treba li se reklamni lekovi na recept direktno usmeravati potrošačima? [70 chars] | Mnogi oglasi ne sadrže dovoljno informacija o tome koliko lekovi delotvorno deluju. Na primer, Lunesta se reklamira leptirkom koji lebdi kroz prozor spavaće sobe, iznad osobe koja mirno spava. Zapravo... [200 / 1,697 chars] |
+| Da li bi neke vakcine trebalo da budu obavezne za decu? [55 chars] | Još uvek nije u potpunosti razrađeno... Samo nekoliko manjih stavki koje sam sastavio... Vlade ne bi trebalo da imaju pravo da se mešaju u zdravstvene odluke koje roditelji donose za svoju decu. Prema... [200 / 4,370 chars] |
+| Da li abortus treba da bude legalan? [36 chars] | Pobačaji bi trebalo da budu legalni jer ličnost počinje nakon što fetus postane sposoban za život ili nakon rođenja, a ne u trenutku začeća. Prema stavu Vrhovnog suda SAD, osoba dobija svoje godine ka... [200 / 325 chars] |
+| Da li standardizovani testovi poboljšavaju obrazovanje? [55 chars] | Rezolucija: SAT, ACT i drugi standardizovani testovi pružaju bolji uvid u spremnost srednjoškolca za obrazovanje na elitnim koledžima i univerzitetima nego srednjoškolski prosek ocena i stoga bi treba... [200 / 4,097 chars] |
 
 ### Source Reference Table
 

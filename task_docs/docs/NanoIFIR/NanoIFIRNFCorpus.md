@@ -70,9 +70,13 @@ For reranking, the model should verify that the abstract scientifically addresse
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the IFIR paper, the NFCorpus paper, and the NFCorpus project page. The Nano split is published in `hakari-bench/NanoIFIR`.
+| Query | Positive document |
+| --- | --- |
+| Who Should be Careful About Curcumin? [37 chars] | Curcumin as "Curecumin": from kitchen to clinic. Although turmeric (Curcuma longa; an Indian spice) has been described in Ayurveda, as a treatment for inflammatory diseases and is referred by differen... [200 / 1,773 chars] |
+| Preventing Ulcerative Colitis with Diet [39 chars] | A diet high in fat and meat but low in dietary fibre increases the genotoxic potential of 'faecal water'. To determine the effects of different diets on the genotoxicity of human faecal water, a diet... [200 / 1,604 chars] |
+| Exploiting Autophagy to Live Longer [35 chars] | mTOR: from growth signal integration to cancer, diabetes and ageing Preface In all eukaryotes, the target of rapamycin (TOR) signaling pathway couples energy and nutrient abundance to the execution of... [200 / 694 chars] |
+| Treating Multiple Sclerosis With the Swank MS Diet [50 chars] | Effect of low saturated fat diet in early and late cases of multiple sclerosis. 144 multiple sclerosis patients took a low-fat diet for 34 years. For each of three categories of neurological disabilit... [200 / 683 chars] |
+| Boosting the Bioavailability of Curcumin [40 chars] | Bioavailability of curcumin: problems and promises. Curcumin, a polyphenolic compound derived from dietary spice turmeric, possesses diverse pharmacologic effects including anti-inflammatory, antioxid... [200 / 1,418 chars] |
 
 ### Source Reference Table
 

@@ -121,11 +121,11 @@ abstracts from merely related scientific literature.
 
 | Query | Positive document |
 | --- | --- |
-| Ly49Q regola la migrazione dei neutrofili verso i siti di infiammazione modulando le funzioni dei raft di membrana. | Neutrofili subiscono rapidamente una polarizzazione e un movimento direzionale per infiltrarsi nei siti di infezione e infiammazione. Qui mostriamo che un recettore MHC I inibitorio... |
-| La terapia antiretrovirale riduce l'incidenza di tubercolosi in un ampio spettro di livelli di CD4. | CONTESTO L'infezione da virus dell'immunodeficienza umana (HIV) è il principale fattore di rischio per lo sviluppo della tubercolosi... |
-| La regolazione rapida verso l'alto e l'espressione basale più elevata dei geni indotti da interferone riducono la sopravvivenza dei neuroni a granulo infetti dal virus del Nilo occidentale. | La suscettibilità dei neuroni del cervello all'infezione microbica è un determinante principale dell'esito clinico. Poco si sa riguardo ai fattori molecolari... |
-| Lo screening primario per il cancro cervicale con rilevazione dell'HPV ha una maggiore sensibilità nel tempo rispetto alla citologia convenzionale per rilevare la neoplasia intraepiteliale cervicale di grado 2. | CONTESTO Lo screening per il cancro cervicale basato sul test per il papillomavirus umano (HPV) aumenta la sensibilità nella rilevazione della neoplasia intraepiteliale... |
-| Inibire l'interazione tra TDP-43 e le proteine del complesso respiratorio I ND3 e ND6 provoca un aumento della perdita neuronale indotta da TDP-43. | Le mutazioni genetiche nella proteina TAR DNA-binding protein 43 (TARDBP, nota anche come TDP-43) causano la sclerosi laterale amiotrofica... |
+| Ly49Q regola la migrazione dei neutrofili verso i siti di infiammazione modulando le funzioni dei ra... [100 / 115 chars] | Neutrofili subiscono rapidamente una polarizzazione e un movimento direzionale per infiltrarsi nei siti di infezione e infiammazione. Qui mostriamo che un recettore MHC I inibitorio, Ly49Q, è stato fo... [200 / 1,148 chars] |
+| La terapia antiretrovirale riduce l'incidenza di tubercolosi in un ampio spettro di livelli di CD4. [99 chars] | CONTESTO L'infezione da virus dell'immunodeficienza umana (HIV) è il principale fattore di rischio per lo sviluppo della tubercolosi e ha contribuito alla sua ripresa, specialmente nell'Africa subsaha... [200 / 2,437 chars] |
+| La regolazione rapida verso l'alto e l'espressione basale più elevata dei geni indotti da interferon... [100 / 189 chars] | La suscettibilità dei neuroni del cervello all'infezione microbica è un determinante principale dell'esito clinico. Poco si sa riguardo ai fattori molecolari che governano questa vulnerabilità. Qui di... [200 / 1,295 chars] |
+| Lo screening primario per il cancro cervicale con rilevazione dell'HPV ha una maggiore sensibilità n... [100 / 210 chars] | CONTESTO Lo screening per il cancro cervicale basato sul test per il papillomavirus umano (HPV) aumenta la sensibilità nella rilevazione della neoplasia intraepiteliale cervicale di grado elevato (gra... [200 / 2,538 chars] |
+| Inibire l'interazione tra TDP-43 e le proteine del complesso respiratorio I ND3 e ND6 provoca un aum... [100 / 147 chars] | Le mutazioni genetiche nella proteina TAR DNA-binding protein 43 (TARDBP, nota anche come TDP-43) causano la sclerosi laterale amiotrofica (SLA), e un aumento della presenza di TDP-43 (codificata da T... [200 / 1,439 chars] |
 
 ### Public Sources
 
@@ -140,8 +140,8 @@ abstracts from merely related scientific literature.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository |  | project page | https://github.com/allenai/scifact |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| SciFact repository |  | project page | [https://github.com/allenai/scifact](https://github.com/allenai/scifact) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

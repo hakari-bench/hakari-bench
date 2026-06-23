@@ -144,21 +144,22 @@ literature discovery in Dutch-translated settings.
 
 ## Example Data
 
-### Public Sources
-
-- [SPECTER: Document-level Representation Learning using Citation-informed Transformers](https://arxiv.org/abs/2004.07180), 2020.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [clips/beir-nl-scidocs](https://huggingface.co/datasets/clips/beir-nl-scidocs), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Een geïntegreerd raamwerk voor het delven van logbestanden voor systeembeheer. [78 chars] | Machine learning in geautomatiseerde tekstcategorisering De geautomatiseerde categorisering (of classificatie) van teksten in vooraf gedefinieerde categorieën heeft de afgelopen 10 jaar een explosieve... [200 / 1,249 chars] |
+| Onderwerp-Relevantiekaart: Visualisatie voor Verbetering van het Begrip van Zoekresultaten [90 chars] | Ontwerpen voor explorerend zoeken op touchscreen-apparaten Explorerend zoeken confronteert gebruikers met uitdagingen bij het uitdrukken van zoekintenties, aangezien huidige zoekinterfaces het onderzo... [200 / 1,428 chars] |
+| Algoritmische Brokjes in Contentlevering [40 chars] | Consistente Hashing en Willekeurige Bomen: Gedistribueerde Cachingprotocollen voor het Verminderen van Hotspots op het World Wide Web We beschrijven een familie van cachingprotocollen voor gedistribue... [200 / 1,474 chars] |
+| De Enactieve Benadering van Architectonische Ervaring: Een Neurofysiologisch Perspectief op Embodime... [100 / 128 chars] | Affectieve uitkomsten van virtual reality exposuretherapie voor angst en specifieke fobieën: een meta-analyse. Virtual reality exposuretherapie (VRET) is een steeds vaker toegepaste behandeling voor a... [200 / 862 chars] |
+| PD-regeling met online zwaartekrachtcompensatie voor robots met elastische gewrichten: Theorie en ex... [100 / 110 chars] | Een op passief gedrag gebaseerde Cartesische impedantieregeling voor robots met flexibele gewrichten - deel I: koppelterugkoppeling en zwaartekrachtcompensatie In dit artikel wordt een nieuwe aanpak g... [200 / 912 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | arXiv paper | https://arxiv.org/abs/2004.07180 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| clips/beir-nl-scidocs |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-scidocs |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | arXiv paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| clips/beir-nl-scidocs |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-scidocs](https://huggingface.co/datasets/clips/beir-nl-scidocs) |
 
 ### Representative Snippets
 

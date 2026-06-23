@@ -62,19 +62,21 @@ Models should improve Slovak legal semantic matching while retaining exact sensi
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Ktorá trojstupňová intervenčná schéma sa navrhuje spolu s podporou duševného zdravia, udržiavaním zd... [100 / 167 chars] | Z tohto hľadiska je potrebné zdôrazniť tri zložky prevencie (primárnu, sekundárnu a terciárnu) a prispôsobiť ich danej oblasti. Je potrebné vypracovať iniciatívy pre viaceré oblasti, vrátane podpory d... [200 / 500 chars] |
+| Ktorý výbor vyzval na opatrenia podporované EÚ na nápravu nedostatkov kvalifikácie a etiky vedúcich... [100 / 146 chars] | Kríza spojená so stratou dôvery sa medzi zamestnancami a spotrebiteľmi v mnohých krajinách Európskeho spoločenstva zhoršila po odhalení chýb a nesprávneho počínania riadiacich pracovníkov a celých ria... [200 / 681 chars] |
+| Ktorý orgán vysvetľuje politiku pri neriešenej judikatúre bez prejudikácie výkladu ods. 1 a 3 zmluvy... [100 / 135 chars] | Vzhľadom na niekoľko otázok v týchto usmerneniach je načrtnutý súčasný stav judikatúry Súdneho dvora EZVO a Súdneho dvora Európskych spoločenstiev v súlade so zodpovedajúcimi ustanoveniami v Zmluve o... [200 / 644 chars] |
+| Ktorý dohľadový orgán poskytol samostatné riešenie na riadenie pohybu a neskôr v roku 2006 kontrolov... [100 / 138 chars] | Na začiatku projektu NCTS niekoľko členských štátov, ktoré si nechceli vypracovať vnútroštátnu aplikáciu pre oblasť tranzitu, požiadali Komisiu, aby vyvinula štandardnú aplikáciu. MCC vytvorená Komisi... [200 / 817 chars] |
+| Ako európske podnikové výbory zakotvujú záväzky spoločenskej zodpovednosti podnikov prostredníctvom... [100 / 193 chars] | Rozhodujúcim krokom na európskej úrovni je dobrovoľné a/alebo vyjednané stanovenie záväzkov týkajúcich sa SZP vo všetkých nadnárodných spoločnostiach, ktoré majú európsky podnikový výbor. Týmto spôsob... [200 / 834 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

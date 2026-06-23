@@ -70,13 +70,13 @@ Error analysis should categorize entity recall, attribute mismatch, title transl
 
 ## Example Data
 
-### Public Sources
-
-- [Natural Questions paper](https://aclanthology.org/Q19-1026/)
-- [Natural Questions official page](https://ai.google.com/research/NaturalQuestions/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/nq-vn](https://huggingface.co/datasets/GreenNode/nq-vn)
+| Query | Positive document |
+| --- | --- |
+| ai la cha của Dylan trong Bates Motel [37 chars] | Danh sách nhân vật trong phim Bates Motel Dylan Massett (do Max Thieriot thủ vai) [3] là con trai xa lạ của Norma và là anh cùng cha khác mẹ với Norman. Sau khi lớn lên hầu như tự lực cánh sinh, anh r... [200 / 2,150 chars] |
+| mùa 5 của Ruby ra khi nào [25 chars] | Danh sách tập RWBY RWBY là một loạt phim hoạt hình trực tuyến Mỹ được sản xuất bởi Rooster Teeth Productions. Phim ra mắt vào ngày 18 tháng 7 năm 2013 trên trang web Rooster Teeth, và sau đó các tập p... [200 / 486 chars] |
+| câu nói blue moon xuất phát từ đâu [34 chars] | Trăng xanh Một giả thuyết đã được đưa ra rằng thuật ngữ "trăng xanh" cho "tháng nhuận" xuất hiện từ dân gian, trong đó "xanh" thay thế cho belewe không còn được hiểu nghĩa là "bất trung". Ý nghĩa gốc... [200 / 476 chars] |
+| danh sách sách viết bởi abul kalam azad [39 chars] | Abul Kalam Azad Maulana Azad được cho là một trong những nhà văn tiếng Urdu vĩ đại nhất của thế kỷ 20. Ông đã viết nhiều sách bao gồm cả Ấn Độ giành được tự do, Ghubar-e-Khatir, Tazkirah, Tarjumanul Q... [200 / 211 chars] |
+| sông nào liên quan đến thành phố rome [37 chars] | Tiber Sông Tiber (/ ˈtaɪbər /, tiếng Latin Tiberis,[1] tiếng Ý Tevere, phát âm tiếng Ý: [ˈteːvere] ) [2] là con sông dài thứ ba ở Ý, bắt nguồn từ dãy núi Apennine ở Emilia-Romagna và chảy 406 km (252... [200 / 513 chars] |
 
 ### Source Reference Table
 

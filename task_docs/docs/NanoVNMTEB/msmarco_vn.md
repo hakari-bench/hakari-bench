@@ -70,13 +70,13 @@ Error analysis should classify failures as entity misses, attribute misses, ambi
 
 ## Example Data
 
-### Public Sources
-
-- [MS MARCO paper](https://arxiv.org/abs/1611.09268)
-- [MS MARCO official page](https://microsoft.github.io/msmarco/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/msmarco-vn](https://huggingface.co/datasets/GreenNode/msmarco-vn)
+| Query | Positive document |
+| --- | --- |
+| Tác dụng của việc sử dụng pedialyte [35 chars] | Ngoài ra, nếu bạn đang hướng đến việc giảm cân thì lượng calo trong Pedialyte và nước tăng lực sẽ có thể làm mất tác dụng của những bài tập vừa phải. Tuy nhiên, bù nước bằng một loại thức uống như Ped... [200 / 711 chars] |
+| hiệu ứng lâu dài của ô nhiễm không khí tác động lên con người là gì? [68 chars] | Khó thở, ho, đau ngực và khó thở. ï§ Ho ra nhiều hơn hoặc nặng hơn. ï§ Tăng nguy cơ bị bệnh tim mạch. Ngoài ra, tiếp xúc lâu dài với ô nhiễm không khí có thể gây ung thư và làm tổn thương hệ miễn dị... [200 / 234 chars] |
+| Quá trình tế bào nào đòi hỏi năng lượng [39 chars] | Có nhiều hơn nữa, những cái này chỉ là một vài ví dụ! [ATP (adenosine triphosphate) được dùng cho việc chuyển năng lượng trong tế bào nhưng nó không phải là hợp chất duy nhất được sử dụng. NTP, ADP, G... [200 / 474 chars] |
+| Coca Cola có bao nhiêu dòng sản phẩm? [37 chars] | COCA-COLA ON SOCIAL. Coca-Cola Great Britain chịu trách nhiệm tiếp thị 20 nhãn hiệu và hơn 80 loại nước giải khát cho người tiêu dùng trên khắp Vương quốc Anh bao gồm danh mục Coca-Cola – Coca-Cola Cl... [200 / 257 chars] |
+| Thời tiết ở sao miguel [22 chars] | SÃ£o Miguel - Dự báo thời tiết từ Theweather.com. Điều kiện thời tiết với cập nhật về nhiệt độ, độ ẩm, tốc độ gió, tuyết, áp suất, v.v... cho SÃ£o Miguel , Coimbra Hôm nay: Trời quang đãng trong ngày... [200 / 294 chars] |
 
 ### Source Reference Table
 

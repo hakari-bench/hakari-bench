@@ -115,11 +115,11 @@ early precision and breadth of evidence coverage.
 
 | Query | Positive document |
 | --- | --- |
-| Batidas de chocolate saudáveis | Objetivo: Estudar a relação entre o consumo de cerejas e o risco de ataques recorrentes de gota em indivíduos com gota... |
-| ética médica | Fundamentação: Um dos principais problemas no controle do colesterol sérico através de intervenção dietética parece ser a necessidade de melhorar a adesão... |
-| favas | Nos últimos 20 anos, o crescente interesse pela bioquímica, nutrição e farmacologia da L-arginina levou a estudos extensivos... |
-| Do que são feitos os nuggets de frango? | Objetivo: Determinar os componentes dos nuggets de frango de 2 redes de fast food nacionais... |
-| gordura saturada | O interesse pelo possível impacto da ingestão alimentar materna durante a gravidez no desenvolvimento de doenças alérgicas em crianças tem aumentado... |
+| Batidas de chocolate saudáveis [30 chars] | Objetivo: Estudar a relação entre o consumo de cerejas e o risco de ataques recorrentes de gota em indivíduos com gota. Métodos: Realizamos um estudo caso-cruzado para examinar as associações de um co... [200 / 1,752 chars] |
+| ética médica [12 chars] | FUNDAMENTAÇÃO: Um dos principais problemas no controle do colesterol sérico através de intervenção dietética parece ser a necessidade de melhorar a adesão do paciente. OBJETIVOS: Explorar as diversas... [200 / 1,978 chars] |
+| favas [5 chars] | Nos últimos 20 anos, o crescente interesse pela bioquímica, nutrição e farmacologia da L-arginina levou a estudos extensivos para explorar seus papéis nutricionais e terapêuticos no tratamento e preve... [200 / 1,347 chars] |
+| Do que são feitos os nuggets de frango? [39 chars] | OBJETIVO: Determinar os componentes dos nuggets de frango de 2 redes de fast food nacionais. CONTEXTO: Os nuggets de frango tornaram-se um componente importante da dieta americana. Buscamos determinar... [200 / 790 chars] |
+| gordura saturada [16 chars] | O interesse pelo possível impacto da ingestão alimentar materna durante a gravidez no desenvolvimento de doenças alérgicas em crianças tem aumentado. O presente estudo prospectivo examinou a associaçã... [200 / 2,146 chars] |
 
 ### Public Sources
 
@@ -133,7 +133,7 @@ early precision and breadth of evidence coverage.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

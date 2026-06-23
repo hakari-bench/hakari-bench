@@ -70,13 +70,13 @@ Error analysis should separate entity retrieval failures from evidence sufficien
 
 ## Example Data
 
-### Public Sources
-
-- [FEVER paper](https://arxiv.org/abs/1803.05355)
-- [FEVER project page](https://fever.ai/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/fever-vn](https://huggingface.co/datasets/GreenNode/fever-vn)
+| Query | Positive document |
+| --- | --- |
+| Watchmen là một bộ phim được đặt trong bối cảnh lịch sử thay thế vào năm 1985. [78 chars] | Watchmen (phim) Watchmen là một bộ phim siêu anh hùng Mỹ năm 2009 do Zack Snyder đạo diễn, dựa trên loạt truyện tranh cùng tên của DC Comics ra mắt năm 1986-87 của Alan Moore và Dave Gibbons. Phim có... [200 / 2,181 chars] |
+| Jenny McCarthy là một người mẫu. [32 chars] | Jenny McCarthy Jennifer Ann McCarthy ( sinh ngày 1 tháng 11 năm 1972), được biết đến với tên Jenny McCarthy và Jenny Wahlberg, là một nữ diễn viên, người mẫu, người dẫn chương trình truyền hình, tác g... [200 / 1,368 chars] |
+| James Brolin đã từng đóng vai trong những vở kịch hài tình huống. [65 chars] | James Brolin James Brolin ( - LSB- broʊlᵻn - RSB- sinh ngày 18 tháng Bảy năm 1940 ) là một diễn viên , nhà sản xuất và đạo diễn người Mỹ, được biết đến với những vai diễn phim và truyền hình , bao gồm... [200 / 494 chars] |
+| Joseph Merrick đã là chủ đề của hàng ngàn những dòng tweet hận thù. [67 chars] | Joseph Merrick Joseph Carey Merrick (5 tháng 8 năm 1862 - ngày 11 tháng 4 năm 1890, thường bị nhầm tên là John Merrick) là một người đàn ông Anh với những dị tật rất nặng nề đã từng được trưng bày tại... [200 / 1,396 chars] |
+| Chris Mullin chơi bóng rổ cho một đội bóng chuyên nghiệp. [57 chars] | Indiana Pacers Indiana Pacers là một đội bóng rổ chuyên nghiệp của Mỹ có trụ sở tại Indianapolis. Indiana Pacers thi đấu tại giải Nhà nghề Hoa Kỳ (NBA) trong hội nghị miền Đông, giải Trung Bộ. Đội đượ... [200 / 871 chars] |
 
 ### Source Reference Table
 

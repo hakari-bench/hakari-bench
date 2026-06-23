@@ -139,11 +139,13 @@ top-rank ordering.
 
 ## Example Data
 
-Representative queries ask about water-resource management measures in a
-regulation, the core concept of a central theory, how a health exercise uses
-acupoints and meridians, how Gemini and Pisces personalities affect a
-relationship, and when the Gongsun clan first appeared. Positive documents are
-Chinese long articles containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| 《条例》中对于水资源管理的具体措施有哪些？ [21 chars] | 湖北省抗旱条例 湖北是千湖之省，然而，受制于气象、资源、工程、发展等四大缺水矛盾，湖北一直存在着缺水之忧。据统计，新中国建立以来的64年间，湖北平均4年发生一次大范围的严重以上程度的干旱，中轻度旱每年都会在局部或全省发生，其中鄂北等地更是十年九旱。近十年来，湖北的干旱核心逐步向鄂中丘陵区蔓延，形成十堰、襄阳、随州、孝感、荆门等市为主的干旱带，且有逐年扩大的趋势。抗旱急需依法规范，因此，《湖北省抗旱... [200 / 15,116 chars] |
+| 什么是中枢理论的核心概念？ [13 chars] | [转载]中枢扩张、扩展 原文地址:中枢扩张、扩展作者:覃迪 大家有关于中枢扩张和中枢扩展的异同点,以及两者之间疑问、想法、建议,对这两者进行详细的区分并且以此为中心向上和向下延伸细化。 中枢扩张和中枢扩展的前生后世能全面透彻的理解掌握后,对缠论的理解会更进一步常见谬误: 1、认为扩张等同扩展！ 2、扩张后,走出了不可扩展,就说没有扩张或不属扩张范畴。缠中说禅走势中枢: 某级别走势类型中,被至少三个... [200 / 10,712 chars] |
+| 练习「抱住健康」法时，如何通过调动穴位和经络来实现养身和养心的效果？ [34 chars] | [转载]养生,就是养阳气;阳气旺盛,百病不侵 原文地址:养生,就是养阳气；阳气旺盛,百病不侵作者:夏一文心灵禅语 1、人要活到多少岁才算尽其天年 为何现代人的平均寿命才七八十岁,而且大多是死于疾病！为什么今人比古人所预期的天年寿命减少了将近三分之一呢？是谁偷走了这四五十年的宝贵生命呢？ 在长期从医经历中,我面对的病人是各种各样的,我经常会问他们一个问题:「你想活到多大岁数？」令我惊讶的是,很多人都... [200 / 9,944 chars] |
+| 双子座和双鱼座的复杂性格如何影响他们的关系？ [22 chars] | 水象星座 “水”是属于液态的元素。和水相关的事物和含义有很多，比如水是地球上生物生存的必要条件之一；由水构成的海洋占去地表大部分的面积，而且很多生物体内也含有大量的水分，包括人类也是如此。水在四季中是代表夏天的元素，继承了代表春天的火元素所创造出的生命力后，作为情感的存在。水是所有元素中唯一可以从液态转变成气态或固态的，但就和火一样，从每一种状态转换成另一种状态的过程都是一致且稳定的。正如同人类多... [200 / 11,284 chars] |
+| 公孙氏最初出现在哪个时期？ [13 chars] | 公孙范 公孙范，东汉末期人物，赵云第一个主公-公孙瓒的从弟，在公孙瓒与袁绍界桥之战中与公孙瓒一同败走。 姓名：公孙范 性别：男 出生年月：不详 国籍：中国 时代：东汉末期 籍贯：勃海 民族：汉族 身份：将军。姓名：公孙范 性别：男 出生年月：不详 国籍：中国 时代：东汉末期 籍贯：勃海 民族：汉族 身份：将军 公孙范（生卒年不详），东汉末期人物，公孙瓒从弟。 袁绍初欲以自身勃海太守印绶给与公孙瓒弟... [200 / 9,451 chars] |
 
 ### Public Sources
 
@@ -159,9 +161,9 @@ Chinese long articles containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

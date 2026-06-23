@@ -70,9 +70,13 @@ For reranking, useful features include title match, heading match, language or f
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeRAGOnlineTutorials is documented through CodeRAG-Bench and its public project resources. The source-specific dataset card is `code-rag-bench/online-tutorials`.
+| Query | Positive document |
+| --- | --- |
+| How to turn Android device screen on and off programmatically? [62 chars] | This example demonstrate about How to turn Android device screen on and off programmatically. Step 1 − Create a new project in Android Studio, go to File ⇒ New Project and fill all required details to... [200 / 6,654 chars] |
+| Tools to Securely Delete Files from Linux - GeeksforGeeks [57 chars] | 16 Feb, 2021 Every time you delete a file from your Linux system using the shift + delete or rm command, it doesn’t actually permanently and securely delete the file from the hard disk. When you delet... [200 / 3,940 chars] |
+| Difference between Private and Protected in C++ with Example - GeeksforGeeks [76 chars] | 03 Jan, 2022 Protected Protected access modifier is similar to that of private access modifiers, the difference is that the class member declared as Protected are inaccessible outside the class but th... [200 / 2,559 chars] |
+| How to print Superscript and Subscript in Python? - GeeksforGeeks [65 chars] | 24 Jan, 2021 Whenever we are working with formulas there may be a need of writing the given formula in a given format which may require subscripts or superscripts. There are several methods available... [200 / 2,336 chars] |
+| Maximum Difference \| Practice \| GeeksforGeeks [45 chars] | Given array A[] of integers, the task is to complete the function findMaxDiff which finds the maximum absolute difference between nearest left and right smaller element of every element in array.If th... [200 / 12,706 chars] |
 
 ### Source Reference Table
 

@@ -68,9 +68,13 @@ Long-document systems may benefit from section retrieval, issue-thread summariza
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging and long-document split.
+| Query | Positive document |
+| --- | --- |
+| ROS2 Map not received when using nav2_bringup I'm currently using the TurtleBot2 on Ubuntu 22.04 Hum... [100 / 1,101 chars] | # Map Server The `Map Server` provides maps to the rest of the Nav2 system using both topic and service interfaces. Map server will expose maps on the node bringup, but can also change maps using a `l... [200 / 5,260 chars] |
+| Custom hardware interface type I would like to write a controller that needs all joint states to upd... [100 / 2,560 chars] | Skip to content Toggle navigation [ ](https://github.com/) [ Sign in ](/login?return_to=https%3A%2F%2Fgithub.com%2Fros- controls%2Fros2_control%2Fpull%2F1240) * Product * [ Actions Automate any workfl... [200 / 75,706 chars] |
+| Add files to be loaded when ROS node is launched Rosanswers logo Hello ROS community, I have a pytho... [100 / 1,169 chars] | [ ![ros.org](/custom/images/ros_org.png) ](/) \| [ About ](http://www.ros.org/about-ros) \| [ Support ](/Support) \| [ Discussion Forum ](http://discourse.ros.org/) \| [ Index ](http://index.ros.org/) \| [... [200 / 7,029 chars] |
+| Rosdep installing python dependencies as root seems to break the installation I started with ROS2 fo... [100 / 3,039 chars] | Skip to content Toggle navigation [ ](https://github.com/) [ Sign in ](/login?return_to=https%3A%2F%2Fgithub.com%2Fros2%2Fros2%2Fissues%2F1478) * Product * [ Actions Automate any workflow ](/features/... [200 / 14,000 chars] |
+| ldlidar ros 2, colcon build error, pthread mutex init/lock/unlock not declared So i am trying to use... [100 / 2,759 chars] | The Single UNIX ® Specification, Version 2 Copyright © 1997 The Open Group * * * #### NAME > pthread_mutex_init, pthread_mutex_destroy - initialise or destroy a mutex #### SYNOPSIS > > > #include <[pt... [200 / 4,377 chars] |
 
 ### Source Reference Table
 

@@ -158,7 +158,89 @@
         "url": "https://arxiv.org/abs/2104.08663",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "74161",
+        "document_id": "17992",
+        "query": {
+          "text": "Het algemene 'het",
+          "full_chars": 17,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Waar verwijst 'het' naar in dit voorbeeld? **Mogelijk duplicaat:** > Het regent. Wat dan? 'Het regent.' Waar verwijst 'het' naar? Ik weet dat sommige mensen 'het weer' zouden zeggen, maar je zou niet",
+          "full_chars": 301,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "130587",
+        "document_id": "33975",
+        "query": {
+          "text": "Hoe moet je een bereik van getallen met een koppelteken interpunctiëren?",
+          "full_chars": 72,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wat is het verschil tussen - en -- in een zin? **Mogelijke dubbel:** > Wanneer moet ik een em-dash, een en-dash en een koppelteken gebruiken? Wanneer plaats ik een - in een zin? Is het een sterkere ko",
+          "full_chars": 229,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "112956",
+        "document_id": "59307",
+        "query": {
+          "text": "Kiezen tussen \"experimenteren met\" en \"waarmee te experimenteren",
+          "full_chars": 64,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Waar moet het voorzetsel van \"goedkeuren\" staan? **Mogelijke dubbel:** > Wanneer is het gepast om een zin met een voorzetsel te eindigen? In dit antwoord schreef ik > [Je kunt het gebruiken] om foto's",
+          "full_chars": 660,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "90874",
+        "document_id": "84288",
+        "query": {
+          "text": "Hoofdletterregels voor \"the",
+          "full_chars": 27,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De hoofdletter in bepaalde lidwoorden in namen Toen ik jonger was, een aantal _mumble-mumble-mumble_ decennia geleden, leerde ik dat in namen van personen, plaatsen en dingen met het bepaalde lidwoord",
+          "full_chars": 862,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "178255",
+        "document_id": "158232",
+        "query": {
+          "text": "Wat is het verschil tussen 'part of' en 'a part of'?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Verschil tussen 'part' en 'a part'? Deze vraag lijkt misschien heel simpel, maar ik raak er altijd in de war wanneer ik wil spreken. Ik las een boek getiteld \"re-start your English\", en zag een zin. >",
+          "full_chars": 517,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "example_count": 5

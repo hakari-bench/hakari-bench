@@ -144,7 +144,7 @@
         "title": "Google Research Natural Questions publication page",
         "url": "https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "أين تقام أربع النهائي هذا العام؟",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بطولة كرة السلة للرجال في القسم الأول من الاتحاد الوطني للرياضات الجامعية لعام 2018 كانت بطولة إقصاء فردي تضم 68 فريقًا لتحديد بطل كرة السلة الجامعية للرجال في القسم الأول للاتحاد الوطني للرياضات الجا",
+          "full_chars": 349,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "هل كان فيلم \"ليلة مرعبة قبل عيد الميلاد\" من إنتاج ديزني في البداية؟",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بدأ فكرة فيلم ليلة مرعبة في عيد الميلاد بقصيدة كتبها تيم بورتون في عام 1982، وهو يعمل كرسام متحرك في استوديوهات والت ديزني للرسوم المتحركة. بعد نجاح فيلم فينسنت في نفس العام، بدأت استوديوهات والت ديزن",
+          "full_chars": 556,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "لماذا يوجد تمثال الملاك الشمالي هناك؟",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "وفقًا لـ غورملي، كان لمعنى التمثال الملاك ثلاثة جوانب: أولاً، لإظهار أن تحت موقع بنائه عمل عمال المناجم على مدى قرنين؛ ثانيًا، لاستيعاب الانتقال من عصر صناعي إلى عصر المعلومات؛ وثالثًا، لأن يكون مركزً",
+          "full_chars": 224,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test826",
+        "document_id": "doc29757",
+        "query": {
+          "text": "أين تم ذكر تعويض الثلاثي الخامس في الدستور لأول مرة؟",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "توجد اتفاقية الثلاثة أخماس في المادة الأولى، القسم الثاني، البند الثالث من دستور الولايات المتحدة الأمريكية، والتي تنص على:",
+          "full_chars": 123,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test2079",
+        "document_id": "doc72413",
+        "query": {
+          "text": "من يغني أغنية \"أحد يراقبني\" مع مايكل جاكسون",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Somebody's Watching Me\" هي أغنية للمغني الأمريكي روكويل من ألبومه الأول Somebody's Watching Me (1984). أصدرت الأغنية كأغنية أولية وأغنية رئيسية من الألبوم في 14 يناير 1984 بواسطة موتاون. شارك فيها أع",
+          "full_chars": 300,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

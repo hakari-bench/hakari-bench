@@ -62,19 +62,21 @@ Dutch legal retrieval models should retain exact handling of quoted terms, acron
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Wie heeft de Commissie op 11 oktober 2004 geïnformeerd over een aandelenverwerving die gezamenlijk z... [100 / 154 chars] | Op 11 oktober 2004 ontving de Commissie een aanmelding van een voorgenomen concentratie in de zin van artikel 4 van Verordening (EG) nr. 139/2004 van de Raad waarin wordt meegedeeld dat de onderneming... [200 / 631 chars] |
+| Wat is het aandeel inwoners van de Unie dat binnen drie jaar naar een derde land wil reizen? [92 chars] | Toch wensen de burgers dat de Europese dimensie wordt versterkt. Zo is uit een recente Eurobarometer-enquête naar voren gekomen dat de burgers niet op de hoogte zijn van hun rechten en dat zij op dat... [200 / 657 chars] |
+| Welk EU-adviesorgaan steunde de derde optie van de Commissie en benadrukte dat buitengerechtelijke c... [100 / 168 chars] | Het EESC stelde eerder al dat … invoering van een groepsactie op EG-niveau … op generlei wijze afbreuk doet aan de stelsels voor buitengerechtelijke beslechting van consumentengeschillen. Het Comité s... [200 / 583 chars] |
+| Welke EU-oppositieprocedure in het Spaans behandelde weigering wegens verwarringsgevaar tussen een t... [100 / 158 chars] | Gemeenschapsmerk Oppositieprocedure Ouder communautair beeldmerk dat lettercombinatie „NL” bevat Aanvragen tot inschrijving als gemeenschapsmerk van beeldmerken die termen „NLSPORT”, „NLJEANS”, „NLACT... [200 / 688 chars] |
+| Welke herziening 17/28 februari 1986 schiep een afzonderlijk ecologisch hoofdstuk om een lacune in h... [100 / 131 chars] | Deze eis van een duidelijke en bijgevolg internationaal controleerbare rechtsgrond kan in politiek opzicht ook worden opgevat als een ontegenzeglijk constitutioneel signaal dat er behoefte bestaat aan... [200 / 765 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

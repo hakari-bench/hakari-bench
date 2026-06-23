@@ -162,9 +162,9 @@ mathematical, social, or program-behavior constraint.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | benchmark paper | https://arxiv.org/abs/2404.06347 |
-| ARC, the AI2 Reasoning Challenge | 2018 | source task paper | https://arxiv.org/abs/1803.05457 |
-| Abductive Commonsense Reasoning | 2019 | source task paper | https://arxiv.org/abs/1908.05739 |
-| HellaSwag | 2019 | source task paper | https://arxiv.org/abs/1905.07830 |
-| PIQA | 2020 | source task paper | https://arxiv.org/abs/1911.11641 |
-| QuAIL | 2020 | source task paper | https://ojs.aaai.org/index.php/AAAI/article/view/6398 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | benchmark paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| ARC, the AI2 Reasoning Challenge | 2018 | source task paper | [https://arxiv.org/abs/1803.05457](https://arxiv.org/abs/1803.05457) |
+| Abductive Commonsense Reasoning | 2019 | source task paper | [https://arxiv.org/abs/1908.05739](https://arxiv.org/abs/1908.05739) |
+| HellaSwag | 2019 | source task paper | [https://arxiv.org/abs/1905.07830](https://arxiv.org/abs/1905.07830) |
+| PIQA | 2020 | source task paper | [https://arxiv.org/abs/1911.11641](https://arxiv.org/abs/1911.11641) |
+| QuAIL | 2020 | source task paper | [https://ojs.aaai.org/index.php/AAAI/article/view/6398](https://ojs.aaai.org/index.php/AAAI/article/view/6398) |

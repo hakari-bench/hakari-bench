@@ -70,11 +70,13 @@ For evaluation, nDCG@10 is the clearest indicator of direct paraphrase retrieval
 
 ## Example Data
 
-### Public Sources
-
-- Quora Question Pairs release: https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- Source task dataset card: https://huggingface.co/datasets/mteb/Quora-PLHardNegatives
+| Query | Positive document |
+| --- | --- |
+| Jak dostać się na Harvard? [26 chars] | Jak dostać się na Uniwersytet Harvarda? [39 chars] |
+| Czym jest 10-20 przypadkowych rzeczy o sobie? [45 chars] | Jakie są 10 przypadkowych faktów o Tobie? [41 chars] |
+| Co powinienem zrobić w swoim CV, aby uzyskać wywiady z zakresu analityki danych? [80 chars] | Co powinienem poprawić w swoim CV, aby uzyskać wywiady z zakresu analityki danych? [82 chars] |
+| Jak sobie radzisz, gdy czujesz się wyczerpany emocjonalnie? [59 chars] | Jak przezwyciężyć uczucie wyczerpania emocjonalnego? [52 chars] |
+| Czy iPhone naprawdę jest wart swojej ceny? [42 chars] | Czy iPhone jest tego wart? [26 chars] |
 
 ### Source Reference Table
 

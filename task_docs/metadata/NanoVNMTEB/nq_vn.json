@@ -171,8 +171,91 @@
         "title": "Natural Questions official page",
         "url": "https://ai.google.com/research/NaturalQuestions/",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test650",
+        "document_id": "doc23087",
+        "query": {
+          "text": "ai la cha của Dylan trong Bates Motel",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Danh sách nhân vật trong phim Bates Motel Dylan Massett (do Max Thieriot thủ vai) [3] là con trai xa lạ của Norma và là anh cùng cha khác mẹ với Norman. Sau khi lớn lên hầu như tự lực cánh sinh, anh r",
+          "full_chars": 2150,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test201",
+        "document_id": "doc7251",
+        "query": {
+          "text": "mùa 5 của Ruby ra khi nào",
+          "full_chars": 25,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Danh sách tập RWBY RWBY là một loạt phim hoạt hình trực tuyến Mỹ được sản xuất bởi Rooster Teeth Productions. Phim ra mắt vào ngày 18 tháng 7 năm 2013 trên trang web Rooster Teeth, và sau đó các tập p",
+          "full_chars": 486,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test111",
+        "document_id": "doc3986",
+        "query": {
+          "text": "câu nói blue moon xuất phát từ đâu",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Trăng xanh Một giả thuyết đã được đưa ra rằng thuật ngữ \"trăng xanh\" cho \"tháng nhuận\" xuất hiện từ dân gian, trong đó \"xanh\" thay thế cho belewe không còn được hiểu nghĩa là \"bất trung\". Ý nghĩa gốc",
+          "full_chars": 476,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test739",
+        "document_id": "doc26407",
+        "query": {
+          "text": "danh sách sách viết bởi abul kalam azad",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Abul Kalam Azad Maulana Azad được cho là một trong những nhà văn tiếng Urdu vĩ đại nhất của thế kỷ 20. Ông đã viết nhiều sách bao gồm cả Ấn Độ giành được tự do, Ghubar-e-Khatir, Tazkirah, Tarjumanul Q",
+          "full_chars": 211,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test327",
+        "document_id": "doc12588",
+        "query": {
+          "text": "sông nào liên quan đến thành phố rome",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tiber Sông Tiber (/ ˈtaɪbər /, tiếng Latin Tiberis,[1] tiếng Ý Tevere, phát âm tiếng Ý: [ˈteːvere] ) [2] là con sông dài thứ ba ở Ý, bắt nguồn từ dãy núi Apennine ở Emilia-Romagna và chảy 406 km (252",
+          "full_chars": 513,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -62,19 +62,21 @@ Models should encode the relation between question wording, schema columns, row 
 
 ## Example Data
 
-### Public Sources
-
-- [Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning](https://arxiv.org/abs/1709.00103), task paper.
-- [Salesforce/wikisql](https://huggingface.co/datasets/Salesforce/wikisql), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| tell the final for lindsey graham {'header': ['State (linked to summaries below)', 'Senator', 'Party... [100 / 2,038 chars] | SELECT Result FROM table WHERE Senator = Lindsey Graham [55 chars] |
+| what's the total w–l where player is boro jovanović category:articles with hcards {'header': ['Playe... [100 / 1,190 chars] | SELECT Total W–L FROM table WHERE Player = Boro Jovanović Category:Articles with hCards [87 chars] |
+| What was the date of the race in Misano? {'header': ['No', 'Date', 'Round', 'Circuit', 'Pole Positio... [100 / 1,742 chars] | SELECT Date FROM table WHERE Circuit = Misano [45 chars] |
+| What was the record at week 7 {'header': ['Week', 'Date', 'Opponent', 'Result', 'Kickoff [a ]', 'Ven... [100 / 1,687 chars] | SELECT Record FROM table WHERE Week = 7 [39 chars] |
+| what's the original air date with title "hell" {'header': ['No. in series', 'No. in season', 'Title'... [100 / 1,341 chars] | SELECT Original air date FROM table WHERE Title = "Hell" [56 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning | 2017 | task paper | https://arxiv.org/abs/1709.00103 |
-| Salesforce/wikisql |  | dataset card | https://huggingface.co/datasets/Salesforce/wikisql |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning | 2017 | task paper | [https://arxiv.org/abs/1709.00103](https://arxiv.org/abs/1709.00103) |
+| Salesforce/wikisql |  | dataset card | [https://huggingface.co/datasets/Salesforce/wikisql](https://huggingface.co/datasets/Salesforce/wikisql) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

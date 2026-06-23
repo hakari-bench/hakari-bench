@@ -127,15 +127,98 @@
         "url": "https://arxiv.org/abs/2004.14974",
         "year": 2020,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Fact or Fiction: Verifying Scientific Claims",
         "url": "https://aclanthology.org/2020.emnlp-main.609/",
         "year": 2020,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "770",
+        "document_id": "15476777",
+        "query": {
+          "text": "Metastatic colorectal cancer treated with a single agent fluoropyrimidines resulted in reduced effic",
+          "full_chars": 200,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Chemotherapy options in elderly and frail patients with metastatic colorectal cancer (MRC FOCUS2): an open-label, randomised factorial trial BACKGROUND Elderly and frail patients with cancer, although",
+          "full_chars": 3063,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "213",
+        "document_id": "13625993",
+        "query": {
+          "text": "CRP is not predictive of postoperative mortality following Coronary Artery Bypass Graft (CABG) surge",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Assessing the cost effectiveness of using prognostic biomarkers with decision models: case study in prioritising patients waiting for coronary artery surgery OBJECTIVE To determine the effectiveness a",
+          "full_chars": 2937,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "127",
+        "document_id": "21598000",
+        "query": {
+          "text": "Arginine 90 in p150n is important for interaction with EB1.",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Structural basis for the activation of microtubule assembly by the EB1 and p150Glued complex. Plus-end tracking proteins, such as EB1 and the dynein/dynactin complex, regulate microtubule dynamics. Th",
+          "full_chars": 1198,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "873",
+        "document_id": "1180972",
+        "query": {
+          "text": "Obesity is determined solely by environmental factors.",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Genetics of obesity in adult adoptees and their biological siblings. An adoption study of genetic effects on obesity in adulthood was carried out in which adoptees separated from their natural parents",
+          "full_chars": 1319,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "410",
+        "document_id": "14924526",
+        "query": {
+          "text": "Febrile seizures increase the threshold for development of epilepsy.",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Febrile seizures in the developing brain result in persistent modification of neuronal excitability in limbic circuits Febrile (fever-induced) seizures affect 3–5% of infants and young children. Despi",
+          "full_chars": 801,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

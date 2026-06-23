@@ -124,11 +124,11 @@ useful and diverse debate evidence rather than repeated topical mentions.
 
 | Query | Positive document |
 | --- | --- |
-| Er leksene nyttige? | Først, er det tre argumenter for hvorfor leksene er utmerket og bør fortsette i moderne skoler... |
-| Bør reseptbelagte legemidler reklameres direkte til forbrukere? | Mange reklamer inneholder ikke nok informasjon om hvordan medisiner virker. For eksempel reklameres Lunesta med en sommerfugl... |
-| Skal barn få noen vaksiner? | Regjeringer bør ikke ha rett til å gripe inn i helsebeslutninger som foreldre tar for sine barn... |
-| Bør abort være tillatt? | Abort skal være lovlig siden personlighet begynner når fosteret er levedyktig eller etter fødsel, ikke ved unnfangelsen... |
-| Forbedrer standardiserte tester utdanningen? | SAT, ACT og andre standardiserte tester gir mer innsikt i en videregående skoleelevers forberedelse for utdanning ved eliteuniversiteter... |
+| Er leksene nyttige? [19 chars] | Først, er det tre argumenter for hvorfor leksene er utmerket og bør fortsette i moderne skoler. 1. Leksene hjelper gjerningslærere. Det er generelt akseptert at det finnes tre typer lærere: de som lær... [200 / 3,544 chars] |
+| Bør reseptbelagte legemidler reklameres direkte til forbrukere? [63 chars] | Mange reklamer inneholder ikke nok informasjon om hvordan medisiner virker. For eksempel reklameres Lunesta med en sommerfugl som flyr inn gjennom et soveromsvindu over en person som sover fredelig. F... [200 / 1,726 chars] |
+| Skal barn få noen vaksiner? [27 chars] | Ikke et fullstendig tilfelle ennå... Bare noen små punkter jeg har satt sammen... Regjeringer bør ikke ha rett til å gripe inn i helsebeslutninger som foreldre tar for sine barn. Ifølge en undersøkels... [200 / 4,271 chars] |
+| Bør abort være tillatt? [23 chars] | Abort skal være lovlig siden personlighet begynner når fosteret er levedyktig eller etter fødsel, ikke ved unnfangelsen. Ifølge den amerikanske høyesterett får en person sin alder når de er født og be... [200 / 270 chars] |
+| Forbedrer standardiserte tester utdanningen? [44 chars] | Løst: SAT, ACT og andre standardiserte tester gir mer innsikt i en videregående skoleelevers forberedelse for utdanning ved eliteuniversiteter enn videregående skolekarakterer, og bør derfor spille en... [200 / 4,141 chars] |
 
 ### Public Sources
 
@@ -143,8 +143,8 @@ useful and diverse debate evidence rather than repeated topical mentions.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | [https://doi.org/10.1007/978-3-030-58219-7_26](https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | [https://doi.org/10.5281/zenodo.6862281](https://doi.org/10.5281/zenodo.6862281) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -62,9 +62,13 @@ A model targeting this task should preserve high entity recall while improving e
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FEVER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Keith Godchaux knew the Grateful Dead. [38 chars] | The Grateful Dead was an American rock band formed in 1965 in Palo Alto , California . Ranging from quintet to septet , the band is known for its unique and eclectic style , which fused elements of ro... [200 / 3,024 chars] |
+| Taarak Mehta Ka Ooltah Chashmah is a sitcom. [44 chars] | Taarak Mehta Ka Ooltah Chashmah ( English : Taarak Mehta 's Different Perspective ) is India 's longest running sitcom serial produced by Neela Tele Films Private Limited . The show went on-air on Jul... [200 / 581 chars] |
+| Secret and technologically advanced airplanes were produced in Burbank, California. [83 chars] | Burbank is a city in Los Angeles County in Southern California , United States , 12 mi northwest of downtown Los Angeles . The population at the 2010 census was 103,340 . Billed as the `` Media Capita... [200 / 1,401 chars] |
+| Nero is a person. [17 chars] | The term Julio-Claudian dynasty refers to the first five Roman emperors -- Augustus , Tiberius , Caligula , Claudius , and Nero -- or the family to which they belonged . They ruled the Roman Empire fr... [200 / 2,069 chars] |
+| Scream 2 is exclusively a German film. [38 chars] | Scream 2 is a 1997 American slasher film directed by Wes Craven and written by Kevin Williamson . It stars David Arquette , Neve Campbell , Courteney Cox , Sarah Michelle Gellar , Jamie Kennedy , Laur... [200 / 2,542 chars] |
 
 ### Source Reference Table
 

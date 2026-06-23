@@ -129,10 +129,13 @@ lexical fusion.
 
 ## Example Data
 
-Representative queries ask for the time 9 years and 10 months after November
-1170, 5 years and 12 months after June 1243, 6 years and 4 months after June
-1905, 10 years and 1 month after October 1093, or 12 months after May 2007.
-Positive documents are the exact computed month-year answers.
+| Query | Positive document |
+| --- | --- |
+| What is the time 9 year and 10 month after Nov, 1170 [52 chars] | Sep, 1180 [9 chars] |
+| What is the time 5 year and 12 month after Jun, 1243 [52 chars] | Jun, 1249 [9 chars] |
+| What is the time 6 year and 4 month after Jun, 1905 [51 chars] | Oct, 1911 [9 chars] |
+| What is the time 10 year and 1 month after Oct, 1093 [52 chars] | Nov, 1103 [9 chars] |
+| What is the time 12 month after May, 2007 [41 chars] | May, 2008 [9 chars] |
 
 ### Public Sources
 
@@ -147,9 +150,9 @@ Positive documents are the exact computed month-year answers.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | task paper | https://arxiv.org/abs/2306.08952 |
-| TempReason repository | 2023 | repository | https://github.com/DAMO-NLP-SG/TempReason |
-| mteb/TempReasonL1 | 2024 | dataset card | https://huggingface.co/datasets/mteb/TempReasonL1 |
+| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | task paper | [https://arxiv.org/abs/2306.08952](https://arxiv.org/abs/2306.08952) |
+| TempReason repository | 2023 | repository | [https://github.com/DAMO-NLP-SG/TempReason](https://github.com/DAMO-NLP-SG/TempReason) |
+| mteb/TempReasonL1 | 2024 | dataset card | [https://huggingface.co/datasets/mteb/TempReasonL1](https://huggingface.co/datasets/mteb/TempReasonL1) |
 
 ### Representative Snippets
 

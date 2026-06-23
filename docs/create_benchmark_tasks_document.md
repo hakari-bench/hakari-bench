@@ -135,6 +135,10 @@ The metadata JSON should include at least:
   `reranking_hybrid` candidate subset. This subset is top-100 plus an optional
   rank-101 safeguard positive when the top-100 contains no qrels positive.
 - Average query length and document length in characters.
+- Five deterministic query-positive examples from the actual Nano split when
+  five eligible pairs exist. Store the sampled query ID, positive document ID,
+  truncated visible text, original character count, visible limit, and
+  truncation flag for both the query and the positive document.
 
 Do not hand-maintain these statistics in Markdown prose. Generate or refresh
 them from the Nano dataset tables with:
@@ -194,21 +198,24 @@ uv run python scripts/extract_benchmark_task_examples.py hakari-bench/NanoMMTEB-
 For bulk refreshes, replace only the `## Example Data` sections with:
 
 ```bash
+uv run python scripts/extract_benchmark_task_examples.py --update-metadata task_docs/docs
 uv run python scripts/extract_benchmark_task_examples.py --update-docs task_docs/docs
 ```
 
 Use a Markdown table with exactly two columns by default: `Query` and
 `Positive document`. The visible table should focus on the actual query and
 positive document text. Omit query/doc IDs, BM25 ranks, and extra count columns
-unless a task specifically needs them. Append full character counts inline.
-Truncate long content to the configured visible character limit and show the
-full pre-truncation length with the compact marker
-`[truncated 225 chars](1258 chars)`.
+unless a task specifically needs them. The table should be rendered from
+metadata JSON, not maintained by hand. Append full character counts inline.
+Truncate queries to 100 visible characters and positive documents to 200 visible
+characters by default. Use a compact count marker: untruncated text ends with
+`[29 chars]`; truncated text ends with an ellipsis plus
+`[200 / 2,444 chars]`.
 
 ```markdown
 | Query | Positive document |
 | --- | --- |
-| What is ...? (12 chars) | The answer-bearing passage ... [truncated 225 chars](1800 chars) |
+| What is ...? [12 chars] | The answer-bearing passage... [200 / 1,800 chars] |
 ```
 
 For extremely long-context, legal, patent, medical, code, or documentation tasks,
@@ -537,7 +544,26 @@ Minimal shape:
       "ndcg_at_10": 0.6600634301,
       "hit_at_10": 0.935,
       "source": "dataset_candidate_subset"
-    }
+    },
+    "examples": [
+      {
+        "query_id": "q1",
+        "document_id": "d1",
+        "query": {
+          "text": "visible query text",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "visible positive document text",
+          "full_chars": 1258,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 1
   }
 }
 ```
@@ -557,6 +583,12 @@ Field guidance:
 - `learning.*`, `links.*`, and `references[]`: optional structured support
   material for index pages, public rendering, and doc generation. Keep public
   URLs only; do not store local research paths.
+- `references[].source_confidence`: required, and must use one of the labels
+  documented in `docs/dataset_citation_metadata.md`.
+- `examples[]`: generated from the Nano `queries`, `corpus`, and `qrels` tables
+  with deterministic sampling. Keep the stored text truncated; the `full_chars`,
+  `limit_chars`, and `truncated` fields preserve enough context for rendered
+  docs without duplicating full documents in metadata.
 
 ## Document Template
 
@@ -707,8 +739,8 @@ visible enough to affect interpretation.}
 
 {Five deterministic random query-positive examples. Generate with
 `scripts/extract_benchmark_task_examples.py`. Use a two-column Markdown table,
-include full character counts inline, and visibly truncate long content with
-`[truncated 225 chars](N chars)`.}
+append `[N chars]` for untruncated text, and visibly truncate long content with
+`... [limit / full chars]`.}
 
 ### Public Sources
 
@@ -724,7 +756,7 @@ include full character counts inline, and visibly truncate long content with
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| {title} | {year} | paper | {url} |
+| {title} | {year} | paper | [{url}]({url}) |
 ````
 
 ## Group Index Pages

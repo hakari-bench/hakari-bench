@@ -162,22 +162,22 @@ or translated wording differs from the query.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| DeleteDuplicatesBy werkt niet zoals ik had gehoopt. Mis ik iets? [64 chars] | Dubbele elementen uit een lijst verwijderen Als een lijst dubbele elementen bevat, bijvoorbeeld list = {a, 1, 5, 3, 5, x^2, x^2}, hoe kunnen de dubbele elementen worden verwijderd? Het resultaat zou z... [200 / 274 chars] |
+| Is het mogelijk om de kleur van de plot in Show te veranderen? [62 chars] | Plot bewerken na aanmaak Ik probeer een manier te vinden om een plot te manipuleren die ik eerder heb gemaakt. (voor de volledige code, neem de functie x[t_]:=Sin[2t] ) Stel dat ik een plot heb: plot1... [200 / 1,150 chars] |
+| Krijg polynomiale interpolatieformule [37 chars] | Functies Bepalen Gegeven Datapunten Kan Mathematica f(x,y) = 0 oplossen zodanig dat {x,y} bevat `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}}`? Moeten we f(x,y) eerst specificeren? Dank u. [186 chars] |
+| Functie of formule als functieparameter doorgeven [49 chars] | Een functie als argument van een andere functie doorgeven **Mogelijke dubbel:** > Functie of formule als functieparameter doorgeven Ik probeer een eenvoudige Plot[]-achtige functie te implementeren, m... [200 / 1,051 chars] |
+| Hoe typ ik een hoofdletter "E" in Mathematica 9 met behulp van "ToExpression" en "TeXForm"? [91 chars] | Kan TeX-invoer niet converteren naar Mathematica De invoer ToExpression["\\sqrt{x y}", TeXForm] geeft de uitvoer `$Failed`. Misschien is mijn zeer oude computer het probleem, maar dat is de enige opdr... [200 / 294 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

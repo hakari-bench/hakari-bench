@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "831",
+        "document_id": "24341#0",
+        "query": {
+          "text": "Kuka perusti Ferrarin?",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ferrari Ferrari S.p.A. on italialainen urheiluautojen valmistaja. Ferrarin perusti Enzo Ferrari vuonna 1939 nimellä \"Auto Avio Costruzioni\". Ferrari on juridisesti alankomaalainen yhtiö, mutta sen pää",
+          "full_chars": 425,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "207",
+        "document_id": "23525#10",
+        "query": {
+          "text": "Mitä tarkoittaa psykoosi?",
+          "full_chars": 25,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hallusinaatio Psykoosi tarkoittaa, että ihmisen todellisuudentaju on heikentynyt, eli hän ei tajua psykoosin laukaisemia kuulo- tai muita harhoja harhoiksi. Psykoosisairauttakin sairastava henkilö voi",
+          "full_chars": 307,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1044",
+        "document_id": "4999#17",
+        "query": {
+          "text": "Onko Uranuksella kuita?",
+          "full_chars": 23,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Uranus Uranuksella on 27 tunnettua kuuta. Kaksi suurinta kuuta, Titanian ja Oberonin, löysi Herschel 13. maaliskuuta 1787. William Lassell löysi Arielin ja Umbrielin vuonna 1851. William Herschelin po",
+          "full_chars": 909,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "956",
+        "document_id": "228443#2",
+        "query": {
+          "text": "Mistä Suvarnabhumin lentoasema on saanut nimensä?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Suvarnabhumin kansainvälinen lentoasema Nimi \"Suvarnabhumi\" on Thaimaan kuninkaan Bhumibol Adulyadejin keksimä, ja se tarkoittaa \"kultaista maata\".",
+          "full_chars": 148,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "428",
+        "document_id": "197032#19",
+        "query": {
+          "text": "Mitä tuotteita Afrikka vie ulkomaille?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Afrikan talous Afrikan selvästi arvokkaimmat vientituotteet ovat mineraalit sekä öljy. Nämä luonnonvarat ovat keskittyneet muutaman valtion alueelle. Eteläisillä valtiolla on suuret määrät kultaa, tim",
+          "full_chars": 397,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

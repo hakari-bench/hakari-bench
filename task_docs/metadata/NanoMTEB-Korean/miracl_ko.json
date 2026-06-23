@@ -140,15 +140,98 @@
         "url": "http://miracl.ai/",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/MIRACLRetrieval",
         "url": "https://huggingface.co/datasets/mteb/MIRACLRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "700",
+        "document_id": "4468#32",
+        "query": {
+          "text": "헤라클레스는 그리스 신들 중 한 명인가?",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "그리스 신화 헤라클레스는 에트루리아와 로마의 신화 및 숭배에도 등장하며, 로마인이 쓰던 라틴어 감탄사 \"mehercule\"은 그리스어인 \"Herakleis\"에서 유래한 것이었다. 이탈리아에서는 헤라클레스를 상인의 신으로 숭배하였는데, 다른 나라에서는 그의 특징적인 재능인 행운이나 위험에서의 구조를 염원하기도 하였다.",
+          "full_chars": 178,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1154",
+        "document_id": "6385#0",
+        "query": {
+          "text": "숙종은 몇 번째 왕인가?",
+          "full_chars": 13,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "조선 숙종 숙종(肅宗, 1661년 10월 7일(음력 8월 15일) ~ 1720년 7월 12일(음력 6월 8일))은 조선의 제19대 왕이다. 성은 이(李), 휘는 돈(焞), 본관은 전주(全州)., 초명은 용상(龍祥), 광(爌), 자는 명보(明譜), 사후 시호는 숙종현의광륜예성영렬장문헌무경명원효대왕(肅宗顯義光倫睿聖英烈章文憲武敬明元孝大王)이며 이후 존호가 더해져",
+          "full_chars": 371,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "12510#19",
+        "query": {
+          "text": "가톨릭교회의 교회법(CIC)은 교회의 고유한 조직과 운영, 그리고 신자들이 교회의 목적을 좇아 이루도록 합법적인 교회의 권위로 제정한 법을 말하나요?",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "로마 가톨릭교회 가톨릭교회의 교회법(CIC)은 교회의 고유한 조직과 운영, 그리고 신자들이 교회의 목적을 좇아 이루도록 합법적인 교회의 권위로 제정한 법을 말한다. 가톨릭교회는 영신적이면서도 가시적인 형태로 존재하며, 신적인 것과 인간적인 것이 함께 존재한다. 그러므로 교회법도 자연히 신약성경과 성전 안에 나오는 신법과, 교회와 인간이 제정한 실정법으로 이",
+          "full_chars": 320,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "930",
+        "document_id": "700#1",
+        "query": {
+          "text": "RNA는 오탄당인 리보스를 기반으로 사슬구조를 이루나요?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "RNA RNA는 오탄당인 리보스를 기반으로 사슬구조를 이룬다. 오른쪽 그림에서와 같이 리보스에 있는 다섯개의 탄소에 번호를 붙였을 때 1번 탄소가 핵염기와 연결되며(이 그림의 경우 구아닌) 3번과 5번은 인산에 연결된다. 1번 탄소에 연결되는 핵염기는 구아닌 이외에도 아데닌, 우라실, 시토신이 있다. 인산은 당과 당 사이를 연결하여 사슬을 이룬다.",
+          "full_chars": 196,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1467",
+        "document_id": "261019#11",
+        "query": {
+          "text": "불교의 시작은 어느 나라인가?",
+          "full_chars": 16,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "불교의 역사 기원전 317년경 찬드라굽타(Chandra Gupta)에 의해 인도 최초의 통일 국가인 마우리아 왕조가 성립되고 제3대 왕 아소카가 즉위한 후 불교는 비약적으로 팽창하여 캐시미르와 간다라 지방을 비롯한 인도 각 지역그리스의 식민지인 박트리아스리랑카(실론)미얀마(버마) 등 국외로까지 전파되었다. 특히 스리랑카에는 아소카 왕은 자신의 아들 마힌다(",
+          "full_chars": 293,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

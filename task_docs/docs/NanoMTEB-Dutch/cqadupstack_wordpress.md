@@ -151,22 +151,22 @@ depending on either alone.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Programmatisch hiërarchische termen invoegen & termen instellen voor berichten veroorzaakt een stori... [100 / 103 chars] | Het invoegen van termen in een hiërarchische taxonomie Ik ondervind een paar problemen met het invoegen van termen. Dit is mijn scenario: Ik heb een taxonomie genaamd veda_release_type: //Release Type... [200 / 4,702 chars] |
+| Hoe de lengte van een excerpt in WordPress te vergroten? [56 chars] | De korte inhoud per karakter **Mogelijk duplicaat:** > fragment in karakters Op sommige van onze sites tonen we fragmenten van berichten (de beheerders voeren geen fragmenten in). We _kunnen_ de funct... [200 / 800 chars] |
+| Media bibliotheek pagina supersnel, laad volle kwaliteit afbeeldingen [69 chars] | Wordpress 3.5 Media Manager - Afbeelding Formaat bij Laden Wijzigen De nieuwe media manager laadt afbeeldingen in VOLLE grootte, wat ECHT inefficiënt is voor een thumbnail. Ik wil dit graag vervangen... [200 / 352 chars] |
+| Voorgedefinieerde categorieën in WordPress via GET-parameters [61 chars] | Hyperlink om nieuw bericht te maken met vooraf gedefinieerde categorie Ik ben een complete WordPress-beginner. Ik heb een site gemaakt voor mijn werk. Items worden gesorteerd op categorie. Op het dash... [200 / 660 chars] |
+| Hoe schakel ik reacties uit op een pagina? [42 chars] | Hoe verwijder je de mogelijkheid voor een gebruiker om een reactie te plaatsen of te posten op een pagina? Ik bouw een nieuwe website op WordPress, en al mijn pagina's hebben onderaan het vak om een r... [200 / 518 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

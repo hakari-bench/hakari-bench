@@ -149,11 +149,13 @@ hybrid retrieval keeps all judged positives available for reranking.
 
 ## Example Data
 
-Representative queries ask which news organization Eugenia Abu worked with,
-which countries border Austria, which group Huey Newton founded, what year
-Stella Obasanjo died, or what Botswana was called before its name changed.
-Positive documents are Yoruba-centered Wikipedia passages containing the
-requested organization, border, political, death-date, or country-name evidence.
+| Query | Positive document |
+| --- | --- |
+| ilé iṣẹ iroyin wo ni Eugenia Abu bá ṣiṣe? [41 chars] | Eugenia Abu Eugenia Abu (bíi ni ọjọ́ mọ́kàndinlógún oṣù kẹwàá ọdún 1961) jẹ́ oniroyin, agbóhùnsáfẹ́fẹ́, akọ̀wé àti akéwì. Òun ni atọkun ètò ìròyìn tẹ́lẹ̀ fún Nigerian Television Authority (NTA) . Ó ṣe... [200 / 246 chars] |
+| Awon orile ede wo lo yika Austria? [34 chars] | Austríà Austríà ( tabi ; ), lonibise bi Orileominira ile Austria (German: "Republik Österreich"), je orile-ede atimo ile to ni awon eniyan bi egbegberun 8.8 to wa ni Aringbongan Europe. O ni bode mo O... [200 / 685 chars] |
+| ẹgbẹ wo ni Huey Newton da silẹ? [31 chars] | Huey P. Newton Huey Percy Newton (February 17, 1942 – August 22, 1989) je omo ile Amerika. Newton je oludasile ati olori egbe oselu Black Panther Party. [153 chars] |
+| Odun wo ni Stella Obasanjo s'alaisi? [36 chars] | Stella Obasanjo Stella Obasanjo (14 November 1945 – 23 October 2005) ni Iyaafin Akoko ile Naijiria lati 1999 titi di ojo iku re ni 23 osu kewa, 2005. Ohun ni iyawo aare totikoja Olusegun Obasanjo. [197 chars] |
+| Orukọ wo ni a n pe orile-ede Botswana ki wọn to yi pada? [56 chars] | Bòtswánà Ni orundun 19k, ogun sele larin awon Tswana ti won ti ungbe Botswana ati awon eya Ndebele ti won sese unko bo si agbegbe yi lati ariwa-ilaorun. Bakanna rogbodiyan sele pelu awon ateludo Boer... [200 / 661 chars] |
 
 ### Public Sources
 
@@ -171,10 +173,10 @@ requested organization, border, political, death-date, or country-name evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

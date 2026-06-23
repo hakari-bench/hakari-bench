@@ -48,13 +48,13 @@ Strong models should improve stance-sensitive long-passage ranking while preserv
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Il pubblico è indifferente alle riforme. Se la riforma della Camera dei Lord dovrebbe essere una priorità assoluta... | La campagna AV non può essere paragonata a una riforma del sistema elettorale... |
-| L'espansione di Heathrow è cruciale per l'economia. L'espansione di Heathrow garantirebbe molti posti di lavoro... | La comunità imprenditoriale è lungi dall'essere unita nel suo presunto sostegno a una terza pista... |
-| Le persone hanno troppe scelte, il che le rende meno felici. | Le persone sono infelici perché non possono avere tutto, non perché hanno troppe scelte e si sentono stressate... |
-| Gli attacchi informatici sono spesso perpetrati da attori non statali, come ciberterroristi o hacktivisti... | In caso di attacco da parte di attori non statali, molti esperti di diritto internazionale concordano sul fatto che lo Stato possa reagire... |
-| La religione promuove la certezza della fede, rendendo facile l'uso dell'odio ispirato divinamente per giustificare azioni violente. | Nessuno viene indotto a compiere atti di violenza dalle parole di un altro; è una loro scelta farlo... |
+| Query | Positive document |
+| --- | --- |
+| Il pubblico è indifferente alle riforme. Se la riforma della Camera dei Lord dovrebbe essere una pri... [100 / 612 chars] | La campagna AV non può essere paragonata a una riforma del sistema elettorale. Inoltre, non si deve confondere un pubblico disinformato a causa della propaganda politica con l'apatia. Spesso gli elett... [200 / 423 chars] |
+| L'espansione di Heathrow è cruciale per l'economia. L'espansione di Heathrow garantirebbe molti post... [100 / 1,317 chars] | La comunità imprenditoriale è lungi dall'essere unita nel suo presunto sostegno a una terza pista. I sondaggi suggeriscono che molte aziende influenti, in realtà, non sostengono l'espansione. Una lett... [200 / 1,238 chars] |
+| Le persone hanno troppe scelte, il che le rende meno felici. La pubblicità porta molte persone a sen... [100 / 1,005 chars] | Le persone sono infelici perché non possono avere tutto, non perché hanno troppe scelte e si sentono stressate. In realtà, la pubblicità svolge un ruolo cruciale nel garantire che le persone spendano... [200 / 955 chars] |
+| Gli attacchi informatici sono spesso perpetrati da attori non statali, come ciberterroristi o hackti... [100 / 1,102 chars] | In caso di attacco da parte di attori non statali, molti esperti di diritto internazionale concordano sul fatto che lo Stato possa ancora reagire in legittima difesa se un altro Stato è 'non disposto... [200 / 636 chars] |
+| La religione promuove la certezza della fede, rendendo facile l'uso dell'odio ispirato divinamente p... [100 / 1,244 chars] | Nessuno viene indotto a compiere atti di violenza dalle parole di un altro; è una loro scelta farlo. Allo stesso modo, ci sono molte persone che potrebbero avere opinioni che potrebbero essere conside... [200 / 689 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should improve stance-sensitive long-passage ranking while preserv
 
 | Label | URL |
 |---|---|
-| ArguAna paper | https://aclanthology.org/P18-1023/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| ArguAna paper (https://aclanthology.org/P18-1023/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

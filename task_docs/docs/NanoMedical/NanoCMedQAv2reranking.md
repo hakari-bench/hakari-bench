@@ -62,17 +62,20 @@ Models should focus on Chinese symptom normalization, patient-context handling, 
 
 ## Example Data
 
-### Public Sources
-
-- [Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection](https://doi.org/10.1109/ACCESS.2018.2883637), 2018.
-- [cMedQA2 repository](https://github.com/zhangsheng93/cMedQA2), official dataset repository.
+| Query | Positive document |
+| --- | --- |
+| 全部症状：近一个月发现，胸闷，气短、咳嗽、低烧治疗情况 [27 chars] | 这样的情况表明癌肿已经侵犯到胸膜，可以说是后期的表现 [26 chars] |
+| 全部症状：月经来的天数跟原来的一样，就只是量少了，如果是子宫内膜有异常的话该怎么办发病时间及原因：治疗情况 [53 chars] | 月经量少的原因很多，月经量少一般可能与内分泌失调、妇科炎症等有关，除了可能是黄体机能不足外，甲状腺、泌乳激素功能异常，或是曾做过人工流产手术或是子宫内膜粘连也都是可能的因素之一。子宫内膜有异常的话，要去医院检查，根据情况在医生指导下用药 [118 chars] |
+| 主要诊断:右颞叶脑挫裂伤其他诊断:外伤性蛛网膜下腔出血左侧颞骨骨折我想问能不能评上十级伤残主要诊断:右颞叶脑挫裂伤其他诊断:外伤性蛛网膜下腔出血左侧颞骨骨折我想问能不能评上十级伤残？交通事故 [95 chars] | 有可能是由于骨折引起肿胀引起的疼痛这样的话需要应用消肿的药物和止痛的药物一般经过2周的时间就会没事的希望好好的保养不要活动 [61 chars] |
+| 我宝宝误喝了一爵臣牌清洗剂有事吗用去医院洗胃吗 [23 chars] | 你的情况要考虑这个如果量比较多的话还是要到医院进行洗胃治疗的。 [31 chars] |
+| 我母亲半月前出现过几次突然眼前发黑、头很晕、无力，开始血压很高，到医院诊断是脑动脉缺血，医生解释说是脑梗塞前期，我想请问一下怎么治疗？能否治好？在饮食方面具体吃那些东西？药物方面该用什么药？在医院住过... [100 / 141 chars] | 你头晕或眩晕是脑供血不足引起的，可能有脑血管痉挛，由于紧张压力等因素造成的，需要放松训练，、最好采用中医中药治疗，中药方剂有效，结合针灸理疗效果好，特别是头针治疗有特效 [84 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection | 2018 | IEEE Access paper | https://doi.org/10.1109/ACCESS.2018.2883637 |
-| cMedQA2 | 2018 | source repository | https://github.com/zhangsheng93/cMedQA2 |
+| Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection | 2018 | IEEE Access paper | [https://doi.org/10.1109/ACCESS.2018.2883637](https://doi.org/10.1109/ACCESS.2018.2883637) |
+| cMedQA2 | 2018 | source repository | [https://github.com/zhangsheng93/cMedQA2](https://github.com/zhangsheng93/cMedQA2) |
 
 ### Representative Snippets
 

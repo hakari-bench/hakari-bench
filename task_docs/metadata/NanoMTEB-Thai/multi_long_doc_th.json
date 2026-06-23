@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 71
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
-        "url": "https://arxiv.org/abs/2402.03216",
-        "year": 2024,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/MultiLongDocRetrieval",
-        "url": "https://huggingface.co/datasets/mteb/MultiLongDocRetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/mteb/MultiLongDocRetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
+        "url": "https://arxiv.org/abs/2402.03216",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/MultiLongDocRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/MultiLongDocRetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "q-th-807",
+        "document_id": "doc-th-6452",
+        "query": {
+          "text": "คำถาม: สารละลายที่มีความเข้มข้นเท่ากันทุกสารละลายจะมีค่า pH สูงสุดเมื่อใด?",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ข้อเอ็นทรานซ์ เคมี 2537 | วิชาการ.คอม ข้อเอ็นทรานซ์ เคมี 2537 วิชา : เคมี จำนวน : 88 ข้อ ผู้เข้าชม : 2,262 การประลองฝีมือ : 67 view stats 1 ) กำหนดให้ อุณหภูมิ () น้ำแข็ง 0 น้ำ 0 ไอน้ำ 100 ถ้าน้ำแข็งท",
+          "full_chars": 19534,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-1140",
+        "document_id": "doc-th-9107",
+        "query": {
+          "text": "คำถาม: วิธีเลือกเบอร์โทรศัพท์มงคลเบอร์สวยคืออะไรและทำไมเบอร์ 05-6071-0290 ถือเป็นเบอร์สวย?",
+          "full_chars": 90,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "0815529736 ผลรวม 46 ซิมเบอร์สวย เบอร์รายเดือน สี่จี 08-1552-9736 เช็คดวงจากเบอร์มือถือ ศูนย์แปดหนึ่งห้าห้าสองเก้าเจ็ดสามหก 081-5529736, 081-552-9736, 081-5529-736, Zero Eight One Five Five Two Nine Se",
+          "full_chars": 20760,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-1024",
+        "document_id": "doc-th-8182",
+        "query": {
+          "text": "s question: How does the code above select all list items on the page and bind a handler function to",
+          "full_chars": 150,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "กันยายน 18, 2019 มกราคม 4, 2020 - by admin My post on worldventures is just a tiny fraction of what this website is about. Archived from the original on 15 july seyedolshohada hospital. Compatible wit",
+          "full_chars": 27254,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-934",
+        "document_id": "doc-th-7467",
+        "query": {
+          "text": "สามารถสร้างคำถามที่เจาะจงและมีคุณค่าจากข้อความดังกล่าวได้เป็นดังนี้:",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "แจก เครดิต เล่น ฟรี 2018 เครื่องราง เข้า บ่อน โปร โม ชั่ น บัตร เครดิต กรุง ไทย อ่าน(24) | ทบทวน(882) | ส่งต่อ(313) | ก่อนคา สิ โน 88 เกี่ยวกับเว็บไซต์นี้ |โปร โม ชั่ น บัตร เครดิต กรุง ไทย| พาร์ทเนอร",
+          "full_chars": 25469,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-273",
+        "document_id": "doc-th-2184",
+        "query": {
+          "text": "คำถามที่สร้างขึ้น: \"Daniela ตอบสนองทันทีเพื่อแก้ไขปัญหา คุณสามารถแนะนำให้พักอยู่กับ Daniela ได้อย่าง",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "มาเป็นเจ้าของที่พักความช่วยเหลือลงทะเบียนเข้าสู่ระบบDattilo · ตลอดเวลา · ผู้เข้าพัก 1 คนDattiloตลอดเวลาผู้เข้าพัก 1 คนLocationตลอดเวลาผู้เข้าพัก 1 คนประเภทห้องช่วงราคาจองทันทีตัวกรองเพิ่มเติม1วิลล่าให",
+          "full_chars": 25297,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

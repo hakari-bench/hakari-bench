@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "69726",
+        "document_id": "56245",
+        "query": {
+          "text": "Thương mại có ảnh hưởng đến sự quay của Trái Đất không?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nhân loại và các hoạt động/cấu trúc do con người tạo ra có ảnh hưởng đến chuyển động quay của Trái Đất? Chúng ta đi bộ hay lái phương tiện đến đích hàng ngày. Hành động của chúng ta có ảnh hưởng đến s",
+          "full_chars": 410,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "112820",
+        "document_id": "107061",
+        "query": {
+          "text": "Nguyên lý của Archimedes: thuật ngữ không chính xác?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tại sao một cốc có 100 g nước nổi khi đặt trên một cốc khác có 50 g nước? Hãy tưởng tượng chúng ta có cốc A với 50 g nước và cốc B (nhỏ hơn so với cốc A) với 100 g nước. Bây giờ cho cốc B vào trong cố",
+          "full_chars": 716,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10496",
+        "document_id": "66099",
+        "query": {
+          "text": "Máy tính lượng tử D-Wave có thể làm gì?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Máy tính lượng tử do D-Wave Systems, Inc. sản xuất có hoạt động không? D-wave tuyên bố đã chế tạo được 128 máy tính lượng tử qbit thương mại? Điều tôi không hiểu là họ có thực sự làm được điều này hay",
+          "full_chars": 1857,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "88077",
+        "document_id": "45203",
+        "query": {
+          "text": "Có phải hạt Higgs là hạt cuối cùng được dự đoán bởi Mô hình chuẩn?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Boson Higgs trong LHC Gần đây, các hạt higgs bosons đã được phát hiện ra ở LHC. Câu hỏi của tôi là làm sao họ biết rằng những hạt được tạo ra thực sự là higgs boson? Họ xác nhận chúng là higgs boson d",
+          "full_chars": 229,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "17259",
+        "document_id": "2175",
+        "query": {
+          "text": "Lực lan truyền trong vật chất nhanh như thế nào?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Có thể truyền tải thông tin nhanh hơn tốc độ ánh sáng bằng cách sử dụng một cây gậy cứng không? Có thể truyền tải thông tin (như 1 và 0) nhanh hơn tốc độ ánh sáng không? Ví dụ, hãy lấy một cây cột cứn",
+          "full_chars": 468,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

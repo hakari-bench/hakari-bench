@@ -120,11 +120,11 @@ final ranking.
 
 | Query | Positive document |
 | --- | --- |
-| Que tipos de rentabilidade a Vanguard está oferecendo? | Da página da Vanguard - Esta pareceu a mais fácil, pois os dados da S&P são simples de encontrar... |
-| Quais são as implicações fiscais do trabalho freelancer? | Se você tiver rendimentos nos EUA, terá de pagar imposto de renda dos EUA sobre eles, a menos que haja um tratado... |
-| O que é considerado alto ou baixo quando se fala de volume? | O volume diário é geralmente comparado ao volume médio diário dos últimos 50 dias para uma ação... |
-| Como utilizar os pontos do cartão de crédito para pagar despesas empresariais que podem ser deduzidas no imposto de renda? | Para simplificar, vamos começar considerando apenas o cashback. Em geral, o cashback de cartões de crédito para uso pessoal não é tributável... |
-| Como devo declarar meus impostos como autônomo? | Para fins fiscais, você precisará declarar como empregado e também como empreendedor... |
+| Que tipos de rentabilidade a Vanguard está oferecendo? [54 chars] | Da página da Vanguard - Esta pareceu a mais fácil, pois os dados da S&P são simples de encontrar. Utilizo o MoneyChimp para confirmar - o que verifica que a página da Vanguard oferece a TIRC, e não a... [200 / 445 chars] |
+| Quais são as implicações fiscais do trabalho freelancer? [56 chars] | Se você tiver rendimentos nos EUA, terá de pagar imposto de renda dos EUA sobre eles, a menos que haja um tratado com o seu país que o isente dessa obrigação. [158 chars] |
+| O que é considerado alto ou baixo quando se fala de volume? [59 chars] | O volume diário é geralmente comparado ao volume médio diário dos últimos 50 dias para uma ação. Volume alto é considerado ser 2 ou mais vezes o volume médio diário dos últimos 50 dias para essa ação.... [200 / 681 chars] |
+| Como utilizar os pontos do cartão de crédito para pagar despesas empresariais que podem ser deduzida... [100 / 122 chars] | Para simplificar, vamos começar considerando apenas o cashback. Em geral, o cashback de cartões de crédito para uso pessoal não é tributável, mas para uso empresarial é tributável (mais ou menos, expl... [200 / 3,863 chars] |
+| Como devo declarar meus impostos como autônomo? [47 chars] | Para fins fiscais, você precisará declarar como empregado (com recibos T4 e imposto retido automaticamente) e também como empreendedor. Eu tive a mesma situação no ano passado. "Employee and Self-Empl... [200 / 744 chars] |
 
 ### Public Sources
 
@@ -138,7 +138,7 @@ final ranking.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FiQA: Financial Opinion Mining and Question Answering | 2018 | task paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA: Financial Opinion Mining and Question Answering | 2018 | task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

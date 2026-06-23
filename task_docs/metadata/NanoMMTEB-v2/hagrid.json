@@ -134,15 +134,98 @@
         "url": "https://github.com/project-miracl/hagrid",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/HagridRetrieval",
         "url": "https://huggingface.co/datasets/mteb/HagridRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "721",
+        "document_id": "53fcb7d3-108d-4cfc-afa2-ddd0dac5cb62",
+        "query": {
+          "text": "How many clubs are in the Australian Football League?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Australian Football League consists of 18 clubs [1][2]",
+          "full_chars": 58,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1213",
+        "document_id": "972c50b9-de47-4db0-a237-3ca1ba36b4d1",
+        "query": {
+          "text": "What was the film Nausicaä of the Valley of the Wind adapted from?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nausicaä of the Valley of the Wind was adapted from the manga series of the same name written and illustrated by Hayao Miyazaki. [4]",
+          "full_chars": 132,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "105",
+        "document_id": "c511cb13-606c-46e6-8186-a04cf60abe24",
+        "query": {
+          "text": "Is Abi Branning still a character on EastEnders?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "No, Abi Branning is not a regular character on EastEnders as she was killed off in January 2018 after falling from the roof of The Queen Victoria pub [2]. However, she did make a few guest appearances",
+          "full_chars": 281,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "913",
+        "document_id": "bc5cb373-1860-4dbb-b3e9-c1efce566a73",
+        "query": {
+          "text": "Where was Loretta Lynn born?",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Loretta Lynn was born in Butcher Hollow, Kentucky. [1][2]",
+          "full_chars": 57,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "298",
+        "document_id": "ad828dc2-28e5-4032-b480-279ce78d7e56",
+        "query": {
+          "text": "How old is the Cincinnati Bengals?",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Cincinnati Bengals are 51 years old overall and have been playing in the National Football League for 49 seasons [1].",
+          "full_chars": 121,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

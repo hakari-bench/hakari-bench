@@ -62,9 +62,13 @@ A model targeting this task should optimize for document-level scientific relate
 
 ## Example Data
 
-### Public Sources
-
-The original task is connected to SCIDOCS and SPECTER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Novel DC-DC Multilevel Boost Converter [38 chars] | AbstructMultilevel voltage source converters are emerging as a new breed of power converter options for high-power applications. The multilevel voltage source converters typically synthesize the stair... [200 / 930 chars] |
+| Fast Sparse Gaussian Markov Random Fields Learning Based on Cholesky Factorization [82 chars] |  [0 chars] |
+| Texture Synthesis Using Convolutional Neural Networks [53 chars] | In this work we investigate the effect of the convolutional n etwork depth on its accuracy in the large-scale image recognition setting. Our main contribution is a thorough evaluation of networks of i... [200 / 840 chars] |
+| Planar broadband annular-ring antenna with circular polarization for RFID system [80 chars] | In this paper, a horizontally meandered strip (HMS) feed technique is proposed to achieve good impedance matching and symmetrical broadside radiation patterns for a single-fed broadband circularly pol... [200 / 1,308 chars] |
+| Design of advanced digital heartbeat monitor using basic electronic components [78 chars] | In this paper, we presented the design and development of a new integrated device for measuring heart rate using fingertip to improve estimating the heart rate. As heart related diseases are increasin... [200 / 1,116 chars] |
 
 ### Source Reference Table
 

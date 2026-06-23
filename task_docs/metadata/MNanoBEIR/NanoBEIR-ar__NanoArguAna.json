@@ -142,7 +142,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -150,15 +150,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "الجمهور غير مهتم بالتغيير. ما إذا كان يجب أن يكون إصلاح مجلس اللوردات أولوية قصوى في الظروف الاقتصاد",
+          "full_chars": 434,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "الحملة الانتخابية لا يمكن مقارنتها بإصلاح النظام السياسي. بالإضافة إلى ذلك، لا يجب الخلط بين الجمهور غير المعلومات بسبب التأثير السياسي واللامبالاة. غالبًا ما يعبر الناخبون عن شعورهم باليأس لأنهم يشعر",
+          "full_chars": 366,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "توسيع مطار هيثرو ضروري للاقتصاد، حيث سيضمن الحفاظ على العديد من الوظائف الحالية وسيخلق وظائف جديدة.",
+          "full_chars": 933,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "المجتمع التجاري بعيد عن الوحدة في دعمه المزعوم لممر جوي ثالث. تشير الاستطلاعات إلى أن العديد من الأعمال المؤثرة لا تدعم التوسعة. وقع رسالة تعبر عن القلق جاستن كينغ، الرئيس التنفيذي لشركة ج ساينزبوري،",
+          "full_chars": 877,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "الناس يُعطون خيارات كثيرة جداً، مما يجعلهم أقل سعادة. الإعلانات تؤدي إلى إرهاق العديد من الناس بسبب",
+          "full_chars": 767,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "الناس غير سعداء لأنهم لا يمكنهم الحصول على كل شيء، وليس لأنهم يشعرون بالتوتر من كثرة الخيارات. في الواقع، تلعب الإعلانات دورًا حاسمًا في توجيه الناس إلى إنفاق ما يملكونه من مال على المنتج الأكثر ملاءم",
+          "full_chars": 759,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "الهجمات الإلكترونية غالبًا ما تُنفذها كيانات غير حكومية مثل الإرهابيين السيبرانيين أو الهاكتيفيست (ا",
+          "full_chars": 860,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "في حالة هجمات الفاعلين غير الدوليين، يتفق العديد من الخبراء في القانون الدولي على أن الدولة يمكنها الرد دفاعًا عن النفس إذا كانت دولة أخرى 'غير مستعدة أو غير قادرة على اتخاذ إجراءات فعالة' لمواجهة اله",
+          "full_chars": 479,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "لأن الدين يعزز يقين الاعتقاد، فإن الكراهية الإلهية الملهمة سهلة الاستخدام لتبرير وتعزيز الأفعال العن",
+          "full_chars": 1158,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "لا أحد يُجبر على ارتكاب أعمال العنف بسبب كلام شخص آخر؛ إنه اختيارهم القيام بذلك. بالمثل، هناك العديد من الأشخاص الذين قد يؤيدون آراء يمكن اعتبارها معادية للمثليين ولكنهم سيشعرون بالصدمة من أعمال العنف",
+          "full_chars": 495,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

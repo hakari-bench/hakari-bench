@@ -160,22 +160,22 @@ surface terms repeat across many non-duplicate questions.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Hoe is de Schrödingervergelijking een golffvergelijking? [56 chars] | Relatie tussen de Schrödingervergelijking en de golfvergelijking Ik ben altijd in de war geweest over de relatie tussen de Schrödingervergelijking en de golfvergelijking. $$ i\hbar \frac{\partial \psi... [200 / 1,081 chars] |
+| Metingen van actieve ruisonderdrukkingstechnologie [50 chars] | Maximale vertraging voor effectieve actieve ruisonderdrukking? Actieve ruisonderdrukking vermindert ongewenste geluiden door de omgekeerde fase van de originele fase te verzenden: ![Actieve ruisonderd... [200 / 985 chars] |
+| Zijn continue wiskundige modellen van discrete fysische verschijnselen rommelig vanwege een discrepa... [100 / 138 chars] | Wat is het "discrete" analogon van de "continuüm" mechanica? Als ik een discrete wiskundige benadering van de continuümmechanica wil verkennen, welke leerboeken moet ik dan raadplegen? Een kant-en-kla... [200 / 549 chars] |
+| Gravitatie van energie [22 chars] | Kan een zwart gat ontstaan door Lorentz-contractie? **Mogelijke dubbel:</** > Als een massa van 1 kg bijna met de lichtsnelheid wordt versneld, zou deze dan veranderen > in een zwart gat? Stel je voor... [200 / 1,111 chars] |
+| Waarom neemt de (relativistische) massa van een object toe naarmate zijn snelheid de lichtsnelheid b... [100 / 108 chars] | Verwarring over de (relativistische) massa van objecten Volgens Einsteins theorie hangt de (relativistische) massa van objecten af van de snelheid. Dan zullen in een inertiaal referentiesysteem 2 waar... [200 / 371 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

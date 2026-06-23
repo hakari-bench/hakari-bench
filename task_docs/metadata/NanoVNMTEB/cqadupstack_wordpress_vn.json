@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "70519",
+        "document_id": "70620",
+        "query": {
+          "text": "Các thành viên chia sẻ giữa hai cài đặt khác nhau với các cơ sở dữ liệu khác nhau wordpress",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cách sử dụng các bảng db từ xa trong cấu hình hiện tại? > **Có thể trùng lặp:** > Thành viên chia sẻ giữa hai cài đặt wordpress khác nhau với các cơ sở dữ liệu khác nhau Ví dụ tôi có 2 cài đặt wordpre",
+          "full_chars": 659,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "120193",
+        "document_id": "120260",
+        "query": {
+          "text": "gán 2 $args cho một wp_query",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "pagenavi với wp_query hợp nhất Tôi cần sử dụng wp_query để thực thi bài viết từ 2 từ khóa riêng biệt sử dụng `s = từ khóa` vì vậy tôi đã tìm thấy câu trả lời này và nó rất hữu ích Kết hợp các truy vấn",
+          "full_chars": 6097,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "105641",
+        "document_id": "78666",
+        "query": {
+          "text": "Giúp với chức năng Walker trong Wordpress",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Xác định xem mục điều hướng có con không Tôi đang cố gắng xác định xem một mục có mục con với độ sâu 1 hay không. Tôi không thể tìm thấy bất cứ điều gì về việc có một hàm/query nào đó mà tôi có thể vi",
+          "full_chars": 3671,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "91166",
+        "document_id": "141053",
+        "query": {
+          "text": "Cách vô hiệu hóa WordPress từ tạo ra hình thu nhỏ?",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Thêm hình ảnh không tạo ra hình thu nhỏ Tôi không chắc liệu yêu cầu của tôi có điên rồ hay hợp lý, nhưng tôi muốn kiểm soát cách mà hình ảnh của tôi được lưu trữ trong WordPress, tránh trường hợp một",
+          "full_chars": 346,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "143301",
+        "document_id": "63356",
+        "query": {
+          "text": "Hình ảnh mặc định (logo) cho tùy chỉnh",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "wp_customize_image_control giá trị mặc định Tôi đang cố gắng tạo một chủ đề tùy chỉnh sử dụng tùy chọn tùy chỉnh trong Wordpress 3.4. Tôi muốn tạo một tùy chọn để thay đổi logo của chủ đề, nhưng tôi c",
+          "full_chars": 993,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

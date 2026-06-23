@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "842",
+        "document_id": "1309#78",
+        "query": {
+          "text": "ما هي اول دار للنشر في لبنان ؟",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "لبنان ويشتهر لبنان بدور النشر التي تصدر الكتب المتنوعة العربية منها والمترجمة من لغات أخرى. وأول دار للنشر في لبنان أنشئت بهدف النشر والتوزيع والتأليف هي دار العلم للملايين في سنة 1945، وكان معظم المش",
+          "full_chars": 722,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "160",
+        "document_id": "16622#3",
+        "query": {
+          "text": "ما أول أبحاث ماري سكوودوفسكا كوري؟",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ماري كوري خلال الحرب العالمية الأولى، أسست أول مراكز إشعاعية عسكرية. ورغم حصولها على الجنسية الفرنسية، لم تفقد ماري سكوودوفسكا كوري إحساسها بهويتها البولندية، فقد علمت بناتها اللغة البولندية، واصطحبته",
+          "full_chars": 549,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104",
+        "document_id": "361576#5",
+        "query": {
+          "text": "كم عدد أعضاء مجلس الأمة الكويتي؟",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "سياسة الكويت لدى مجلس الأمة 65 عضو، 50 عضو منهم منتخبين لفترة تستمر لأربعة سنوات، ويكون الوزراء في الحكومة أعضاء في البرلمان، وبالرغم من أن الأمير لديه الأمر الأخير في جميع قضايا الدولة، إلا أن مجلس ا",
+          "full_chars": 489,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "958",
+        "document_id": "262297#2",
+        "query": {
+          "text": "من مؤسس الإمبراطورية الهابسبورغية ؟",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "هابسبورغ الفترة من القرن الحادي عشر إلى القرن الثاني عشر فترة انحدار للإمبراطورية والملكية الألمانية إلى أدنى مستوياتها حيث سقطت أسرة هوهنشتاوفن وسادت الفوضى والمنازعات وادعى ريتشارد كورونولى أحقيته ف",
+          "full_chars": 1027,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "368",
+        "document_id": "409994#17",
+        "query": {
+          "text": "متى بدأت شركة امازون بتقديم خدمة الحوسبة السحابية ؟",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "حوسبة سحابية هذا ولعب موقع أمازون الإلكتروني دوراً جوهرياً في تنمية الحوسبة السحابية من خلال تحديث مراكز البيانات بعد فقاعة الدوت كوم، والتي، مثل غالبية شبكات الحاسوب، كانت تستخدم قدراً ضئيلاً يُقَدَّ",
+          "full_chars": 664,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

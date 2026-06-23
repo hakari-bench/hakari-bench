@@ -144,11 +144,13 @@ reranker.
 
 ## Example Data
 
-Representative queries ask why Irena has not killed herself, what item reveals
-a bomber's identity, whose hand Grayes reluctantly takes in marriage, who Plato
-did not deter from writing according to Cicero, and what Mrs. Lovett reveals to
-Todd. Positive documents are whole books or scripts that contain the relevant
-scene or narrative explanation.
+| Query | Positive document |
+| --- | --- |
+| Why hasn't Irena killed herself before? [39 chars] | ï»¿The Project Gutenberg EBook of When We Dead Awaken, by Henrik Ibsen This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away... [200 / 131,749 chars] |
+| What does the bomber leave behind that reveals his identity? [60 chars] | <html> <head><title>Source Code Script at IMSDb.</title> <meta name="description" content="Source Code script at the Internet Movie Script Database."> <meta name="keywords" content="Source Code script... [200 / 219,018 chars] |
+| Whose hand does Grayes reluctantly take in marriage? [52 chars] | ï»¿The Project Gutenberg EBook of Desperate Remedies, by Thomas Hardy This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away... [200 / 817,284 chars] |
+| Who did Plato not deter from writing according to Cicero in speaking to Romans? [79 chars] | ï»¿The Project Gutenberg EBook of Cicero's Brutus or History of Famous Orators; also His Orator, or Accomplished Speaker., by Cicero This eBook is for the use of anyone anywhere at no cost and with al... [200 / 481,075 chars] |
+| What did Mrs. Lovett reveal to Todd? [36 chars] | <html> <head><title>Sweeney Todd: The Demon Barber of Fleet Street Script at IMSDb.</title> <meta name="description" content="Sweeney Todd: The Demon Barber of Fleet Street script at the Internet Movi... [200 / 252,633 chars] |
 
 ### Public Sources
 
@@ -165,9 +167,9 @@ scene or narrative explanation.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The NarrativeQA Reading Comprehension Challenge | 2018 | arXiv paper | https://arxiv.org/abs/1712.07040 |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| The NarrativeQA Reading Comprehension Challenge | 2018 | arXiv paper | [https://arxiv.org/abs/1712.07040](https://arxiv.org/abs/1712.07040) |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

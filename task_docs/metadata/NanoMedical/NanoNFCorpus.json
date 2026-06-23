@@ -137,22 +137,105 @@
         "url": "https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf",
         "year": 2016,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "year": 2016,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
         "url": "https://doi.org/10.1007/978-3-319-30671-1_58",
         "year": 2016,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-634",
+        "document_id": "MED-1463",
+        "query": {
+          "text": "avocados",
+          "full_chars": 8,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Role of insulin in the pathogenesis of free fatty acid-induced insulin resistance in skeletal muscle. Insulin resistance is a pathophysiological link of obesity to type 2 diabetes. The initial cause o",
+          "full_chars": 1694,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1288",
+        "document_id": "MED-2663",
+        "query": {
+          "text": "grapes",
+          "full_chars": 6,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A berry thought-provoking idea: the potential role of plant polyphenols in the treatment of age-related cognitive disorders. Today, tens of millions of elderly individuals worldwide suffer from dement",
+          "full_chars": 1862,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1066",
+        "document_id": "MED-4000",
+        "query": {
+          "text": "Dr. Walter Willett",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Coconut oil predicts a beneficial lipid profile in pre-menopausal women in the Philippines Coconut oil is a common edible oil in many countries, and there is mixed evidence for its effects on lipid pr",
+          "full_chars": 1360,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-902",
+        "document_id": "MED-4194",
+        "query": {
+          "text": "chlorophyll",
+          "full_chars": 11,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Antimutagens and anticarcinogens: a survey of putative interceptor molecules. In this review recent publications are cited for a number of antimutagens. The molecules surveyed are potential or proven",
+          "full_chars": 870,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1700",
+        "document_id": "MED-2999",
+        "query": {
+          "text": "Native Americans",
+          "full_chars": 16,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Western diseases and their emergence related to diet. Many of the commonest diseases in the economically more developed communities are characteristic of modern Western culture. Evidence is presented",
+          "full_chars": 463,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "df105183c561b67f8b7bea155345f4852d70648e10726c41f68c1e6d096937f5",
+        "document_id": "50459b6cd0554d69d0308376ff29e4162116a0a34b10eef025a9ee68aa59e2c5",
+        "query": {
+          "text": "દિલ્હીમાં ચોમાસાના પવનો આવવાની તારીખ કઈ છે?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": ")થી 48 °C (118 °F) જેટલાં રહે છે. તેનું વાર્ષિક સરેરાશ તાપમાન 25° સે. (77° ફે. ) છે; તેનું માસિક સરેરાશ તાપમાન 13°સે. થી 32°સે. (56° ફે. થી 90° ફે.",
+          "full_chars": 147,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "29ccca2aa54b381314d62a40aedde17394d1d7e7635473b853c4ebd0f60ade63",
+        "document_id": "4d4522cab07756466d3c92c9291dfea27c4564397b238f21cfbedad84a7ec0c5",
+        "query": {
+          "text": "ક્યાં શહેરને \"માન્ચેસ્ટર ઓફ ધ ઇસ્ટ\" તરીકે પણ ઓળખવામાં આવતું હતું?",
+          "full_chars": 65,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "અંગ્રજોના શાસનકાળ દરમિયાન અમદાવાદ એક મુખ્ય નગર બની ગયું. અહીં તેમણે કોર્ટ, નગરપાલિકા વગેરે સ્થાપ્યાં. કાપડની મિલોને કારણે અમદાવાદ 'પૂર્વનું માંચેસ્ટર' પણ કહેવાતું હતું. મે ૧૯૬૦થી નવા બનેલા ગુજરાત રાજ્",
+          "full_chars": 540,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "061f559bfa27eb70bf8f96f06083879d226833c6cb882331135368c2b9a013a6",
+        "document_id": "8dcbbdc8dbe54e5f5db93af34455147438e83312ca357bcf70e3554dc72f2cdb",
+        "query": {
+          "text": "અન્ય મધ્યયુગીન શાસકોની જેમ કોણ એક મહાન સામ્રાજ્યવાદી હતા?",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "અન્ય મધ્યયુગીન શાસકોની જેમ અકબર પણ એક મહાન સામ્રાજ્યવાદી હતો. અને તેને પોતાનુ રાજ્ય ઉત્તરે અફઘાનિસ્તાન કાશ્મીરની દક્ષિણે મૈસુર સુધી તથા પશ્ચિમે ગુજરાતની પુર્વમાં બંગાળ સુધી ફેલાવવાની મહત્વાકાંક્ષા હતી",
+          "full_chars": 1639,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "efc951a52b75d856616fa9a6f2e9a4552fd6ca683fc628ca194fa7f1f3cb212c",
+        "document_id": "b74b73d507ea49a65ccb150f8ffd570985c6d5835ff2630b7f5dc987745dd717",
+        "query": {
+          "text": "BEIC નું પૂરું નામ શું છે?",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1707માં સમ્રાટ ઔરંગઝેબના મૃત્યુ બાદ, આ સામ્રાજ્ય અવગતિમાં સરી પડ્યું. બહાદુરશાહ પહેલાથી શરૂ કરીને, મુઘલ સમ્રાટોની સત્તા ક્ષીણ થતી ગઈ અને તેઓ શોભાના ગાંઠિયા જેવા બની ગયા, પ્રારંભમાં પરચુરણ દરબારીઓના ચી",
+          "full_chars": 1403,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5f15337ba91456f4df3234b6c0a86412928d36e9f2745ebd4173a6748b68cd45",
+        "document_id": "27fba05bbe6cbb89b76a1838050f8e7b4cfed3ad6a0068a4f44f79e3192022f1",
+        "query": {
+          "text": "કચ્છ અને સિંધ વચ્ચેની પર્વતમાળાનો એક ભાગ કયો છે?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "અરવલ્લી પર્વતમાળાની આરાસુર શાખા દાંતા, ખેડબ્રહ્મા, ઇડર અને શામળાજી થઈને વિંધ્યાચલમાં સમાઈ જાય છે. તાપી જિલ્લામાંથી પસાર થતી સહ્યાદ્રી પર્વતમાળા એ રાજ્યનો સૌથી વધુ વરસાદ પડતો વિસ્તાર ધરાવે છે અને તદુપર",
+          "full_chars": 540,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

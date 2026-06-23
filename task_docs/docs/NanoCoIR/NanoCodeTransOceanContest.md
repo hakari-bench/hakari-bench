@@ -70,9 +70,13 @@ For reranking, an effective model should compare behavioral equivalence: whether
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeTransOceanContest is documented through CoIR and the CodeTransOcean paper. The public WeixiangYan/CodeTransOcean dataset card provides the source-data reference.
+| Query | Positive document |
+| --- | --- |
+| import mpmath as mp with mp.workdps(72): def integer_term(n): p = 532 * n * n + 126 * n + 9 return (... [100 / 904 chars] | Almkvist-Giullera formula for pi #include <boost/multiprecision/cpp_dec_float.hpp> #include <boost/multiprecision/gmp.hpp> #include <iomanip> #include <iostream> namespace mp = boost::multiprecision;... [200 / 1,331 chars] |
+| a1 = [0, 1403580, -810728] m1 = 2**32 - 209 a2 = [527612, 0, -1370589] m2 = 2**32 - 22853 d = m1 + 1... [100 / 1,166 chars] | Pseudo-random numbers_Combined recursive generator MRG32k3a #include <array> #include <iostream> int64_t mod(int64_t x, int64_t y) { int64_t m = x % y; if (m < 0) { if (y < 0) { return m - y; } else {... [200 / 1,793 chars] |
+| def water_collected(tower): N = len(tower) highest_left = [0] + [max(tower[:n]) for n in range(1,N)]... [100 / 770 chars] | Water collected between towers #include <iostream> #include <vector> #include <algorithm> enum { EMPTY, WALL, WATER }; auto fill(const std::vector<int> b) { auto water = 0; const auto rows = *std::max... [200 / 1,488 chars] |
+| from fractions import Fraction def harmonic_series(): n, h = Fraction(1), Fraction(1) while True: yi... [100 / 328 chars] | Harmonic series #include <iomanip> #include <iostream> #include <boost/rational.hpp> #include <boost/multiprecision/gmp.hpp> using integer = boost::multiprecision::mpz_int; using rational = boost::rat... [200 / 1,031 chars] |
+| "Generate a short Superpermutation of n characters A... as a string using various algorithms." from... [100 / 3,528 chars] | Superpermutation minimisation #include <array> #include <iostream> #include <vector> constexpr int MAX = 12; static std::vector<char> sp; static std::array<int, MAX> count; static int pos = 0; int fac... [200 / 1,027 chars] |
 
 ### Source Reference Table
 

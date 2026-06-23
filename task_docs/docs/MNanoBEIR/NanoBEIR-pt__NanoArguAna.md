@@ -121,11 +121,11 @@ argument-aware reranker for final ordering.
 
 | Query | Positive document |
 | --- | --- |
-| O público é indiferente às reformas. É discutível se a reforma da Câmara dos Lordes deve ser uma prioridade máxima no atual clima econômico... | A campanha de voto alternativo não pode ser comparada a uma reforma do sistema político. Além disso, não se deve confundir um público mal informado... |
-| A expansão do Heathrow é vital para a economia. A expansão do Heathrow garantiria muitos empregos atuais e criaria novos... | A comunidade empresarial está longe de estar unida no suposto apoio a uma terceira pista. Pesquisas indicam que muitas empresas influentes não apoiam a expansão... |
-| As pessoas têm muitas opções, o que as deixa menos felizes. A publicidade faz com que muitas pessoas se sintam sobrecarregadas... | As pessoas ficam infelizes porque não podem ter tudo, e não porque têm muitas opções e acham isso estressante... |
-| Ataques cibernéticos são frequentemente realizados por atores não estatais, como ciberterroristas ou hacktivistas, sem qualquer envolvimento do estado... | Em caso de ataque de atores não estatais, muitos praticantes do direito internacional concordam que o estado pode retaliar em legítima defesa... |
-| Porque a religião promove a certeza de crença, o ódio inspirado por Deus é facilmente utilizado para justificar e promover ações violentas... | Ninguém é obrigado a cometer atos de violência pelas palavras de outra pessoa; é uma escolha deles fazer isso... |
+| O público é indiferente às reformas. É discutível se a reforma da Câmara dos Lordes deve ser uma pri... [100 / 566 chars] | A campanha de voto alternativo não pode ser comparada a uma reforma do sistema político. Além disso, não se deve confundir um público mal informado devido à manipulação política com indiferença. Muita... [200 / 436 chars] |
+| A expansão do Heathrow é vital para a economia. A expansão do Heathrow garantiria muitos empregos at... [100 / 1,228 chars] | A comunidade empresarial está longe de estar unida no suposto apoio a uma terceira pista. Pesquisas indicam que muitas empresas influentes, na verdade, não apoiam a expansão. Uma carta expressando pre... [200 / 1,369 chars] |
+| As pessoas têm muitas opções, o que as deixa menos felizes. A publicidade faz com que muitas pessoas... [100 / 975 chars] | As pessoas ficam infelizes porque não podem ter tudo, e não porque têm muitas opções e acham isso estressante. Na verdade, os anúncios desempenham um papel crucial ao garantir que o dinheiro que as pe... [200 / 933 chars] |
+| Ataques cibernéticos são frequentemente realizados por atores não estatais, como ciberterroristas ou... [100 / 1,069 chars] | Em caso de ataque de atores não estatais, muitos praticantes do direito internacional concordam que o estado pode ainda retaliar em legítima defesa se outro estado é 'relutante ou incapaz de tomar med... [200 / 565 chars] |
+| Porque a religião promove a certeza de crença, o ódio inspirado por Deus é facilmente utilizado para... [100 / 1,347 chars] | Ninguém é obrigado a cometer atos de violência pelas palavras de outra pessoa; é uma escolha deles fazer isso. Da mesma forma, há muitas pessoas que podem ter opiniões que poderiam ser consideradas ho... [200 / 685 chars] |
 
 ### Public Sources
 
@@ -139,7 +139,7 @@ argument-aware reranker for final ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Argument Mining for Understanding Peer Reviews | 2018 | task paper | https://aclanthology.org/P18-1023/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Argument Mining for Understanding Peer Reviews | 2018 | task paper | [https://aclanthology.org/P18-1023/](https://aclanthology.org/P18-1023/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

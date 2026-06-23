@@ -89,36 +89,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "references": [
-      {
-        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
-        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -127,6 +97,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "นมปั่นช็อกโกแลตเพื่อสุขภาพ",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "วัตถุประสงค์ เพื่อศึกษาความสัมพันธ์ระหว่างการบริโภคเชอร์รี่และความเสี่ยงต่อการเกิดโรคเกาต์ซ้ำในบุคคลที่เป็นโรคเกาต์ วิธีการ เราได้ดำเนินการศึกษากรณีข้ามเพื่อพิจารณาความสัมพันธ์ของชุดปัจจัยเสี่ยงที่คาด",
+          "full_chars": 1492,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "การศึกษาการลดคอเลสเตอรอล",
+          "full_chars": 24,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ภูมิหลัง: หนึ่งในปัญหาหลักในการควบคุมคอเลสเตอรอลในเลือดผ่านการแทรกแซงทางโภชนาการดูเหมือนว่าจะเป็นความจำเป็นในการปรับปรุงการปฏิบัติตามของผู้ป่วย เป้าหมาย: เพื่อสำรวจคำถามมากมายเกี่ยวกับอุปสรรคและแรงจูง",
+          "full_chars": 1601,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "ถั่วฟาวา",
+          "full_chars": 8,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ในช่วง 20 ปีที่ผ่านมา ความสนใจที่เพิ่มขึ้นในชีวเคมี โภชนาการ และเภสัชวิทยาของ L-arginine ได้นำไปสู่การศึกษาอย่างกว้างขวางเพื่อสำรวจบทบาททางโภชนาการและการรักษาของมันในการรักษาและป้องกันความผิดปกติทางเม",
+          "full_chars": 1078,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-68",
+        "document_id": "MED-2991",
+        "query": {
+          "text": "ไก่นักเก็ตมีอะไรอยู่จริงๆ?",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "วัตถุประสงค์: เพื่อตรวจสอบเนื้อหาของนั๊กเก็ตไก่จากร้านอาหารฟาสต์ฟู้ดระดับชาติ 2 แห่ง ข้อมูลพื้นฐาน: นั๊กเก็ตไก่ได้กลายเป็นส่วนประกอบหลักของอาหารอเมริกัน เราต้องการตรวจสอบองค์ประกอบปัจจุบันของอาหารที่ผ",
+          "full_chars": 662,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2051",
+        "document_id": "MED-4551",
+        "query": {
+          "text": "ไขมันอิ่มตัว",
+          "full_chars": 12,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ความสนใจเพิ่มขึ้นในความเป็นไปได้ที่การบริโภคอาหารของมารดาในระหว่างตั้งครรภ์อาจมีอิทธิพลต่อการพัฒนาความผิดปกติจากภูมิแพ้ในเด็ก การศึกษาที่มีลักษณะเป็น prospective ในปัจจุบันได้ตรวจสอบความสัมพันธ์ระหว่า",
+          "full_chars": 1839,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

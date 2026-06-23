@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,118 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "50755",
+        "document_id": "122689",
+        "query": {
+          "text": "Moet ik blijven investeren in datastructuren en algoritmes?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe belangrijk is het leren van algoritmes voor programmeurs van hogere programmeertalen? **Mogelijk duplicaat:** > Hoe belangrijk is het bestuderen van algoritmes en theorie om een geweldige > progra",
+          "full_chars": 632,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "126965",
+        "document_id": "83716",
+        "query": {
+          "text": "Django leren aan de hand van voorbeelden",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe begrijp ik het Django framework goed? Ik heb redelijke kennis van PHP, d.w.z. ik kan een framework pakken, de code lezen en als de documentatie adequaat is, begrijpen wat het doet. De belangrijkst",
+          "full_chars": 786,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109279",
+        "document_id": "230934",
+        "query": {
+          "text": "Licentieverificatie en contact opnemen met de thuisserver",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Softwarelicentie veilig valideren Ik ontwikkel momenteel een product (in C#) dat gratis te downloaden is, maar een maandelijks abonnement vereist om na een specifieke proefperiode te kunnen gebruiken.",
+          "full_chars": 1674,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "89944",
+        "document_id": "121829",
+        "query": {
+          "text": "Als ik .NET Framework gebruik voor mijn applicatie, moet ik dan iets aan Microsoft betalen?",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ik wil mijn software verkopen [C# desktop applicatie], maar zit vast met licenties **Mogelijk duplicaat:** > Als ik .NET Framework gebruik voor mijn applicatie, moet ik dan iets aan > Microsoft betale",
+          "full_chars": 1229,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "17898",
+        "document_id": "209408",
+        "query": {
+          "text": "Wat is een goede uitleg voor pointers?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wat is de definitie van een pointer? Conceptueel is een \"pointer\" gewoon iets dat naar iets anders \"wijst\"; Is deze definitie voldoende om precies te zeggen wat een pointer is in programmeertalen? Moe",
+          "full_chars": 860,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

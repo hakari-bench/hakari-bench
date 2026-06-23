@@ -138,10 +138,13 @@ coverage into correct counterargument ordering.
 
 ## Example Data
 
-Representative queries argue about partial-birth abortion strategy, whether
-technology can solve climate change, vegetarianism and food poisoning, whether
-baseball should allow home-plate collisions, and the value of community radio.
-Positive documents respond with counterarguments on the same issue.
+| Query | Positive document |
+| --- | --- |
+| Opposition to partial birth abortion is part of a strategy intended to ban abortion in general Parti... [100 / 704 chars] | pregnancy philosophy ethics life family house would ban partial birth abortions Although many people who are against partial-birth abortion are against abortion in general, there is no necessary link,... [200 / 691 chars] |
+| New Technology Humanity has revolutionized the world repeatedly through such monumental inventions a... [100 / 1,013 chars] | climate house believes were too late global climate change Technological improvements will almost certainly be developed for those who can afford them (as most technology is). However, climate change... [200 / 391 chars] |
+| Being vegetarian reduces risks of food poisoning Almost all dangerous types of food poisoning are pa... [100 / 810 chars] | animals environment general health health general weight philosophy ethics Food safety and hygiene are very important for everyone, and governments should act to ensure that high standards are in plac... [200 / 1,580 chars] |
+| Collisions are a part of the game. First, collisions are part of the tradition of baseball. They hav... [100 / 2,256 chars] | team sports house believes major league baseball should continue allow collisions Collisions are much less a part of the game than people believe. The notion that collisions have been in the game for... [200 / 1,584 chars] |
+| Community radio gives voices to the people rather than imposing those of the powerful. The events of... [100 / 1,266 chars] | media and good government house believes community radio good Community radio can indeed do the many wondrous things that Prop seems to trust it to do. It can also do more or less anything else. If pr... [200 / 558 chars] |
 
 ### Public Sources
 
@@ -157,9 +160,9 @@ Positive documents respond with counterarguments on the same issue.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Retrieval of the Best Counterargument without Prior Topic Knowledge | 2018 | task paper | https://aclanthology.org/P18-1023/ |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/arguana | 2024 | dataset card | https://huggingface.co/datasets/mteb/arguana |
+| Retrieval of the Best Counterargument without Prior Topic Knowledge | 2018 | task paper | [https://aclanthology.org/P18-1023/](https://aclanthology.org/P18-1023/) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/arguana | 2024 | dataset card | [https://huggingface.co/datasets/mteb/arguana](https://huggingface.co/datasets/mteb/arguana) |
 
 ### Representative Snippets
 

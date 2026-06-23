@@ -174,11 +174,11 @@ nearby medical areas that are not evidence for the same topic.
 
 | Query | Positive document |
 | --- | --- |
-| ميلشيكات الشوكولاتة الصحية (26 chars) | الهدف: دراسة العلاقة بين استهلاك الكيريز وتكرار هجمات النقرس لدى الأفراد المصابين بالنقرس. الطرق: أجرينا دراسة تقاطع الحالات لدراسة العلاقات بين مجموعة من العوامل المخاطرة المحتملة مع تكرار هجمات النقرس. تم تجنيد الأفراد المص ... [truncated 225 chars](1438 chars) |
-| الأخلاق الطبية (14 chars) | الخلفية: يبدو أن أحد المشاكل الرئيسية في التحكم في الكوليسترول في الدم من خلال التدخل الغذائي هو الحاجة إلى تحسين الالتزام بالمريض. الأهداف: استكشاف العديد من الأسئلة المتعلقة بالحواجز والمحفزات للالتزام بالوجبات الغذائية الخ ... [truncated 225 chars](1557 chars) |
-| فول (3 chars) | في السنوات العشرين الماضية، زادت الاهتمامات بالبيوكيمياء، التغذية، والعلاج الكيميائي للأرجينين، مما أدى إلى إجراء دراسات شاملة لاستكشاف أدواره الغذائية والعلاجية في علاج ووقاية الاضطرابات الأيضية لدى الإنسان. تظهر الأدلة النا ... [truncated 225 chars](1064 chars) |
-| ما يحتوي على النيوجتات الدجاجية؟ (32 chars) | غرض: تحديد مكونات قطع الدجاج من 2 سلاسل غذائية وطنية. الخلفية: أصبحت قطع الدجاج مكونًا رئيسيًا في النظام الغذائي الأمريكي. حاولنا تحديد التركيبة الحالية لهذه الأطعمة المعالجة بشكل كبير. الطرق: تم اختيار قطع الدجاج عشوائيًا من ... [truncated 225 chars](625 chars) |
-| الدسم المشبع (12 chars) | الاهتمام باحتمالية أن تناول الأمهات للأغذية أثناء الحمل قد يؤثر على تطور اضطرابات الحساسية لدى الأطفال قد زادت. درس هذا الدراسة المستقبلية الارتباط بين تناول الأمهات لبعض الأغذية الغنية بالحموض الدهنية وأنواع محددة من الحموض ... [truncated 225 chars](1884 chars) |
+| ميلشيكات الشوكولاتة الصحية [26 chars] | الهدف: دراسة العلاقة بين استهلاك الكيريز وتكرار هجمات النقرس لدى الأفراد المصابين بالنقرس. الطرق: أجرينا دراسة تقاطع الحالات لدراسة العلاقات بين مجموعة من العوامل المخاطرة المحتملة مع تكرار هجمات النق... [200 / 1,438 chars] |
+| الأخلاق الطبية [14 chars] | الخلفية: يبدو أن أحد المشاكل الرئيسية في التحكم في الكوليسترول في الدم من خلال التدخل الغذائي هو الحاجة إلى تحسين الالتزام بالمريض. الأهداف: استكشاف العديد من الأسئلة المتعلقة بالحواجز والمحفزات للالت... [200 / 1,557 chars] |
+| فول [3 chars] | في السنوات العشرين الماضية، زادت الاهتمامات بالبيوكيمياء، التغذية، والعلاج الكيميائي للأرجينين، مما أدى إلى إجراء دراسات شاملة لاستكشاف أدواره الغذائية والعلاجية في علاج ووقاية الاضطرابات الأيضية لدى... [200 / 1,064 chars] |
+| ما يحتوي على النيوجتات الدجاجية؟ [32 chars] | غرض: تحديد مكونات قطع الدجاج من 2 سلاسل غذائية وطنية. الخلفية: أصبحت قطع الدجاج مكونًا رئيسيًا في النظام الغذائي الأمريكي. حاولنا تحديد التركيبة الحالية لهذه الأطعمة المعالجة بشكل كبير. الطرق: تم اختي... [200 / 625 chars] |
+| الدسم المشبع [12 chars] | الاهتمام باحتمالية أن تناول الأمهات للأغذية أثناء الحمل قد يؤثر على تطور اضطرابات الحساسية لدى الأطفال قد زادت. درس هذا الدراسة المستقبلية الارتباط بين تناول الأمهات لبعض الأغذية الغنية بالحموض الدهني... [200 / 1,884 chars] |
 
 ### Public Sources
 
@@ -197,8 +197,8 @@ nearby medical areas that are not evidence for the same topic.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| NFCorpus project page |  | dataset page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| NFCorpus project page |  | dataset page | [https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/](https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -112,11 +112,11 @@ restore answer-focused ordering.
 
 | Query | Positive document |
 | --- | --- |
-| 今年のファイナルフォーはどこで開催されますか | 2018年のNCAAディビジョンI男子バスケットボール選手権は、68チームによるシングルエリミネーション方式のトーナメントであった... |
-| 『ナイトメア・ビフォア・クリスマス』はもともとディズニーの映画だったのか？ | 『ナイトメア・ビフォア・クリスマス』は、1982年にティム・バートンがウォルト・ディズニー・フィーチャー・アニメーションで働いていた際に書いた詩が起源である... |
-| なぜ「北の天使」はそこに存在するのか | ゴームリーによれば、天使の意義は三つある。第一に、その建造地の地下で炭鉱労働者が2世紀にわたり働いていたことを象徴すること... |
-| 3分の5妥協は、アメリカ合衆国憲法の第1条第2節第3項に最初に記述されています。 | 三人のうち五分の三の妥協は、アメリカ合衆国憲法第1条第2項第3項に記載されている。 |
-| 「Somebody's Watching Me」でマイケル・ジャクソンが参加しているのは、ロッキー・ローランドです。 | 「Somebody's Watching Me」は、アメリカの歌手ロクウェルが自身のデビュースタジオアルバムから発表した楽曲である。 |
+| 今年のファイナルフォーはどこで開催されますか [22 chars] | 2018年のNCAAディビジョンI男子バスケットボール選手権は、2017–18年シーズンの全米大学体育協会（NCAA）ディビジョンI男子大学バスケットボールの全国王者を決定するための68チームによるシングルエリミネーション方式のトーナメントであった。第80回大会は2018年3月13日に始まり、4月2日にテキサス州サンアントニオのアラモドームで行われた決勝戦をもって終了した。 [188 chars] |
+| 『ナイトメア・ビフォア・クリスマス』はもともとディズニーの映画だったのか？ [37 chars] | 『ナイトメア・ビフォア・クリスマス』は、1982年にティム・バートンがウォルト・ディズニー・フィーチャー・アニメーションでアニメーターとして働いていた際に書いた詩が起源である。同年に『ヴィンセント』が成功したことで、ウォルト・ディズニー・スタジオは『ナイトメア・ビフォア・クリスマス』を短編映画または30分のテレビ特別番組として制作することを検討し始めた。その後数年間、バートンは定期的にこのプロジェ... [200 / 326 chars] |
+| なぜ「北の天使」はそこに存在するのか [18 chars] | ゴームリーによれば、天使の意義は三つある。第一に、その建造地の地下で炭鉱労働者が2世紀にわたり働いていたことを象徴すること。第二に、産業時代から情報時代への移行を捉えること。第三に、私たちの変化する希望と恐怖の焦点となることである。[2] [119 chars] |
+| 3分の5妥協は、アメリカ合衆国憲法の第1条第2節第3項に最初に記述されています。 [40 chars] | 三人のうち五分の三の妥協は、アメリカ合衆国憲法第1条第2項第3項に記載されており、その内容は以下の通りである： [55 chars] |
+| 「Somebody's Watching Me」でマイケル・ジャクソンが参加しているのは、ロッキー・ローランド（Rockwell）です。マイケル・ジャクソンはこの曲のバックボーカルを務めています。 [98 chars] | 「Somebody's Watching Me」は、アメリカの歌手ロクウェルが自身のデビュースタジオアルバム『Somebody's Watching Me』（1984年）から発表した楽曲である。この曲は1984年1月14日にモータウンから、ロクウェルのデビューシングルおよびアルバムのリードシングルとしてリリースされた。曲には元ジャクソン5のメンバーであるマイケル・ジャクソン（コーラスでのボーカル）... [200 / 235 chars] |
 
 ### Public Sources
 
@@ -130,7 +130,7 @@ restore answer-focused ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | https://aclanthology.org/Q19-1026/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

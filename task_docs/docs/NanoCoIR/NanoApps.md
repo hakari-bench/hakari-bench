@@ -70,9 +70,13 @@ Evaluation should also inspect candidate recall before reranking. A reranker can
 
 ## Example Data
 
-### Public Sources
-
-NanoApps is documented through the CoIR benchmark paper and the APPS task paper. The public APPS dataset card is also relevant because it describes the source programming-challenge data used by CoIR.
+| Query | Positive document |
+| --- | --- |
+| On the way to Rio de Janeiro Ostap kills time playing with a grasshopper he took with him in a speci... [100 / 2,427 chars] | from math import * from sys import * from queue import * from decimal import * n,k=(int(z) for z in input().split()) s=input() i=0 while i<len(s) and s[i] not in ["G","T"]: i+=1 i+=k while i<len(s) an... [200 / 300 chars] |
+| The All-Berland National Olympiad in Informatics has just ended! Now Vladimir wants to upload the co... [100 / 2,762 chars] | n = int(input()) t = [1] + [0] * n b, a = d = [], [] h, s = [], [] for i in range(n): f, k = input().split() d[int(k)].append(f) m = len(a) for i in a: if i.isdigit() and i[0] != '0': j = int(i) if 0... [200 / 1,311 chars] |
+| You are fighting with Zmei Gorynich — a ferocious monster from Slavic myths, a huge dragon-like rept... [100 / 2,047 chars] | for _ in range(int(input())): n, x = list(map(int, input().split())) A = [] for _1 in range(n): d, h = list(map(int, input().split())) A.append([d, h]) A.sort(reverse=True) if A[0][0] >= x: print(1) e... [200 / 434 chars] |
+| Salem gave you $n$ sticks with integer positive lengths $a_1, a_2, \ldots, a_n$. For every stick, yo... [100 / 1,556 chars] | n = int(input()) a = list(map(int,input().split())) t = 0 mn = 1000000000 for i in range(1,100): cur = 0 for j in range(n): cur += max(0,abs(i-a[j])-1) if cur < mn: mn = cur t = i print(t,mn) [227 chars] |
+| Polycarp is crazy about round numbers. He especially likes the numbers divisible by 10^{k}. In the g... [100 / 1,533 chars] | s = input().split() k = int(s[1]) s = s[0] if s.count('0') < k: if s.count('0') > 0: print(len(s) - 1) else: print(len(s)) return have = 0 its = 0 for i in range(len(s) - 1, -1, -1): its += 1 if s[i]... [200 / 320 chars] |
 
 ### Source Reference Table
 

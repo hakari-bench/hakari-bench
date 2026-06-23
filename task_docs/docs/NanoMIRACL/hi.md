@@ -154,11 +154,13 @@ positive coverage.
 
 ## Example Data
 
-Representative queries ask what kind of waves radar uses, on which date India's
-Republic Day falls, who leads the Congress party, whether vehicle fuel
-combustion pollutes air, or which factories in India were established by the
-Portuguese. Positive documents are Hindi Wikipedia passages containing the
-requested technical, date, leadership, pollution, or historical evidence.
+| Query | Positive document |
+| --- | --- |
+| रडार में किस प्रकार की तरंगें होती हैं ? [40 chars] | रडार रडार (Radar) वस्तुओं का पता लगाने वाली एक प्रणाली है जो सूक्ष्मतरंगों का उपयोग करती है। इसकी सहायता से गतिमान वस्तुओं जैसे वायुयान, जलयान, मोटरगाड़ियों आदि की दूरी (परास), ऊंचाई, दिशा, चाल आदि का... [200 / 685 chars] |
+| भारत का गणतंत्र दिवस किस तारीख पर आता है? [41 chars] | गणतन्त्र दिवस (भारत) गणतन्त्र दिवस भारत का एक राष्ट्रीय पर्व है जो प्रति वर्ष 26 जनवरी को मनाया जाता है। इसी दिन सन् 1950 को भारत सरकार अधिनियम (1935) को हटाकर भारत का संविधान लागू किया गया था। यह भार... [200 / 287 chars] |
+| कांग्रेस दल का नेता कौन है ? [28 chars] | भारतीय राष्ट्रीय कांग्रेस 1947 में भारत की स्वतन्त्रता के बाद से भारतीय राष्ट्रीय काँग्रेस भारत के मुख्य राजनैतिक दलों में से एक रही है। इस दल के कई प्रमुख नेता भारत के प्रधानमन्त्री रह चुके हैं। जवाह... [200 / 746 chars] |
+| वाहनों में पेट्रोल के जलने से धातु वायु को प्रदूषित करती है ? [61 chars] | मोटरवाहन अधिकांश ऑटोमोबाइल जिनका आज हम प्रयोग करते हैं चलती है गैसोलीन () द्वारा (जिसे हम पेट्रोल भी कहते हैं) या डीजल आंतरिक दहन इंजन, जो वायु प्रदूषण () फैलाने के लिए भी जाने जाते हैं और इन्हे जलवाय... [200 / 569 chars] |
+| भारत की कौन सी फैक्ट्रियां पुर्तगालियों द्वारा स्थापित की? [58 chars] | भारत में यूरोपीय आगमन सन् 1500 में पुर्तगालियों ने कोचीन(केरल) के पास अपनी कोठी बनाई। शासक सामुरी (जमोरिन) से उसने कोठी की सुरक्षा का भी इंतजाम करवा लिया क्योंकि अरब व्यापारी उसके ख़िलाफ़ थे। इसके बाद... [200 / 716 chars] |
 
 ### Public Sources
 
@@ -176,10 +178,10 @@ requested technical, date, leadership, pollution, or historical evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "DBpedia Entity Retrieval",
-        "url": "https://doi.org/10.1145/3077136.3080751",
-        "year": 2017,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "DBpedia Entity Retrieval",
+        "url": "https://doi.org/10.1145/3077136.3080751",
+        "year": 2017,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "Fitzgerald Auto Mall em Chambersburg, PA",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fitzgerald Auto Malls é uma concessionária de automóveis de propriedade e operação familiar fundada em 1966, com sua primeira localização abrindo em Bethesda, Maryland. Em 2014, a Fitzgerald Auto Mall",
+          "full_chars": 436,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "Coleção de contos de 1994 de Alice Munro está disponível",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Alice Ann Munro (nascida Laidlaw; 10 de julho de 1931) é uma autora canadense. O trabalho de Munro é frequentemente descrito como tendo revolucionado a arquitetura dos contos, especialmente por sua te",
+          "full_chars": 528,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "Arquitetura galo-romana em Paris",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A Arte em Paris é um artigo sobre a cultura e a história da arte em Paris, a capital da França. Há séculos, Paris atrai artistas de todo o mundo, que chegam à cidade para se educarem e buscar inspiraç",
+          "full_chars": 306,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "SemSearch_LS-35",
+        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
+        "query": {
+          "text": "Repúblicas da antiga Iugoslávia",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A Constituição de 1974 da Iugoslávia foi a quarta e última constituição da República Federal Socialista da Iugoslávia. Ela entrou em vigor em 21 de fevereiro. Com 406 artigos originais, a constituição",
+          "full_chars": 440,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_XER-72",
+        "document_id": "<dbpedia:A_Little_Romance>",
+        "query": {
+          "text": "Filmes filmados em Veneza",
+          "full_chars": 25,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A Pequena Romântica é um filme de comédia romântica americano de 1979, em Technicolor e Panavision, dirigido por George Roy Hill e estrelado por Laurence Olivier, Thelonious Bernard e Diane Lane, em s",
+          "full_chars": 391,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

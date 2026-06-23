@@ -137,21 +137,22 @@ best initial top ranking.
 
 ## Example Data
 
-### Public Sources
-
-- [VABB-SHW: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14)](https://zenodo.org/records/14214806), 2024.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [clips/mteb-nl-vabb-ret](https://huggingface.co/datasets/clips/mteb-nl-vabb-ret), source dataset card.
-- [MTEB project repository](https://github.com/embeddings-benchmark/mteb).
+| Query | Positive document |
+| --- | --- |
+| De polsstokwerking van de beginselen van behoorlijk bestuur: export en reflexwerking? [85 chars] | Deze bijdrage omvat een analyse van de toepassing van de beginselen van behoorlijk bestuur op het privaatrechtelijk handelen van de overheid, bekeken vanuit het perspectief van publicisten. [189 chars] |
+| Het leedprincipe, het strafbegrip en de schuld zonder straf. De fixatie op leedtoevoegende straffen... [100 / 117 chars] | Volgens velen kenmerkt het strafrecht zich door het feit dat het leidt tot het opleggen van een straf. Vanuit dit oogpunt wordt het strafrecht te snel en te gemakkelijk gereduceerd tot straffen, en du... [200 / 1,499 chars] |
+| Bamacodex 4 Sociaalrecht 2009-10 [32 chars] | De Bamacodex 4 "Sociaalrecht" biedt een selectie aan, met zorg uitgevoerd, van de belangrijkste en geupdated wetten en besluiten in de domeinen van het arbeidsrecht en het socialezekerheidsrecht. Onde... [200 / 270 chars] |
+| Raoul Servais. De Tovenaar van Oostende [39 chars] | Context Raoul Servais, revolutionaire animatiecineast. Engagement, contestatie en erkenning Schrijven over de filmkunst van Raoul Servais is geen gemakkelijke taak. In het hierna volgende interview wo... [200 / 7,551 chars] |
+| Museumstrijd. Reacties van de conservatoren [43 chars] | Naar aanleiding van onderzoek naar het beleid van erfgoedmusea in Vlaanderen aan de UGent, werden in dit artikel reacties van de conservatoren verzameld. [153 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| VABB-SHW: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14) | 2024 | Zenodo dataset | https://zenodo.org/records/14214806 |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| clips/mteb-nl-vabb-ret |  | dataset card | https://huggingface.co/datasets/clips/mteb-nl-vabb-ret |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| VABB-SHW: Dataset of Flemish Academic Bibliography for the Social Sciences and Humanities (edition 14) | 2024 | Zenodo dataset | [https://zenodo.org/records/14214806](https://zenodo.org/records/14214806) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| clips/mteb-nl-vabb-ret |  | dataset card | [https://huggingface.co/datasets/clips/mteb-nl-vabb-ret](https://huggingface.co/datasets/clips/mteb-nl-vabb-ret) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

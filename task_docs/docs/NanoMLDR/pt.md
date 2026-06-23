@@ -141,12 +141,13 @@ coverage.
 
 ## Example Data
 
-Representative queries ask about formulas for solving a kinematic equation,
-when Haydn, Mozart, and Beethoven used fugue, what is needed to adjust
-brightness in a cathode-ray tube, how PR-16 connects Curiuva to other cities,
-and how counterfeit games affected the Sega Saturn's popularity in Brazil.
-Positive documents are Portuguese long articles containing the relevant
-paragraph.
+| Query | Positive document |
+| --- | --- |
+| Qual é a relação entre as fórmulas formula_99, formula_94 e formula_47 para resolver a equação menci... [100 / 106 chars] | Cinemática A cinemática (do grego "κινημα", movimento) é o ramo da física que se ocupa da descrição dos movimentos de pontos, corpos ou sistemas de corpos (grupos de objetos), sem se preocupar com a a... [200 / 31,375 chars] |
+| Quais foram as ocasiões em que Haydn, Mozart e Beethoven redescobriram a forma fugal e a utilizaram... [100 / 152 chars] | Fuga Fuga em música, é um estilo de composição contrapontista, polifônica e imitativa, de um tema principal, com sua origem na música barroca. Na composição musical o tema é repetido por outras vozes... [200 / 30,207 chars] |
+| O que é necessário para obter o ajuste de luminosidade em um tubo de raios catódicos (CRT)? [91 chars] | Osciloscópio O osciloscópio é um instrumento de medida de sinais elétricos/eletrônicos que apresenta gráficos a duas dimensões de um ou mais sinais elétricos (de acordo com a quantidade de canais de e... [200 / 26,731 chars] |
+| Qual é a importância da PR-16 para o município de Curiúva e como ela contribui para a conexão com ou... [100 / 147 chars] | Curiúva Curiúva é um município brasileiro localizado no interior do estado do Paraná. Pertence à Região Geográfica Intermediária de Ponta Grossa e à Imediata de Telêmaco Borba e localiza-se a noroeste... [200 / 26,810 chars] |
+| Qual foi o impacto da disponibilidade de jogos falsificados a preços mais acessíveis na popularidade... [100 / 129 chars] | Sega Saturn O Sega Saturn é um console de jogos eletrônicos de quinta geração, lançado pela empresa Sega em 22 de Novembro de 1994 no Japão, 11 de Maio de 1995 na América do Norte, 30 de agosto de 199... [200 / 32,800 chars] |
 
 ### Public Sources
 
@@ -162,9 +163,9 @@ paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

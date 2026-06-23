@@ -62,19 +62,21 @@ Models should focus on Arabic public-health intent and action matching. Hard neg
 
 ## Example Data
 
-### Public Sources
-
-- [publichealth-qa](https://huggingface.co/datasets/xhluca/publichealth-qa), dataset card.
-- [publichealth-qa repository](https://github.com/xhluca/publichealth-qa).
-- [COVID-QA dataset](https://www.kaggle.com/datasets/xhlulu/covidqa), source dataset referenced by the dataset card.
+| Query | Positive document |
+| --- | --- |
+| أنا مصابة بمرض كوفيد-19 وأشعر بتوعك شديد لا يسمح لي بإرضاع طفلي مباشرة. ماذا أفعل؟ [82 chars] | إذا كنت تشعرين بتوعك شديد يمنعك من إرضاع طفلك مباشرة سواء بسبب مرض كوفيد-19 أو غيره من المضاعفات، فينبغي أن تلتمسي الدعم لتوفير حليبك لطفلك على نحو مأمون وبطريقة مناسبة ومتاحة ومقبولة لك. ويمكن أن يشم... [200 / 291 chars] |
+| هل هناك أمور ينبغي أن أتجنبها؟ [30 chars] | التدابير التالية غير فعّالة في مواجهة مرض كوفيد-19 بل قد تكون ضارة: التدخيناستخدام كمامات متعددة تعاطي المضادات الحيوية (أنظر هل توجد أي أدوية أو علاجات يمكنها الوقاية من مرض كوفيد-19 أو علاجه؟) في جم... [200 / 408 chars] |
+| هل المضادات الحيوية فعّالة في الوقاية من مرض كوفيد-2019 أو علاجه؟ [65 chars] | لا. لا تقضي المضادات الحيوية على الفيروسات، فهي لا تقضي إلا على العدوى الجرثومية. وبما أن مرض كوفيد-19 سببه فيروس، فإن المضادات الحيوية لا تقضي عليه. فلا ينبغي استعمال المضادات الحيوية كوسيلة للوقاية... [200 / 300 chars] |
+| ما هي المطهرات الموصى باستخدامها لتنظيف البيئة في مرافق الرعاية الصحية أو المنازل التي يوجد فيها الم... [100 / 183 chars] | لتنظيف البيئة في مرافق الرعاية الصحية أو المنازل التي يوجد فيها المرضى الذين يُشتبه في إصابتهم بعدوى فيروس كورونا المستجد أو الذين تأكّدت إصابتهم بها، ينبغي أن تُستخدم المطهرات الفعالة ضد الفيروسات ال... [200 / 1,276 chars] |
+| هل يمكن جمع المرضى الذين يُشتبه في إصابتهم بعدوى فيروس كورونا المستجد أو الذين تأكّدت إصابتهم بها في... [100 / 112 chars] | يُستحسن أن يُعزل المرضى الذين يُشتبه في إصابتهم بمرض تنفسي حاد ناجم عن فيروس كورونا المستجد أو الذين تأكّدت إصابتهم به، في غرف فردية. ولكن، إذا تَعذّر ذلك (بسبب العدد المحدود للغرف الفردية مثلا)، فإن... [200 / 482 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| publichealth-qa | 2024 | dataset card | https://huggingface.co/datasets/xhluca/publichealth-qa |
-| publichealth-qa repository |  | source repository | https://github.com/xhluca/publichealth-qa |
-| COVID-QA dataset |  | source dataset | https://www.kaggle.com/datasets/xhlulu/covidqa |
+| publichealth-qa | 2024 | dataset card | [https://huggingface.co/datasets/xhluca/publichealth-qa](https://huggingface.co/datasets/xhluca/publichealth-qa) |
+| publichealth-qa repository |  | source repository | [https://github.com/xhluca/publichealth-qa](https://github.com/xhluca/publichealth-qa) |
+| COVID-QA dataset |  | source dataset | [https://www.kaggle.com/datasets/xhlulu/covidqa](https://www.kaggle.com/datasets/xhlulu/covidqa) |
 
 ### Representative Snippets
 

@@ -107,20 +107,106 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "CodeSearchNet Challenge: Evaluating the State of Semantic Code Search",
         "url": "https://arxiv.org/abs/1909.09436",
         "year": 2019,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "OctoPack: Instruction Tuning Code Large Language Models",
         "url": "https://arxiv.org/abs/2308.07124",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "humanevalpack-q-66",
+        "document_id": "humanevalpack-d-66",
+        "query": {
+          "text": "Finish the following code based on the docstring: def digitSum(s): \"\"\"Task Write a function that tak",
+          "full_chars": 412,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "if s == \"\": return 0 return sum(ord(char) if char.isupper() else 0 for char in s)",
+          "full_chars": 85,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "humanevalpack-q-123",
+        "document_id": "humanevalpack-d-123",
+        "query": {
+          "text": "Finish the following code based on the docstring: def get_odd_collatz(n): \"\"\" Given a positive integ",
+          "full_chars": 892,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "if n%2==0: odd_collatz = [] else: odd_collatz = [n] while n > 1: if n % 2 == 0: n = n/2 else: n = n*3 + 1 if n%2 == 1: odd_collatz.append(int(n)) return sorted(odd_collatz)",
+          "full_chars": 275,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "humanevalpack-q-103",
+        "document_id": "humanevalpack-d-103",
+        "query": {
+          "text": "Finish the following code based on the docstring: def rounded_avg(n, m): \"\"\"You are given two positi",
+          "full_chars": 489,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "if m < n: return -1 summation = 0 for i in range(n, m+1): summation += i return bin(round(summation/(m - n + 1)))",
+          "full_chars": 141,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "humanevalpack-q-9",
+        "document_id": "humanevalpack-d-9",
+        "query": {
+          "text": "Finish the following code based on the docstring: from typing import List, Tuple def rolling_max(num",
+          "full_chars": 337,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "running_max = None result = [] for n in numbers: if running_max is None: running_max = n else: running_max = max(running_max, n) result.append(running_max) return result",
+          "full_chars": 232,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "humanevalpack-q-161",
+        "document_id": "humanevalpack-d-161",
+        "query": {
+          "text": "Finish the following code based on the docstring: def solve(s): \"\"\"You are given a string s. if s[i]",
+          "full_chars": 416,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "flg = 0 idx = 0 new_str = list(s) for i in s: if i.isalpha(): new_str[idx] = i.swapcase() flg = 1 idx += 1 s = \"\" for i in new_str: s += i if flg == 0: return s[len(s)::-1] return s",
+          "full_chars": 265,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

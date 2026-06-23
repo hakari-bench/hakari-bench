@@ -62,9 +62,13 @@ A model targeting this task should optimize for broad argument coverage and firs
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Touché 2020 argument retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Är läxor bra? [13 chars] | Först och främst finns det tre argument för varför läxor är utmärkta och bör fortsätta i moderna skolor. 1. Läxor hjälper gör-lärarna. Det är allmänt accepterat att det finns tre typer av lärande: de... [200 / 3,658 chars] |
+| Bör receptbelagda läkemedel annonseras direkt till konsumenter? [63 chars] | Många annonser innehåller inte tillräckligt med information om hur väl läkemedel fungerar. Till exempel annonseras Lunesta av en fjäril som flyger in genom ett sovrumsfönster, över en person som sover... [200 / 1,768 chars] |
+| Skall barn behöva några vacciner? [33 chars] | Det är inte ett fullständigt fall ännu... bara några små punkter jag samlat ihop... Regeringar bör inte ha rätt att ingripa i de hälsoval som föräldrar gör för sina barn. Enligt en undersökning från 2... [200 / 4,244 chars] |
+| Bör abort vara lagligt? [23 chars] | Abort ska vara lagligt eftersom personlighet börjar när fostret är livskraftigt eller efter födseln, inte vid befruktningen. Enligt USA:s högsta domstol får en person sin ålder när de är utanför moder... [200 / 286 chars] |
+| Förbättrar standardiserade prov utbildningen? [45 chars] | Löst: SAT, ACT och andra standardiserade tester ger mer insikt i en gymnasieelevers beredskap för utbildning på elituniversitet och högskolor än gymnasiebetyget och bör därför spela en större roll i a... [200 / 4,148 chars] |
 
 ### Source Reference Table
 

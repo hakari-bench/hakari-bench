@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
-        "url": "https://arxiv.org/abs/1803.05355",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "Keith Godchaux kände till Grateful Dead",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Grateful Dead var ett amerikanskt rockband som bildades 1965 i Palo Alto, Kalifornien. Bandet, som bestod av fem till sju medlemmar, är känt för sin unika och eklektiska stil, som blandade element",
+          "full_chars": 2895,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah är en sitcom.",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah (Engelska: Taarak Mehtas olika perspektiv) är Indiens längsta löpande sitcom, producerad av Neela Tele Films Private Limited. Serien sändes för första gången den 28 jul",
+          "full_chars": 583,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Hemliga och tekniskt avancerade flygplan tillverkades i Burbank, Kalifornien.",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank är en stad i Los Angeles County i södra Kalifornien, USA, cirka 19 kilometer nordväst om centrala Los Angeles. Vid folkräkningen 2010 hade staden 103 340 invånare. Staden marknadsförs som \"Vär",
+          "full_chars": 1280,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "85454",
+        "document_id": "Julio-Claudian_dynasty",
+        "query": {
+          "text": "Nero är en människa",
+          "full_chars": 19,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Den julisk-claudiska dynastin syftar på de första fem romerska kejsarna – Augustus, Tiberius, Caligula, Claudius och Nero – eller familjen de tillhörde. De styrde Romarriket från dess bildande under A",
+          "full_chars": 2022,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172320",
+        "document_id": "Scream_2",
+        "query": {
+          "text": "Scream 2 är enbart en tysk film.",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Scream 2 är en amerikansk slasherfilm från 1997, regisserad av Wes Craven och skriven av Kevin Williamson. Filmen har David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Jamie Kennedy",
+          "full_chars": 2456,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

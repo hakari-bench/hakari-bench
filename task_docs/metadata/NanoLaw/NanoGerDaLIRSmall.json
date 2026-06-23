@@ -134,8 +134,91 @@
         "url": "https://github.com/lavis-nlp/GerDaLIR",
         "year": 2021,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "qwXXPZtlCG",
+        "query": {
+          "text": "Die Streitwertfestsetzung bzw. änderung beruht auf den §§ 0, 0 Abs. 0 und 0, 0 Abs. 0 Satz 0 Nr. 0 i",
+          "full_chars": 476,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor Der Antrag wird abgelehnt. Der Kläger trägt die Kosten des Zulassungsverfah-rens. Der Streitwert wird unter Abänderung der Streitwertfestsetzung des Verwaltungsgerichts für beide Rechtszüge jewe",
+          "full_chars": 7138,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "m7haZW9njV",
+        "query": {
+          "text": "Das Regierungspräsidium hat die Anordnung des Sofortvollzugs in einer den Anforderungen des [REF] ge",
+          "full_chars": 1266,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor Auf die Beschwerde des Antragsgegners wird der Beschluss des Verwaltungsgerichts Freiburg vom [DATE] [REF] geändert.Der Antrag des Antragstellers auf Wiederherstellung bzw. Anordnung der aufschi",
+          "full_chars": 16218,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "WIlnoCqNl4",
+        "query": {
+          "text": "Die Entscheidung des Landgerichts, die Beklagte zur Erteilung der Auskunft durch Vorlage eines notar",
+          "full_chars": 1431,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor Die Rechtsbeschwerde gegen den Beschluss des 0. Familiensenats in Freiburg des Oberlandesgerichts Karlsruhe vom [DATE] wird auf Kosten des Antragsgegners zurückgewiesen. Von Rechts wegen Gründe",
+          "full_chars": 11013,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "groJ3cNnwS",
+        "query": {
+          "text": "Zwar müssen Neugestaltungen des Besoldungsrechts auch das Leistungsprinzip wahren . Die Anrechnungsr",
+          "full_chars": 1347,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor § 0 Absatz 0 des Gesetzes zum Personalrecht der Beschäftigten der früheren Deutschen Bundespost in der Fassung des [REF] es vom [DATE] ist mit dem Grundgesetz vereinbar. Gründe A. Die Vorlage de",
+          "full_chars": 40578,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "TJiWvmyBCn",
+        "query": {
+          "text": "„Ob nach ihrem Gesamtergebnis wesentlich gleiche Beurteilungen vorliegen, richtet sich aber nicht al",
+          "full_chars": 627,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor Der Wert des Gegenstands der anwaltlichen Tätigkeit für das Verfassungsbeschwerdeverfahren wird auf 0 € und für das Verfahren über den Antrag auf Erlass einer einstweiligen Anordnung auf 0 € fes",
+          "full_chars": 521,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -70,9 +70,13 @@ A strong model should not require polished requirements. It should interpret inc
 
 ## Example Data
 
-### Public Sources
-
-NanoCosQA is documented through CoIR and the CoSQA paper. The CoIR-Retrieval/cosqa dataset card is the source-specific public reference for the retrieval adaptation.
+| Query | Positive document |
+| --- | --- |
+| token to id python [18 chars] | def strids2ids(tokens: Iterable[str]) -> List[int]: """ Returns sequence of integer ids given a sequence of string ids. :param tokens: List of integer tokens. :return: List of word ids. """ return lis... [200 / 244 chars] |
+| python 3 tkinter open file dialog [33 chars] | def askopenfilename(**kwargs): """Return file name(s) from Tkinter's file open dialog.""" try: from Tkinter import Tk import tkFileDialog as filedialog except ImportError: from tkinter import Tk, file... [200 / 389 chars] |
+| python calc page align [22 chars] | def page_align_content_length(length): # type: (int) -> int """Compute page boundary alignment :param int length: content length :rtype: int :return: aligned byte boundary """ mod = length % _PAGEBLOB... [200 / 323 chars] |
+| how to separate list elements by white space python [51 chars] | def split_strings_in_list_retain_spaces(orig_list): """ Function to split every line in a list, and retain spaces for a rejoin :param orig_list: Original list :return: A List with split lines """ temp... [200 / 381 chars] |
+| python how to change file extension [35 chars] | def lower_ext(abspath): """Convert file extension to lowercase. """ fname, ext = os.path.splitext(abspath) return fname + ext.lower() [149 chars] |
 
 ### Source Reference Table
 

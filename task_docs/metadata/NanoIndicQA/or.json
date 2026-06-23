@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d46e18d3a179fddfd130cfbc9dfe7d357edeb2ccb526a80a4197b6a61c6e030a",
+        "document_id": "fe5abc075756aac39c62517a2b628196b58e0615c8670cc50dff85d4aebdf026",
+        "query": {
+          "text": "ଅମିତାଭଙ୍କ ବାପା ଜଣେ କ’ଣ ଥିଲେ ?",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ଅମିତାଭ ବଚ୍ଚନ ୧୯୪୨ ମସିହା ଅକ୍ଟୋବର ମାସ ୧୧ ତାରିଖରେ ଭାରତର ଉତ୍ତର ପ୍ରଦେଶ ରାଜ୍ୟରେ ଥିବା ଆଲ୍ହାବାଦଠାରେ ଜନ୍ମ ଗ୍ରହଣ କରିଥିଲେ । ସେତେବେଳେ ଭାରତ ବ୍ରିଟିଶ୍ ଶାସନାଧୀନ ଥିଲା । ତାଙ୍କ ପୂର୍ବପୂରୁଷମାନେ ଉତ୍ତର ପ୍ରଦେଶର ପ୍ରତାପଗଡ଼ ଜିଲ",
+          "full_chars": 826,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "22ddd44d2e88d4e47744c1bd131603f9de2ad53dc6d3fdb49813aa97a29f4a33",
+        "document_id": "a7efdcc350ae4b33d96f1df535b1f9b5dd53886658caf70820ccb8cca0e36cc9",
+        "query": {
+          "text": "ନେନୁ ଓକ୍କଡ଼ନି‌ ଚଳଚ୍ଚିତ୍ର କେଉଁ ମସିହାରେ ମୁକ୍ତିଲାଭ କରିଥିଲା?",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ଏହା ପରେ ମହେଶ ‌ଶ୍ରୀକାନ୍ତ ଆଡ୍‌ଲା‌ଙ୍କ ନିର୍ଦ୍ଦେଶିତ ‌ସୀତାମ୍ମା ଭେକିଟିଲ୍ଲୋ ସେରିମଲ୍ଲି ସିଟ୍ଟୁ‌ରେ ଅଭିନୟ କରିଥିଲେ, ଯାହାର କାହାଣୀ ‌ଦୋକୁଡ଼ୁ‌ ଚଳଚ୍ଚିତ୍ରର କାମ ଚାଲିଥିବା ବେଳେ ମହେଶ ବାବୁଙ୍କଦ୍ୱାରା ମଞ୍ଜୁର କରାଯାଇଥିଲା । ଏହି ଚଳ",
+          "full_chars": 1862,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "06d9023a385795dab4ec054f99a02f47492591af1e25466615bc6d1b56d944fc",
+        "document_id": "e338ba412994f21f89eba4fa9a8078ead7c5188fc3e8e9ddd049d471545c7ad9",
+        "query": {
+          "text": "ଇଣ୍ଡୋନେସିଆର ସବୁଠାରୁ ଉଚ୍ଚ ଶିବ ମନ୍ଦିରର ଉଚ୍ଚତା କେତେ ?",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ଇନ୍ଦୋନେସିଆର ହିନ୍ଦୁ ବା ବୁଦ୍ଧ ମନ୍ଦିରକୁ ଚାଣ୍ଡି କୁହାଯାଏ । ଏଥିରେ ସିଂହାସନ, ତା’ ଉପରେ ମୁଖ୍ୟ ମନ୍ଦିର ଓ ପ୍ରବେଶ ଦ୍ୱାର ରହିଥାଏ । ଏଗୁଡ଼ିକ ୭ମ ଶତାବ୍ଦୀରୁ ୧୫ଶ ଶତାବ୍ଦୀ ମଧ୍ୟରେ ନିର୍ମିତ ହୋଇଥିଲା । ବାଲିର ହିନ୍ଦୁମନ୍ଦିର ନିର୍ମାଣ",
+          "full_chars": 704,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "fa3f824b1619b09634dc39a23ab9cdd15b8a5f0b8f92a9dbe8325aaf44093203",
+        "document_id": "a7efdcc350ae4b33d96f1df535b1f9b5dd53886658caf70820ccb8cca0e36cc9",
+        "query": {
+          "text": "କିଏ ଚଳଚିତ୍ର କୁ ନିର୍ଦେଶନା ଦେଇଥିଲେ?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ଏହା ପରେ ମହେଶ ‌ଶ୍ରୀକାନ୍ତ ଆଡ୍‌ଲା‌ଙ୍କ ନିର୍ଦ୍ଦେଶିତ ‌ସୀତାମ୍ମା ଭେକିଟିଲ୍ଲୋ ସେରିମଲ୍ଲି ସିଟ୍ଟୁ‌ରେ ଅଭିନୟ କରିଥିଲେ, ଯାହାର କାହାଣୀ ‌ଦୋକୁଡ଼ୁ‌ ଚଳଚ୍ଚିତ୍ରର କାମ ଚାଲିଥିବା ବେଳେ ମହେଶ ବାବୁଙ୍କଦ୍ୱାରା ମଞ୍ଜୁର କରାଯାଇଥିଲା । ଏହି ଚଳ",
+          "full_chars": 1862,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5cdc65fdf15598c18d6241184705b3fb272bb6fbb860cc5e1134c077d22790ea",
+        "document_id": "8d3b423db2201ede598de8cf84b3a89a1375dec3482cd16b2c30b920cabb45ea",
+        "query": {
+          "text": "ଅମିତାଭ ବଚ୍ଚନ ଅଭିନୟ କରନ୍ତୁ ବୋଲି କିଏ ଚାହୁଁଥିଲେ?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ଅମିତାଭ ବଚ୍ଚନଙ୍କ ପିତା ୨୦୦୩ ମସିହାରେ ମୃତ୍ୟୁବରଣ କରିଥିଲେ ଓ ତାଙ୍କ ମାତା ୨୦୦୭ ମସିହାରେ ମୃତ୍ୟୁବରଣ କରିଥିଲେ । ଅମିତାଭ ବଚ୍ଚନ ନୈନିତାଲ୍‌ର ଶେର୍‌‌‌‌ଉଡ୍ କଲେଜରେ ନିଜର କଲେଜ ଶିକ୍ଷା ଶେଷ କରିଥିଲେ । ଏହାପରେ ସେ ଦିଲ୍ଲୀ ୟୁନିଭର୍ସିଟି",
+          "full_chars": 656,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

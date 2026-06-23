@@ -135,7 +135,7 @@
         "url": "https://kaggle.com/competitions/quora-question-pairs",
         "year": 2017,
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -143,7 +143,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -151,15 +151,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "461149",
+        "document_id": "461148",
+        "query": {
+          "text": "¿Está bien reírse de tus propios chistes?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "¿Es raro reírse de mis propios chistes?",
+          "full_chars": 39,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "145739",
+        "document_id": "145740",
+        "query": {
+          "text": "¿Cuál es la mejor mentira que has contado?",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "¿Cuál es la mentira más ingeniosa que hayas contado?",
+          "full_chars": 52,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "127728",
+        "document_id": "127729",
+        "query": {
+          "text": "¿Por qué Quora me sugiere con frecuencia respuestas en mi timeline que critican a Donald Trump?",
+          "full_chars": 95,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "¿Por qué parece que en Quora solo hay respuestas subjetivas y parciales sobre Donald Trump?",
+          "full_chars": 91,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "516276",
+        "document_id": "516277",
+        "query": {
+          "text": "¿Cómo puedo fortalecerme físicamente?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "¿Cómo puedo fortalecerme físicamente?",
+          "full_chars": 37,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "250143",
+        "document_id": "250142",
+        "query": {
+          "text": "¿Cómo funcionará un satélite cuántico?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "¿Cómo funciona un satélite cuántico y cuáles serían sus principales usos?",
+          "full_chars": 73,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

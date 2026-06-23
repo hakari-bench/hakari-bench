@@ -184,12 +184,12 @@ in multilingual or synthetic training mixtures.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | benchmark paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| BEIR | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| CQADupStack | 2015 | source task paper | https://doi.org/10.1145/2838931.2838934 |
-| FEVER | 2018 | source task paper | https://arxiv.org/abs/1803.05355 |
-| Natural Questions | 2019 | source task paper | https://aclanthology.org/Q19-1026/ |
-| MS MARCO | 2016 | source task paper | https://arxiv.org/abs/1611.09268 |
-| TREC-COVID | 2020 | source task paper | https://arxiv.org/abs/2005.04474 |
-| GreenNode datasets |  | dataset organization | https://huggingface.co/GreenNode |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | benchmark paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| BEIR | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| CQADupStack | 2015 | source task paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| FEVER | 2018 | source task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| Natural Questions | 2019 | source task paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| MS MARCO | 2016 | source task paper | [https://arxiv.org/abs/1611.09268](https://arxiv.org/abs/1611.09268) |
+| TREC-COVID | 2020 | source task paper | [https://arxiv.org/abs/2005.04474](https://arxiv.org/abs/2005.04474) |
+| GreenNode datasets |  | dataset organization | [https://huggingface.co/GreenNode](https://huggingface.co/GreenNode) |

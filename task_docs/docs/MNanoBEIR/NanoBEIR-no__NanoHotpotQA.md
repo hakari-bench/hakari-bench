@@ -122,11 +122,11 @@ the key question is whether both positives are available and highly ranked.
 
 | Query | Positive document |
 | --- | --- |
-| Hvilken annen skuespiller medvirket Penny Rae Bridges i en TV-sitcom sammen med? | Penny Rae Bridges er en amerikansk skuespiller. Hun har spilt i "For Your Love", "Family Law", "Boy Meets World"... |
-| Hvem ga Kaganoi Shigemochi et sverd laget av personen som grunnla Muramasa-skolen? | Kaganoi Shigemochi var en japansk samurai fra Azuchi-Momoyama-perioden som tjenestegjorde for Oda-klanen... |
-| Hvilken film er skrevet og regissert av Joby Harold med musikk av Samuel Sim? | Samuel Sim er en komponist for film og fjernsyn. Han fikk først anerkjennelse for sin musikk til BBC-dramaserien "Dunkirk"... |
-| Hvilken dato ble denne college football-kampen spilt på Sun Life Stadium i Miami Gardens, Florida, der Clemson slo nr. 4 Oklahoma Sooners, 37-17? | Clemson Tigers fotballaget representerte Clemson University i 2015-sesongen i NCAA Division I FBS... |
-| Hva er Devil's Food? Det er en samling med singler av en amerikansk rock and roll-band som også har vært kjent for å spille country-konserter under hvilket navn? | Devil's Food er en samleplate med singler av det amerikanske rock & roll-bandet Supersuckers, utgitt i april 2005... |
+| Hvilken annen skuespiller medvirket Penny Rae Bridges i en TV-sitcom sammen med? [80 chars] | Penny Rae Bridges (født 29. juli 1990) er en amerikansk skuespiller. Hun har spilt i "For Your Love", "Family Law", "Boy Meets World" og "The Parent 'Hood". Hun er mest kjent for sin rolle i "Half & H... [200 / 224 chars] |
+| Hvem ga Kaganoi Shigemochi et sverd laget av personen som grunnla Muramasa-skolen? [82 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27. august 1600) var en japansk samurai fra Azuchi-Momoyama-perioden som tjenestegjorde for Oda-klanen. Han styrte Kaganoi-slottet. Under slaget ved Komaki og Nagaku... [200 / 554 chars] |
+| Hvilken film er skrevet og regissert av Joby Harold med musikk av Samuel Sim? [77 chars] | Samuel Sim er en komponist for film og fjernsyn. Han fikk først anerkjennelse for sin prisbelønte musikk til BBC-dramaserien "Dunkirk". Siden da har han skrevet musikk til en bred vifte av film- og fj... [200 / 468 chars] |
+| Hvilken dato ble denne college football-kampen spilt på Sun Life Stadium i Miami Gardens, Florida, d... [100 / 145 chars] | Clemson Tigers fotballaget representerte Clemson University i 2015-sesongen i NCAA Division I FBS. Tigers ble ledet av hovedtrener Dabo Swinney i hans syvende fulle år og åttende år totalt siden han o... [200 / 963 chars] |
+| Hva er Devil's Food? Det er en samling med singler av en amerikansk rock and roll-band som også har... [100 / 161 chars] | Devil's Food er en samleplate med singler av det amerikanske rock & roll-bandet Supersuckers, utgitt i april 2005 på Mid-Fi Records. [132 chars] |
 
 ### Public Sources
 
@@ -140,7 +140,7 @@ the key question is whether both positives are available and highly ranked.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | https://arxiv.org/abs/1809.09600 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

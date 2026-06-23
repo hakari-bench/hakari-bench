@@ -62,9 +62,13 @@ A model targeting this task should keep scientific identifier precision while im
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on SciFact, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Quy định của Ly49Q về chức năng của màng raft trong sự di chuyển của bạch cầu trung tính đến các vị... [100 / 109 chars] | Các bạch cầu trung tính nhanh chóng trải qua quá trình phân cực và di chuyển theo hướng để xâm nhập vào các vị trí nhiễm trùng và viêm. Ở đây, chúng tôi cho thấy rằng một thụ thể MHC I ức chế, Ly49Q,... [200 / 1,134 chars] |
+| Liệu pháp kháng retrovirus và tác động của nó đến việc giảm tỷ lệ bệnh lao trên một loạt các mức CD4... [100 / 101 chars] | NỀN TẢNG Nhiễm virus suy giảm miễn dịch ở người (HIV) là yếu tố nguy cơ mạnh nhất dẫn đến bệnh lao và đã thúc đẩy sự tái phát của nó, đặc biệt là ở khu vực hạ Sahara châu Phi. Năm 2010, ước tính có 1,... [200 / 2,179 chars] |
+| Sự điều chỉnh tăng nhanh và biểu hiện cơ bản cao hơn của các gen được kích thích bởi interferon có l... [100 / 177 chars] | Mặc dù độ nhạy cảm của các tế bào thần kinh trong não đối với nhiễm trùng vi sinh vật là một yếu tố quyết định chính trong kết quả lâm sàng, nhưng rất ít điều được biết về các yếu tố phân tử điều chỉn... [200 / 1,233 chars] |
+| Sàng lọc ung thư cổ tử cung nguyên phát với phát hiện HPV có độ nhạy dọc cao hơn so với tế bào học t... [100 / 159 chars] | NỀN TẢNG Sàng lọc ung thư cổ tử cung dựa trên việc xét nghiệm virus papilloma ở người (HPV) làm tăng độ nhạy trong việc phát hiện các tổn thương nội biểu mô cổ tử cung độ cao (độ 2 hoặc 3), nhưng khôn... [200 / 2,422 chars] |
+| Chặn tương tác giữa TDP-43 và protein phức hợp hô hấp I ND3 và ND6 dẫn đến tăng cường mất neuron do... [100 / 114 chars] | Các đột biến gen trong protein liên kết DNA TAR (TARDBP, còn được gọi là TDP-43) gây ra bệnh xơ cứng teo cơ một bên (ALS), và sự gia tăng hiện diện của TDP-43 (được mã hóa bởi TARDBP) trong tế bào chấ... [200 / 1,368 chars] |
 
 ### Source Reference Table
 

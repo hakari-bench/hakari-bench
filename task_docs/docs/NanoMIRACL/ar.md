@@ -144,11 +144,13 @@ top-rank ordering.
 
 ## Example Data
 
-Representative queries ask about the first publishing house in Lebanon, Marie
-Curie's early research, the number of Kuwaiti National Assembly members, the
-founder of the Habsburg dynasty, and when Amazon began offering cloud-computing
-services. Positive documents are Arabic Wikipedia passages containing the
-corresponding facts.
+| Query | Positive document |
+| --- | --- |
+| ما هي اول دار للنشر في لبنان ؟ [30 chars] | لبنان ويشتهر لبنان بدور النشر التي تصدر الكتب المتنوعة العربية منها والمترجمة من لغات أخرى. وأول دار للنشر في لبنان أنشئت بهدف النشر والتوزيع والتأليف هي دار العلم للملايين في سنة 1945، وكان معظم المش... [200 / 722 chars] |
+| ما أول أبحاث ماري سكوودوفسكا كوري؟ [34 chars] | ماري كوري خلال الحرب العالمية الأولى، أسست أول مراكز إشعاعية عسكرية. ورغم حصولها على الجنسية الفرنسية، لم تفقد ماري سكوودوفسكا كوري إحساسها بهويتها البولندية، فقد علمت بناتها اللغة البولندية، واصطحبته... [200 / 549 chars] |
+| كم عدد أعضاء مجلس الأمة الكويتي؟ [32 chars] | سياسة الكويت لدى مجلس الأمة 65 عضو، 50 عضو منهم منتخبين لفترة تستمر لأربعة سنوات، ويكون الوزراء في الحكومة أعضاء في البرلمان، وبالرغم من أن الأمير لديه الأمر الأخير في جميع قضايا الدولة، إلا أن مجلس ا... [200 / 489 chars] |
+| من مؤسس الإمبراطورية الهابسبورغية ؟ [35 chars] | هابسبورغ الفترة من القرن الحادي عشر إلى القرن الثاني عشر فترة انحدار للإمبراطورية والملكية الألمانية إلى أدنى مستوياتها حيث سقطت أسرة هوهنشتاوفن وسادت الفوضى والمنازعات وادعى ريتشارد كورونولى أحقيته ف... [200 / 1,027 chars] |
+| متى بدأت شركة امازون بتقديم خدمة الحوسبة السحابية ؟ [51 chars] | حوسبة سحابية هذا ولعب موقع أمازون الإلكتروني دوراً جوهرياً في تنمية الحوسبة السحابية من خلال تحديث مراكز البيانات بعد فقاعة الدوت كوم، والتي، مثل غالبية شبكات الحاسوب، كانت تستخدم قدراً ضئيلاً يُقَدَّ... [200 / 664 chars] |
 
 ### Public Sources
 
@@ -166,10 +168,10 @@ corresponding facts.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

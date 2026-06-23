@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "81",
+        "document_id": "illogical_things/strikethroughhowtrumpovertonwindowextremenormal.txt",
+        "query": {
+          "text": "Asking for illogical things to make extreme views normal? A couple of months back I was reading an a",
+          "full_chars": 363,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to main content clock menu more-arrow no yes mobile [ Vox homepage ](/) * ## Give [ Give ](http://vox.com/pages/support- now?itm_campaign=contribute&itm_medium=site&itm_source=navigation) * ## Ne",
+          "full_chars": 14364,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "20",
+        "document_id": "psycho_flow/Flowpsychology.txt",
+        "query": {
+          "text": "What term can describe the feeling that a job just does itself? Is there a term that can describe th",
+          "full_chars": 943,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page \"Visit the main page \\[z\\]\") * [ Contents ](/wiki/Wikipedia:Contents \"Guides to browsing Wikipedia\")",
+          "full_chars": 132869,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "mentalblock/Mentalblock.txt",
+        "query": {
+          "text": "What is the term for the \"knowing what you think but can't explain it\" phenomenon? I think we all ex",
+          "full_chars": 504,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page \"Visit the main page \\[z\\]\") * [ Contents ](/wiki/Wikipedia:Contents \"Guides to browsing Wikipedia\")",
+          "full_chars": 23048,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "93",
+        "document_id": "excessive_shock/excessiveattentionseekinganddramaaddiction.txt",
+        "query": {
+          "text": "Saying things to shock others Is it strange or categorically bad to say things that shock others kno",
+          "full_chars": 830,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to main content Psychology Today Find a Therapist Get Help Magazine Today INTL Search Find a Therapist (City or Postcode) Verified by Psychology Today Billi Gordon Ph.D. Billi Gordon Ph.D. Obesel",
+          "full_chars": 19857,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4",
+        "document_id": "hot_cold/Hotcoldempathygap.txt",
+        "query": {
+          "text": "What is the term for the inability to see past one's own current emotional state? I'm looking for a",
+          "full_chars": 1889,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page \"Visit the main page \\[z\\]\") * [ Contents ](/wiki/Wikipedia:Contents \"Guides to browsing Wikipedia\")",
+          "full_chars": 26976,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Psychology StackExchange long-document"
+    "source_task": "Psychology StackExchange long-document",
+    "example_count": 5
   }
 }

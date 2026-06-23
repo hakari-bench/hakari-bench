@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 8
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Program Synthesis with Large Language Models",
-        "url": "https://arxiv.org/abs/2108.07732",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "google-research-datasets/mbpp",
-        "url": "https://huggingface.co/datasets/google-research-datasets/mbpp",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/google-research-datasets/mbpp"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Program Synthesis with Large Language Models",
+        "url": "https://arxiv.org/abs/2108.07732",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "google-research-datasets/mbpp",
+        "url": "https://huggingface.co/datasets/google-research-datasets/mbpp",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "000000163",
+        "query": {
+          "text": "Write a python function to check whether the sum of divisors are same or not.",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "import math def divSum(n): sum = 1; i = 2; while(i * i <= n): if (n % i == 0): sum = (sum + i +math.floor(n / i)); i += 1; return sum; def areEquivalent(num1,num2): return divSum(num1) == divSum(num2)",
+          "full_chars": 269,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "Write a python function to find the element occurring odd number of times.",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def get_Odd_Occurrence(arr,arr_size): for i in range(0,arr_size): count = 0 for j in range(0,arr_size): if arr[i] == arr[j]: count+=1 if (count % 2 != 0): return arr[i] return -1",
+          "full_chars": 275,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "Write a function to find all words which are at least 4 characters long in a string by using regex.",
+          "full_chars": 99,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "import re def find_char_long(text): return (re.findall(r\"\\b\\w{4,}\\b\", text))",
+          "full_chars": 80,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "000000189",
+        "query": {
+          "text": "Write a python function to count the number of integral co-ordinates that lie inside a square.",
+          "full_chars": 94,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def count_Intgral_Points(x1,y1,x2,y2): return ((y2 - y1 - 1) * (x2 - x1 - 1))",
+          "full_chars": 83,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "000000070",
+        "query": {
+          "text": "Write a function to sort a list of elements using comb sort.",
+          "full_chars": 60,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def comb_sort(nums): shrink_fact = 1.3 gaps = len(nums) swapped = True i = 0 while gaps > 1 or swapped: gaps = int(float(gaps) / shrink_fact) swapped = False i = 0 while gaps + i < len(nums): if nums[",
+          "full_chars": 424,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

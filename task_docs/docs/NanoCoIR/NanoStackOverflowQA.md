@@ -70,9 +70,13 @@ For reranking, the most useful signals are answer specificity, correspondence to
 
 ## Example Data
 
-### Public Sources
-
-NanoStackOverflowQA is documented through CoIR and public Stack Overflow data resources. The CoIR-Retrieval/stackoverflow-qa dataset card is the source-specific retrieval reference.
+| Query | Positive document |
+| --- | --- |
+| How to block mouse click events from another form I have a winforms single form application that use... [100 / 1,644 chars] | I'm glad to announce that the problem is finally solved. After spending a few days attempting to recreate this bug in a new application, re-constructing the main form in the application, comment out p... [200 / 916 chars] |
+| Passing a parameter to a $resource? I have a controller that that looks like this: (function() { ang... [100 / 1,406 chars] | Create the $resource object with: function branchResource($resource){ ̶r̶e̶t̶u̶r̶n̶ ̶$̶r̶e̶s̶o̶u̶r̶c̶e̶(̶"̶/̶a̶p̶i̶/̶u̶s̶e̶r̶/̶G̶e̶t̶A̶l̶l̶U̶s̶e̶r̶B̶r̶a̶n̶c̶h̶e̶s̶?̶f̶e̶d̶e̶r̶a̶t̶e̶d̶U̶s̶e̶r̶N̶a̶m̶e̶=... [200 / 991 chars] |
+| Chrome doesn’t show un-minified code in spite of source map present I’m using Grunt and UglifyJS to... [100 / 910 chars] | "sources":["customDomain.js"] should be relative to the customDomain.map.js file. Make sure they are in the same directory on your server if this is the case for you. "file":"customDomain.js" should b... [200 / 641 chars] |
+| Get looked up array count for a document i have 2 collections : words and phrases Each word document... [100 / 2,051 chars] | db.words.aggregate([ { "$unwind" : "$phrases"}, { "$lookup": { "from": "phrases", "localField": "phrases", "foreignField": "id", "as": "phrases_data" } }, { "$match" : { "phrases_data.active" : 1} },... [200 / 683 chars] |
+| Inno Setup Remove version number from "Setup has detected that ... is currently running" I've added... [100 / 694 chars] | You are wrong. The message is: SetupAppRunningError=Setup has detected that %1 is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit. Where the %1... [200 / 858 chars] |
 
 ### Source Reference Table
 

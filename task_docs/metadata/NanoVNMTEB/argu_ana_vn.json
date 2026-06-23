@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-health-hpehwadvoee-pro03a",
+        "document_id": "test-health-hpehwadvoee-pro03b",
+        "query": {
+          "text": "Quyền tự quyết cá nhân là quyền con người cơ bản, ngang hàng với quyền sống. Nguyên tắc cơ bản của c",
+          "full_chars": 1001,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "triết lý y tế đạo đức nhà cho phép quyên góp các cơ quan quan trọng ngay cả chi phí Con người cũng là một sinh vật xã hội. Trong khi chúng ta có quyền đối với cơ thể của mình, chúng ta cũng có nghĩa v",
+          "full_chars": 818,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-environment-assgbatj-con05a",
+        "document_id": "test-environment-assgbatj-con05b",
+        "query": {
+          "text": "Động vật thí nghiệm được đối xử tốt Động vật dùng trong nghiên cứu nói chung không bị đau khổ. Mặc d",
+          "full_chars": 559,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "thú vật khoa học khoa học đại chúng thử nghiệm trên động vật Chỉ vì một con vật được đối xử tốt khi nó được nuôi dưỡng không ngăn chặn nỗi đau rất thực tế trong khi thử nghiệm. Quy tắc nghiêm ngặt và",
+          "full_chars": 353,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-con01a",
+        "document_id": "test-economy-egecegphw-con01b",
+        "query": {
+          "text": "Việc xây dựng đường băng thứ ba sẽ gây ra vấn đề tiếng ồn và ô nhiễm. Mật độ dân cư cao trong khu vự",
+          "full_chars": 1302,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "kinh tế môi trường chung khí hậu môi trường chung ô nhiễm nhà ở Việc bổ sung đường băng không nhất thiết dẫn đến sự gia tăng đáng kể về ô nhiễm tiếng ồn, vì điều đó phụ thuộc vào vị trí đặt đường băng",
+          "full_chars": 1124,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-sport-tshbmlbscac-pro02a",
+        "document_id": "test-sport-tshbmlbscac-pro02b",
+        "query": {
+          "text": "Những va chạm là một phần của trò chơi. Đầu tiên, những va chạm là một phần truyền thống của bóng ch",
+          "full_chars": 2102,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "đội thể thao tin rằng giải bóng chày nên tiếp tục cho phép va chạm Những va chạm ít xảy ra trong trò chơi hơn những gì mọi người nghĩ. Ý tưởng rằng những va chạm đã tồn tại từ lâu trong trò chơi là mộ",
+          "full_chars": 1659,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-con02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-con02b",
+        "query": {
+          "text": "Không có quyền không bị xúc phạm, việc thực thi những gì được cho là chấp nhận được để suy nghĩ hoặc",
+          "full_chars": 1230,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Nhà ở khác biệt sống sẽ trừng phạt bài phát biểu thù hận tôn giáo Đây chỉ là một huyền thoại. Xã hội thường thường lập pháp để ngăn ngừa hành vi phạm tội bằng cách hạn chế những gì có thể nói hoặc làm",
+          "full_chars": 675,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "การควบคุมฟังก์ชันของเมมเบรนราฟต์ของ Ly49Q ในการเคลื่อนที่ของนิวโทรฟิลไปยังจุดอักเสบ",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "นิวโทรฟิลจะเกิดการพอระเบียบและเคลื่อนที่ในทิศทางอย่างรวดเร็วเพื่อแทรกซึมเข้าสู่จุดติดเชื้อและการอักเสบ ที่นี่เราจะแสดงให้เห็นว่า ตัวรับ MHC I ที่มีฤทธิ์ยับยั้ง Ly49Q มีความสำคัญต่อการพอระเบียบอย่างรวด",
+          "full_chars": 942,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "การบำบัดด้วยยาต้านไวรัสและผลกระทบต่อการลดอัตราการติดเชื้อวัณโรคในกลุ่ม CD4 ที่หลากหลาย",
+          "full_chars": 86,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "พื้นหลัง การติดเชื้อไวรัสภูมิคุ้มกันบกพร่องของมนุษย์ (HIV) เป็นปัจจัยเสี่ยงที่สำคัญที่สุดในการพัฒนาวัณโรคและได้กระตุ้นให้เกิดการกลับมาของโรคนี้ โดยเฉพาะในแอฟริกาตอนใต้ของซาฮารา ในปี 2010 มีการประมาณว่",
+          "full_chars": 1895,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "การเพิ่มการแสดงออกอย่างรวดเร็วและการแสดงออกพื้นฐานที่สูงขึ้นของยีนที่กระตุ้นโดยอินเตอร์เฟอรอนลดการอย",
+          "full_chars": 158,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "แม้ว่าความไวของเซลล์ประสาทในสมองต่อการติดเชื้อจุลินทรีย์จะเป็นปัจจัยหลักที่กำหนดผลลัพธ์ทางคลินิก แต่ข้อมูลเกี่ยวกับปัจจัยโมเลกุลที่ควบคุมความเปราะบางนี้ยังมีน้อย ที่นี่เราจะแสดงให้เห็นว่าเซลล์ประสาทสอ",
+          "full_chars": 1021,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "การตรวจคัดกรองมะเร็งปากมดลูกขั้นต้นด้วยการตรวจหา HPV มีความไวเชิงยาวที่สูงกว่าซิโทโลยีแบบดั้งเดิมในก",
+          "full_chars": 145,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ภูมิหลัง การคัดกรองมะเร็งปากมดลูกโดยอิงจากการตรวจหาเชื้อไวรัส HPV (human papillomavirus) จะเพิ่มความไวในการตรวจจับเนื้องอกในปากมดลูกระดับสูง (เกรด 2 หรือ 3) แต่ไม่ทราบว่าการเพิ่มขึ้นนี้เป็นการวินิจฉัย",
+          "full_chars": 1904,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "การบล็อกการมีปฏิสัมพันธ์ระหว่าง TDP-43 กับโปรตีนที่เกี่ยวข้องกับระบบหายใจซับซ้อน I ND3 และ ND6 ส่งผล",
+          "full_chars": 155,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "การกลายพันธุ์ทางพันธุกรรมในโปรตีนที่จับกับดีเอ็นเอ TAR (TARDBP หรือที่รู้จักในชื่อ TDP-43) ทำให้เกิดโรคกล้ามเนื้ออ่อนแรงข้างเดียว (ALS) และการเพิ่มขึ้นของการมีอยู่ของ TDP-43 (ที่เข้ารหัสโดย TARDBP) ใน",
+          "full_chars": 1252,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

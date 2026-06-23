@@ -129,10 +129,13 @@ anchor, while dense retrieval needs better local fact preservation.
 
 ## Example Data
 
-Representative queries ask for the passkey for generated names such as Douglas
-Alfaro, Declan Horton, Denisse Wilcox, Cheyenne Jarvis, or Zyaire Sweeney.
-Positive documents are long repeated filler passages containing the requested
-person-passkey statement.
+| Query | Positive document |
+| --- | --- |
+| what is the passkey for Douglas Alfaro? [39 chars] | The grass is green. Douglas Alfaro's pass key is 6699. Remember it. 6699 is the pass key for Douglas Alfaro. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. T... [200 / 1,786 chars] |
+| what is the passkey for Declan Horton? [38 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 58,175 chars] |
+| what is the passkey for Denisse Wilcox? [39 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 3,610 chars] |
+| what is the passkey for Cheyenne Jarvis? [40 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 29,076 chars] |
+| what is the passkey for Zyaire Sweeney? [39 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 7,243 chars] |
 
 ### Public Sources
 
@@ -147,9 +150,9 @@ person-passkey statement.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | task paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
-| mteb/LEMBPasskeyRetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/LEMBPasskeyRetrieval |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | task paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
+| mteb/LEMBPasskeyRetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/LEMBPasskeyRetrieval](https://huggingface.co/datasets/mteb/LEMBPasskeyRetrieval) |
 
 ### Representative Snippets
 

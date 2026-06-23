@@ -138,5 +138,5 @@ audits are important before training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain Information Retrieval | 2025 | paper | https://aclanthology.org/2025.naacl-long.511/ |
-| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | paper | https://ceur-ws.org/Vol-2517/T1-1.pdf |
+| IFIR: A Comprehensive Benchmark for Evaluating Instruction-Following in Expert-Domain Information Retrieval | 2025 | paper | [https://aclanthology.org/2025.naacl-long.511/](https://aclanthology.org/2025.naacl-long.511/) |
+| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | paper | [https://ceur-ws.org/Vol-2517/T1-1.pdf](https://ceur-ws.org/Vol-2517/T1-1.pdf) |

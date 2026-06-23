@@ -86,28 +86,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
-        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "An overview of the European Union's highly multilingual parallel corpora",
-        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
-        "year": 2014,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "DGT-Acquis",
-        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMuPLeR",
       "source_urls": [
@@ -116,6 +94,110 @@
           "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
+        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "An overview of the European Union's highly multilingual parallel corpora",
+        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
+        "year": 2014,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DGT-Acquis",
+        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d0c9769d-35de-496e-b909-1eebb84d44f6",
+        "document_id": "2426",
+        "query": {
+          "text": "Kto ponownie zaapelował o powołanie doświadczonych specjalistów, powołując się na reguły nadzoru, po",
+          "full_chars": 157,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Komitet zdaje sobie sprawę, że taki postulat wpływa na niełatwy kompromis pomiędzy wymogiem przejrzystości, przepisami Europejskiego Trybunału Obrachunkowego i polem manewru wszystkich decydentów. To",
+          "full_chars": 702,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "286d332d-7174-4ee2-bb53-9d1603897a5a",
+        "document_id": "6274",
+        "query": {
+          "text": "Które chronione Kartą prawo dostępu do usług w ogólnym interesie gospodarczym wymaga analizy na mocy",
+          "full_chars": 137,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jeśli chodzi o wpływ zaproponowanych przez Komisję ram regulacyjnych na prawa użytkowników, należy przypomnieć, że w określonych wypadkach konieczna będzie konkretna analiza dotycząca zachowania prawa",
+          "full_chars": 677,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "060fbf5b-2574-43f1-b2da-ea8cdb313d1d",
+        "document_id": "2660",
+        "query": {
+          "text": "Która decyzja sądowa pokazała ostatnio, że sądy przekształcają krajowe opodatkowanie przedsiębiorstw",
+          "full_chars": 165,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Niepożądanym skutkiem ubocznym dotychczasowego braku porozumienia ze strony Rady i Parlamentu Europejskiego w kwestiach wspólnej podstawy wymiaru opodatkowania przedsiębiorstw jest to, iż niezbędne de",
+          "full_chars": 680,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ef34c4a3-e330-44ca-8733-234247e51395",
+        "document_id": "1845",
+        "query": {
+          "text": "Które orzeczenie skrytykowało sąd niższej instancji za przecenianie różnic brzmieniowych i niedoceni",
+          "full_chars": 166,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Sąd mylnie wyszedł z założenia, że pomiędzy spornymi znakami towarowymi istnieje wystarczająca różnica brzmieniowa, ponieważ rejestracja zgłoszonego znaku towarowego podlega odmowie już z uwagi na sam",
+          "full_chars": 669,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "613fcd6a-66a2-485b-8bda-dd9c567ea868",
+        "document_id": "4390",
+        "query": {
+          "text": "Którego organu utworzenie uznano za zachęcający pierwszy krok do włączenia doświadczonych praktyków",
+          "full_chars": 134,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Nie jest z tym sprzeczne żądanie, by w większym stopniu niż dotychczas włączać doświadczonych ekspertów i wybitnych przedstawicieli nauki i techniki w procesy decyzyjne i sprawy administracyjne w zakr",
+          "full_chars": 584,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

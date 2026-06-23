@@ -68,9 +68,13 @@ The task is a useful benchmark for BIM, construction, and asset-information sear
 
 ## Example Data
 
-### Public Sources
-
-The task is based on BuiltBench, introduced for benchmarking text embedding models in built asset information alignment.
+| Query | Positive document |
+| --- | --- |
+| a short, thick post on the deck of a ship or a quay side, to which ship's rope may be secured. not t... [100 / 136 chars] | Capstan Capstan: This product is associated with equipment used for mooring, docking, and flotation, categorized under 'equipment' in the broader context of signage, sanitary fittings, and furnishings... [200 / 315 chars] |
+| The covering is used to represent a molding being a strip of material to cover the transition of sur... [100 / 148 chars] | Fibrous plaster mouldings Fibrous plaster mouldings are trim products used for interior wall and ceiling detailing, categorized under coverings and finishes. These mouldings add both functional and ae... [200 / 232 chars] |
+| Cooling coil using a refrigerant to cool the air stream directly. [65 chars] | Refrigerant cooling coils Refrigerant cooling coils are components associated with heating and cooling coils, classified under air and fume source products, which are part of the larger group of servi... [200 / 314 chars] |
+| Water boiler. [13 chars] | Biomass boilers Biomass boilers are a type of boiler system classified under heating and cooling source products, which are part of the larger group of services and process source products. These boil... [200 / 255 chars] |
+| An electrical appliance that has the primary function of storing food at low temperature but above t... [100 / 127 chars] | Drink chillers Drink chillers are a type of equipment categorized under commercial display and service catering products, which are part of the broader classification of signage, sanitary fittings, an... [200 / 320 chars] |
 
 ### Source Reference Table
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Convertitore Elevatore CC-CC a Più Livelli Innovativo",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "I convertitori di tensione a sorgente multlivello stanno emergendo come una nuova categoria di opzioni di convertitori di potenza per applicazioni ad alta potenza. I convertitori di tensione a sorgent",
+          "full_chars": 1122,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Apprendimento di Campi Markoviani Gaussiani Sparsi Veloci Basato sulla Fattorizzazione di Cholesky",
+          "full_chars": 98,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sure, please provide the English document text that you need translated into Italian.",
+          "full_chars": 85,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Sintesi delle Texture Utilizzando Reti Neurali Convoluzionali",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In questo lavoro indaghiamo l'effetto della profondità della rete convoluzionale sulla sua accuratezza nel contesto del riconoscimento delle immagini su larga scala. Il nostro principale contributo è",
+          "full_chars": 988,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
+        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
+        "query": {
+          "text": "Antenna ad anello anulare planare a banda larga con polarizzazione circolare per sistema RFID",
+          "full_chars": 93,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In questo articolo, viene proposta una tecnica di alimentazione a striscia meandrante orizzontale (HMS) per ottenere un buon adattamento di impedenza e schemi di radiazione simmetrici frontali per un'",
+          "full_chars": 1481,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
+        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
+        "query": {
+          "text": "Progettazione di un monitor digitale avanzato del battito cardiaco utilizzando componenti elettronic",
+          "full_chars": 109,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In questo articolo, abbiamo presentato il design e lo sviluppo di un nuovo dispositivo integrato per misurare la frequenza cardiaca utilizzando la punta del dito, al fine di migliorare la stima della",
+          "full_chars": 1397,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Argument Mining for Understanding Peer Reviews",
-        "url": "https://aclanthology.org/P18-1023/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Argument Mining for Understanding Peer Reviews",
+        "url": "https://aclanthology.org/P18-1023/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "Công chúng thờ ơ với cải cách. Liệu cải cách của Thượng viện có nên là ưu tiên hàng đầu trong bối cả",
+          "full_chars": 824,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Chiến dịch AV không thể so sánh với cải cách Thượng viện, hơn nữa không nên nhầm lẫn một công chúng thiếu thông tin do sự xoay chuyển chính trị với sự thờ ơ. Thường thì cử tri bày tỏ rằng họ thờ ơ vì",
+          "full_chars": 412,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "Sự mở rộng của Heathrow là rất quan trọng cho nền kinh tế Mở rộng Heathrow sẽ đảm bảo nhiều việc làm",
+          "full_chars": 1000,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Cộng đồng doanh nghiệp còn xa mới thống nhất trong sự ủng hộ được cho là dành cho một đường băng thứ ba. Các cuộc khảo sát cho thấy nhiều doanh nghiệp có ảnh hưởng thực sự không ủng hộ việc mở rộng. M",
+          "full_chars": 1180,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "Con người được đưa ra quá nhiều sự lựa chọn, điều này khiến họ kém hạnh phúc hơn. Quảng cáo dẫn đến",
+          "full_chars": 952,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Con người không hạnh phúc vì họ không thể có mọi thứ, chứ không phải vì họ được đưa ra quá nhiều sự lựa chọn và cảm thấy căng thẳng. Thực tế, quảng cáo đóng một vai trò quan trọng trong việc đảm bảo r",
+          "full_chars": 734,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "Các cuộc tấn công mạng thường được thực hiện bởi các tác nhân phi nhà nước Các cuộc tấn công mạng th",
+          "full_chars": 1143,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Trong trường hợp các tác nhân phi nhà nước tấn công, nhiều chuyên gia trong lĩnh vực luật quốc tế đồng ý rằng nhà nước vẫn có thể trả đũa để tự vệ nếu một nhà nước khác \"không sẵn sàng hoặc không có k",
+          "full_chars": 592,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "Bởi vì tôn giáo thúc đẩy sự chắc chắn trong niềm tin, sự thù hận được thần thánh hóa dễ dàng được sử",
+          "full_chars": 1172,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Không ai bị buộc phải thực hiện các hành vi bạo lực bởi lời nói của người khác; đó là sự lựa chọn của họ. Tương tự, có rất nhiều người có quan điểm có thể được coi là kỳ thị đồng tính nhưng lại cảm th",
+          "full_chars": 657,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

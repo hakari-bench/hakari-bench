@@ -62,19 +62,21 @@ Models should learn duplicate intent at the question level. Hard negatives shoul
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/cqadupstack-gaming](https://huggingface.co/datasets/mteb/cqadupstack-gaming), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| How can a monk tank effectively for a group? [44 chars] | Monk skills suited for CC and tanking > **Possible Duplicate:** > How can a monk tank effectively for a group? When playing with my friends (who play ranged classes), I mostly end up tanking / crowd c... [200 / 298 chars] |
+| Portal 2 Offline Co-op on Mac [29 chars] | Can we play Portal 2 co-op on one PC or Mac? Is there a way to play Portal 2 co-op on a single PC or Mac? If so, do we need two keyboards, or two mice, or what? Do we need to buy two copies of the gam... [200 / 389 chars] |
+| What type of buildings offer what level of jobs? [48 chars] | Who works in medium value commercial properties? I have some §§ (medium-wealth) buildings that are closed or closing due to a lack of workers. Yet, of my 10,652 §§ workers, 3,205 are unemployed and 15... [200 / 305 chars] |
+| At what rate do players and commanders receive resources per resource node? [75 chars] | How are resources gained, distributed, and spent? > **Possible Duplicate:** > At what rate do players and commanders receive resources per resource node? I'm unclear on how resources gained by aliens... [200 / 1,478 chars] |
+| How many forms of Vivilion are there? [37 chars] | Vivillon's Pattern 3DS Locations - Who do I need to trade with? According to Vivillon's Pokedex Entry, they have different wing patterns depending on their original location in the world: > Vivillon w... [200 / 765 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | https://eltimster.github.io/www/pubs/adcs2015.pdf |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/cqadupstack-gaming |  | dataset card | https://huggingface.co/datasets/mteb/cqadupstack-gaming |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | [https://eltimster.github.io/www/pubs/adcs2015.pdf](https://eltimster.github.io/www/pubs/adcs2015.pdf) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/cqadupstack-gaming |  | dataset card | [https://huggingface.co/datasets/mteb/cqadupstack-gaming](https://huggingface.co/datasets/mteb/cqadupstack-gaming) |
 
 ### Representative Snippets
 

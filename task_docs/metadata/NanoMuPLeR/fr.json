@@ -86,28 +86,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
-        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "An overview of the European Union's highly multilingual parallel corpora",
-        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
-        "year": 2014,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "DGT-Acquis",
-        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMuPLeR",
       "source_urls": [
@@ -116,6 +94,110 @@
           "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
+        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "An overview of the European Union's highly multilingual parallel corpora",
+        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
+        "year": 2014,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DGT-Acquis",
+        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d2e451fd-842f-4230-844c-14e6969a98b7",
+        "document_id": "5408",
+        "query": {
+          "text": "Quelles deux constatations de l'enquête réglementaire ont miné l'affirmation des opérateurs selon la",
+          "full_chars": 169,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Pour les parties notifiantes, il existe une solution sérieuse pour les ORM, celle de l'auto-approvisionnement puisque les ORM possèdent à l'intérieur de leur entreprise les capacités et le savoir-fair",
+          "full_chars": 726,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1d984da4-7668-415a-b36e-e15688097efe",
+        "document_id": "3496",
+        "query": {
+          "text": "Quelle chambre régionale est nommée avec les institutions de l'Union pour promouvoir la parité comme",
+          "full_chars": 141,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Pour être efficace et significative, la démocratie doit garantir la possibilité de pleine participation des citoyens aux décisions finales contraignantes qui concernent leur vie quotidienne. Tant que",
+          "full_chars": 664,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "02de25e5-fb65-43e7-8488-6eb2b1de2692",
+        "document_id": "2934",
+        "query": {
+          "text": "Quelles deux clauses la Commission, dans l'évaluation préliminaire, a‑t‑elle jugées potentiellement",
+          "full_chars": 156,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Il ressort de l'évaluation préliminaire de la Commission que deux des clauses de la convention soulèvent des doutes sérieux quant à leur compatibilité avec l'article 81 du traité CE et l'article 53 de",
+          "full_chars": 656,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f06ac4c5-5a27-4cbc-930b-7b70f67a3e4f",
+        "document_id": "1317",
+        "query": {
+          "text": "Quel pays a omis d'appliquer les règles de reconnaissance de l'UE aux professions sanitaires régleme",
+          "full_chars": 122,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "juger, qu'en n'omettant de prendre les mesures législatives et réglementaires nécessaires, ou de les communiquer à la Commission, la République fédérale d'Allemagne a méconnu ses obligations de transp",
+          "full_chars": 795,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4a247f4b-e6e3-469d-83d1-4b09a9eede99",
+        "document_id": "7818",
+        "query": {
+          "text": "Quelle pièce de charcuterie dont l'étymologie remonte à des termes désignant des chasseurs est une r",
+          "full_chars": 138,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Le nom kiełbasa myśliwska reflète les caractéristiques spécifiques du produit. Les caractéristiques spécifiques exprimées par ce nom transparaissent dans l’origine étymologique de ce dernier, qui vien",
+          "full_chars": 730,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

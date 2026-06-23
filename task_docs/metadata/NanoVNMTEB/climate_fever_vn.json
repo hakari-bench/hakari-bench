@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "555",
+        "document_id": "Brown_bear",
+        "query": {
+          "text": "Ở Alaska, gấu nâu đang thay đổi thói quen ăn uống của chúng để ăn quả mâm xôi chín sớm hơn.",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Gấu nâu Gấu nâu (Ursus arctos) là một loài gấu lớn với sự phân bố rộng nhất trong số các loài gấu còn sinh tồn. Loài này được tìm thấy ở hầu hết các vùng phía bắc của châu Âu và Bắc Mỹ. Đây là một tro",
+          "full_chars": 1643,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "171",
+        "document_id": "Climate_change_and_gender",
+        "query": {
+          "text": "Chúng ta sẽ phải đối mặt với nhiệt độ cực cao, nhưng ở mức độ dễ chịu hơn rất nhiều so với nếu chúng",
+          "full_chars": 147,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Thay đổi khí hậu và giới tính Thay đổi khí hậu và giới tính liên quan đến sự khác biệt về giới trong bối cảnh thay đổi khí hậu và các mối quan hệ quyền lực phức tạp, đan xen phát sinh từ đó. Bằng cách",
+          "full_chars": 1439,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11",
+        "document_id": "Carbon_dioxide",
+        "query": {
+          "text": "Họ nói với chúng ta rằng chúng ta là những lực lượng chính điều khiển nhiệt độ trên Trái Đất bằng cá",
+          "full_chars": 180,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Khí cacbonic Khí cacbonic ( công thức hóa học: CO2) là một khí vô màu với mật độ cao hơn khoảng 60% so với không khí (1,225 g/L), ở nồng độ thông thường nó không có mùi. Khí cacbonic bao gồm một nguyê",
+          "full_chars": 1882,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "76",
+        "document_id": "Earth",
+        "query": {
+          "text": "Nhai nhổ bọt của bò gây tác hại đến khí hậu hơn tất cả những chiếc xe hơi trên hành tinh này.",
+          "full_chars": 93,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Trái Đất Trái Đất ( từ Eorðe -LSB- Γαῖα , Gaia -RSB- Terra ) , còn được gọi là Thế giới hay Trái cầu, là hành tinh thứ ba tính từ Mặt Trời và là vật thể duy nhất trong vũ trụ được biết đến có sự sống.",
+          "full_chars": 978,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "302",
+        "document_id": "Climate_change_mitigation",
+        "query": {
+          "text": "Ngoài ra [mô hình khí hậu] bỏ qua thực tế là việc làm giàu khí quyển với CO2 có lợi.",
+          "full_chars": 84,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Giảm nhẹ biến đổi khí hậu Giảm nhẹ biến đổi khí hậu bao gồm các hành động nhằm hạn chế mức độ hoặc tốc độ của biến đổi khí hậu trong dài hạn. Giảm nhẹ biến đổi khí hậu nói chung liên quan đến việc giả",
+          "full_chars": 2205,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

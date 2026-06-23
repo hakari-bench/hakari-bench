@@ -130,8 +130,91 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-pt-13",
+        "document_id": "doc-pt-103",
+        "query": {
+          "text": "Qual é a relação entre as fórmulas formula_99, formula_94 e formula_47 para resolver a equação menci",
+          "full_chars": 106,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Cinemática A cinemática (do grego \"κινημα\", movimento) é o ramo da física que se ocupa da descrição dos movimentos de pontos, corpos ou sistemas de corpos (grupos de objetos), sem se preocupar com a a",
+          "full_chars": 31375,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-pt-1072",
+        "document_id": "doc-pt-7486",
+        "query": {
+          "text": "Quais foram as ocasiões em que Haydn, Mozart e Beethoven redescobriram a forma fugal e a utilizaram",
+          "full_chars": 152,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Fuga Fuga em música, é um estilo de composição contrapontista, polifônica e imitativa, de um tema principal, com sua origem na música barroca. Na composição musical o tema é repetido por outras vozes",
+          "full_chars": 30207,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-pt-47",
+        "document_id": "doc-pt-373",
+        "query": {
+          "text": "O que é necessário para obter o ajuste de luminosidade em um tubo de raios catódicos (CRT)?",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Osciloscópio O osciloscópio é um instrumento de medida de sinais elétricos/eletrônicos que apresenta gráficos a duas dimensões de um ou mais sinais elétricos (de acordo com a quantidade de canais de e",
+          "full_chars": 26731,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-pt-391",
+        "document_id": "doc-pt-2937",
+        "query": {
+          "text": "Qual é a importância da PR-16 para o município de Curiúva e como ela contribui para a conexão com ou",
+          "full_chars": 147,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Curiúva Curiúva é um município brasileiro localizado no interior do estado do Paraná. Pertence à Região Geográfica Intermediária de Ponta Grossa e à Imediata de Telêmaco Borba e localiza-se a noroeste",
+          "full_chars": 26810,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-pt-353",
+        "document_id": "doc-pt-2663",
+        "query": {
+          "text": "Qual foi o impacto da disponibilidade de jogos falsificados a preços mais acessíveis na popularidade",
+          "full_chars": 129,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Sega Saturn O Sega Saturn é um console de jogos eletrônicos de quinta geração, lançado pela empresa Sega em 22 de Novembro de 1994 no Japão, 11 de Maio de 1995 na América do Norte, 30 de agosto de 199",
+          "full_chars": 32800,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

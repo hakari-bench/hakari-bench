@@ -152,15 +152,98 @@
         "url": "https://code-rag-bench.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "code-rag-bench/library-documentation",
         "url": "https://huggingface.co/datasets/code-rag-bench/library-documentation",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "6",
+        "document_id": "doc_6",
+        "query": {
+          "text": "tf.autodiff.ForwardAccumulator Computes Jacobian-vector products (\"JVP\"s) using forward-mode autodif",
+          "full_chars": 102,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "tf.autodiff.ForwardAccumulator( primals, tangents ) Compare to tf.GradientTape which computes vector-Jacobian products (\"VJP\"s) using reverse-mode autodiff (backprop). Reverse mode is more attractive",
+          "full_chars": 6087,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "doc_124",
+        "query": {
+          "text": "tf.compat.v1.data.experimental.RandomDataset A Dataset of pseudorandom values. Inherits From: Datase",
+          "full_chars": 110,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "tf.compat.v1.data.experimental.RandomDataset( seed=None ) Attributes element_spec The type specification of an element of this dataset. dataset = tf.data.Dataset.from_tensor_slices([1, 2, 3]) dataset.",
+          "full_chars": 55309,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104",
+        "document_id": "doc_104",
+        "query": {
+          "text": "tf.compat.v1.confusion_matrix Computes the confusion matrix from predictions and labels. View aliase",
+          "full_chars": 132,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "See Migration guide for more details. tf.compat.v1.math.confusion_matrix tf.compat.v1.confusion_matrix( labels, predictions, num_classes=None, dtype=tf.dtypes.int32, name=None, weights=None ) The matr",
+          "full_chars": 1943,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "86",
+        "document_id": "doc_86",
+        "query": {
+          "text": "tf.compat.v1.batch_to_space_nd BatchToSpace for N-D tensors of type T. View aliases Compat aliases f",
+          "full_chars": 114,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "See Migration guide for more details. tf.compat.v1.manip.batch_to_space_nd tf.compat.v1.batch_to_space_nd( input, block_shape, crops, name=None ) This operation reshapes the \"batch\" dimension 0 into M",
+          "full_chars": 3558,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "166",
+        "document_id": "doc_166",
+        "query": {
+          "text": "tf.compat.v1.distribute.OneDeviceStrategy A distribution strategy for running on a single device. In",
+          "full_chars": 121,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "tf.compat.v1.distribute.OneDeviceStrategy( device ) Using this strategy will place any variables created in its scope on the specified device. Input distributed through this strategy will be prefetche",
+          "full_chars": 30793,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

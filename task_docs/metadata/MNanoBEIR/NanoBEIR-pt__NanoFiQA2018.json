@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "references": [
-      {
-        "title": "FiQA: Financial Opinion Mining and Question Answering",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA: Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Que tipos de rentabilidade a Vanguard está oferecendo?",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Da página da Vanguard - Esta pareceu a mais fácil, pois os dados da S&P são simples de encontrar. Utilizo o MoneyChimp para confirmar - o que verifica que a página da Vanguard oferece a TIRC, e não a",
+          "full_chars": 445,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Quais são as implicações fiscais do trabalho freelancer?",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Se você tiver rendimentos nos EUA, terá de pagar imposto de renda dos EUA sobre eles, a menos que haja um tratado com o seu país que o isente dessa obrigação.",
+          "full_chars": 158,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "O que é considerado alto ou baixo quando se fala de volume?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O volume diário é geralmente comparado ao volume médio diário dos últimos 50 dias para uma ação. Volume alto é considerado ser 2 ou mais vezes o volume médio diário dos últimos 50 dias para essa ação.",
+          "full_chars": 681,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "94",
+        "document_id": "245447",
+        "query": {
+          "text": "Como utilizar os pontos do cartão de crédito para pagar despesas empresariais que podem ser deduzida",
+          "full_chars": 122,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Para simplificar, vamos começar considerando apenas o cashback. Em geral, o cashback de cartões de crédito para uso pessoal não é tributável, mas para uso empresarial é tributável (mais ou menos, expl",
+          "full_chars": 3863,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2903",
+        "document_id": "527776",
+        "query": {
+          "text": "Como devo declarar meus impostos como autônomo?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Para fins fiscais, você precisará declarar como empregado (com recibos T4 e imposto retido automaticamente) e também como empreendedor. Eu tive a mesma situação no ano passado. \"Employee and Self-Empl",
+          "full_chars": 744,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -144,7 +144,7 @@
         "title": "Natural Questions dataset page",
         "url": "https://ai.google.com/research/NaturalQuestions",
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "¿Dónde se celebrará el Final Four este año?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "El Torneo de Baloncesto Masculino de la División I de la NCAA de 2018 fue un torneo de eliminación directa de 68 equipos para determinar el campeón nacional de baloncesto universitario de la División",
+          "full_chars": 393,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "¿Era \"Pesadilla antes de Navidad\" originalmente una película de Disney?",
+          "full_chars": 71,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "La Pesadilla Antes de Navidad surgió de un poema escrito por Tim Burton en 1982, mientras trabajaba como animador en Walt Disney Feature Animation. Con el éxito de Vincent ese mismo año, Walt Disney S",
+          "full_chars": 687,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "¿Por qué está el Ángel del Norte ahí?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Según Gormley, el significado de un ángel tenía tres aspectos importantes: primero, representar que bajo el lugar de su construcción, los mineros de carbón trabajaron durante dos siglos; segundo, refl",
+          "full_chars": 360,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test826",
+        "document_id": "doc29757",
+        "query": {
+          "text": "¿Dónde se estableció originalmente el Compromiso de los Tres Quintos en la Constitución?",
+          "full_chars": 88,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "El Compromiso de los Tres Quintos se encuentra en el Artículo 1, Sección 2, Cláusula 3 de la Constitución de los Estados Unidos, que dice:",
+          "full_chars": 138,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test2079",
+        "document_id": "doc72413",
+        "query": {
+          "text": "¿Quién canta \"Somebody's Watching Me\" con Michael Jackson?",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Somebody's Watching Me\" es una canción del cantante estadounidense Rockwell de su álbum debut Somebody's Watching Me (1984). Se lanzó como el primer sencillo y sencillo principal del álbum el 14 de e",
+          "full_chars": 383,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

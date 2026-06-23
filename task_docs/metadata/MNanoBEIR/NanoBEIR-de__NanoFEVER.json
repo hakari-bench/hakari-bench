@@ -142,7 +142,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -150,15 +150,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "Keith Godchaux kannte die Grateful Dead.",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Die Grateful Dead war eine US-amerikanische Rockband, die 1965 in Palo Alto, Kalifornien, gegründet wurde. Die Besetzung variierte zwischen Quintett und Septett. Die Band ist für ihren einzigartigen u",
+          "full_chars": 3134,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah ist eine Sitcom.",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah (englisch: Taarak Mehtas andere Perspektive) ist die am längsten laufende Sitcom-Serie in Indien, produziert von Neela Tele Films Private Limited. Die Serie wurde erstm",
+          "full_chars": 648,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "In Burbank, Kalifornien, wurden geheime, hochentwickelte Flugzeuge hergestellt.",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank ist eine Stadt im Los Angeles County in Südkalifornien, Vereinigte Staaten, etwa 12 Meilen nordwestlich des Stadtzentrums von Los Angeles. Bei der Volkszählung im Jahr 2010 betrug die Einwohne",
+          "full_chars": 1480,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "85454",
+        "document_id": "Julio-Claudian_dynasty",
+        "query": {
+          "text": "Nero ist ein Mensch.",
+          "full_chars": 20,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Die Bezeichnung \"Julisch-Claudische Dynastie\" bezieht sich auf die ersten fünf römischen Kaiser – Augustus, Tiberius, Caligula, Claudius und Nero – oder die Familie, zu der sie gehörten. Sie regierten",
+          "full_chars": 2235,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172320",
+        "document_id": "Scream_2",
+        "query": {
+          "text": "Scream 2 ist ein rein deutscher Film.",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Scream 2 ist ein 1997 erschienener amerikanischer Slasher-Film, der von Wes Craven inszeniert und von Kevin Williamson geschrieben wurde. In den Hauptrollen sind David Arquette, Neve Campbell, Courten",
+          "full_chars": 2719,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

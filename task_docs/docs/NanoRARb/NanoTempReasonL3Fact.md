@@ -62,17 +62,20 @@ Models should learn to represent temporal direction and position, not only entit
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models](https://arxiv.org/abs/2306.08952), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Question: Who was the chair of Technical University of Munich before Wolfgang A. Herrmann? Facts: Ot... [100 / 473 chars] | Otto Meitinger [14 chars] |
+| Question: Who was the head of Romania before Alexandru G. Golescu? Facts: Gheorghe Tătărescu is the... [100 / 4,784 chars] | Dimitrie Ghica [14 chars] |
+| Question: Which position did Lord Douglas Gordon-Hallyburton hold before Member of the 13th Parliame... [100 / 675 chars] | Member of the 12th Parliament of the United Kingdom [51 chars] |
+| Question: Which employer did Eduard Winkelmann work for after Imperial University of Dorpat? Facts:... [100 / 514 chars] | University of Bern [18 chars] |
+| Question: Who was the head of Romania after Adrian Năstase? Facts: Petre Roman is the head of the go... [100 / 4,777 chars] | Călin Popescu-Tăriceanu [23 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2306.08952 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2306.08952](https://arxiv.org/abs/2306.08952) |
 
 ### Representative Snippets
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "DBpedia-Entity V2: A Test Collection for Entity Search",
-        "url": "https://doi.org/10.1145/3077136.3080751",
-        "year": 2017,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-fr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "DBpedia-Entity V2: A Test Collection for Entity Search",
+        "url": "https://doi.org/10.1145/3077136.3080751",
+        "year": 2017,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "concession automobile fitzgerald à chambersburg, pa",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fitzgerald Auto Malls est un concessionnaire automobile familial fondé en 1966, avec son premier emplacement ouvert à Bethesda, Maryland. En 2014, Fitzgerald Auto Malls était classé 59e sur la liste d",
+          "full_chars": 444,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "Le recueil de nouvelles de 1994 d'Alice Munro est disponible",
+          "full_chars": 60,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, née Laidlaw /ˈleɪdlɔː/; née le 10 juillet 1931) est une auteure canadienne. L'œuvre de Munro a été décrite comme ayant révolutionné la structure des nouvelles, no",
+          "full_chars": 567,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "Architecture gallo-romaine à Paris",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "L'art à Paris parle de la culture et de l'histoire de l'art à Paris, la capitale de la France. Depuis des siècles, Paris a attiré des artistes du monde entier, venant s'y former et y puiser l'inspirat",
+          "full_chars": 321,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "SemSearch_LS-35",
+        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
+        "query": {
+          "text": "Républiques de l'ex-Yougoslavie",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "La Constitution yougoslave de 1974 était la quatrième et dernière constitution de la République fédérative socialiste de Yougoslavie. Elle est entrée en vigueur le 21 février. Avec 406 articles origin",
+          "full_chars": 474,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_XER-72",
+        "document_id": "<dbpedia:A_Little_Romance>",
+        "query": {
+          "text": "Films tournés à Venise",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Un peu de romance est un film comique romantique américain de 1979 en Technicolor et Panavision, réalisé par George Roy Hill et mettant en vedette Laurence Olivier, Thelonious Bernard, et Diane Lane d",
+          "full_chars": 400,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

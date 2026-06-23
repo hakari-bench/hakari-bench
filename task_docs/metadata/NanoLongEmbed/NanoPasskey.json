@@ -132,8 +132,91 @@
         "url": "https://huggingface.co/datasets/dwzhu/LongEmbed",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "ctx512_query41",
+        "document_id": "ctx512_doc41",
+        "query": {
+          "text": "what is the passkey for Ronan Day?",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
+          "full_chars": 1778,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ctx1024_query98",
+        "document_id": "ctx1024_doc98",
+        "query": {
+          "text": "what is the passkey for Flora Wu?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
+          "full_chars": 3598,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ctx1024_query24",
+        "document_id": "ctx1024_doc24",
+        "query": {
+          "text": "what is the passkey for Summer Walton?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
+          "full_chars": 3608,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ctx512_query88",
+        "document_id": "ctx512_doc88",
+        "query": {
+          "text": "what is the passkey for Cassidy Wolf?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
+          "full_chars": 1784,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ctx256_query33",
+        "document_id": "ctx256_doc33",
+        "query": {
+          "text": "what is the passkey for Archer Peralta?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
+          "full_chars": 878,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

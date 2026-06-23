@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "cae68a01978568969ead37688656ee7dfa788b15c5f5ce068d79fbd83b0aa34c",
+        "document_id": "b352f5e72bb626e925713aea5f4c57507cf6b29ead2f37720da8470a61373bcb",
+        "query": {
+          "text": "কার দ্বারা পাঞ্জাবের জালিয়ানওয়ালাবাগে বেসামরিক লোকদের গণহত্যা জনরোষ সৃষ্টি করে এবং সহিংসতা বৃদ্ধি",
+          "full_chars": 105,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "অন্যায়ের বিরুদ্ধে গান্ধীর অস্ত্র ছিল অসহযোগ এবং শান্তিপূর্ণ প্রতিরোধ। পাঞ্জাবের জালিয়ানওয়ালাবাগে সাধারণ মানুষের উপরে ব্রিটিশ সরকার কর্তৃক সংগঠিত হত্যাকাণ্ডের ফলে জনসাধারণ ক্ষুব্ধ হয়ে যায় এবং সহিং",
+          "full_chars": 1277,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "29d8d9ae42c5530f89fb4ee99a43150d472b8cd3a755e9457ca5af53bececf76",
+        "document_id": "3bad7994d591acc72c4c80339ebb17e6ccaa0464c0ee64d83e0dc21cca9e4cd4",
+        "query": {
+          "text": "ঘুরি রাজবংশের অন্যতম শাসক কে ছিলেন ?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "আফগানিস্থানে সম্প্রতি মেন্‌রোজ প্রদেশের ‘শাহ্ পোশ্’-এ খননকালে একটি মিনারের ধ্বংসাবশেষ আবিষ্কৃত হয়েছে। একটি মস্‌জিদের অনতিদূরে সেই মিনারটি নির্মিত হয়েছিল নবম অথবা দশম-শতাব্দীর প্রথম পাদে। সামানিদ্-ইট",
+          "full_chars": 961,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0e8f0636e73fa86ad489f590d073d148ec2b9299c33cc024e20e221a1a5ad673",
+        "document_id": "4a84b86e8a9c36240bd2a6724016c3e103736b12c34af52f9acd7a9cd287c911",
+        "query": {
+          "text": "বাংলাদেশের জাতীয় খেলার নাম কি ?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ঈদুল ফিতরের আগের দিনটি বাংলাদেশে ‘চাঁদ রাত’ নামে পরিচিত। ছোট ছোট বাচ্চারা এ দিনটি অনেক সময়ই আতশবাজির মাধ্যমে পটকা ফাটিয়ে উদ্‌যাপন করে। ঈদুল আজহার সময় শহরাঞ্চলে প্রচুর কোরবানির পশুর আগমন হয় এবং এটি",
+          "full_chars": 2396,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f16610e2efab688dee9e3e5ae18d9874e1e0bb9e3efbeb05850692e240a166e2",
+        "document_id": "a23bfcf1b33d933ac77581b554093bcaca4aa796fbbfd8f18ad30c9386cd1950",
+        "query": {
+          "text": "এই তাজমহলের বড় গম্বুজের চূড়ায় স্বর্ণের কাজ কে করেছিলেন ?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "আরও তামার পাইপ দিয়ে উত্তর-দক্ষিণ দিকে নালার ঝরনাগুলোতে পানি সরবরাহ করা হতো। সহায়ক আরও নালা খনন করা হয়েছিল পুরো বাগানে সেচ দেয়ার জন্য। ঝরনার পাইপগুলো সরাসরি সরবরাহ পাইপের সাথে যুক্ত ছিল না। এর বদলে",
+          "full_chars": 2169,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "614cec386170b66ca35a178ff5ca9fc85c7d2bedee80f6dd7bb7cf2ec235ecbc",
+        "document_id": "f65ec35f209ed80f31cf471b3655e235d950518782d6254708a2c9076af8a1b2",
+        "query": {
+          "text": "সম্রাট অশোককে চণ্ড অশোক বলার কারণ কি?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "অশোকের ক্রূর স্বভাবের জন্য তাকে চণ্ড অশোক নামে অভিহিত করা হত। অধ্যাপক চার্লস ড্রেকেমেয়ার অবশ্য বৌদ্ধ প্রবাদগুলিকে অতিশয়োক্তি হিসেবে বিবেচনা করেছেন। তার মতে, কোপণ স্বভাবের অশোক যে বৌদ্ধ ধর্মে প্রভাবি",
+          "full_chars": 1193,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

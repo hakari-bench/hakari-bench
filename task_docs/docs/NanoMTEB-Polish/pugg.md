@@ -70,11 +70,13 @@ For downstream QA systems, this split is useful because the retrieved passage mu
 
 ## Example Data
 
-### Public Sources
-
-- PUGG paper: https://aclanthology.org/2024.findings-acl.652/
-- Source dataset card: https://huggingface.co/datasets/clarin-pl/PUGG_IR
-- PUGG repository: https://github.com/CLARIN-PL/PUGG
+| Query | Positive document |
+| --- | --- |
+| kto napisał balladyne? [22 chars] | Balladyna – dramat romantyczny w pięciu aktach, napisany przez Juliusza Słowackiego w Genewie w 1834 roku, a wydany w Paryżu w roku 1839. == Opis dramatu == Dramat miał być prawdopodobnie jedną z sześ... [200 / 867 chars] |
+| co obiecano polakom w akcie 5 listopada? [40 chars] | 5 listopada 1916 w wyniku konferencji w Pszczynie władze niemieckie i austro-węgierskie wydały proklamację, z podpisami swych generalnych gubernatorów von Beselera i Kuka, zawierającą obietnicę powsta... [200 / 964 chars] |
+| jakie pouczenia wynikają z biblijnej opowieści o stworzeniu świata? [67 chars] | Stworzenie świata – pojęcie biblijne wyjaśniające naturę i sposób powstania wszechświata. W ujęciu judeo-chrześcijańskim zarówno niebo (materialne i duchowe), jak i ziemia i wszystko co istnieje jest... [200 / 931 chars] |
+| z kim zareczyl sie tadeusz? [27 chars] | Tadeusz Soplica ("pan Tadeusz") – postać literacka, tytułowy bohater poematu epickiego "Pan Tadeusz" (1834) Adama Mickiewicza; syn Jacka Soplicy, bratanek Sędziego, dziedzic Soplicowa. Młody, przystoj... [200 / 867 chars] |
+| ile procent ludzi ma blond włosy? [33 chars] | Blond – kolor włosów, występujący u niektórych ssaków, wywołany przez niewielką ilość barwnika – melaniny. Zazwyczaj przez kolor ten rozumie się odcienie od jasnego brązu poprzez żółty aż do niemalże... [200 / 857 chars] |
 
 ### Source Reference Table
 

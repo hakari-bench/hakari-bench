@@ -116,11 +116,11 @@ than only topic similarity.
 
 | Query | Positive document |
 | --- | --- |
-| Conversor Elevador Multinível DC-DC Novo | Os conversores de fonte de tensão multinível estão surgindo como uma nova geração de opções de conversores de energia para aplicações de alta potência... |
-| Aprendizado Rápido de Campos Aleatórios de Markov Esparsos Baseado em Fatorização de Cholesky | Sure, please provide the English document text that you need translated into Portuguese. |
-| Síntese de Texturas Usando Redes Neurais Convolucionais | Neste trabalho, investigamos o efeito da profundidade de redes convolucionais na sua precisão em reconhecimento de imagens em grande escala... |
-| Antena anelar plana de banda larga com polarização circular para sistema RFID | Neste artigo, é proposta uma técnica de alimentação com faixa meandrante horizontal para alcançar boa adaptação de impedância... |
-| Projeto de monitor cardíaco digital avançado utilizando componentes eletrônicos básicos | Neste artigo, apresentamos o design e o desenvolvimento de um novo dispositivo integrado para medir a frequência cardíaca... |
+| Conversor Elevador Multinível DC-DC Novo [40 chars] | Os conversores de fonte de tensão multinível estão surgindo como uma nova geração de opções de conversores de energia para aplicações de alta potência. Os conversores de fonte de tensão multinível ger... [200 / 1,078 chars] |
+| Aprendizado Rápido de Campos Aleatórios de Markov Esparsos Baseado em Fatorização de Cholesky [93 chars] | Sure, please provide the English document text that you need translated into Portuguese. [88 chars] |
+| Síntese de Texturas Usando Redes Neurais Convolucionais [55 chars] | Neste trabalho, investigamos o efeito da profundidade de redes convolucionais na sua precisão em ambientes de reconhecimento de imagens em grande escala. Nossa principal contribuição é uma avaliação d... [200 / 917 chars] |
+| Antena anelar plana de banda larga com polarização circular para sistema RFID [77 chars] | Neste artigo, é proposta uma técnica de alimentação com faixa meandrante horizontal (HMS) para alcançar uma boa adaptação de impedância e padrões de radiação simétricos em banda larga para uma antena... [200 / 1,434 chars] |
+| Projeto de monitor cardíaco digital avançado utilizando componentes eletrônicos básicos [87 chars] | Neste artigo, apresentamos o design e o desenvolvimento de um novo dispositivo integrado para medir a frequência cardíaca utilizando a ponta do dedo, visando melhorar a estimativa da frequência cardía... [200 / 1,291 chars] |
 
 ### Public Sources
 
@@ -134,7 +134,7 @@ than only topic similarity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

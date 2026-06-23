@@ -146,22 +146,105 @@
         "url": "https://r2med.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED GitHub repository",
         "url": "https://github.com/R2MED/R2MED",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED/PMC-Clinical",
         "url": "https://huggingface.co/datasets/R2MED/PMC-Clinical",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q_PMC6620304",
+        "document_id": "PMC5634433_1",
+        "query": {
+          "text": "A 5-year-old female patient presents with swelling and pain in the right mandibular region. Initial",
+          "full_chars": 532,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A 33-year-old male attended the medical consultation complaining of a painful perianal lesion over the last 18 months. Previous therapeutic attempts, including different antibiotics orally or topicall",
+          "full_chars": 1579,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC3452086",
+        "document_id": "PMC4626349_1",
+        "query": {
+          "text": "A 46-year-old man with a history of radical extirpated melanoma presents with spontaneous acute seve",
+          "full_chars": 988,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A 29-year-old female patient with a 6-day history of laparoscopic uterine myomectomy visited a local hospital complaining of worsening headache and mild left hand weakness since surgery. Brain compute",
+          "full_chars": 1977,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC2924564",
+        "document_id": "PMC4939687_1",
+        "query": {
+          "text": "An 82-year-old man presented with a chief complaint of an abdominal mass and associated abdominal di",
+          "full_chars": 518,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A 71-year-old woman presented with complaint of progressive abdominal distension. The ultrasonography revealed a huge retroperitoneal or mesenchymal mass occupying the entire abdomen. The patient had",
+          "full_chars": 2908,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC7398181",
+        "document_id": "PMC7398181_2",
+        "query": {
+          "text": "A 69-year-old male presents with a progressive frontal paroxysmal headache, mild vomiting, diplopia,",
+          "full_chars": 749,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A 52-year-old male was admitted with a paroxysmal headache in the right parietal region accompanied by visual disturbance in the right eye for over 2 months. Both symptoms mostly occurred in the morni",
+          "full_chars": 1291,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC4068870",
+        "document_id": "PMC4405829_1",
+        "query": {
+          "text": "An 8-year-old boy was incidentally found to have a splenic mass on abdominal ultrasonography during",
+          "full_chars": 966,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A 39-year-old Greek woman, with no remarkable medical history, presented to the emergency room of our hospital with diffuse abdominal pain and a mass-like distention of the left side of her abdomen. N",
+          "full_chars": 1977,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -135,15 +135,98 @@
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/MintakaRetrieval",
         "url": "https://huggingface.co/datasets/mteb/MintakaRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q645",
+        "document_id": "D1387",
+        "query": {
+          "text": "Quel film du début des année 1970 est-il celui pour lequel Bruce Lee est le plus connu ?",
+          "full_chars": 88,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Opération Dragon",
+          "full_chars": 16,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1281",
+        "document_id": "D825",
+        "query": {
+          "text": "Quel acteur a joué Hans Solo et Indiana Jones ?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Harrison Ford",
+          "full_chars": 13,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1086",
+        "document_id": "D1500",
+        "query": {
+          "text": "Quel est le nom du tout premier film du réalisateur Kevin Smith ?",
+          "full_chars": 65,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Clerks : Les Employés modèles",
+          "full_chars": 29,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q878",
+        "document_id": "D1035",
+        "query": {
+          "text": "Quel film de Star Trek a le moins rapporté ?",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Star Trek : Nemesis",
+          "full_chars": 19,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1768",
+        "document_id": "D813",
+        "query": {
+          "text": "Dans quel film de Major League ne figurait pas Charlie Sheen ?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Les Indians 3",
+          "full_chars": 13,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

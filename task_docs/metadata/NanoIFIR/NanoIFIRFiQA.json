@@ -131,8 +131,91 @@
         "url": "https://arxiv.org/abs/2503.04644",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "3739_v1",
+        "document_id": "350607",
+        "query": {
+          "text": "Dividend vs Growth Stocks for young investors",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"The key is to look at total return, that is dividend yields plus capital growth. Some stocks have yields of 5%-7%, and no growth. In that case, you get the dividends, and not a whole lot more. These",
+          "full_chars": 589,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1576_v1",
+        "document_id": "70806",
+        "query": {
+          "text": "What purchases, not counting real estate, will help me increase my cash flow?",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "You can increase your monthly cash flow in two ways: It's really that simple. I'd even argue that to a certain extent, decreasing expenses can be more cash-positive than increasing income by the same",
+          "full_chars": 883,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1275_v1",
+        "document_id": "537930",
+        "query": {
+          "text": "What are the contents of fixed annuities?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"An annuity is a contract. Its contents are \"\"a contractual obligation from the issuing company\"\". If you want to evaluate how your annuity is likely to fare, you're essentially asking whether or not",
+          "full_chars": 2509,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "51_v1",
+        "document_id": "107817",
+        "query": {
+          "text": "Full-time work + running small side business: Best business structure for taxes?",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "You should look into an LLC. Its a fairly simple process, and the income simply flows through to your individual return. It will allow you to deduct supplies and other expenses from that income. It sh",
+          "full_chars": 603,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2438_v1",
+        "document_id": "292224",
+        "query": {
+          "text": "Why don't banks give access to all your transaction activity?",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Things are the way they are because they got that way. - Gerald Weinberg Banks have been in business for a very long time. Yet, much of what we take for granted in terms of technology (capabilities,",
+          "full_chars": 1103,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

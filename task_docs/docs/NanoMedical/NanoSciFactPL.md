@@ -62,23 +62,23 @@ Models should handle Polish morphology while preserving biomedical names and evi
 
 ## Example Data
 
-### Public Sources
-
-- [BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language](https://arxiv.org/abs/2305.19840), 2024.
-- [BEIR-PL ACL Anthology record](https://aclanthology.org/2024.lrec-main.194/).
-- [Fact or Fiction: Verifying Scientific Claims](https://arxiv.org/abs/2004.14974), 2020.
-- [SciFact ACL Anthology record](https://aclanthology.org/2020.emnlp-main.609/).
-- [clarin-knext Hugging Face](https://huggingface.co/clarin-knext).
+| Query | Positive document |
+| --- | --- |
+| Rak jelita grubego z przerzutami leczony pojedynczym lekiem fluoropirymidynami skutkował zmniejszoną... [100 / 223 chars] | Opcje chemioterapii u starszych i słabych pacjentów z przerzutowym rakiem jelita grubego (MRC FOCUS2): otwarte, randomizowane badanie czynnikowe TŁO Pacjenci w podeszłym wieku i słabi z rakiem, chocia... [200 / 3,343 chars] |
+| CRP nie pozwala przewidzieć śmiertelności pooperacyjnej po operacji pomostowania aortalno-wieńcowego... [100 / 108 chars] | Ocena opłacalności stosowania prognostycznych biomarkerów z modelami decyzyjnymi: studium przypadku w ustalaniu priorytetów pacjentów oczekujących na operację tętnicy wieńcowej CEL Określenie skuteczn... [200 / 3,169 chars] |
+| Arginina 90 w p150n jest ważna dla interakcji z EB1. [52 chars] | Strukturalne podstawy do aktywacji składania mikrotubul przez kompleks EB1 i p150Glued. Białka śledzące plus, takie jak EB1 i kompleks dyneina/dynaktyna, regulują dynamikę mikrotubul. Uważa się, że bi... [200 / 1,210 chars] |
+| O otyłości decydują wyłącznie czynniki środowiskowe. [52 chars] | Genetyka otyłości u dorosłych adopcyjnych i ich biologicznego rodzeństwa. Przeprowadzono badanie adopcyjne wpływu genetycznego na otyłość w wieku dorosłym, w którym osoby adoptowane oddzielone od swoi... [200 / 1,465 chars] |
+| Napady gorączkowe zwiększają próg rozwoju padaczki. [51 chars] | Napady gorączkowe w rozwijającym się mózgu powodują uporczywą modyfikację pobudliwości neuronalnej w obwodach limbicznych Napady gorączkowe (wywołane gorączką) dotykają 3–5% niemowląt i małych dzieci.... [200 / 812 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | https://arxiv.org/abs/2305.19840 |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | https://aclanthology.org/2024.lrec-main.194/ |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | https://arxiv.org/abs/2004.14974 |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | ACL Anthology paper | https://aclanthology.org/2020.emnlp-main.609/ |
-| clarin-knext |  | Hugging Face publisher | https://huggingface.co/clarin-knext |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | [https://arxiv.org/abs/2305.19840](https://arxiv.org/abs/2305.19840) |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | [https://aclanthology.org/2024.lrec-main.194/](https://aclanthology.org/2024.lrec-main.194/) |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | ACL Anthology paper | [https://aclanthology.org/2020.emnlp-main.609/](https://aclanthology.org/2020.emnlp-main.609/) |
+| clarin-knext |  | Hugging Face publisher | [https://huggingface.co/clarin-knext](https://huggingface.co/clarin-knext) |
 
 ### Representative Snippets
 

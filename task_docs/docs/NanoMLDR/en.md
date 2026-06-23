@@ -142,11 +142,13 @@ must be evaluated against the sparse baseline.
 
 ## Example Data
 
-Representative queries ask who the last person mentioned in a text was, one
-major limitation of PCR, what Ambassador Goldberg said about the U.S. view of
-Jordan, the time period of Roman stiffeners, or the first step in the USERec
-method of DNA recombination. Positive documents are long English articles
-containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| Who was the last person mentioned in the text? [46 chars] | Chronological Classics was a French compact disc reissue label. Gilles Pétard, the original owner, intended to release the complete master takes of all jazz and swing recordings that were issued on 78... [200 / 31,958 chars] |
+| What is one major limitation of PCR? [36 chars] | Polymerase chain reaction (PCR) is a method widely used to rapidly make millions to billions of copies (complete copies or partial copies) of a specific DNA sample, allowing scientists to take a very... [200 / 49,157 chars] |
+| What did Ambassador Goldberg say about the US view of Jordan? [61 chars] | United Nations Security Council Resolution 242 (S/RES/242) was adopted unanimously by the UN Security Council on November 22, 1967, in the aftermath of the Six-Day War. It was adopted under Chapter VI... [200 / 44,540 chars] |
+| What is the time period in which Roman stiffeners are attributed to? [68 chars] | A composite bow is a traditional bow made from horn, wood, and sinew laminated together, a form of laminated bow. The horn is on the belly, facing the archer, and sinew on the outer side of a wooden c... [200 / 24,773 chars] |
+| What is the first step in the USERec method of DNA recombination? [65 chars] | Protein engineering is the process of developing useful or valuable proteins. It is a young discipline, with much research taking place into the understanding of protein folding and recognition for pr... [200 / 46,771 chars] |
 
 ### Public Sources
 
@@ -162,9 +164,9 @@ containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

@@ -135,8 +135,8 @@ ruMTEB, MIRACL, RIA news, or RuBQ-derived data for training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | benchmark paper | https://aclanthology.org/2025.naacl-long.12/ |
-| MIRACL |  | project page | http://miracl.ai/ |
-| mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2 |  | dataset card | https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2 |
-| ai-forever/rubq-retrieval |  | dataset card | https://huggingface.co/datasets/ai-forever/rubq-retrieval |
-| mteb/MIRACLRetrievalHardNegatives |  | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives |
+| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | benchmark paper | [https://aclanthology.org/2025.naacl-long.12/](https://aclanthology.org/2025.naacl-long.12/) |
+| MIRACL |  | project page | [http://miracl.ai/](http://miracl.ai/) |
+| mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2 |  | dataset card | [https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2) |
+| ai-forever/rubq-retrieval |  | dataset card | [https://huggingface.co/datasets/ai-forever/rubq-retrieval](https://huggingface.co/datasets/ai-forever/rubq-retrieval) |
+| mteb/MIRACLRetrievalHardNegatives |  | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives) |

@@ -134,15 +134,98 @@
         "url": "https://github.com/HLR/SpartQA_generation",
         "year": 2021,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/SpartQA",
         "url": "https://huggingface.co/datasets/mteb/SpartQA",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "spartqa-q-63",
+        "document_id": "spartqa-d-0",
+        "query": {
+          "text": "There are three blocks. Lets call them A, B and C. Block A is below B and block B is below C. Block",
+          "full_chars": 797,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "both of them",
+          "full_chars": 12,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "spartqa-q-123",
+        "document_id": "spartqa-d-0",
+        "query": {
+          "text": "We have three blocks, A, B and C. Blocks B and C are above A. Block A contains one medium black squa",
+          "full_chars": 484,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "both of them",
+          "full_chars": 12,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "spartqa-q-103",
+        "document_id": "spartqa-d-0",
+        "query": {
+          "text": "We have three blocks, A, B and C. Block B is below block C and it is to the left of block A. Block A",
+          "full_chars": 669,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "both of them",
+          "full_chars": 12,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "spartqa-q-89",
+        "document_id": "spartqa-d-88",
+        "query": {
+          "text": "We have three blocks. We call them A, B and C. Block B is below and C is above A. Block A contains o",
+          "full_chars": 761,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "the yellow thing that is touching the right edge of a block",
+          "full_chars": 59,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "spartqa-q-161",
+        "document_id": "spartqa-d-3",
+        "query": {
+          "text": "There are three blocks, A, B and C. Block A is below C. Block C is to the right of B. Block A has a",
+          "full_chars": 565,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "none of them",
+          "full_chars": 12,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

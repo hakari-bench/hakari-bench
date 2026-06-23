@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages",
-        "url": "https://arxiv.org/abs/2210.09984",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MIRACL project page",
-        "url": "http://miracl.ai/",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/MIRACLRetrievalHardNegatives",
-        "url": "https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages",
+        "url": "https://arxiv.org/abs/2210.09984",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MIRACL project page",
+        "url": "http://miracl.ai/",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/MIRACLRetrievalHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "854",
+        "document_id": "224275#0",
+        "query": {
+          "text": "ชาวนอร์มันหมายถึงอะไร?",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "นอร์มัน นอร์มัน () คือกลุ่มชนผู้ให้นามแก่ดินแดนนอร์ม็องดีซึ่งเป็นบริเวณทางตอนเหนือของฝรั่งเศส ชนนอร์มันสืบเชื้อสายมาจากไวกิงผู้ได้รับชัยชนะต่อผู้ตั้งถิ่นฐานอยู่แต่เดิมที่เป็นชนแฟรงค์ (Franks) และกอลล์",
+          "full_chars": 603,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "201",
+        "document_id": "823#60",
+        "query": {
+          "text": "สัตว์ประจำชาติสหรัฐอเมริกาคืออะไร?",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "สหรัฐ นิเวศวิทยาของสหรัฐนั้นหลากหลายมาก (megadiverse) โดยมีพืชมีท่อลำเลียงประมาณ 17,000 ชนิดในสหรัฐแผ่นดินใหญ่และรัฐอะแลสกา และพบพืชดอกกว่า 1,800 ชนิดในรัฐฮาวาย ซึ่งมีจำนวนน้อยที่พบในแผ่นดินใหญ่ สหรัฐ",
+          "full_chars": 434,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1018",
+        "document_id": "387197#6",
+        "query": {
+          "text": "สไปรูไลนามีโปรตีนอยู่ราวเท่าไหร่?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "สไปรูลินา (ผลิตภัณฑ์เสริมอาหาร) สไปรูไลนามีโปรตีนอยู่ราว 60% (51-71%) ในสไปรูไลนามีโปรตีนที่มีกรดอะมิโนจำเป็นทุกชนิด แม้ว่าจะมีปริมาณเมไทโอนีน ซีสเตอีนและไลซีนเมื่อเทียบกับโปรตีนที่ได้จากเนื้อสัตว์ ไข",
+          "full_chars": 517,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "96",
+        "document_id": "8726#0",
+        "query": {
+          "text": "พระราชวังบวรสถานมงคล ถูกสร้างขึ้นเมื่อไหร่?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "พระราชวังบวรสถานมงคล พระราชวังบวรสถานมงคล หรือ พระบวรราชวัง ตั้งอยู่ที่เขตพระนคร กรุงเทพมหานคร เป็นพระราชวังที่ประทับของกรมพระราชวังบวรสถานมงคลหรือวังหน้า สมเด็จพระบวรราชเจ้ามหาสุรสิงหนาทซึ่งทรงดำรงพร",
+          "full_chars": 768,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "382",
+        "document_id": "177501#2",
+        "query": {
+          "text": "คลองรังสิต สร้างขึ้นเมื่อใด ?",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "คลองรังสิต การขุดคลองตามโครงการรังสิตนับเป็นจุดเริ่มต้นของการพัฒนางานด้านชลประทานของประเทศไทย โดยเฉพาะการชลประทานเพื่อการเกษตรกรรม การขุดคลองรังสิตและคลองแยกต่าง ๆ ระหว่าง พ.ศ. 2433 - พ.ศ. 2448 ในรัชส",
+          "full_chars": 611,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

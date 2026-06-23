@@ -122,11 +122,11 @@ only count shared technical terms.
 
 | Query | Positive document |
 | --- | --- |
-| Convertitore Elevatore CC-CC a Più Livelli Innovativo | I convertitori di tensione a sorgente multlivello stanno emergendo come una nuova categoria di opzioni di convertitori di potenza per applicazioni ad alta potenza... |
-| Apprendimento di Campi Markoviani Gaussiani Sparsi Veloci Basato sulla Fattorizzazione di Cholesky | Sure, please provide the English document text that you need translated into Italian. |
-| Sintesi delle Texture Utilizzando Reti Neurali Convoluzionali | In questo lavoro indaghiamo l'effetto della profondità della rete convoluzionale sulla sua accuratezza nel contesto del riconoscimento delle immagini su larga scala... |
-| Antenna ad anello anulare planare a banda larga con polarizzazione circolare per sistema RFID | In questo articolo, viene proposta una tecnica di alimentazione a striscia meandrante orizzontale (HMS) per ottenere un buon adattamento di impedenza... |
-| Progettazione di un monitor digitale avanzato del battito cardiaco utilizzando componenti elettronici di base | In questo articolo, abbiamo presentato il design e lo sviluppo di un nuovo dispositivo integrato per misurare la frequenza cardiaca utilizzando la punta del dito... |
+| Convertitore Elevatore CC-CC a Più Livelli Innovativo [53 chars] | I convertitori di tensione a sorgente multlivello stanno emergendo come una nuova categoria di opzioni di convertitori di potenza per applicazioni ad alta potenza. I convertitori di tensione a sorgent... [200 / 1,122 chars] |
+| Apprendimento di Campi Markoviani Gaussiani Sparsi Veloci Basato sulla Fattorizzazione di Cholesky [98 chars] | Sure, please provide the English document text that you need translated into Italian. [85 chars] |
+| Sintesi delle Texture Utilizzando Reti Neurali Convoluzionali [61 chars] | In questo lavoro indaghiamo l'effetto della profondità della rete convoluzionale sulla sua accuratezza nel contesto del riconoscimento delle immagini su larga scala. Il nostro principale contributo è... [200 / 988 chars] |
+| Antenna ad anello anulare planare a banda larga con polarizzazione circolare per sistema RFID [93 chars] | In questo articolo, viene proposta una tecnica di alimentazione a striscia meandrante orizzontale (HMS) per ottenere un buon adattamento di impedenza e schemi di radiazione simmetrici frontali per un'... [200 / 1,481 chars] |
+| Progettazione di un monitor digitale avanzato del battito cardiaco utilizzando componenti elettronic... [100 / 109 chars] | In questo articolo, abbiamo presentato il design e lo sviluppo di un nuovo dispositivo integrato per misurare la frequenza cardiaca utilizzando la punta del dito, al fine di migliorare la stima della... [200 / 1,397 chars] |
 
 ### Public Sources
 
@@ -140,7 +140,7 @@ only count shared technical terms.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

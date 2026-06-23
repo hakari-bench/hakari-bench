@@ -142,8 +142,91 @@
         "title": "mteb/arguana",
         "url": "https://huggingface.co/datasets/mteb/arguana",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "The public is apathetic to reform. Whether or not reform of the House of Lords should be a top prior",
+          "full_chars": 799,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The AV campaign cannot be compared to reform to the House of Lords, furthermore one should not mistake a misinformed public due to political spin, with apathy. Often voters express that they are apath",
+          "full_chars": 408,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "The expansion of Heathrow is vital for the economy Expanding Heathrow would ensure many current jobs",
+          "full_chars": 1421,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The business community is far from united in its supposed support of a third run-way. Surveys suggest that many influential businesses in fact do not support expansion. A letter expressing concern was",
+          "full_chars": 1330,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "People are given too much choice, which makes them less happy. Advertising leads to many people bein",
+          "full_chars": 1031,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "People are unhappy because they can't have everything, not because they are given too much choice and find it stressful. In fact, advertisements play a crucial role in ensuring that what money people",
+          "full_chars": 912,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "Cyber attacks are often carried out by non-state actors Cyber attacks are often carried out by non-s",
+          "full_chars": 1038,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In case of non-state actors attack, many practitioners in international law agree that the state can still retaliate in self-defence if another state is 'unwilling or unable to take effective action'",
+          "full_chars": 547,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "Because religion promotes certainty of belief, divinely inspired hatred is easy to use to justify an",
+          "full_chars": 1355,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Nobody is being forced to perform acts of violence by the words of another; it is their choice to do so. Equally, there are plenty of people who would hold views that could be considered homophobic bu",
+          "full_chars": 636,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

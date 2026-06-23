@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation",
-        "url": "https://arxiv.org/abs/2211.11501",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "xlangai/DS-1000",
-        "url": "https://huggingface.co/datasets/xlangai/DS-1000",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/xlangai/DS-1000"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation",
+        "url": "https://arxiv.org/abs/2211.11501",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "xlangai/DS-1000",
+        "url": "https://huggingface.co/datasets/xlangai/DS-1000",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "000000057",
+        "query": {
+          "text": "Problem: I have a list of numpy vectors of the format: [array([[-0.36314615, 0.80562619, -0.82777381",
+          "full_chars": 1055,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument(\"--test_case\", type=int, default=1) args = parser.parse_args() import numpy as np import scipy.sparse as sparse vec",
+          "full_chars": 520,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "Problem: I'm trying to reduce noise in a binary python array by removing all completely isolated sin",
+          "full_chars": 925,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument(\"--test_case\", type=int, default=1) args = parser.parse_args() import numpy as np import scipy.ndimage square = pic",
+          "full_chars": 777,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "Problem: I am having a problem with minimization procedure. Actually, I could not create a correct o",
+          "full_chars": 1716,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument(\"--test_case\", type=int, default=1) args = parser.parse_args() import scipy.optimize import numpy as np a, x_true,",
+          "full_chars": 614,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "000000083",
+        "query": {
+          "text": "Problem: I am working with a 2D numpy array made of 512x512=262144 values. Such values are of float",
+          "full_chars": 1020,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument(\"--test_case\", type=int, default=1) args = parser.parse_args() import numpy as np from scipy import ndimage img = p",
+          "full_chars": 455,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "000000070",
+        "query": {
+          "text": "Problem: I'm trying to integrate X (X ~ N(u, o2)) to calculate the probability up to position `x`. H",
+          "full_chars": 1047,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument(\"--test_case\", type=int, default=1) args = parser.parse_args() import scipy.integrate import math import numpy as n",
+          "full_chars": 527,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

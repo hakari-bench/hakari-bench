@@ -126,8 +126,91 @@
         "title": "BIRCO GitHub repository",
         "url": "https://github.com/BIRCO-benchmark/BIRCO",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q_unique_7136",
+        "document_id": "unique_7136",
+        "query": {
+          "text": "Heres what I can recall YA The cover was blue with a girls face on the frontThe girl began to suspec",
+          "full_chars": 833,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "is a merrymaid or so she believes . . . Ellen and Jack are evacuated from London to Cornwall during the Second World War. Ellen relishes the opportunity to better herself. Jack is different. He finds",
+          "full_chars": 791,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_unique_11480",
+        "document_id": "unique_11480",
+        "query": {
+          "text": "Hi all!I'm looking for a book I started a couple of months ago (probably in January before the curre",
+          "full_chars": 812,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Kidnapped, drugged, and about to be sold to the highest bidder, Desdemona Carlisle is having a hell of a time maintaining her English pride. Then she sees the man in black, galloping through the Egypt",
+          "full_chars": 1272,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_unique_10490",
+        "document_id": "unique_10490",
+        "query": {
+          "text": "Read around 2011. Cover was an illustration with several characters depicted. Likely from the 90’s.I",
+          "full_chars": 745,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "When her mother died, she told 14-year-old Walking Breeze to seek out her family-the Chelmsfords of Salem. She will find solace there.But Ebie Chelmsford has other ideas. Ebie knows that her half-Shaw",
+          "full_chars": 709,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_unique_936",
+        "document_id": "unique_936",
+        "query": {
+          "text": "This book opens with a eastern woman who has been recently widowed when her husband died in a mining",
+          "full_chars": 675,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Welcome to Hope Falls where three enterprising young females are accepting applications for husbands-for-hire. With one woman already snagged, Lacey Lyman is one of only two remaining. No one really c",
+          "full_chars": 983,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_unique_13841",
+        "document_id": "unique_13841",
+        "query": {
+          "text": "I'm looking for a book I read as a teen. I thought it might be part of the Point Horror, Point Roman",
+          "full_chars": 1126,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "\"And then you die!\" - The grim message is scrawled across the script of the horror film Christina stars in - is it a joke, or for real? While shooting a horror film, of which she is the star, young ac",
+          "full_chars": 571,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

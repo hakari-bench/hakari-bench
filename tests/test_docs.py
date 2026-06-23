@@ -11,6 +11,7 @@ from hakari_bench.task_docs import (
     validate_task_docs,
 )
 from hakari_bench.cli import parse_args
+from scripts.extract_benchmark_task_examples import build_example_metadata, render_example_table
 
 
 def test_documented_hakari_bench_commands_parse() -> None:
@@ -80,11 +81,111 @@ def test_task_metadata_prefers_external_json(tmp_path: Path) -> None:
     assert [item.task_name for item in metadata] == ["ja"]
 
 
+def test_task_metadata_examples_store_truncated_text_and_full_lengths() -> None:
+    source_metadata = load_task_metadata(Path("task_docs/docs/NanoMIRACL/ja.md"))
+    payload = source_metadata.model_dump()
+    payload["examples"] = [
+        {
+            "query_id": "q1",
+            "document_id": "d1",
+            "query": {
+                "text": "short query",
+                "full_chars": 11,
+                "limit_chars": 100,
+                "truncated": False,
+            },
+            "positive_document": {
+                "text": "long document preview",
+                "full_chars": 2200,
+                "limit_chars": 200,
+                "truncated": True,
+            },
+        }
+    ]
+
+    document = TaskMetadataDocument.model_validate({"task_metadata": payload})
+
+    assert document.task_metadata.examples is not None
+    example = document.task_metadata.examples[0]
+    assert example.query.text == "short query"
+    assert example.query.full_chars == 11
+    assert example.query.limit_chars == 100
+    assert not example.query.truncated
+    assert example.positive_document.text == "long document preview"
+    assert example.positive_document.full_chars == 2200
+    assert example.positive_document.limit_chars == 200
+    assert example.positive_document.truncated
+
+
+def test_task_metadata_references_require_valid_source_confidence() -> None:
+    source_metadata = load_task_metadata(Path("task_docs/docs/NanoMIRACL/ja.md"))
+    payload = source_metadata.model_dump()
+    payload["references"] = [
+        {
+            "title": "Unchecked Source",
+            "url": "https://example.com/source",
+            "is_paper": False,
+            "source_confidence": "unchecked",
+        }
+    ]
+
+    metadata, issues = validate_task_docs()
+    assert not issues
+
+    try:
+        TaskMetadataDocument.model_validate({"task_metadata": payload})
+    except ValueError as exc:
+        assert "source_confidence has invalid label 'unchecked'" in str(exc)
+    else:
+        raise AssertionError("invalid source_confidence label should fail validation")
+
+
+def test_build_example_metadata_uses_separate_query_and_document_limits() -> None:
+    examples = build_example_metadata(
+        queries=[{"_id": "q1", "text": "query " + "x" * 120}],
+        corpus=[{"_id": "d1", "text": "document " + "y" * 240}],
+        qrels=[{"query-id": "q1", "corpus-id": "d1", "score": 1}],
+        sample_size=5,
+        seed=42,
+        query_text_limit=100,
+        document_text_limit=200,
+    )
+
+    assert len(examples) == 1
+    assert examples[0]["query_id"] == "q1"
+    assert examples[0]["document_id"] == "d1"
+    assert examples[0]["query"]["full_chars"] == 126
+    assert examples[0]["query"]["limit_chars"] == 100
+    assert examples[0]["query"]["truncated"] is True
+    assert len(examples[0]["query"]["text"]) == 100
+    assert examples[0]["positive_document"]["full_chars"] == 249
+    assert examples[0]["positive_document"]["limit_chars"] == 200
+    assert examples[0]["positive_document"]["truncated"] is True
+    assert len(examples[0]["positive_document"]["text"]) == 200
+
+    table = render_example_table(examples)
+
+    assert "| Query | Positive document |" in table
+    assert "... [100 / 126 chars]" in table
+    assert "... [200 / 249 chars]" in table
+
+
 def test_task_docs_metadata_validate() -> None:
     metadata, issues = validate_task_docs()
 
     assert not issues
     assert len(metadata) > 500
+    for item in metadata:
+        assert item.examples is not None, item.document_path
+        assert len(item.examples) == 5, item.document_path
+        assert item.example_count == 5, item.document_path
+        for example in item.examples:
+            assert example.query_id
+            assert example.document_id
+            assert len(example.query.text) <= example.query.limit_chars
+            assert len(example.positive_document.text) <= example.positive_document.limit_chars
+            assert example.query.limit_chars == 100
+            assert example.positive_document.limit_chars == 200
 
 
 def _normalize_shell_command(block: str) -> str:

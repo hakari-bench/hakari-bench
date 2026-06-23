@@ -134,15 +134,98 @@
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/norquad_retrieval",
         "url": "https://huggingface.co/datasets/mteb/norquad_retrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "407",
+        "document_id": "408",
+        "query": {
+          "text": "Når ble euroen innført?",
+          "full_chars": 23,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "I 1999",
+          "full_chars": 6,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "152",
+        "document_id": "153",
+        "query": {
+          "text": "Hvilken bok lyver flest briter om at de har lest?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "«Bibelen»",
+          "full_chars": 9,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "110",
+        "document_id": "111",
+        "query": {
+          "text": "Hvilket land i Øst-Europa var det første til å få en ikke-kommunistisk statsminister?",
+          "full_chars": 85,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "30 år uten Berlinmur Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. FOTO: GERARD MALLE/NTB SCANPIX Det heter at muren falt. Som om den tumlet over ende av",
+          "full_chars": 1948,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "87",
+        "document_id": "88",
+        "query": {
+          "text": "Hva kalte romerne provinsen de lagde ut av dagens England og Wales?",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Romersk Britannia",
+          "full_chars": 17,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "235",
+        "document_id": "236",
+        "query": {
+          "text": "Hvordan var tonen til Botnan etter løpet?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "litt mer spøkefull",
+          "full_chars": 18,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

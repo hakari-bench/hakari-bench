@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,118 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "55294",
+        "document_id": "2419",
+        "query": {
+          "text": "DeleteDuplicatesBy werkt niet zoals ik had gehoopt. Mis ik iets?",
+          "full_chars": 64,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dubbele elementen uit een lijst verwijderen Als een lijst dubbele elementen bevat, bijvoorbeeld list = {a, 1, 5, 3, 5, x^2, x^2}, hoe kunnen de dubbele elementen worden verwijderd? Het resultaat zou z",
+          "full_chars": 274,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "17250",
+        "document_id": "51414",
+        "query": {
+          "text": "Is het mogelijk om de kleur van de plot in Show te veranderen?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Plot bewerken na aanmaak Ik probeer een manier te vinden om een plot te manipuleren die ik eerder heb gemaakt. (voor de volledige code, neem de functie x[t_]:=Sin[2t] ) Stel dat ik een plot heb: plot1",
+          "full_chars": 1150,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11794",
+        "document_id": "50550",
+        "query": {
+          "text": "Krijg polynomiale interpolatieformule",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Functies Bepalen Gegeven Datapunten Kan Mathematica f(x,y) = 0 oplossen zodanig dat {x,y} bevat `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}}`? Moeten we f(x,y) eerst specificeren? Dank u.",
+          "full_chars": 186,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "8865",
+        "document_id": "14112",
+        "query": {
+          "text": "Functie of formule als functieparameter doorgeven",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Een functie als argument van een andere functie doorgeven **Mogelijke dubbel:** > Functie of formule als functieparameter doorgeven Ik probeer een eenvoudige Plot[]-achtige functie te implementeren, m",
+          "full_chars": 1051,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25502",
+        "document_id": "2794",
+        "query": {
+          "text": "Hoe typ ik een hoofdletter \"E\" in Mathematica 9 met behulp van \"ToExpression\" en \"TeXForm\"?",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kan TeX-invoer niet converteren naar Mathematica De invoer ToExpression[\"\\\\sqrt{x y}\", TeXForm] geeft de uitvoer `$Failed`. Misschien is mijn zeer oude computer het probleem, maar dat is de enige opdr",
+          "full_chars": 294,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

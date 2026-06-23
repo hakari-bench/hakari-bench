@@ -156,11 +156,13 @@ abstracts to introductions in a small academic corpus.
 
 ## Example Data
 
-Representative queries include abstracts about bilingual dictionary extraction,
-local summarization, Japanese bunsetsu grouping for speech synthesis,
-related-term collection, and corpus effects in statistical NLP. The positive
-documents are the corresponding introduction sections, which motivate the same
-research problems and introduce the paper's core technical setting.
+| Query | Positive document |
+| --- | --- |
+| 機械翻訳などの多言語間自然言語処理で用いられる対訳辞書は現在，人手によって作成されることが多い．しかし，人手による作成には一貫性・網羅性などの点で限界があることから対訳コーパスから自動的に対訳辞書を作... [100 / 423 chars] | \label{sec:intro}機械翻訳などの多言語間システムの構築において対訳辞書は必要不可欠であり，その品質がシステム全体の性能を左右する．これらに用いられる対訳辞書は現在，人手によって作成されることが多い．しかし，人手による作成には限界があり，品質を向上するためには膨大な労力が必要であること，辞書の記述の一貫性を保つことが困難であることが問題となる．このことからコーパスから自動的に対訳辞書... [200 / 920 chars] |
+| 日本語ニュースを局所的要約する際に必要となる要約知識を，コーパスから自動獲得する手法について述べる．局所的要約とは注目個所の近傍の情報（局所的情報）を用いて行なう要約をいう．局所的情報には注目個所その... [100 / 392 chars] | \label{sec:sec1}インターネットの普及も手伝って，最近は電子化されたテキスト情報を簡単にかつ大量に手にいれることが可能となってきている．このような状況の中で，必要な情報だけを得るための技術として文章要約は重要であり，計算機によって要約を自動的に行なうこと，すなわち自動要約が望まれる．自動要約を実現するためには本来，人間が文章を要約するのと同様に，原文を理解する過程が当然必要となる．し... [200 / 1,203 chars] |
+| 近年の高度情報化の流れにより，自動車にも種々の情報機器が搭載されるようになり，その中で音声認識・合成の必要性が高まっている．本研究は音声合成を行うための日本語解析の中で基本となる，文節まとめあげに関す... [100 / 589 chars] | 近年の高度情報化の流れにより，種々の情報機器が自動車にも搭載されるようになり，さまざまな情報通信サービスが広がりつつある．このような車載情報機器は，自動車に搭載するためにCPUの速度やRAM，ROMなどのメモリ容量の制約が非常に厳しく，また，開発期間がより短いことや保守管理の労力の低減も同時に求められている．自動車内で提供される情報通信サービスには，交通情報，観光情報，電子メール，一般情報(例えば... [200 / 1,703 chars] |
+| 本論文で提案する{\em関連用語収集問題}は，与えられた専門用語に対し，それと強く関連する用語集合を求める問題である．この問題を解くためには，ある用語が専門用語であり，かつ，入力用語と強く関連するかど... [100 / 425 chars] | 「ある用語を知る」ということは，その用語が何を意味し，どのような概念を表すかを知ることである．それと同時に，その用語が他のどのような用語と関連があるのかを知ることは非常に重要である．特定の専門分野で使われる用語---{\bf専門用語}---は，その分野内で孤立した用語として存在することはない．その分野で使われる他の用語に支えられ，その関連を土台として，はじめて意味を持つ．それらの用語間の関連を把握... [200 / 1,510 chars] |
+| 統計情報に基づく自然言語処理が盛んになる中で，訓練データとしてのコーパスの影響は非常に大きい．生コーパスをそのまま利用する場合には，コーパスの取得が容易であるため，目的に合ったドメインのコーパスを大量... [100 / 496 chars] | 統計情報に基づく自然言語処理では，訓練データとしてのコーパスの影響は非常に大きい．形態素情報や品詞情報等の情報を付加したコーパスを利用することで処理の精度の向上や処理の簡略化等が期待できるが，情報を付加する段階での労力が大きく，その精度に結果が大きく左右されるという問題がある．生コーパスをそのまま利用する場合には，コーパスの取得が容易であるため，目的に合ったドメインのコーパスを大量に入手できるとい... [200 / 600 chars] |
 
 ### Public Sources
 
@@ -179,9 +181,9 @@ research problems and introduce the paper's core technical setting.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
-| 言語処理学会論文誌 LaTeX コーパス |  | repository | https://github.com/jenio/nlp-journal-latex-corpus |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
+| 言語処理学会論文誌 LaTeX コーパス |  | repository | [https://github.com/jenio/nlp-journal-latex-corpus](https://github.com/jenio/nlp-journal-latex-corpus) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

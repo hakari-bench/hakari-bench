@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
-        "url": "https://arxiv.org/abs/1809.09600",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "Penny Rae Bridges đã đóng vai trong một bộ phim hài truyền hình cùng với diễn viên nào khác?",
+          "full_chars": 92,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (sinh ngày 29 tháng 7 năm 1990) là một nữ diễn viên người Mỹ. Công việc truyền hình của cô đã bao gồm các vai diễn trong \"For Your Love\", \"Family Law\", \"Boy Meets World\" và \"The Pare",
+          "full_chars": 292,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "Ai đã tặng Kaganoi Shigemochi một thanh kiếm được làm bởi người sáng lập trường Muramasa?",
+          "full_chars": 89,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 tháng 8, 1600) là một samurai Nhật Bản của thời kỳ Azuchi-Momoyama, phục vụ cho gia tộc Oda. Ông cai trị lâu đài Kaganoi. Trong trận chiến Komaki và Nagakute, Shi",
+          "full_chars": 607,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "Bộ phim nào được viết và đạo diễn bởi Joby Harold với nhạc được viết bởi Samuel Sim?",
+          "full_chars": 84,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim là một nhạc sĩ phim và truyền hình. Ông lần đầu tiên được công nhận với bản nhạc đoạt giải cho loạt phim truyền hình của BBC \"Dunkirk\". Kể từ đó, ông đã sáng tác nhạc cho nhiều sản phẩm phi",
+          "full_chars": 537,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae63b2255429908198fa526",
+        "document_id": "46395880",
+        "query": {
+          "text": "Ngày diễn ra trận đấu bóng đá đại học này tại Sân vận động Sun Life ở Miami Gardens, Florida, nơi Cl",
+          "full_chars": 159,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Đội bóng đá Clemson Tigers năm 2015 đại diện cho Đại học Clemson trong mùa bóng đá NCAA Division I FBS năm 2015. Đội Tigers được dẫn dắt bởi huấn luyện viên trưởng Dabo Swinney trong năm thứ bảy đầy đ",
+          "full_chars": 1183,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a84fd085542994c784ddaba",
+        "document_id": "1854777",
+        "query": {
+          "text": "Devil's Food là một album tổng hợp các bài hát đơn của một ban nhạc rock and roll người Mỹ, cũng đượ",
+          "full_chars": 173,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Devil's Food là một album tổng hợp các bài hát đơn của ban nhạc rock and roll Mỹ Supersuckers, phát hành vào tháng 4 năm 2005 trên hãng đĩa Mid-Fi.",
+          "full_chars": 147,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

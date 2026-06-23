@@ -70,9 +70,13 @@ For reranking, useful evidence includes technical function, cited-family relatio
 
 ## Example Data
 
-### Public Sources
-
-NanoDAPFAM is documented through the DAPFAM paper and the public DAPFAM patent dataset card.
+| Query | Positive document |
+| --- | --- |
+| snow removal equipment with automatic walking function the invention relates to snow removal equipme... [100 / 6,075 chars] | multifunctional device for clearing snow an apparatus and method for clearing an accumulation of matter from a surface that includes a blade configured to collect matter upon movement of the apparatus... [200 / 643 chars] |
+| modular intelligent transportation system a modular intelligent transportation system, comprising an... [100 / 7,061 chars] | impact media sharing an example operation includes one or more of associating a transport with an impact in proximity to one or more other transports, transmitting, by a device in proximity to the imp... [200 / 462 chars] |
+| synthetic hollow microspheres this invention relates to a method of forming a synthetic hollow micro... [100 / 8,392 chars] | process for preparing metal-coated hollow microspheres a process for preparing a metal-coated hollow microsphere comprising the combination of steps of: (a) vigorously admixing a major quantity of hol... [200 / 821 chars] |
+| low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile s... [100 / 3,799 chars] | anti-static mats and carpets a novel carpet material or mat which is characterized by an extraordinary ability to quickly and comfortably discharge any build-up of a static electricity charge on a per... [200 / 510 chars] |
+| steering system with lane keeping integration a system for steering a vehicle including: an actuator... [100 / 5,360 chars] | steer torque manager for an advanced driver assistance system of a road vehicle a steer torque manager for an advanced driver assistance system of a road vehicle and a method therefor. a driver-in-the... [200 / 985 chars] |
 
 ### Source Reference Table
 

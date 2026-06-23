@@ -160,11 +160,11 @@ same climate topic.
 
 | Query | Positive document |
 | --- | --- |
-| Von 1970 bis 1998 gab es eine Erwärmungsperiode, die die Temperaturen um etwa 0,4 Grad Celsius erhöhte und die globale Erwärmungs-Alarmisten-Bewegung ins Leben gerufen hat. (172 chars) | Das Paläozän (ausgesprochen: /paleoˈtseːn/ oder /ˈpaleoˌtseːn/), auch Paläozän genannt, das „alte Neue“, ist eine geologische Epoche, die etwa von 66 bis 56 Millionen Jahren dauerte. Es ist die erste Epoche des Paläogens in d ... [truncated 225 chars](1266 chars) |
-| Tatsächlich zeigt der Trend, wenn auch statistisch nicht signifikant, nach unten. (81 chars) | Der Sonnenzyklus oder Sonnenfleckenzyklus ist ein fast periodischer 11-Jahres-Zyklus, der die Aktivität der Sonne (einschließlich Veränderungen in der Sonnenstrahlung und dem Ausstoß von Sonnenmaterial) und ihr Erscheinungsbi ... [truncated 225 chars](720 chars) |
-| Lokale und regionale Meeresspiegel zeigen weiterhin typische natürliche Schwankungen, an einigen Orten steigen sie, an anderen sinken sie. (138 chars) | Der mittlere Meeresspiegel (MSL) (abgekürzt einfach Meeresspiegel) ist ein Durchschnittswert der Oberfläche eines oder mehrerer Ozeane der Erde, von dem Höhen wie Höhenlagen gemessen werden können. MSL ist eine Art vertikaler ... [truncated 225 chars](1164 chars) |
-| Klimawissenschaftler sagen, dass bei Hurrikan Harvey Hinweise darauf zu finden sind, dass der Klimawandel die Lage verschärft. (126 chars) | Die Auswirkungen des globalen Klimawandels sind die Umwelt- und sozialen Veränderungen, die direkt oder indirekt durch menschliche Emissionen von Treibhausgasen verursacht werden. Es gibt einen wissenschaftlichen Konsens, das ... [truncated 225 chars](1421 chars) |
-| Das CERN CLOUD-Experiment hat nur einen von vier notwendigen Anforderungen, um die globale Erwärmung auf kosmische Strahlung zurückzuführen, teilweise getestet, und zwei der anderen Anforderungen sind bereits gescheitert. (221 chars) | Die Zurechnung des jüngsten Klimawandels ist die wissenschaftliche Bemühung, die Mechanismen zu bestimmen, die für die jüngsten Klimaveränderungen auf der Erde verantwortlich sind, die gemeinhin als "globale Erwärmung" bekann ... [truncated 225 chars](2377 chars) |
+| Von 1970 bis 1998 gab es eine Erwärmungsperiode, die die Temperaturen um etwa 0,4 Grad Celsius erhöh... [100 / 172 chars] | Das Paläozän (ausgesprochen: /paleoˈtseːn/ oder /ˈpaleoˌtseːn/), auch Paläozän genannt, das „alte Neue“, ist eine geologische Epoche, die etwa von 66 bis 56 Millionen Jahren dauerte. Es ist die erste... [200 / 1,266 chars] |
+| Tatsächlich zeigt der Trend, wenn auch statistisch nicht signifikant, nach unten. [81 chars] | Der Sonnenzyklus oder Sonnenfleckenzyklus ist ein fast periodischer 11-Jahres-Zyklus, der die Aktivität der Sonne (einschließlich Veränderungen in der Sonnenstrahlung und dem Ausstoß von Sonnenmateria... [200 / 720 chars] |
+| Lokale und regionale Meeresspiegel zeigen weiterhin typische natürliche Schwankungen, an einigen Ort... [100 / 138 chars] | Der mittlere Meeresspiegel (MSL) (abgekürzt einfach Meeresspiegel) ist ein Durchschnittswert der Oberfläche eines oder mehrerer Ozeane der Erde, von dem Höhen wie Höhenlagen gemessen werden können. MS... [200 / 1,164 chars] |
+| Klimawissenschaftler sagen, dass bei Hurrikan Harvey Hinweise darauf zu finden sind, dass der Klimaw... [100 / 126 chars] | Die Auswirkungen des globalen Klimawandels sind die Umwelt- und sozialen Veränderungen, die direkt oder indirekt durch menschliche Emissionen von Treibhausgasen verursacht werden. Es gibt einen wissen... [200 / 1,421 chars] |
+| Das CERN CLOUD-Experiment hat nur einen von vier notwendigen Anforderungen, um die globale Erwärmung... [100 / 221 chars] | Die Zurechnung des jüngsten Klimawandels ist die wissenschaftliche Bemühung, die Mechanismen zu bestimmen, die für die jüngsten Klimaveränderungen auf der Erde verantwortlich sind, die gemeinhin als "... [200 / 2,377 chars] |
 
 ### Public Sources
 
@@ -182,7 +182,7 @@ same climate topic.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | task paper | https://arxiv.org/abs/2012.00614 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

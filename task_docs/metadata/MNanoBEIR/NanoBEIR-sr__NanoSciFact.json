@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q usmerava organizaciju migracije neutrofila do mesta zapaljenja regulišući funkcije membranskih",
+          "full_chars": 110,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Neutrofili brzo podležu polarizaciji i usmerenom kretanju kako bi se infiltrirali na mesta infekcije i upale. Ovde pokazujemo da je inhibitorni MHC I receptor, Ly49Q, bio ključan za brzu polarizaciju",
+          "full_chars": 989,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Antiretrovirusna terapija smanjuje stope oboljevanja od tuberkuloze u širokom rasponu CD4 slojeva.",
+          "full_chars": 98,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "POZADINA Infekcija virusom humane imunodeficijencije (HIV) predstavlja najznačajniji faktor rizika za razvoj tuberkuloze i podstaknula je njen ponovni porast, posebno u podsaharskoj Africi. Godine 201",
+          "full_chars": 2174,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Brza regulacija naviše i viši bazalni izražaj interferonom indukovanih gena smanjuju preživljavanje",
+          "full_chars": 163,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Iako je podložnost neurona u mozgu mikrobnoj infekciji glavni faktor koji određuje klinički ishod, malo se zna o molekularnim faktorima koji upravljaju ovom osetljivošću. Ovde pokazujemo da su dve vrs",
+          "full_chars": 1119,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "Primarno skrining za rak grlića materice uz detekciju HPV-a ima veću longitudinalnu senzitivnost od",
+          "full_chars": 187,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "POZADINA Skrining za rak grlića materice zasnovan na testiranju na humani papiloma virus (HPV) povećava senzitivnost detekcije visokog stepena (stepen 2 ili 3) cervikalne intraepitelne neoplazije, ali",
+          "full_chars": 2253,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "Blokiranje interakcije između TDP-43 i proteina respiratornog kompleksa I, ND3 i ND6, dovodí do poja",
+          "full_chars": 139,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Genetičke mutacije u TAR DNK-vezujućem proteinu 43 (TARDBP, takođe poznatom kao TDP-43) uzrokuju amiotrofičnu lateralnu sklerozu (ALS), a povećana prisutnost TDP-43 (kodiranog genom TARDBP) u citoplaz",
+          "full_chars": 1274,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

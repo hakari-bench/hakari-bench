@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/arguana-fa-v2",
         "url": "https://huggingface.co/datasets/MCINext/arguana-fa-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-health-ppelfhwbpba-con02a",
+        "document_id": "test-health-ppelfhwbpba-con02b",
+        "query": {
+          "text": "مخالفت با سقط جنین ناقص زایمان بخشی از استراتژی‌ای است که هدف آن ممنوع کردن سقط جنین به طور کلی است.",
+          "full_chars": 668,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "فلسفه بارداری، اخلاق، زندگی، خانواده، خانه، ممنوعیت سقط جنین ناقص اگرچه بسیاری از مخالفان سقط جنین نوع خاص، در اصل با سقط جنین مخالف هستند، اما ارتباط ضروری بین این دو وجود ندارد، زیرا سقط جنین نوع خا",
+          "full_chars": 694,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-environment-chbwtlgcc-con03a",
+        "document_id": "test-environment-chbwtlgcc-con03b",
+        "query": {
+          "text": "فناوری نوین بشر بارها از طریق اختراعات عظیمی مانند کشاورزی، فولاد، آنتی‌بیوتیک‌ها و ریزتراشه‌ها، جها",
+          "full_chars": 966,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "خانه اقلیم معتقد است برای تغییرات اقلیمی جهانی خیلی دیر شده است. پیشرفت‌های تکنولوژیکی تقریباً به‌طور قطع برای کسانی که توانایی پرداخت آن را دارند توسعه خواهند یافت (همانطور که معمولاً در مورد بیشتر ف",
+          "full_chars": 472,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-environment-aeghhgwpe-pro04a",
+        "document_id": "test-environment-aeghhgwpe-pro04b",
+        "query": {
+          "text": "گیاهخواری خطر مسمومیت غذایی را کاهش می‌دهد. تقریباً تمام انواع خطرناک مسمومیت غذایی از طریق گوشت یا",
+          "full_chars": 808,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "حیوانات، محیط زیست، سلامت عمومی، بهداشت عمومی، وزن، فلسفه، اخلاق. ایمنی و بهداشت مواد غذایی برای همه بسیار مهم است و دولت‌ها باید برای اطمینان از وجود استانداردهای بالا، به ویژه در رستوران‌ها و سایر م",
+          "full_chars": 1605,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-sport-tshbmlbscac-pro02a",
+        "document_id": "test-sport-tshbmlbscac-pro02b",
+        "query": {
+          "text": "برخوردها بخشی از بازی هستند. اولاً، برخوردها بخشی از سنت بیسبال هستند. آنها برای مدت طولانی بخشی از",
+          "full_chars": 2033,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "تیم ورزشی هوس معتقد است که لیگ اصلی بیسبال باید به بازیکنان اجازه دهد برخوردها را ادامه دهند. برخوردها بخش به مراتب کمتری از بازی را تشکیل می‌دهند تا آنچه مردم تصور می‌کنند. این تصور که برخوردها از دی",
+          "full_chars": 1475,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-magghbcrg-pro01a",
+        "document_id": "test-free-speech-debate-magghbcrg-pro01b",
+        "query": {
+          "text": "رادیوهای مردمی به جای تحمیل صدای قدرتمندان، به مردم امکان بیان دیدگاه‌هایشان را می‌دهند. رویدادهای ب",
+          "full_chars": 1121,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "رسانه‌ها و خانه دولت معتقدند رادیوهای محلی خوب هستند. رادیوهای محلی می‌توانند همان کارهای شگفت‌انگیزی را که به نظر می‌رسد طرفداران آن به آن‌ها امیدوارند، انجام دهند. آن‌ها حتی می‌توانند کارهای دیگری ه",
+          "full_chars": 537,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

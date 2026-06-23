@@ -146,22 +146,105 @@
         "url": "https://r2med.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED GitHub repository",
         "url": "https://github.com/R2MED/R2MED",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED/MedXpertQA-Exam",
         "url": "https://huggingface.co/datasets/R2MED/MedXpertQA-Exam",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Text-587",
+        "document_id": "wiki20220301en522_6003",
+        "query": {
+          "text": "A 27-year-old male presents with anxiety and ongoing moodiness, citing stress at home and work. His",
+          "full_chars": 703,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Applications The National Institute for Health and Clinical Excellence endorsed the PHQ-9 for measuring depression severity and responsiveness to treatment in adults in a primary care setting. The Beh",
+          "full_chars": 865,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Text-1310",
+        "document_id": "wiki20220301en022_81616",
+        "query": {
+          "text": "A 65-year-old woman presents with an 8-month history of progressive difficulty swallowing food and r",
+          "full_chars": 954,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Procedure Clinical status and relevant medical history are reviewed prior to the studies. Patient consent is required. Barium swallow A barium swallow study is also known as a barium esophagram and ne",
+          "full_chars": 787,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Text-1068",
+        "document_id": "wiki20220301en017_69073",
+        "query": {
+          "text": "A 27-year-old primigravida at 33 weeks gestation visits her primary care physician with concerns abo",
+          "full_chars": 489,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Immune factors may also play a role. Diagnosis Testing for pre-eclampsia is recommended throughout pregnancy via measuring a woman's blood pressure. Diagnostic criteria Pre-eclampsia is diagnosed when",
+          "full_chars": 902,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Text-886",
+        "document_id": "wiki20220301en048_61376",
+        "query": {
+          "text": "A 43-year-old female daycare teacher seeks medical attention for one month of fatigue and lightheade",
+          "full_chars": 675,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Diagnosis The presence of a uterine fibroid versus an adnexal tumor is made. Fibroids can be mistaken for ovarian neoplasms. An uncommon tumor which may be mistaken for a fibroid is Sarcoma botryoides",
+          "full_chars": 890,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Text-1670",
+        "document_id": "wiki20220301en253_16012",
+        "query": {
+          "text": "A 14-year-old girl with no notable medical history reports having intermittent mild pain in her uppe",
+          "full_chars": 2334,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Hereditary hemochromatosis usually presents with a family history of cirrhosis, skin hyperpigmentation, diabetes mellitus, pseudogout, or cardiomyopathy, all due to signs of iron overload. Wilson's di",
+          "full_chars": 929,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

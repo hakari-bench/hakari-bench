@@ -48,13 +48,13 @@ Strong models should improve medical terminology bridging and evidence-set recal
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Batidos de chocolate saludables | Objetivo: Estudiar la relación entre el consumo de cerezas y el riesgo de ataques recurrentes de gota... |
-| ética médica | ANTECEDENTES: Uno de los principales problemas en el control del colesterol sérico mediante intervención dietética parece ser la necesidad de mejorar... |
-| habas | Durante los últimos 20 años, el creciente interés en la bioquímica, nutrición y farmacología de la L-arginina... |
-| ¿Qué contienen los nuggets de pollo? | OBJETIVO: Determinar los componentes de las croquetas de pollo de 2 cadenas de comida nacionales... |
-| grasa saturada | El interés por la posibilidad de que la ingesta materna de alimentos durante el embarazo pueda influir en el desarrollo de trastornos alérgicos... |
+| Query | Positive document |
+| --- | --- |
+| Batidos de chocolate saludables [31 chars] | Objetivo: Estudiar la relación entre el consumo de cerezas y el riesgo de ataques recurrentes de gota en individuos con gota. Métodos: Realizamos un estudio de caso-cruce para examinar las asociacione... [200 / 1,865 chars] |
+| ética médica [12 chars] | ANTECEDENTES: Uno de los principales problemas en el control del colesterol sérico mediante intervención dietética parece ser la necesidad de mejorar la adherencia del paciente. OBJETIVOS: Explorar la... [200 / 2,091 chars] |
+| habas [5 chars] | Durante los últimos 20 años, el creciente interés en la bioquímica, nutrición y farmacología de la L-arginina ha llevado a extensos estudios para explorar sus roles nutricionales y terapéuticos en el... [200 / 1,398 chars] |
+| ¿Qué contienen los nuggets de pollo? [36 chars] | OBJETIVO: Determinar los componentes de las croquetas de pollo de 2 cadenas de comida nacionales. ANTECEDENTES: Las croquetas de pollo se han convertido en un componente importante de la dieta estadou... [200 / 852 chars] |
+| grasa saturada [14 chars] | El interés por la posibilidad de que la ingesta materna de alimentos durante el embarazo pueda influir en el desarrollo de trastornos alérgicos en los niños ha aumentado. El presente estudio prospecti... [200 / 2,263 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve medical terminology bridging and evidence-set recal
 
 | Label | URL |
 |---|---|
-| NFCorpus paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| NFCorpus project page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus paper (https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| NFCorpus project page (https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

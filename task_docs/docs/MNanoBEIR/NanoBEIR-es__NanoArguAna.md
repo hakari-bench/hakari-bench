@@ -48,13 +48,13 @@ Strong models should improve stance-sensitive ranking while preserving topic cov
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| El público es apático ante la reforma. Es discutible si la reforma de la Cámara de los Lores debería ser una prioridad... | La campaña de voto alternativo no puede compararse con una reforma del sistema político. Además, no se debe confundir a un público... |
-| La expansión de Heathrow es vital para la economía. La expansión de Heathrow garantizaría muchos de los empleos actuales y crearía nuevos... | La comunidad empresarial está lejos de estar unida en su supuesto apoyo a una tercera pista. Las encuestas sugieren que muchos negocios influyentes... |
-| Las personas tienen demasiadas opciones, lo que las hace menos felices. | Las personas están descontentas porque no pueden tenerlo todo, no porque se les ofrezca demasiadas opciones y eso les resulte estresante... |
-| Los ataques cibernéticos a menudo son perpetrados por actores no estatales, como ciberterroristas o hacktivistas... | En caso de un ataque de actores no estatales, muchos expertos en derecho internacional coinciden en que el estado puede aún retaliar en defensa propia... |
-| Porque la religión promueve la certeza de la creencia, el odio divino es fácil de utilizar para justificar y promover acciones violentas... | Nadie está siendo obligado a cometer actos de violencia por las palabras de otra persona; es su elección hacerlo... |
+| Query | Positive document |
+| --- | --- |
+| El público es apático ante la reforma. Es discutible si la reforma de la Cámara de los Lores debería... [100 / 572 chars] | La campaña de voto alternativo no puede compararse con una reforma del sistema político. Además, no se debe confundir a un público mal informado debido a la manipulación política con apatía. A menudo,... [200 / 462 chars] |
+| La expansión de Heathrow es vital para la economía. La expansión de Heathrow garantizaría muchos de... [100 / 1,285 chars] | La comunidad empresarial está lejos de estar unida en su supuesto apoyo a una tercera pista. Las encuestas sugieren que muchos negocios influyentes, en realidad, no apoyan la expansión. Una carta expr... [200 / 1,438 chars] |
+| Las personas tienen demasiadas opciones, lo que las hace menos felices. La publicidad lleva a muchas... [100 / 989 chars] | Las personas están descontentas porque no pueden tenerlo todo, no porque se les ofrezca demasiadas opciones y eso les resulte estresante. De hecho, los anuncios juegan un papel crucial al asegurar que... [200 / 983 chars] |
+| Los ataques cibernéticos a menudo son perpetrados por actores no estatales, como ciberterroristas o... [100 / 1,067 chars] | En caso de un ataque de actores no estatales, muchos expertos en derecho internacional coinciden en que el estado puede aún retaliar en defensa propia si otro estado es 'incapaz o no está dispuesto a... [200 / 599 chars] |
+| Porque la religión promueve la certeza de la creencia, el odio divino es fácil de utilizar para just... [100 / 1,473 chars] | Nadie está siendo obligado a cometer actos de violencia por las palabras de otra persona; es su elección hacerlo. Igualmente, hay muchas personas que podrían tener opiniones que se considerarían homof... [200 / 680 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should improve stance-sensitive ranking while preserving topic cov
 
 | Label | URL |
 |---|---|
-| ArguAna paper | https://aclanthology.org/P18-1023/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| ArguAna paper (https://aclanthology.org/P18-1023/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "Natural Questions: A Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: A Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "Dove si terrà la Final Four quest'anno?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "L'80ª edizione del Torneo di Pallacanestro Maschile della Divisione I della NCAA 2018 è stato un torneo a eliminazione diretta con 68 squadre per determinare il campione nazionale di pallacanestro del",
+          "full_chars": 367,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "L'incubo prima di Natale è stato originariamente un film Disney?",
+          "full_chars": 64,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Il film \"Nightmare Before Christmas\" ha avuto origine da una poesia scritta da Tim Burton nel 1982, mentre lavorava come animatore presso la Walt Disney Feature Animation. Grazie al successo di \"Vince",
+          "full_chars": 706,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "Perché l'Angelo del Nord si trova lì?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Secondo Gormley, il significato dell'angelo era triplice: innanzitutto, per indicare che sotto il sito della sua costruzione, i minatori di carbone avevano lavorato per due secoli; in secondo luogo, p",
+          "full_chars": 370,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test826",
+        "document_id": "doc29757",
+        "query": {
+          "text": "Dove era originariamente stabilito il compromesso dei tre quinti nella Costituzione degli Stati Unit",
+          "full_chars": 102,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Il Compromesso dei Tre Quinti è contenuto nell'Articolo 1, Sezione 2, Clausola 3 della Costituzione degli Stati Uniti, che recita:",
+          "full_chars": 130,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test2079",
+        "document_id": "doc72413",
+        "query": {
+          "text": "Chi canta \"Somebody's Watching Me\" con Michael Jackson?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Somebody's Watching Me\" è un brano del cantante americano Rockwell, tratto dal suo album di debutto omonimo Somebody's Watching Me (1984). È stato pubblicato come primo singolo di Rockwell e singolo",
+          "full_chars": 384,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

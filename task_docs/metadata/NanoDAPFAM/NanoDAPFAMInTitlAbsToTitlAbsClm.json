@@ -133,15 +133,98 @@
         "url": "https://doi.org/10.1016/j.array.2026.100720",
         "year": 2026,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "datalyes/DAPFAM_patent",
         "url": "https://huggingface.co/datasets/datalyes/DAPFAM_patent",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "157-957-371-093-061",
+        "document_id": "009-475-855-682-016",
+        "query": {
+          "text": "snow removal equipment with automatic walking function the invention relates to snow removal equipme",
+          "full_chars": 988,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "multifunctional device for clearing snow an apparatus and method for clearing an accumulation of matter from a surface that includes a blade configured to collect matter upon movement of the apparatus",
+          "full_chars": 12229,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "025-477-423-951-197",
+        "document_id": "103-648-977-004-109",
+        "query": {
+          "text": "waste disposal devices waste disposal device including a housing defining a waste compartment for re",
+          "full_chars": 891,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "cassette for dispensing pleated tubing a cassette for use in dispensing a pleated tubing. the cassette includes an annular body having a generally u shaped housing with an open central cylindrical cor",
+          "full_chars": 3454,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "006-841-719-520-934",
+        "document_id": "026-420-956-132-089",
+        "query": {
+          "text": "an article including identification for use in an electrically heated smoking system. there is provi",
+          "full_chars": 1164,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "apparatus for generating aerosol from an aerosolisable medium, an article of aerosolisable medium and a method of determining a parameter of an article to provide an apparatus that heats an aerosoliza",
+          "full_chars": 5466,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "182-279-132-155-313",
+        "document_id": "066-853-224-887-536",
+        "query": {
+          "text": "low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile s",
+          "full_chars": 565,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "anti-static mats and carpets a novel carpet material or mat which is characterized by an extraordinary ability to quickly and comfortably discharge any build-up of a static electricity charge on a per",
+          "full_chars": 3680,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "069-670-480-962-483",
+        "document_id": "007-164-988-710-42X",
+        "query": {
+          "text": "organosilicon precursors for interlayer dielectric films with low dielectric constants a method of f",
+          "full_chars": 546,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "radiation shield a radiation shield and an assembly and a reactor including the radiation shield are disclosed. the radiation shield can be used to control heat flux from a susceptor heater assembly a",
+          "full_chars": 4267,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

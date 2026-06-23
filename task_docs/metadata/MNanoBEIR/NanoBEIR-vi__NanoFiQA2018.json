@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "FiQA: Financial Opinion Mining and Question Answering",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA: Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Loại lợi suất nào mà Vanguard đang báo giá?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Từ trang Vanguard - Đây có vẻ là cái dễ nhất vì dữ liệu S&P dễ tìm. Tôi sử dụng MoneyChimp để lấy - điều này xác nhận rằng trang của Vanguard đang cung cấp CAGR, không phải Trung bình số học. Lưu ý:",
+          "full_chars": 431,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Các tác động thuế của việc làm tự do ở Hoa Kỳ",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nếu bạn có thu nhập ở Mỹ, bạn sẽ phải nộp thuế thu nhập Mỹ trên số thu nhập đó, trừ khi có hiệp định với quốc gia của bạn quy định khác.",
+          "full_chars": 136,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "Cái gì được coi là cao hoặc thấp khi nói về âm lượng?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Khối lượng giao dịch hàng ngày thường được so sánh với khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của một cổ phiếu. Khối lượng cao thường được coi là gấp 2 lần hoặc hơn khối lượng gia",
+          "full_chars": 782,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "94",
+        "document_id": "245447",
+        "query": {
+          "text": "Sử dụng điểm thẻ tín dụng để thanh toán cho chi phí kinh doanh có thể khấu trừ thuế",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Để đơn giản, hãy bắt đầu bằng cách chỉ xem xét tiền hoàn lại. Nói chung, tiền hoàn lại từ thẻ tín dụng cho mục đích cá nhân không phải chịu thuế, nhưng cho mục đích kinh doanh thì phải chịu thuế (một",
+          "full_chars": 3814,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2903",
+        "document_id": "527776",
+        "query": {
+          "text": "Tôi nên nộp thuế của mình như thế nào với tư cách là một nhà thầu?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Về mục đích thuế, bạn sẽ cần nộp hồ sơ như một nhân viên (biên lai T4 và thuế bị khấu trừ tự động), nhưng cũng như một doanh nhân. Tôi đã gặp tình huống tương tự năm ngoái. Nhân viên và tự làm chủ là",
+          "full_chars": 723,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

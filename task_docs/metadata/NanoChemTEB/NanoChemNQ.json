@@ -153,8 +153,91 @@
         "url": "https://huggingface.co/datasets/BASF-AI/ChemNQRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test3378",
+        "document_id": "doc115370",
+        "query": {
+          "text": "the reciprocal lattice of an fcc crystal is",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Reciprocal lattice The reciprocal lattice to an FCC lattice is the body-centered cubic (BCC) lattice.",
+          "full_chars": 101,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1207",
+        "document_id": "doc43101",
+        "query": {
+          "text": "suffix applied to the end of the name of enzymes",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "-ase The suffix -ase is used in biochemistry to form names of enzymes. The most common way to name enzymes is to add this suffix onto the end of the substrate, e.g. an enzyme that breaks down peroxide",
+          "full_chars": 482,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1020",
+        "document_id": "doc35964",
+        "query": {
+          "text": "what is the breakdown product formed when one phosphate group is removed from atp",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ATP hydrolysis ATP hydrolysis is the reaction by which chemical energy that has been stored in the high-energy phosphoanhydride bonds in adenosine triphosphate (ATP) is released, for example in muscle",
+          "full_chars": 705,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test61",
+        "document_id": "doc1679",
+        "query": {
+          "text": "where does the electron transport chain pumps protons",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Electron transport chain Electron transport chains are used for extracting energy via redox reactions from sunlight in photosynthesis or, such as in the case of the oxidation of sugars, cellular respi",
+          "full_chars": 564,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1512",
+        "document_id": "doc53946",
+        "query": {
+          "text": "where do they grow hops in the us",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hops Hops production is concentrated in moist temperate climates, with much of the world's production occurring near the 48th parallel north. Hop plants prefer the same soils as potatoes and the leadi",
+          "full_chars": 611,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 41
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-programmers-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-programmers-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,111 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Programmers-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-programmers-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-programmers-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "50755",
+        "document_id": "237809",
+        "query": {
+          "text": "Czy powinienem nadal inwestować w struktury danych i algorytmy?",
+          "full_chars": 63,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Czy implementacja algorytmów poprawia Twoje umiejętności programistyczne? Od jakiegoś czasu uczę się samodzielnie algorytmów i struktur danych i obecnie się tym cieszę. Ilekroć rozumiem algorytm, zwyk",
+          "full_chars": 545,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "126965",
+        "document_id": "83716",
+        "query": {
+          "text": "Nauka Django na przykładzie",
+          "full_chars": 27,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jak poprawnie zrozumieć framework django? Mam przyzwoitą znajomość php, tj. umiem wziąć framework, przeczytać jego kod i jeśli dokumentacja jest odpowiednia, zrozumieć, co robi. Głównym powodem jest t",
+          "full_chars": 730,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109279",
+        "document_id": "230934",
+        "query": {
+          "text": "Walidacja licencji i dzwonienie do domu",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bezpieczna walidacja licencji na oprogramowanie Obecnie pracuję nad produktem (w języku C#), który będzie dostępny do pobrania za darmo, ale wymaga miesięcznej subskrypcji, aby mógł być używany po okr",
+          "full_chars": 1698,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "89944",
+        "document_id": "121829",
+        "query": {
+          "text": "jeśli używam .NET Framework dla mojej aplikacji, czy muszę coś płacić firmie Microsoft?",
+          "full_chars": 87,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chcę sprzedać swoje oprogramowanie [aplikacja komputerowa C#], ale utknąłem w licencjonowaniu > **Możliwy duplikat:** > jeśli używam .NET Framework dla mojej aplikacji, czy muszę coś płacić > Microsof",
+          "full_chars": 1291,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "17898",
+        "document_id": "209408",
+        "query": {
+          "text": "Jakie jest ładne wytłumaczenie wskaźników?",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jaka jest definicja wskaźnika? Koncepcyjnie „wskaźnik” jest po prostu czymś, co „wskazuje” na coś innego; czy ta definicja jest wystarczająca, aby dokładnie powiedzieć, czym jest wskaźnik w językach p",
+          "full_chars": 839,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

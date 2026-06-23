@@ -115,11 +115,11 @@ has the advantage.
 
 | Query | Positive document |
 | --- | --- |
-| Penny Rae Bridgesは、どの他の俳優と共演してテレビのシットコムに出演しましたか？ | ペニー・レイ・ブリッジズはアメリカの女優である。テレビ番組では、「フォア・ユア・ラブ」、「ファミリー・ロー」、「ボーイ・ミーツ・ワールド」などに出演している... |
-| 誰が村正派を創設した人物が作った刀を加賀野井重持に授けたのか？ | 加賀井重望は、安土桃山時代の日本の武士で、織田氏に仕えた。加賀井城を治めた... |
-| ジョビー・ハロルドが脚本と監督を担当し、サミュエル・シムが音楽を手掛けた映画はどれですか？ | サミュエル・シムは、映画およびテレビの作曲家である。彼はBBCドラマシリーズ『ダンケルク』の楽曲で初めて注目を集めた... |
-| フロリダ州マイアミガーデンズのサンライフ・スタジアムで行われたこの大学フットボールの試合はいつ行われましたか？ | 2015年のクレムソン・タイガースアメリカンフットボールチームは、2015年NCAAディビジョンI FBSシーズンでクレムソン大学を代表した... |
-| Devil's Foodは、カントリーショーの際にも使用される名前で知られるアメリカのロックンロールバンドによるシングルズ・コンピレーションである。 | 『Devil's Food』は、アメリカのロックンロール・バンド、スーパーサッカーズによるシングルズ・コンピレーション・アルバムである... |
+| Penny Rae Bridgesは、どの他の俳優と共演してテレビのシットコムに出演しましたか？ [48 chars] | ペニー・レイ・ブリッジズ（1990年7月29日生まれ）はアメリカの女優である。テレビ番組では、「フォア・ユア・ラブ」、「ファミリー・ロー」、「ボーイ・ミーツ・ワールド」、「ザ・ペアレント・フッド」などに出演している。彼女は「ハーフ＆ハーフ」で若いモナを演じた役で最も知られている。 [140 chars] |
+| 誰が村正派を創設した人物が作った刀を加賀野井重持に授けたのか？ [31 chars] | 加賀井重望（かがのい しげもち、1561年 - 慶長5年8月27日（1600年8月27日））は、安土桃山時代の日本の武士で、織田氏に仕えた。加賀井城を治めた。小牧・長久手の戦いでは、父重宗の配下として織田信雄の軍勢に属して戦った。その後間もなく、加賀井城は豊臣秀吉の軍勢に包囲され、重宗は降伏。重望は秀吉に召し抱えられ、使者として仕え、1万石の知行を賜った。また、1598年に秀吉から名刀村正を下賜さ... [200 / 205 chars] |
+| ジョビー・ハロルドが脚本と監督を担当し、サミュエル・シムが音楽を手掛けた映画はどれですか？ [45 chars] | サミュエル・シムは、映画およびテレビの作曲家である。彼はBBCドラマシリーズ『ダンケルク』の受賞歴を持つ楽曲で初めて注目を集めた。以来、さまざまな映画やテレビ番組の音楽を手がけており、最近では、ザ・ワインスタイン・カンパニーの映画『目覚めの時』や、BBC／HBO共同制作のドラマシリーズ『サダムの一族』の音楽を担当した。彼の最新の称賛された作品は、テレビシリーズ『ホーム・ファイアーズ』のサウンドトラ... [200 / 262 chars] |
+| フロリダ州マイアミガーデンズのサンライフ・スタジアムで行われたこの大学フットボールの試合はいつ行われましたか？この試合では、クレムソンが第4位のオクラホマ・スーザンズを37対17で破りました。 [96 chars] | 2015年のクレムソン・タイガースアメリカンフットボールチームは、2015年NCAAディビジョンI FBSシーズンでクレムソン大学を代表した。チームは、2008年シーズン途中から指揮を執って以来、7年目となるフルシーズン（通算8年目）を迎えるヘッドコーチのダボ・スウィニー率いるものであった。ホームゲームは「デスバレー」としても知られるメモリアル・スタジアムで行われた。クレムソンはアトランティック・... [200 / 588 chars] |
+| Devil's Foodは、カントリーショーの際にも使用される名前で知られるアメリカのロックンロールバンドによるシングルズ・コンピレーションである。 [74 chars] | 『Devil's Food』は、アメリカのロックンロール・バンド、スーパーサッカーズによるシングルズ・コンピレーション・アルバムであり、2005年4月にミッドファイ・レコーズからリリースされた。 [97 chars] |
 
 ### Public Sources
 
@@ -133,7 +133,7 @@ has the advantage.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | https://arxiv.org/abs/1809.09600 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

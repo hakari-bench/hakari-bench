@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/quora-fa-v2",
         "url": "https://huggingface.co/datasets/MCINext/quora-fa-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "8269",
+        "document_id": "8270",
+        "query": {
+          "text": "بهترین سریال‌های درام کدام‌اند؟",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بهترین سریال‌های درام کدام‌ها هستند؟",
+          "full_chars": 36,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "2021",
+        "document_id": "2022",
+        "query": {
+          "text": "آیا ریاضیات را به عنوان هنر می‌بینید یا علم؟",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "آیا ریاضی هنر است یا علم؟",
+          "full_chars": 25,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1238",
+        "document_id": "1239",
+        "query": {
+          "text": "به نظر شما بهترین آهنگ کلاسیک تمام دوران کدام است؟",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بهترین قطعه موسیقی کلاسیک تمام دوران کدام است؟",
+          "full_chars": 46,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "9163",
+        "document_id": "74652",
+        "query": {
+          "text": "بهترین موسسات آموزش آزمون جی‌مات در دهلی/NCR کدام‌ها هستند؟",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بهترین موسسه آموزش آزمون جی‌مات در منطقه دهلی ان‌سی‌آر کدام است؟",
+          "full_chars": 64,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "4293",
+        "document_id": "4292",
+        "query": {
+          "text": "بهترین نقاط قوت ارتش هند کدامند؟",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بزرگترین نقاط قوت ارتش هند کدامند؟",
+          "full_chars": 34,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

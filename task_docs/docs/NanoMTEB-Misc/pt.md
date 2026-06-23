@@ -119,20 +119,21 @@ answer, not only the domain match.
 
 ## Example Data
 
-### Public Sources
-
-- [EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Por que a Comissão acredita que o insucesso empresarial deve ser visto como uma oportunidade para um... [100 / 115 chars] | O CESE subscreve a importância atribuída pela Comissão à necessidade de superar o estigma do insucesso empresarial. A Comissão está certa em afirmar que a criação de empresas e o êxito e o insucesso e... [200 / 562 chars] |
+| Como o Conselho propõe aliviar a sobrecarga das PME em relação ao regulamento REACH? [84 chars] | Nesta base, a posição comum não integra algumas das alterações adoptadas pelo Parlamento Europeu em primeira leitura (alterações 169 e 726). No que se refere à alteração 169, que introduziria um proce... [200 / 554 chars] |
+| O que é necessário para o processo contínuo de construção e operação de um mercado integrado? [93 chars] | Finalmente, a construção de um mercado totalmente integrado não é uma tarefa definida e com um fim finito, mas antes um processo permanente que requer um esforço, vigilância e actualização constantes.... [200 / 561 chars] |
+| Quais medidas as autoridades gregas não implementaram para proteger o sítio e evitar a deterioração... [100 / 144 chars] | Em contrapartida, verifica-se que as autoridades gregas não tomaram as medidas necessárias para estabelecer um regime de protecção adequada do sítio e evitar a deterioração dos habitats e as perturbaç... [200 / 552 chars] |
+| Que tipo de produtos a Comissão está considerando promover através de um instrumento comunitário, e... [100 / 149 chars] | A Comissão prossegue as suas reflexões sobre esta matéria e tenciona realizar trabalhos preparatórios para avaliar a viabilidade de um instrumento comunitário de valorização e promoção dos produtos tí... [200 / 545 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| EuroPIRQ-retrieval | 2025 | Dataset card | https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | https://arxiv.org/abs/2502.13595 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | https://arxiv.org/abs/2210.07316 |
+| EuroPIRQ-retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

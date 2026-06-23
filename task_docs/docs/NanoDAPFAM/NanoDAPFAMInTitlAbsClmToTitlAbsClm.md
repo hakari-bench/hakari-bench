@@ -66,9 +66,13 @@ Late-interaction and claim-element alignment approaches may be useful because re
 
 ## Example Data
 
-### Public Sources
-
-NanoDAPFAM is documented through the DAPFAM paper and the public DAPFAM patent dataset card.
+| Query | Positive document |
+| --- | --- |
+| snow removal equipment with automatic walking function the invention relates to snow removal equipme... [100 / 6,075 chars] | multifunctional device for clearing snow an apparatus and method for clearing an accumulation of matter from a surface that includes a blade configured to collect matter upon movement of the apparatus... [200 / 12,229 chars] |
+| apparatus for indication of at least one subsurface barrier characteristic and methods of use a cont... [100 / 11,428 chars] | method of confirming position of drain material left and apparatus for confirming same in drain engineering method a method and apparatus is provided to embed paper drain material in water-laden soil... [200 / 6,762 chars] |
+| an article including identification for use in an electrically heated smoking system. there is provi... [100 / 5,076 chars] | apparatus for generating aerosol from an aerosolisable medium, an article of aerosolisable medium and a method of determining a parameter of an article to provide an apparatus that heats an aerosoliza... [200 / 5,466 chars] |
+| low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile s... [100 / 3,799 chars] | anti-static mats and carpets a novel carpet material or mat which is characterized by an extraordinary ability to quickly and comfortably discharge any build-up of a static electricity charge on a per... [200 / 3,680 chars] |
+| organosilicon precursors for interlayer dielectric films with low dielectric constants a method of f... [100 / 11,588 chars] | radiation shield a radiation shield and an assembly and a reactor including the radiation shield are disclosed. the radiation shield can be used to control heat flux from a susceptor heater assembly a... [200 / 4,267 chars] |
 
 ### Source Reference Table
 

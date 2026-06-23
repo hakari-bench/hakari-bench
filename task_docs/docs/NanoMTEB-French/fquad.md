@@ -156,20 +156,21 @@ improve top-10 ordering beyond candidate recall.
 
 ## Example Data
 
-### Public Sources
-
-- [FQuAD: French Question Answering Dataset](https://arxiv.org/abs/2002.06071)
-- [FQuAD2.0](https://arxiv.org/abs/2109.13209)
-- [manu/fquad2_test](https://huggingface.co/datasets/manu/fquad2_test)
-- [hakari-bench/NanoMTEB-French](https://huggingface.co/datasets/hakari-bench/NanoMTEB-French)
+| Query | Positive document |
+| --- | --- |
+| Quand est-ce que Pierre Lambert est proche des Jésuites ? [57 chars] | pierre-lambert-de-la-motte_2_36 La spiritualité de Pierre Lambert de La Motte évolue tout au long de sa vie. Il est marqué par son époque et principalement par le centralisme issue de l'Église post tr... [200 / 786 chars] |
+| Comment se nomme le frère de Carnot ? [37 chars] | sadi-carnot-(physicien)_12_8 Parmi ses écrits posthumes, un manuscrit intitulé Recherche d’une formule propre à représenter la puissance motrice de la vapeur d’eau, rédigé entre novembre 1819 et mars... [200 / 1,382 chars] |
+| Pour quoi sont réputés les deux frères engagés par Wallis ? [59 chars] | casablanca-(film)_7_9 Ce sont Julius J. et Philip G. Epstein qui sont engagés par Wallis pour adapter la pièce au grand écran. Réputés pour leur esprit ironique, les deux frères introduisent plusieurs... [200 / 732 chars] |
+| Qui tire sur Strasser ? [23 chars] | casablanca-(film)_7_7 Lorsque Renault tente d'arrêter Laszlo, Rick double le policier en l'obligeant, sous la menace d'une arme, à laisser partir le couple. Il convainc également Ilsa de prendre l'avi... [200 / 640 chars] |
+| De quelle société Hal B. Wallis fait-il parti ? [47 chars] | casablanca-(film)_7_18 Dans les années 1940, Casablanca était une ville paisible sur l'Atlantique jusqu'au jour où Hal B. Wallis, producteur de la Warner Bros., tombe sur la pièce Everybody Comes to R... [200 / 857 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FQuAD: French Question Answering Dataset | 2020 | Paper | https://arxiv.org/abs/2002.06071 |
-| FQuAD2.0: French Question Answering and knowing that you know nothing | 2021 | Paper | https://arxiv.org/abs/2109.13209 |
-| manu/fquad2_test | 2024 | Dataset card | https://huggingface.co/datasets/manu/fquad2_test |
+| FQuAD: French Question Answering Dataset | 2020 | Paper | [https://arxiv.org/abs/2002.06071](https://arxiv.org/abs/2002.06071) |
+| FQuAD2.0: French Question Answering and knowing that you know nothing | 2021 | Paper | [https://arxiv.org/abs/2109.13209](https://arxiv.org/abs/2109.13209) |
+| manu/fquad2_test | 2024 | Dataset card | [https://huggingface.co/datasets/manu/fquad2_test](https://huggingface.co/datasets/manu/fquad2_test) |
 
 ### Representative Snippets
 

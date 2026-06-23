@@ -130,8 +130,91 @@
         "url": "https://arxiv.org/abs/2503.04644",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "2015_6_v1",
+        "document_id": "2270822",
+        "query": {
+          "text": "Given some infomation about patient.A 46-year-old woman with sweaty hands, exophthalmia, and weight",
+          "full_chars": 162,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Recognizing thyrotoxicosis in a patient with bipolar mania: a case report A thyroid stimulating hormone level is commonly measured in patients presenting with symptoms of mania in order to rule out an",
+          "full_chars": 949,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2014_18_v1",
+        "document_id": "1175926",
+        "query": {
+          "text": "Given some infomation about patient.6-month-old male with decreased urine output and edema several h",
+          "full_chars": 289,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Serum cystatin C concentration as a marker of acute renal dysfunction in critically ill patients In critically ill patients sudden changes in glomerular filtration rate (GFR) are not instantly followe",
+          "full_chars": 1849,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2014_11_v1",
+        "document_id": "1559601",
+        "query": {
+          "text": "Given some infomation about patient.40-year-old woman with severe right arm pain and hypotension. Sh",
+          "full_chars": 216,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A simple statistical model for prediction of acute coronary syndrome in chest pain patients in the emergency department Several models for prediction of acute coronary syndrome (ACS) among chest pain",
+          "full_chars": 1449,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2014_4_v1",
+        "document_id": "1156909",
+        "query": {
+          "text": "Given some infomation about patient.2-year-old boy with fever and irritability for 5 days. Physical",
+          "full_chars": 396,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Behaviour sequelae following acute Kawasaki disease Kawasaki disease is a systemic vasculitis and may affect cerebral function acutely. The aim of the present study was to measure a number of behaviou",
+          "full_chars": 1803,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2014_28_v1",
+        "document_id": "2887860",
+        "query": {
+          "text": "Given some infomation about patient.31-year-old female with amenorrhea, milky nipple discharge, nega",
+          "full_chars": 190,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Prolactinomas, Cushing's disease and acromegaly: debating the role of medical therapy for secretory pituitary adenomas Pituitary adenomas are associated with a variety of clinical manifestations resul",
+          "full_chars": 2805,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -146,22 +146,105 @@
         "url": "https://r2med.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED GitHub repository",
         "url": "https://github.com/R2MED/R2MED",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED/Medical-Sciences",
         "url": "https://huggingface.co/datasets/R2MED/Medical-Sciences",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "91",
+        "document_id": "Does_Cooking_Vegetables_Diminish_1",
+        "query": {
+          "text": "Is food prepared in a microwave oven less healthy?/nThere are people who avoid preparing their food",
+          "full_chars": 405,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "How much water you're cooking with. Water-soluble vitamins like B and C can leach out of the vegetables and into the cooking water. For this reason, cooking methods that use little or no water are the",
+          "full_chars": 729,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "21",
+        "document_id": "Does_Sweating_Cause_Acne_1",
+        "query": {
+          "text": "Increase in acne during weight loss. Is it normal?/nI'm 100kg male. I'm losing 1kg-2kg per week with",
+          "full_chars": 435,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Once the bacteria is on the scene, it attracts white blood cells to help fight back. This is what ultimately causes the inflammation that we refer to as a pimple. Blocked pores, dirty pores and an exc",
+          "full_chars": 691,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "101",
+        "document_id": "Anatomy_And_Physiology_Of_Feeding_12",
+        "query": {
+          "text": "Why is it so much harder to swallow pills than it is to swallow food?/nI don't have any real trouble",
+          "full_chars": 927,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "(A) The bolus is held between the anterior surface of the tongue and hard palate, in a “swallow ready” position (end of oral preparatory stage). The tongue presses against the palate both in front of",
+          "full_chars": 786,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "43",
+        "document_id": "Chapter_4_Water_0",
+        "query": {
+          "text": "How often should you drink water? Not how much/nWe all know how much water we should be drinking. Ho",
+          "full_chars": 705,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "4 Water SUMMARY Water is the largest single constituent of the human body and is essential for cellular homeostasis and life. Total water intake includes drinking water, water in beverages, and water",
+          "full_chars": 683,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "38",
+        "document_id": "Amino_Acids_0",
+        "query": {
+          "text": "Do protein bars/shakes provide nutrients that your body can use? [closed]/nClosed. This question is",
+          "full_chars": 1711,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Amino acids Amino acids are molecules that combine to form proteins. Amino acids and proteins are the building blocks of life. When proteins are digested or broken down, amino acids are the result. Th",
+          "full_chars": 808,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

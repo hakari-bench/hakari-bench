@@ -137,21 +137,21 @@ posture, and reasoning rather than relying only on shared statute terms.
 
 ## Example Data
 
-### Public Sources
-
-- [GerDaLIR: A German Dataset for Legal Information Retrieval](https://aclanthology.org/2021.nllp-1.13/)
-- [GerDaLIR GitHub repository](https://github.com/lavis-nlp/GerDaLIR)
-- [mteb/GerDaLIR](https://huggingface.co/datasets/mteb/GerDaLIR)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Die Entscheidung des Landgerichts, die Beklagte zur Erteilung der Auskunft durch Vorlage eines notar... [100 / 1,431 chars] | Tenor Die Rechtsbeschwerde gegen den Beschluss des 0. Familiensenats in Freiburg des Oberlandesgerichts Karlsruhe vom [DATE] wird auf Kosten des Antragsgegners zurückgewiesen. Von Rechts wegen Gründe... [200 / 11,013 chars] |
+| Der Vergütungsanspruch des Krankenhauses entsteht unmittelbar mit Inanspruchnahme der Leistung durch... [100 / 1,165 chars] | Der Antragsteller wendet sich mit seinem Normenkontrollantrag gegen die am [DATE] bekannt gemachte städtebauliche Entwicklungssatzung der Antragsgegnerin für das Wohnbaugebiet „B.“ am südöstlichen Ort... [200 / 32,444 chars] |
+| Die Auslegung der in §§ 0 Abs. 0, 0 NHundG enthaltenen Vorgaben ergibt, dass das erwähnte Erforderni... [100 / 1,335 chars] | Die Beschwerde des Antragsgegners gegen den Beschluss des Verwaltungsgerichts, mit dem dieses die aufschiebende Wirkung der gegen den Bescheid des Antragsgegners vom [DATE] gerichteten Klage des Antra... [200 / 15,391 chars] |
+| Zwar ergibt sich aus [REF] das Erfordernis, dass die Begründung einen bestimmten Antrag enthalten mu... [100 / 818 chars] | Tenor Die Beschwerde wird zurückgewiesen. Der Antragsteller trägt die Kosten des Beschwerdeverfahrens mit Ausnahme etwaiger außergerichtlicher Kosten der Beigeladenen, die diese selbst trägt. Der Stre... [200 / 16,881 chars] |
+| Die gerichtliche Kontrolle einer behördlichen Ermessensentscheidung beschränkt sich gemäß [REF] dara... [100 / 667 chars] | Der Beklagte gewährte der Klägerin im [DATE] eine Zuwendung von bis zu 0 0 0 DM aus Mitteln der Finanzhilfen des Bundes für Investitionen zur Verbesserung der Verkehrsverhältnisse der Gemeinden als An... [200 / 14,680 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| GerDaLIR: A German Dataset for Legal Information Retrieval | 2021 | Paper | https://aclanthology.org/2021.nllp-1.13/ |
-| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | https://arxiv.org/abs/2210.07316 |
-| mteb/GerDaLIR | 2025 | Dataset card | https://huggingface.co/datasets/mteb/GerDaLIR |
+| GerDaLIR: A German Dataset for Legal Information Retrieval | 2021 | Paper | [https://aclanthology.org/2021.nllp-1.13/](https://aclanthology.org/2021.nllp-1.13/) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/GerDaLIR | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/GerDaLIR](https://huggingface.co/datasets/mteb/GerDaLIR) |
 
 ### Representative Snippets
 

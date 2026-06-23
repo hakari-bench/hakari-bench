@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "Argument Mining for Understanding Peer Reviews",
-        "url": "https://aclanthology.org/P18-1023/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Argument Mining for Understanding Peer Reviews",
+        "url": "https://aclanthology.org/P18-1023/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "สาธารณชนไม่สนใจการปฏิรูป ไม่ว่าจะเป็นการปฏิรูปสภาขุนนางควรเป็นลำดับความสำคัญสูงสุดในสภาพเศรษฐกิจปัจจ",
+          "full_chars": 528,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "แคมเปญ AV ไม่สามารถเปรียบเทียบกับการปฏิรูปสภาขุนนางได้ นอกจากนี้ ไม่ควรเข้าใจผิดว่าประชาชนที่มีข้อมูลผิดพลาดจากการเมืองเป็นความเฉยเมย บ่อยครั้งที่ผู้มีสิทธิเลือกตั้งแสดงออกว่าพวกเขาเฉยเมยเพราะรู้สึกว่",
+          "full_chars": 370,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "การขยายสนามบินฮีทโธรว์มีความสำคัญต่อเศรษฐกิจ การขยายสนามบินฮีทโธรว์จะทำให้มั่นใจได้ว่ามีงานปัจจุบันจ",
+          "full_chars": 911,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ชุมชนธุรกิจยังห่างไกลจากการเป็นเอกภาพในความสนับสนุนที่กล่าวอ้างต่อการสร้างรันเวย์ที่สาม การสำรวจแสดงให้เห็นว่าหลายธุรกิจที่มีอิทธิพลจริง ๆ แล้วไม่สนับสนุนการขยายตัว จดหมายที่แสดงความกังวลได้รับการลงนา",
+          "full_chars": 1032,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "ผู้คนได้รับทางเลือกมากเกินไป ซึ่งทำให้พวกเขาน้อยใจมากขึ้น การโฆษณานำไปสู่หลายคนที่รู้สึกท่วมท้นจากคว",
+          "full_chars": 797,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ผู้คนไม่พอใจเพราะพวกเขาไม่สามารถมีทุกอย่างได้ ไม่ใช่เพราะพวกเขาได้รับทางเลือกมากเกินไปและรู้สึกเครียด ในความเป็นจริง โฆษณามีบทบาทสำคัญในการทำให้แน่ใจว่าผู้คนใช้เงินที่มีอยู่ไปกับผลิตภัณฑ์ที่เหมาะสมที่",
+          "full_chars": 788,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "การโจมตีทางไซเบอร์มักเกิดขึ้นโดยผู้ที่ไม่ใช่รัฐ การโจมตีทางไซเบอร์มักเกิดขึ้นโดยผู้ที่ไม่ใช่รัฐ เช่น",
+          "full_chars": 903,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ในกรณีที่มีการโจมตีจากผู้ไม่ใช่รัฐ ผู้เชี่ยวชาญหลายคนในกฎหมายระหว่างประเทศเห็นพ้องกันว่ารัฐยังสามารถตอบโต้ในลักษณะการป้องกันตนเองได้หากรัฐอื่น 'ไม่เต็มใจหรือไม่สามารถดำเนินการที่มีประสิทธิภาพ' เพื่อตอ",
+          "full_chars": 533,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "เนื่องจากศาสนาส่งเสริมความแน่นอนของความเชื่อ ความเกลียดชังที่ได้รับแรงบันดาลใจจากพระเจ้าเป็นเรื่องง่",
+          "full_chars": 953,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ไม่มีใครถูกบังคับให้กระทำการใช้ความรุนแรงโดยคำพูดของผู้อื่น; นี่เป็นทางเลือกของพวกเขาเอง เช่นเดียวกัน มีคนจำนวนมากที่มีความคิดเห็นที่อาจถือว่าเป็นการเหยียดเชื้อชาติ แต่กลับรู้สึกตกใจต่อการกระทำความรุน",
+          "full_chars": 541,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

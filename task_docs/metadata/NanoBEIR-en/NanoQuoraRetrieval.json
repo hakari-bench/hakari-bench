@@ -135,14 +135,97 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "ir_datasets BEIR documentation",
         "url": "https://ir-datasets.com/beir",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "461149",
+        "document_id": "461148",
+        "query": {
+          "text": "Is it okay to laugh at your own jokes?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Is it weird to laugh at my own jokes?",
+          "full_chars": 37,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "145739",
+        "document_id": "145740",
+        "query": {
+          "text": "What is the best lie you ever spun?",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "What's the best-crafted lie you've ever told?",
+          "full_chars": 45,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "127728",
+        "document_id": "127729",
+        "query": {
+          "text": "Why does Quora frequently suggest answers to my feed that put down Donald Trump?",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Why does Quora only seem to have subjective, biased answers to questions about Donald Trump?",
+          "full_chars": 92,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "516276",
+        "document_id": "516277",
+        "query": {
+          "text": "How can I make my self physically strong?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "How do I make myself physically strong?",
+          "full_chars": 39,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "250143",
+        "document_id": "250142",
+        "query": {
+          "text": "How will a quantum satellite work?",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "How does a Quantum satellite work and what would be some of its primary uses?",
+          "full_chars": 77,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

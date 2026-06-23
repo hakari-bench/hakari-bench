@@ -136,11 +136,13 @@ profile preserves recall but still leaves a substantial top-rank gap.
 
 ## Example Data
 
-Representative queries ask who wrote an early textbook on locomotives, how
-Averchenko depicted Trotsky and Lenin, why two-hour time-zone jumps appeared in
-northern regions, which walls in a building are load-bearing, and which
-editions were included in a poetry collection. Positive documents are Russian
-long articles containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| Кто был автором первого учебника "Курс паровозов", изданного в 1870 году? [73 chars] | История паровоза началась с изобретения первого парового двигателя. Предыстория Впервые силу пара для движения повозки предложил И. Ньютон в 1680 году. Тележка Ньютона была реактивной. Французский инж... [200 / 20,939 chars] |
+| Каким образом Аверченко изображает главных российских политиков Троцкого и Ленина в своих произведен... [100 / 104 chars] | Арка́дий Тимофе́евич Аве́рченко (, Севастополь — 12 марта 1925, Прага) — русский писатель, сатирик, драматург и театральный критик, редактор журналов «Сатирикон» (1908—1913) и «Новый Сатирикон» (1913—... [200 / 18,971 chars] |
+| Какие факторы привели к появлению границы часовых поясов, где применяемое время изменяется сразу на... [100 / 161 chars] | Понятие часово́й по́яс имеет два основных значения: Географи́ческий часовой пояс — условная полоса на земной поверхности шириной ровно 15° (±7,5° относительно среднего меридиана). Средним меридианом н... [200 / 29,926 chars] |
+| Какие стены в здании являются самонесущими, а какие - ненесущими? [65 chars] | Зда́ние — результат строительства, представляющий собой объемное надземное строительное сооружение, включающую в себя помещения, предназначенные для проживания и (или) деятельности людей, размещения п... [200 / 28,813 chars] |
+| Какие издания включены в сборник "Счастье ремесла: Избранные стихотворения"? [76 chars] | Дави́д Самуи́лович Само́йлов (настоящая фамилия — Ка́уфман; 1 июня 1920, Москва — 23 февраля 1990, Таллин) — русский советский поэт и переводчик. Один из крупнейших представителей поколения поэтов, уш... [200 / 17,470 chars] |
 
 ### Public Sources
 
@@ -156,9 +158,9 @@ long articles containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

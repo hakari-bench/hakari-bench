@@ -171,8 +171,91 @@
         "title": "SciFact GitHub repository",
         "url": "https://github.com/allenai/scifact",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "1271",
+        "document_id": "13768432",
+        "query": {
+          "text": "Mức độ nghiêm trọng của bệnh tim liên quan đến amyloidosis có thể được mô tả bằng mức độ xuyên thành",
+          "full_chars": 145,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Giá trị tiên lượng của quá trình tăng cường muộn gadolinium của cộng hưởng từ tim mạch trong bệnh tim amyloidosis BỐN MẠT LÝ NHIỆM: Dự đoán và điều trị 2 loại bệnh Amyloidosis tim chính, chuỗi nhẹ của",
+          "full_chars": 2127,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1086",
+        "document_id": "39281140",
+        "query": {
+          "text": "Sildenafil cải thiện chức năng cương dương ở những người đàn ông bị rối loạn cương dương do sử dụng",
+          "full_chars": 126,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Điều trị rối loạn chức năng tình dục liên quan đến thuốc chống trầm cảm với sildenafil: một thử nghiệm có đối chứng. Bất lực là tác dụng phụ phổ biến của thuốc chống trầm cảm thường gây nên tình trạng",
+          "full_chars": 2203,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "388",
+        "document_id": "1148122",
+        "query": {
+          "text": "Căng thẳng ethanol làm giảm biểu hiện của IBP trong vi khuẩn.",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sự điều chỉnh và chuyển mạch trao hóa trong quá trình tiến hóa trong phòng thí nghiệm của độ dung nạp cồn ở E. coli Hiểu được cơ sở di truyền của sự thích nghi là một vấn đề trung tâm trong sinh học.",
+          "full_chars": 1545,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "295",
+        "document_id": "20310709",
+        "query": {
+          "text": "Sự giao tiếp giữa tế bào dendritic (DCs) và tế bào bạch cầu lympho bản chất (ILCs) đóng vai trò quan",
+          "full_chars": 150,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Yếu tố phiên mã T-bet điều tiết viêm ruột được trung gian bởi tế bào lympho bẩm sinh thụ thể interleukin-7+ Chuột thiếu yếu tố phiên mã T-bet trong hệ miễn dịch bẩm sinh phát triển viêm đại tràng phụ",
+          "full_chars": 1347,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "238",
+        "document_id": "2251426",
+        "query": {
+          "text": "Các tế bào đang trải qua hạn chế methionine có thể kích hoạt miRNAs.",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "microRNAs: Một biện pháp bảo vệ chống lại sự hỗn loạn? Dữ liệu gần đây cho thấy rằng microRNAs (miRNAs) đóng vai trò quan trọng trong các phản ứng căng thẳng ngoài vai trò được công nhận hơn của chúng",
+          "full_chars": 554,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

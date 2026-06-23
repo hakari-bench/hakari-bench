@@ -157,11 +157,11 @@ same product.
 
 | Query | Positive document |
 | --- | --- |
-| Welche Art von Renditen bietet Vanguard an? (43 chars) | Von der Vanguard-Seite - Dies erschien als das einfachste, da die S&P-Daten leicht zu finden sind. Ich nutze MoneyChimp, um zu bestätigen, dass die Vanguard-Seite den CAGR und nicht den arithmetischen Durchschnitt anbietet. H ... [truncated 225 chars](449 chars) |
-| Steuerliche Auswirkungen des Freelancings (41 chars) | Wenn Sie in den USA Einkommen erzielen, müssen Sie darauf US-Einkommensteuer zahlen, es sei denn, es gibt ein Abkommen mit Ihrem Land, das etwas anderes regelt. (160 chars) |
-| Was bedeutet "hoch" oder "niedrig" im Zusammenhang mit Lautstärke? (66 chars) | Das tägliche Handelsvolumen wird in der Regel mit dem durchschnittlichen Tageshandelsvolumen der letzten 50 Tage für eine Aktie verglichen. Ein hohes Handelsvolumen wird in der Regel als 2-mal oder mehr des durchschnittlichen ... [truncated 225 chars](890 chars) |
-| Kann ich Kreditkartenpunkte für steuerlich absetzbare Geschäftsausgaben verwenden? (82 chars) | Um es einfach zu halten, beginnen wir mit der Rückerstattung von Bargeld. Im Allgemeinen ist die Rückerstattung von Bargeld durch Kreditkarten für den privaten Gebrauch nicht steuerpflichtig, für den Geschäftsgebrauch jedoch ... [truncated 225 chars](4138 chars) |
-| Wie mache ich meine Steuererklärung als Freiberufler? (53 chars) | Für steuerliche Zwecke müssen Sie Ihre Steuern sowohl als Arbeitnehmer (T4-Belege und automatisch einbehaltene Steuern) als auch als Selbstständiger einreichen. Ich hatte letztes Jahr die gleiche Situation. "Arbeitnehmer und ... [truncated 225 chars](893 chars) |
+| Welche Art von Renditen bietet Vanguard an? [43 chars] | Von der Vanguard-Seite - Dies erschien als das einfachste, da die S&P-Daten leicht zu finden sind. Ich nutze MoneyChimp, um zu bestätigen, dass die Vanguard-Seite den CAGR und nicht den arithmetischen... [200 / 449 chars] |
+| Steuerliche Auswirkungen des Freelancings [41 chars] | Wenn Sie in den USA Einkommen erzielen, müssen Sie darauf US-Einkommensteuer zahlen, es sei denn, es gibt ein Abkommen mit Ihrem Land, das etwas anderes regelt. [160 chars] |
+| Was bedeutet "hoch" oder "niedrig" im Zusammenhang mit Lautstärke? [66 chars] | Das tägliche Handelsvolumen wird in der Regel mit dem durchschnittlichen Tageshandelsvolumen der letzten 50 Tage für eine Aktie verglichen. Ein hohes Handelsvolumen wird in der Regel als 2-mal oder me... [200 / 890 chars] |
+| Kann ich Kreditkartenpunkte für steuerlich absetzbare Geschäftsausgaben verwenden? [82 chars] | Um es einfach zu halten, beginnen wir mit der Rückerstattung von Bargeld. Im Allgemeinen ist die Rückerstattung von Bargeld durch Kreditkarten für den privaten Gebrauch nicht steuerpflichtig, für den... [200 / 4,138 chars] |
+| Wie mache ich meine Steuererklärung als Freiberufler? [53 chars] | Für steuerliche Zwecke müssen Sie Ihre Steuern sowohl als Arbeitnehmer (T4-Belege und automatisch einbehaltene Steuern) als auch als Selbstständiger einreichen. Ich hatte letztes Jahr die gleiche Situ... [200 / 893 chars] |
 
 ### Public Sources
 
@@ -179,7 +179,7 @@ same product.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| WWW'18 Open Challenge: Financial Opinion Mining and Question Answering | 2018 | task paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| WWW'18 Open Challenge: Financial Opinion Mining and Question Answering | 2018 | task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -152,11 +152,13 @@ signals are still needed for complete coverage.
 
 ## Example Data
 
-Representative queries ask where the word `markka` comes from, what Arimaa game
-pieces are like, whether Uranus has moons, whether a book series has a shared
-plot, or where Anglesey is located. Positive documents are Finnish Wikipedia
-passages containing the requested definition, description, count, relation, or
-location evidence.
+| Query | Positive document |
+| --- | --- |
+| Kuka perusti Ferrarin? [22 chars] | Ferrari Ferrari S.p.A. on italialainen urheiluautojen valmistaja. Ferrarin perusti Enzo Ferrari vuonna 1939 nimellä "Auto Avio Costruzioni". Ferrari on juridisesti alankomaalainen yhtiö, mutta sen pää... [200 / 425 chars] |
+| Mitä tarkoittaa psykoosi? [25 chars] | Hallusinaatio Psykoosi tarkoittaa, että ihmisen todellisuudentaju on heikentynyt, eli hän ei tajua psykoosin laukaisemia kuulo- tai muita harhoja harhoiksi. Psykoosisairauttakin sairastava henkilö voi... [200 / 307 chars] |
+| Onko Uranuksella kuita? [23 chars] | Uranus Uranuksella on 27 tunnettua kuuta. Kaksi suurinta kuuta, Titanian ja Oberonin, löysi Herschel 13. maaliskuuta 1787. William Lassell löysi Arielin ja Umbrielin vuonna 1851. William Herschelin po... [200 / 909 chars] |
+| Mistä Suvarnabhumin lentoasema on saanut nimensä? [49 chars] | Suvarnabhumin kansainvälinen lentoasema Nimi "Suvarnabhumi" on Thaimaan kuninkaan Bhumibol Adulyadejin keksimä, ja se tarkoittaa "kultaista maata". [148 chars] |
+| Mitä tuotteita Afrikka vie ulkomaille? [38 chars] | Afrikan talous Afrikan selvästi arvokkaimmat vientituotteet ovat mineraalit sekä öljy. Nämä luonnonvarat ovat keskittyneet muutaman valtion alueelle. Eteläisillä valtiolla on suuret määrät kultaa, tim... [200 / 397 chars] |
 
 ### Public Sources
 
@@ -174,10 +176,10 @@ location evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

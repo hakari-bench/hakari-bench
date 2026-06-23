@@ -149,11 +149,11 @@ target fact.
 
 | Query | Positive document |
 | --- | --- |
-| Keith Godchaux kannte die Grateful Dead. (40 chars) | Die Grateful Dead war eine US-amerikanische Rockband, die 1965 in Palo Alto, Kalifornien, gegründet wurde. Die Besetzung variierte zwischen Quintett und Septett. Die Band ist für ihren einzigartigen und eklektischen Stil beka ... [truncated 225 chars](3134 chars) |
-| Taarak Mehta Ka Ooltah Chashmah ist eine Sitcom. (48 chars) | Taarak Mehta Ka Ooltah Chashmah (englisch: Taarak Mehtas andere Perspektive) ist die am längsten laufende Sitcom-Serie in Indien, produziert von Neela Tele Films Private Limited. Die Serie wurde erstmals am 28. Juli 2008 ausg ... [truncated 225 chars](648 chars) |
-| In Burbank, Kalifornien, wurden geheime, hochentwickelte Flugzeuge hergestellt. (79 chars) | Burbank ist eine Stadt im Los Angeles County in Südkalifornien, Vereinigte Staaten, etwa 12 Meilen nordwestlich des Stadtzentrums von Los Angeles. Bei der Volkszählung im Jahr 2010 betrug die Einwohnerzahl 103.340. Burbank wi ... [truncated 225 chars](1480 chars) |
-| Nero ist ein Mensch. (20 chars) | Die Bezeichnung "Julisch-Claudische Dynastie" bezieht sich auf die ersten fünf römischen Kaiser – Augustus, Tiberius, Caligula, Claudius und Nero – oder die Familie, zu der sie gehörten. Sie regierten das Römische Reich von d ... [truncated 225 chars](2235 chars) |
-| Scream 2 ist ein rein deutscher Film. (37 chars) | Scream 2 ist ein 1997 erschienener amerikanischer Slasher-Film, der von Wes Craven inszeniert und von Kevin Williamson geschrieben wurde. In den Hauptrollen sind David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Ge ... [truncated 225 chars](2719 chars) |
+| Keith Godchaux kannte die Grateful Dead. [40 chars] | Die Grateful Dead war eine US-amerikanische Rockband, die 1965 in Palo Alto, Kalifornien, gegründet wurde. Die Besetzung variierte zwischen Quintett und Septett. Die Band ist für ihren einzigartigen u... [200 / 3,134 chars] |
+| Taarak Mehta Ka Ooltah Chashmah ist eine Sitcom. [48 chars] | Taarak Mehta Ka Ooltah Chashmah (englisch: Taarak Mehtas andere Perspektive) ist die am längsten laufende Sitcom-Serie in Indien, produziert von Neela Tele Films Private Limited. Die Serie wurde erstm... [200 / 648 chars] |
+| In Burbank, Kalifornien, wurden geheime, hochentwickelte Flugzeuge hergestellt. [79 chars] | Burbank ist eine Stadt im Los Angeles County in Südkalifornien, Vereinigte Staaten, etwa 12 Meilen nordwestlich des Stadtzentrums von Los Angeles. Bei der Volkszählung im Jahr 2010 betrug die Einwohne... [200 / 1,480 chars] |
+| Nero ist ein Mensch. [20 chars] | Die Bezeichnung "Julisch-Claudische Dynastie" bezieht sich auf die ersten fünf römischen Kaiser – Augustus, Tiberius, Caligula, Claudius und Nero – oder die Familie, zu der sie gehörten. Sie regierten... [200 / 2,235 chars] |
+| Scream 2 ist ein rein deutscher Film. [37 chars] | Scream 2 ist ein 1997 erschienener amerikanischer Slasher-Film, der von Wes Craven inszeniert und von Kevin Williamson geschrieben wurde. In den Hauptrollen sind David Arquette, Neve Campbell, Courten... [200 / 2,719 chars] |
 
 ### Public Sources
 
@@ -171,7 +171,7 @@ target fact.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a large-scale dataset for Fact Extraction and VERification | 2018 | task paper | https://arxiv.org/abs/1803.05355 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER: a large-scale dataset for Fact Extraction and VERification | 2018 | task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

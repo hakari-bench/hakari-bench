@@ -181,21 +181,22 @@ positive above candidates that share only names, countries, or topical words.
 
 ## Example Data
 
-### Public Sources
-
-- [The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants](https://arxiv.org/abs/2308.16884), 2023.
-- [facebookresearch/belebele](https://github.com/facebookresearch/belebele), source repository.
-- [mteb/belebele](https://huggingface.co/datasets/mteb/belebele), MTEB dataset card.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
+| Query | Positive document |
+| --- | --- |
+| Which of the changes prompted by The French Revolution had a significant impact on working class cit... [100 / 106 chars] | De Revolutie heeft grote sociale en politieke gevolgen gehad, zoals het gebruik van het metrieke stelsel, een verschuiving van de absolute monarchie naar republicanisme, nationalisme en de opvatting d... [200 / 650 chars] |
+| According to the passage, who may have started an agriculture society? [70 chars] | Voor een groot deel van de negentiende en twintigste eeuw geloofde men dat de vroegste inwoners van Nieuw-Zeeland de Maori waren, die jacht maakten die op enorme vogels genaamd moa's. De theorie leidd... [200 / 774 chars] |
+| Which of the following accurately describes the practice of subsistence agriculture? [84 chars] | Zelfvoorzienende landbouw is landbouw waarbij voldoende voedsel wordt geproduceerd om aan de behoeften van de boer en zijn gezin te voldoen. Landbouw met als doel levensonderhoud is een simpel systeem... [200 / 552 chars] |
+| According to the passage, which of the following was one of China’s most violent eras? [86 chars] | Het oude China had een unieke manier om verschillende tijdsperiodes weer te geven; iedere fase van China of iedere regerende familie had een onderscheidende dynastie. Ook tussen de verschillende dynas... [200 / 710 chars] |
+| When did King Tutankhamun gain notoriety? [41 chars] | Ja! Koning Toetanchamon is vandaag de dag een van de bekendste koningen van het oude Egypte. In de oudheid werd hij echter niet als belangrijk beschouwd en hij is niet opgenomen in de meeste lijsten m... [200 / 525 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | https://arxiv.org/abs/2308.16884 |
-| facebookresearch/belebele | 2023 | repository | https://github.com/facebookresearch/belebele |
-| mteb/belebele |  | dataset card | https://huggingface.co/datasets/mteb/belebele |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| facebookresearch/belebele | 2023 | repository | [https://github.com/facebookresearch/belebele](https://github.com/facebookresearch/belebele) |
+| mteb/belebele |  | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
 
 ### Representative Snippets
 

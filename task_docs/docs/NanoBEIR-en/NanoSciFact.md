@@ -62,9 +62,13 @@ A model targeting this task should preserve exact biomedical identifiers while i
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on SciFact, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Ly49Q directs the organization of neutrophil migration to inflammation sites by regulating membrane... [100 / 115 chars] | Neutrophils rapidly undergo polarization and directional movement to infiltrate the sites of infection and inflammation. Here, we show that an inhibitory MHC I receptor, Ly49Q, was crucial for the swi... [200 / 990 chars] |
+| Antiretroviral therapy reduces rates of tuberculosis across a broad range of CD4 strata. [88 chars] | BACKGROUND Human immunodeficiency virus (HIV) infection is the strongest risk factor for developing tuberculosis and has fuelled its resurgence, especially in sub-Saharan Africa. In 2010, there were a... [200 / 2,144 chars] |
+| Rapid up-regulation and higher basal expression of interferon-induced genes reduce survival of granu... [100 / 153 chars] | Although susceptibility of neurons in the brain to microbial infection is a major determinant of clinical outcome, little is known about the molecular factors governing this vulnerability. Here we sho... [200 / 1,153 chars] |
+| Primary cervical cancer screening with HPV detection has higher longitudinal sensitivity than conven... [100 / 169 chars] | BACKGROUND Screening for cervical cancer based on testing for human papillomavirus (HPV) increases the sensitivity of detection of high-grade (grade 2 or 3) cervical intraepithelial neoplasia, but whe... [200 / 2,284 chars] |
+| Blocking the interaction between TDP-43 and respiratory complex I proteins ND3 and ND6 leads to incr... [100 / 135 chars] | Genetic mutations in TAR DNA-binding protein 43 (TARDBP, also known as TDP-43) cause amyotrophic lateral sclerosis (ALS), and an increase in the presence of TDP-43 (encoded by TARDBP) in the cytoplasm... [200 / 1,244 chars] |
 
 ### Source Reference Table
 

@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/WebFAQRetrieval",
         "url": "https://huggingface.co/datasets/mteb/WebFAQRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "61108",
+        "document_id": "28056",
+        "query": {
+          "text": "آیا عمل لیپوماتیک با درد و خونریزی همراه است؟",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "در عمل لیپوماتیک سوراخ های کوچکی ایجاد می‌شود. سپس لوله مخصوصی به زیر پوست برده می‌شود تا چربی‌ها را بیرون بکشد. این برش‌ها، به طول ۲ تا ۵ میلی‌متر خواهند بود و درد و خونریزی بسیار کمی در پی دارند و خ",
+          "full_chars": 231,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123673",
+        "document_id": "149685",
+        "query": {
+          "text": "نوزاد تا چه فاصله ای را می بیند؟",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بدیهی است نوزادی که تازه به دنیا آمده شما را با حس بینایی تشخیص نمی‌دهد، زیرا این اولین نگاه او به چهره شما است. نوزادان تازه متولد شده فقط می‌توانند تا فاصله حدود ۳۰ سانتی‌متری را ببینند. این بهترین",
+          "full_chars": 267,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104653",
+        "document_id": "189386",
+        "query": {
+          "text": "آیا همه افراد جامعه با استعداد هستند؟",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "پاسخ به این سوال که آیا همه افراد جامعه با استعداد هستند کاملا مثبت بوده و با کشف موضوعات مورد علاقه افراد خواهید دید که چه پیشرفت هایی را در زمینه های مختلف کسب خواهند کرد. هر کدام از ما انسان ها در",
+          "full_chars": 507,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "83786",
+        "document_id": "171523",
+        "query": {
+          "text": "مرکز خدمات حیوانات آزمایشگاهی جهت خونگیری را معرفی کنید",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "شما میتوانید انجام امور خدمات مرتبط با آزمایشگاه حیوانات آزمایشگاهی را به شرکت بافت و ژن پاسارگاد (هیستوژن ) برون سپاری کنید",
+          "full_chars": 124,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "171970",
+        "document_id": "148",
+        "query": {
+          "text": "آیا تنظیمات استارتاپ ویندوز هشت و ده متفاوت است؟",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "تنظیمات Advanced Startup Options ویندوز هشت و ویندوز ده تقریبا مشابه است و تفاوت زیادی با همدیگر ندارند ، مگر برخی امکانات ریکاوری کل ویندوز و بحث Reset و Refresh کردن که شاید کمی متفاوت عمل کنند اما",
+          "full_chars": 217,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

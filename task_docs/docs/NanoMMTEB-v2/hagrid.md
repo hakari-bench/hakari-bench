@@ -130,11 +130,13 @@ work is precise top-rank ordering among compact factual snippets.
 
 ## Example Data
 
-Representative queries ask how many clubs are in the Australian Football
-League, what Nausicaa of the Valley of the Wind was adapted from, whether Abi
-Branning is still on EastEnders, where Loretta Lynn was born, and how old the
-Cincinnati Bengals are. Positive documents are concise answer passages with
-the requested fact.
+| Query | Positive document |
+| --- | --- |
+| How many clubs are in the Australian Football League? [53 chars] | The Australian Football League consists of 18 clubs [1][2] [58 chars] |
+| What was the film Nausicaä of the Valley of the Wind adapted from? [66 chars] | Nausicaä of the Valley of the Wind was adapted from the manga series of the same name written and illustrated by Hayao Miyazaki. [4] [132 chars] |
+| Is Abi Branning still a character on EastEnders? [48 chars] | No, Abi Branning is not a regular character on EastEnders as she was killed off in January 2018 after falling from the roof of The Queen Victoria pub [2]. However, she did make a few guest appearances... [200 / 281 chars] |
+| Where was Loretta Lynn born? [28 chars] | Loretta Lynn was born in Butcher Hollow, Kentucky. [1][2] [57 chars] |
+| How old is the Cincinnati Bengals? [34 chars] | The Cincinnati Bengals are 51 years old overall and have been playing in the National Football League for 49 seasons [1]. [121 chars] |
 
 ### Public Sources
 
@@ -149,9 +151,9 @@ the requested fact.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HAGRID: A Human-LLM Collaborative Dataset for Generative Information-Seeking with Attribution | 2023 | task paper | https://arxiv.org/abs/2307.16883 |
-| HAGRID GitHub repository | 2023 | project page | https://github.com/project-miracl/hagrid |
-| mteb/HagridRetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/HagridRetrieval |
+| HAGRID: A Human-LLM Collaborative Dataset for Generative Information-Seeking with Attribution | 2023 | task paper | [https://arxiv.org/abs/2307.16883](https://arxiv.org/abs/2307.16883) |
+| HAGRID GitHub repository | 2023 | project page | [https://github.com/project-miracl/hagrid](https://github.com/project-miracl/hagrid) |
+| mteb/HagridRetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/HagridRetrieval](https://huggingface.co/datasets/mteb/HagridRetrieval) |
 
 ### Representative Snippets
 

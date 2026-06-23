@@ -86,30 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "EuroPIRQ-retrieval",
-        "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -118,6 +94,112 @@
           "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "EuroPIRQ-retrieval",
+        "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d3533952-1f98-4d48-8d95-4e0e4793a680",
+        "document_id": "3840",
+        "query": {
+          "text": "Por que a Comissão acredita que o insucesso empresarial deve ser visto como uma oportunidade para um",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "O CESE subscreve a importância atribuída pela Comissão à necessidade de superar o estigma do insucesso empresarial. A Comissão está certa em afirmar que a criação de empresas e o êxito e o insucesso e",
+          "full_chars": 562,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "302277e0-7424-4e14-a51f-03cc541bdc89",
+        "document_id": "9710",
+        "query": {
+          "text": "Como o Conselho propõe aliviar a sobrecarga das PME em relação ao regulamento REACH?",
+          "full_chars": 84,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nesta base, a posição comum não integra algumas das alterações adoptadas pelo Parlamento Europeu em primeira leitura (alterações 169 e 726). No que se refere à alteração 169, que introduziria um proce",
+          "full_chars": 554,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1070e189-55c4-47b0-b64e-9a4c2d0c832a",
+        "document_id": "8228",
+        "query": {
+          "text": "O que é necessário para o processo contínuo de construção e operação de um mercado integrado?",
+          "full_chars": 93,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Finalmente, a construção de um mercado totalmente integrado não é uma tarefa definida e com um fim finito, mas antes um processo permanente que requer um esforço, vigilância e actualização constantes.",
+          "full_chars": 561,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f84cf760-6ac2-47bf-b1b6-3b175770cb6a",
+        "document_id": "8596",
+        "query": {
+          "text": "Quais medidas as autoridades gregas não implementaram para proteger o sítio e evitar a deterioração",
+          "full_chars": 144,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Em contrapartida, verifica-se que as autoridades gregas não tomaram as medidas necessárias para estabelecer um regime de protecção adequada do sítio e evitar a deterioração dos habitats e as perturbaç",
+          "full_chars": 552,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "65bfa5bb-1558-4667-8f20-1d8ba2bb9d9c",
+        "document_id": "8547",
+        "query": {
+          "text": "Que tipo de produtos a Comissão está considerando promover através de um instrumento comunitário, e",
+          "full_chars": 149,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A Comissão prossegue as suas reflexões sobre esta matéria e tenciona realizar trabalhos preparatórios para avaliar a viabilidade de um instrumento comunitário de valorização e promoção dos produtos tí",
+          "full_chars": 545,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

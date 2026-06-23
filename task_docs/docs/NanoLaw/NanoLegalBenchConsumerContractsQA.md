@@ -155,11 +155,13 @@ profile is the strongest of the three.
 
 ## Example Data
 
-Representative queries ask whether Instagram and Facebook share user data,
-whether a user might have to pay for services, whether minors need parental
-permission for YouTube, whether automated scraping of YouTube data is allowed,
-and whether eBay prohibits account transfers. Positive documents are the
-specific terms-of-service sections that answer those questions.
+| Query | Positive document |
+| --- | --- |
+| Does data sharing (including sharing of user data) take place between and among Instagram and Facebo... [100 / 103 chars] | Welcome to Instagram! These Terms of Use (or Terms) govern your use of Instagram, except where we expressly state that separate terms (and not these) apply, and provide information about the Instagram... [200 / 4,112 chars] |
+| Is it possible that Ill have to pay money for the services? [59 chars] | Using the Services Authority. You agree that you are permitted to use the Services under applicable law. If you are using the Services on behalf of a company, business or other entity, you represent t... [200 / 7,928 chars] |
+| Do minors require parental permission in order to access Youtubes services? [75 chars] | Introduction Thank you for using the YouTube platform and the products, services and features we make available to you as part of the platform (collectively, the Service). Our Service The Service allo... [200 / 2,811 chars] |
+| Can I use a program to automatically scrape video data from Youtube? [68 chars] | Content on the Service The content on the Service includes videos, audio (for example music and other sounds), graphics, photos, text (such as comments and scripts), branding (including trade names, t... [200 / 6,181 chars] |
+| By default, does eBay prohibit transfers of eBay accounts? [58 chars] | In connection with using or accessing our Services you will not: post, list or upload content or items in inappropriate categories or areas on our sites; breach or circumvent any laws, regulations, th... [200 / 4,566 chars] |
 
 ### Public Sources
 
@@ -177,9 +179,9 @@ specific terms-of-service sections that answer those questions.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2308.11462 |
-| consumer_contracts_qa | 2023 | LegalBench task page | https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html |
-| Predicting Consumer Contracts | 2022 | law review article | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988 |
+| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2308.11462](https://arxiv.org/abs/2308.11462) |
+| consumer_contracts_qa | 2023 | LegalBench task page | [https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html](https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html) |
+| Predicting Consumer Contracts | 2022 | law review article | [https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988) |
 
 ### Representative Snippets
 

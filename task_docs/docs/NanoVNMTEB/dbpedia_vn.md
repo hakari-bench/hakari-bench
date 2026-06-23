@@ -70,13 +70,13 @@ Error analysis should inspect whether missed positives are due to alias mismatch
 
 ## Example Data
 
-### Public Sources
-
-- [DBpedia-Entity v2 paper](https://doi.org/10.1145/3077136.3080751)
-- [DBpedia-Entity project page](https://iai-group.github.io/DBpedia-Entity/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/dbpedia-vn](https://huggingface.co/datasets/GreenNode/dbpedia-vn)
+| Query | Positive document |
+| --- | --- |
+| Những cây cầu nào giống như Cầu Manhattan? [42 chars] | Cầu 25 de Abril Cầu 25 de Abril (tiếng Bồ Đào Nha: Ponte 25 de Abril, phát âm tiếng Bồ Đào Nha: [ˈpõt(ɨ) ˈvĩt i ˈsĩku ðɨ ɐˈβɾiɫ]) là cây cầu treo nối thành phố Lisbon, thủ đô của Bồ Đào Nha đến thị tr... [200 / 464 chars] |
+| John Lennon Yoko Ono album Starting Over [40 chars] | (Chỉ Như) Bắt Đầu Một Lần Nữa (Just Like) Starting Over là một ca khúc được viết và trình diễn bởi John Lennon cho album của ông, Double Fantasy. Mặt B của đĩa đơn này là "Kiss Kiss Kiss" thuộc về Yok... [200 / 526 chars] |
+| Món Ấn Độ [9 chars] | Bánh Appam Appam là một loại bánh kếp được làm từ bột gạo lên men và sữa dừa. Nó là món ăn phổ biến ở bang Kerala miền Nam Ấn Độ. Nó cũng rất phổ biến ở Tamil Nadu và Sri Lanka. Món này thường được ăn... [200 / 436 chars] |
+| Ai đã sản xuất được nhiều phim nhất? [36 chars] | Charles Newirth Charles Newirth (sinh ngày 22 tháng 8 năm 1955 tại thành phố New York) là nhà sản xuất phim người Mỹ. Gần đây nhất, ông đã giám sát sản xuất bộ phim bom tấn "Iron Man 3" (năm 2013) của... [200 / 509 chars] |
+| Các Thuyền trưởng Star Trek [27 chars] | Nguy Hiểm Của Thuyền Trưởng Captain's Peril là một tiểu thuyết của William Shatner, viết chung với Judith và Garfield Reeves-Stevens, dựa trên loạt phim truyền hình Star Trek. Cuốn tiểu thuyết được ph... [200 / 345 chars] |
 
 ### Source Reference Table
 

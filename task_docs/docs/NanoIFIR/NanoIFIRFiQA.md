@@ -70,9 +70,13 @@ For reranking, the most valuable behavior is distinguishing advice that answers 
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the IFIR paper and the FiQA financial opinion mining and question answering paper. The Nano split is published in `hakari-bench/NanoIFIR`.
+| Query | Positive document |
+| --- | --- |
+| Dividend vs Growth Stocks for young investors [45 chars] | "The key is to look at total return, that is dividend yields plus capital growth. Some stocks have yields of 5%-7%, and no growth. In that case, you get the dividends, and not a whole lot more. These... [200 / 589 chars] |
+| What purchases, not counting real estate, will help me increase my cash flow? [77 chars] | You can increase your monthly cash flow in two ways: It's really that simple. I'd even argue that to a certain extent, decreasing expenses can be more cash-positive than increasing income by the same... [200 / 883 chars] |
+| What are the contents of fixed annuities? [41 chars] | "An annuity is a contract. Its contents are ""a contractual obligation from the issuing company"". If you want to evaluate how your annuity is likely to fare, you're essentially asking whether or not... [200 / 2,509 chars] |
+| Full-time work + running small side business: Best business structure for taxes? [80 chars] | You should look into an LLC. Its a fairly simple process, and the income simply flows through to your individual return. It will allow you to deduct supplies and other expenses from that income. It sh... [200 / 603 chars] |
+| Why don't banks give access to all your transaction activity? [61 chars] | "Things are the way they are because they got that way. - Gerald Weinberg Banks have been in business for a very long time. Yet, much of what we take for granted in terms of technology (capabilities,... [200 / 1,103 chars] |
 
 ### Source Reference Table
 

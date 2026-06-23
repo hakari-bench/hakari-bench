@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "On the Cross-lingual Transferability of Monolingual Representations",
-        "url": "https://arxiv.org/abs/1910.11856",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "google-deepmind/xquad",
-        "url": "https://github.com/google-deepmind/xquad",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "google/xquad",
-        "url": "https://huggingface.co/datasets/google/xquad",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/google/xquad"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "On the Cross-lingual Transferability of Monolingual Representations",
+        "url": "https://arxiv.org/abs/1910.11856",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "google-deepmind/xquad",
+        "url": "https://github.com/google-deepmind/xquad",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "google/xquad",
+        "url": "https://huggingface.co/datasets/google/xquad",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "56f86e91aef237190062606a",
+        "document_id": "e18a57fb17d560dc258ea48a997630d10b4772f62386ec81ea3c7d635b0367a4",
+        "query": {
+          "text": "ศิลปินท่านใดที่ทำงานแกะสลักไม้ให้กับไบเบิลของลูเทอร์?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ถูกเผยแพร่ในเวลาที่มีความต้องการเพิ่มมากขึ้นสำหรับ สิ่งพิมพ์ภาษาเยอรมัน งานแปล คัมภีร์ไบเบิล เวอร์ชั่นของลูเทอร์กลายเป็นที่นิยมและมีอิทธิพลอย่างรวดเร็ว เช่นนั้น งานชิ้นนี้เป็นส่วนช่วยสำคัญแก่ วิวัฒนาก",
+          "full_chars": 523,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "56bf36b93aeaaa14008c9565",
+        "document_id": "edb66c94a626de3208153cfaa7c0584fa5afbb1f835e953f48f501743fbd2343",
+        "query": {
+          "text": "ระหว่างการแข่งขันเพลย์ออฟ ใครไม่ได้ขว้างลูกบอลเลย",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในกา",
+          "full_chars": 453,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "56beb7953aeaaa14008c92ac",
+        "document_id": "edb66c94a626de3208153cfaa7c0584fa5afbb1f835e953f48f501743fbd2343",
+        "query": {
+          "text": "ทีมบรอนคอสทำคะแนนได้เท่าไรในสามนาทีสุดท้ายของการแข่งขันกับทีมพิตต์สเบิร์ก",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในกา",
+          "full_chars": 453,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5733834ed058e614000b5c2a",
+        "document_id": "fcf8164a5777083610cf01cafb9264fcc3c4848384d4ec767f826a836430c06e",
+        "query": {
+          "text": "ตลาดหลักทรัพย์วอร์ซอว์ตั้งอยู่ในอดีตสำนักงานใหญ่ของใครจนกระทั่งปี 2000",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ตลาดหลักทรัพย์แห่งแรกของวอร์ซอว์ก่อตั้งขึ้นในปี 1817 โดยทำการซื้อขายหลักทรัพย์เรื่อยมาจนถึง สงครามโลกครั้งที่สอง และได้รับการก่อตั้งขึ้นใหม่ใน เดือนเมษายน ปี 1991 หลังจากที่การปกครองของคอมมิวนิสต์ภายห",
+          "full_chars": 605,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "56d9cb47dc89441400fdb835",
+        "document_id": "07552ba5e7f4139f8b155865e7fd7823639416b57f4a9a3dfbebfb651350a612",
+        "query": {
+          "text": "เดนเวอร์ถูกกันให้อยู่นอกเอนด์โซนกี่เกม หลังจากแย่งลูกบอลไปจากนิวตัน",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ขณะที่เหลือเวลาอีก 4:51 นาทีแคโรไลนาได้ครองลูกบอลที่เส้น 24 หลาในเขตของตัวเอง โดยมีโอกาสทำคะแนนนำไปสู่ชัยชนะ และในไม่ช้าก็ไปถึงเส้นที่ 3 หลาตัดกับ 9 หลา ในการเล่นครั้งต่อไป มิลเลอร์ แย่งลูกบอลมาจาก นิ",
+          "full_chars": 948,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

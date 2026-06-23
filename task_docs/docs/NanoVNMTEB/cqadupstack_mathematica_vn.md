@@ -70,12 +70,13 @@ Evaluation should inspect failures by function family. If errors cluster around 
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-mathematica-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-mathematica-vn)
+| Query | Positive document |
+| --- | --- |
+| nguồn giao nhau giữa hai đường cong trong Mathematica [53 chars] | Giao điểm của hai đường cong bậc hai Tôi có một tập hợp các tập hợp điểm, mỗi tập hợp xác định phân đoạn của một đường cong (đẹp) trên cầu đơn vị $S^2 \subset \mathbb {R}^3$. Các điểm được tính toán b... [200 / 2,327 chars] |
+| Mathematica và Python tích hợp? [31 chars] | Có cách nào để chạy Python từ Mathematica không? Tôi biết có một số hỗ trợ cho việc chạy _Mathematica_ từ Python, nhưng có cách nào để làm ngược lại không? Ví dụ như nhập một vài lớp Python và sử dụng... [200 / 228 chars] |
+| Cách tránh lỗi NIntegrate::slwcon [33 chars] | Làm thế nào để tính tích phân số học của một hàm, mà kết quả phải là 0? Tôi muốn tích phân số học hàm 'berrycur' theo kx và ky. Định nghĩa của 'berrycur' được đưa ra ở cuối câu hỏi. Đồ thị của 'berryc... [200 / 3,054 chars] |
+| Truyền hàm hoặc công thức như là tham số của hàm [48 chars] | Truyền một hàm như một tham số của một hàm khác > **Có thể trùng lặp:** > Pass hàm hoặc công thức như tham số hàm Tôi đang cố gắng thực hiện một hàm Plot[] giống nhau, với bản tóm tắt tương tự; lần th... [200 / 909 chars] |
+| Có cách nào để thêm các mũi tên dọc theo một đường cong tham số bên trong một hàm thao tác (Mathemat... [100 / 105 chars] | Vẽ đồ thị của một tập hợp các đường cong (không phải là trường vectơ) trong không gian 3 chiều Hãy xem xét một tập hợp các quỹ đạo trong không gian 3D, có thể hội tụ. Bằng cách trực quan hóa các quỹ đ... [200 / 3,641 chars] |
 
 ### Source Reference Table
 

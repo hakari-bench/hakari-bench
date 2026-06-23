@@ -62,9 +62,13 @@ A model targeting this task should improve intent-level discrimination for short
 
 ## Example Data
 
-### Public Sources
-
-The original data source is Quora Question Pairs, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Är det okej att skratta åt sina egna skämt? [43 chars] | Är det konstigt att skratta åt sina egna skämt? [47 chars] |
+| Vad är den bästa lögn du någonsin har berättat? [47 chars] | Vilken är den mest genomtänkta lögn du någonsin har berättat? [61 chars] |
+| Varför föreslår Quora ofta svar i min flödesmatning som kritiserar Donald Trump? [80 chars] | Varför verkar Quora bara ha partiska och subjektiva svar på frågor om Donald Trump? [83 chars] |
+| Hur kan jag bli starkare? [25 chars] | Hur blir jag starkare fysiskt? [30 chars] |
+| Hur fungerar en kvantsatellit? [30 chars] | Hur fungerar en kvantumsatellit och vad skulle några av dess huvudanvändningar vara? [84 chars] |
 
 ### Source Reference Table
 

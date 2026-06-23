@@ -154,15 +154,98 @@
         "url": "https://github.com/mehrzadshm/built-bench-paper",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB BuiltBenchRetrieval",
         "url": "https://huggingface.co/datasets/mteb/BuiltBenchRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "ifc_569",
+        "document_id": "uniclass_3013",
+        "query": {
+          "text": "a short, thick post on the deck of a ship or a quay side, to which ship's rope may be secured. not t",
+          "full_chars": 136,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Capstan Capstan: This product is associated with equipment used for mooring, docking, and flotation, categorized under 'equipment' in the broader context of signage, sanitary fittings, and furnishings",
+          "full_chars": 315,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ifc_221",
+        "document_id": "uniclass_2108",
+        "query": {
+          "text": "The covering is used to represent a molding being a strip of material to cover the transition of sur",
+          "full_chars": 148,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Fibrous plaster mouldings Fibrous plaster mouldings are trim products used for interior wall and ceiling detailing, categorized under coverings and finishes. These mouldings add both functional and ae",
+          "full_chars": 232,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ifc_127",
+        "document_id": "uniclass_3182",
+        "query": {
+          "text": "Cooling coil using a refrigerant to cool the air stream directly.",
+          "full_chars": 65,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Refrigerant cooling coils Refrigerant cooling coils are components associated with heating and cooling coils, classified under air and fume source products, which are part of the larger group of servi",
+          "full_chars": 314,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ifc_72",
+        "document_id": "uniclass_3126",
+        "query": {
+          "text": "Water boiler.",
+          "full_chars": 13,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Biomass boilers Biomass boilers are a type of boiler system classified under heating and cooling source products, which are part of the larger group of services and process source products. These boil",
+          "full_chars": 255,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "ifc_334",
+        "document_id": "uniclass_2962",
+        "query": {
+          "text": "An electrical appliance that has the primary function of storing food at low temperature but above t",
+          "full_chars": 127,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Drink chillers Drink chillers are a type of equipment categorized under commercial display and service catering products, which are part of the broader classification of signage, sanitary fittings, an",
+          "full_chars": 320,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -150,11 +150,13 @@ while hybrid retrieval supplies broader positive coverage for reranking.
 
 ## Example Data
 
-Representative queries ask when Chelsea F.C. was founded, who Gabon's first
-president was, who founded Tanzanian hip-hop, in what year Nigeria gained
-independence, or who the first president of Russia was. Positive documents are
-Swahili Wikipedia passages containing the requested founding, leadership,
-music-history, independence, or presidency evidence.
+| Query | Positive document |
+| --- | --- |
+| Chelsea F.C. ilizinduliwa lini? [31 chars] | Chelsea F.C. Chelsea Football Club ni klabu ya mpira wa miguu ya nchini Uingereza iliyo na maskani yake Fulham, London. Klabu hii ilianzishwa mwaka 1905, na kwa miaka mingi sana imekuwa ikishiriki lig... [200 / 359 chars] |
+| Rais wa kwanza wa Gabon aliitwa nani? [37 chars] | Omar Bongo Kiongozi huyo amevunja rekodi ya kuwa Rais aliyekaa muda mrefu marakani kuliko Rais yeyote barani Afrika. Rais huyo amefariki dunia akiwa na umri wa miaka 73, ambapo ameiongoza Gabon kwa mi... [200 / 1,263 chars] |
+| Je,nani mwanzilishi wa mziki wa hIhop nchini Tanzania? [54 chars] | Machozi Jasho na Damu Halkadhalika ame-enzi kazi ya mwanzilishi halisi wa rap ya Kiswahili nchini Tanzania bwana Edward Mtui (maarufu kama Fresh XE) kwa kuchukua kiitikio chake cha "Piga Makofi" ambac... [200 / 412 chars] |
+| Nigeria ilipata huru mwaka gani? [32 chars] | Ahmadu Bello Katika uchaguzi wa kwanza uliofanyika Kaskazini mwa Nigeria mwaka 1952, Bwana Ahmadu Bello alishinda [[kiti[[ cha bunge cha Kaskazini, na kuwa mwanachama wa [[baraza tendaji]] kikanda kam... [200 / 1,289 chars] |
+| Nani alikuwa rais wa kwanza Urusi? [34 chars] | Boris Yeltsin Boris Nikolayevich Yeltsin () (kwa herufi za Kirusi huita:Бори́с Никола́евич Е́льцин) (1 Februari 1931 - 23 Aprili 2007) alikuwa rais wa kwanza wa Urusi baada ya mwisho wa ukomunisti. Al... [200 / 454 chars] |
 
 ### Public Sources
 
@@ -172,10 +174,10 @@ music-history, independence, or presidency evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

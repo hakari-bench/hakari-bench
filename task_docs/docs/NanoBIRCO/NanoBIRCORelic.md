@@ -62,9 +62,13 @@ A model targeting this task should represent discourse function and literary evi
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BIRCO's complex-objective retrieval benchmark, with NanoBIRCO providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Euripides' god, in contrast, is conceived agnostically; he is described in the Hercules as "Jove, wh... [100 / 650 chars] | thou clear spirit of clear fire, whom on these seas I as Persian once did worship, till in the sacramental act so burned by thee, that to this hour I bear the scar; I now know thee, thou clear spirit,... [200 / 252 chars] |
+| Let us look at the way. Lawrence begins The Rainbow, which was originally to have been the first par... [100 / 829 chars] | But heaven and earth was teeming around them, and how should this cease? They felt the rush of the sap in spring, they knew the wave which cannot halt, but every year throws forward the seed to begett... [200 / 794 chars] |
+| the latter follows the former in the use of means that drug the masses. The "Semi-Demi Finals of the... [100 / 1,164 chars] | Round they went, a circular procession of dancers, each with hands on the hips of the dancer preceding, round and round, shouting in unison, stamping to the rhythm of the music with their feet, beatin... [200 / 342 chars] |
+| the monster is likewise doomed to an existence of loneliness and homelessness. Sublimity, supposedly... [100 / 1,122 chars] | Delighted and surprised, I embraced her, but as I imprinted the first kiss on her lips, they became livid with the hue of death; her features appeared to change, and I thought that I held the corpse o... [200 / 323 chars] |
+| She can be his inspiration; her intuitive capacity, often superior to man's, can give him timely war... [100 / 1,000 chars] | But on other moonlight nights, when the sadness and the silence have touched me in a different way-have affected me with something as like a sorrowful sense of peace, as any emotion that had pain for... [200 / 433 chars] |
 
 ### Source Reference Table
 

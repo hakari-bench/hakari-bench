@@ -134,14 +134,97 @@
         "title": "publichealth-qa repository",
         "url": "https://github.com/xhluca/publichealth-qa",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "COVID-QA dataset",
         "url": "https://www.kaggle.com/datasets/xhlulu/covidqa",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q82",
+        "document_id": "D83",
+        "query": {
+          "text": "أنا مصابة بمرض كوفيد-19 وأشعر بتوعك شديد لا يسمح لي بإرضاع طفلي مباشرة. ماذا أفعل؟",
+          "full_chars": 82,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "إذا كنت تشعرين بتوعك شديد يمنعك من إرضاع طفلك مباشرة سواء بسبب مرض كوفيد-19 أو غيره من المضاعفات، فينبغي أن تلتمسي الدعم لتوفير حليبك لطفلك على نحو مأمون وبطريقة مناسبة ومتاحة ومقبولة لك. ويمكن أن يشم",
+          "full_chars": 291,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q21",
+        "document_id": "D22",
+        "query": {
+          "text": "هل هناك أمور ينبغي أن أتجنبها؟",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "التدابير التالية غير فعّالة في مواجهة مرض كوفيد-19 بل قد تكون ضارة: التدخيناستخدام كمامات متعددة تعاطي المضادات الحيوية (أنظر هل توجد أي أدوية أو علاجات يمكنها الوقاية من مرض كوفيد-19 أو علاجه؟) في جم",
+          "full_chars": 408,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q11",
+        "document_id": "D11",
+        "query": {
+          "text": "هل المضادات الحيوية فعّالة في الوقاية من مرض كوفيد-2019 أو علاجه؟",
+          "full_chars": 65,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "لا. لا تقضي المضادات الحيوية على الفيروسات، فهي لا تقضي إلا على العدوى الجرثومية. وبما أن مرض كوفيد-19 سببه فيروس، فإن المضادات الحيوية لا تقضي عليه. فلا ينبغي استعمال المضادات الحيوية كوسيلة للوقاية",
+          "full_chars": 300,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q40",
+        "document_id": "D41",
+        "query": {
+          "text": "ما هي المطهرات الموصى باستخدامها لتنظيف البيئة في مرافق الرعاية الصحية أو المنازل التي يوجد فيها الم",
+          "full_chars": 183,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "لتنظيف البيئة في مرافق الرعاية الصحية أو المنازل التي يوجد فيها المرضى الذين يُشتبه في إصابتهم بعدوى فيروس كورونا المستجد أو الذين تأكّدت إصابتهم بها، ينبغي أن تُستخدم المطهرات الفعالة ضد الفيروسات ال",
+          "full_chars": 1276,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q37",
+        "document_id": "D38",
+        "query": {
+          "text": "هل يمكن جمع المرضى الذين يُشتبه في إصابتهم بعدوى فيروس كورونا المستجد أو الذين تأكّدت إصابتهم بها في",
+          "full_chars": 112,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "يُستحسن أن يُعزل المرضى الذين يُشتبه في إصابتهم بمرض تنفسي حاد ناجم عن فيروس كورونا المستجد أو الذين تأكّدت إصابتهم به، في غرف فردية. ولكن، إذا تَعذّر ذلك (بسبب العدد المحدود للغرف الفردية مثلا)، فإن",
+          "full_chars": 482,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -48,13 +48,13 @@ Strong models should improve scientific-document representations and citation-st
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Convertidor elevador multinivel CC-CC innovador | Los conversores de fuente de voltaje multinivel están emergiendo como una nueva generación de opciones de conversores de potencia... |
-| Aprendizaje rápido de campos aleatorios de Markov gaussianos esparcidos utilizando la factorización de Cholesky | Sure, please provide the English document text that you need translated into Spanish. |
-| Síntesis de Texturas mediante Redes Neuronales Convolucionales | En este trabajo, investigamos el efecto de la profundidad de las redes convolucionales en su precisión... |
-| Antena plana de banda ancha de anillo con polarización circular para sistema RFID | En este artículo, se propone una técnica de alimentación con una tira meandrante horizontal para lograr una buena adaptación de impedancia... |
-| Diseño de un monitor avanzado digital de frecuencia cardíaca con componentes electrónicos básicos | En este artículo, presentamos el diseño y desarrollo de un nuevo dispositivo integrado para medir la frecuencia cardíaca... |
+| Query | Positive document |
+| --- | --- |
+| Convertidor elevador multinivel CC-CC innovador [47 chars] | Los conversores de fuente de voltaje multinivel están emergiendo como una nueva generación de opciones de conversores de potencia para aplicaciones de alta potencia. Los conversores de fuente de volta... [200 / 1,128 chars] |
+| Aprendizaje rápido de campos aleatorios de Markov gaussianos esparcidos utilizando la factorización... [100 / 111 chars] | Sure, please provide the English document text that you need translated into Spanish. [85 chars] |
+| Síntesis de Texturas mediante Redes Neuronales Convolucionales [62 chars] | En este trabajo, investigamos el efecto de la profundidad de las redes convolucionales en su precisión en el contexto de reconocimiento de imágenes a gran escala. Nuestra principal contribución es una... [200 / 991 chars] |
+| Antena plana de banda ancha de anillo con polarización circular para sistema RFID [81 chars] | En este artículo, se propone una técnica de alimentación con una tira meandrante horizontal (HMS) para lograr una buena adaptación de impedancia y patrones de radiación simétricos en el plano frontal... [200 / 1,522 chars] |
+| Diseño de un monitor avanzado digital de frecuencia cardíaca con componentes electrónicos básicos [97 chars] | En este artículo, presentamos el diseño y desarrollo de un nuevo dispositivo integrado para medir la frecuencia cardíaca utilizando la yema del dedo, con el fin de mejorar la estimación de la frecuenc... [200 / 1,322 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve scientific-document representations and citation-st
 
 | Label | URL |
 |---|---|
-| SPECTER paper | https://arxiv.org/abs/2004.07180 |
-| SCIDOCS repository | https://github.com/allenai/scidocs |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER paper (https://arxiv.org/abs/2004.07180) |
+| SCIDOCS repository (https://github.com/allenai/scidocs) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

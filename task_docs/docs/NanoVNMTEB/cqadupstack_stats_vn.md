@@ -70,12 +70,13 @@ Error analysis should separate formula mismatch from intent mismatch. If a model
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-stats-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-stats-vn)
+| Query | Positive document |
+| --- | --- |
+| Thử nghiệm này có ý nghĩa gì? [29 chars] | Tôi giải thích kết quả của bài kiểm tra căn đơn vị như thế nào? Dickey-Fuller kiểm tra đơn vị gốc Số lượng quan sát = 21 ---------- Dickey-Fuller can thiệp Kiểm tra 1% Quan trọng 5% Quan trọng 10% Qua... [200 / 1,506 chars] |
+| Sự khác biệt giữa Cohen's d và Hedges' g trong các số liệu thống kê về kích thước tác động [90 chars] | Sự khác biệt giữa Hedges' g và Cohen's d là gì? Tôi đã đọc http://www.polyu.edu.hk/mm/effectsizefaqs/effect_size_equations2.html và sự khác biệt duy nhất tôi có thể tìm thấy giữa hai phương pháp này l... [200 / 672 chars] |
+| $\chi^2$ goodness of fit - cách tính giá trị mong đợi khi $\exists$ các tham số không biết [90 chars] | Cách hiểu về bậc tự do là gì? Từ Wikipedia, có ba cách giải thích về bậc tự do của một thống kê: > Trong thống kê, số bậc tự do là số lượng các giá trị trong **tính toán cuối cùng** của một thống kê m... [200 / 1,087 chars] |
+| Cách xử lý Infs trong hàm thống kê ra sao? [42 chars] | xử lý hàm mũ trong python - vô cực và tràn Trong một thuật toán học máy mà tôi đang sử dụng, tôi cần lấy các giá trị mũ của một cái gì đó trong một trong những bước. Đây là bước mà tôi đang xử lý ngay... [200 / 747 chars] |
+| Phát hiện các sự kiện đặc biệt [30 chars] | Phương pháp đơn giản để phát hiện ngoại lệ trực tuyến của một chuỗi thời gian chung Tôi đang làm việc với một lượng lớn dữ liệu chuỗi thời gian. Những chuỗi thời gian này chủ yếu là các phép đo mạng đ... [200 / 1,188 chars] |
 
 ### Source Reference Table
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-no",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "Hva er ruminasjonssyndrom?",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ruminasjonssyndrom, også kalt merykisme, er en type spiseforstyrrelse som ikke er spesifisert ellers og som fører til oppkast av mat. Selv om det ikke er identifisert som en spesifikk spiseforstyrrels",
+          "full_chars": 281,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "Hvem sang \"Here I Go Again\"?",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "For andre bruk, se Here I Go Again (forklaring). Here I Go Again er en sang av det britiske rockebandet Whitesnake. Sangen ble opprinnelig utgitt på albumet Saints & Sinners fra 1982, og ble spilt inn",
+          "full_chars": 306,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "Hvem spiller Cameron Boyce i TV-serien Liv og Maddie?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bli klar for mye latter, dere. I en eksklusiv forhåndsvisning av episoden den 19. april av 'Liv & Maddie' kalt 'Prom-A-Rooney.' Selvsagt. I den morsomme klippet ser vi Jessie-stjernen Cameron Boyce ho",
+          "full_chars": 312,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971233",
+        "document_id": "4589415",
+        "query": {
+          "text": "Hvor finner vi flest av jordens store ørkener?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De resterende ørkener på jorden ligger utenfor polområdene. Den største er Saharaørkenen, en subtropisk ørken i Nord-Afrika.",
+          "full_chars": 124,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1093082",
+        "document_id": "7778956",
+        "query": {
+          "text": "Hva betyr \"bølle\"?",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ut fra nåværende funn ser det ut til at kopper (en politimann, bokstavelig 'en som arresterer') er eldre enn cop (brukt verbalt og betyr å arrestere eller som substantiv for en politimann). Det kan go",
+          "full_chars": 358,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "sbintuitions/JMTEB",
-        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "言語処理学会論文誌 LaTeX コーパス",
-        "url": "https://github.com/jenio/nlp-journal-latex-corpus",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoJMTEB-v2",
       "source_urls": [
@@ -117,6 +94,111 @@
           "url": "https://huggingface.co/datasets/mteb/NLPJournalTitleAbsRetrieval.V2"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "sbintuitions/JMTEB",
+        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "言語処理学会論文誌 LaTeX コーパス",
+        "url": "https://github.com/jenio/nlp-journal-latex-corpus",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "66",
+        "document_id": "V09N01-05",
+        "query": {
+          "text": "最大エントロピー法を用いた対訳単語対の抽出",
+          "full_chars": 21,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "機械翻訳などの多言語間自然言語処理で用いられる対訳辞書は現在，人手によって作成されることが多い．しかし，人手による作成には一貫性・網羅性などの点で限界があることから対訳コーパスから自動的に対訳辞書を作成しようとする研究が近年盛んに行われている．本論文では，最大エントロピー法を用いて対訳コーパス上に対訳関係の確率モデルを推定し，自動的に対訳単語対を抽出する手法を提案する．素性関数として共起情報を用い",
+          "full_chars": 423,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "V06N07-04",
+        "query": {
+          "text": "局所的要約知識の自動獲得手法",
+          "full_chars": 14,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "日本語ニュースを局所的要約する際に必要となる要約知識を，コーパスから自動獲得する手法について述べる．局所的要約とは注目個所の近傍の情報（局所的情報）を用いて行なう要約をいう．局所的情報には注目個所そのものやその前後の単語列などがある．本手法では要約知識として置換規則と置換条件を用い，これらを原文−要約文コーパスから自動獲得する．はじめに原文中の単語と要約文中の単語のすべての組み合わせに対して単語間",
+          "full_chars": 392,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "V07N04-11",
+        "query": {
+          "text": "複数決定リストの順次適用による文節まとめあげ",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "近年の高度情報化の流れにより，自動車にも種々の情報機器が搭載されるようになり，その中で音声認識・合成の必要性が高まっている．本研究は音声合成を行うための日本語解析の中で基本となる，文節まとめあげに関する研究報告である．従来の文節まとめあげは，人手規則による手法と機械学習による手法の二つに大きく分けられる．前者は，長年の努力により非常に高い精度を得られているが，入力データ形式が固定であるために柔軟性",
+          "full_chars": 589,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9",
+        "document_id": "V13N03-07",
+        "query": {
+          "text": "関連用語収集問題とその解法",
+          "full_chars": 13,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "本論文で提案する{\\em関連用語収集問題}は，与えられた専門用語に対し，それと強く関連する用語集合を求める問題である．この問題を解くためには，ある用語が専門用語であり，かつ，入力用語と強く関連するかどうかを判定する方法が必要となる．本研究では，ウェブのサーチエンジンのヒット数から計算したJaccard係数もしくは$\\chi^2$統計量を用いて，この判定を行なう．作成した関連用語収集システムは，候補",
+          "full_chars": 425,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "161",
+        "document_id": "V08N03-03",
+        "query": {
+          "text": "文字間統計情報に基づく口語文字列の自動抽出",
+          "full_chars": 21,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "統計情報に基づく自然言語処理が盛んになる中で，訓練データとしてのコーパスの影響は非常に大きい．生コーパスをそのまま利用する場合には，コーパスの取得が容易であるため，目的に合ったドメインのコーパスを大量に入手できるという利点がある．しかし，生コーパスは人間の言語の性質上，未登録語や未知の言い回し，非文とされるような文の出現等を多く含むことがほとんどであり，これらが処理の精度の低下を招くという問題があ",
+          "full_chars": 496,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

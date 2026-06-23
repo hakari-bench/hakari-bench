@@ -77,6 +77,24 @@ def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path
     },
     "text_stats_chars": {"query_mean": 17.5, "document_mean": 173.3871},
     "bm25": {"ndcg_at_10": 0.6600634301, "hit_at_10": 0.935, "source": "dataset_candidate_subset"},
+    "examples": [
+      {
+        "query_id": "q1",
+        "document_id": "d1",
+        "query": {
+          "text": "検索クエリの例",
+          "full_chars": 8,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "This is a truncated positive document preview.",
+          "full_chars": 2200,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
     "candidate_subsets": {
       "bm25": {
         "config": "bm25",
@@ -134,7 +152,8 @@ def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path
         "url": "https://arxiv.org/abs/2210.09984",
         "year": 2022,
         "is_paper": true,
-        "doi": "10.48550/arXiv.2210.09984"
+        "doi": "10.48550/arXiv.2210.09984",
+        "source_confidence": "definitive_paper_link"
       }
     ]
   }
@@ -153,8 +172,15 @@ def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path
     assert "| Positive qrels | 373 |" in doc.markdown
     assert "| BM25 | `bm25` | 0.6601 | 0.9350 | 0.9705 | top-500 |" in doc.markdown
     assert "| Dense | `harrier_oss_v1_270m` | 0.7745 | 0.9150 | 0.9303 | top-500 |" in doc.markdown
+    assert "## Example Data" in doc.markdown
+    assert "| 検索クエリの例 [8 chars] | This is a truncated positive document preview.... [200 / 2,200 chars] |" in doc.markdown
     assert "- Nano dataset: [hakari-bench/NanoMIRACL](https://huggingface.co/datasets/hakari-bench/NanoMIRACL)" in doc.markdown
-    assert "| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |" in doc.markdown
+    assert (
+        "| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | "
+        "[https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |"
+    ) in doc.markdown
+    html = render_markdown_to_html(doc.markdown, base_url=doc.url)
+    assert '<a href="https://arxiv.org/abs/2210.09984" target="_blank" rel="noopener noreferrer">' in html
 
 
 def test_benchmark_docs_renders_group_metadata_summary_from_task_docs_json(tmp_path: Path) -> None:

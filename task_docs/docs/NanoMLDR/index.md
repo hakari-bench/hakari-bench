@@ -145,5 +145,5 @@ before mixing examples into training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | paper | https://arxiv.org/abs/2402.03216 |
-| MLDR dataset |  | dataset | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| MLDR dataset |  | dataset | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |

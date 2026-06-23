@@ -135,15 +135,98 @@
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/XPQARetrieval",
         "url": "https://huggingface.co/datasets/mteb/XPQARetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C1394",
+        "query": {
+          "text": "bonjour, quels sont les avantages de cette box android, comparée aux autres ? merci",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "i have had several different android boxes and find this one of the best // easy to set up and lots of memory storage.",
+          "full_chars": 118,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C1634",
+        "query": {
+          "text": "sur quel produit fitbit avez vous essayé cette extension ?",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "this worked great as an extender for the fitbit charge.",
+          "full_chars": 55,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C1026",
+        "query": {
+          "text": "bonjour, la vitre est-elle en verre ou en plastique?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "the front transparent plastic is a good protect the pictures.",
+          "full_chars": 61,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q9",
+        "document_id": "C866",
+        "query": {
+          "text": "cet article est-il \"compatible\" avec un smartphone de 5.5 pouces ?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "it is described as being appropriate for any handlebar and any device.",
+          "full_chars": 70,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q161",
+        "document_id": "C1615",
+        "query": {
+          "text": "bonjour est ce anti lumière bleue?",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Product description does not mention anti blue light features.",
+          "full_chars": 62,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

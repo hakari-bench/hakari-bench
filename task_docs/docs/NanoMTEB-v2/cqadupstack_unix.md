@@ -62,19 +62,21 @@ Models should preserve both semantic intent and exact technical constraints. Eff
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/cqadupstack-unix](https://huggingface.co/datasets/mteb/cqadupstack-unix), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| copy sas file from prior version directory to new version directory [67 chars] | How to copy datasets from prior version directory to latest version directory I've go a number of directories named like: /data/db/OX/8_10 /data/db/OX/9_1 /data/db/OX/9_2 And need to copy some files (... [200 / 718 chars] |
+| Linux Mint Booting Installed Partition [38 chars] | How can I fix/install/reinstall grub? So I started out with a 250GB HDD, the stock drive from an EeePC 1015pem that I am trying to turn into a MintBook. The drive is physically operable, but all data... [200 / 914 chars] |
+| Yanked USB Key During Move [26 chars] | Recovering accidentally deleted files I accidentally deleted a file from my laptop. I'm using Fedora. Is it possible to recover the file? [138 chars] |
+| How proc gets updated about the devices [39 chars] | How frequently is the proc file system updated on Linux? How frequently is the `proc` file system updated on Linux? Is it 20 milliseconds (time quantum)? [154 chars] |
+| bashrc in custom folder [23 chars] | Change the location of .bashrc Is it possible to change the location of `.bashrc` from `/home/orhanc/.bashrc` to some other directory? [135 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | https://eltimster.github.io/www/pubs/adcs2015.pdf |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/cqadupstack-unix |  | dataset card | https://huggingface.co/datasets/mteb/cqadupstack-unix |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | [https://eltimster.github.io/www/pubs/adcs2015.pdf](https://eltimster.github.io/www/pubs/adcs2015.pdf) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/cqadupstack-unix |  | dataset card | [https://huggingface.co/datasets/mteb/cqadupstack-unix](https://huggingface.co/datasets/mteb/cqadupstack-unix) |
 
 ### Representative Snippets
 

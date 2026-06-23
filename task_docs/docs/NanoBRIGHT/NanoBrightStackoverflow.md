@@ -68,9 +68,13 @@ The observed metrics make reranking_hybrid the best candidate source for this ta
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Sort tbody list which is populated with Javascript getList? I have a router with a DHCP page which i... [100 / 12,432 chars] | ` 0 ` or have opposite signs. * _Transitive_ : If ` compareFn(a, b) ` and ` compareFn(b, c) ` are both positive, zero, or negative, then ` compareFn(a, c) ` has the same positivity as the previous two... [200 / 3,998 chars] |
+| Copy and delete files from SFTP folder I have to pick (remove) the files with file mask `FileName_A_... [100 / 1,125 chars] | Menu Toggle search [ ![](https://winscp- static-746341.c.cdn77.org/assets/images/logos/logo.png?v=7032) WinSCP Free SFTP, SCP, S3 and FTP client for Windows ](https://winscp.net/) * [ Home ](/eng/inde... [200 / 4,000 chars] |
+| DAX RLS Function using LOOKUPVALUE Parsing but not working I have a table that I'm trying to impleme... [100 / 1,525 chars] | Skip to main content This browser is no longer supported. Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support. [ Download Microsoft Edge ](https... [200 / 3,997 chars] |
+| How can I get LLM to only respond in JSON strings? This is how I am defining the executor ``` const... [100 / 1,063 chars] | which covers methods to improve model reasoning, reduce the likelihood of model hallucinations, and more. You can also find many useful resources including code samples in the OpenAI Cookbook. FAQ How... [200 / 1,699 chars] |
+| How can I initialise a constexpr array with values using std::generate For example, if I wanted a co... [100 / 565 chars] | ##### [ cppreference.com ](/) [ Log in ](/mwiki/index.php?title=Special:UserLogin&returnto=cpp%2Futility%2Finteger+sequence "You are encouraged to log in; however, it is not mandatory \[o\]") ##### Na... [200 / 4,000 chars] |
 
 ### Source Reference Table
 

@@ -68,9 +68,13 @@ Long-document retrievers may benefit from hierarchical encoding, passage aggrega
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging and long-document split.
+| Query | Positive document |
+| --- | --- |
+| How is/was continental drift monitored? I am curious about current technology but I am particularly... [100 / 189 chars] | Paleomagnetism - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main pageContentsCurrent eventsRandom articleAbout WikipediaContact usDonate Contribute HelpLearn to edit... [200 / 21,493 chars] |
+| I am a lay person in meteorology, maybe this is not the right place for my question, but I would lik... [100 / 284 chars] | How Rainbows Form - Overview How Rainbows Form Overview Steps Involved Overview Copyright 1999 Rebecca McDowell. Figure 1: Basic diagram showing formation of rainbow. Note: Angles not to scale. The fo... [200 / 3,583 chars] |
+| Which plant is the most efficient in making oxygen for it's weight? I want to think it is the greene... [100 / 154 chars] | Algae - Rocky Mountain National Park (U.S. National Park Service) Skip to global NPS navigation Skip to this park navigation Skip to the main content Skip to this park information section Skip to the... [200 / 6,419 chars] |
+| My son wants to replicate some experiments and try to grow plants in Martian soil for his A-level sc... [100 / 408 chars] | In a recent project, I simulated Mars to see if I could get a fern to grow. A bit like a terrarium but with Mars instead of ‘Terra’ inside, a ‘marsarium’ if you will. Yeah Pauly Shore, you better be p... [200 / 3,866 chars] |
+| It is said about ozone: a layer in the earth's stratosphere at an altitude of about 10 km (6.2 miles... [100 / 350 chars] | Chlorofluorocarbons (CFCs) and hydrochlorofluorocarbons (HCFCs) are fully or partly halogenated hydrocarbons that contain carbon (C), hydrogen (H), chlorine (Cl), and fluorine (F), produced as volatil... [200 / 31,262 chars] |
 
 ### Source Reference Table
 

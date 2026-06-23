@@ -62,21 +62,22 @@ Models should learn to map lay medical questions to evidence passages that suppo
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/Medical-Sciences dataset card](https://huggingface.co/datasets/R2MED/Medical-Sciences).
+| Query | Positive document |
+| --- | --- |
+| Is food prepared in a microwave oven less healthy?/nThere are people who avoid preparing their food... [100 / 405 chars] | How much water you're cooking with. Water-soluble vitamins like B and C can leach out of the vegetables and into the cooking water. For this reason, cooking methods that use little or no water are the... [200 / 729 chars] |
+| Increase in acne during weight loss. Is it normal?/nI'm 100kg male. I'm losing 1kg-2kg per week with... [100 / 435 chars] | Once the bacteria is on the scene, it attracts white blood cells to help fight back. This is what ultimately causes the inflammation that we refer to as a pimple. Blocked pores, dirty pores and an exc... [200 / 691 chars] |
+| Why is it so much harder to swallow pills than it is to swallow food?/nI don't have any real trouble... [100 / 927 chars] | (A) The bolus is held between the anterior surface of the tongue and hard palate, in a “swallow ready” position (end of oral preparatory stage). The tongue presses against the palate both in front of... [200 / 786 chars] |
+| How often should you drink water? Not how much/nWe all know how much water we should be drinking. Ho... [100 / 705 chars] | 4 Water SUMMARY Water is the largest single constituent of the human body and is essential for cellular homeostasis and life. Total water intake includes drinking water, water in beverages, and water... [200 / 683 chars] |
+| Do protein bars/shakes provide nutrients that your body can use? [closed]/nClosed. This question is... [100 / 1,711 chars] | Amino acids Amino acids are molecules that combine to form proteins. Amino acids and proteins are the building blocks of life. When proteins are digested or broken down, amino acids are the result. Th... [200 / 808 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/Medical-Sciences | 2025 | dataset card | https://huggingface.co/datasets/R2MED/Medical-Sciences |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/Medical-Sciences | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/Medical-Sciences](https://huggingface.co/datasets/R2MED/Medical-Sciences) |
 
 ### Representative Snippets
 

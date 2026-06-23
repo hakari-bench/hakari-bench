@@ -159,22 +159,22 @@ underlying confusion.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Moet ik blijven investeren in datastructuren en algoritmes? [59 chars] | Hoe belangrijk is het leren van algoritmes voor programmeurs van hogere programmeertalen? **Mogelijk duplicaat:** > Hoe belangrijk is het bestuderen van algoritmes en theorie om een geweldige > progra... [200 / 632 chars] |
+| Django leren aan de hand van voorbeelden [40 chars] | Hoe begrijp ik het Django framework goed? Ik heb redelijke kennis van PHP, d.w.z. ik kan een framework pakken, de code lezen en als de documentatie adequaat is, begrijpen wat het doet. De belangrijkst... [200 / 786 chars] |
+| Licentieverificatie en contact opnemen met de thuisserver [57 chars] | Softwarelicentie veilig valideren Ik ontwikkel momenteel een product (in C#) dat gratis te downloaden is, maar een maandelijks abonnement vereist om na een specifieke proefperiode te kunnen gebruiken.... [200 / 1,674 chars] |
+| Als ik .NET Framework gebruik voor mijn applicatie, moet ik dan iets aan Microsoft betalen? [91 chars] | Ik wil mijn software verkopen [C# desktop applicatie], maar zit vast met licenties **Mogelijk duplicaat:** > Als ik .NET Framework gebruik voor mijn applicatie, moet ik dan iets aan > Microsoft betale... [200 / 1,229 chars] |
+| Wat is een goede uitleg voor pointers? [38 chars] | Wat is de definitie van een pointer? Conceptueel is een "pointer" gewoon iets dat naar iets anders "wijst"; Is deze definitie voldoende om precies te zeggen wat een pointer is in programmeertalen? Moe... [200 / 860 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

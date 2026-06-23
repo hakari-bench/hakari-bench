@@ -111,11 +111,11 @@ financial decision being asked about rather than broad topic similarity.
 
 | Query | Positive document |
 | --- | --- |
-| 뱅가드가 제시하는 수익률은 어떤 유형인가요? | 벤처가드 페이지에서 S&P 데이터를 찾기 쉬워서 이 방법이 가장 쉬워 보였다. MoneyChimp 데이터는 산술 평균이 아닌 CAGR을 제공한다는 것을 확인시켜 준다. |
-| 프리랜서의 세금 문제 | 미국에서 소득이 있는 경우, 조세조약에서 달리 규정하지 않는 한 해당 소득에 대해 미국 소득세를 납부해야 합니다. |
-| 거래량에 대해 이야기할 때 높음과 낮음은 무엇을 기준으로 하나요? | 일일 거래량은 보통 해당 주식의 과거 50일 동안의 평균 일일 거래량과 비교한다. |
-| 신용카드 포인트를 사용하여 공제 가능한 사업 비용 납부하기 | 일반적으로 개인용 신용카드의 캐시백은 과세 대상이 아니지만, 사업용으로 사용하는 경우는 과세 대상이 될 수 있다. |
-| 계약자로서 세금은 어떻게 신고해야 하나요? | 세금 신고를 위해서는 근로자로서 신고해야 할 뿐 아니라, 사업자로서도 신고해야 합니다. |
+| 뱅가드가 제시하는 수익률은 어떤 유형인가요? [24 chars] | 벤처가드 페이지에서 - S&P 데이터를 찾기 쉬워서 이 방법이 가장 쉬워 보였다. 나는 MoneyChimp를 사용해서 데이터를 얻었으며, 이는 벤처가드 페이지가 산술 평균이 아닌 CAGR(복리 성장률)을 제공하고 있다는 것을 확인시켜 준다. 참고로, 벤처가드는 "미국 주식 시장 수익률의 경우 1926년부터 1957년 3월 3일까지 Standard & Poo... [200 / 295 chars] |
+| 프리랜서의 세금 문제 [11 chars] | 미국에서 소득이 있는 경우, 귀하의 국가와 체결된 조세조약에서 달리 규정하지 않는 한, 해당 소득에 대해 미국 소득세를 납부해야 합니다. [76 chars] |
+| 거래량에 대해 이야기할 때 높음과 낮음은 무엇을 기준으로 하나요? [36 chars] | 일일 거래량은 보통 해당 주식의 과거 50일 동안의 평균 일일 거래량과 비교한다. 높은 거래량은 일반적으로 해당 주식의 최근 50일 평균 일일 거래량의 2배 이상을 의미하지만, 일부 트레이더들은 특정 패턴이나 사건의 확인을 위해 기준을 평균 일일 거래량의 3배 또는 4배로 설정하기도 한다. 거래량은 다른 주식의 거래량과 비교하기보다는 해당 주식 자체의 평균... [200 / 360 chars] |
+| 신용카드 포인트를 사용하여 공제 가능한 사업 비용 납부하기 [32 chars] | 간단히 하기 위해 캐시백만을 먼저 고려해 보겠습니다. 일반적으로 개인용 신용카드의 캐시백은 과세 대상이 아니지만, 사업용으로 사용하는 경우는 과세 대상이 됩니다(정확히는 아닙니다. 나중에 설명하겠습니다). 그 이유는 대부분의 개인 구매가 세후 소득으로 이루어지기 때문입니다. 보통 개인 소득에서 구매한 물품 비용을 공제하지 않기 때문에, 예를 들어 100달러... [200 / 1,845 chars] |
+| 계약자로서 세금은 어떻게 신고해야 하나요? [23 chars] | 세금 신고를 위해서는 근로자로서(자동으로 원천징수된 T4 소득공제 영수증 포함) 신고해야 할 뿐 아니라, 사업자로서도 신고해야 합니다. 저는 작년에 동일한 상황이었는데요, 캐나다국세청(Revenue Canada)에서 발행한 '근로자 및 자영업자(Employee and self-employed)'라는 안내서가 도움이 될 것입니다. 사업 활동 내역서(form)... [200 / 395 chars] |
 
 ### Public Sources
 
@@ -129,7 +129,7 @@ financial decision being asked about rather than broad topic similarity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FiQA 2018 | 2018 | task paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA 2018 | 2018 | task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -126,8 +126,91 @@
         "title": "BIRCO GitHub repository",
         "url": "https://github.com/BIRCO-benchmark/BIRCO",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q_8499",
+        "document_id": "c_1328267",
+        "query": {
+          "text": "Euripides' god, in contrast, is conceived agnostically; he is described in the Hercules as \"Jove, wh",
+          "full_chars": 650,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "thou clear spirit of clear fire, whom on these seas I as Persian once did worship, till in the sacramental act so burned by thee, that to this hour I bear the scar; I now know thee, thou clear spirit,",
+          "full_chars": 252,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_12445",
+        "document_id": "c_2354486",
+        "query": {
+          "text": "Let us look at the way. Lawrence begins The Rainbow, which was originally to have been the first par",
+          "full_chars": 829,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "But heaven and earth was teeming around them, and how should this cease? They felt the rush of the sap in spring, they knew the wave which cannot halt, but every year throws forward the seed to begett",
+          "full_chars": 794,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_11034",
+        "document_id": "c_1828323",
+        "query": {
+          "text": "the latter follows the former in the use of means that drug the masses. The \"Semi-Demi Finals of the",
+          "full_chars": 1164,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Round they went, a circular procession of dancers, each with hands on the hips of the dancer preceding, round and round, shouting in unison, stamping to the rhythm of the music with their feet, beatin",
+          "full_chars": 342,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_9671",
+        "document_id": "c_1595648",
+        "query": {
+          "text": "the monster is likewise doomed to an existence of loneliness and homelessness. Sublimity, supposedly",
+          "full_chars": 1122,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Delighted and surprised, I embraced her, but as I imprinted the first kiss on her lips, they became livid with the hue of death; her features appeared to change, and I thought that I held the corpse o",
+          "full_chars": 323,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_15286",
+        "document_id": "c_3078540",
+        "query": {
+          "text": "She can be his inspiration; her intuitive capacity, often superior to man's, can give him timely war",
+          "full_chars": 1000,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "But on other moonlight nights, when the sadness and the silence have touched me in a different way-have affected me with something as like a sorrowful sense of peace, as any emotion that had pain for",
+          "full_chars": 433,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

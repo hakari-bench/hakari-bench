@@ -128,11 +128,11 @@ financial QA relevance rather than generic passage similarity.
 
 | Query | Positive document |
 | --- | --- |
-| Hvilken type avkastning gir Vanguard? | Fra Vanguards side: dette virket som den enkleste siden S&P-data er lett å finne... |
-| Hva er skattekonsekvensene av å frilanse? | Hvis du har inntekt i USA, må du betale amerikansk inntektsskatt på det, med mindre det finnes en avtale... |
-| Hva betyr høy eller lav volum? | Den daglige volumet sammenlignes vanligvis med gjennomsnittlig daglig volum over de siste 50 dagene for en aksje... |
-| Hvordan bruke kredittkortpoeng til å dekke skattefradragsberettigede bedriftsutgifter? | For enkelhets skyld, la oss starte med å se på kontanttilbakebetaling. Generelt sett er kontanttilbakebetaling fra kredittkort... |
-| Hvordan skal jeg skatteføre meg når jeg er frilanser? | For skatteformål må du registrere deg både som ansatt og som selvstendig næringsdrivende... |
+| Hvilken type avkastning gir Vanguard? [37 chars] | Fra Vanguards side - Dette virket som den enkleste siden S&P-data er lett å finne. Jeg bruker MoneyChimp for å bekrefte at Vanguards side tilbyr CAGR, ikke aritmetisk gjennomsnitt. Merk: Vanguard oppg... [200 / 381 chars] |
+| Hva er skattekonsekvensene av å frilanse? [41 chars] | Hvis du har inntekt i USA, må du betale amerikansk inntektsskatt på det, med mindre det finnes en avtale mellom ditt land og USA som sier noe annet. [148 chars] |
+| Hva betyr høy eller lav volum? [30 chars] | Den daglige volumet sammenlignes vanligvis med gjennomsnittlig daglig volum over de siste 50 dagene for en aksje. Høyt volum regnes vanligvis som 2 eller flere ganger gjennomsnittlig daglig volum over... [200 / 730 chars] |
+| Hvordan bruke kredittkortpoeng til å dekke skattefradragsberettigede bedriftsutgifter? [86 chars] | For enkelhets skyld, la oss starte med å se på kontanttilbakebetaling. Generelt sett er kontanttilbakebetaling fra kredittkort for personlig bruk ikke skattepliktig, men for bedriftsbruk er det skatte... [200 / 3,648 chars] |
+| Hvordan skal jeg skatteføre meg når jeg er frilanser? [53 chars] | For skatteformål må du registrere deg både som ansatt (med T4-skjemaer og automatisk trekk i skatt) og som selvstendig næringsdrivende. Jeg var i samme situasjon selv i fjor. Ansatt og selvstendig nær... [200 / 715 chars] |
 
 ### Public Sources
 
@@ -146,7 +146,7 @@ financial QA relevance rather than generic passage similarity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FiQA 2018 | 2018 | task paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA 2018 | 2018 | task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

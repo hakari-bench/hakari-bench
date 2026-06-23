@@ -121,11 +121,11 @@ nDCG@10.
 
 | Query | Positive document |
 | --- | --- |
-| Dove si terrà la Final Four quest'anno? | L'80ª edizione del Torneo di Pallacanestro Maschile della Divisione I della NCAA 2018 è stato un torneo a eliminazione diretta... |
-| L'incubo prima di Natale è stato originariamente un film Disney? | Il film "Nightmare Before Christmas" ha avuto origine da una poesia scritta da Tim Burton nel 1982, mentre lavorava come animatore presso la Walt Disney Feature Animation... |
-| Perché l'Angelo del Nord si trova lì? | Secondo Gormley, il significato dell'angelo era triplice: innanzitutto, per indicare che sotto il sito della sua costruzione, i minatori di carbone avevano lavorato... |
-| Dove era originariamente stabilito il compromesso dei tre quinti nella Costituzione degli Stati Uniti? | Il Compromesso dei Tre Quinti è contenuto nell'Articolo 1, Sezione 2, Clausola 3 della Costituzione degli Stati Uniti... |
-| Chi canta "Somebody's Watching Me" con Michael Jackson? | "Somebody's Watching Me" è un brano del cantante americano Rockwell, tratto dal suo album di debutto omonimo Somebody's Watching Me (1984)... |
+| Dove si terrà la Final Four quest'anno? [39 chars] | L'80ª edizione del Torneo di Pallacanestro Maschile della Divisione I della NCAA 2018 è stato un torneo a eliminazione diretta con 68 squadre per determinare il campione nazionale di pallacanestro del... [200 / 367 chars] |
+| L'incubo prima di Natale è stato originariamente un film Disney? [64 chars] | Il film "Nightmare Before Christmas" ha avuto origine da una poesia scritta da Tim Burton nel 1982, mentre lavorava come animatore presso la Walt Disney Feature Animation. Grazie al successo di "Vince... [200 / 706 chars] |
+| Perché l'Angelo del Nord si trova lì? [37 chars] | Secondo Gormley, il significato dell'angelo era triplice: innanzitutto, per indicare che sotto il sito della sua costruzione, i minatori di carbone avevano lavorato per due secoli; in secondo luogo, p... [200 / 370 chars] |
+| Dove era originariamente stabilito il compromesso dei tre quinti nella Costituzione degli Stati Unit... [100 / 102 chars] | Il Compromesso dei Tre Quinti è contenuto nell'Articolo 1, Sezione 2, Clausola 3 della Costituzione degli Stati Uniti, che recita: [130 chars] |
+| Chi canta "Somebody's Watching Me" con Michael Jackson? [55 chars] | "Somebody's Watching Me" è un brano del cantante americano Rockwell, tratto dal suo album di debutto omonimo Somebody's Watching Me (1984). È stato pubblicato come primo singolo di Rockwell e singolo... [200 / 384 chars] |
 
 ### Public Sources
 
@@ -139,7 +139,7 @@ nDCG@10.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | https://aclanthology.org/Q19-1026/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

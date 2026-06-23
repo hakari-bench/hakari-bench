@@ -62,9 +62,13 @@ A model targeting this task should optimize for complete support recovery, not j
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on HotpotQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Med vilken annan skådespelare medverkade Penny Rae Bridges i en TV-sitcom? [74 chars] | Penny Rae Bridges (född 29 juli 1990) är en amerikansk skådespelerska. Hon har medverkat i TV-serier som "For Your Love", "Family Law", "Boy Meets World" och "The Parent 'Hood". Hon är mest känd för s... [200 / 254 chars] |
+| Vem gav Kaganoi Shigemochi ett svärd som tillverkades av den som grundade Muramasa-skolan? [90 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 augusti 1600) var en japansk samuraj under Azuchi-Momoyama-perioden, som tjänade Oda-klanen. Han styrde över Kaganoi-slottet. Under slagen vid Komaki och Nagakute... [200 / 569 chars] |
+| Vilken film är skriven och regisserad av Joby Harold och har musik av Samuel Sim? [81 chars] | Samuel Sim är en film- och TV-kompositör. Han fick först uppmärksamhet med sin prisbelönta musik till BBC-dramaserien "Dunkirk". Sedan dess har han skrivit musik till en bred variation av film- och TV... [200 / 488 chars] |
+| När spelades denna college football-match på Sun Life Stadium i Miami Gardens, Florida, där Clemson... [100 / 151 chars] | Clemson Tigers fotbollslaget 2015 representerade Clemson University i 2015 års NCAA Division I FBS fotbollssäsong. Tigers leddes av huvudtränaren Dabo Swinney i hans sjunde fulla år och åttonde år tot... [200 / 1,007 chars] |
+| Devil's Food är en samling med singlar av ett amerikanskt rock and roll-band som också är känt för a... [100 / 145 chars] | Devil's Food är en samling av singlar av det amerikanska rock'n'roll-bandet Supersuckers, utgiven i april 2005 på Mid-Fi Records. [129 chars] |
 
 ### Source Reference Table
 

@@ -62,9 +62,13 @@ A model targeting this task should improve domain-specific answer matching. Spar
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FiQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Loại lợi suất nào mà Vanguard đang báo giá? [43 chars] | "Từ trang Vanguard - Đây có vẻ là cái dễ nhất vì dữ liệu S&P dễ tìm. Tôi sử dụng MoneyChimp để lấy - điều này xác nhận rằng trang của Vanguard đang cung cấp CAGR, không phải Trung bình số học. Lưu ý:... [200 / 431 chars] |
+| Các tác động thuế của việc làm tự do ở Hoa Kỳ [45 chars] | Nếu bạn có thu nhập ở Mỹ, bạn sẽ phải nộp thuế thu nhập Mỹ trên số thu nhập đó, trừ khi có hiệp định với quốc gia của bạn quy định khác. [136 chars] |
+| Cái gì được coi là cao hoặc thấp khi nói về âm lượng? [53 chars] | Khối lượng giao dịch hàng ngày thường được so sánh với khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của một cổ phiếu. Khối lượng cao thường được coi là gấp 2 lần hoặc hơn khối lượng gia... [200 / 782 chars] |
+| Sử dụng điểm thẻ tín dụng để thanh toán cho chi phí kinh doanh có thể khấu trừ thuế [83 chars] | "Để đơn giản, hãy bắt đầu bằng cách chỉ xem xét tiền hoàn lại. Nói chung, tiền hoàn lại từ thẻ tín dụng cho mục đích cá nhân không phải chịu thuế, nhưng cho mục đích kinh doanh thì phải chịu thuế (một... [200 / 3,814 chars] |
+| Tôi nên nộp thuế của mình như thế nào với tư cách là một nhà thầu? [66 chars] | Về mục đích thuế, bạn sẽ cần nộp hồ sơ như một nhân viên (biên lai T4 và thuế bị khấu trừ tự động), nhưng cũng như một doanh nhân. Tôi đã gặp tình huống tương tự năm ngoái. Nhân viên và tự làm chủ là... [200 / 723 chars] |
 
 ### Source Reference Table
 

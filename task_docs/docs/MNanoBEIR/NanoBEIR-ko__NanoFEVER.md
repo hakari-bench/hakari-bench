@@ -107,11 +107,11 @@ reranker to recover dense-like evidence ordering.
 
 | Query | Positive document |
 | --- | --- |
-| 키스 고쇼는 그레이트풀 데드를 잘 알고 있었다. | 그레이트풀 데드는 1965년 캘리포니아주 팔로 알토에서 결성된 미국의 록 밴드이다. |
-| '타라크 메타 카 울타 카슈마'는 시트콤이다. | '타라크 메타의 올타흐 차슈마'는 인도에서 가장 오래 방영된 시트콤 드라마이다. |
-| 캘리포니아 버뱅크에서는 비밀스럽고 기술적으로 진보된 비행기들이 생산되었다. | 버번크는 미국 캘리포니아주 남부 로스앤젤레스 카운티에 위치한 도시로, 여러 미디어 기업이 있는 곳이다. |
-| 네로는 사람이다. | 율리오-클라우디우스 왕조라는 용어는 로마 최초의 다섯 황제인 아우구스투스, 티베리우스, 칼리굴라, 클라우디우스, 네로를 가리킨다. |
-| Scream 2는 독일 영화로만 제작되었다. | 《스크림 2》는 웨스 크레이븐이 감독하고 케빈 윌리엄슨이 각본을 쓴 1997년 미국의 슬래셔 영화이다. |
+| 키스 고쇼는 그레이트풀 데드를 잘 알고 있었다. [26 chars] | 그레이트풀 데드는 1965년 캘리포니아주 팔로 알토에서 결성된 미국의 록 밴드이다. 5인조에서 7인조까지 구성이 변했으며, 이 밴드는 록, 사이키델리아, 실험 음악, 모달 재즈, 컨트리, 포크, 블루그래스, 블루스, 레게, 스페이스 록 등 다양한 요소를 융합한 독특하고 독창적인 스타일로 알려져 있으며, 긴 즉흥 연주를 특징으로 하는 라이브 공연과 '데드헤즈... [200 / 1,780 chars] |
+| '타라크 메타 카 울타 카슈마'는 시트콤이다. [25 chars] | '타라크 메타의 올타흐 차슈마'(영어: Taarak Mehta's Different Perspective)는 넬라 텔레 필름 프라이빗 리미티드가 제작한 인도에서 가장 오래 방영된 시트콤 드라마이다. 이 프로그램은 2008년 7월 28일에 첫 방송을 시작했으며, 매주 월요일부터 금요일까지 오후 8시 30분에 방영되며, SAB TV에서 오후 11시와 다음날 오... [200 / 391 chars] |
+| 캘리포니아 버뱅크에서는 비밀스럽고 기술적으로 진보된 비행기들이 생산되었다. [41 chars] | 버번크는 미국 캘리포니아주 남부 로스앤젤레스 카운티에 위치한 도시로, 로스앤젤레스 다운타운에서 북서쪽으로 약 12마일 떨어져 있다. 2010년 인구 조사 기준 인구는 103,340명이다. 할리우드에서 북동쪽으로 몇 마일 떨어진 곳에 위치한 버번크는 "세계의 미디어 수도"로 불리며, 월트 디즈니 컴퍼니, 워너브라더스 엔터테인먼트, 니켈로디언 애니메이션 스튜디... [200 / 697 chars] |
+| 네로는 사람이다. [9 chars] | 율리오-클라우디우스 왕조라는 용어는 로마 최초의 다섯 황제인 아우구스투스, 티베리우스, 칼리굴라, 클라우디우스, 네로 또는 그들이 속한 가문을 가리킨다. 이들은 기원전 1세기 후반(기원전 44/31/27년) 아우구스투스에 의해 로마 제국이 수립된 이래 기원후 68년까지, 즉 마지막 황제 네로가 자살할 때까지 로마 제국을 통치했다. 율리오-클라우디우스 왕조의... [200 / 1,110 chars] |
+| Scream 2는 독일 영화로만 제작되었다. [24 chars] | 《스크림 2》는 웨스 크레이븐이 감독하고 케빈 윌리엄슨이 각본을 쓴 1997년 미국의 슬래셔 영화이다. 데이비드 아쿼트, 네브 캠벨, 커티니 콕스, 사라 미셸 겔러, 제이미 케네디, 로리 메트카프, 제리 오코넬, 자다 핑켓, 리브 쉬라이버 등이 출연한다. 이 영화는 디멘션 필름스를 통해 1997년 12월 12일 개봉되었으며, 《스크림》 시리즈의 두 번째 작... [200 / 1,261 chars] |
 
 ### Public Sources
 
@@ -125,7 +125,7 @@ reranker to recover dense-like evidence ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | https://arxiv.org/abs/1803.05355 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

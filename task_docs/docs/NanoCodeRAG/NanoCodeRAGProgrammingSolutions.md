@@ -70,9 +70,13 @@ For reranking, execution-informed or test-informed signals may be useful. A rank
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeRAGProgrammingSolutions is documented through CodeRAG-Bench and its public project resources. The source-specific dataset card is `code-rag-bench/programming-solutions`.
+| Query | Positive document |
+| --- | --- |
+| # Write a python function to check whether the given array is monotonic or not. [79 chars] | def is_Monotonic(A): return (all(A[i] <= A[i + 1] for i in range(len(A) - 1)) or all(A[i] >= A[i + 1] for i in range(len(A) - 1))) [149 chars] |
+| # Write a python function to find the sum of common divisors of two given numbers. [82 chars] | def sum(a,b): sum = 0 for i in range (1,min(a,b)): if (a % i == 0 and b % i == 0): sum += i return sum [143 chars] |
+| # Write a function to add the given list to the given tuples. [61 chars] | def add_lists(test_list, test_tup): res = tuple(list(test_tup) + test_list) return (res) [94 chars] |
+| # Write a function to extract the index minimum value record from the given tuples. [83 chars] | from operator import itemgetter def index_minimum(test_list): res = min(test_list, key = itemgetter(1))[0] return (res) [127 chars] |
+| # Write a python function to check whether the sum of divisors are same or not. [79 chars] | import math def divSum(n): sum = 1; i = 2; while(i * i <= n): if (n % i == 0): sum = (sum + i +math.floor(n / i)); i += 1; return sum; def areEquivalent(num1,num2): return divSum(num1) == divSum(num2)... [200 / 269 chars] |
 
 ### Source Reference Table
 

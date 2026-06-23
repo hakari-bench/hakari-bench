@@ -70,11 +70,13 @@ For reranking, this task calls for cross-encoders or late-interaction models tha
 
 ## Example Data
 
-### Public Sources
-
-- Scandinavian Embedding Benchmarks paper: https://arxiv.org/abs/2406.02396
-- NorQuAD paper: https://aclanthology.org/2023.nodalida-1.17/
-- Source dataset card: https://huggingface.co/datasets/mteb/norquad_retrieval
+| Query | Positive document |
+| --- | --- |
+| Når ble euroen innført? [23 chars] | I 1999 [6 chars] |
+| Hvilken bok lyver flest briter om at de har lest? [49 chars] | «Bibelen» [9 chars] |
+| Hvilket land i Øst-Europa var det første til å få en ikke-kommunistisk statsminister? [85 chars] | 30 år uten Berlinmur Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. FOTO: GERARD MALLE/NTB SCANPIX Det heter at muren falt. Som om den tumlet over ende av... [200 / 1,948 chars] |
+| Hva kalte romerne provinsen de lagde ut av dagens England og Wales? [67 chars] | Romersk Britannia [17 chars] |
+| Hvordan var tonen til Botnan etter løpet? [41 chars] | litt mer spøkefull [18 chars] |
 
 ### Source Reference Table
 

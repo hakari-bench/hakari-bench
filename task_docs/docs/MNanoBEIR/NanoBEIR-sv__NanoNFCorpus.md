@@ -62,9 +62,13 @@ A model targeting this task should improve biomedical concept normalization and 
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on NFCorpus, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Hälsosamma chokladmjölkshakes [29 chars] | Syfte: Att undersöka sambandet mellan intag av körsbär och risken för återkommande giktattacker hos individer med gikt. Metoder: Vi genomförde en fall-korsstudie för att undersöka sambandet mellan en... [200 / 1,591 chars] |
+| medicinsk etik [14 chars] | Bakgrund: En av de stora utmaningarna med att kontrollera serumkolesterol genom dietintervention verkar vara behovet av att förbättra patientens följsamhet. Syfte: Att utforska de många frågorna kring... [200 / 1,812 chars] |
+| favabönor [9 chars] | De senaste 20 åren har intresset för L-arginins biokemi, näring och farmakologi ökat, vilket har lett till omfattande studier för att utforska dess näringsmässiga och terapeutiska roller i behandling... [200 / 1,220 chars] |
+| Vad finns egentligen i kycklingbitar? [37 chars] | SYFTE: Att bestämma innehållet i kycklingbitar från 2 nationella matkedjor. BAKGRUND: Kycklingbitar har blivit en viktig del av den amerikanska kosten. Vi sökte att fastställa den nuvarande sammansätt... [200 / 720 chars] |
+| mättat fett [11 chars] | Intresset har ökat för möjligheten att moderns kostintag under graviditeten kan påverka utvecklingen av allergiska sjukdomar hos barn. Denna prospektiva studie undersökte sambandet mellan moderns inta... [200 / 1,954 chars] |
 
 ### Source Reference Table
 

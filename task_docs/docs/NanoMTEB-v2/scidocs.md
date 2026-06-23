@@ -62,19 +62,21 @@ Models should be trained on scientific relatedness, not only text similarity. Ci
 
 ## Example Data
 
-### Public Sources
-
-- [SPECTER: Document-level Representation Learning using Citation-informed Transformers](https://arxiv.org/abs/2004.07180), 2020.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/scidocs](https://huggingface.co/datasets/mteb/scidocs), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| An integrated framework on mining logs files for computing system management [76 chars] | Machine learning in automated text categorization The automated categorization (or classification) of texts into predefined categories has witnessed a booming interest in the last 10 years, due to the... [200 / 1,103 chars] |
+| Topic-Relevance Map: Visualization for Improving Search Result Comprehension [76 chars] | Designing for Exploratory Search on Touch Devices Exploratory search confront users with challenges in expressing search intents as the current search interfaces require investigating result listings... [200 / 1,194 chars] |
+| Algorithmic Nuggets in Content Delivery [39 chars] | Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web We describe a family of caching protocols for distrib-uted networks that can be used to... [200 / 1,323 chars] |
+| The Enactive Approach to Architectural Experience: A Neurophysiological Perspective on Embodiment, M... [100 / 126 chars] | Affective outcomes of virtual reality exposure therapy for anxiety and specific phobias: a meta-analysis. Virtual reality exposure therapy (VRET) is an increasingly common treatment for anxiety and sp... [200 / 836 chars] |
+| PD control with on-line gravity compensation for robots with elastic joints: Theory and experiments [99 chars] | A passivity based Cartesian impedance controller for flexible joint robots - part I: torque feedback and gravity compensation In this paper a novel approach to the Cartesian impedance control problem... [200 / 780 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | source task paper | https://arxiv.org/abs/2004.07180 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/scidocs |  | dataset card | https://huggingface.co/datasets/mteb/scidocs |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | source task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/scidocs |  | dataset card | [https://huggingface.co/datasets/mteb/scidocs](https://huggingface.co/datasets/mteb/scidocs) |
 
 ### Representative Snippets
 

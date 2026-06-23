@@ -166,11 +166,11 @@ arguments relevant to the topic, not merely long documents sharing keywords.
 
 | Query | Positive document |
 | --- | --- |
-| هل الواجبات المدرسية مفيدة؟ (27 chars) | أولاً، هناك ثلاثة حجج تدعم أهمية الواجبات المنزلية في المدارس الحديثة. 1. الواجبات المنزلية تساعد المتعلمين الذين يتعلمون من خلال الفعل. هناك ثلاثة أنواع من المتعلمين: الذين يتعلمون من خلال السمع، والذين يتعلمون من خلال الرؤي ... [truncated 225 chars](3157 chars) |
-| هل يجب أن تُعلن الأدوية الموصوفة مباشرة للأفراد؟ (48 chars) | كثير من الإعلانات لا تحتوي على معلومات كافية حول فعالية الأدوية. على سبيل المثال، يتم الإعلان عن الدواء "لونستا" عبر فراشة تطير عبر نافذة غرفة نوم فوق شخص نائم بسلام. في الواقع، يساعد "لونستا" المرضى على النوم 15 دقيقة أسرع ب ... [truncated 225 chars](1033 chars) |
-| هل يجب تطعيم الأطفال؟ (21 chars) | ليس هناك قضية كاملة بعد... مجرد بعض النقاط التي جمعتها... لا يجب أن يكون للحكومة الحق في التدخل في قرارات الصحة التي يتخذها الآباء لأطفالهم. وفقًا لاستطلاع أجرته جامعة ميشيغان في عام 2010، يعتقد 31% من الآباء أنهم يجب أن يكون ... [truncated 225 chars](3842 chars) |
-| هل يجب أن تكون الإجهاض قانونيًا؟ (32 chars) | يجب أن تكون الإجهاض قانونيًا، حيث تبدأ الشخصية بعد أن يصبح الجنين قادرًا على الحياة أو بعد الولادة، وليس عند الحمل. وفقًا لمحكمة العدل العليا الأمريكية، يبدأ الشخص في الحصول على عمره بعد الولادة عندما يبدأ في التنفس، بدءًا من ... [truncated 225 chars](261 chars) |
-| هل اختبارات القياس الموحد تحسن من جودة التعليم؟ (47 chars) | القرار: اختبارات SAT وACT وغيرها من الاختبارات المعيارية توفر رؤى أكبر حول استعداد طالب المدرسة الثانوية للتعليم في الكليات والجامعات النخبة مقارنة بمعدل التخرج من المدرسة الثانوية، وبالتالي يجب أن تلعب دورًا أكبر في عملية ال ... [truncated 225 chars](3549 chars) |
+| هل الواجبات المدرسية مفيدة؟ [27 chars] | أولاً، هناك ثلاثة حجج تدعم أهمية الواجبات المنزلية في المدارس الحديثة. 1. الواجبات المنزلية تساعد المتعلمين الذين يتعلمون من خلال الفعل. هناك ثلاثة أنواع من المتعلمين: الذين يتعلمون من خلال السمع، وال... [200 / 3,157 chars] |
+| هل يجب أن تُعلن الأدوية الموصوفة مباشرة للأفراد؟ [48 chars] | كثير من الإعلانات لا تحتوي على معلومات كافية حول فعالية الأدوية. على سبيل المثال، يتم الإعلان عن الدواء "لونستا" عبر فراشة تطير عبر نافذة غرفة نوم فوق شخص نائم بسلام. في الواقع، يساعد "لونستا" المرضى... [200 / 1,033 chars] |
+| هل يجب تطعيم الأطفال؟ [21 chars] | ليس هناك قضية كاملة بعد... مجرد بعض النقاط التي جمعتها... لا يجب أن يكون للحكومة الحق في التدخل في قرارات الصحة التي يتخذها الآباء لأطفالهم. وفقًا لاستطلاع أجرته جامعة ميشيغان في عام 2010، يعتقد 31% م... [200 / 3,842 chars] |
+| هل يجب أن تكون الإجهاض قانونيًا؟ [32 chars] | يجب أن تكون الإجهاض قانونيًا، حيث تبدأ الشخصية بعد أن يصبح الجنين قادرًا على الحياة أو بعد الولادة، وليس عند الحمل. وفقًا لمحكمة العدل العليا الأمريكية، يبدأ الشخص في الحصول على عمره بعد الولادة عندما... [200 / 261 chars] |
+| هل اختبارات القياس الموحد تحسن من جودة التعليم؟ [47 chars] | القرار: اختبارات SAT وACT وغيرها من الاختبارات المعيارية توفر رؤى أكبر حول استعداد طالب المدرسة الثانوية للتعليم في الكليات والجامعات النخبة مقارنة بمعدل التخرج من المدرسة الثانوية، وبالتالي يجب أن تل... [200 / 3,549 chars] |
 
 ### Public Sources
 
@@ -189,8 +189,8 @@ arguments relevant to the topic, not merely long documents sharing keywords.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of Touché 2020: Argument Retrieval | 2020 | task paper | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Open PDF: Overview of Touché 2020: Argument Retrieval | 2020 | paper PDF | https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Overview of Touché 2020: Argument Retrieval | 2020 | task paper | [https://doi.org/10.1007/978-3-030-58219-7_26](https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Open PDF: Overview of Touché 2020: Argument Retrieval | 2020 | paper PDF | [https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf](https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

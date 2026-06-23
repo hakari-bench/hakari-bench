@@ -68,9 +68,13 @@ The task is a useful benchmark for product-search retrieval where semantic simil
 
 ## Example Data
 
-### Public Sources
-
-The task is based on the e-commerce retrieval domain from the Multi-CPR and C-MTEB Chinese retrieval benchmark families.
+| Query | Positive document |
+| --- | --- |
+| 奥尔良味香肠调理 [8 chars] | 畅之味香肠调料五组合香肠调料台湾风味黑胡椒香辣蒜香新奥尔良 [29 chars] |
+| 吉莫特洗鼻器 [6 chars] | 新品吉莫特洗鼻专用洗鼻盐 医生推荐儿童成人洗鼻瑜伽洗鼻盐60包 [31 chars] |
+| 约肤深层滋润免蒸发膜 [10 chars] | 约肤免蒸发膜修护干枯倒膜改善毛躁头发护理水疗顺滑护发素女柔顺 [30 chars] |
+| 童装韩版睡衣 [6 chars] | 女童睡衣法兰绒秋冬季儿童珊瑚绒加厚保暖女孩家居服中大童装套装 [30 chars] |
+| 尼康z62 [5 chars] | Nikon/尼康z6ii z7ii二代z6z7全画幅微单机身Z62Z72 2代24-70套机 [46 chars] |
 
 ### Source Reference Table
 

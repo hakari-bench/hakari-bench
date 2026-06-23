@@ -62,9 +62,13 @@ A model targeting this task should improve answer-bearing passage discrimination
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Natural Questions, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Var hålls Final Four detta år? [30 chars] | NCAA Division I:s herrarnas basketturnering 2018 var en turnering med utslagning för 68 lag för att kora herrarnas nationella mästare i collegebasket för NCAA Division I för säsongen 2017–18. Den 80:e... [200 / 323 chars] |
+| Var Nattens Häxer ursprungligen en Disney-film? [47 chars] | Nightmare Before Christmas uppstod från ett dikt skrivet av Tim Burton 1982, medan han arbetade som animatör på Walt Disney Feature Animation. Efter framgången med Vincent samma år började Walt Disney... [200 / 612 chars] |
+| Varför finns Ängeln i norr? [27 chars] | Enligt Gormley hade en ängel tre betydelser: först, att symbolisera att kolgruvarbetare arbetade under platsen för dess uppförande i två århundraden; andra, att förstå övergången från en industriell t... [200 / 303 chars] |
+| Var i grundlagen nämndes tre-femtedelskompromissen ursprungligen? [65 chars] | Tre-femtedelskompromissen finns i Artikel 1, Avsnitt 2, Paragraf 3 i USA:s konstitution, som lyder: [99 chars] |
+| Vem sjunger "Someone's Watching Me" tillsammans med Michael Jackson? [68 chars] | "Somebody's Watching Me" är en låt av den amerikanska sångaren Rockwell från hans debutalbum Somebody's Watching Me (1984). Den släpptes som Rockwells debutsingel och förstasingel från albumet den 14... [200 / 348 chars] |
 
 ### Source Reference Table
 

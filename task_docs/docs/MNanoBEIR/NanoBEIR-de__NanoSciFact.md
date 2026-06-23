@@ -48,13 +48,13 @@ Strong models should preserve exact scientific terminology while learning claim-
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Ly49Q steuert die Organisation der Migration von Neutrophilen zu Entzündungsherden, indem es die Funktionen von Membran-Rafts reguliert. | Neutrophile durchlaufen eine schnelle Polarisation und gerichtete Bewegung, um Infektions- und Entzündungsherde zu infiltrieren... |
-| Antiretrovirale Therapie verringert die Häufigkeit von Tuberkulose bei verschiedenen CD4-Werten. | HINTERGRUND Die Infektion mit dem humanen Immundefizienz-Virus ist der stärkste Risikofaktor für die Entwicklung von Tuberkulose... |
-| Eine schnelle Hochregulierung und eine höhere basale Expression von Interferon-induzierten Genen verringern die Überlebensfähigkeit von Granulazellneuronen, die mit dem West-Nil-Virus infiziert sind. | Obwohl die Anfälligkeit von Neuronen im Gehirn für mikrobiologische Infektionen ein entscheidender Faktor für den klinischen Verlauf ist... |
-| Primäre Zervixkarzinom-Screening mit HPV-Nachweis weist eine höhere longitudinale Sensitivität auf als die konventionelle Zytologie zur Erkennung von Zervixintraepithelialen Neoplasien Grad 2. | HINTERGRUND Das Screening auf Gebärmutterhalskrebs durch HPV-Tests erhöht die Sensitivität bei der Erkennung von hochgradigen... |
-| Die Hemmung der Interaktion zwischen TDP-43 und den Proteinen ND3 und ND6 des Atmungskomplexes I führt zu erhöhten TDP-43-induzierten neuronalen Zellschäden. | Genetische Mutationen im TAR-DNA-bindenden Protein 43 verursachen amyotrophe Lateralsklerose... |
+| Query | Positive document |
+| --- | --- |
+| Ly49Q steuert die Organisation der Migration von Neutrophilen zu Entzündungsherden, indem es die Fun... [100 / 136 chars] | Neutrophile durchlaufen eine schnelle Polarisation und gerichtete Bewegung, um Infektions- und Entzündungsherde zu infiltrieren. Wir zeigen, dass ein inhibitorischer MHC-I-Rezeptor, Ly49Q, für die sch... [200 / 1,116 chars] |
+| Antiretrovirale Therapie verringert die Häufigkeit von Tuberkulose bei verschiedenen CD4-Werten. [96 chars] | HINTERGRUND Die Infektion mit dem humanen Immundefizienz-Virus (HIV) ist der stärkste Risikofaktor für die Entwicklung von Tuberkulose und hat deren Wiederauftreten, insbesondere in Subsahara-Afrika,... [200 / 2,378 chars] |
+| Eine schnelle Hochregulierung und eine höhere basale Expression von Interferon-induzierten Genen ver... [100 / 199 chars] | Obwohl die Anfälligkeit von Neuronen im Gehirn für mikrobiologische Infektionen ein entscheidender Faktor für den klinischen Verlauf ist, ist wenig über die molekularen Faktoren bekannt, die diese Anf... [200 / 1,264 chars] |
+| Primäre Zervixkarzinom-Screening mit HPV-Nachweis weist eine höhere longitudinale Sensitivität auf a... [100 / 192 chars] | HINTERGRUND Das Screening auf Gebärmutterhalskrebs durch HPV-Tests erhöht die Sensitivität bei der Erkennung von hochgradigen (Grad 2 oder 3) zervikalen intraepithelialen Neoplasien, aber ob dieser Ge... [200 / 2,622 chars] |
+| Die Hemmung der Interaktion zwischen TDP-43 und den Proteinen ND3 und ND6 des Atmungskomplexes I füh... [100 / 157 chars] | Genetische Mutationen im TAR-DNA-bindenden Protein 43 (TARDBP, auch bekannt als TDP-43) verursachen amyotrophe Lateralsklerose (ALS), und eine erhöhte Präsenz von TDP-43 (kodiert durch TARDBP) im Zyto... [200 / 1,463 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should preserve exact scientific terminology while learning claim-
 
 | Label | URL |
 |---|---|
-| SciFact paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository | https://github.com/allenai/scifact |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SciFact paper (https://arxiv.org/abs/2004.14974) |
+| SciFact repository (https://github.com/allenai/scifact) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

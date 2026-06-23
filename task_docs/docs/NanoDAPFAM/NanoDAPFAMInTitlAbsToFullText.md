@@ -64,9 +64,13 @@ For reranking, passage-level evidence aggregation and citation-likelihood signal
 
 ## Example Data
 
-### Public Sources
-
-NanoDAPFAM is documented through the DAPFAM paper and the public DAPFAM patent dataset card.
+| Query | Positive document |
+| --- | --- |
+| snow removal equipment with automatic walking function the invention relates to snow removal equipme... [100 / 988 chars] | multifunctional device for clearing snow an apparatus and method for clearing an accumulation of matter from a surface that includes a blade configured to collect matter upon movement of the apparatus... [200 / 59,310 chars] |
+| waste disposal devices waste disposal device including a housing defining a waste compartment for re... [100 / 891 chars] | cassette for dispensing pleated tubing a cassette for use in dispensing a pleated tubing. the cassette includes an annular body having a generally u shaped housing with an open central cylindrical cor... [200 / 36,269 chars] |
+| an article including identification for use in an electrically heated smoking system. there is provi... [100 / 1,164 chars] | apparatus for generating aerosol from an aerosolisable medium, an article of aerosolisable medium and a method of determining a parameter of an article to provide an apparatus that heats an aerosoliza... [200 / 52,756 chars] |
+| low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile s... [100 / 565 chars] | anti-static mats and carpets a novel carpet material or mat which is characterized by an extraordinary ability to quickly and comfortably discharge any build-up of a static electricity charge on a per... [200 / 17,195 chars] |
+| organosilicon precursors for interlayer dielectric films with low dielectric constants a method of f... [100 / 546 chars] | radiation shield a radiation shield and an assembly and a reactor including the radiation shield are disclosed. the radiation shield can be used to control heat flux from a susceptor heater assembly a... [200 / 48,536 chars] |
 
 ### Source Reference Table
 

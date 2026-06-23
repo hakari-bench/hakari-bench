@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "743693#0",
+        "document_id": "213351#0",
+        "query": {
+          "text": "रडार में किस प्रकार की तरंगें होती हैं ?",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "रडार रडार (Radar) वस्तुओं का पता लगाने वाली एक प्रणाली है जो सूक्ष्मतरंगों का उपयोग करती है। इसकी सहायता से गतिमान वस्तुओं जैसे वायुयान, जलयान, मोटरगाड़ियों आदि की दूरी (परास), ऊंचाई, दिशा, चाल आदि का",
+          "full_chars": 685,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1272354#0",
+        "document_id": "26160#0",
+        "query": {
+          "text": "भारत का गणतंत्र दिवस किस तारीख पर आता है?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "गणतन्त्र दिवस (भारत) गणतन्त्र दिवस भारत का एक राष्ट्रीय पर्व है जो प्रति वर्ष 26 जनवरी को मनाया जाता है। इसी दिन सन् 1950 को भारत सरकार अधिनियम (1935) को हटाकर भारत का संविधान लागू किया गया था। यह भार",
+          "full_chars": 287,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1033752#0",
+        "document_id": "6394#10",
+        "query": {
+          "text": "कांग्रेस दल का नेता कौन है ?",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "भारतीय राष्ट्रीय कांग्रेस 1947 में भारत की स्वतन्त्रता के बाद से भारतीय राष्ट्रीय काँग्रेस भारत के मुख्य राजनैतिक दलों में से एक रही है। इस दल के कई प्रमुख नेता भारत के प्रधानमन्त्री रह चुके हैं। जवाह",
+          "full_chars": 746,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "890150#0",
+        "document_id": "62438#30",
+        "query": {
+          "text": "वाहनों में पेट्रोल के जलने से धातु वायु को प्रदूषित करती है ?",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "मोटरवाहन अधिकांश ऑटोमोबाइल जिनका आज हम प्रयोग करते हैं चलती है गैसोलीन () द्वारा (जिसे हम पेट्रोल भी कहते हैं) या डीजल आंतरिक दहन इंजन, जो वायु प्रदूषण () फैलाने के लिए भी जाने जाते हैं और इन्हे जलवाय",
+          "full_chars": 569,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "230673#0",
+        "document_id": "44580#3",
+        "query": {
+          "text": "भारत की कौन सी फैक्ट्रियां पुर्तगालियों द्वारा स्थापित की?",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "भारत में यूरोपीय आगमन सन् 1500 में पुर्तगालियों ने कोचीन(केरल) के पास अपनी कोठी बनाई। शासक सामुरी (जमोरिन) से उसने कोठी की सुरक्षा का भी इंतजाम करवा लिया क्योंकि अरब व्यापारी उसके ख़िलाफ़ थे। इसके बाद",
+          "full_chars": 716,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 27
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-physics-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-physics-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,111 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Physics-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-physics-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-physics-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "75363",
+        "document_id": "91269",
+        "query": {
+          "text": "Jak równanie Schroedingera jest równaniem falowym?",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "związek między równaniem Schrodingera a równaniem falowym Zawsze byłem zdezorientowany związkiem między równaniem Schrödingera a równaniem falowym. $$ i\\hbar \\frac{\\partial \\psi}{\\partial t} = - \\frac",
+          "full_chars": 1059,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "113548",
+        "document_id": "60614",
+        "query": {
+          "text": "Pomiary technologii aktywnej redukcji szumów",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Maksymalne opóźnienie efektywnej aktywnej redukcji szumów? Aktywna redukcja szumów redukuje niechciany dźwięk, wysyłając odwróconą fazę oryginalnej fazy: ![Aktywna redukcja szumów](http://i.stack.imgu",
+          "full_chars": 913,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "102517",
+        "document_id": "100498",
+        "query": {
+          "text": "Czy ciągłe modele matematyczne dyskretnych zjawisk fizycznych są bałaganiarskie z powodu rozłączenia",
+          "full_chars": 133,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jaki jest „dyskretny” odpowiednik mechaniki „ciągłej”? Gdybym chciał zbadać podejście matematyki dyskretnej do mechaniki kontinuum, do jakich podręczników powinienem się zajrzeć? Przypuszczam, że goto",
+          "full_chars": 536,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "92293",
+        "document_id": "62390",
+        "query": {
+          "text": "Grawitacja z energii",
+          "full_chars": 20,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Czy energia niemasowa generuje pole grawitacyjne? Na bardzo podstawowym poziomie wiem, że grawitacja nie jest generowana przez masę, ale raczej przez tensor naprężenia-energii i kiedy często macham rę",
+          "full_chars": 1451,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1686",
+        "document_id": "93470",
+        "query": {
+          "text": "Dlaczego (relatywistyczna) masa obiektu wzrasta, gdy jego prędkość zbliża się do prędkości światła?",
+          "full_chars": 99,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Relatywistyczny pęd i masa Czy istnieje w ogóle relatywistyczna masa czy po prostu relatywistyczny pęd? Jaki jest powód, aby preferować jeden nad drugim? Jaki jest problem ze stwierdzeniem, że gorący",
+          "full_chars": 241,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

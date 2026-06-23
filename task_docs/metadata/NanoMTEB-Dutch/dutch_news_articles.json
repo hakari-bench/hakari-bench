@@ -157,8 +157,91 @@
         "title": "MTEB project repository",
         "url": "https://github.com/embeddings-benchmark/mteb",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "50792",
+        "document_id": "50792",
+        "query": {
+          "text": "Hoofdagent weg na drugsgebruik",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Een 50-jarige hoofdagent van de regiopolitie Gelderland-Midden is ontslagen wegens \"zeer ernstig plichtsverzuim\". Dat heeft de politie bekendgemaakt. De politieman bleek al lange tijd harddrugs te geb",
+          "full_chars": 365,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "128037",
+        "document_id": "128037",
+        "query": {
+          "text": "Basisschoolleerlingen onwel tijdens kookles",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In een buurthuis in Linden in Noord-Brabant zijn basisschoolleerlingen onwel geworden tijdens het koken, schrijft Omroep Brabant. Elf kinderen werden uit voorzorg naar het ziekenhuis gebracht. Een van",
+          "full_chars": 1001,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "102333",
+        "document_id": "102333",
+        "query": {
+          "text": "'IS heeft vluchtelingenkamp bij Damascus in handen'",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "IS heeft het Palestijnse vluchtelingenkamp Yarmouk bij de Syrische hoofdstad Damascus in handen. De moslimterroristen bezitten nu ongeveer de helft van het kamp, zegt een hoge Palestijnse functionaris",
+          "full_chars": 888,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "86795",
+        "document_id": "86795",
+        "query": {
+          "text": "Kamerzorgen over missie Oekraïne",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In de Tweede Kamer leven zorgen over de veiligheid van de mensen die naar stoffelijke resten en bagage moeten zoeken in het rampgebied in Oekraïne. Vandaag kwamen er berichten dat er rond de rampplek",
+          "full_chars": 1521,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "186717",
+        "document_id": "186717",
+        "query": {
+          "text": "Zeven kinderen omgekomen bij brand in Mexico",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bij een brand in Mexico-Stad zijn zeven kinderen om het leven gekomen. De brand was in Iztapalapa, een arm en dichtbevolkt district in het oosten van de stad. Volgens de autoriteiten brak de brand uit",
+          "full_chars": 414,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

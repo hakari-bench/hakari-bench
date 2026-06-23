@@ -135,15 +135,98 @@
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/XPQARetrieval",
         "url": "https://huggingface.co/datasets/mteb/XPQARetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C1781",
+        "query": {
+          "text": "el pack de 3 cintas, ¿es una de cada tamaño o las 3 del mismo tamaño?",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "gm climbing pack of 3 16mm nylon sling runner 120cm / 48inch (gray)",
+          "full_chars": 67,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C334",
+        "query": {
+          "text": "que son tallas grandes o justas?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The waist-tightening and slim-fitting design hides your proud flesh at your waist and instead forms a curve there.",
+          "full_chars": 114,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C1929",
+        "query": {
+          "text": "és el modelo acústico o electro acústico?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "martin drs2 dreadnought acoustic-electric guitar",
+          "full_chars": 48,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q9",
+        "document_id": "C1932",
+        "query": {
+          "text": "como se que tamaño pedir,?",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "i encourage people to measure your wrist before purchasing; for reference my wrist is 5.5 inches around.",
+          "full_chars": 104,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q161",
+        "document_id": "C120",
+        "query": {
+          "text": "si compro un pack vendran 12 unidades?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"unit_count\": [{\"type\": {\"value\": \"count\"}, \"value\": 12}]",
+          "full_chars": 57,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

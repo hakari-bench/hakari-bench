@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d49f790c9bd9d5ff221051cba2e7f13222fefba16c557c119fd98671c45ec6e0",
+        "document_id": "cf01f130268bbbfd0b82c4c1ce300b6f8d434609ec322f7148ad7fe3c043b94e",
+        "query": {
+          "text": "ਬਹੁਤ ਸਾਰੇ ਲੇਖਕਾਂ ਅਨੁਸਾਰ, ਇਸ ਦਹਾਕੇ ਵਿੱਚ 140,000 ਕਸ਼ਮੀਰੀ ਪੰਡਿਤਾਂ ਵਿੱਚੋਂ ਲਗਭਗ ਕਿੰਨੇ ਘਾਟੀ ਛੱਡ ਗਏ ਸਨ ?",
+          "full_chars": 97,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1901 ਦੀ ਇਸੇ ਜਨਗਣਨਾ ਅਨੁਸਾਰ, ਕਸ਼ਮੀਰ ਘਾਟੀ ਦੇ ਵਿੱਚ, ਕੁੱਲ ਆਬਾਦੀ 1,157,394 ਦਰਜ ਕੀਤੀ ਗਈ ਸੀ ਜਿਸ ਵਿੱਚ 1,083,766, ਜਾਂ 93.6% ਆਬਾਦੀ ਮੁਸਲਮਾਨਾਂ ਦੀ ਸੀ ਅਤੇ ਹਿੰਦੂਆਂ ਦੀ ਗਿਣਤੀ 60,641 ਸੀ। ਜੰਮੂ ਰਿਆਸਤ ਦੇ ਹਿੰਦੂਆਂ ਵਿੱਚ, ਜਿਨ੍",
+          "full_chars": 1137,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2610c9e47d6c5fec39aa79b166eba9d1807c397a73bc6be500c20cca2c7ad6e8",
+        "document_id": "692172016faf42e924ca393178a122f7c2d9c4779d0bf5dd7e2dde1d40026493",
+        "query": {
+          "text": "ਉਸਨੇ ਵਰਲਡ ਪ੍ਰੋਗਰਾਮ ਟੂਰ ਨਾਮਕ ਵਿੱਚ ਹਿੱਸਾ ਲਿਆ?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "2007 ਵਿਚ ਚੋਪੜਾ ਮਿਸ ਇੰਡੀਆ ਮੁਕਾਬਲੇ ਵਿੱਚ ਜੱਜਾਂ ਦੇ ਪੈਨਲ ਵਿਚ ਸੀ। ਉਸ ਨੇ ਕਿਹਾ, \"ਮਿਸ ਇੰਡੀਆ ਹਮੇਸ਼ਾ ਵਿਸ਼ੇਸ਼ ਬਣੇ ਰਹਿਣਗੇ, ਇਹ ਉਹ ਥਾਂ ਹੈ ਜਿੱਥੇ ਇਹ ਸਭ ਮੇਰੇ ਲਈ ਸ਼ੁਰੂ ਹੋਇਆ. ਅਤੇ ਹੋ ਸਕਦਾ ਹੈ ਕਿ ਜੇ ਮੈਂ ਤਾਜ ਨਹੀਂ ਜਿੱਤਿਆ ਹੁੰਦ",
+          "full_chars": 1427,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0a34a950bb3f76107cdcad8b68e856aecdadceab094df9cd8597b7a8b04b88e8",
+        "document_id": "ed5d8bdaeca56ca829cda3c80c9da57c9430d660603d84c9328256cbeac9c691",
+        "query": {
+          "text": "ਫਰਾਂਸ ਦੇ ਅਰਾਜਕਤਾਵਾਦੀ ਨੇ ਅਗਸਟਸ ਵੇਲਟ ਤੋਂ ਪ੍ਰਭਾਵਿਤ ਹੋ ਕੇ ਕਿਹੜੀ ਥਾਂ ਬੰਬ ਸੁਟਿਆ?",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1929 ਵਿੱਚ, ਉਸਨੇ ਐਚ ਐਸ ਆਰ ਏ ਲਈ ਆਪਣੇ ਉਦੇਸ਼ ਲਈ ਵੱਡੇ ਪੈਮਾਨੇ 'ਤੇ ਪ੍ਰਚਾਰ ਹਾਸਲ ਕਰਨ ਲਈ ਇੱਕ ਨਾਟਕੀ ਐਕਟ ਦਾ ਪ੍ਰਸਤਾਵ ਰੱਖਿਆ। ਪੈਰਿਸ ਵਿੱਚ ਚੈਂਬਰ ਆਫ਼ ਡਿਪਟੀਜ਼ ਉੱਤੇ ਬੰਬ ਸੁੱਟਣ ਵਾਲੇ, ਫਰਾਂਸੀਸੀ ਅਰਾਜਕਤਾਵਾਦੀ ਅਗਸਟਸ ਵੈੱਲਟ ਤੋਂ ਪ੍",
+          "full_chars": 2900,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f39179a5b7d421413b1d07f220c75e4c3879467f6b894a620bf621751bd0878c",
+        "document_id": "4a5ac331e65d036eda81b1c446cb36f1e734824608b9dc4e7f1d5364a2d59ffe",
+        "query": {
+          "text": "ਪ੍ਰਿਯੰਕਾ ਦੀ 2006 ਦੇ ਫਰਹਾਨ ਅਖਤਰ ਦੀ ਐਕਸ਼ਨ ਥ੍ਰਿਲਰ ਦੀ ਆਖਰੀ ਰਿਲੀਜ਼ ਦਾ ਨਾਮ ਕੀ ਸੀ?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\" ਉਸੇ ਸਾਲ ਪ੍ਰਿਅੰਕਾ ਨੇ ਵਿਪੁਲ ਦੇ ਪਰਿਵਾਰਕ ਨਾਟਕ ਵਕਤ: ਦ ਰੇਸ ਅਗੇਂਸਟ ਟਾਈਮ ਵਿਚ ਅਕਸ਼ੈ ਕੁਮਾਰ ਦੀ ਪਤਨੀ ਦੀ ਭੂਮਿਕਾ ਨਿਭਾਈ, ਇਹ ਕਹਾਣੀ ਇਕ ਛੋਟੀ ਵਪਾਰੀ (ਅਮੀਤਾਭ ਬੱਚਨ ਦੁਆਰਾ ਨਿਭਾਈ) ਦੀ ਕਹਾਣੀ ਜਿਸ ਨੇ ਆਪਣੀ ਬੀਮਾਰੀ ਨੂੰ ਛੁਪਾ ਲਿਆ, ਉ",
+          "full_chars": 2942,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5e56add87e09000d9f82462d8dc06befc7c94d2828be70fa78b657c8fee15e18",
+        "document_id": "d13a8ee114f7f91847b9300f6c9b122af5bf51266277da4f2d3bb54665abf57d",
+        "query": {
+          "text": "ਖਾਨ ਦਾ ਦੂਜਾ ਸਹਿਯੋਗ ਕਿਸ ਨਾਲ ਸੰਗੀਤ ਰੋਮਾਂਸ ਦਿਲ ਤੋਂ ਪਾਗਲ ਹੈ (1997) ਵਿੱਚ ਸੀ?",
+          "full_chars": 71,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1997 ਦੇ ਖਾਨ ਦੀ ਆਖ਼ਰੀ ਰਿਲੀਜ਼ ਯਸ਼ ਚੋਪੜਾ ਨਾਲ ਸੰਗੀਤ ਰੋਮਾਂਸ ਦਿਲ ਤੋ ਪਾਗਲ ਹੈ ਵਿੱਚ ਦੂਜਾ ਸਹਿਯੋਗ ਸੀ। ਉਸਨੇ ਰਾਹੁਲ, ਇੱਕ ਸਟੇਜ ਨਿਰਦੇਸ਼ਕ ਦੀ ਭੂਮਿਕਾ ਨਿਭਾਈ, ਜੋ ਮਾਧੁਰੀ ਦੀਕਸ਼ਿਤ ਅਤੇ ਕਰਿਸ਼ਮਾ ਕਪੂਰ ਵਿਚਕਾਰ ਪਿਆਰ ਦੇ ਤਿਕੋਣ 'ਚ ਫਸਿ",
+          "full_chars": 2296,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -103,14 +103,99 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "HellaSwag: Can a Machine Really Finish Your Sentence?",
         "url": "https://arxiv.org/abs/1905.07830",
         "year": 2019,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "hellaswag-q-66",
+        "document_id": "hellaswag-d-264",
+        "query": {
+          "text": "A man dressed in yellow and black winter clothes ice fishes on a a frozen lake. The man",
+          "full_chars": 87,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "is reeling in a fish for a long time.",
+          "full_chars": 37,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "hellaswag-q-123",
+        "document_id": "hellaswag-d-495",
+        "query": {
+          "text": "A group of people are in a house. A man is mopping the floor with a mop. Another boy",
+          "full_chars": 84,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "attempts to walk through where he is mopping.",
+          "full_chars": 45,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "hellaswag-q-103",
+        "document_id": "hellaswag-d-414",
+        "query": {
+          "text": "A man is in the gym in tight he bends over picks up a weight over his head and drops it back down. H",
+          "full_chars": 192,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "does this multiple times adding more and more weight to the rack.",
+          "full_chars": 65,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "hellaswag-q-9",
+        "document_id": "hellaswag-d-39",
+        "query": {
+          "text": "Then he takes a small stone from the flowing river and smashes it on another stone. He starts to cru",
+          "full_chars": 140,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "grind it hard to make the pieces smaller.",
+          "full_chars": 41,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "hellaswag-q-161",
+        "document_id": "hellaswag-d-644",
+        "query": {
+          "text": "A person hangs onto the handles of a kite flying overhead. The kite",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "falls as the wind lessens.",
+          "full_chars": 26,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

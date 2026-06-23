@@ -116,11 +116,11 @@ claim.
 
 | Query | Positive document |
 | --- | --- |
-| Keith Godchaux conhecia o Grateful Dead. | A Grateful Dead foi uma banda de rock americana formada em 1965 em Palo Alto, Califórnia... |
-| Taarak Mehta Ka Ooltah Chashmah é uma sitcom. | Taarak Mehta Ka Ooltah Chashmah é a sitcom mais longa da Índia, produzida pela Neela Tele Films Private Limited... |
-| Aviões secretos e avançados foram fabricados em Burbank, Califórnia. | Burbank é uma cidade no Condado de Los Angeles, no sul da Califórnia, Estados Unidos... |
-| Nero é uma pessoa. | A dinastia Júlio-Cláudia refere-se aos primeiros cinco imperadores romanos, incluindo Augusto, Tibério, Calígula, Cláudio e Nero... |
-| Scream 2 é um filme exclusivamente alemão. | Scream 2 é um filme de terror americano de 1997 dirigido por Wes Craven e escrito por Kevin Williamson... |
+| Keith Godchaux conhecia o Grateful Dead. [40 chars] | A Grateful Dead foi uma banda de rock americana formada em 1965 em Palo Alto, Califórnia. Com uma formação que variava de quinteto a septeto, a banda é conhecida por seu estilo único e eclético, que m... [200 / 2,969 chars] |
+| Taarak Mehta Ka Ooltah Chashmah é uma sitcom. [45 chars] | Taarak Mehta Ka Ooltah Chashmah (em inglês: A Perspectiva Diferente de Taarak Mehta) é a sitcom mais longa da Índia, produzida pela Neela Tele Films Private Limited. O programa estreou no ar em 28 de... [200 / 563 chars] |
+| Aviões secretos e avançados foram fabricados em Burbank, Califórnia. [68 chars] | Burbank é uma cidade no Condado de Los Angeles, no sul da Califórnia, Estados Unidos, a 12 milhas a noroeste do centro de Los Angeles. A população no censo de 2010 era de 103.340 habitantes. Conhecida... [200 / 1,406 chars] |
+| Nero é uma pessoa. [18 chars] | A dinastia Júlio-Cláudia refere-se aos primeiros cinco imperadores romanos — Augusto, Tibério, Calígula, Cláudio e Nero — ou à família a que pertenciam. Eles governaram o Império Romano desde a sua fo... [200 / 2,003 chars] |
+| Scream 2 é um filme exclusivamente alemão. [42 chars] | Scream 2 é um filme de terror americano de 1997 dirigido por Wes Craven e escrito por Kevin Williamson. Estrelado por David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Jamie Kennedy... [200 / 2,575 chars] |
 
 ### Public Sources
 
@@ -134,7 +134,7 @@ claim.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | https://arxiv.org/abs/1803.05355 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

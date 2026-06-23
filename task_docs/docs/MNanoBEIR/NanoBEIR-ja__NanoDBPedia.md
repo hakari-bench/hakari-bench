@@ -114,11 +114,11 @@ related but incorrect DBpedia entries.
 
 | Query | Positive document |
 | --- | --- |
-| フィッツジェラルド・オートモール チャンバーズバーグ ペンシルベニア州 | フィッツジェラルド・オートモールは1966年に創業された家族経営の自動車販売会社であり、最初の店舗はメリーランド州ベセスダにオープンしました... |
-| 1994年の短編小説集『アリス・マーローはオープン』 | アリス・アーン・マンローはカナダの作家である。マンローの作品は、特に時間の前後を行き来する傾向を持つことから、短編小説の構造を革新したと評されている... |
-| パリのガロ＝ローマ建築 | パリの芸術は、フランスの首都であるパリにおける芸術文化と歴史に関する記事である。何世紀にもわたり、パリは世界中から芸術家たちを惹きつけてきた... |
-| 旧ユーゴスラビアの共和国 | 1974年のユーゴスラビア憲法は、社会主義連邦共和国ユーゴスラビアの4番目で最終的な憲法である... |
-| ヴェネツィアで撮影された映画 | 『小さな恋の物語』は、1979年のアメリカ映画で、テクニカラーとパナビジョンによるロマンチック・コメディ... |
+| フィッツジェラルド・オートモール チャンバーズバーグ ペンシルベニア州 [35 chars] | フィッツジェラルド・オートモールは1966年に創業された家族経営の自動車販売会社であり、最初の店舗はメリーランド州ベセスダにオープンしました。2014年時点で、フィッツジェラルド・オートモールは『オートモーティブニュース』が毎年発表する米国「トップ125ディーラーグループ」ランキングで59位にランクインしています。また、フィッツジェラルドのディーラー店舗は、2013年のワーズオートe-ディーラー1... [200 / 240 chars] |
+| 1994年の短編小説集『アリス・マーローはオープン』 [26 chars] | アリス・アーン・マンロー（/ˈælɨs ˌæn mʌnˈroʊ/、旧姓レイドロウ /ˈleɪdlɔː/、1931年7月10日生まれ）はカナダの作家である。マンローの作品は、特に時間の前後を行き来する傾向を持つことから、短編小説の構造を革新したと評されている。彼女の物語は「示すよりも内に秘め、誇示するよりも深く明らかにする」と言われている。マンローのフィクションの舞台は、多くの場合、彼女の故郷である... [200 / 256 chars] |
+| パリのガロ＝ローマ建築 [11 chars] | パリの芸術は、フランスの首都であるパリにおける芸術文化と歴史に関する記事である。何世紀にもわたり、パリは世界中から芸術家たちを惹きつけてきた。彼らはこの街に訪れ、芸術的な資源や美術館からインスピレーションを得るとともに、研鑽を積んできた。その結果、パリは「芸術の都」という名声を獲得した。 [144 chars] |
+| 旧ユーゴスラビアの共和国 [12 chars] | 1974年のユーゴスラビア憲法は、社会主義連邦共和国ユーゴスラビアの4番目で最終的な憲法である。この憲法は2月21日に発効した。原文406条から成るこの1974年憲法は、世界で最も長い憲法の一つであった。この憲法は、自治管理システムを国家の干渉から保護するための詳細な規定を追加し、共和国および地方自治体の、すべての選挙および政策決定の場における代表を拡大した。 [181 chars] |
+| ヴェネツィアで撮影された映画 [14 chars] | 『小さな恋の物語』は、1979年のアメリカ映画で、テクニカラーとパナビジョンによるロマンチック・コメディ。ジョージ・ロイ・ヒルが監督を務め、ローレンス・オリヴィエ、テロニウス・バーナード、そして映画デビューを果たしたダイアン・レインが主演している。脚本はアラン・バーンズとジョージ・ロイ・ヒルが、パトリック・コヴァンの小説『E=mc2 モン・アムール』を原作として執筆。オリジナル音楽はジョルジュ・デ... [200 / 209 chars] |
 
 ### Public Sources
 
@@ -132,7 +132,7 @@ related but incorrect DBpedia entries.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DBpedia-Entity V2 | 2017 | task paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia-Entity V2 | 2017 | task paper | [https://doi.org/10.1145/3077136.3080751](https://doi.org/10.1145/3077136.3080751) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -62,17 +62,20 @@ Models should learn structured spatial representations from text. Hard negatives
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning](https://arxiv.org/abs/2104.05832), source task paper.
+| Query | Positive document |
+| --- | --- |
+| There are three blocks. Lets call them A, B and C. Block A is below B and block B is below C. Block... [100 / 797 chars] | both of them [12 chars] |
+| We have three blocks, A, B and C. Blocks B and C are above A. Block A contains one medium black squa... [100 / 484 chars] | both of them [12 chars] |
+| We have three blocks, A, B and C. Block B is below block C and it is to the left of block A. Block A... [100 / 669 chars] | both of them [12 chars] |
+| We have three blocks. We call them A, B and C. Block B is below and C is above A. Block A contains o... [100 / 761 chars] | the yellow thing that is touching the right edge of a block [59 chars] |
+| There are three blocks, A, B and C. Block A is below C. Block C is to the right of B. Block A has a... [100 / 565 chars] | none of them [12 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning | 2021 | arXiv paper | https://arxiv.org/abs/2104.05832 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning | 2021 | arXiv paper | [https://arxiv.org/abs/2104.05832](https://arxiv.org/abs/2104.05832) |
 
 ### Representative Snippets
 

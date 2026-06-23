@@ -62,19 +62,21 @@ Models should handle Finnish morphology, compounds, legal terminology, and exact
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Mikä EU:n neuvoa-antava elin ilmoitti tervetulleeksi työnantajien ja työntekijöiden sopimuksen sisäl... [100 / 165 chars] | Tiedonannossa korostetaan inhimillisten tekijöiden merkitystä meriklusterin yhteydessä. ETSK on tyytyväinen työmarkkinaosapuolten (ETF:n ja ECSA:n) tekemään sopimukseen siitä, että vuonna 2006 tehdyn,... [200 / 673 chars] |
+| Mikä sääntelykehys salli viranomaisten nimetä yrityksiä dominoiviksi noin 25 prosentin markkinaosuud... [100 / 156 chars] | Vuoden 1998 sääntelyjärjestelmässä ennakkosääntelyn kohteena olevat telealan markkina-alueet määriteltiin asianomaisissa direktiiveissä, mutta niiden määrittelyssä ei sovellettu kilpailuoikeuden peria... [200 / 928 chars] |
+| Mikä ehdotettu valittavissa oleva mittaristo tukee kansallisen ammatillisen koulutuksen laatua erote... [100 / 145 chars] | Liitteessä II ehdotettujen viiteindikaattoreiden tarkoituksena on tukea ammatillisen koulutuksen järjestelmien ja/tai järjestäjien arviointia ja laadun parantamista kansallisen lainsäädännön ja käytän... [200 / 681 chars] |
+| Miten henkilöstöresurssien suunnittelijat suosittelevat kohdentamaan koulutusohjelmia työllisyysennu... [100 / 156 chars] | Henkilöresurssien kehittäminen on kehittämisstrategioiden vääjäämätön osa. Koulutuksella on tärkeä rooli joustavan ja monipuolisiin työtehtäviin kykenevän ja ammattitaitoisen työvoiman kouluttamisessa... [200 / 658 chars] |
+| Mikä järjestelmätyyppi edellyttää pitkän aikavälin suunnittelua sekä suurten tietomäärien laajamitta... [100 / 223 chars] | Älykkäät liikennejärjestelmät perustuvat suurten tietomäärien lisääntyvään hyödyntämiseen. Niiden käyttöönotto vaatii näin ollen sellaisen pitkän aikavälin vision kehittämistä, jossa otetaan nykyisten... [200 / 621 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

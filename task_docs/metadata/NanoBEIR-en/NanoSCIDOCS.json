@@ -150,7 +150,7 @@
         "title": "SCIDOCS GitHub repository",
         "url": "https://github.com/allenai/scidocs",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -164,8 +164,91 @@
         "title": "mteb/scidocs",
         "url": "https://huggingface.co/datasets/mteb/scidocs",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Novel DC-DC Multilevel Boost Converter",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "AbstructMultilevel voltage source converters are emerging as a new breed of power converter options for high-power applications. The multilevel voltage source converters typically synthesize the stair",
+          "full_chars": 930,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Fast Sparse Gaussian Markov Random Fields Learning Based on Cholesky Factorization",
+          "full_chars": 82,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "",
+          "full_chars": 0,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Texture Synthesis Using Convolutional Neural Networks",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In this work we investigate the effect of the convolutional n etwork depth on its accuracy in the large-scale image recognition setting. Our main contribution is a thorough evaluation of networks of i",
+          "full_chars": 840,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
+        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
+        "query": {
+          "text": "Planar broadband annular-ring antenna with circular polarization for RFID system",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In this paper, a horizontally meandered strip (HMS) feed technique is proposed to achieve good impedance matching and symmetrical broadside radiation patterns for a single-fed broadband circularly pol",
+          "full_chars": 1308,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
+        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
+        "query": {
+          "text": "Design of advanced digital heartbeat monitor using basic electronic components",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In this paper, we presented the design and development of a new integrated device for measuring heart rate using fingertip to improve estimating the heart rate. As heart related diseases are increasin",
+          "full_chars": 1116,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

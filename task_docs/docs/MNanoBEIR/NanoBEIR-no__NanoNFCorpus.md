@@ -124,11 +124,11 @@ evidence set it can surface within a limited candidate budget.
 
 | Query | Positive document |
 | --- | --- |
-| Sunn sjokolademelk | Mål: Å undersøke forholdet mellom inntak av kirsebær og risikoen for gjentatte giktangrep hos individer med gikt... |
-| Medisinsk etikk | BAKGRUNN: En av de største utfordringene ved å kontrollere serumkolesterol gjennom diettintervensjoner... |
-| bikubear | De siste 20 årene har økt interesse for L-arginins biokjemi, ernæring og farmakologi ført til omfattende studier... |
-| Hva er egentlig i kyllingnuggets? | PURPOSE: Å fastslå innholdet i kyllingnuggets fra to nasjonale matkjeder... |
-| mettet fett | Interessen for muligheten av at mors kosthold under graviditet kan påvirke utviklingen av allergiske lidelser hos barn har økt... |
+| Sunn sjokolademelk [18 chars] | Mål: Å undersøke forholdet mellom inntak av kirsebær og risikoen for gjentatte giktangrep hos individer med gikt. Metoder: Vi gjennomførte en case-crossover-studie for å undersøke sammenhenger mellom... [200 / 1,617 chars] |
+| Medisinsk etikk [15 chars] | BAKGRUNN: En av de største utfordringene ved å kontrollere serumkolesterol gjennom diettintervensjoner ser ut til å være behovet for å forbedre pasientens overholdelse. MÅL: For å utforske de mange sp... [200 / 1,855 chars] |
+| bikubear [8 chars] | De siste 20 årene har økt interesse for L-arginins biokjemi, ernæring og farmakologi ført til omfattende studier for å utforske dets ernæringsmessige og terapeutiske roller i behandling og forebygging... [200 / 1,210 chars] |
+| Hva er egentlig i kyllingnuggets? [33 chars] | PURPOSE: Å fastslå innholdet i kyllingnuggets fra to nasjonale matkjeder. BACKGROUND: Kyllingnuggets har blitt en viktig del av den amerikanske dietten. Vi ønsket å fastslå den nåværende sammensetning... [200 / 716 chars] |
+| mettet fett [11 chars] | Interessen for muligheten av at mors kosthold under graviditet kan påvirke utviklingen av allergiske lidelser hos barn har økt. Denne prospektive studien undersøkte sammenhengen mellom mors inntak av... [200 / 1,897 chars] |
 
 ### Public Sources
 
@@ -142,7 +142,7 @@ evidence set it can surface within a limited candidate budget.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

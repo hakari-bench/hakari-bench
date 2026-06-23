@@ -62,9 +62,13 @@ A model targeting this task should preserve strong named-entity recall while imp
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FEVER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Keith Godchaux kände till Grateful Dead [39 chars] | The Grateful Dead var ett amerikanskt rockband som bildades 1965 i Palo Alto, Kalifornien. Bandet, som bestod av fem till sju medlemmar, är känt för sin unika och eklektiska stil, som blandade element... [200 / 2,895 chars] |
+| Taarak Mehta Ka Ooltah Chashmah är en sitcom. [45 chars] | Taarak Mehta Ka Ooltah Chashmah (Engelska: Taarak Mehtas olika perspektiv) är Indiens längsta löpande sitcom, producerad av Neela Tele Films Private Limited. Serien sändes för första gången den 28 jul... [200 / 583 chars] |
+| Hemliga och tekniskt avancerade flygplan tillverkades i Burbank, Kalifornien. [77 chars] | Burbank är en stad i Los Angeles County i södra Kalifornien, USA, cirka 19 kilometer nordväst om centrala Los Angeles. Vid folkräkningen 2010 hade staden 103 340 invånare. Staden marknadsförs som "Vär... [200 / 1,280 chars] |
+| Nero är en människa [19 chars] | Den julisk-claudiska dynastin syftar på de första fem romerska kejsarna – Augustus, Tiberius, Caligula, Claudius och Nero – eller familjen de tillhörde. De styrde Romarriket från dess bildande under A... [200 / 2,022 chars] |
+| Scream 2 är enbart en tysk film. [32 chars] | Scream 2 är en amerikansk slasherfilm från 1997, regisserad av Wes Craven och skriven av Kevin Williamson. Filmen har David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Jamie Kennedy... [200 / 2,456 chars] |
 
 ### Source Reference Table
 

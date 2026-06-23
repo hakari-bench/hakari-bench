@@ -134,14 +134,97 @@
         "url": "https://arxiv.org/abs/2309.07597",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "definitive_benchmark_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/VideoRetrieval",
         "url": "https://huggingface.co/datasets/mteb/VideoRetrieval",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "62882",
+        "document_id": "1045152",
+        "query": {
+          "text": "游泳和悦悦",
+          "full_chars": 5,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "悦悦游泳20170817 21m",
+          "full_chars": 16,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "121080",
+        "document_id": "1107557",
+        "query": {
+          "text": "甲状腺的检查",
+          "full_chars": 6,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "科普时间 专业仪器如何检查甲状腺",
+          "full_chars": 16,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10809",
+        "document_id": "1323061",
+        "query": {
+          "text": "BAMBINo",
+          "full_chars": 7,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "bambino2016 恩率 oppa",
+          "full_chars": 19,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "8877",
+        "document_id": "1616056",
+        "query": {
+          "text": "明天依然爱你泰国电视剧普通话版",
+          "full_chars": 15,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "明天依然爱你 15",
+          "full_chars": 9,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "149223",
+        "document_id": "1698620",
+        "query": {
+          "text": "秃鹰档案国语",
+          "full_chars": 6,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "秃鹰档案 杀手行动失败 黑老大凶残霸道 立马派人杀人灭口",
+          "full_chars": 28,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

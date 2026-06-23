@@ -137,11 +137,13 @@ reranking could convert extra coverage into top-rank gains.
 
 ## Example Data
 
-Representative queries ask why online slot games are popular, why an idealized
-hard-working father is treated as socialization, what should be considered when
-re-electing directors, what amenities make hotels near Balaclava attractive,
-and how to address deletion of Bitcoin Core block-folder data. Positive
-documents are noisy Thai web documents containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| สล็อตออนไลน์เป็นเกมที่ได้รับความนิยมมากเพราะอะไร? [49 chars] | 【เกมยิงปลาตายไว】เครดิต ฟรี 999 vjf \| 2019-09-18 \| อ่านเรื่องเต็ม(610) \| ทบทวน(526) 【แจก เครดิต ฟรี 2000】แจก เงิน ฟรี 1000 h1h \| 2019-09-18 \| อ่านเรื่องเต็ม(122) \| ทบทวน(535) 【เว็บ เล่น ดั ม มี่ ออนไลน... [200 / 25,397 chars] |
+| ในสังคมที่เราอาศัยอยู่ในปัจจุบัน, ทำไมการมีพ่อที่ออกไปทำงานอย่างหนักเพื่อเลี้ยงครอบครัวถือว่าเป็นแบบ... [100 / 145 chars] | คุณกำลังอ่าน: อุตสาหกรรมบันเทิงเกาหลีใต้ เติบโตพร้อมกับการสร้างประชาธิปไตย คุยกับ อ.จักรกริช สังขมณี Posted On 24 April 2020 Karoonporn Chetpayark ภาพยนตร์เกาหลีคว้าออสการ์ ซีรีส์ก็โด่งดัง เรตติ้งดี ม... [200 / 28,444 chars] |
+| าความสำคัญและการตัดสินใจที่ดีในการเลือกตั้งกรรมการอีกครั้งควรพิจารณาอะไรบ้างเพื่อให้คณะกรรมการมีประส... [100 / 137 chars] | การกำกับดูแลกิจการ - King Wai Group (Thailand) Public Company Limited Home / นักลงทุนสัมพันธ์ / การกำกับดูแลกิจการ บริษัทมีพันธะกิจเพื่อบรรลุถึงมาตรฐานระดับสูงของหลักการกำกับดูแลกิจการและได้กำหนดแนวทา... [200 / 29,125 chars] |
+| โรงแรมใน Balaclava มีสิ่งอำนวยความสะดวกอะไรบ้างที่ทำให้เป็นที่นิยมในการเข้าพัก? [79 chars] | 10 โรงแรมที่ดีที่สุด ใกล้ Port Louis Race track - TripAdvisor โรงแรมที่ดีที่สุดใกล้ Port Louis Race track, พอร์ตหลุยส์ โรงแรม พอร์ตหลุยส์ ทั้งหมด ข้อเสนอของโรงแรมใน พอร์ตหลุยส์ โรงแรมแบบกระชั้นใน พอร์... [200 / 18,946 chars] |
+| วิธีแก้ปัญหาเกี่ยวกับการลบข้อมูลในโฟลเดอร์ blocks ใน Bitcoin core คืออะไร? [74 chars] | ที่อยู่ลบ bitcoin core Litecoin ราคา gbp ดูธุรกรรมของ bitcoin ที่อยู่ลบ bitcoin core - Ubs รายงาน bitcoin pdf 1060 ม ข าวล อว าจะม ร นย อยอ กร น เป นร นใช แรม 5GB หล งจากในป จจ บ นม การ ดร นน ในร นแรม... [200 / 15,292 chars] |
 
 ### Public Sources
 
@@ -157,9 +159,9 @@ documents are noisy Thai web documents containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

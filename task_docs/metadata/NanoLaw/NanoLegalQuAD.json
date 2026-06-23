@@ -134,8 +134,91 @@
         "url": "https://huggingface.co/datasets/mteb/LegalQuAD",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "9s8OrJQUdL",
+        "query": {
+          "text": "Wie ist das rechtliche Gehör nach Art. 103 Abs. 1 GG definiert?",
+          "full_chars": 64,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "TenorDer Antrag auf Zulassung der Berufung wird abgelehnt.Der Kläger trägt die Kosten des Zulassungsverfahrens; Gerichtskosten werden nicht erhoben.1G r ü n d e2Der Antrag auf Zulassung der Berufun",
+          "full_chars": 13780,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "nFbmOHnKYa",
+        "query": {
+          "text": "Welchen Wert hat das Beschwerdeverfahren?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "TenorDie Beschwerde des Beschwerdeführers vom 27.04.2018 gegen den Beschluss des Amtsgerichts – Familiengericht – Bochum vom 21.03.2018 (57 F 17/18) in Verbindung mit dem Beschluss vom 03.04.2018 wir",
+          "full_chars": 11601,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "zgEz6cwB61",
+        "query": {
+          "text": "Muss der Beauftragte dem Auftraggeber erhaltene Gegenstände zur Ausführung des Auftrages zurückgeben",
+          "full_chars": 101,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor1E n t s c h e i d u n g s g r ü n d e :2##blob##nbsp;3##blob##nbsp;4Die in förmlicher Hinsicht unbedenkliche Berufung hat nach demErgebnis der zweitinstanzlichen Beweisaufnahme keinen Erfolg.5",
+          "full_chars": 13258,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "XRvj7uff0L",
+        "query": {
+          "text": "Mit wem wurde der Baubeginn abgestimmt?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tenor1.Die Anträge vom 25.04.2012 auf Erlass einer einstweiligen Verfügung werden zurückgewiesen.2.Die Verfügungsklägerin trägt die Kosten des Verfahrens.3.Das Urteil ist vorläufig vollstreckba",
+          "full_chars": 13416,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "FJjuGhmKfF",
+        "query": {
+          "text": "Können Gesellschafter zur Erhöhung von Beiträgen verpflichtet werden?",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Auf die Berufung des Beklagten wird das Urteil der 9. Zivilkammer des Landgerichts Koblenz vom 15. Juli 2004 abgeändert und die Klage abgewiesen.Die Kläger tragen die Kosten des Rechtsstreits einsch",
+          "full_chars": 13468,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

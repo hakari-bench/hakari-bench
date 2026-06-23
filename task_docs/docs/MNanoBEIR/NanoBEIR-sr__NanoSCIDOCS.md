@@ -62,9 +62,13 @@ A model targeting this task should improve multi-positive coverage without sacri
 
 ## Example Data
 
-### Public Sources
-
-The original task is connected to SCIDOCS and SPECTER-style scientific document embedding evaluation, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Novi DC-DC višestepeni pojačavački pretvarač [44 chars] | Apstrakt Višenaponski pretvarači sa više nivoa postaju nova vrsta opcija za pretvarače snage u primenama velike snage. Višenaponski pretvarači tipično sintetizuju stepenasti naponski talas iz nekoliko... [200 / 872 chars] |
+| Brzo Učenje Retkih Gaussovih Markovljevih Slučajnih Polja Bazirano na Čoleskijevoj Faktorizaciji [96 chars] | Poštovani korisniče, Zahvaljujem vam se što ste me kontaktirali. Kao veštačka inteligencija, moja osnovna svrha je pružanje informacija i pomoći u različitim oblastima. Nažalost, trenutno nemam pristu... [200 / 687 chars] |
+| Sinteza teksture korišćenjem konvolucionih neuronskih mreža [59 chars] | U ovom radu istražujemo uticaj dubine konvolucione mreže na njenu tačnost u okruženju za prepoznavanje slika velikih razmera. Naš glavni doprinos je temeljna evaluacija mreža sve veće dubine, koja pok... [200 / 819 chars] |
+| Planarna širokopojasna prstenasta antena sa kružnom polarizacijom za RFID sistem [80 chars] | U ovom radu predlaže se tehnika horizontalno meandrirajuće trake (HMS) kako bi se postiglo dobro prilagođavanje impedanse i simetrični širokousmereni zračni obrasci za širokopojasnu kružno polarizovan... [200 / 1,219 chars] |
+| Dizajn naprednog digitalnog monitora srčanog ritma korišćenjem osnovnih elektronskih komponenti [95 chars] | U ovom radu, predstavili smo dizajn i razvoj novog integrisanog uređaja za merenje srčanog ritma pomoću vrha prsta kako bi se poboljšalo procenjivanje otkucaja srca. Kako se srčane bolesti svakodnevno... [200 / 1,110 chars] |
 
 ### Source Reference Table
 

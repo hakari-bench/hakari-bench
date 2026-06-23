@@ -143,8 +143,91 @@
         "url": "https://huggingface.co/datasets/dwzhu/LongEmbed",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "query_66",
+        "document_id": "doc_138",
+        "query": {
+          "text": "They felt that the battery design should be long-lived, original, and conventional to ensure the bat",
+          "full_chars": 241,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "User Interface: .. . Project Manager: Okay . So , this is uh first meeting of this design project . Um and I um like to show you the agenda for the meeting , I don't know if it was sent round to all o",
+          "full_chars": 22629,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_123",
+        "document_id": "doc_152",
+        "query": {
+          "text": "The Prime Minister explained that the government recognized that several organizations and companies",
+          "full_chars": 537,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Chair (Hon. Anthony Rota (NipissingTimiskaming, Lib.)): I call this meeting to order. Welcome to the 12th meeting of the House of Commons Special Committee on the COVID-19 Pandemic. This will be t",
+          "full_chars": 120229,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_103",
+        "document_id": "doc_101",
+        "query": {
+          "text": "In the product evaluation, the team was satisfied with its success in reducing the number of unused",
+          "full_chars": 362,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Project Manager: That should hopefully do the trick , um . 'Kay . Sorry about the small delay . Falling a little bit behind schedule . And that's uh fifteen twenty five . Okay . So just to try and rou",
+          "full_chars": 43300,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_9",
+        "document_id": "doc_57",
+        "query": {
+          "text": "Grad F explained that he was focusing on writing his proposal for his qualification exams, which was",
+          "full_chars": 182,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Professor B: I think for two years we were two months , uh , away from being done . PhD A: And what was that , Morgan ? What project ? Professor B: Uh , the , uh , TORRENT chip . PhD A: Oh . Professor",
+          "full_chars": 56387,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_161",
+        "document_id": "doc_125",
+        "query": {
+          "text": "The team agreed that there should be 17 buttons on the remote, including number 0 to 9, volume up an",
+          "full_chars": 250,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Project Manager: Right uh . So um . So where's the PowerPoint presentation ? Sorry ? Microsoft PowerPoint , right . Right , okay . So . Right . Okay , so we've got uh so we've got new project requirem",
+          "full_chars": 43476,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

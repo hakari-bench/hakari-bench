@@ -130,8 +130,91 @@
         "url": "https://arxiv.org/abs/2503.04644",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "2018_30_v1",
+        "document_id": "NCT01530997",
+        "query": {
+          "text": "A patient diagnosed with head and neck squamous cell carcinoma with a mutation in the CDKN2A gene. I",
+          "full_chars": 167,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "De-intensification of Radiation and Chemotherapy for Low-Risk Human Papillomavirus-related Oropharyngeal Squamous Cell Carcinoma Carcinoma, Squamous Cell The purpose of this research study is to learn",
+          "full_chars": 3238,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2017_16_v1",
+        "document_id": "NCT00657982",
+        "query": {
+          "text": "Patient diagnosed with prostate cancer with PTEN inactivating gene mutation. I am looking for possib",
+          "full_chars": 145,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Phase II Study of RAD001 in a Neoadjuvant Setting in Men With Intermediate or High Risk Prostate Cancer Prostate Cancer The mechanisms responsible for the development of hormonal refractory prostate c",
+          "full_chars": 3481,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2017_10_v1",
+        "document_id": "NCT01501604",
+        "query": {
+          "text": "A patient diagnosed with gastric cancer with the PIK3CA (E545K) gene mutation. I am looking for poss",
+          "full_chars": 147,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "BKM120 in Cancers With PIK3CA Activating Mutations Lung Cancer In people whos cancers have a PIK3CA mutation, this trial will be evaluating the drug BKM120as a possible treatment. BKM120 works by bloc",
+          "full_chars": 2539,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2018_40_v1",
+        "document_id": "NCT02097810",
+        "query": {
+          "text": "A patient diagnosed with papillary thyroid carcinoma and carrying the NTRK1 gene mutation. I am look",
+          "full_chars": 159,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Study of Oral RXDX-101 in Adult Patients With Locally Advanced or Metastatic Cancer Targeting NTRK1, NTRK2, NTRK3, ROS1, or ALK Molecular Alterations. Locally Advanced Solid Tumors Entrectinib (RXDX-1",
+          "full_chars": 2588,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2017_28_v1",
+        "document_id": "NCT00779454",
+        "query": {
+          "text": "Patient diagnosed with Ampullary carcinoma with KRAS gene mutation. Seeking possible clinical trials",
+          "full_chars": 127,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Combined Biological Treatment and Chemotherapy for Patients With Inoperable Cholangiocarcinoma Cholangiocarcinoma The purpose of this study is partly to continue the good experience the investigators",
+          "full_chars": 2078,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

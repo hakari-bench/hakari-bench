@@ -136,15 +136,98 @@
         "url": "https://huggingface.co/datasets/mteb/AlloprofRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "antoinelb7/alloprof",
         "url": "https://huggingface.co/datasets/antoinelb7/alloprof",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5339",
+        "document_id": "d5699b49-6b57-46f6-99d0-cf45302feea1",
+        "query": {
+          "text": "Bonjour, j'ai de la difficulté à comprendre les différences entre le simple past et le past progress",
+          "full_chars": 169,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Was he playing soccer when his mom arrived? They were watching a movie while their parents were preparing dinner. The past continuous is used to describe two types of actions happening in the past. On",
+          "full_chars": 768,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "15646",
+        "document_id": "a287a1c0-91f9-4104-9aa3-531867dccdcb",
+        "query": {
+          "text": "Bonjour! Je suis en 5e année du primaire et je voudrais des trucs pour mémoriser les fractions irréd",
+          "full_chars": 218,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Les fractions équivalentes sont des fractions qui représentent le même nombre, la même proportion. Pour passer d'une fraction à une autre fraction équivalente, on peut multiplier ou diviser cette frac",
+          "full_chars": 3529,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11106",
+        "document_id": "33fe5c0f-6d7f-4e09-a5ae-5820e6f028f5",
+        "query": {
+          "text": "bonjour, on comence a voir les cirquit électrique en science. ma question sais a quoi serve les Rési",
+          "full_chars": 106,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La résistance électrique est une propriété physique d'un matériau qui limite le passage du courant électrique dans un circuit. Les composantes qui possèdent cette propriété servent à limiter le passag",
+          "full_chars": 2507,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8348",
+        "document_id": "b7596834-83d1-4600-9803-d74c0fdb45cb",
+        "query": {
+          "text": "bonjour, l'eau est un PH7, alors le papier tournesol rouge et bleu ne réagient pas? merci",
+          "full_chars": 89,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Il existe quatre façons de déterminer la nature d'une substance. Le papier tournesol est imbibé de teinture de tournesol ou d'extrait de poudre de lichen. Il sert d'indicateur coloré pour déterminer l",
+          "full_chars": 4326,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "21059",
+        "document_id": "1d723b87-ef41-4281-9f31-9807e5439a23",
+        "query": {
+          "text": "C'est quoi une somme",
+          "full_chars": 20,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "L'addition est une opération qui consiste à ajouter un nombre (ou plusieurs nombres) à un autre nombre. Les nombres qui composent l'addition se nomment les termes. La somme désigne le résultat de cett",
+          "full_chars": 774,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -145,6 +145,89 @@
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q53270",
+        "document_id": "c53270",
+        "query": {
+          "text": "'user': Write a SQL query to list customers who have placed orders for more than $100 in the past mo",
+          "full_chars": 3249,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "To adhere to standard SQL formatting, keywords are written in uppercase, while database, table, and column names in lowercase. Indentation is used to show the structure of SQL statements clearly, and",
+          "full_chars": 2115,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q53135",
+        "document_id": "c53135",
+        "query": {
+          "text": "'user': Design a programming function that integrates underscores in place of spaces that separate w",
+          "full_chars": 2357,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The function `underscore_punctuation` has been successfully defined without any syntactical errors. Now we can use this function to replace spaces with underscores in string words, ending with punctua",
+          "full_chars": 557,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q53113",
+        "document_id": "c53113",
+        "query": {
+          "text": "'user': A divisor $d$ of a number $n$ is deemed unitary if it possesses the characteristic $\\gcd(d,",
+          "full_chars": 7649,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "I apologize for any confusion caused earlier. Calculating $S(100,000,000!)$ directly is not feasible due to the size of the numbers involved. In mathematics, problems like this often require a deep un",
+          "full_chars": 777,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q53296",
+        "document_id": "c53296",
+        "query": {
+          "text": "'user': Write a detailed explanation of the Model-View-Controller (MVC) architecture pattern and its",
+          "full_chars": 11785,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Apologies for the confusion, but as an AI, I can't execute Django code. However, I can indeed enhance the middleware code with comments and improved formatting for better readability: For the threadin",
+          "full_chars": 2136,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q53177",
+        "document_id": "c53177",
+        "query": {
+          "text": "'user': Write a Python code that takes a Unix timestamp as input, converts it to date and time, and",
+          "full_chars": 3514,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The provided Unix timestamp, 1594102055, has been successfully converted into a date and time. The year extracted from this conversion was 2020, and based on that, the program has returned the message",
+          "full_chars": 429,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

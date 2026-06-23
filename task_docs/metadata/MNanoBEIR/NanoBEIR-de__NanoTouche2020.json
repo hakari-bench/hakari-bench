@@ -138,7 +138,7 @@
         "year": 2020,
         "is_paper": true,
         "doi": "10.1007/978-3-030-58219-7_26",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
@@ -146,7 +146,7 @@
         "year": 2022,
         "is_paper": false,
         "doi": "10.5281/zenodo.6862281",
-        "source_confidence": "dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -154,7 +154,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -162,15 +162,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Ist Hausaufgaben sinnvoll?",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten. 1. Hausaufgaben unterstützen Lernende, die durch Handeln lernen. Es ist allgem",
+          "full_chars": 4185,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Sollten verschreibungspflichtige Medikamente direkt an Verbraucher beworben werden dürfen?",
+          "full_chars": 90,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken. Zum Beispiel wird Lunesta durch einen Schmetterling beworben, der durch ein Schlafzimmerfenster fliegt,",
+          "full_chars": 2016,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Welche Impfungen sind für Kinder notwendig?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... Regierungen sollten kein Recht haben, in die gesundheitlichen Entscheidungen einzug",
+          "full_chars": 4993,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
+        "query": {
+          "text": "Sollte Abtreibung legal sein?",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Abtreibungen sollten legal sein, da die Persönlichkeit erst beginnt, wenn ein Fötus lebensfähig ist oder nach der Geburt. Laut dem Obersten Gerichtshof der USA erhält eine Person ihr Alter, wenn sie a",
+          "full_chars": 318,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26",
+        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
+        "query": {
+          "text": "Verbessern standardisierte Tests die Qualität der Bildung?",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Die SAT, ACT und andere standardisierte Tests bieten mehr Einblicke in die Vorbereitung eines Schülers auf das Studium an Elite-Universitäten als der Notendurchschnitt in der High School. Daher sollte",
+          "full_chars": 4955,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

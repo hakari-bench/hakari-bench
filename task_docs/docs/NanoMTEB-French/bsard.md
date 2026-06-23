@@ -134,19 +134,21 @@ both vocabulary mismatch and statutory-scope errors.
 
 ## Example Data
 
-### Public Sources
-
-- [A Statutory Article Retrieval Dataset in French](https://arxiv.org/abs/2108.11792), 2022.
-- [mteb/BSARDRetrieval](https://huggingface.co/datasets/mteb/BSARDRetrieval), source dataset card.
-- [MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis](https://arxiv.org/abs/2405.20468), 2024.
+| Query | Positive document |
+| --- | --- |
+| Je loue une caravane dans un camping à l'année. Quelles règles s'appliquent à mon bail à Bruxelles ?... [100 / 162 chars] | PrincipesLe présent chapitre s'applique aux baux portant sur le logement que le preneur, avec l'accord exprès ou tacite du bailleur, affecte dès l'entrée en jouissance à sa résidence principale. Est r... [200 / 1,082 chars] |
+| J’ai fait un testament. Puis-je le modifier ? Démarches avant décès, Donation et testament, Testamen... [100 / 101 chars] | Le testament par acte public est celui qui est reçu par un notaire. Le testament par acte public est celui qui est reçu par un notaire, en présence de deux témoins, ou par deux notaires. [186 chars] |
+| Dois-je payer les frais de justice si je conteste une décision d’un organisme de sécurité sociale ? [99 chars] | L'indemnité de procédure est une intervention forfaitaire dans les frais et honoraires d'avocat de la partie ayant obtenu gain de cause.Après avoir pris l'avis de l'Ordre des barreaux francophones et... [200 / 2,341 chars] |
+| Mon propriétaire ne fait pas les réparations nécessaires, puis-je faire les réparations à sa place à... [100 / 215 chars] | Réparations et entretien§ 1er. Le preneur est tenu des réparations locatives, à l'exception de celles qui sont occasionnées par la vétusté ou la force majeure, et des travaux de menu entretien.Les rép... [200 / 555 chars] |
+| Comment lire et comprendre ma facture d'eau en Wallonie ? Dettes liées à la fourniture d'eau, En Wal... [100 / 105 chars] | Une facture annuelle est établie par le distributeur. De plus, des acomptes ou des factures intermédiaires au minimum trimestriels seront établis.En cas de changement d'usager ainsi qu'en cas de modif... [200 / 530 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A Statutory Article Retrieval Dataset in French | 2022 | arXiv paper | https://arxiv.org/abs/2108.11792 |
-| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | https://arxiv.org/abs/2405.20468 |
-| mteb/BSARDRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/BSARDRetrieval |
+| A Statutory Article Retrieval Dataset in French | 2022 | arXiv paper | [https://arxiv.org/abs/2108.11792](https://arxiv.org/abs/2108.11792) |
+| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | [https://arxiv.org/abs/2405.20468](https://arxiv.org/abs/2405.20468) |
+| mteb/BSARDRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/BSARDRetrieval](https://huggingface.co/datasets/mteb/BSARDRetrieval) |
 
 ### Representative Snippets
 

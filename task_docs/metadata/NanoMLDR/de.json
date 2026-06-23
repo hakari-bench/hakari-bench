@@ -130,8 +130,91 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-de-683",
+        "document_id": "doc-de-5457",
+        "query": {
+          "text": "Welche Veranstaltung findet am Sonntag in Niedersachsen statt?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wvormyks v 15 скачать. Radeberger SV Abt. Bogenschießen gegründet 0877 FIDE-Trainerkurs 0009 Ausbildung 0005 A-Trainer 0004 0017 Männer 0016 Männer 0015 Männer 0014 Männer 0013 Männer 0012 Männer 0011",
+          "full_chars": 24762,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-de-113",
+        "document_id": "doc-de-904",
+        "query": {
+          "text": "Warum wird das Design von deutschen Läden als schützenswert angesehen?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kommentare zu: Apple kann sich Design seiner Geschäfte als Marke schützen lassen Der Computer-Konzern Apple kann sich das Design seiner Ladengeschäfte markenrechtlich schützen lassen. Das hat der Euro",
+          "full_chars": 26711,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-de-1027",
+        "document_id": "doc-de-8203",
+        "query": {
+          "text": "Welche Eigenschaften hat das Mikronell Shine 2 Rainbow Reinigungstuch?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Mikronell Poliertuch Search Results | Schmutzweg.de - der Schmutz weg Online Shop Sie befinden sich hier: Startseite » Mikronell Poliertuch Results for 'Mikronell Poliertuch' Suchergebnis 1 to 30 of 6",
+          "full_chars": 30575,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-de-794",
+        "document_id": "doc-de-6343",
+        "query": {
+          "text": "Was hat den Autor dazu gebracht, das Spiel unbedingt ausprobieren zu wollen?",
+          "full_chars": 76,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Prey Preview - Story, Inszenierung, Morgan Yu, Madison Yu, Talos I, System Shock | GamersGlobal.de ). Alternativ bieten wir GamersGlobal-Premium an. Prey Preview+ Benjamin Braun / 15. Februar 2017 - 1",
+          "full_chars": 27076,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-de-145",
+        "document_id": "doc-de-1160",
+        "query": {
+          "text": "Was sind mögliche Auswirkungen der künstlichen Intelligenz auf die Gesellschaft?",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "<{~פAnime Starlight��~}> Forum - YGO! Archiv - Andere Orte* - Atlantis - Seite 220 ForumNewsMitgliederSuchenRegistrierenMember LoginKostenloses Forum! <{~פAnime Starlight��~}> � YGO! Archiv � Andere O",
+          "full_chars": 13941,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

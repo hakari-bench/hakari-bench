@@ -48,13 +48,13 @@ Strong models should combine exact issue matching with argument-awareness. Usefu
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Ist Hausaufgaben sinnvoll? | Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten... |
-| Sollten verschreibungspflichtige Medikamente direkt an Verbraucher beworben werden dürfen? | Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken... |
-| Welche Impfungen sind für Kinder notwendig? | Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... |
-| Sollte Abtreibung legal sein? | Abtreibungen sollten legal sein, da die Persönlichkeit erst beginnt, wenn ein Fötus lebensfähig ist oder nach der Geburt... |
-| Verbessern standardisierte Tests die Qualität der Bildung? | Die SAT, ACT und andere standardisierte Tests bieten mehr Einblicke in die Vorbereitung eines Schülers auf das Studium... |
+| Query | Positive document |
+| --- | --- |
+| Ist Hausaufgaben sinnvoll? [26 chars] | Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten. 1. Hausaufgaben unterstützen Lernende, die durch Handeln lernen. Es ist allgem... [200 / 4,185 chars] |
+| Sollten verschreibungspflichtige Medikamente direkt an Verbraucher beworben werden dürfen? [90 chars] | Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken. Zum Beispiel wird Lunesta durch einen Schmetterling beworben, der durch ein Schlafzimmerfenster fliegt,... [200 / 2,016 chars] |
+| Welche Impfungen sind für Kinder notwendig? [43 chars] | Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... Regierungen sollten kein Recht haben, in die gesundheitlichen Entscheidungen einzug... [200 / 4,993 chars] |
+| Sollte Abtreibung legal sein? [29 chars] | Abtreibungen sollten legal sein, da die Persönlichkeit erst beginnt, wenn ein Fötus lebensfähig ist oder nach der Geburt. Laut dem Obersten Gerichtshof der USA erhält eine Person ihr Alter, wenn sie a... [200 / 318 chars] |
+| Verbessern standardisierte Tests die Qualität der Bildung? [58 chars] | Die SAT, ACT und andere standardisierte Tests bieten mehr Einblicke in die Vorbereitung eines Schülers auf das Studium an Elite-Universitäten als der Notendurchschnitt in der High School. Daher sollte... [200 / 4,955 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should combine exact issue matching with argument-awareness. Usefu
 
 | Label | URL |
 |---|---|
-| Touché 2020 overview | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touché 2020 dataset | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Touché 2020 overview (https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touché 2020 dataset (https://doi.org/10.5281/zenodo.6862281) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

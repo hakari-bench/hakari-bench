@@ -62,9 +62,13 @@ A model targeting this task should improve lay-to-biomedical vocabulary bridging
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on NFCorpus, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Healthy Chocolate Milkshakes [28 chars] | Objective To study the relation between cherry intake and the risk of recurrent gout attacks among individuals with gout. Methods We conducted a case-crossover study to examine associations of a set o... [200 / 1,586 chars] |
+| medical ethics [14 chars] | BACKGROUND: One of the major issues in controlling serum cholesterol through dietetic intervention appears to be the need to improve patient adherence. AIMS: To explore the many questions regarding ba... [200 / 1,831 chars] |
+| fava beans [10 chars] | Over the past 20 years, growing interest in the biochemistry, nutrition, and pharmacology of L-arginine has led to extensive studies to explore its nutritional and therapeutic roles in treating and pr... [200 / 1,240 chars] |
+| What is Actually in Chicken Nuggets? [36 chars] | PURPOSE: To determine the contents of chicken nuggets from 2 national food chains. BACKGROUND: Chicken nuggets have become a major component of the American diet. We sought to determine the current co... [200 / 714 chars] |
+| saturated fat [13 chars] | Interest has increased in the possibility that maternal dietary intake during pregnancy might influence the development of allergic disorders in children. The present prospective study examined the as... [200 / 2,022 chars] |
 
 ### Source Reference Table
 

@@ -176,11 +176,11 @@ Do not seed generation with Nano evaluation queries or positive passages.
 
 | Query | Positive document |
 | --- | --- |
-| ノートン・モーターサイクルは自動車の製造をしたことはある？ (29 chars) | ノートン・モーターサイクル ノートンは、1898年にバーミンガムのによって設立された。当初は自転車メーカーであったが1902年1.5馬力のエンジンを積んだオートバイ一号車を製造しオートバイ製造に参入した。その後もフランスやスイスからエンジンを調達してオートバイの製造を続け、1907年にはプジョーから購入した726ccV2サイドバルブエンジンを搭載したオートバイで（新競技方式での）第1回マン島TTレース2気筒クラスを制した。1908年には自社製72 ... [truncated 225 chars](651 chars) |
-| チャールズ・ディケンズの出身はどこ (17 chars) | チャールズ・ディケンズ 海軍の会計吏ジョン・ディケンズとエリザベスの長男として、ハンプシャー州のポーツマス郊外のランドポートに生まれた。2歳のときにロンドンに、5歳のときにケント州（現在は独立行政区メドウェイ）の港町チャタムに移る。チャタムでは6年間を過ごし、ディケンズの心の故郷となった。少年期は病弱であり、フィールディング、デフォー、セルバンテスなどを濫読した。 ディケンズの家は中流階級の家庭であったが、父親ジョンは金銭感覚に乏しい人物であり、 ... [truncated 225 chars](636 chars) |
-| FIA GT1世界選手権は何の競技？ (18 chars) | FIA GT1世界選手権 FIA GT1世界選手権（エフアイエー ジーティーワンせかいせんしゅけん、FIA GT1 World Championship）は、ステファン・ラテル・オルガニザシオンが主催し、国際自動車連盟（FIA）が管轄する、FIA GTカーによるレースの名称。2010年より開催されていたが2012年にFIA GT世界選手権としては終了した。翌年の2013年からFIA GTシリーズ、2014年からはブランパンスプリントシリーズとして ... [truncated 225 chars](233 chars) |
-| ヘンリー2世はいつ死去した？ (14 chars) | ヘンリー2世 (イングランド王) ヘンリー2世（, 1133年3月5日 - 1189年7月6日）は、プランタジネット朝（あるいはアンジュー朝）初代のイングランド王国の国王（在位：1154年 - 1189年）である。 (107 chars) |
-| アメリカン・エキスプレスはいつ設立した？ (20 chars) | アメリカン・エキスプレス 1850年に、ウェルズ・ファーゴの創設者でもあるヘンリー・ウェルズとウィリアム・ファーゴ、ジョン・バターフィールドの3人によって、荷馬車により貨物を運ぶ宅配便業者（）として、ニューヨーク州バッファローを本社に運輸業を開始した。事業は好調に推移し、輸送網を全米、および隣国のカナダやメキシコにも広げた。 (163 chars) |
+| ノートン・モーターサイクルは自動車の製造をしたことはある？ [29 chars] | ノートン・モーターサイクル ノートンは、1898年にバーミンガムのによって設立された。当初は自転車メーカーであったが1902年1.5馬力のエンジンを積んだオートバイ一号車を製造しオートバイ製造に参入した。その後もフランスやスイスからエンジンを調達してオートバイの製造を続け、1907年にはプジョーから購入した726ccV2サイドバルブエンジンを搭載したオートバイで（新競技方式での）第1回マン島TTレ... [200 / 652 chars] |
+| 被災者生活再建支援法が制定されたのはいつ [20 chars] | 被災者生活再建支援法 浪江町では、(1)自然災害に起因する今回の原子力発電所の事故を支給対象とせねば支援法が死に法となる。(2)法解釈は現場を知る福島県が被災者に寄り添い、柔軟に運用する義務がある。(3)東京電力原子力事故により被災した子どもをはじめとする住民等の生活を守り支えるための被災者の生活支援等に関する施策の推進に関する法律の趣旨を踏まえ被災者生活再建支援法を適用すべき。(4)長期避難世帯... [200 / 375 chars] |
+| アメリカに西欧人が入植したのはいつ？ [18 chars] | ペンサコーラ (フロリダ州) この一帯にヨーロッパ人が訪れるようになったのは16世紀中盤にさしかかった頃であった。1528年にはスペインのパンフィロ・デ・ナルバエスの一行が、1539年には同じくスペインのエルナンド・デ・ソトの一行がその探検の中でこの地を訪れた。そして1559年、トリスタン・デ・ルナ・イ・アレヤーノがメキシコのベラクルスから11隻の船を率いて、1,400人の入植者と共にこの地に降り... [200 / 550 chars] |
+| ヘンリー2世はいつ死去した？ [14 chars] | ヘンリー2世 (イングランド王) ヘンリー2世（, 1133年3月5日 - 1189年7月6日）は、プランタジネット朝（あるいはアンジュー朝）初代のイングランド王国の国王（在位：1154年 - 1189年）である。 [108 chars] |
+| 小田急電鉄はいつ設立した？ [13 chars] | 小田急電鉄 1923年（大正12年）5月1日に旧会社である小田原急行鉄道が設立。1941年（昭和16年）に親会社の鬼怒川水力電気がこれを合併して小田急電鉄となり、1942年（昭和17年）5月1日に東京急行電鉄に統合されたが、1948年（昭和23年）6月1日、東京急行電鉄の再編成により、東京急行電鉄、京浜急行電鉄、京王帝都電鉄（現在の京王電鉄）および新会社の小田急電鉄の4社に分離されて発足した。 [199 chars] |
 
 ### Public Sources
 
@@ -198,7 +198,7 @@ Do not seed generation with Nano evaluation queries or positive passages.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |

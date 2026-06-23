@@ -116,11 +116,11 @@ important for robust top-100 coverage.
 
 | Query | Positive document |
 | --- | --- |
-| È utile fare i compiti a casa? | Prima di tutto, ci sono tre argomenti a favore del perché i compiti a casa sono eccellenti e dovrebbero continuare nelle scuole moderne... |
-| È giusto che i farmaci da prescrizione siano pubblicizzati direttamente ai consumatori? | Molti annunci pubblicitari non includono informazioni sufficienti su quanto bene funzionano i farmaci. Ad esempio, Lunesta viene pubblicizzato da una falena... |
-| Quali vaccini sono necessari per i bambini? | Non è ancora un caso completo... Solo alcuni punti che ho messo insieme... I governi non dovrebbero avere il diritto di intervenire nelle decisioni sanitarie... |
-| L'aborto dovrebbe essere legale? | L'aborto dovrebbe essere legale poiché la personalità giuridica inizia dopo che il feto diventa vitale o dopo la nascita, non al momento del concepimento. |
-| I test standardizzati migliorano l'istruzione? | Risolto: Il SAT, l'ACT e altri test standardizzati forniscono maggiori informazioni sulla preparazione di uno studente delle superiori per l'istruzione in college... |
+| È utile fare i compiti a casa? [30 chars] | Prima di tutto, ci sono tre argomenti a favore del perché i compiti a casa sono eccellenti e dovrebbero continuare nelle scuole moderne. 1. I compiti aiutano gli studenti che imparano facendo. È gener... [200 / 4,034 chars] |
+| È giusto che i farmaci da prescrizione siano pubblicizzati direttamente ai consumatori? [87 chars] | Molti annunci pubblicitari non includono informazioni sufficienti su quanto bene funzionano i farmaci. Ad esempio, Lunesta viene pubblicizzato da una falena che vola attraverso una finestra della came... [200 / 1,972 chars] |
+| Quali vaccini sono necessari per i bambini? [43 chars] | Non è ancora un caso completo... Solo alcuni punti che ho messo insieme... I governi non dovrebbero avere il diritto di intervenire nelle decisioni sanitarie che i genitori prendono per i loro figli.... [200 / 5,135 chars] |
+| L'aborto dovrebbe essere legale? [32 chars] | L'aborto dovrebbe essere legale poiché la personalità giuridica inizia dopo che il feto diventa vitale o dopo la nascita, non al momento del concepimento. Secondo la Corte Suprema degli Stati Uniti, u... [200 / 353 chars] |
+| I test standardizzati migliorano l'istruzione? [46 chars] | Risolto: Il SAT, l'ACT e altri test standardizzati forniscono maggiori informazioni sulla preparazione di uno studente delle superiori per l'istruzione in college e università di élite rispetto al vot... [200 / 4,640 chars] |
 
 ### Public Sources
 
@@ -135,8 +135,8 @@ important for robust top-100 coverage.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | [https://doi.org/10.1007/978-3-030-58219-7_26](https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | [https://doi.org/10.5281/zenodo.6862281](https://doi.org/10.5281/zenodo.6862281) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

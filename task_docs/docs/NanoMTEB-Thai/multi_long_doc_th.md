@@ -62,19 +62,21 @@ This task favors retrieval architectures that preserve local evidence in long do
 
 ## Example Data
 
-### Public Sources
-
-- [M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation](https://arxiv.org/abs/2402.03216), 2024.
-- [mteb/MultiLongDocRetrieval](https://huggingface.co/datasets/mteb/MultiLongDocRetrieval), source dataset card.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2022.
+| Query | Positive document |
+| --- | --- |
+| คำถาม: สารละลายที่มีความเข้มข้นเท่ากันทุกสารละลายจะมีค่า pH สูงสุดเมื่อใด? [74 chars] | ข้อเอ็นทรานซ์ เคมี 2537 \| วิชาการ.คอม ข้อเอ็นทรานซ์ เคมี 2537 วิชา : เคมี จำนวน : 88 ข้อ ผู้เข้าชม : 2,262 การประลองฝีมือ : 67 view stats 1 ) กำหนดให้ อุณหภูมิ () น้ำแข็ง 0 น้ำ 0 ไอน้ำ 100 ถ้าน้ำแข็งท... [200 / 19,534 chars] |
+| คำถาม: วิธีเลือกเบอร์โทรศัพท์มงคลเบอร์สวยคืออะไรและทำไมเบอร์ 05-6071-0290 ถือเป็นเบอร์สวย? [90 chars] | 0815529736 ผลรวม 46 ซิมเบอร์สวย เบอร์รายเดือน สี่จี 08-1552-9736 เช็คดวงจากเบอร์มือถือ ศูนย์แปดหนึ่งห้าห้าสองเก้าเจ็ดสามหก 081-5529736, 081-552-9736, 081-5529-736, Zero Eight One Five Five Two Nine Se... [200 / 20,760 chars] |
+| s question: How does the code above select all list items on the page and bind a handler function to... [100 / 150 chars] | กันยายน 18, 2019 มกราคม 4, 2020 - by admin My post on worldventures is just a tiny fraction of what this website is about. Archived from the original on 15 july seyedolshohada hospital. Compatible wit... [200 / 27,254 chars] |
+| สามารถสร้างคำถามที่เจาะจงและมีคุณค่าจากข้อความดังกล่าวได้เป็นดังนี้: [68 chars] | แจก เครดิต เล่น ฟรี 2018 เครื่องราง เข้า บ่อน โปร โม ชั่ น บัตร เครดิต กรุง ไทย อ่าน(24) \| ทบทวน(882) \| ส่งต่อ(313) \| ก่อนคา สิ โน 88 เกี่ยวกับเว็บไซต์นี้ \|โปร โม ชั่ น บัตร เครดิต กรุง ไทย\| พาร์ทเนอร... [200 / 25,469 chars] |
+| คำถามที่สร้างขึ้น: "Daniela ตอบสนองทันทีเพื่อแก้ไขปัญหา คุณสามารถแนะนำให้พักอยู่กับ Daniela ได้อย่าง... [100 / 115 chars] | มาเป็นเจ้าของที่พักความช่วยเหลือลงทะเบียนเข้าสู่ระบบDattilo · ตลอดเวลา · ผู้เข้าพัก 1 คนDattiloตลอดเวลาผู้เข้าพัก 1 คนLocationตลอดเวลาผู้เข้าพัก 1 คนประเภทห้องช่วงราคาจองทันทีตัวกรองเพิ่มเติม1วิลล่าให... [200 / 25,297 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | paper | https://arxiv.org/abs/2402.03216 |
-| mteb/MultiLongDocRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/MultiLongDocRetrieval |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| mteb/MultiLongDocRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MultiLongDocRetrieval](https://huggingface.co/datasets/mteb/MultiLongDocRetrieval) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

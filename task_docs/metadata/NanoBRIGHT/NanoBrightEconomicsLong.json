@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "8",
+        "document_id": "gdp_wellbeing/wellbeingandgdphtm.txt",
+        "query": {
+          "text": "Would a GDP measure be improved by excluding foreign interest paid? The income method of calculating",
+          "full_chars": 684,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[ OECD Better Life Index ](/) ![](/media/bli/theme/img/logo-bli@2x.png) * [ Index ](/) * [ Responses ](/responses/) * Countries __ * [ Australia ](/countries/australia/) * [ Austria ](/countries/austr",
+          "full_chars": 13187,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "19",
+        "document_id": "elastic_substitution/Elasticityofsubstitution.txt",
+        "query": {
+          "text": "Derivative to ln(K(t)) in the RBC model In the calculation of the equation of motion for capital in",
+          "full_chars": 406,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page \"Visit the main page \\[z\\]\") * [ Contents ](/wiki/Wikipedia:Contents \"Guides to browsing Wikipedia\")",
+          "full_chars": 34111,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "printmoney_inflation/vol.txt",
+        "query": {
+          "text": "What is the purpose of taxes if central banks can fund deficit spending? Somewhat straight forward.",
+          "full_chars": 524,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Economic and Social Review, Vol. 35, No. 3, Winter, 2004, pp. 251-266 Inflation and Money Growth: Evidence from a Multi-Country Data-Set JOHN C. FRAIN* Central Bank and Financial Services Regulato",
+          "full_chars": 29854,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "91",
+        "document_id": "efficiency_equity/jep25383.txt",
+        "query": {
+          "text": "Is it always a trade off between efficiency and equity? Is there any situations where we can achieve",
+          "full_chars": 467,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "##### This website uses cookies. By clicking the \"Accept\" button or continuing to browse our site, you agree to first-party and session-only cookies being stored on your device to enhance site navigat",
+          "full_chars": 5408,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "38",
+        "document_id": "matching_price/matchingordersasp.txt",
+        "query": {
+          "text": "How are stock prices determined in the following cases? I looked at this question already. I know th",
+          "full_chars": 689,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "INVESTING SIMULATOR BANKING PERSONAL FINANCE NEWS REVIEWS ACADEMY TRADE TRADING SKILLS TRADING BASIC EDUCATION Matching Orders: What They Are, How They Work, and Examples By GORDON SCOTT Updated April",
+          "full_chars": 6039,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Economics StackExchange long-document"
+    "source_task": "Economics StackExchange long-document",
+    "example_count": 5
   }
 }

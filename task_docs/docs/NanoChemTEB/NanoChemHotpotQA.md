@@ -66,9 +66,13 @@ Strong systems should represent both bridge entities and the requested final pro
 
 ## Example Data
 
-### Public Sources
-
-The task is based on ChemTEB's chemistry-filtered HotpotQA retrieval setting.
+| Query | Positive document |
+| --- | --- |
+| In what field did a Swiss physicist who had a geometrical representation named after him work in? [97 chars] | Felix Bloch Felix Bloch (23 October 1905 – 10 September 1983) was a Swiss physicist, working mainly in the U.S. He and Edward Mills Purcell were awarded the 1952 Nobel Prize for Physics for "their dev... [200 / 354 chars] |
+| What company claims to manufacture one out of every three objects that provide a shelf life typicall... [100 / 133 chars] | Canning Canning is a method of preserving food in which the food contents are processed and sealed in an airtight container. Canning provides a shelf life typically ranging from one to five years, alt... [200 / 715 chars] |
+| WHat dish is Dacryopinax spathularia included in that is also sometimes called Luóhàn cài? [91 chars] | Dacryopinax spathularia Dacryopinax spathularia (syn. Guepinia spathularia) is an edible jelly fungus. It is orange in color. In Chinese culture, it is called "guìhuā'ěr" (桂花耳; literally "sweet osmant... [200 / 339 chars] |
+| What is another name for basidiomycete fungus? [46 chars] | Boletus edulis Boletus edulis (English: penny bun, cep, porcino or porcini) is a basidiomycete fungus, and the type species of the genus "Boletus". Widely distributed in the Northern Hemisphere across... [200 / 821 chars] |
+| What substance is always in a trap to prevent the passage of anything from either direction, even se... [100 / 111 chars] | Trap (plumbing) In plumbing, a trap is a device which has a shape that uses a bending path to capture water to prevent sewer gases from entering buildings, while allowing waste to pass through. In ref... [200 / 322 chars] |
 
 ### Source Reference Table
 

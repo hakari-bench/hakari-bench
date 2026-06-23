@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "Argument Mining for Understanding Peer Reviews",
-        "url": "https://aclanthology.org/P18-1023/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Argument Mining for Understanding Peer Reviews",
+        "url": "https://aclanthology.org/P18-1023/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "Il pubblico è indifferente alle riforme. Se la riforma della Camera dei Lord dovrebbe essere una pri",
+          "full_chars": 612,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La campagna AV non può essere paragonata a una riforma del sistema elettorale. Inoltre, non si deve confondere un pubblico disinformato a causa della propaganda politica con l'apatia. Spesso gli elett",
+          "full_chars": 423,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "L'espansione di Heathrow è cruciale per l'economia. L'espansione di Heathrow garantirebbe molti post",
+          "full_chars": 1317,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La comunità imprenditoriale è lungi dall'essere unita nel suo presunto sostegno a una terza pista. I sondaggi suggeriscono che molte aziende influenti, in realtà, non sostengono l'espansione. Una lett",
+          "full_chars": 1238,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "Le persone hanno troppe scelte, il che le rende meno felici. La pubblicità porta molte persone a sen",
+          "full_chars": 1005,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Le persone sono infelici perché non possono avere tutto, non perché hanno troppe scelte e si sentono stressate. In realtà, la pubblicità svolge un ruolo cruciale nel garantire che le persone spendano",
+          "full_chars": 955,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "Gli attacchi informatici sono spesso perpetrati da attori non statali, come ciberterroristi o hackti",
+          "full_chars": 1102,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In caso di attacco da parte di attori non statali, molti esperti di diritto internazionale concordano sul fatto che lo Stato possa ancora reagire in legittima difesa se un altro Stato è 'non disposto",
+          "full_chars": 636,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "La religione promuove la certezza della fede, rendendo facile l'uso dell'odio ispirato divinamente p",
+          "full_chars": 1244,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Nessuno viene indotto a compiere atti di violenza dalle parole di un altro; è una loro scelta farlo. Allo stesso modo, ci sono molte persone che potrebbero avere opinioni che potrebbero essere conside",
+          "full_chars": 689,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

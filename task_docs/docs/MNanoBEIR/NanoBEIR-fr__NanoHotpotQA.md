@@ -48,13 +48,13 @@ Strong models should improve second-support retrieval without sacrificing exact 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Avec quel autre acteur Penny Rae Bridges a-t-elle joué dans une sitcom ? | Penny Rae Bridges est une actrice américaine. Elle a joué dans les séries "For Your Love", "Family Law"... |
-| Qui a donné à Kaganoi Shigemochi une lame forgée par Masamune, le fondateur de l'école Muramasa ? | Kaganoi Shigemochi était un samouraï japonais de la période Azuchi-Momoyama... |
-| Quel film a été écrit et réalisé par Joby Harold avec la musique de Samuel Sim ? | Samuel Sim est un compositeur de films et de séries télévisées... |
-| Quand a eu lieu ce match de football universitaire au Sun Life Stadium à Miami Gardens, en Floride ? | L'équipe de football des Tigers de Clemson de 2015 a représenté l'Université de Clemson... |
-| Plat du Diable est un album de titres d'un groupe de rock and roll américain connu aussi pour des concerts country sous quel nom ? | Diabolique est une compilation de singles du groupe américain de rock 'n' roll Supersuckers... |
+| Query | Positive document |
+| --- | --- |
+| Avec quel autre acteur Penny Rae Bridges a-t-elle joué dans une sitcom ? [72 chars] | Penny Rae Bridges (née le 29 juillet 1990) est une actrice américaine. Elle a joué dans les séries "For Your Love", "Family Law", "Boy Meets World" et "The Parent 'Hood". Elle est surtout connue pour... [200 / 252 chars] |
+| Qui a donné à Kaganoi Shigemochi une lame forgée par Masamune, le fondateur de l'école Muramasa ? [97 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 août 1600) était un samouraï japonais de la période Azuchi-Momoyama, au service du clan Oda. Il gouvernait le château de Kaganoi. Lors de la bataille de Komaki et... [200 / 606 chars] |
+| Quel film a été écrit et réalisé par Joby Harold avec la musique de Samuel Sim ? [80 chars] | Samuel Sim est un compositeur de films et de séries télévisées. Il a acquis une notoriété avec sa bande originale récompensée pour la série dramatique de la BBC "Dunkirk". Depuis, il a composé la musi... [200 / 600 chars] |
+| Quand a eu lieu ce match de football universitaire au Sun Life Stadium à Miami Gardens, en Floride,... [100 / 181 chars] | L'équipe de football des Tigers de Clemson de 2015 a représenté l'Université de Clemson lors de la saison 2015 de la NCAA Division I FBS. Les Tigers étaient dirigés par l'entraîneur-chef Dabo Swinney,... [200 / 1,181 chars] |
+| Plat du Diable est un album de titres d'un groupe de rock and roll américain qui a également été con... [100 / 150 chars] | Diabolique est une compilation de singles du groupe américain de rock 'n' roll Supersuckers, sortie en avril 2005 chez Mid-Fi Records. [134 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve second-support retrieval without sacrificing exact 
 
 | Label | URL |
 |---|---|
-| HotpotQA paper | https://arxiv.org/abs/1809.09600 |
-| HotpotQA official site | https://hotpotqa.github.io/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA paper (https://arxiv.org/abs/1809.09600) |
+| HotpotQA official site (https://hotpotqa.github.io/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

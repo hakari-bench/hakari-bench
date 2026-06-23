@@ -62,17 +62,20 @@ Models should combine exact biomedical term handling with semantic information-n
 
 ## Example Data
 
-### Public Sources
-
-- [Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID](https://arxiv.org/abs/2104.09632), 2021.
-- [TREC-COVID data archive](https://ir.nist.gov/trec-covid/).
+| Query | Positive document |
+| --- | --- |
+| what evidence is there for dexamethasone as a treatment for COVID-19? [69 chars] | The Combination of Tocilizumab and Methylprednisolone Along With Initial Lung Recruitment Strategy in Coronavirus Disease 2019 Patients Requiring Mechanical Ventilation: A Series of 21 Consecutive Cas... [200 / 1,756 chars] |
+| how long does coronavirus remain stable on surfaces? [53 chars] | Body fluids may contribute to human-to-human transmission of severe acute respiratory syndrome coronavirus 2: evidence and practical experience BACKGROUND: In December 2019, an unbelievable outbreak o... [200 / 1,171 chars] |
+| has social distancing had an impact on slowing the spread of COVID-19? [70 chars] | Increased Detection coupled with Social Distancing and Health Capacity Planning Reduce the Burden of COVID-19 Cases and Fatalities: A Proof of Concept Study using a Stochastic Computational Simulation... [200 / 1,575 chars] |
+| are there serological tests that detect antibodies to coronavirus? [66 chars] | Serodiagnostics for Severe Acute Respiratory Syndrome-Related Coronavirus-2: A Narrative Review Accurate serologic tests to detect host antibodies to severe acute respiratory syndrome-related coronavi... [200 / 1,428 chars] |
+| which biomarkers predict the severe clinical course of 2019-nCOV infection? [75 chars] | Clinical Features and Predictors for Patients with Severe SARS-CoV-2 Pneumonia: a retrospective multicenter cohort study Objectives: This study was performed to investigate clinical features of patien... [200 / 1,517 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | https://arxiv.org/abs/2104.09632 |
-| TREC-COVID data archive | 2020 | benchmark archive | https://ir.nist.gov/trec-covid/ |
+| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | [https://arxiv.org/abs/2104.09632](https://arxiv.org/abs/2104.09632) |
+| TREC-COVID data archive | 2020 | benchmark archive | [https://ir.nist.gov/trec-covid/](https://ir.nist.gov/trec-covid/) |
 
 ### Representative Snippets
 

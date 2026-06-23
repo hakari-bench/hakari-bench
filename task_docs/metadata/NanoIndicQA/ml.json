@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d23a86bb3c47b0f3f3b74824adf09d8e156bca40bace65059ffec5c0a5c0026a",
+        "document_id": "1fd2290f0eb02cdeabec195db5c26738c6f2755b0dd903551705627eca3ff245",
+        "query": {
+          "text": "ഈസ്റ്റ് ഇന്ത്യാ കമ്പനി കലാപം അടിച്ചമർത്തപ്പെട്ടതിനെ തുടർന്ന്,രാജ്യം വിട്ട് തന്റെ പുത്രന്മാരെ വെടിവെച",
+          "full_chars": 148,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "1803-ലെ ദില്ലി യുദ്ധത്തിൽ മറാഠരെ പരാജയപ്പെടുത്തി ബ്രിട്ടീഷുകാർ ഉത്തരേന്ത്യയുടെ നിയന്ത്രണം കൈയടക്കി. മുഗളരുടെ സംരക്ഷകരായി ദില്ലിയിലെത്തിയ ബ്രിട്ടീഷുകാർ തുടക്കത്തിൽ ചക്രവർത്തിയോട് ബഹുമാനപൂർവ്വമായിരുന്നു",
+          "full_chars": 1588,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "35ae92d6de2a5d28ce90287d45125b43f08a46256a4bb523ce605b363fede6c2",
+        "document_id": "faf88ab82e44a6274e37a7cc8812069b08b24eb9ff60802dffeb237626d174ed",
+        "query": {
+          "text": "വർഷങ്ങളുടെ പോരാട്ടത്തിന് ശേഷം, ബ്രിട്ടീഷുകാരിൽ നിന്ന് ഇന്ത്യയ്ക്ക് സ്വാതന്ത്ര്യം ലഭിച്ചതെന്ന്?",
+          "full_chars": 94,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1857-ൽ ഇംഗ്ലീഷ്‌ ഈസ്റ്റിന്ത്യാ കമ്പനിക്കു നേരെയുണ്ടായ കലാപമാണ്‌ യൂറോപ്യൻ അധിനിവേശത്തിനു നേരെ ഇന്ത്യക്കാർ നടത്തിയ പ്രധാന ചെറുത്തുനിൽപ്പ്‌ ശ്രമം. ഒന്നാം ഇന്ത്യൻ സ്വാതന്ത്ര്യ സമരം എന്നറിയപ്പെടുന്ന ഈ കലാപ",
+          "full_chars": 2424,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11e08f0ba3e1a481dcafb71f9de3aaa79f9e28699f1b6eb95c42827dc69c3753",
+        "document_id": "132f0dca798f20dea7d388b7e9b47c7f10f1005c3fe552d0a08fd117d5fb8ccc",
+        "query": {
+          "text": "ആർ കെ നാരായണന്റെ ആദ്യ കൃതി ഏത് ?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ആർ. കെ. നാരായണൻ ബ്രിട്ടീഷ് ഇന്ത്യയിലെ മദ്രാസിൽ (ഇപ്പോൾ ചെന്നൈ, തമിഴ്‌നാട്) ഒരു അയ്യർ വടാമ തമിഴ് ബ്രാഹ്മണ കുടുംബത്തിൽ 1906 ഒക്ടോബർ 10-ന് ജനിച്ചു. ആറ് ആൺമക്കളും രണ്ട് പെൺമക്കളുമുള്ള ഒരു കുടുംബത്തിലെ എട്",
+          "full_chars": 4050,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f1e8bc2be71f20ae04e1f88d9293996838678b66f7533cef504dce942fb63e1a",
+        "document_id": "ae1ecac2b4be0738c0999c977df2910708fb17109ad4b5dc7f44588c74c14ec7",
+        "query": {
+          "text": "അലാവുദ്ദീൻ ഖൽജി നിർമ്മിച്ച ഒരു വലിയ കവാടം ഏതായിരുന്നു?",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1199-ൽ ദില്ലി സുൽത്താനായിരുന്ന ഖുത്ബ്ദീൻ ഐബക് ആയിരുന്നു ഈ മിനാറിന്റെ ആദ്യ നില പണികഴിപ്പിച്ചത്. സുൽത്താൻ ഇൽത്തുമിഷ്, 1229-ഓടെ മറ്റു നാലുനിലകളുടെ പണി പൂർത്തീകരിച്ചു. ഗോറി സാമ്രാജ്യത്തിന്റെ കാലത്ത് അഫ്ഗാ",
+          "full_chars": 1608,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "63af104822b8118d1f8094143bb666f4f4f0ebfdfff332f26572aa8fe264e543",
+        "document_id": "f02c80613e88107dc245cdd8995eaec80b5dcb074357f29e922f6e0aa025ecdf",
+        "query": {
+          "text": "നികെ അപ്പാച്ചേ എന്ന ഉപഗ്രഹം വിക്ഷേപിച്ചത് ഏത് വർഷം?",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1960-ൽ ബിരുദം നേടിയ ശേഷം കലാം, ഡയറക്ടറേറ്റ് ഓഫ് ടെക്നിക്കൽ ഡെവലപ്പ്മെന്റ് ആന്റ് പ്രൊഡക്ഷൻ (എയർ) എന്ന സ്ഥാപനത്തിൽ ശാസ്ത്രജ്ഞനായി ജോലിക്കു ചേർന്നു. ഇന്ത്യയുടെ പ്രതിരോധ മന്ത്രാലയത്തിന്റെ കീഴിലുള്ളതായിരുന",
+          "full_chars": 2366,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

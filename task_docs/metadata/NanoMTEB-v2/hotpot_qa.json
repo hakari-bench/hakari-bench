@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0132d55429925eb1afc00",
+        "document_id": "18207527",
+        "query": {
+          "text": "The Soul of Buddha is a 1918 American silent romance film shot in a borough that is the western term",
+          "full_chars": 114,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Soul of Buddha The Soul of Buddha is a 1918 American silent romance film directed by J. Gordon Edwards and starring Theda Bara, who also wrote the film's story. The film was produced by Fox Film C",
+          "full_chars": 263,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7a8a9c554299042af8f666",
+        "document_id": "16758393",
+        "query": {
+          "text": "The lamp used in many lighthouses is similiar to this type of lamp patented in 1780 by Aimé Argand?",
+          "full_chars": 99,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lewis lamp The Lewis lamp is a type of light fixture used in lighthouses. It was invented by Winslow Lewis who patented the design in 1810. The primary marketing point of the Lewis lamp was that it us",
+          "full_chars": 708,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a73977d554299623ed4ac08",
+        "document_id": "4140268",
+        "query": {
+          "text": "What is the shared country of ancestry between Art Laboe and Scout Tufankjian?",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Art Laboe Art Laboe (born Arthur Egnoian on August 7, 1925) is an Armenian American disc jockey, songwriter, record producer, and radio station owner, generally credited with coining the term \"Oldies",
+          "full_chars": 214,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae73d505542991e8301cc2c",
+        "document_id": "24437734",
+        "query": {
+          "text": "Sebastian Gutierrez is known for writing the screenplay for the 2003 film directed by whom?",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sebastian Gutierrez Sebastian Gutierrez (born September 10, 1974) is a Venezuelan film director, screenwriter and film producer. known for writing the screenplays to the films \"Gothika\", \"Snakes on a",
+          "full_chars": 354,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a88bd1d554299206df2b357",
+        "document_id": "15329914",
+        "query": {
+          "text": "When did the character on Grey's Anatomy, played by the same actor who portrayed Rev James Lawson in",
+          "full_chars": 134,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jesse Williams (actor) Jesse Wesley Williams (born August 5, 1981) is an American actor, model, and activist, best known for his role as Dr. Jackson Avery on the ABC Television series \"Grey's Anatomy\"",
+          "full_chars": 526,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/HotpotQA_test_top_250_only_w_correct-v2",
-    "source_task": "HotpotQAHardNegatives"
+    "source_task": "HotpotQAHardNegatives",
+    "example_count": 5
   }
 }

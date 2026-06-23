@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "references": [
-      {
-        "title": "FiQA: Financial Opinion Mining and Question Answering",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA: Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Vanguard กำลังอ้างถึงผลตอบแทนประเภทใด?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "จากหน้า Vanguard - นี่ดูเหมือนจะเป็นเรื่องที่ง่ายที่สุดเพราะข้อมูล S&P หาง่าย ฉันใช้ MoneyChimp เพื่อยืนยัน - ซึ่งยืนยันว่าหน้า Vanguard เสนอ CAGR ไม่ใช่ค่าเฉลี่ยเลขคณิต หมายเหตุ: Vanguard ระบุว่า \"สำ",
+          "full_chars": 373,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "ผลกระทบด้านภาษีของการทำงานฟรีแลนซ์ในสหรัฐอเมริกา",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "หากคุณมีรายได้ในสหรัฐอเมริกา คุณจะต้องเสียภาษีรายได้สหรัฐจากรายได้ดังกล่าว ยกเว้นว่าจะมีสนธิสัญญากับประเทศของคุณที่ระบุเป็นอย่างอื่น",
+          "full_chars": 132,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "ปริมาณอะไรถือว่าสูงหรือต่ำเมื่อพูดถึงปริมาณ?",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ปริมาณการซื้อขายรายวันมักจะถูกเปรียบเทียบกับปริมาณการซื้อขายเฉลี่ยรายวันในช่วง 50 วันที่ผ่านมา สำหรับหุ้นหนึ่งๆ ปริมาณที่สูงมักจะถือว่ามีค่า 2 เท่าหรือมากกว่าปริมาณการซื้อขายเฉลี่ยรายวันในช่วง 50 วันท",
+          "full_chars": 646,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "94",
+        "document_id": "245447",
+        "query": {
+          "text": "การใช้คะแนนบัตรเครดิตเพื่อชำระค่าใช้จ่ายทางธุรกิจที่หักลดหย่อนภาษีได้",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "เพื่อความเรียบง่าย มาลองพิจารณาแค่เงินคืนกันก่อน โดยทั่วไปแล้ว เงินคืนจากบัตรเครดิตสำหรับการใช้งานส่วนตัวจะไม่ต้องเสียภาษี แต่สำหรับการใช้งานธุรกิจจะต้องเสียภาษี (ประมาณนั้น ฉันจะอธิบายเพิ่มเติมในภายห",
+          "full_chars": 3140,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2903",
+        "document_id": "527776",
+        "query": {
+          "text": "ฉันควรยื่นภาษีอย่างไรในฐานะผู้รับเหมา?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "เพื่อวัตถุประสงค์ด้านภาษี คุณจะต้องยื่นแบบฟอร์มในฐานะพนักงาน (T4 slips และภาษีที่หักโดยอัตโนมัติ) แต่ก็ต้องยื่นในฐานะผู้ประกอบการด้วย ปีที่แล้วฉันก็มีสถานการณ์เดียวกันนี้ หนังสือพิมพ์ \"พนักงานและผู้ปร",
+          "full_chars": 639,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

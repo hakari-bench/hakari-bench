@@ -156,22 +156,22 @@ and reranking can make the final duplicate-intent decision.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| BibLaTeX: primaire en secundaire bibliografieën [47 chars] | Bibliografie met verschillende namen en gesorteerd op naam Ik wil graag twee bibliografieën maken met twee verschillende namen. Mijn twee bibliografieën zijn books.bib en articles.bib. Door \renewcomm... [200 / 559 chars] |
+| Hoe kan ik het compileren van een document met meerdere afbeeldingen versnellen? [80 chars] | Het verwerken van alle afbeeldingen onderdrukken Ik probeer een concept te maken door LaTeX te dwingen alle afbeeldingen te negeren. Hoe kan ik LaTeX vertellen alle afbeeldingsbestandsnamen (in de `\i... [200 / 420 chars] |
+| Lege regels in align-omgeving [29 chars] | Waarom geeft een extra regel witruimte voor \end{align} een foutmelding? Ik voeg vaak extra witruimte toe aan mijn TeX-bestand voor betere leesbaarheid, en ik krijg deze foutmelding steeds wanneer er... [200 / 312 chars] |
+| alternatief voor slashbox [25 chars] | Geavanceerde tabellen maken ![voer hier een afbeeldingbeschrijving in](http://i.stack.imgur.com/PX4Jn.png) Ik probeer tabellen te genereren zoals de bovenstaande die ik in een leerboek in LaTeX heb ge... [200 / 456 chars] |
+| Een ander plaatje plaatsen in elke paginahoek [45 chars] | Bladerboek in masterproef Ik schrijf momenteel mijn masterproef in de informatica over een visualisatieonderwerp. Aangezien de kern van mijn scriptie een complexe 3D-visualisatie is die zijn boodschap... [200 / 2,990 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

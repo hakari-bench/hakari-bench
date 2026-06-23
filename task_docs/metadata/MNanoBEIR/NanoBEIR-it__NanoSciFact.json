@@ -85,42 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "SciFact repository",
-        "url": "https://github.com/allenai/scifact",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -129,6 +93,125 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "SciFact repository",
+        "url": "https://github.com/allenai/scifact",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q regola la migrazione dei neutrofili verso i siti di infiammazione modulando le funzioni dei ra",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Neutrofili subiscono rapidamente una polarizzazione e un movimento direzionale per infiltrarsi nei siti di infezione e infiammazione. Qui mostriamo che un recettore MHC I inibitorio, Ly49Q, è stato fo",
+          "full_chars": 1148,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "La terapia antiretrovirale riduce l'incidenza di tubercolosi in un ampio spettro di livelli di CD4.",
+          "full_chars": 99,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "CONTESTO L'infezione da virus dell'immunodeficienza umana (HIV) è il principale fattore di rischio per lo sviluppo della tubercolosi e ha contribuito alla sua ripresa, specialmente nell'Africa subsaha",
+          "full_chars": 2437,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "La regolazione rapida verso l'alto e l'espressione basale più elevata dei geni indotti da interferon",
+          "full_chars": 189,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La suscettibilità dei neuroni del cervello all'infezione microbica è un determinante principale dell'esito clinico. Poco si sa riguardo ai fattori molecolari che governano questa vulnerabilità. Qui di",
+          "full_chars": 1295,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "Lo screening primario per il cancro cervicale con rilevazione dell'HPV ha una maggiore sensibilità n",
+          "full_chars": 210,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "CONTESTO Lo screening per il cancro cervicale basato sul test per il papillomavirus umano (HPV) aumenta la sensibilità nella rilevazione della neoplasia intraepiteliale cervicale di grado elevato (gra",
+          "full_chars": 2538,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "Inibire l'interazione tra TDP-43 e le proteine del complesso respiratorio I ND3 e ND6 provoca un aum",
+          "full_chars": 147,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Le mutazioni genetiche nella proteina TAR DNA-binding protein 43 (TARDBP, nota anche come TDP-43) causano la sclerosi laterale amiotrofica (SLA), e un aumento della presenza di TDP-43 (codificata da T",
+          "full_chars": 1439,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

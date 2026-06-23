@@ -62,19 +62,21 @@ Portuguese legal retrieval models should preserve exact legal names, percentages
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Por que auxílio público escasso deve ser proporcional, dirigido a regiões desfavorecidas e justifica... [100 / 145 chars] | Os auxílios regionais só podem ser eficazes se forem utilizados com parcimónia e de forma proporcional e se se concentrarem nas regiões mais desfavorecidas da União Europeia. Em especial, os limites m... [200 / 790 chars] |
+| Que intenção sinalizam comentários que estendem concessão a empresas com volume de negócios intracom... [100 / 141 chars] | Cabe notar, por outro lado, que a Comissão refere as pequenas e médias empresas, quando os documentos oficiais e, em particular, os protocolos de adesão evocam apenas as pequenas empresas: trata-se de... [200 / 645 chars] |
+| Qual modelo analítico de 1983 é criticado por presumir benefícios uniformes a comerciantes, comprado... [100 / 145 chars] | O modelo específico subjacente às CIM da Master Card foi elaborado por William Baxter em 1983. Contudo, este modelo padece de limitações importantes por considerar que a procura dos consumidores e dos... [200 / 698 chars] |
+| Quando podem revisões cosméticas a um ficheiro de aprovação ser incluídas na alteração dessa parte e... [100 / 136 chars] | Nas presentes orientações, as referências a alterações ao processo de autorização de introdução no mercado significam adição, substituição ou supressão, salvo indicação específica em contrário. Caso a... [200 / 593 chars] |
+| Quando pagamento retroativo de prejuízos de Estado‑Membro, sem critérios objetivos e transparentes p... [100 / 159 chars] | […] Em segundo lugar, os parâmetros com base nos quais será calculada a compensação devem ser previamente estabelecidos de forma objectiva e transparente, a fim de evitar que aquela implique uma vanta... [200 / 738 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

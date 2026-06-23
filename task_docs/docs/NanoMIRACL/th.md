@@ -148,12 +148,13 @@ hybrid candidate set keeps more positives available for reranking.
 
 ## Example Data
 
-Representative queries ask what the Normans mean, what fluid fills the cochlea,
-how much protein spirulina contains, when Boworn Sathan Mongkol Palace was
-built, or how many clubs competed in UEFA Europa League 2018-19 qualifying and
-playoffs. Positive documents are Thai Wikipedia passages containing the
-requested definition, anatomical, nutritional, historical, or competition
-evidence.
+| Query | Positive document |
+| --- | --- |
+| ชาวนอร์มันหมายถึงอะไร? [22 chars] | นอร์มัน นอร์มัน () คือกลุ่มชนผู้ให้นามแก่ดินแดนนอร์ม็องดีซึ่งเป็นบริเวณทางตอนเหนือของฝรั่งเศส ชนนอร์มันสืบเชื้อสายมาจากไวกิงผู้ได้รับชัยชนะต่อผู้ตั้งถิ่นฐานอยู่แต่เดิมที่เป็นชนแฟรงค์ (Franks) และกอลล์... [200 / 603 chars] |
+| สัตว์ประจำชาติสหรัฐอเมริกาคืออะไร? [34 chars] | สหรัฐ นิเวศวิทยาของสหรัฐนั้นหลากหลายมาก (megadiverse) โดยมีพืชมีท่อลำเลียงประมาณ 17,000 ชนิดในสหรัฐแผ่นดินใหญ่และรัฐอะแลสกา และพบพืชดอกกว่า 1,800 ชนิดในรัฐฮาวาย ซึ่งมีจำนวนน้อยที่พบในแผ่นดินใหญ่ สหรัฐ... [200 / 434 chars] |
+| สไปรูไลนามีโปรตีนอยู่ราวเท่าไหร่? [33 chars] | สไปรูลินา (ผลิตภัณฑ์เสริมอาหาร) สไปรูไลนามีโปรตีนอยู่ราว 60% (51-71%) ในสไปรูไลนามีโปรตีนที่มีกรดอะมิโนจำเป็นทุกชนิด แม้ว่าจะมีปริมาณเมไทโอนีน ซีสเตอีนและไลซีนเมื่อเทียบกับโปรตีนที่ได้จากเนื้อสัตว์ ไข... [200 / 517 chars] |
+| พระราชวังบวรสถานมงคล ถูกสร้างขึ้นเมื่อไหร่? [43 chars] | พระราชวังบวรสถานมงคล พระราชวังบวรสถานมงคล หรือ พระบวรราชวัง ตั้งอยู่ที่เขตพระนคร กรุงเทพมหานคร เป็นพระราชวังที่ประทับของกรมพระราชวังบวรสถานมงคลหรือวังหน้า สมเด็จพระบวรราชเจ้ามหาสุรสิงหนาทซึ่งทรงดำรงพร... [200 / 768 chars] |
+| คลองรังสิต สร้างขึ้นเมื่อใด ? [29 chars] | คลองรังสิต การขุดคลองตามโครงการรังสิตนับเป็นจุดเริ่มต้นของการพัฒนางานด้านชลประทานของประเทศไทย โดยเฉพาะการชลประทานเพื่อการเกษตรกรรม การขุดคลองรังสิตและคลองแยกต่าง ๆ ระหว่าง พ.ศ. 2433 - พ.ศ. 2448 ในรัชส... [200 / 611 chars] |
 
 ### Public Sources
 
@@ -171,10 +172,10 @@ evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

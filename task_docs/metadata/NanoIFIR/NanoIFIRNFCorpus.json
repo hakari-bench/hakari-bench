@@ -135,15 +135,98 @@
         "url": "https://arxiv.org/abs/2503.04644",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "NFCorpus project page",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "year": 2016,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-44_v1",
+        "document_id": "MED-2810",
+        "query": {
+          "text": "Who Should be Careful About Curcumin?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Curcumin as \"Curecumin\": from kitchen to clinic. Although turmeric (Curcuma longa; an Indian spice) has been described in Ayurveda, as a treatment for inflammatory diseases and is referred by differen",
+          "full_chars": 1773,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2480_v1",
+        "document_id": "MED-1419",
+        "query": {
+          "text": "Preventing Ulcerative Colitis with Diet",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A diet high in fat and meat but low in dietary fibre increases the genotoxic potential of 'faecal water'. To determine the effects of different diets on the genotoxicity of human faecal water, a diet",
+          "full_chars": 1604,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-12_v1",
+        "document_id": "MED-5237",
+        "query": {
+          "text": "Exploiting Autophagy to Live Longer",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "mTOR: from growth signal integration to cancer, diabetes and ageing Preface In all eukaryotes, the target of rapamycin (TOR) signaling pathway couples energy and nutrient abundance to the execution of",
+          "full_chars": 694,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2699_v1",
+        "document_id": "MED-3249",
+        "query": {
+          "text": "Treating Multiple Sclerosis With the Swank MS Diet",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Effect of low saturated fat diet in early and late cases of multiple sclerosis. 144 multiple sclerosis patients took a low-fat diet for 34 years. For each of three categories of neurological disabilit",
+          "full_chars": 683,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2649_v1",
+        "document_id": "MED-2791",
+        "query": {
+          "text": "Boosting the Bioavailability of Curcumin",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bioavailability of curcumin: problems and promises. Curcumin, a polyphenolic compound derived from dietary spice turmeric, possesses diverse pharmacologic effects including anti-inflammatory, antioxid",
+          "full_chars": 1418,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

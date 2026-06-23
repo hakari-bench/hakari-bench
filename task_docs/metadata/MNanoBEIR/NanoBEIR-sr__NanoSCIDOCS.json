@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Novi DC-DC višestepeni pojačavački pretvarač",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Apstrakt Višenaponski pretvarači sa više nivoa postaju nova vrsta opcija za pretvarače snage u primenama velike snage. Višenaponski pretvarači tipično sintetizuju stepenasti naponski talas iz nekoliko",
+          "full_chars": 872,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Brzo Učenje Retkih Gaussovih Markovljevih Slučajnih Polja Bazirano na Čoleskijevoj Faktorizaciji",
+          "full_chars": 96,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Poštovani korisniče, Zahvaljujem vam se što ste me kontaktirali. Kao veštačka inteligencija, moja osnovna svrha je pružanje informacija i pomoći u različitim oblastima. Nažalost, trenutno nemam pristu",
+          "full_chars": 687,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Sinteza teksture korišćenjem konvolucionih neuronskih mreža",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "U ovom radu istražujemo uticaj dubine konvolucione mreže na njenu tačnost u okruženju za prepoznavanje slika velikih razmera. Naš glavni doprinos je temeljna evaluacija mreža sve veće dubine, koja pok",
+          "full_chars": 819,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
+        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
+        "query": {
+          "text": "Planarna širokopojasna prstenasta antena sa kružnom polarizacijom za RFID sistem",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "U ovom radu predlaže se tehnika horizontalno meandrirajuće trake (HMS) kako bi se postiglo dobro prilagođavanje impedanse i simetrični širokousmereni zračni obrasci za širokopojasnu kružno polarizovan",
+          "full_chars": 1219,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
+        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
+        "query": {
+          "text": "Dizajn naprednog digitalnog monitora srčanog ritma korišćenjem osnovnih elektronskih komponenti",
+          "full_chars": 95,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "U ovom radu, predstavili smo dizajn i razvoj novog integrisanog uređaja za merenje srčanog ritma pomoću vrha prsta kako bi se poboljšalo procenjivanje otkucaja srca. Kako se srčane bolesti svakodnevno",
+          "full_chars": 1110,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

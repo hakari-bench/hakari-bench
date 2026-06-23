@@ -62,9 +62,13 @@ A model targeting this task should improve both terminology normalization and bi
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on NFCorpus, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Lợi ích sức khỏe của các loại hạt [33 chars] | Mục tiêu Nghiên cứu mối quan hệ giữa việc tiêu thụ anh đào và nguy cơ tái phát cơn gout ở những người mắc bệnh gout. Phương pháp Chúng tôi đã tiến hành một nghiên cứu trường hợp chéo để xem xét mối li... [200 / 1,732 chars] |
+| đạo đức y tế [12 chars] | BỐI CẢNH: Một trong những vấn đề chính trong việc kiểm soát cholesterol huyết thanh thông qua can thiệp chế độ ăn uống dường như là cần cải thiện sự tuân thủ của bệnh nhân. MỤC TIÊU: Khám phá nhiều câ... [200 / 1,913 chars] |
+| đậu fava [8 chars] | Trong 20 năm qua, sự quan tâm ngày càng tăng đối với sinh hóa, dinh dưỡng và dược lý của L-arginine đã dẫn đến nhiều nghiên cứu sâu rộng để khám phá vai trò dinh dưỡng và điều trị của nó trong việc đi... [200 / 1,275 chars] |
+| Thực sự có gì trong món gà viên? [32 chars] | MỤC ĐÍCH: Để xác định thành phần của thịt gà viên từ 2 chuỗi thực phẩm quốc gia. NỀN TẢNG: Thịt gà viên đã trở thành một thành phần chính trong chế độ ăn uống của người Mỹ. Chúng tôi đã tìm cách xác đ... [200 / 765 chars] |
+| chất béo bão hòa [16 chars] | Sự quan tâm đã tăng lên về khả năng rằng chế độ ăn uống của mẹ trong thời kỳ mang thai có thể ảnh hưởng đến sự phát triển của các rối loạn dị ứng ở trẻ em. Nghiên cứu tiềm năng hiện tại đã xem xét mối... [200 / 1,968 chars] |
 
 ### Source Reference Table
 

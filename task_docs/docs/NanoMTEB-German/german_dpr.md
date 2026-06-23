@@ -135,21 +135,21 @@ Wikipedia contexts.
 
 ## Example Data
 
-### Public Sources
-
-- [GermanQuAD and GermanDPR](https://arxiv.org/abs/2104.12741)
-- [ACL Anthology record](https://aclanthology.org/2021.mrqa-1.4/)
-- [mteb/GermanDPR](https://huggingface.co/datasets/mteb/GermanDPR)
-- [deepset/germandpr](https://huggingface.co/datasets/deepset/germandpr)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Seit wann gibt es in Iowa keine Todesstrafe mehr? [49 chars] | Todesstrafe_in_den_Vereinigten_Staaten In der Geschichte Iowas gab es 46 Hinrichtungen, davon 43 wegen Mord und drei wegen Vergewaltigung. Alle Getöteten waren Männer. 1872 wurde die Todesstrafe erstm... [200 / 538 chars] |
+| Welche Personen sitzen im akademischen Senat? [45 chars] | Universität An der Spitze einer Universität steht ein Rektor oder Präsident, der in der Regel selbst ein Universitätsprofessor ist. Er wird üblicherweise unterstützt von mehreren Prorektoren beziehung... [200 / 1,042 chars] |
+| Für welche Geräte konnte USB 1.0 auch als Stromzufuhr eingesetzt werden? [73 chars] | Universal_Serial_Bus Schon mit USB 1.0 war eine Stromversorgung angeschlossener Geräte über die USB-Kabelverbindungen möglich. Allerdings war die maximale Leistung nur für Geräte mit geringem Strombed... [200 / 896 chars] |
+| Welche Institution organisiert den öffentlichen Verkehr in London? [66 chars] | London London ist Dreh- und Angelpunkt des Straßen-, Schienen- und Luftverkehrs im Vereinigten Königreich. Das Verkehrswesen fällt in die direkte Zuständigkeit des Mayor of London, des Oberbürgermeist... [200 / 617 chars] |
+| Was war der Grund für den Absturz der Boeing 747-300 über Guam 1997? [68 chars] | Guam Am 6. August 1997 wurde eine Boeing 747-300 der Korean Airlines auf dem Korean-Air-Flug 801 von Seoul nach Agana (Guam) bei heftigem Regen gegen einen Hügel 5 km vor dem Flughafen Hagåtña gefloge... [200 / 1,542 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | https://arxiv.org/abs/2104.12741 |
-| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | https://aclanthology.org/2021.mrqa-1.4/ |
-| mteb/GermanDPR | 2025 | Dataset card | https://huggingface.co/datasets/mteb/GermanDPR |
+| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | [https://arxiv.org/abs/2104.12741](https://arxiv.org/abs/2104.12741) |
+| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | [https://aclanthology.org/2021.mrqa-1.4/](https://aclanthology.org/2021.mrqa-1.4/) |
+| mteb/GermanDPR | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/GermanDPR](https://huggingface.co/datasets/mteb/GermanDPR) |
 
 ### Representative Snippets
 

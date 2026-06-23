@@ -143,6 +143,89 @@
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q383",
+        "document_id": "c309",
+        "query": {
+          "text": "import mpmath as mp with mp.workdps(72): def integer_term(n): p = 532 * n * n + 126 * n + 9 return (",
+          "full_chars": 904,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Almkvist-Giullera formula for pi #include <boost/multiprecision/cpp_dec_float.hpp> #include <boost/multiprecision/gmp.hpp> #include <iomanip> #include <iostream> namespace mp = boost::multiprecision;",
+          "full_chars": 1331,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q128",
+        "document_id": "c161",
+        "query": {
+          "text": "a1 = [0, 1403580, -810728] m1 = 2**32 - 209 a2 = [527612, 0, -1370589] m2 = 2**32 - 22853 d = m1 + 1",
+          "full_chars": 1166,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Pseudo-random numbers_Combined recursive generator MRG32k3a #include <array> #include <iostream> int64_t mod(int64_t x, int64_t y) { int64_t m = x % y; if (m < 0) { if (y < 0) { return m - y; } else {",
+          "full_chars": 1793,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q106",
+        "document_id": "c138",
+        "query": {
+          "text": "def water_collected(tower): N = len(tower) highest_left = [0] + [max(tower[:n]) for n in range(1,N)]",
+          "full_chars": 770,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Water collected between towers #include <iostream> #include <vector> #include <algorithm> enum { EMPTY, WALL, WATER }; auto fill(const std::vector<int> b) { auto water = 0; const auto rows = *std::max",
+          "full_chars": 1488,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q470",
+        "document_id": "c334",
+        "query": {
+          "text": "from fractions import Fraction def harmonic_series(): n, h = Fraction(1), Fraction(1) while True: yi",
+          "full_chars": 328,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Harmonic series #include <iomanip> #include <iostream> #include <boost/rational.hpp> #include <boost/multiprecision/gmp.hpp> using integer = boost::multiprecision::mpz_int; using rational = boost::rat",
+          "full_chars": 1031,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q170",
+        "document_id": "c204",
+        "query": {
+          "text": "\"Generate a short Superpermutation of n characters A... as a string using various algorithms.\" from",
+          "full_chars": 3528,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Superpermutation minimisation #include <array> #include <iostream> #include <vector> constexpr int MAX = 12; static std::vector<char> sp; static std::array<int, MAX> count; static int pos = 0; int fac",
+          "full_chars": 1027,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

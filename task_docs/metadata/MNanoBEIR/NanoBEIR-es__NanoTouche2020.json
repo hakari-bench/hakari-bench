@@ -138,7 +138,7 @@
         "year": 2020,
         "is_paper": true,
         "doi": "10.1007/978-3-030-58219-7_26",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
@@ -146,7 +146,7 @@
         "year": 2022,
         "is_paper": false,
         "doi": "10.5281/zenodo.6862281",
-        "source_confidence": "dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -154,7 +154,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -162,15 +162,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "¿Son útiles las tareas?",
+          "full_chars": 23,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Primero, hay tres argumentos sobre por qué los deberes son excelentes y deberían continuar en las escuelas modernas. 1. Los deberes ayudan a los aprendices prácticos. Generalmente se acepta que hay tr",
+          "full_chars": 4011,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "¿Deberían anunciarse los medicamentos con receta directamente a los consumidores?",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Muchos anuncios no incluyen suficiente información sobre la eficacia de los medicamentos. Por ejemplo, Lunesta se promociona con una polilla que entra volando por una ventana de un dormitorio, sobre u",
+          "full_chars": 2009,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "¿Es necesario vacunar a los niños?",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Aún no es un caso completo... Solo algunos puntos que he reunido... Los gobiernos no deberían tener el derecho de intervenir en las decisiones de salud que los padres toman para sus hijos. Según una e",
+          "full_chars": 5062,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
+        "query": {
+          "text": "¿Debería ser legal el aborto?",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Los abortos deberían ser legales, ya que la personalidad jurídica comienza cuando el feto es viable o después del nacimiento, no en el momento de la concepción. Según la Corte Suprema de Estados Unido",
+          "full_chars": 347,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26",
+        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
+        "query": {
+          "text": "¿Mejoran las pruebas estandarizadas la educación?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Resuelto: El SAT, el ACT y otras pruebas estandarizadas proporcionan más información sobre la preparación de un estudiante de secundaria para la educación en universidades y colegios de élite que el p",
+          "full_chars": 4878,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

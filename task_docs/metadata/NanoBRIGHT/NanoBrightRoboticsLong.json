@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "81",
+        "document_id": "nav2bringup/READMEmd.txt",
+        "query": {
+          "text": "ROS2 Map not received when using nav2_bringup I'm currently using the TurtleBot2 on Ubuntu 22.04 Hum",
+          "full_chars": 1101,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Map Server The `Map Server` provides maps to the rest of the Nav2 system using both topic and service interfaces. Map server will expose maps on the node bringup, but can also change maps using a `l",
+          "full_chars": 5260,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "20",
+        "document_id": "hardware_control/1240.txt",
+        "query": {
+          "text": "Custom hardware interface type I would like to write a controller that needs all joint states to upd",
+          "full_chars": 2560,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to content Toggle navigation [ ](https://github.com/) [ Sign in ](/login?return_to=https%3A%2F%2Fgithub.com%2Fros- controls%2Fros2_control%2Fpull%2F1240) * Product * [ Actions Automate any workfl",
+          "full_chars": 75706,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "relative_path/PackagesClientLibrar.txt",
+        "query": {
+          "text": "Add files to be loaded when ROS node is launched Rosanswers logo Hello ROS community, I have a pytho",
+          "full_chars": 1169,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[ ![ros.org](/custom/images/ros_org.png) ](/) | [ About ](http://www.ros.org/about-ros) | [ Support ](/Support) | [ Discussion Forum ](http://discourse.ros.org/) | [ Index ](http://index.ros.org/) | [",
+          "full_chars": 7029,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "93",
+        "document_id": "rosdep_install/1478.txt",
+        "query": {
+          "text": "Rosdep installing python dependencies as root seems to break the installation I started with ROS2 fo",
+          "full_chars": 3039,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to content Toggle navigation [ ](https://github.com/) [ Sign in ](/login?return_to=https%3A%2F%2Fgithub.com%2Fros2%2Fros2%2Fissues%2F1478) * Product * [ Actions Automate any workflow ](/features/",
+          "full_chars": 14000,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4",
+        "document_id": "pthread_not_declared/pthreadmutexinithtml.txt",
+        "query": {
+          "text": "ldlidar ros 2, colcon build error, pthread mutex init/lock/unlock not declared So i am trying to use",
+          "full_chars": 2759,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Single UNIX ® Specification, Version 2 Copyright © 1997 The Open Group * * * #### NAME > pthread_mutex_init, pthread_mutex_destroy - initialise or destroy a mutex #### SYNOPSIS > > > #include <[pt",
+          "full_chars": 4377,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Robotics StackExchange long-document"
+    "source_task": "Robotics StackExchange long-document",
+    "example_count": 5
   }
 }

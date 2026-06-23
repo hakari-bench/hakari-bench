@@ -119,11 +119,11 @@ distinguish true evidence from general climate-related text.
 
 | Query | Positive document |
 | --- | --- |
-| De 1970 até 1998 houve um período de aquecimento que elevou as temperaturas em cerca de 0,39°C... | O Paleoceno, o "recentemente antigo", é uma época geológica que durou aproximadamente de 66 a 56 milhões de anos atrás... |
-| De fato, a tendência, embora não seja estatisticamente significativa, é de queda. | O ciclo solar, ou ciclo de atividade magnética solar, é a mudança quase periódica de 11 anos na atividade do Sol... |
-| Os níveis do mar locais e regionais continuam a apresentar a variabilidade natural esperada, subindo em algumas regiões e descendo em outras. | O nível médio do mar é o nível médio da superfície de um ou mais dos oceanos da Terra... |
-| Cientistas climáticos dizem que elementos do furacão Harvey sugerem que o aquecimento global está agravando uma situação já difícil. | As mudanças climáticas são as alterações ambientais e sociais causadas pelas emissões humanas de gases de efeito estufa... |
-| O experimento CLOUD do CERN testou apenas um terço de um dos quatro requisitos necessários para culpar o aquecimento global aos raios cósmicos... | A atribuição das mudanças climáticas recentes refere-se ao esforço científico para determinar os mecanismos responsáveis pelas mudanças climáticas observadas na Terra... |
+| De 1970 até 1998 houve um período de aquecimento que elevou as temperaturas em cerca de 0,39°C, o qu... [100 / 176 chars] | O Paleoceno (pronunciado /paleoˈsɛnu/), ou Paleoceno, o "recentemente antigo", é uma época geológica que durou aproximadamente de 66 a 56 milhões de anos atrás. É a primeira época do Período Paleogeno... [200 / 1,128 chars] |
+| De fato, a tendência, embora não seja estatisticamente significativa, é de queda. [81 chars] | O ciclo solar, ou ciclo de atividade magnética solar, é a mudança quase periódica de 11 anos na atividade do Sol, que inclui variações nos níveis de radiação solar e na ejeção de material solar, bem c... [200 / 641 chars] |
+| Os níveis do mar locais e regionais continuam a apresentar a variabilidade natural esperada, subindo... [100 / 141 chars] | O nível médio do mar (NMM) (abreviado simplesmente como nível do mar) é o nível médio da superfície de um ou mais dos oceanos da Terra, a partir do qual se podem medir alturas, como elevações. O NMM é... [200 / 1,098 chars] |
+| Cientistas climáticos dizem que elementos do furacão Harvey sugerem que o aquecimento global está ag... [100 / 132 chars] | As mudanças climáticas são as alterações ambientais e sociais causadas (direta ou indiretamente) pelas emissões humanas de gases de efeito estufa. Há um consenso científico de que a mudança climática... [200 / 1,416 chars] |
+| O experimento CLOUD do CERN testou apenas um terço de um dos quatro requisitos necessários para culp... [100 / 192 chars] | A atribuição das mudanças climáticas recentes refere-se ao esforço científico para determinar os mecanismos responsáveis pelas mudanças climáticas observadas na Terra, comumente conhecidas como "aquec... [200 / 2,238 chars] |
 
 ### Public Sources
 
@@ -137,7 +137,7 @@ distinguish true evidence from general climate-related text.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | task paper | https://arxiv.org/abs/2012.00614 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

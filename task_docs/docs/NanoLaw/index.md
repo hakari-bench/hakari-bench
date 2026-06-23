@@ -143,6 +143,6 @@ necessary before training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | paper | https://ceur-ws.org/Vol-2517/T1-1.pdf |
-| LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset | 2023 | paper | https://arxiv.org/abs/2310.17609 |
-| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | paper | https://arxiv.org/abs/2308.11462 |
+| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | paper | [https://ceur-ws.org/Vol-2517/T1-1.pdf](https://ceur-ws.org/Vol-2517/T1-1.pdf) |
+| LeCaRDv2: A Large-Scale Chinese Legal Case Retrieval Dataset | 2023 | paper | [https://arxiv.org/abs/2310.17609](https://arxiv.org/abs/2310.17609) |
+| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | paper | [https://arxiv.org/abs/2308.11462](https://arxiv.org/abs/2308.11462) |

@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants",
-        "url": "https://arxiv.org/abs/2308.16884",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "facebookresearch/belebele",
-        "url": "https://github.com/facebookresearch/belebele",
-        "year": 2023,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/belebele",
-        "url": "https://huggingface.co/datasets/mteb/belebele",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/mteb/belebele"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants",
+        "url": "https://arxiv.org/abs/2308.16884",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "facebookresearch/belebele",
+        "url": "https://github.com/facebookresearch/belebele",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/belebele",
+        "url": "https://huggingface.co/datasets/mteb/belebele",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C38",
+        "query": {
+          "text": "การเปลี่ยนแปลงใดที่เกิดจากการปฏิวัติฝรั่งเศสมีผลกระทบอย่างมากต่อพลเมืองชนชั้นแรงงาน",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ผลกระทบทางสังคมและการเมืองมีมากมาย เช่น การใช้ระบบเมตริก การเปลี่ยนจากระบอบสมบูรณาญาสิทธิราชย์ไปสู่ระบอบสาธารณรัฐ ความเป็นชาตินิยม และความเชื่อว่าประเทศเป็นของประชาชน ไม่ใช่ของผู้ปกครองคนเดียว หลังการ",
+          "full_chars": 553,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C71",
+        "query": {
+          "text": "จากบทความ ใครน่าจะเป็นผู้สร้างสังคมเกษตรกรรมขึ้น",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "เมื่อนานมาแล้วในช่วงศตวรรษที่สิบเก้าและยี่สิบ เชื่อกันว่าคนกลุ่มแรกที่อยู่​อาศัยในประเทศ​นิวซีแลนด์คือชนเผ่าเมารีซึ่งเป็นผู้ล่านกยักษ์โมอา จากนั้นทฤษฎีดังกล่าวได้ก่อให้เกิดแนวคิดที่ว่าชาวเมารีอพยพมาจา",
+          "full_chars": 682,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C59",
+        "query": {
+          "text": "ข้อใดต่อไปนี้กล่าวถึงเกษตรกรรมเพื่อยังชีพได้ถูกต้อง",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "การเกษตรเพื่อดำรงชีพ คือการเกษตรที่กระทำพื่อผลิตอาหารให้เพียงพอต่อความต้องการของเกษตรกรและครอบครัวของพวกเขา การเกษตรเพื่อดำรงชีพคือระบบเรียบง่ายที่มักเป็นการเกษตรอินทรีย์โดยใช้เมล็ดพันธุ์ที่ขึ้นในเขตภ",
+          "full_chars": 383,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q9",
+        "document_id": "C5",
+        "query": {
+          "text": "จากบทความ ข้อใดเป็นยุคที่มีการนองเลือดที่สุดยุคหนึ่งของจีน",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "จีนสมัยโบราณมีวิธีการแสดงช่วงเวลาต่าง ๆ ที่พิเศษไม่เหมือนใคร โดยแบ่งเป็นช่วงระยะของจีน หรือแต่ละตระกูลที่อยู่ในอำนาจเป็นราชวงศ์ที่มีลักษณะพิเศษ ในช่วงเวลาระหว่างแต่ละราชวงศ์เป็นยุคที่จังหวัดต่าง ๆ ซึ่",
+          "full_chars": 565,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q161",
+        "document_id": "C92",
+        "query": {
+          "text": "กษัตริย์ตุตันคามุนมีชื่อเสียงในแง่ลบตอนไหน",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"ใช่แล้วล่ะ! กษัตริย์ตุตันคามุนซึ่งบางครั้งก็ถูกเรียกว่า \"\"กษัตริย์ทุต\"\" หรือ \"\"กษัตริย์เด็ก\"\" คือหนึ่งในกษัตริย์อียิปต์โบราณที่เป็นที่รู้จักกันมากที่สุดในยุคปัจจุบัน ที่น่าสนใจคือ ผู้คนไม่คิดว่าเขาเป",
+          "full_chars": 550,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

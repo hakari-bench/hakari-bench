@@ -135,15 +135,98 @@
         "url": "https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Predicting Consumer Contracts",
         "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988",
         "year": 2022,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "LVOkVEUVB5",
+        "query": {
+          "text": "Does data sharing (including sharing of user data) take place between and among Instagram and Facebo",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Welcome to Instagram! These Terms of Use (or Terms) govern your use of Instagram, except where we expressly state that separate terms (and not these) apply, and provide information about the Instagram",
+          "full_chars": 4112,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "LojIIf94Ch",
+        "query": {
+          "text": "Is it possible that Ill have to pay money for the services?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Using the Services Authority. You agree that you are permitted to use the Services under applicable law. If you are using the Services on behalf of a company, business or other entity, you represent t",
+          "full_chars": 7928,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "wmq6OLkTkx",
+        "query": {
+          "text": "Do minors require parental permission in order to access Youtubes services?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Introduction Thank you for using the YouTube platform and the products, services and features we make available to you as part of the platform (collectively, the Service). Our Service The Service allo",
+          "full_chars": 2811,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "PKY6gob2I4",
+        "query": {
+          "text": "Can I use a program to automatically scrape video data from Youtube?",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Content on the Service The content on the Service includes videos, audio (for example music and other sounds), graphics, photos, text (such as comments and scripts), branding (including trade names, t",
+          "full_chars": 6181,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "zHzmA4KR1V",
+        "query": {
+          "text": "By default, does eBay prohibit transfers of eBay accounts?",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In connection with using or accessing our Services you will not: post, list or upload content or items in inappropriate categories or areas on our sites; breach or circumvent any laws, regulations, th",
+          "full_chars": 4566,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

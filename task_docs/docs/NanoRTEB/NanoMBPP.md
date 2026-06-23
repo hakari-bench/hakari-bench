@@ -62,19 +62,21 @@ Models should encode input-output behavior, small algorithmic requirements, and 
 
 ## Example Data
 
-### Public Sources
-
-- [Program Synthesis with Large Language Models](https://arxiv.org/abs/2108.07732), task paper.
-- [google-research-datasets/mbpp](https://huggingface.co/datasets/google-research-datasets/mbpp), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| Write a python function to check whether the sum of divisors are same or not. [77 chars] | import math def divSum(n): sum = 1; i = 2; while(i * i <= n): if (n % i == 0): sum = (sum + i +math.floor(n / i)); i += 1; return sum; def areEquivalent(num1,num2): return divSum(num1) == divSum(num2)... [200 / 269 chars] |
+| Write a python function to find the element occurring odd number of times. [74 chars] | def get_Odd_Occurrence(arr,arr_size): for i in range(0,arr_size): count = 0 for j in range(0,arr_size): if arr[i] == arr[j]: count+=1 if (count % 2 != 0): return arr[i] return -1 [275 chars] |
+| Write a function to find all words which are at least 4 characters long in a string by using regex. [99 chars] | import re def find_char_long(text): return (re.findall(r"\b\w{4,}\b", text)) [80 chars] |
+| Write a python function to count the number of integral co-ordinates that lie inside a square. [94 chars] | def count_Intgral_Points(x1,y1,x2,y2): return ((y2 - y1 - 1) * (x2 - x1 - 1)) [83 chars] |
+| Write a function to sort a list of elements using comb sort. [60 chars] | def comb_sort(nums): shrink_fact = 1.3 gaps = len(nums) swapped = True i = 0 while gaps > 1 or swapped: gaps = int(float(gaps) / shrink_fact) swapped = False i = 0 while gaps + i < len(nums): if nums[... [200 / 424 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Program Synthesis with Large Language Models | 2021 | task paper | https://arxiv.org/abs/2108.07732 |
-| google-research-datasets/mbpp |  | dataset card | https://huggingface.co/datasets/google-research-datasets/mbpp |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Program Synthesis with Large Language Models | 2021 | task paper | [https://arxiv.org/abs/2108.07732](https://arxiv.org/abs/2108.07732) |
+| google-research-datasets/mbpp |  | dataset card | [https://huggingface.co/datasets/google-research-datasets/mbpp](https://huggingface.co/datasets/google-research-datasets/mbpp) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

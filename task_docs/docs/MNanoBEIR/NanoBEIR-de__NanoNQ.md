@@ -48,13 +48,13 @@ Strong models should improve semantic answerability without losing entity precis
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Wo findet dieses Jahr die Final Four statt? | Das NCAA Division I Men's Basketball Tournament 2018 war ein 68-Team-K.-o.-Turnier... |
-| War "Die Nacht vor Weihnachten" ursprünglich ein Disney-Film? | Die Idee zu "The Nightmare Before Christmas" entstand 1982 in einem Gedicht, das Tim Burton schrieb... |
-| Warum steht der Engel des Nordens in Gateshead? | Laut Gormley hatte die Bedeutung des Engels eine dreifache Bedeutung: Erstens, um darauf hinzuweisen... |
-| Wo wurde der Dreifünftelkompromiss ursprünglich in der Verfassung festgehalten? | Der Dreifünftelkompromiss findet sich in Artikel 1, Abschnitt 2, Satz 3 der Verfassung der Vereinigten Staaten... |
-| Wer singt "Someone's Watching Me" zusammen mit Michael Jackson? | "Somebody's Watching Me" ist ein Song des amerikanischen Sängers Rockwell von seinem Debütalbum... |
+| Query | Positive document |
+| --- | --- |
+| Wo findet dieses Jahr die Final Four statt? [43 chars] | Das NCAA Division I Men's Basketball Tournament 2018 war ein 68-Team-K.-o.-Turnier, um den nationalen Meister im Basketball der NCAA Division I für die Saison 2017/18 zu ermitteln. Die 80. Auflage des... [200 / 307 chars] |
+| War "Die Nacht vor Weihnachten" ursprünglich ein Disney-Film? [61 chars] | Die Idee zu "The Nightmare Before Christmas" entstand 1982 in einem Gedicht, das Tim Burton schrieb, während er als Animator bei Walt Disney Feature Animation arbeitete. Nach dem Erfolg von "Vincent"... [200 / 705 chars] |
+| Warum steht der Engel des Nordens in Gateshead? [47 chars] | Laut Gormley hatte die Bedeutung des Engels eine dreifache Bedeutung: Erstens, um darauf hinzuweisen, dass unter der Baustelle über zwei Jahrhunderte hinweg Bergleute arbeiteten; zweitens, um den Über... [200 / 357 chars] |
+| Wo wurde der Dreifünftelkompromiss ursprünglich in der Verfassung festgehalten? [79 chars] | Der Dreifünftelkompromiss findet sich in Artikel 1, Abschnitt 2, Satz 3 der Verfassung der Vereinigten Staaten, der lautet: [123 chars] |
+| Wer singt "Someone's Watching Me" zusammen mit Michael Jackson? [63 chars] | "Somebody's Watching Me" ist ein Song des amerikanischen Sängers Rockwell von seinem Debütalbum Somebody's Watching Me (1984). Er erschien am 14. Januar 1984 als Rockwells Debütsingle und Lead-Single... [200 / 375 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve semantic answerability without losing entity precis
 
 | Label | URL |
 |---|---|
-| Natural Questions paper | https://aclanthology.org/Q19-1026/ |
-| Natural Questions dataset page | https://ai.google.com/research/NaturalQuestions |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions paper (https://aclanthology.org/Q19-1026/) |
+| Natural Questions dataset page (https://ai.google.com/research/NaturalQuestions) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

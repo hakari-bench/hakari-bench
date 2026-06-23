@@ -62,9 +62,13 @@ A model targeting this task should combine clue extraction with holistic descrip
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BIRCO's complex-objective retrieval benchmark, with NanoBIRCO providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Heres what I can recall YA The cover was blue with a girls face on the frontThe girl began to suspec... [100 / 833 chars] | is a merrymaid or so she believes . . . Ellen and Jack are evacuated from London to Cornwall during the Second World War. Ellen relishes the opportunity to better herself. Jack is different. He finds... [200 / 791 chars] |
+| Hi all!I'm looking for a book I started a couple of months ago (probably in January before the curre... [100 / 812 chars] | Kidnapped, drugged, and about to be sold to the highest bidder, Desdemona Carlisle is having a hell of a time maintaining her English pride. Then she sees the man in black, galloping through the Egypt... [200 / 1,272 chars] |
+| Read around 2011. Cover was an illustration with several characters depicted. Likely from the 90’s.I... [100 / 745 chars] | When her mother died, she told 14-year-old Walking Breeze to seek out her family-the Chelmsfords of Salem. She will find solace there.But Ebie Chelmsford has other ideas. Ebie knows that her half-Shaw... [200 / 709 chars] |
+| This book opens with a eastern woman who has been recently widowed when her husband died in a mining... [100 / 675 chars] | Welcome to Hope Falls where three enterprising young females are accepting applications for husbands-for-hire. With one woman already snagged, Lacey Lyman is one of only two remaining. No one really c... [200 / 983 chars] |
+| I'm looking for a book I read as a teen. I thought it might be part of the Point Horror, Point Roman... [100 / 1,126 chars] | "And then you die!" - The grim message is scrawled across the script of the horror film Christina stars in - is it a joke, or for real? While shooting a horror film, of which she is the star, young ac... [200 / 571 chars] |
 
 ### Source Reference Table
 

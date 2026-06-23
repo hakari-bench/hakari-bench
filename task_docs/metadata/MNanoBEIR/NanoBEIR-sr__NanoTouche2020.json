@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Overview of Touché 2020: Argument Retrieval",
-        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Da li je domaći zadatak koristan?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Prvo, postoje tri argumenta zašto je domaći zadatak odličan i trebalo bi da se nastavi u modernim školama. 1. Domaći zadatak pomaže učenicima koji uče kroz praksu. Opšte je prihvaćeno da postoje tri t",
+          "full_chars": 3651,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Treba li se reklamni lekovi na recept direktno usmeravati potrošačima?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Mnogi oglasi ne sadrže dovoljno informacija o tome koliko lekovi delotvorno deluju. Na primer, Lunesta se reklamira leptirkom koji lebdi kroz prozor spavaće sobe, iznad osobe koja mirno spava. Zapravo",
+          "full_chars": 1697,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Da li bi neke vakcine trebalo da budu obavezne za decu?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Još uvek nije u potpunosti razrađeno... Samo nekoliko manjih stavki koje sam sastavio... Vlade ne bi trebalo da imaju pravo da se mešaju u zdravstvene odluke koje roditelji donose za svoju decu. Prema",
+          "full_chars": 4370,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
+        "query": {
+          "text": "Da li abortus treba da bude legalan?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pobačaji bi trebalo da budu legalni jer ličnost počinje nakon što fetus postane sposoban za život ili nakon rođenja, a ne u trenutku začeća. Prema stavu Vrhovnog suda SAD, osoba dobija svoje godine ka",
+          "full_chars": 325,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26",
+        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
+        "query": {
+          "text": "Da li standardizovani testovi poboljšavaju obrazovanje?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Rezolucija: SAT, ACT i drugi standardizovani testovi pružaju bolji uvid u spremnost srednjoškolca za obrazovanje na elitnim koledžima i univerzitetima nego srednjoškolski prosek ocena i stoga bi treba",
+          "full_chars": 4097,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

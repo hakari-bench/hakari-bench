@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/HotpotQA_FA_test_top_250_only_w_correct-v2",
         "url": "https://huggingface.co/datasets/MCINext/HotpotQA_FA_test_top_250_only_w_correct-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0132d55429925eb1afc00",
+        "document_id": "18207527",
+        "query": {
+          "text": "روح بودا یک فیلم صامت رمانتیک آمریکایی محصول سال ۱۹۱۸ است که در منطقه‌ای فیلمبرداری شده که انتهای غر",
+          "full_chars": 116,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "روح بودا روح بودا یک فیلم صامت رمانتیک آمریکایی محصول سال ۱۹۱۸ به کارگردانی ج. گوردون ادواردز و با بازی تدا بارا است که داستان فیلم را نیز نوشت. این فیلم توسط شرکت فیلم‌سازی فاکس تولید و در استودیوی ف",
+          "full_chars": 240,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7a8a9c554299042af8f666",
+        "document_id": "16758393",
+        "query": {
+          "text": "آیا چراغی که در بسیاری از فانوس‌های دریایی استفاده می‌شود، شبیه به نوع چراغی است که در سال ۱۷۸۰ توسط",
+          "full_chars": 125,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "لامپ لوئیس چراغ لوئیس نوعی چراغ روشنایی است که در فانوس‌های دریایی استفاده می‌شد. این چراغ توسط وینزلو لوئیس اختراع شد که طرح آن را در سال ۱۸۱۰ به ثبت رساند. مهم‌ترین نکته بازاریابی چراغ لوئیس این بود",
+          "full_chars": 714,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a73977d554299623ed4ac08",
+        "document_id": "4140268",
+        "query": {
+          "text": "کشور مشترک پدری آرت لابو و اسکات توفانجیان چیست؟",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "آرت لبُو آرت لبو (زاده آرتور اگنوایان در ۷ اوت ۱۹۲۵) یک دی‌جی، ترانه‌سرا، تهیه‌کننده موسیقی و صاحب ایستگاه رادیویی ارمنی-آمریکایی است که به‌طور کلی به او نسبت داده می‌شود اصطلاح «قدیمی‌ها اما خوب‌ها»",
+          "full_chars": 219,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae73d505542991e8301cc2c",
+        "document_id": "24437734",
+        "query": {
+          "text": "سباستین گوتیرز به خاطر نوشتن فیلمنامه فیلم سال ۲۰۰۳ به کارگردانی چه کسی شناخته می‌شود؟",
+          "full_chars": 86,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "سباستین گوتیرز سباستین گوتیرز (زاده ۱۰ سپتامبر ۱۹۷۴) کارگردان، فیلمنامه‌نویس و تهیه‌کننده فیلم ونزوئلایی است. او به خاطر نوشتن فیلمنامه‌های فیلم‌هایی مانند «گوثیکا»، «مارها در هواپیما»، «چشم» و «پرش ب",
+          "full_chars": 321,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a88bd1d554299206df2b357",
+        "document_id": "15329914",
+        "query": {
+          "text": "چه زمانی شخصیت در سریال «آناتومی گری» که توسط همان بازیگری که نقش کشیش جیمز لاوسون را در فیلم «خدمتک",
+          "full_chars": 132,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "جسی ویلیامز (بازیگر) جسی وسلی ویلیامز (زاده ۵ اوت ۱۹۸۱) بازیگر، مدل و فعال آمریکایی است که بیشتر به خاطر نقش دکتر جکسون آوری در سریال تلویزیونی \"آناتومی گری\" شبکه ABC شناخته می‌شود. او همچنین در فیلم",
+          "full_chars": 474,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

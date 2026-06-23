@@ -86,36 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Quora Question Pairs",
-        "url": "https://kaggle.com/competitions/quora-question-pairs",
-        "year": 2017,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-fr",
       "source_urls": [
@@ -124,6 +94,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Quora Question Pairs",
+        "url": "https://kaggle.com/competitions/quora-question-pairs",
+        "year": 2017,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "461149",
+        "document_id": "461148",
+        "query": {
+          "text": "Est-ce que c'est permis de rire de ses propres blagues ?",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Est-ce que c'est bizarre de rire de mes propres blagues ?",
+          "full_chars": 57,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "145739",
+        "document_id": "145740",
+        "query": {
+          "text": "Quel est le plus gros mensonge que tu aies jamais raconté ?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Quel est le plus beau mensonge que vous ayez jamais raconté ?",
+          "full_chars": 61,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "127728",
+        "document_id": "127729",
+        "query": {
+          "text": "Pourquoi Quora suggère-t-il fréquemment des réponses dans mon fil d'actualité qui critiquent Donald",
+          "full_chars": 107,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Pourquoi Quora ne propose-t-il que des réponses partisanes aux questions sur Donald Trump ?",
+          "full_chars": 91,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "516276",
+        "document_id": "516277",
+        "query": {
+          "text": "Comment renforcer ma condition physique ?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Comment puis-je améliorer ma condition physique ?",
+          "full_chars": 49,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "250143",
+        "document_id": "250142",
+        "query": {
+          "text": "Comment fonctionne un satellite quantique ?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Comment fonctionne un satellite quantique et quelles seraient ses principales utilisations ?",
+          "full_chars": 92,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

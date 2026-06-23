@@ -115,11 +115,11 @@ candidate generation and an answer-aware reranker trained on financial QA.
 
 | Query | Positive document |
 | --- | --- |
-| Koje vrste prinosa Vanguard navodi? | Sa stranice Vanguard, S&P podatke je lako pronaći, a MoneyChimp potvrđuje da Vanguardova stranica nudi CAGR... |
-| Poreske implikacije freelancinga | Ako imate prihode u SAD-u, dugovaćete porez na prihod SAD-u, osim ako postoji sporazum sa vašom zemljom... |
-| Šta se smatra visokim ili niskim kada je reč o jačini zvuka? | Dnevni volumen se obično upoređuje sa prosečnim dnevnim volumenom u poslednjih 50 dana za određenu akciju... |
-| Korišćenje kreditnih kartica poena za plaćanje poreski odbitnih poslovnih troškova | Radi jednostavnosti, počnimo samo od keš bek-a. Generalno, keš bek sa kreditnih kartica za ličnu upotrebu nije oporeziv... |
-| Kako da prijavim svoje poreze kao preduzetnik? | Za poreske svrhe, biće vam potrebno da se prijavite kao zaposleni, ali i kao preduzetnik... |
+| Koje vrste prinosa Vanguard navodi? [35 chars] | "Sa stranice Vanguard - Ovo se činilo najlakšim jer je S&P podatke lako pronaći. Koristim MoneyChimp da dobijem - što potvrđuje da Vanguardova stranica nudi CAGR, a ne aritmetički prosek. Napomena: Va... [200 / 392 chars] |
+| Poreske implikacije freelancinga [32 chars] | Ako imate prihode u SAD-u, dugovaćete porez na prihod SAD-u, osim ako postoji sporazum sa vašom zemljom koji kaže drugačije. [124 chars] |
+| Šta se smatra visokim ili niskim kada je reč o jačini zvuka? [60 chars] | Dnevni volumen se obično upoređuje sa prosečnim dnevnim volumenom u poslednjih 50 dana za određenu akciju. Visok volumen se obično smatra kada je dva ili više puta veći od prosečnog dnevnog volumena t... [200 / 661 chars] |
+| Korišćenje kreditnih kartica poena za plaćanje poreski odbitnih poslovnih troškova [82 chars] | Radi jednostavnosti, počnimo samo od keš bek-a. Generalno, keš bek sa kreditnih kartica za ličnu upotrebu nije oporeziv, ali za poslovnu upotrebu jeste (na neki način, objasniću kasnije). Razlog je št... [200 / 3,696 chars] |
+| Kako da prijavim svoje poreze kao preduzetnik? [46 chars] | Za poreske svrhe, biće vam potrebno da se prijavite kao zaposleni (T4 obrasci i automatski zadržani porez), ali i kao preduzetnik. I sam sam imao istu situaciju prošle godine. "Zaposleni i samostalni... [200 / 738 chars] |
 
 ### Public Sources
 
@@ -133,7 +133,7 @@ candidate generation and an answer-aware reranker trained on financial QA.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FiQA: Financial Opinion Mining and Question Answering | 2018 | task paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA: Financial Opinion Mining and Question Answering | 2018 | task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

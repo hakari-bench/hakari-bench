@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 26
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "WWW18 Open Challenge: Financial Opinion Mining and Question Answering",
-        "url": "https://research.universityofgalway.ie/en/publications/www18-open-challenge-financial-opinion-mining-and-question-answer/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "FiQA 2018 challenge site",
-        "url": "https://sites.google.com/view/fiqa/",
-        "year": 2018,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/FiQA-PL",
-        "url": "https://huggingface.co/datasets/mteb/FiQA-PL",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,111 @@
           "url": "https://huggingface.co/datasets/mteb/FiQA-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "WWW18 Open Challenge: Financial Opinion Mining and Question Answering",
+        "url": "https://research.universityofgalway.ie/en/publications/www18-open-challenge-financial-opinion-mining-and-question-answer/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "FiQA 2018 challenge site",
+        "url": "https://sites.google.com/view/fiqa/",
+        "year": 2018,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/FiQA-PL",
+        "url": "https://huggingface.co/datasets/mteb/FiQA-PL",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "8247",
+        "document_id": "42521",
+        "query": {
+          "text": "Podatek od akcji lub ETF",
+          "full_chars": 24,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "„Jeśli sprzedajesz akcje bez wypłat, Twój zysk podlega opodatkowaniu zgodnie z § 1001. Ale nie wszystkie zrealizowane zyski zostaną uznane za podlegające opodatkowaniu. A niektóre zyski, które prawdop",
+          "full_chars": 2122,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2316",
+        "document_id": "482343",
+        "query": {
+          "text": "Jaki kurs wymiany stosuje El Al przy przeliczaniu kwoty płatności końcowej na szekle?",
+          "full_chars": 85,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "„Stawka za „czeki i przelewy” jest ustalana przez każdy bank wielokrotnie w ciągu dnia w oparciu o rynek. Jest to przeciwieństwo stawki za „gotówkę/banknoty”, również ustalaną przez każdy bank, a „„st",
+          "full_chars": 691,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10547",
+        "document_id": "571306",
+        "query": {
+          "text": "Ile brokerzy płacą za wymianę za transakcję?",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nie ma jednej odpowiedzi na to pytanie, ale są pewne ogólniki. Większość giełd rozróżnia pasywną i agresywną stronę handlu. Uczestnik pasywny to zlecenie, które znajdowało się na rynku w momencie tran",
+          "full_chars": 1211,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "932",
+        "document_id": "48722",
+        "query": {
+          "text": "Czy dochód freelancera uzyskany przez obywatela USA mieszkającego za granicą podlega stanowemu podat",
+          "full_chars": 117,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Brak podatków stanowych, ale Włochy mają również korzystny traktat z rządem federalnym Stanów Zjednoczonych. Zastanów się nad obniżeniem podatków federalnych do 5% ;) to gruba lektura, http://www.irs.",
+          "full_chars": 629,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4415",
+        "document_id": "238234",
+        "query": {
+          "text": "Ile wynosi inflacja?",
+          "full_chars": 20,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Istnieje coś takiego jak indeks cen konsumpcyjnych (CPI). Istnieje koszyk towarów, po który ludzie, którzy prowadzą indeks, w zasadzie robią zakupy. Jest o wiele bardziej szczegółowy ze względu na dok",
+          "full_chars": 614,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -213,11 +213,11 @@ foods, diseases, chemicals, or organisms but address a different finding.
 
 | Query | Positive document |
 | --- | --- |
-| ヘルシーなチョコレートミルクシェイク (18 chars) | 目的 痛風患者におけるサクランボの摂取と再発性痛風発作リスクとの関連を検討すること。 方法 一連の疑似的なリスク因子と再発性痛風発作との関連を調査するために、ケースクロスオーバー研究を実施した。痛風患者を前向きにオンラインで登録し、1年間追跡した。参加者には、痛風発作が発生した際に、発作の発症日、症状および徴候、薬物（痛風治療薬を含む）、および発作発生前の2日間における潜在的なリスク因子（サクランボおよびサクランボ抽出物の1日あたりの摂取を含む） ... [truncated 225 chars](701 chars) |
-| 医学倫理 (4 chars) | 背景：食事介入による血清コレステロールの管理において、主要な課題の一つは患者の服従性を高める必要性である。 目的：コレステロール低下食事の服従における障壁や動機に関する多くの疑問を検討すること。 方法：高コレステロール血症患者に対するフランスの一般医の食事指導実態を調査し、患者のそのようなアプローチに対する態度を検討した。 結果：医師234名の個人用アンケートおよび患者356名の自己記入式アンケートを分析した。患者が処方された食事に従わない理由に ... [truncated 225 chars](786 chars) |
-| ファバ豆 (4 chars) | 過去20年間、L-アルギニンの生化学、栄養学および薬理学に対する関心が高まり、その栄養的および治療的役割について、人間の代謝障害の予防および治療における広範な研究が行われてきた。最近の証拠は、食事によるL-アルギニンの補給が、遺伝的に肥満なラット、食餌誘導性肥満ラット、肥育用ブタ、および2型糖尿病を有する肥満人間において、体脂肪量を減少させることを示している。L-アルギニンの有益な効果をもたらすメカニズムはおそらく複雑であるが、最終的にはエネルギ ... [truncated 225 chars](537 chars) |
-| チキンナゲットには実際に何が入っているのか？ (22 chars) | 目的：2つの全国的なフードチェーンで提供されるチキンナゲットの内容物を明らかにすること。 背景：チキンナゲットはアメリカ人の食生活の主要な構成要素となっている。我々は、この高度に加工された食品の現在の構成を明らかにすることを試みた。 方法：2つの異なる全国チェーンから無作為に選ばれたチキンナゲットをホルマリンで固定し、切片を作成して顕微鏡的分析のために染色した。 結果：どちらのナゲットにおいても、横紋筋（鶏肉）が主要な成分ではなかった。脂肪は同量 ... [truncated 225 chars](365 chars) |
-| 飽和脂肪 (4 chars) | 妊娠中の母親の食事摂取が小児のアレルギー性疾患の発症に影響を与える可能性についての関心が高まっている。本研究は、妊娠中の特定の脂肪酸を多く含む食品および特定の脂肪酸の摂取が、3〜4か月齢の日本の乳児における疑わしいアトピー性皮膚炎のリスクに与える影響を前向きに検討したものである。対象は771組の母子である。妊娠中の母親の食事摂取に関する情報は、妥当性が確認された自己記入式の食歴調査票を用いて評価した。「疑わしいアトピー性皮膚炎」という用語は、出産 ... [truncated 225 chars](839 chars) |
+| ヘルシーなチョコレートミルクシェイク [18 chars] | 目的 痛風患者におけるサクランボの摂取と再発性痛風発作リスクとの関連を検討すること。 方法 一連の疑似的なリスク因子と再発性痛風発作との関連を調査するために、ケースクロスオーバー研究を実施した。痛風患者を前向きにオンラインで登録し、1年間追跡した。参加者には、痛風発作が発生した際に、発作の発症日、症状および徴候、薬物（痛風治療薬を含む）、および発作発生前の2日間における潜在的なリスク因子（サクラン... [200 / 701 chars] |
+| 医学倫理 [4 chars] | 背景：食事介入による血清コレステロールの管理において、主要な課題の一つは患者の服従性を高める必要性である。 目的：コレステロール低下食事の服従における障壁や動機に関する多くの疑問を検討すること。 方法：高コレステロール血症患者に対するフランスの一般医の食事指導実態を調査し、患者のそのようなアプローチに対する態度を検討した。 結果：医師234名の個人用アンケートおよび患者356名の自己記入式アンケー... [200 / 786 chars] |
+| ファバ豆 [4 chars] | 過去20年間、L-アルギニンの生化学、栄養学および薬理学に対する関心が高まり、その栄養的および治療的役割について、人間の代謝障害の予防および治療における広範な研究が行われてきた。最近の証拠は、食事によるL-アルギニンの補給が、遺伝的に肥満なラット、食餌誘導性肥満ラット、肥育用ブタ、および2型糖尿病を有する肥満人間において、体脂肪量を減少させることを示している。L-アルギニンの有益な効果をもたらすメ... [200 / 537 chars] |
+| チキンナゲットには実際に何が入っているのか？ [22 chars] | 目的：2つの全国的なフードチェーンで提供されるチキンナゲットの内容物を明らかにすること。 背景：チキンナゲットはアメリカ人の食生活の主要な構成要素となっている。我々は、この高度に加工された食品の現在の構成を明らかにすることを試みた。 方法：2つの異なる全国チェーンから無作為に選ばれたチキンナゲットをホルマリンで固定し、切片を作成して顕微鏡的分析のために染色した。 結果：どちらのナゲットにおいても、... [200 / 365 chars] |
+| 飽和脂肪 [4 chars] | 妊娠中の母親の食事摂取が小児のアレルギー性疾患の発症に影響を与える可能性についての関心が高まっている。本研究は、妊娠中の特定の脂肪酸を多く含む食品および特定の脂肪酸の摂取が、3〜4か月齢の日本の乳児における疑わしいアトピー性皮膚炎のリスクに与える影響を前向きに検討したものである。対象は771組の母子である。妊娠中の母親の食事摂取に関する情報は、妥当性が確認された自己記入式の食歴調査票を用いて評価し... [200 / 839 chars] |
 
 ### Public Sources
 
@@ -235,7 +235,7 @@ foods, diseases, chemicals, or organisms but address a different finding.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

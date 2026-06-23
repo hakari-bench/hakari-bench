@@ -145,21 +145,22 @@ excellent, but dense retrieval provides a stronger initial top order.
 
 ## Example Data
 
-### Public Sources
-
-- [Natural Questions: A Benchmark for Question Answering Research](https://aclanthology.org/Q19-1026/), 2019.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-nq](https://huggingface.co/datasets/clips/beir-nl-nq), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Wanneer is Chinees Nieuwjaar en welk jaar is het [48 chars] | Chinees Nieuwjaar Chinees Nieuwjaar,[a][2] ook wel bekend als het Lentefeest in modern China,[b] is een belangrijk Chinees festival dat wordt gevierd bij de overgang van de traditionele lunisolaire Ch... [200 / 620 chars] |
+| wat is het verschil tussen ron en mon [37 chars] | Octaangetal Een ander type octaangetal, Motor Octaangetal (MON) genaamd, wordt bepaald bij een motorsnelheid van 900 tpm in plaats van de 600 tpm voor RON.[1] Bij MON-tests wordt een vergelijkbare tes... [200 / 682 chars] |
+| aan wie behoorde puerto rico voordat het tot de VS behoorde [59 chars] | Puerto Rico Oorspronkelijk bewoond door de inheemse Taíno-bevolking, werd het eiland in 1493 tijdens zijn tweede reis door Christoffel Columbus voor Spanje geclaimd. Later onderging het invasiepoginge... [200 / 1,017 chars] |
+| Wie neemt de beslissingen over wat er geproduceerd wordt in een markteconomie? [78 chars] | Markteconomie Een markteconomie is een economisch systeem waarin beslissingen over investeringen, productie en distributie gebaseerd zijn op het samenspel van vraag en aanbod,[1] wat de prijzen van go... [200 / 649 chars] |
+| wie is de man die vanuit de ruimte sprong [41 chars] | Felix Baumgartner Felix Baumgartner (Duits: [ˈfeːlɪks ˈbaʊ̯mˌɡaɐ̯tnɐ]; geboren 20 april 1969) is een Oostenrijkse parachutist, waaghals en BASE-jumper.[1] Hij staat vooral bekend om zijn sprong naar d... [200 / 994 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | ACL paper | https://aclanthology.org/Q19-1026/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-nq |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-nq |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | ACL paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-nq |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-nq](https://huggingface.co/datasets/clips/beir-nl-nq) |
 
 ### Representative Snippets
 

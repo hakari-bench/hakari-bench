@@ -128,22 +128,105 @@
         "url": "https://arxiv.org/abs/2502.13595",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "benchmark_paper_link"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/WikipediaRetrievalMultilingual",
         "url": "https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "url": "https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "wikipedia-multilingual__pt::q::q20231101.pt_6302003_4",
+        "document_id": "wikipedia-multilingual__pt::d::20231101.pt_6302003_4",
+        "query": {
+          "text": "Quais são as origens genéticas das variedades de feijão típicas de Portugal?",
+          "full_chars": 76,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Com base num estudo publicado na US National Library of Medicine National Institutes of Health, em 2017, as variedades de feijão típicas de Portugal exibem proximidade genética com as variedades própr",
+          "full_chars": 389,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "wikipedia-multilingual__cs::q::q20231101.cs_12984_5",
+        "document_id": "wikipedia-multilingual__cs::d::20231101.cs_12984_5",
+        "query": {
+          "text": "Jaký vliv mělo zřízení zvláštní hospodářské zóny Pchu-tung na rozvoj Šanghaje?",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Od 27. května 1949 je Šanghaj pod komunistickou vládou. Třebaže po roce 1949 přesídlila řada západních firem do Hongkongu, který tak vystřídal Šanghaj v roli obchodní metropole Dálného východu, výsadn",
+          "full_chars": 691,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "wikipedia-multilingual__bg::q::q20231101.bg_30684_28",
+        "document_id": "wikipedia-multilingual__bg::d::20231101.bg_30684_28",
+        "query": {
+          "text": "Какви местообитания предпочита рисът?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Рисът е представителят на семейство Коткови, който обитава най-разнообразни хабитати от всичките му представители. Предпочита тъмни гори, тайга, планински, хвойнови и широколистни гори с гъст подлес,",
+          "full_chars": 759,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "wikipedia-multilingual__sv::q::q20231101.sv_125623_5",
+        "document_id": "wikipedia-multilingual__sv::d::20231101.sv_125623_5",
+        "query": {
+          "text": "Vilken betydelse hade Aconcagua under Inkariket?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Under Inkariket var Aconcagua ett heligt berg. Liksom på andra berg (till exempel Ampato) upprättades kultiska platser och offerplatser, även för människooffer. 1985 upptäcktes en av dessa anläggninga",
+          "full_chars": 558,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "wikipedia-multilingual__en::q::q20231101.en_2752_5",
+        "document_id": "wikipedia-multilingual__en::d::20231101.en_2752_5",
+        "query": {
+          "text": "What is the acceptable daily intake (ADI) for aspartame according to different health organizations?",
+          "full_chars": 100,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The acceptable daily intake (ADI) value for food additives, including aspartame, is defined as the \"amount of a food additive, expressed on a body weight basis, that can be ingested daily over a lifet",
+          "full_chars": 638,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

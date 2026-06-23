@@ -70,12 +70,13 @@ Error analysis should group failures by shell syntax, permissions, filesystem be
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-unix-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-unix-vn)
+| Query | Positive document |
+| --- | --- |
+| Tập tin đặc biệt gây ra lỗi I/O [31 chars] | Tạo ra lỗi đọc lặp đi lặp lại để thử nghiệm? Tôi đang cố gắng thử nghiệm xử lý lỗi trong một số phần mềm, đặc biệt là những gì xảy ra khi có lỗi xảy ra khi đọc từ một tập tin hoặc đường ống. Có cách n... [200 / 457 chars] |
+| Xác định gen từ một danh sách các gen [37 chars] | So sánh hai tập tin để tìm các dòng trùng khớp và lưu kết quả dương tính Tôi có 2 file. ### File 1: A0001 C001 B0003 C896 A0024 C234 . B1542 C231 . tới 28412 dòng như thế này ### File 2: A0001 A0024 B... [200 / 568 chars] |
+| Làm thế nào để tôi chỉnh sửa một tập tin như là root? [53 chars] | Cách để chỉnh sửa fstab ở Debian Tôi muốn thay đổi tập tin fstab để có thể giải quyết "lỗi đính kèm" (tôi đã thử xóa dòng cuối của tập tin fstab) # /etc/fstab: thông tin hệ thống tập tin tĩnh. # # Sử... [200 / 1,069 chars] |
+| Làm thế nào để có được hỗ trợ 256 màu trong một TTY đăng nhập? [62 chars] | 256 màu trong thực tế console Tôi có trong .bashrc của tôi xuất ra biến môi trường TERM = xterm-256color, nhưng điều này gây ra nhấp nháy tất cả các văn bản màu sắc (ls -- màu sắc, trong vim, v.v.) tr... [200 / 636 chars] |
+| Cách làm cho một máy tính có thể truy cập được từ LAN sử dụng tên máy chủ [73 chars] | định địa chỉ đơn giản trên LAN Tôi đọc câu hỏi này Làm thế nào để tạo một máy tính có thể truy cập từ mạng cục bộ sử dụng tên máy chủ. Cách đơn giản nhất để cho phép các máy chủ Linux trên LAN xác địn... [200 / 449 chars] |
 
 ### Source Reference Table
 

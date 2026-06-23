@@ -134,20 +134,21 @@ avoiding overly broad service matching.
 
 ## Example Data
 
-### Public Sources
-
-- [it-at-m/LHM-Dienstleistungen-QA](https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Was bietet die Abteilung Ferienangebote/Familienpass für die Betreuer:innen an? [79 chars] | Betreuer-innen für Ferienangebote Betreuer*innen für Ferienangebote Du hast Freude im Umgang mit Kindern und Jugendlichen, bist mindestens 18 Jahre alt und suchst einen sinnvollen Ferienjob? Dann meld... [200 / 1,283 chars] |
+| Was kostet die Heilpraktikerprüfung? [36 chars] | Allgemeine Heilpraktikererlaubnis kertätigkeit in München: Wenn Ihr amtlicher Wohnsitz nicht im Stadtgebiet München liegt, legen Sie Ihren Mietvertrag, Anstellungsvertrag oder andere Dokumente bei, di... [200 / 1,243 chars] |
+| Wo muss ich anrufen, wenn ich Fragen zum Thema Ferienangebote habe? [67 chars] | Betreuer-innen für Ferienangebote leitungen und Fachkräfte - eine faire Aufwandsentschädigung, sowie freie Unterkunft und Verpflegung - Tätigkeitsnachweis über dein ehrenamtliches Engagement Benötigte... [200 / 1,108 chars] |
+| Wo bekomme ich einen Antrag auf Wohngeld? [41 chars] | Wohngeld – Mietzuschuss für Mietwohnungen Nachweis Kontoauszüge vorlegen, dürfen Sie Verwendungszweck bzw. Empfänger einer Überweisung – nicht aber deren Höhe - schwärzen, wenn es sich um besondere Ka... [200 / 1,262 chars] |
+| Woher weiß ich als Mieter wie meine Rauchmelder funktionieren? [62 chars] | Rauchmelder werden? Die Rauchwarnmelder müssen so eingebaut oderangebracht und betrieben werden, dass Brandrauchfrühzeitig erkannt und gemeldet wird. Genaue Angabenzur Standortwahl, Montage und Wartun... [200 / 1,174 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| it-at-m/LHM-Dienstleistungen-QA | 2022 | Dataset card | https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA |
-| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | https://arxiv.org/abs/2210.07316 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Paper | https://arxiv.org/abs/2502.13595 |
+| it-at-m/LHM-Dienstleistungen-QA | 2022 | Dataset card | [https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA](https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
 
 ### Representative Snippets
 

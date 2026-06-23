@@ -62,21 +62,22 @@ Models should learn both exact biomedical terminology and lay-to-technical bridg
 
 ## Example Data
 
-### Public Sources
-
-- [A Full-Text Learning to Rank Dataset for Medical Information Retrieval](https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf), 2016.
-- [NFCorpus official dataset page](https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/).
-- [ECIR DOI record](https://doi.org/10.1007/978-3-319-30671-1_58).
-- [mteb/nfcorpus](https://huggingface.co/datasets/mteb/nfcorpus), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| avocados [8 chars] | Role of insulin in the pathogenesis of free fatty acid-induced insulin resistance in skeletal muscle. Insulin resistance is a pathophysiological link of obesity to type 2 diabetes. The initial cause o... [200 / 1,694 chars] |
+| grapes [6 chars] | A berry thought-provoking idea: the potential role of plant polyphenols in the treatment of age-related cognitive disorders. Today, tens of millions of elderly individuals worldwide suffer from dement... [200 / 1,862 chars] |
+| Dr. Walter Willett [18 chars] | Coconut oil predicts a beneficial lipid profile in pre-menopausal women in the Philippines Coconut oil is a common edible oil in many countries, and there is mixed evidence for its effects on lipid pr... [200 / 1,360 chars] |
+| chlorophyll [11 chars] | Antimutagens and anticarcinogens: a survey of putative interceptor molecules. In this review recent publications are cited for a number of antimutagens. The molecules surveyed are potential or proven... [200 / 870 chars] |
+| Native Americans [16 chars] | Western diseases and their emergence related to diet. Many of the commonest diseases in the economically more developed communities are characteristic of modern Western culture. Evidence is presented... [200 / 463 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | ECIR paper PDF | https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | official dataset page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | DOI | https://doi.org/10.1007/978-3-319-30671-1_58 |
-| mteb/nfcorpus |  | dataset card | https://huggingface.co/datasets/mteb/nfcorpus |
+| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | ECIR paper PDF | [https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf](https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf) |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | official dataset page | [https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/](https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | DOI | [https://doi.org/10.1007/978-3-319-30671-1_58](https://doi.org/10.1007/978-3-319-30671-1_58) |
+| mteb/nfcorpus |  | dataset card | [https://huggingface.co/datasets/mteb/nfcorpus](https://huggingface.co/datasets/mteb/nfcorpus) |
 
 ### Representative Snippets
 

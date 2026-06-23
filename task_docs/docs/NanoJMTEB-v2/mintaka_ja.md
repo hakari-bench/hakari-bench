@@ -161,11 +161,13 @@ central problem is semantic and entity-oriented.
 
 ## Example Data
 
-Representative queries ask for the second film in the Jurassic Park franchise,
-a film based around a dilapidated hotel with U2 soundtrack work, an album
-related to the Beatles, the longest film in the Twilight series, and the first
-wife of the director of Jaws. The positive documents are short labels such as
-film titles, album titles, and person names.
+| Query | Positive document |
+| --- | --- |
+| ジュラシック・パークの第2作目の映画の名前は何というですか？ [30 chars] | ジュラシック・ワールド/炎の王国 [16 chars] |
+| 荒れ放題のホテルを本拠とし、U2が映画のサウンドトラックの作曲を手掛けた映画は何でしたか？ [45 chars] | ミリオンダラー・ホテル [11 chars] |
+| どのアルバムはビートルズと一緒にレコードしたなかったでしょうか？ [32 chars] | アビイ・ロード [7 chars] |
+| 映画『トワイライト』シリーズで一番長い映画は？ [23 chars] | ニュームーン/トワイライト・サーガ [17 chars] |
+| ジョーズの監督の最初の奥さんは誰？ [17 chars] | エイミー・アーヴィング [11 chars] |
 
 ### Public Sources
 
@@ -184,9 +186,9 @@ film titles, album titles, and person names.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | paper | https://aclanthology.org/2022.coling-1.138/ |
-| amazon-science/mintaka | 2022 | repository | https://github.com/amazon-science/mintaka |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
+| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | paper | [https://aclanthology.org/2022.coling-1.138/](https://aclanthology.org/2022.coling-1.138/) |
+| amazon-science/mintaka | 2022 | repository | [https://github.com/amazon-science/mintaka](https://github.com/amazon-science/mintaka) |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
 
 ### Representative Snippets
 

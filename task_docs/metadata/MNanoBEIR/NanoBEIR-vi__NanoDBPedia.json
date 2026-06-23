@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "DBpedia Entity Retrieval",
-        "url": "https://doi.org/10.1145/3077136.3080751",
-        "year": 2017,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "DBpedia Entity Retrieval",
+        "url": "https://doi.org/10.1145/3077136.3080751",
+        "year": 2017,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "fitzgerald auto mall chambersburg pa",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fitzgerald Auto Malls là một đại lý ô tô thuộc sở hữu và điều hành bởi gia đình, được thành lập vào năm 1966, với địa điểm đầu tiên mở cửa tại Bethesda, Maryland. Tính đến năm 2014, Fitzgerald Auto Ma",
+          "full_chars": 457,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "Tập truyện ngắn năm 1994 của Alice Munro là Mở",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, tên thật là Laidlaw /ˈleɪdlɔː/; sinh ngày 10 tháng 7 năm 1931) là một tác giả người Canada. Tác phẩm của Munro được mô tả là đã cách mạng hóa cấu trúc của truyện",
+          "full_chars": 553,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "kiến trúc Gallo-Roman ở Paris",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nghệ thuật ở Paris là một bài viết về văn hóa và lịch sử nghệ thuật ở Paris, thủ đô của Pháp. Trong nhiều thế kỷ, Paris đã thu hút các nghệ sĩ từ khắp nơi trên thế giới, đến thành phố để học hỏi và tì",
+          "full_chars": 344,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "SemSearch_LS-35",
+        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
+        "query": {
+          "text": "các nước cộng hòa của Nam Tư cũ",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hiến pháp Nam Tư năm 1974 là hiến pháp thứ tư và cuối cùng của Cộng hòa Liên bang Xã hội chủ nghĩa Nam Tư. Nó có hiệu lực vào ngày 21 tháng 2. Với 406 điều khoản gốc, hiến pháp năm 1974 là một trong n",
+          "full_chars": 420,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_XER-72",
+        "document_id": "<dbpedia:A_Little_Romance>",
+        "query": {
+          "text": "phim quay ở Venice",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A Little Romance là một bộ phim hài lãng mạn Technicolor và Panavision của Mỹ ra mắt năm 1979, được đạo diễn bởi George Roy Hill và có sự tham gia của Laurence Olivier, Thelonious Bernard, và Diane La",
+          "full_chars": 403,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

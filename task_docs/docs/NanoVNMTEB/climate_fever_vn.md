@@ -62,21 +62,22 @@ Models should encode claim-evidence entailment, climate terminology, numbers, ca
 
 ## Example Data
 
-### Public Sources
-
-- [CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims](https://arxiv.org/abs/2012.00614), task paper.
-- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/), VN-MTEB paper.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), benchmark paper.
-- [GreenNode/climate-fever-vn](https://huggingface.co/datasets/GreenNode/climate-fever-vn), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Ở Alaska, gấu nâu đang thay đổi thói quen ăn uống của chúng để ăn quả mâm xôi chín sớm hơn. [91 chars] | Gấu nâu Gấu nâu (Ursus arctos) là một loài gấu lớn với sự phân bố rộng nhất trong số các loài gấu còn sinh tồn. Loài này được tìm thấy ở hầu hết các vùng phía bắc của châu Âu và Bắc Mỹ. Đây là một tro... [200 / 1,643 chars] |
+| Chúng ta sẽ phải đối mặt với nhiệt độ cực cao, nhưng ở mức độ dễ chịu hơn rất nhiều so với nếu chúng... [100 / 147 chars] | Thay đổi khí hậu và giới tính Thay đổi khí hậu và giới tính liên quan đến sự khác biệt về giới trong bối cảnh thay đổi khí hậu và các mối quan hệ quyền lực phức tạp, đan xen phát sinh từ đó. Bằng cách... [200 / 1,439 chars] |
+| Họ nói với chúng ta rằng chúng ta là những lực lượng chính điều khiển nhiệt độ trên Trái Đất bằng cá... [100 / 180 chars] | Khí cacbonic Khí cacbonic ( công thức hóa học: CO2) là một khí vô màu với mật độ cao hơn khoảng 60% so với không khí (1,225 g/L), ở nồng độ thông thường nó không có mùi. Khí cacbonic bao gồm một nguyê... [200 / 1,882 chars] |
+| Nhai nhổ bọt của bò gây tác hại đến khí hậu hơn tất cả những chiếc xe hơi trên hành tinh này. [93 chars] | Trái Đất Trái Đất ( từ Eorðe -LSB- Γαῖα , Gaia -RSB- Terra ) , còn được gọi là Thế giới hay Trái cầu, là hành tinh thứ ba tính từ Mặt Trời và là vật thể duy nhất trong vũ trụ được biết đến có sự sống.... [200 / 978 chars] |
+| Ngoài ra [mô hình khí hậu] bỏ qua thực tế là việc làm giàu khí quyển với CO2 có lợi. [84 chars] | Giảm nhẹ biến đổi khí hậu Giảm nhẹ biến đổi khí hậu bao gồm các hành động nhằm hạn chế mức độ hoặc tốc độ của biến đổi khí hậu trong dài hạn. Giảm nhẹ biến đổi khí hậu nói chung liên quan đến việc giả... [200 / 2,205 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | arXiv paper | https://arxiv.org/abs/2012.00614 |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| GreenNode/climate-fever-vn |  | dataset card | https://huggingface.co/datasets/GreenNode/climate-fever-vn |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | arXiv paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| GreenNode/climate-fever-vn |  | dataset card | [https://huggingface.co/datasets/GreenNode/climate-fever-vn](https://huggingface.co/datasets/GreenNode/climate-fever-vn) |
 
 ### Representative Snippets
 

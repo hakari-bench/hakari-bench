@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "FinanceBench: A New Benchmark for Financial Question Answering",
-        "url": "https://arxiv.org/abs/2311.11944",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "virattt/financebench",
-        "url": "https://huggingface.co/datasets/virattt/financebench",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/virattt/financebench"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FinanceBench: A New Benchmark for Financial Question Answering",
+        "url": "https://arxiv.org/abs/2311.11944",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "virattt/financebench",
+        "url": "https://huggingface.co/datasets/virattt/financebench",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "What Was AMCOR's Adjusted Non GAAP EBITDA for FY 2023",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Twelve Months Ended June 30, 2022 Twelve Months Ended June 30, 2023 ($ million) EBITDA EBIT Net Income EPS (Diluted US cents)(1) EBITDA EBIT Net Income EPS (Diluted US cents)(1) Net income attributabl",
+          "full_chars": 1049,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "Which debt securities are registered to trade on a national securities exchange under 3M's name as o",
+          "full_chars": 113,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title of each class Trading Symbol(s) Name of each exchange on which registered Common Stock, Par Value $.01 Per Share MMM New York Stock Exchange MMM Chicago Stock Exchange, Inc. 1.500% Notes due 202",
+          "full_chars": 335,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "000000069",
+        "query": {
+          "text": "Based on the information provided primarily in the balance sheet and the statement of income, what i",
+          "full_chars": 336,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Index Consolidated Statements of Income Corning Incorporated and Subsidiary Companies Year ended December 31, (In millions, except per share amounts) 2020 2019 2018 Net sales $ 11,303 $ 11,503 $ 11,29",
+          "full_chars": 4015,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00062",
+        "document_id": "000000061",
+        "query": {
+          "text": "Does Boeing have an improving gross margin profile as of FY2022? If gross margin is not a useful met",
+          "full_chars": 161,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Boeing Company and Subsidiaries Consolidated Statements of Operations (Dollars in millions, except per share data) Years ended December 31, 2022 2021 2020 Sales of products $55,893 $51,386 $47,142",
+          "full_chars": 479,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00057",
+        "document_id": "000000056",
+        "query": {
+          "text": "What is the FY2019 - FY2020 total revenue growth rate for Block (formerly known as Square)? Answer i",
+          "full_chars": 287,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SQUARE, INC. CONSOLIDATED STATEMENTS OF OPERATIONS (In thousands, except per share data) Year Ended December 31, 2020 2019 2018 Revenue: Transaction-based revenue $ 3,294,978 $ 3,081,074 $ 2,471,451 S",
+          "full_chars": 1779,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

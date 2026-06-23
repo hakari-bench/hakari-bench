@@ -143,5 +143,5 @@ splits should be audited for overlap before training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Towards Leaving No Indic Language Behind | 2022 | paper | https://arxiv.org/abs/2212.05409 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| Towards Leaving No Indic Language Behind | 2022 | paper | [https://arxiv.org/abs/2212.05409](https://arxiv.org/abs/2212.05409) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |

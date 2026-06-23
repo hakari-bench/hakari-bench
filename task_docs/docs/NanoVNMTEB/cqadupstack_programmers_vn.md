@@ -70,12 +70,13 @@ Researchers should audit errors by topic type. Career and process questions may 
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-programmers-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-programmers-vn)
+| Query | Positive document |
+| --- | --- |
+| Thư viện so với khung so với API? [33 chars] | Sự khác biệt giữa API, thư viện, runtime và khung làm việc là gì? > **Có thể trùng lặp:** > Thư viện so với framework so với API? Tôi đang gặp khó khăn trong việc hiểu những khái niệm này thực sự có n... [200 / 523 chars] |
+| Điều kiện tiên quyết để trở thành kiến trúc sư kỹ thuật [55 chars] | Những điều cần thiết để trở thành kiến trúc sư kỹ thuật tốt là gì? Tôi chỉ tò mò muốn biết làm thế nào để trở thành một kiến trúc sư kỹ thuật tốt. Hoặc những điều gì tạo nên một nhà phát triển kiến tr... [200 / 248 chars] |
+| Java phát triển giải pháp server-client [39 chars] | Tôi nên tiếp cận phát triển ứng dụng client-server dựa trên Java như thế nào? Tôi đã được yêu cầu phát triển một ứng dụng khách hàng-máy chủ (yêu cầu cơ sở dữ liệu) cho một công ty. Tôi rất thành thạo... [200 / 1,358 chars] |
+| Nếu tôi sử dụng .NET Framework cho ứng dụng của mình, tôi có phải trả tiền cho Microsoft không? [95 chars] | Tôi muốn bán phần mềm của tôi [ứng dụng C # trên máy tính để bàn] nhưng tôi bị kẹt trong giấy phép > **Có thể trùng lặp:** > nếu tôi sử dụng .NET Framework cho ứng dụng của tôi, tôi có phải trả tiền g... [200 / 1,258 chars] |
+| Về cách sử dụng của các khẳng định [34 chars] | Sử dụng những khẳng định so với ném ngoại lệ? Khi viết một hàm thường tôi muốn chắc rằng đầu vào cho nó là hợp lệ để phát hiện các lỗi càng sớm càng tốt (tôi nghĩ những điều này được gọi là tiền điều... [200 / 497 chars] |
 
 ### Source Reference Table
 

@@ -62,17 +62,20 @@ Models should learn question-aware compression of long contexts into answer cand
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks](https://ojs.aaai.org/index.php/AAAI/article/view/6398), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Context: It took Erin an hour and forty-five minutes to drive from their half-million dollar home in... [100 / 1,562 chars] | will have an argument with Erin [31 chars] |
+| Context: I actually managed a kind of sleep there, kneeling with the circulation cut off to my legs,... [100 / 1,943 chars] | After someone pulled the hood off their head. [45 chars] |
+| Context: I'm a senior at Cesar Chavez high in San Francisco's sunny Mission district, and that makes... [100 / 1,746 chars] | After I was told to report to the administration office immediately. [68 chars] |
+| Context: Candy watched the bearded man drive his silver BMW into the convenience store parking lot a... [100 / 1,746 chars] | After the bearded man drove his silver BMW into the convenience store parking lot. [82 chars] |
+| Context: They re-shackled and re-hooded me and left me there. A long time later, the truck started t... [100 / 1,831 chars] | After they took off my hood. [28 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks | 2020 | proceedings paper | https://ojs.aaai.org/index.php/AAAI/article/view/6398 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks | 2020 | proceedings paper | [https://ojs.aaai.org/index.php/AAAI/article/view/6398](https://ojs.aaai.org/index.php/AAAI/article/view/6398) |
 
 ### Representative Snippets
 

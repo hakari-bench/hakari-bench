@@ -119,11 +119,11 @@ sensitivity with semantic evidence matching.
 
 | Query | Positive document |
 | --- | --- |
-| Ly49Q styrer organiseringen av neutrofilmigrering til betennelsesområder ved å regulere membranraftfunksjoner. | Neutrofiler gjennomgår rask polarisering og rettet bevegelse for å trenge inn i infeksjons- og betennelsesområder... |
-| Antiretroviral behandling reduserer forekomsten av tuberkulose i ulike CD4-nivåer. | Humant immunsviktvirus infeksjon er den sterkeste risikofaktoren for å utvikle tuberkulose... |
-| Rask oppregulering og høyere basal ekspresjon av interferon-induserte gener reduserer overlevelsen av granulære celler i hjernen som er infisert med Vest-Nil-virus. | Selv om neuroners følsomhet for mikrobiell infeksjon i hjernen er en viktig faktor for klinisk utfall... |
-| Primær screening for livmorhalskreft med HPV-detektering har høyere langtidssensitivitet enn konvensjonell cytologi for å oppdage livmorhalscelleendringer av grad 2. | Screening for livmorhalskreft basert på testing for humant papillomavirus øker følsomheten for å oppdage høygradige forstadier... |
-| Å blokkere interaksjonen mellom TDP-43 og respiratorisk kompleks I-proteiner ND3 og ND6 fører til økt TDP-43-forårsaket nevronalt tap. | Genetiske mutasjoner i TAR DNA-binding protein 43 fører til amyotrofisk lateralsklerose... |
+| Ly49Q styrer organiseringen av neutrofilmigrering til betennelsesområder ved å regulere membranraftf... [100 / 110 chars] | Neutrofiler gjennomgår rask polarisering og rettet bevegelse for å trenge inn i infeksjons- og betennelsesområder. Her viser vi at en inhiberende MHC I-reseptor, Ly49Q, var avgjørende for rask polaris... [200 / 969 chars] |
+| Antiretroviral behandling reduserer forekomsten av tuberkulose i ulike CD4-nivåer. [82 chars] | BAKGRUNN Humant immunsviktvirus (HIV) infeksjon er den sterkeste risikofaktoren for å utvikle tuberkulose og har bidratt til en økning i forekomsten, spesielt i sub-Sahara-Afrika. I 2010 var det anslå... [200 / 2,211 chars] |
+| Rask oppregulering og høyere basal ekspresjon av interferon-induserte gener reduserer overlevelsen a... [100 / 164 chars] | Selv om neuroners følsomhet for mikrobiell infeksjon i hjernen er en viktig faktor for klinisk utfall, er det lite kjent om de molekylære faktorer som styrer denne sårbarheten. Her viser vi at to type... [200 / 1,072 chars] |
+| Primær screening for livmorhalskreft med HPV-detektering har høyere langtidssensitivitet enn konvens... [100 / 165 chars] | BAKGRUNN Screening for livmorhalskreft basert på testing for humant papillomavirus (HPV) øker følsomheten for å oppdage høygradig (grad 2 eller 3) livmorhalskreft forstadier, men om denne økningen rep... [200 / 2,218 chars] |
+| Å blokkere interaksjonen mellom TDP-43 og respiratorisk kompleks I-proteiner ND3 og ND6 fører til øk... [100 / 134 chars] | Genetiske mutasjoner i TAR DNA-binding protein 43 (TARDBP, også kjent som TDP-43) fører til amyotrofisk lateralsklerose (ALS). Økt tilstedeværelse av TDP-43 (kodet av TARDBP) i cytoplasma er et fremtr... [200 / 1,254 chars] |
 
 ### Public Sources
 
@@ -138,8 +138,8 @@ sensitivity with semantic evidence matching.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository |  | project page | https://github.com/allenai/scifact |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| SciFact repository |  | project page | [https://github.com/allenai/scifact](https://github.com/allenai/scifact) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

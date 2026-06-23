@@ -70,12 +70,13 @@ For downstream use, S2S is a good benchmark for answer-passage retrieval in cons
 
 ## Example Data
 
-### Public Sources
-
-- Spanish Passage Retrieval dataset page: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
-- Spanish Passage Retrieval dataset card: https://huggingface.co/datasets/jinaai/spanish_passage_retrieval
-- S2S task dataset card: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2S
-- ECIR paper DOI: https://doi.org/10.1007/978-3-030-15719-7_19
+| Query | Positive document |
+| --- | --- |
+| ¿Cuáles son los beneficios de la leche materna? [47 chars] | En la misma se reconoce que la lactancia materna es el mejor modo de proporcionar al recién nacido los nutrientes que necesita durante los primeros meses de vida. [162 chars] |
+| ¿Cuándo debo introducir alimentos complementarios aparte de la lactancia materna? [81 chars] | Durante los primeros 6 meses de vida el bebé solamente necesita tomar leche materna. Es recomendable utilizar la edad corregida para comenzar a introducir el resto de alimentos, individualizando según... [200 / 314 chars] |
+| ¿Tendría que darle el pecho a mi bebé siempre que me lo pida? [61 chars] | Durante el primer mes de vida, su recién nacido debería alimentarse entre ocho y 12 veces al día. [97 chars] |
+| ¿Cuáles son las vacunas por las que no tengo que pagar? [55 chars] | Vacunas sistemáticas financiadas, las que todos los niños en España reciben de forma universal, que incluye las vacunas oficiales ofertadas gratuitamente por cada una de las CC. AA. Se incluyen las si... [200 / 539 chars] |
+| Me gustaría saber más sobre la vacunación para la prevención de enfermedades infecciosas [88 chars] | Actualmente, los niños en los Estados Unidos reciben vacunas rutinariamente que los protegen de más de una docena de enfermedades como sarampión, polio, tétanos, difteria y tos ferina. [184 chars] |
 
 ### Source Reference Table
 

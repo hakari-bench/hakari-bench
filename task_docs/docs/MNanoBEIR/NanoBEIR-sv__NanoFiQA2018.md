@@ -62,9 +62,13 @@ A model targeting this task should improve domain-specific answer matching. Dens
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FiQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Vilken typ av avkastning anger Vanguard? [40 chars] | På Vanguard-sidan - Detta verkade vara det enklaste eftersom S&P-data är lätt att hitta. Jag använder MoneyChimp för att bekräfta att Vanguards sida erbjuder CAGR, inte aritmetiskt medelvärde. Vanguar... [200 / 405 chars] |
+| Skattekonsekvenser vid frilansarbete [36 chars] | Om du har inkomst i USA, måste du betala amerikansk inkomstskatt på den, om det inte finns ett avtal mellan ditt land och USA som säger annat. [142 chars] |
+| Vad betraktas som hög eller låg volym? [38 chars] | Den dagliga volymen jämförs vanligtvis med den genomsnittliga dagliga volymen över de senaste 50 dagarna för en aktie. Hög volym anses vanligtvis vara 2 eller fler gånger den genomsnittliga dagliga vo... [200 / 720 chars] |
+| Använda kreditkortspoäng för att betala skatteavdragsbara företagsutgifter [74 chars] | För enkelhetens skull, låt oss börja med att bara överväga cashback. Generellt sett är cashback från kreditkort för privat bruk inte skattepliktigt, men för företagsbruk är det skattepliktigt (sådär,... [200 / 3,667 chars] |
+| Hur ska jag skicka in min deklaration som kontraktör? [53 chars] | För skattemål måste du deklarera som anställd (T4-kvitton och skatt dras automatiskt), men också som företagare. Jag hade samma situation själv förra året. Publikationen "Anställd och självständigt ar... [200 / 691 chars] |
 
 ### Source Reference Table
 

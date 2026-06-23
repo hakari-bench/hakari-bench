@@ -106,11 +106,11 @@ coverage diversity is important.
 
 | Query | Positive document |
 | --- | --- |
-| 숙제는 유익한가요? | 숙제가 현대 학교에서 계속되어야 한다는 세 가지 이유가 있으며, 실천을 통해 배우는 학습자에게 도움이 된다는 주장이 제시된다. |
-| 처방약을 소비자에게 직접 광고하는 것이 타당한가? | 많은 광고들은 약물의 효과에 대한 충분한 정보를 제공하지 않으며, 감정적 호소에 기반한다는 주장이 제시된다. |
-| 아이들에게 어떤 백신이라도 의무화되어야 할까요? | 정부는 부모가 자녀의 건강 문제에 대해 내리는 결정에 개입할 권리를 가져서는 안 된다는 주장이 제시된다. |
-| 낙태는 합법이어야 하나요? | 낙태는 태아가 생존 가능해지거나 출생한 후에 인간으로서의 인격이 시작되므로 합법화되어야 한다는 주장이 제시된다. |
-| 표준화된 시험이 교육을 향상시키는가? | SAT, ACT 및 기타 표준화된 시험이 대학 교육 준비 상태에 대해 더 많은 통찰을 제공한다는 주장이 제시된다. |
+| 숙제는 유익한가요? [10 chars] | 첫째, 숙제가 훌륭하며 현대 학교에서 계속되어야 할 세 가지 이유가 있다. 1. 숙제는 실천을 통해 배우는 학습자에게 도움이 된다. 일반적으로 세 가지 유형의 학습자가 있다. 듣고 배우는 사람, 보고 배우는 사람, 그리고 실천을 통해 배우는 사람이 그것이다. 많은 사람들이 특정 과목을 듣거나 보는 것으로 학습에 만족하지만, 일부는 실제로 해보아야 이해할 수... [200 / 1,872 chars] |
+| 처방약을 소비자에게 직접 광고하는 것이 타당한가? [27 chars] | 많은 광고들은 약물의 효과에 대한 충분한 정보를 제공하지 않는다. 예를 들어, 루네스타(Lunesta)는 평화롭게 잠자는 사람 위로 침실 창문을 통해 날아드는 나방의 이미지로 광고된다. 실제로 루네스타는 6개월 치료 후 환자들이 15분 더 빨리 잠들게 하고, 밤에 평균 37분 더 잠을 자게 한다. 대부분의 광고는 감정적 호소에 기반하지만, 질환의 원인, 위... [200 / 936 chars] |
+| 아이들에게 어떤 백신이라도 의무화되어야 할까요? [26 chars] | 아직 완전한 주장은 아니다. 단지 내가 정리한 몇 가지 사항들이다. 정부는 부모가 자녀의 건강 문제에 대해 내리는 결정에 개입할 권리를 가져서는 안 된다. 미시간 대학교의 2010년 조사에 따르면, 자녀에게 의무화된 학교 입학 백신 접종을 거부할 권리가 있어야 한다고 생각하는 부모는 31%에 달한다. 많은 부모들이 백신 접종에 반대하는 종교적 신념을 가지고... [200 / 2,132 chars] |
+| 낙태는 합법이어야 하나요? [14 chars] | 낙태는 태아가 생존 가능해지거나 출생한 후에 인간으로서의 인격이 시작되므로, 수정 시점이 아니라 그 이후에 합법화되어야 한다. 미국 대법원에 따르면, 인간은 산모의 자궁 밖으로 나와 산소를 호흡하기 시작할 때 나이를 가지게 되며, 이때부터 0세로 시작하여 결국 1세까지 성장하게 된다. [159 chars] |
+| 표준화된 시험이 교육을 향상시키는가? [20 chars] | 해결됨: SAT, ACT 및 기타 표준화된 시험은 고교 성적(GPA)보다 엘리트 대학 및 대학교에서의 교육 준비 상태에 대해 더 많은 통찰을 제공하므로 입학 심사 과정에서 더 큰 비중을 차지해야 한다. 논의를 위해, 지원자의 15% 미만만을 받아들이는 모든 대학이나 대학교는 엘리트로 간주될 수 있다. 이는 더 높은 비율의 지원자를 받아들이는 엘리트 대학이... [200 / 2,102 chars] |
 
 ### Public Sources
 
@@ -125,8 +125,8 @@ coverage diversity is important.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | [https://doi.org/10.1007/978-3-030-58219-7_26](https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | [https://doi.org/10.5281/zenodo.6862281](https://doi.org/10.5281/zenodo.6862281) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

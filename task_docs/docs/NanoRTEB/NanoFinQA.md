@@ -62,19 +62,21 @@ Models should retain exact numbers, dates, company names, and financial line-ite
 
 ## Example Data
 
-### Public Sources
-
-- [FinQA: A Dataset of Numerical Reasoning over Financial Data](https://aclanthology.org/2021.emnlp-main.300/), task paper.
-- [ibm/finqa](https://huggingface.co/datasets/ibm/finqa), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| what was the difference in the companies high compared to its low sales price for the second quarter... [100 / 109 chars] | part ii item 5 2014market for registrant 2019s common equity and related stockholder matters ( a ) market information . the common stock of the company is currently traded on the new york stock exchan... [200 / 2,073 chars] |
+| what was the total impairment costs recorded from 2003 to 2005 in millions [74 chars] | notes to consolidated financial statements for the years ended february 3 , 2006 , january 28 , 2005 , and january 30 , 2004 , gross realized gains and losses on the sales of available-for-sale securi... [200 / 4,728 chars] |
+| what percent of total recourse debt is current? [47 chars] | the aes corporation notes to consolidated financial statements 2014 ( continued ) december 31 , 2010 , 2009 , and 2008 recourse debt as of december 31 , 2010 is scheduled to reach maturity as set fort... [200 / 3,155 chars] |
+| what were average operating profit for mfc in millions between 2014 and 2016? [77 chars] | delivered in 2015 compared to seven delivered in 2014 ) . the increases were partially offset by lower net sales of approximately $ 350 million for the c-130 program due to fewer aircraft deliveries (... [200 / 4,637 chars] |
+| in 2017 what was the percent of the total future estimated cash payments under existing contractual... [100 / 163 chars] | we have an option to purchase the class a interests for consideration equal to the then current capital account value , plus any unpaid preferred return and the prescribed make-whole amount . if we pu... [200 / 5,964 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FinQA: A Dataset of Numerical Reasoning over Financial Data | 2021 | task paper | https://aclanthology.org/2021.emnlp-main.300/ |
-| ibm/finqa |  | dataset card | https://huggingface.co/datasets/ibm/finqa |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| FinQA: A Dataset of Numerical Reasoning over Financial Data | 2021 | task paper | [https://aclanthology.org/2021.emnlp-main.300/](https://aclanthology.org/2021.emnlp-main.300/) |
+| ibm/finqa |  | dataset card | [https://huggingface.co/datasets/ibm/finqa](https://huggingface.co/datasets/ibm/finqa) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

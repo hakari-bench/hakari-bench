@@ -62,17 +62,20 @@ Models should learn to identify the relevant interval before ranking short answe
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models](https://arxiv.org/abs/2306.08952), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Question: Which position did Patricia de Lille hold in Sep, 2015? Facts: Patricia de Lille holds the... [100 / 11,244 chars] | mayor of Cape Town [18 chars] |
+| Question: Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? Facts: Lord Douglas... [100 / 2,981 chars] | Member of the 11th Parliament of the United Kingdom [51 chars] |
+| Question: Who was the head of Russia in Jul, 1999? Facts: Mikhail Kasyanov is the head of the govern... [100 / 71,906 chars] | Sergei Stepashin [16 chars] |
+| Question: Which team did Glynn Snodin play for in Jan, 1992? Facts: Glynn Snodin plays for Heart of... [100 / 5,484 chars] | Leeds United F.C. [17 chars] |
+| Question: Who was the head of Romania in May, 1935? Facts: Take Ionescu is the head of the governmen... [100 / 75,421 chars] | Gheorghe Tătărescu [18 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2306.08952 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2306.08952](https://arxiv.org/abs/2306.08952) |
 
 ### Representative Snippets
 

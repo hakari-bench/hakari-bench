@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q controla a migração de neutrófilos para locais de inflamação regulando as funções das rafts de",
+          "full_chars": 110,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Neutrófilos sofrem polarização e movimento direcionado rapidamente para infiltrar os locais de infecção e inflamação. Aqui, mostramos que um receptor inibitório MHC I, Ly49Q, foi essencial para a pola",
+          "full_chars": 1050,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Terapia antirretroviral reduz as taxas de tuberculose em diferentes níveis de contagem de CD4.",
+          "full_chars": 94,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "CONTEXTO A infecção pelo vírus da imunodeficiência humana (HIV) é o principal fator de risco para o desenvolvimento da tuberculose e tem impulsionado seu ressurgimento, especialmente na África subsaar",
+          "full_chars": 2345,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Aumento rápido e expressão basal aumentada de genes induzidos por interferon reduzem a sobrevivência",
+          "full_chars": 176,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Embora a suscetibilidade dos neurônios do cérebro à infecção microbiana seja um grande determinante do resultado clínico, pouco se sabe sobre os fatores moleculares que governam essa vulnerabilidade.",
+          "full_chars": 1256,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "O rastreamento primário de câncer cervical com detecção de HPV apresenta maior sensibilidade longitu",
+          "full_chars": 204,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "CONTEXTO O rastreamento do câncer cervical baseado na detecção do papilomavírus humano (HPV) aumenta a sensibilidade na detecção de neoplasia intraepitelial cervical de alto grau (grau 2 ou 3), mas nã",
+          "full_chars": 2486,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "Bloquear a interação entre TDP-43 e as proteínas ND3 e ND6 do complexo respiratório I resulta em um",
+          "full_chars": 146,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Mutações genéticas na proteína de ligação ao DNA TAR 43 (TARDBP, também conhecida como TDP-43) causam esclerose lateral amiotrófica (ELA), e um aumento na presença de TDP-43 (codificada por TARDBP) no",
+          "full_chars": 1369,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

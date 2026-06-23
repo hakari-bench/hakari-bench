@@ -62,9 +62,13 @@ A model targeting this task should combine exact name precision with semantic ty
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on DBpedia Entity Retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| fitzgerald auto mall chambersburg pa [36 chars] | Fitzgerald Auto Malls là một đại lý ô tô thuộc sở hữu và điều hành bởi gia đình, được thành lập vào năm 1966, với địa điểm đầu tiên mở cửa tại Bethesda, Maryland. Tính đến năm 2014, Fitzgerald Auto Ma... [200 / 457 chars] |
+| Tập truyện ngắn năm 1994 của Alice Munro là Mở [46 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, tên thật là Laidlaw /ˈleɪdlɔː/; sinh ngày 10 tháng 7 năm 1931) là một tác giả người Canada. Tác phẩm của Munro được mô tả là đã cách mạng hóa cấu trúc của truyện... [200 / 553 chars] |
+| kiến trúc Gallo-Roman ở Paris [29 chars] | Nghệ thuật ở Paris là một bài viết về văn hóa và lịch sử nghệ thuật ở Paris, thủ đô của Pháp. Trong nhiều thế kỷ, Paris đã thu hút các nghệ sĩ từ khắp nơi trên thế giới, đến thành phố để học hỏi và tì... [200 / 344 chars] |
+| các nước cộng hòa của Nam Tư cũ [31 chars] | Hiến pháp Nam Tư năm 1974 là hiến pháp thứ tư và cuối cùng của Cộng hòa Liên bang Xã hội chủ nghĩa Nam Tư. Nó có hiệu lực vào ngày 21 tháng 2. Với 406 điều khoản gốc, hiến pháp năm 1974 là một trong n... [200 / 420 chars] |
+| phim quay ở Venice [18 chars] | A Little Romance là một bộ phim hài lãng mạn Technicolor và Panavision của Mỹ ra mắt năm 1979, được đạo diễn bởi George Roy Hill và có sự tham gia của Laurence Olivier, Thelonious Bernard, và Diane La... [200 / 403 chars] |
 
 ### Source Reference Table
 

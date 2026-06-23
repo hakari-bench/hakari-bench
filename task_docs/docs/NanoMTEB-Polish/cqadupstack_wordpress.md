@@ -70,12 +70,13 @@ For reranking, the task rewards models that can compare a short query with a lon
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-wordpress-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Wordpress-PL
+| Query | Positive document |
+| --- | --- |
+| Programowe wstawianie terminów hierarchicznych i ustalanie terminów dla postów powoduje usterkę? [96 chars] | Wstawianie terminów w taksonomii hierarchicznej Naprawdę mam kilka problemów z wstawianiem terminów. Oto mój scenariusz: mam taksonomię o nazwie veda_release_type: //Release Type and Region $labels =... [200 / 3,822 chars] |
+| Jak zwiększyć długość fragmentu w wordpressie? [46 chars] | fragment w postaciach Mam kod w functions.php: function string_limit_words($string, $word_limit) { $words = explode(' ', $string, ($word_limit + 1)); if(count($słowa) > $word_limit) array_pop($słowa);... [200 / 306 chars] |
+| Strona biblioteki multimediów bardzo wolno, ładuje obrazy w pełnej jakości [74 chars] | Wordpress 3.5 Media Manager - Zmień rozmiar załadowanego obrazu Nowy menedżer mediów ładuje obrazy w PEŁNYM rozmiarze, co jest NAPRAWDĘ nieefektywne dla miniatury. Chciałbym go zastąpić miniaturą o in... [200 / 344 chars] |
+| Predefiniowane kategorie w wordpressie według parametrów GET [60 chars] | Jak dodać kategorię do: 'wp-admin/post-new.php'? Chcę mieć link do tworzenia nowego posta, który również ustawia kategorię. Próbowałem `wp-admin/post-new.php?post_category=12` i `wp-admin/post-new.php... [200 / 390 chars] |
+| Jak wyłączyć komentarze na stronie? [35 chars] | Jak usunąć możliwość komentowania lub publikowania przez użytkownika na stronie? Tworzę nową stronę internetową na Wordpress, a wszystkie moje strony mają na dole pole dodawania komentarza. Chciałbym,... [200 / 482 chars] |
 
 ### Source Reference Table
 

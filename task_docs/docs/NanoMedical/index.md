@@ -172,12 +172,12 @@ document-level duplication, not just exact query text.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2025 | benchmark paper | https://doi.org/10.1145/3711896.3737435 |
-| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | source task paper | http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | source task paper | https://arxiv.org/abs/2104.09632 |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | benchmark paper | https://aclanthology.org/2024.lrec-main.194/ |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | source task paper | https://aclanthology.org/2020.emnlp-main.609/ |
-| A Question-Entailment Approach to Question Answering | 2019 | source task paper | https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4 |
-| publichealth-qa | 2024 | dataset card | https://huggingface.co/datasets/xhluca/publichealth-qa |
-| DuReader_retrieval | 2022 | source task paper | https://aclanthology.org/2022.emnlp-main.357/ |
-| Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection | 2018 | source task paper | https://doi.org/10.1109/ACCESS.2018.2883637 |
+| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2025 | benchmark paper | [https://doi.org/10.1145/3711896.3737435](https://doi.org/10.1145/3711896.3737435) |
+| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | source task paper | [http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](http://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | source task paper | [https://arxiv.org/abs/2104.09632](https://arxiv.org/abs/2104.09632) |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | benchmark paper | [https://aclanthology.org/2024.lrec-main.194/](https://aclanthology.org/2024.lrec-main.194/) |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | source task paper | [https://aclanthology.org/2020.emnlp-main.609/](https://aclanthology.org/2020.emnlp-main.609/) |
+| A Question-Entailment Approach to Question Answering | 2019 | source task paper | [https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4) |
+| publichealth-qa | 2024 | dataset card | [https://huggingface.co/datasets/xhluca/publichealth-qa](https://huggingface.co/datasets/xhluca/publichealth-qa) |
+| DuReader_retrieval | 2022 | source task paper | [https://aclanthology.org/2022.emnlp-main.357/](https://aclanthology.org/2022.emnlp-main.357/) |
+| Multi-Scale Attentive Interaction Networks for Chinese Medical Question Answer Selection | 2018 | source task paper | [https://doi.org/10.1109/ACCESS.2018.2883637](https://doi.org/10.1109/ACCESS.2018.2883637) |

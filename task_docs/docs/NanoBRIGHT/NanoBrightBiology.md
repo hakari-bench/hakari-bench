@@ -62,9 +62,13 @@ A model targeting this task should improve mechanism-level evidence retrieval. S
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| What is the longest-lasting protein in a human body? Protein life times are, on average, not particu... [100 / 1,199 chars] | Characteristics[edit] Elastin is a very long-lived protein, with a half-life of over 78 years in humans. [104 chars] |
+| Is kissing a natural human activity? The word natural here is meant in contrast to it being a sociol... [100 / 435 chars] | Biology and evolution[edit] Black-tailed prairie dogs "kissing." Prairie dogs use a nuzzle of this variety to greet their relatives. Within the natural world of other animals, there are numerous analo... [200 / 3,310 chars] |
+| What types of light can't a plant photosynthesize in? I have a plant on my desk, and it got me to wo... [100 / 509 chars] | Chlorophyll is any of several related green pigments found in cyanobacteria and in the chloroplasts of algae and plants. Its name is derived from the Greek words χλωρός, khloros ("pale green") and φύλ... [200 / 712 chars] |
+| If Tumors have lots of mutations in them how is it the immune system can't detect them? If a cancero... [100 / 425 chars] | In transplant rejection[edit] In a transplant procedure, as of an organ or stem cells, MHC molecules themselves act as antigens and can provoke immune response in the recipient, thus causing transplan... [200 / 3,065 chars] |
+| Could viruses be used as antibiotics? Could we use viruses that only affect bacteria to act as antib... [100 / 204 chars] | Applications[edit] Collection[edit] Phages for therapeutic use can be collected from environmental sources that likely contain high quantities of bacteria and bacteriophages, such as effluent outlets,... [200 / 7,339 chars] |
 
 ### Source Reference Table
 

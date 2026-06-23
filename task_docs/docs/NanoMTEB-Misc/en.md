@@ -127,20 +127,21 @@ condition or procedural relation in the question.
 
 ## Example Data
 
-### Public Sources
-
-- [EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| What is required for the ongoing process of building and operating an integrated market? [88 chars] | Finally, building a fully integrated market is not a definite task with a finite end, but rather an ongoing process requiring constant effort, vigilance and updating. There are always new challenges a... [200 / 504 chars] |
+| How do high-speed train connections contribute to social and economic cohesion in the EU? [89 chars] | However, the Commission notes that air transport is not the only driver of development in terms of regional accessibility. High-speed train connections also make a significant contribution to social a... [200 / 498 chars] |
+| What are the challenges faced by Member States in implementing national lifelong learning strategies... [100 / 117 chars] | The implementation of national lifelong learning strategies and instruments, which are key to enabling not only young people, but also adults, to acquire, maintain and develop knowledge, skills and co... [200 / 581 chars] |
+| How does Article 56 EC affect the taxation of dividends received by a resident company from a non-re... [100 / 168 chars] | Article 56 EC is, furthermore, to be interpreted as meaning that it precludes legislation of a Member State which exempts from corporation tax dividends which a resident company receives from another... [200 / 564 chars] |
+| What is the purpose of requiring undertakings to provide sufficient information in Form RS? [91 chars] | Given the above mechanism, it is crucial to the smooth operation of Article 4(5) that all Member States where the case is reviewable under national competition law, and which are hence competent to ex... [200 / 515 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| EuroPIRQ-retrieval | 2025 | Dataset card | https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | https://arxiv.org/abs/2502.13595 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | https://arxiv.org/abs/2210.07316 |
+| EuroPIRQ-retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "75",
+        "document_id": "bacon_grease/axzz2yzIEoMf9_37.txt",
+        "query": {
+          "text": "More uses for bacon grease We (my family) consume good amounts of bacon which produce a lot of bacon",
+          "full_chars": 604,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tallow, or rendered beef fat, can be used to make soap. It went against my grain to throw out the tallow from a side of beef we bought, so I called our County Agent to see if he had any directions for",
+          "full_chars": 2693,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "14",
+        "document_id": "carbon_household/beopthtml_1.txt",
+        "query": {
+          "text": "Determining carbon reduction vs cost of various home upgrades I've done some amount of upgrades to m",
+          "full_chars": 2158,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "BEopt: Building Energy Optimization Tool The BEopt™ (Building Energy Optimization Tool) software provides capabilities to evaluate residential building designs and identify cost-optimal efficiency pac",
+          "full_chars": 1457,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "water_circulate/detailsofplumbing_36.txt",
+        "query": {
+          "text": "Forcing water circulation in solar hot water installation I'm planning an installation for heating w",
+          "full_chars": 1071,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Here you can see the array of pipe going between the coil, the tank, and the domestic hot water plumbing. Alan transitioned to a flexible, pre-insulated stainless steel pipe to complete the thermosiph",
+          "full_chars": 493,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "87",
+        "document_id": "pesticide/NeonicotinoidAvailableneonicotinoidinsecticides_7.txt",
+        "query": {
+          "text": "How to recognize products with neonicotinoid pesticides in them? Recently, the EU has temporarily ba",
+          "full_chars": 561,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Market [ [ edit ](/w/index.php?title=Neonicotinoid&action=edit&section=2 \"Edit section: Market\") ] ![](//upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ambox_current_red.svg/42px- Ambox_current_red",
+          "full_chars": 1911,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "33",
+        "document_id": "mineral_deposit/faq_16.txt",
+        "query": {
+          "text": "Why don't mineral water cans carry a deposit label? I've been putting in the recycling bin all our \"",
+          "full_chars": 443,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "What beverages are covered by NY's Bottle Bill? Carbonated Soft Drinks Including Sparkling Water Carbonated Energy Drinks Carbonated Juice (anything less than 100% juice, containing added sugar or wat",
+          "full_chars": 444,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Sustainable Living StackExchange"
+    "source_task": "Sustainable Living StackExchange",
+    "example_count": 5
   }
 }

@@ -134,15 +134,98 @@
         "url": "https://huggingface.co/datasets/mlqa",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/MLQARetrieval",
         "url": "https://huggingface.co/datasets/mteb/MLQARetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "mlqa__vie-vie::q::Q459",
+        "document_id": "mlqa__vie-vie::d::C181",
+        "query": {
+          "text": "Phiên dịch được sử dụng cho ngôn ngữ nào?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nói chung, tất cả mọi người trong nước đều hiểu và nói tiếng Nga, ngoại trừ tại một số vùng xa xôi hẻo lánh. Tiếng Nga là tiếng mẹ đẻ của đa số dân cư Bishkek, và hầu hết các giao dịch thương mại cũng",
+          "full_chars": 539,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "mlqa__deu-ara::q::Q115",
+        "document_id": "mlqa__deu-ara::d::C137",
+        "query": {
+          "text": "ما هي التقنيات الحديثة المستخدمة للوصول إلى الإنترنت عبر الهاتف المحمول؟",
+          "full_chars": 72,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Reichweite und Bandbreite: Mobiler Internetzugriff ist generell langsamer als direkte Kabelverbindungen. Verwendete Technologien sind hier GPRS, oder EDGE, aktuell auch HSDPA und HSUPA, 3G und 4G Netz",
+          "full_chars": 435,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "mlqa__ara-deu::q::Q54",
+        "document_id": "mlqa__ara-deu::d::C97",
+        "query": {
+          "text": "Was wurde in den 1990er Jahren eingeführt?",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "أما القديس فالنتين الذي كان يعيش في تورني فقد أصبح أسقفًا لمدينة انترامنا (الاسم الحديث لمدينة تورني) تقريبًا في عام 197 بعد الميلاد، ويُقال إنه قد قُتل فترة الاضطهاد التي تعرض له المسيحيون أثناء عهد",
+          "full_chars": 407,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "mlqa__zho-vie::q::Q152",
+        "document_id": "mlqa__zho-vie::d::C145",
+        "query": {
+          "text": "TB-3 là loại phương tiện vận tải gì?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "图波列夫TB-3（俄语：Тяжёлый Бомбардировщик，转写：Tyazholy Bombardirovschik，意为重型轰炸机；民用型则称为ANT-6）是西元1930年代苏联空军列装的重型轰炸机，并被使用于第二次世界大战。它是世界上第一个悬翼四引擎的重型轰炸机。 西元1939年，TB-3因过时而正式退役，但TB-3仍在整个二次世界大战进行轰炸和运输工作。 TB-3也以Zveno计划",
+          "full_chars": 221,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "mlqa__eng-hin::q::Q492",
+        "document_id": "mlqa__eng-hin::d::C241",
+        "query": {
+          "text": "बाह्यत्वचा की कोशिकाएं क्या कर सकती हैं?",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The plant epidermis is specialised tissue, composed of parenchyma cells, that covers the external surfaces of leaves, stems and roots. Several cell types may be present in the epidermis. Notable among",
+          "full_chars": 1229,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

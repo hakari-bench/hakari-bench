@@ -62,9 +62,13 @@ A model targeting this task should combine exact terminology handling with evide
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on SciFact, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Ly49Q usmerava organizaciju migracije neutrofila do mesta zapaljenja regulišući funkcije membranskih... [100 / 110 chars] | Neutrofili brzo podležu polarizaciji i usmerenom kretanju kako bi se infiltrirali na mesta infekcije i upale. Ovde pokazujemo da je inhibitorni MHC I receptor, Ly49Q, bio ključan za brzu polarizaciju... [200 / 989 chars] |
+| Antiretrovirusna terapija smanjuje stope oboljevanja od tuberkuloze u širokom rasponu CD4 slojeva. [98 chars] | POZADINA Infekcija virusom humane imunodeficijencije (HIV) predstavlja najznačajniji faktor rizika za razvoj tuberkuloze i podstaknula je njen ponovni porast, posebno u podsaharskoj Africi. Godine 201... [200 / 2,174 chars] |
+| Brza regulacija naviše i viši bazalni izražaj interferonom indukovanih gena smanjuju preživljavanje... [100 / 163 chars] | Iako je podložnost neurona u mozgu mikrobnoj infekciji glavni faktor koji određuje klinički ishod, malo se zna o molekularnim faktorima koji upravljaju ovom osetljivošću. Ovde pokazujemo da su dve vrs... [200 / 1,119 chars] |
+| Primarno skrining za rak grlića materice uz detekciju HPV-a ima veću longitudinalnu senzitivnost od... [100 / 187 chars] | POZADINA Skrining za rak grlića materice zasnovan na testiranju na humani papiloma virus (HPV) povećava senzitivnost detekcije visokog stepena (stepen 2 ili 3) cervikalne intraepitelne neoplazije, ali... [200 / 2,253 chars] |
+| Blokiranje interakcije između TDP-43 i proteina respiratornog kompleksa I, ND3 i ND6, dovodí do poja... [100 / 139 chars] | Genetičke mutacije u TAR DNK-vezujućem proteinu 43 (TARDBP, takođe poznatom kao TDP-43) uzrokuju amiotrofičnu lateralnu sklerozu (ALS), a povećana prisutnost TDP-43 (kodiranog genom TARDBP) u citoplaz... [200 / 1,274 chars] |
 
 ### Source Reference Table
 

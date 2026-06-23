@@ -179,11 +179,11 @@ questions answerable from only one passage are less useful for this task.
 
 | Query | Positive document |
 | --- | --- |
-| شاركت بيني راي بريدجز في مسلسل كوميدي تلفزيوني مع أي ممثل آخر؟ (62 chars) | بيني راي بريدجز (ولدت في 29 يوليو 1990) ممثلة أمريكية. شاركت في العديد من الأعمال التلفزيونية مثل "لأجل حبك"، "القانون العائلي"، "ولد يلتقي العالم"، و"بيت الآباء". تشتهر بدورها في مسلسل "نصف ونصف" كشابة مونا. (208 chars) |
-| من منح كاغانوي شيجيموتشي سيفًا صنعه مؤسس مدرسة موراماسا؟ (56 chars) | كاغانوي شيجيموتشي (加賀井 重望، 1561 – 27 أغسطس 1600) كان ساموراي يابانيًا في فترة أزوتشي-موموياما، خدم عشيرة أودا. كان حاكمًا على قلعة كاغانوي. خلال معركة كوماكي وناغاكوت، قاتل شيجيموتشي تحت قيادة والده شيجيموني، الذي كان مرتبطًا ... [truncated 225 chars](457 chars) |
-| أي فيلم كتب وأخرجه جوبي هارولد مع موسيقى كتبها صموئيل سيم؟ (58 chars) | سامويل سيم هو ملحن أفلام وتلفزيون. استطاع أن يحصل على الشهرة لأول مرة بموسيقى حازت على جوائز لسلسلة الدراما البريطانية "دونكيرك". منذ ذلك الحين، كتب الموسيقى لأعمال متنوعة من الأفلام والتلفزيون، وأحدث أعماله هي موسيقى فيلم "أ ... [truncated 225 chars](452 chars) |
-| ما هو تاريخ مباراة كرة القدم الجامعية التي لعبت في ملعب صن لايف في ميامي جاردنز، فلوريدا، حيث هزم كليمسون فريق أوكلاهوما سونرز رقم 4 بنتيجة 37-17؟ (146 chars) | فريق كرة القدم كليمسون تايجرز لعام 2015 كان يمثل جامعة كليمسون في موسم كرة القدم NCAA Division I FBS لعام 2015. كان الفريق بقيادة المدرب الرئيسي دابو سويني في عامه السابع الكامل والثامن بشكل عام منذ توليه القيادة منتصف موسم 2 ... [truncated 225 chars](1006 chars) |
-| Devil's Food هي مجموعة من الأغاني الفردية من فرقة روك أند رول أمريكية كانت معروفة أيضًا بأداء عروض كاونتري باسم أي فرقة؟ (120 chars) | Devil's Food هي مجموعة من الأغاني الفردية المفضلة من فرقة الروك الأمريكية Supersuckers، صدرت في أبريل 2005 عن طريق شركة Mid-Fi Records. (135 chars) |
+| شاركت بيني راي بريدجز في مسلسل كوميدي تلفزيوني مع أي ممثل آخر؟ [62 chars] | بيني راي بريدجز (ولدت في 29 يوليو 1990) ممثلة أمريكية. شاركت في العديد من الأعمال التلفزيونية مثل "لأجل حبك"، "القانون العائلي"، "ولد يلتقي العالم"، و"بيت الآباء". تشتهر بدورها في مسلسل "نصف ونصف" كشا... [200 / 208 chars] |
+| من منح كاغانوي شيجيموتشي سيفًا صنعه مؤسس مدرسة موراماسا؟ [56 chars] | كاغانوي شيجيموتشي (加賀井 重望، 1561 – 27 أغسطس 1600) كان ساموراي يابانيًا في فترة أزوتشي-موموياما، خدم عشيرة أودا. كان حاكمًا على قلعة كاغانوي. خلال معركة كوماكي وناغاكوت، قاتل شيجيموتشي تحت قيادة والده ش... [200 / 457 chars] |
+| أي فيلم كتب وأخرجه جوبي هارولد مع موسيقى كتبها صموئيل سيم؟ [58 chars] | سامويل سيم هو ملحن أفلام وتلفزيون. استطاع أن يحصل على الشهرة لأول مرة بموسيقى حازت على جوائز لسلسلة الدراما البريطانية "دونكيرك". منذ ذلك الحين، كتب الموسيقى لأعمال متنوعة من الأفلام والتلفزيون، وأحدث... [200 / 452 chars] |
+| ما هو تاريخ مباراة كرة القدم الجامعية التي لعبت في ملعب صن لايف في ميامي جاردنز، فلوريدا، حيث هزم كل... [100 / 146 chars] | فريق كرة القدم كليمسون تايجرز لعام 2015 كان يمثل جامعة كليمسون في موسم كرة القدم NCAA Division I FBS لعام 2015. كان الفريق بقيادة المدرب الرئيسي دابو سويني في عامه السابع الكامل والثامن بشكل عام منذ ت... [200 / 1,006 chars] |
+| Devil's Food هي مجموعة من الأغاني الفردية من فرقة روك أند رول أمريكية كانت معروفة أيضًا بأداء عروض ك... [100 / 120 chars] | Devil's Food هي مجموعة من الأغاني الفردية المفضلة من فرقة الروك الأمريكية Supersuckers، صدرت في أبريل 2005 عن طريق شركة Mid-Fi Records. [135 chars] |
 
 ### Public Sources
 
@@ -202,8 +202,8 @@ questions answerable from only one passage are less useful for this task.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | https://arxiv.org/abs/1809.09600 |
-| HotpotQA official site |  | project page | https://hotpotqa.github.io/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| HotpotQA official site |  | project page | [https://hotpotqa.github.io/](https://hotpotqa.github.io/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

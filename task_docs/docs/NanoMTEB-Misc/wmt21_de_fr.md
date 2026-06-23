@@ -119,18 +119,20 @@ negation, attribution, and temporal details.
 
 ## Example Data
 
-### Public Sources
-
-- [Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings](https://arxiv.org/abs/2502.08638)
-- [Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Le même jour, le bureau du premier ministre a fait savoir que Justin Trudeau témoignerait lui aussi... [100 / 185 chars] | Am selben Tag kündigte das Büro des Premierministers an, dass Justin Trudeau, wie von der Opposition gefordert, zu einem noch zu bestimmenden Termin ebenfalls vor diesem Ausschuss aussagen wird. [194 chars] |
+| Le président Sebastian Piñera a promulgué le 24 juillet une réforme historique qui permet aux Chilie... [100 / 240 chars] | Präsident Sebastian Piñera verkündete am 24. Juli eine historische Reform, die es den Chilenen erlaubt, 10 % ihrer privaten Rentenfonds vorzeitig zu entnehmen, um die durch die Covid-19-Pandemie verur... [200 / 238 chars] |
+| Des ajustements mineurs qui doivent libérer plus de capital pour les investisseurs et donc permettre... [100 / 292 chars] | Geringfügige Anpassungen sollen mehr Kapital für Investoren freisetzen und es so „den Unternehmen leichter machen, die benötigte Finanzierung zu erhalten und in unsere Wirtschaft zu investieren“, vers... [200 / 272 chars] |
+| Les géants Apple, Alphabet Inc et Amazon.com doivent publier leurs résultats le 30 juillet, le jour... [100 / 239 chars] | Die Giganten Apple, Alphabet Inc und Amazon.com werden ihre Ergebnisse am 30. Juli vorlegen, dem gleichen Tag, an dem das Handelsministerium seine erste Schätzung für das BIP aus dem zweiten Quartal b... [200 / 270 chars] |
+| Justin Trudeau avait admis avoir commis une erreur en ne se retirant pas des discussions lors des né... [100 / 142 chars] | Justin Trudeau hatte zugegeben, dass er einen Fehler gemacht hat, als er sich während der Verhandlungen zwischen seiner Regierung und UNIS nicht von den Gesprächen fernhielt. [174 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | https://arxiv.org/abs/2502.08638 |
-| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | https://huggingface.co/datasets/Andrianos/clsd_wmt19_21 |
+| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | [https://arxiv.org/abs/2502.08638](https://arxiv.org/abs/2502.08638) |
+| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | [https://huggingface.co/datasets/Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21) |
 
 ### Representative Snippets
 

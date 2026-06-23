@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "8",
+        "document_id": "longest-lasting_protein/Elastin_4.txt",
+        "query": {
+          "text": "What is the longest-lasting protein in a human body? Protein life times are, on average, not particu",
+          "full_chars": 1199,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Characteristics[edit] Elastin is a very long-lived protein, with a half-life of over 78 years in humans.",
+          "full_chars": 104,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "19",
+        "document_id": "kissing_natural_human_activity/Kiss_8.txt",
+        "query": {
+          "text": "Is kissing a natural human activity? The word natural here is meant in contrast to it being a sociol",
+          "full_chars": 435,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Biology and evolution[edit] Black-tailed prairie dogs \"kissing.\" Prairie dogs use a nuzzle of this variety to greet their relatives. Within the natural world of other animals, there are numerous analo",
+          "full_chars": 3310,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "plant_light_pho/Chlorophyll_0.txt",
+        "query": {
+          "text": "What types of light can't a plant photosynthesize in? I have a plant on my desk, and it got me to wo",
+          "full_chars": 509,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Chlorophyll is any of several related green pigments found in cyanobacteria and in the chloroplasts of algae and plants. Its name is derived from the Greek words χλωρός, khloros (\"pale green\") and φύλ",
+          "full_chars": 712,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "91",
+        "document_id": "immune_system_detect_tumor/Major_histocompatibility_complex_8.txt",
+        "query": {
+          "text": "If Tumors have lots of mutations in them how is it the immune system can't detect them? If a cancero",
+          "full_chars": 425,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In transplant rejection[edit] In a transplant procedure, as of an organ or stem cells, MHC molecules themselves act as antigens and can provoke immune response in the recipient, thus causing transplan",
+          "full_chars": 3065,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "38",
+        "document_id": "virus_used_as_antibiotics/Phage_therapy_3.txt",
+        "query": {
+          "text": "Could viruses be used as antibiotics? Could we use viruses that only affect bacteria to act as antib",
+          "full_chars": 204,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Applications[edit] Collection[edit] Phages for therapeutic use can be collected from environmental sources that likely contain high quantities of bacteria and bacteriophages, such as effluent outlets,",
+          "full_chars": 7339,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Biology StackExchange"
+    "source_task": "Biology StackExchange",
+    "example_count": 5
   }
 }

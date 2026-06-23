@@ -48,13 +48,13 @@ Strong models should improve lay-to-technical medical matching and evidence-set 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Milkshakes au chocolat santé | Objectif : Étudier la relation entre la consommation de cerises et le risque de crises de goutte récidivantes... |
-| éthique médicale | CONTEXTE : L'un des principaux défis dans la gestion du cholestérol sérique par l'intervention diététique... |
-| fèves | Au cours des 20 dernières années, l'intérêt croissant pour la biochimie, la nutrition et la pharmacologie de la L-arginine... |
-| Qu'est-ce qu'il y a vraiment dans les nuggets de poulet ? | But : Déterminer la composition des nuggets de poulet de deux chaînes de restauration nationales... |
-| graisses saturées | L'intérêt pour la possibilité que l'alimentation maternelle pendant la grossesse puisse influencer le développement des troubles allergiques chez les enfants a augmenté... |
+| Query | Positive document |
+| --- | --- |
+| Milkshakes au chocolat santé [28 chars] | Objectif : Étudier la relation entre la consommation de cerises et le risque de crises de goutte récidivantes chez les personnes atteintes de goutte. Méthodes : Nous avons mené une étude cas-témoins a... [200 / 2,038 chars] |
+| éthique médicale [16 chars] | CONTEXTE : L'un des principaux défis dans la gestion du cholestérol sérique par l'intervention diététique semble être l'amélioration de l'adhésion des patients. OBJECTIFS : Explorer les nombreuses que... [200 / 2,144 chars] |
+| fèves [5 chars] | Au cours des 20 dernières années, l'intérêt croissant pour la biochimie, la nutrition et la pharmacologie de la L-arginine a conduit à des études approfondies visant à explorer ses rôles nutritionnels... [200 / 1,531 chars] |
+| Qu'est-ce qu'il y a vraiment dans les nuggets de poulet ? [57 chars] | But : Déterminer la composition des nuggets de poulet de deux chaînes de restauration nationales. Contexte : Les nuggets de poulet sont devenus un élément majeur de l'alimentation américaine. Nous avo... [200 / 851 chars] |
+| graisses saturées [17 chars] | L'intérêt pour la possibilité que l'alimentation maternelle pendant la grossesse puisse influencer le développement des troubles allergiques chez les enfants a augmenté. La présente étude prospective... [200 / 2,400 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve lay-to-technical medical matching and evidence-set 
 
 | Label | URL |
 |---|---|
-| NFCorpus paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| NFCorpus project page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus paper (https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| NFCorpus project page (https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

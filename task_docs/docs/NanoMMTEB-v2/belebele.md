@@ -130,10 +130,13 @@ weighting or multilingual lexical expansion.
 
 ## Example Data
 
-Representative queries ask what is not an accurate tip for playing accordion in
-several languages, or which MySpace feature helps students with reading
-difficulties. Positive documents are short passages that explicitly support the
-answer, sometimes in a different script or language variant from the query.
+| Query | Positive document |
+| --- | --- |
+| Vad är enligt avsnittet inte ett bra knep för att spela dragspel? [65 chars] | Se till att din hand är så avslappnad som möjligt medan du fortfarande träffar alla noter korrekt. Försök också att inte göra många överflödiga rörelser med fingrarna. På det här sättet tröttar du ut... [200 / 440 chars] |
+| وفقاً للفقرة، ما الذي لا يُعتبر نصيحة دقيقة للعزف الناجح على الأكورديون؟ [72 chars] | Make sure your hand is as relaxed as possible while still hitting all the notes correctly - also try not to make much extraneous motion with your fingers. This way, you will tire yourself out as littl... [200 / 399 chars] |
+| According to the passage, what would not be considered an accurate tip for successfully playing the... [100 / 110 chars] | تأكد من استرخاء يدك قدر الإمكان مع الاستمرار في ضرب كل النغمات بشكل صحيح - حاول كذلك عدم القيام بحركاتٍ غريبةٍ بأصابعك. لن تبذل مجهوداً كبيراً إذا اتبعت تلك الطريقة. ضع نصب عينيك أنه ليس عليك الضغط عل... [200 / 364 chars] |
+| Čo sa podľa úryvku nepovažuje za presné odporúčanie, ako dobre hrať na akordeóne? [81 chars] | Make sure your hand is as relaxed as possible while still hitting all the notes correctly - also try not to make much extraneous motion with your fingers. This way, you will tire yourself out as littl... [200 / 399 chars] |
+| anuchhed anusar, kun MySpace suvidhaley padhna samasya vayeka vidyarthiharulai faidajanak huna sakch... [100 / 103 chars] | MySpace is the third most popular website used in the United States and has 54 million profiles currently. These websites have gotten a lot of attention, especially in the education setting. There are... [200 / 638 chars] |
 
 ### Public Sources
 
@@ -149,9 +152,9 @@ answer, sometimes in a different script or language variant from the query.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2024 | task paper | https://arxiv.org/abs/2308.16884 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| mteb/belebele | 2024 | dataset card | https://huggingface.co/datasets/mteb/belebele |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2024 | task paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| mteb/belebele | 2024 | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
 
 ### Representative Snippets
 

@@ -62,19 +62,21 @@ The best systems for this task should combine Thai-aware lexical recall with den
 
 ## Example Data
 
-### Public Sources
-
-- [Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval](https://arxiv.org/abs/2108.08787), 2021.
-- [castorini/mr-tydi](https://huggingface.co/datasets/castorini/mr-tydi), source dataset card.
-- [mteb/mrtidy](https://huggingface.co/datasets/mteb/mrtidy), MTEB dataset card.
+| Query | Positive document |
+| --- | --- |
+| พรรคแผ่นดินไทยมีใครป็นหัวหน้าพรรค? [34 chars] | พรรคเพื่อแผ่นดิน พรรคเพื่อแผ่นดิน เป็นพรรคการเมืองไทยซึ่งก่อตั้งในกลางปี พ.ศ. 2550 มีนายสุวิทย์ คุณกิตติ เป็นหัวหน้าพรรคคนแรก [126 chars] |
+| โค้ชเชคยเป็นโค้ชให้กับเทควันโดทีมชาติใดก่อนที่จะโค้ชให้ทีมไทย? [62 chars] | ชเว ย็อง-ซ็อก ชเวเริ่มเป็นโค้ชให้กับเทควันโดทีมชาติบาห์เรนในช่วงปี พ.ศ. 2543-2545 ต่อมาสมาคมเทควันโดแห่งประเทศไทยได้ติดต่อสหพันธ์เทควันโดสากล เพื่อจัดหาโค้ชมาทดแทนโค้ชเดิมที่ลาออกไป ชเวจึงได้รับคัดเลื... [200 / 882 chars] |
+| ดร. ถวัลย์ ดัชนี เสียชีวิตเมื่อไหร่? [36 chars] | ถวัลย์ ดัชนี ดร. ถวัลย์ ดัชนี (27 กันยายน พ.ศ. 2482 — 3 กันยายน พ.ศ. 2557) เป็นจิตรกร ช่างเขียนรูป แห่งดอยสูงเชียงราย ได้รับการยกย่องเชิดชูเกียรติให้เป็นศิลปินแห่งชาติ สาขาทัศนศิลป์ (จิตรกรรม) เมื่อพ.... [200 / 331 chars] |
+| เยื่อหุ้มสมองชั้นใน หมายถึงอะไร? [32 chars] | เยื่อหุ้มสมอง เยื่อเพีย หรือ<b data-parsoid='{"dsr":[1524,1549,3,3]}'>เยื่อหุ้มสมองชั้นใน (pia mater) เป็นเยื่อที่มีความบอบบางมาก อยู่ใกล้ชิดกับสมองและไขสันหลังมากที่สุด แนบไปกับกลีบ (gyrus) และร่อง (... [200 / 494 chars] |
+| ใครคือพระราชินีของอังกฤษในปี พ.ศ. 2550 ? [40 chars] | สมเด็จพระราชินีนาถเอลิซาเบธที่ 2 แห่งสหราชอาณาจักร สมเด็จพระราชินีนาถเอลิซาเบธที่ 2 (English: Elizabeth II; พระราชสมภพ 21 เมษายน พ.ศ. 2469) เป็นพระประมุขของ 16 ประเทศ จาก 53 รัฐสมาชิกในเครือจักรภพแห่ง... [200 / 275 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval | 2021 | paper | https://arxiv.org/abs/2108.08787 |
-| castorini/mr-tydi |  | dataset card | https://huggingface.co/datasets/castorini/mr-tydi |
-| mteb/mrtidy |  | dataset card | https://huggingface.co/datasets/mteb/mrtidy |
+| Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval | 2021 | paper | [https://arxiv.org/abs/2108.08787](https://arxiv.org/abs/2108.08787) |
+| castorini/mr-tydi |  | dataset card | [https://huggingface.co/datasets/castorini/mr-tydi](https://huggingface.co/datasets/castorini/mr-tydi) |
+| mteb/mrtidy |  | dataset card | [https://huggingface.co/datasets/mteb/mrtidy](https://huggingface.co/datasets/mteb/mrtidy) |
 
 ### Representative Snippets
 

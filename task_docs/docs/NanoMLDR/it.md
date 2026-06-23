@@ -133,11 +133,13 @@ BM25 recall but does not surpass BM25 top-rank quality.
 
 ## Example Data
 
-Representative queries ask about Georgian sentence structure with numerals and
-adjectives, negative traits in a new duke's behavior, tourist sites in
-Luxembourg that inspired Victor Hugo, CAD configuration or customization
-options, or the most famous wines of Monferrato. Positive documents are long
-Italian articles containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| Qual è la struttura delle frasi in georgiano riguardo l'uso dei numerali e degli aggettivi qualifica... [100 / 105 chars] | La lingua georgiana (nome nativo ქართული ენა, kartuli ena) è la lingua più parlata della famiglia caucasica meridionale, di cui rappresenta la lingua franca, nonché l'unica lingua con una propria trad... [200 / 27,139 chars] |
+| Quali caratteristiche negative emerse nel comportamento del nuovo Duca dopo aver preso il controllo... [100 / 111 chars] | Biografia L'unica erede del ducato Bianca Maria nacque nel castello di Settimo Pavese il 31 marzo del 1425, dalla nobildonna Agnese del Maino, forse dama di compagnia della sventurata Beatrice di Tend... [200 / 26,308 chars] |
+| Quali sono alcuni dei luoghi turistici più importanti del Granducato che hanno ispirato Victor Hugo? [100 chars] | Il Lussemburgo (), ufficialmente Granducato di Lussemburgo (; ; ), è uno Stato dell'Unione europea senza affaccio sul mare, confinante con Germania, Francia e Belgio. Membro fondatore dell'Unione euro... [200 / 25,354 chars] |
+| Quali sono le principali possibilità di configurazione o personalizzazione offerte dai sistemi per a... [100 / 181 chars] | CAD, in informatica, è un acronimo inglese usato per indicare due concetti correlati, ma differenti: computer-aided drafting (lett. "disegno tecnico assistito dall'elaboratore"): in tale accezione ind... [200 / 33,475 chars] |
+| Quali sono i vini più celebri della regione del Monferrato? [59 chars] | Il Monferrato (Monfrà in piemontese, Mons ferratus in latino) è una regione storico-geografica del Piemonte. Il suo territorio, quasi esclusivamente di natura collinare, è compreso principalmente all'... [200 / 26,207 chars] |
 
 ### Public Sources
 
@@ -153,9 +155,9 @@ Italian articles containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

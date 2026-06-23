@@ -130,8 +130,91 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-fr-22",
+        "document_id": "doc-fr-176",
+        "query": {
+          "text": "Quels sont les résultats des huitièmes de finale de la Coupe de France et de la Coupe UEFA ?",
+          "full_chars": 92,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cette page concerne l'actualité sportive du mois de . Mardi mars Football : surprises à l'occasion des huitièmes de finale de la Coupe de France. Clermont Foot, modeste seizième en Ligue 2, sort l'Oly",
+          "full_chars": 24419,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-fr-1052",
+        "document_id": "doc-fr-7530",
+        "query": {
+          "text": "Quel est le lien entre les personnages Xavier et Magnéto et les figures historiques de Martin Luther",
+          "full_chars": 191,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "X-Men est un film américain réalisé par Bryan Singer, sorti en 2000. C'est le premier film de la série X-Men mettant en scène les personnages de la série de comics X-Men de Marvel Comics, créés par le",
+          "full_chars": 22611,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-fr-484",
+        "document_id": "doc-fr-3681",
+        "query": {
+          "text": "Quel est le temps de traversée entre Ouistreham et Portsmouth en utilisant la ligne de ferry de Brit",
+          "full_chars": 114,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Le port de Caen-Ouistreham est un port de commerce, un port passager et un port de plaisance français s'étendant sur le canal de Caen à la mer depuis l'embouchure de l'Orne à Ouistreham jusqu'à la vil",
+          "full_chars": 22300,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-fr-403",
+        "document_id": "doc-fr-3086",
+        "query": {
+          "text": "Quel événement a conduit à la perte de la place de Bernard en équipe de France en été 199x ?",
+          "full_chars": 92,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bernard Lama, né le à Saint-Symphorien (Indre-et-Loire), est un footballeur international français évoluant au poste de gardien de but dans les années 1980-1990. Lama grandit et débute le football en",
+          "full_chars": 24800,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-fr-380",
+        "document_id": "doc-fr-2916",
+        "query": {
+          "text": "Quelles modifications ont été apportées à la monoplace de Lola pour améliorer ses performances en Fo",
+          "full_chars": 109,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La Lola T97/30 est une monoplace de Formule 1, conçue par Eric Broadley, fondateur de l'officine de construction de voitures de courses Lola Cars et engagée en championnat du monde de Formule 1 en 199",
+          "full_chars": 24630,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

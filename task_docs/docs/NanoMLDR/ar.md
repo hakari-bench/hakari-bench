@@ -146,12 +146,13 @@ against lexical long-document baselines.
 
 ## Example Data
 
-Representative queries ask why French forces confronted armed German groups in
-Asia Minor, what events concern Judas and Peter, which conventional symbols
-represent surface features, how many Vietnamese soldiers were killed during a
-Viet Minh reorganization campaign, or how the assassination of Isoroku Yamamoto
-affected Japanese morale. Positive documents are long Arabic articles containing
-the relevant answer paragraph.
+| Query | Positive document |
+| --- | --- |
+| ما هي الأسباب التي دفعت الفرنسيين إلى مواجهة الجموع المسلحة الألمانية في آسيا الصغرى؟ [85 chars] | الحملة الصليبية الثانية كانت ثاني حملة صليبية رئيسية تنطلق من أوروبا، دُعي إليها عام 1145 كرد فعل على سقوط إمارة الرها في العام الذي سبق. حيث كانت الرها (إديسا) أول مملكة مسيحية تقام خلال الحملة الصلي... [200 / 20,202 chars] |
+| ما هي أحداث النص المذكور التي تتعلق بيهودا وبطرس؟ [49 chars] | نظرة العهد الجديد لحياة المسيح أو حياة يسوع بحسب العهد الجديد وفقاً للعهد جديد فأن: يسوع المسيح ولد في بيت لحم كما توجب أن يولد بحسب ما تنبأ عنه النبي ميخا. تذكر الاناجيل الأربعة: متى، مرقس، لوقا، ويو... [200 / 15,908 chars] |
+| ما هي الرموز الاصطلاحية المستخدمة لتمثيل المظاهر السطحية؟ [57 chars] | الطبوغرافيا أو إرَاثَة أو سمات سطح الأرض أو علم التضاريس هو تمثيل دقيق لسطح الأرض بعناصره الطبيعية والبشرية (أي مهتم بتضاريس سطح الأرض) وهي علم توقيع ورسم الهيئات الطبيعة والاصطناعية بمقياس ويرسم وبرم... [200 / 23,514 chars] |
+| كم عدد الجنود الفيتناميين الذين قتلوا خلال حملة إعادة تنظيم فيت منه (1949-1950)؟ [80 chars] | الحرب الهندوصينية الفرنسية أو الحرب الهندوصينية الأولى أو حرب الهند الصينية (وتسمى أيضاً الحرب الفيتنامية الفرنسية) كانت نزاعاً في الهند الصينية في الفترة بين 1946 و1954 بين قوات الاحتلال الفرنسية وال... [200 / 21,218 chars] |
+| ما هو تأثير اغتيال القائد العام للقوات البحرية اليابانية إيسوروكو ياما على معنويات الجيش الياباني خل... [100 / 126 chars] | الاغتيال مصطلح يستعمل لوصف عملية قتل منظمة ومتعمدة تستهدف شخصية مهمة ذات تأثير فكري أو سياسي أو عسكري أو قيادي أو ديني ويكون مرتكز عملية الاغتيال عادة أسباب عقائدية أو سياسية أو اقتصادية أو انتقامية ت... [200 / 24,447 chars] |
 
 ### Public Sources
 
@@ -167,9 +168,9 @@ the relevant answer paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

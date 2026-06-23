@@ -70,9 +70,13 @@ For reranking, useful signals include exact tool or framework match, error-messa
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeRAGStackoverflowPosts is documented through CodeRAG-Bench and its public project resources. The source-specific dataset card is `code-rag-bench/stackoverflow-posts`.
+| Query | Positive document |
+| --- | --- |
+| Q: How can I find the full path to a font from its display name on a Mac? I am using the Photoshop's... [100 / 149 chars] | Given a font name returned by the API, I want to find the actual physical font file that font name corresponds to on the disc. This is all happening in a python program running on OSX so I guess I'm l... [200 / 5,076 chars] |
+| Q: How do I delete a file which is locked by another process in C#? I'm looking for a way to delete... [100 / 396 chars] | A: If you want to do it programmatically. I'm not sure... and I'd really recommend against it. If you're just troubleshooting stuff on your own machine, SysInternals Process Explorer can help you Run... [200 / 13,199 chars] |
+| Q: Editing database records by multiple users I have designed database tables (normalised, on an MS... [100 / 334 chars] | I am concerned that if two users start editing the same record then the last to commit the update would be the 'winner' and important information may be lost. A number of solutions come to mind but I'... [200 / 4,026 chars] |
+| Q: Throw an error preventing a table update in a MySQL trigger If I have a trigger before the update... [100 / 177 chars] | A: CREATE TRIGGER sample_trigger_msg BEFORE INSERT FOR EACH ROW BEGIN IF(NEW.important_value) < (1*2) THEN DECLARE dummy INT; SELECT Enter your Message Here!!! INTO dummy FROM mytable WHERE mytable.id... [200 / 5,314 chars] |
+| Q: Bandwith throttling in IIS 6 by IP Address I am writing an application that downloads large files... [100 / 391 chars] | Since this is an AIR Application, I figure I will throttle via server-side since I can do it from either the server itself (IIS 6) or the web service (asp.net / C#). Throttling through IIS 6 seems to... [200 / 922 chars] |
 
 ### Source Reference Table
 

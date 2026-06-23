@@ -70,12 +70,13 @@ Hybrid systems are well suited to this task. The observed metrics suggest that a
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-gis-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Gis-PL
+| Query | Positive document |
+| --- | --- |
+| Jak zmienić proporcje mapy bez zmiany skali? [44 chars] | Jak zmienić rozmiar elementu mapy w edytorze wydruku QGIS bez zmiany skali? Czy można zablokować skalę w kompozytorze wydruku QGIS 2.0.1? Za każdym razem, gdy zmieniam rozmiar mapy, skala jest dostoso... [200 / 286 chars] |
+| Jak używać SRTM Global DEM do obliczania nachylenia? [52 chars] | jaki jest odpowiedni układ współrzędnych rzutowanych do WGS84? > **Możliwe duplikowanie:** > Obliczanie globalnego DEM na nachylenie Chcę obliczyć nachylenie z mojego globalnego DEM? DEM ma odwzorowan... [200 / 520 chars] |
+| Skopiuj odpytywane atrybuty pliku kształtu do nowego pliku kształtu [67 chars] | Tworzenie rekordów w wyjściowym pliku kształtu za pomocą Pythona Mam listę (wyjście z poprzedniej pętli) zawierającą atrybuty z wejściowego pliku kształtu. To, z czym utknąłem, to wprowadzanie tych at... [200 / 1,933 chars] |
+| Konwertowanie pliku CSV do pliku kształtu [41 chars] | Jak mogę przekonwertować plik csv danych WKT na plik kształtu za pomocą programu ogr2ogr? To pytanie dotyczy plików Shape na tekst. Mam plik csv, z jedną kolumną, gdzie wszystkie wiersze odpowiadają W... [200 / 579 chars] |
+| Skrypty Pythona, które działają w ArcMap, a te, które działają na zewnątrz? [75 chars] | "EOFError: EOF podczas czytania linii" Używanie raw_input() w ArcMaps Python Console Piszę skrypt Pythona, aby zautomatyzować przetwarzanie niektórych danych ArcMaps. Dostaję się zawieszony na raw_inp... [200 / 739 chars] |
 
 ### Source Reference Table
 

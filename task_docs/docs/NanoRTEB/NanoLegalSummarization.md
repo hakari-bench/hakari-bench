@@ -62,19 +62,21 @@ Models should represent obligations, permissions, rights, and restrictions rathe
 
 ## Example Data
 
-### Public Sources
-
-- [Plain English Summarization of Contracts](https://aclanthology.org/W19-2201/), task paper.
-- [mteb/legal_summarization](https://huggingface.co/datasets/mteb/legal_summarization), source retrieval dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| this service may collect use and share location data. [53 chars] | apple and our partners and licensees may collect use and share precise location data including the real time geographic location of your apple computer or device. where available location based servic... [200 / 740 chars] |
+| you may mod the game but don t distribute hacked clients. [57 chars] | if you ve bought the game you may play around with it and modify it. we d appreciate it if you didn t use this for griefing though and remember not to distribute the changed versions of our software.... [200 / 349 chars] |
+| if you haven t played for a year you mess up or we mess up we can delete all of your virtual goods.... [100 / 245 chars] | we may cancel suspend or terminate your account and your access to your trading items virtual money virtual goods the content or the services in our sole discretion and without prior notice including... [200 / 1,441 chars] |
+| the service makes critical changes to its terms without user involvement. [73 chars] | gitlab reserves the right at its sole discretion to modify or replace any part of this agreement. it is your responsibility to check this agreement periodically for changes. your continued use of or a... [200 / 624 chars] |
+| dropbox along with their third parties are allowed to access scan store and duplicate content that y... [100 / 122 chars] | when you use our services you provide us with things like your files content email messages contacts and so on your stuff. your stuff is yours. these terms don t give us any rights to your stuff excep... [200 / 714 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Plain English Summarization of Contracts | 2019 | task paper | https://aclanthology.org/W19-2201/ |
-| mteb/legal_summarization |  | dataset card | https://huggingface.co/datasets/mteb/legal_summarization |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Plain English Summarization of Contracts | 2019 | task paper | [https://aclanthology.org/W19-2201/](https://aclanthology.org/W19-2201/) |
+| mteb/legal_summarization |  | dataset card | [https://huggingface.co/datasets/mteb/legal_summarization](https://huggingface.co/datasets/mteb/legal_summarization) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

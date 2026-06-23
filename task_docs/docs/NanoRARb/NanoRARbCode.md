@@ -62,19 +62,21 @@ Models should learn specification-to-implementation semantics. Hard negatives sh
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [CodeSearchNet Challenge: Evaluating the State of Semantic Code Search](https://arxiv.org/abs/1909.09436), source reference.
-- [OctoPack: Instruction Tuning Code Large Language Models](https://arxiv.org/abs/2308.07124), source reference.
+| Query | Positive document |
+| --- | --- |
+| Finish the following code based on the docstring: def digitSum(s): """Task Write a function that tak... [100 / 412 chars] | if s == "": return 0 return sum(ord(char) if char.isupper() else 0 for char in s) [85 chars] |
+| Finish the following code based on the docstring: def get_odd_collatz(n): """ Given a positive integ... [100 / 892 chars] | if n%2==0: odd_collatz = [] else: odd_collatz = [n] while n > 1: if n % 2 == 0: n = n/2 else: n = n*3 + 1 if n%2 == 1: odd_collatz.append(int(n)) return sorted(odd_collatz) [275 chars] |
+| Finish the following code based on the docstring: def rounded_avg(n, m): """You are given two positi... [100 / 489 chars] | if m < n: return -1 summation = 0 for i in range(n, m+1): summation += i return bin(round(summation/(m - n + 1))) [141 chars] |
+| Finish the following code based on the docstring: from typing import List, Tuple def rolling_max(num... [100 / 337 chars] | running_max = None result = [] for n in numbers: if running_max is None: running_max = n else: running_max = max(running_max, n) result.append(running_max) return result [232 chars] |
+| Finish the following code based on the docstring: def solve(s): """You are given a string s. if s[i]... [100 / 416 chars] | flg = 0 idx = 0 new_str = list(s) for i in s: if i.isalpha(): new_str[idx] = i.swapcase() flg = 1 idx += 1 s = "" for i in new_str: s += i if flg == 0: return s[len(s)::-1] return s [265 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| CodeSearchNet Challenge: Evaluating the State of Semantic Code Search | 2019 | arXiv paper | https://arxiv.org/abs/1909.09436 |
-| OctoPack: Instruction Tuning Code Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2308.07124 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| CodeSearchNet Challenge: Evaluating the State of Semantic Code Search | 2019 | arXiv paper | [https://arxiv.org/abs/1909.09436](https://arxiv.org/abs/1909.09436) |
+| OctoPack: Instruction Tuning Code Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2308.07124](https://arxiv.org/abs/2308.07124) |
 
 ### Representative Snippets
 

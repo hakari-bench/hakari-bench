@@ -113,11 +113,11 @@ reranker for final ordering.
 
 | Query | Positive document |
 | --- | --- |
-| Kith Godčo je poznavao Grateful Dead. | Grateful Dead je bila američka rok grupa osnovana 1965. godine u Palo Altu u Kaliforniji... |
-| "Taarak Mehta Ka Ooltah Chashmah" je sitkom. | "Taarak Mehta Ka Ooltah Chashmah" je najduže trajuća indijska sitkom serija koju proizvodi Neela Tele Films... |
-| Tajni i tehnološki napredni avioni proizvođeni su u Burbanku u Kaliforniji. | Burbank je grad u okrugu Los Anđeles u južnoj Kaliforniji, Sjedinjene Države... |
-| Nero je osoba. | Termin Julijevsko-Klaudijevska dinastija odnosi se na prvih pet rimskih careva, uključujući Nerona... |
-| "Scream 2" je isključivo nemački film. | Scream 2 je američki slasher film iz 1997. godine koji je režirao Wes Craven... |
+| Kith Godčo je poznavao Grateful Dead. [37 chars] | Grateful Dead je bila američka rok grupa osnovana 1965. godine u Palo Altu u Kaliforniji. Sa sastavom koji je varirao od kvinteta do septeta, bend je poznat po svom jedinstvenom i eklektičnom stilu, k... [200 / 2,888 chars] |
+| "Taarak Mehta Ka Ooltah Chashmah" je sitkom. [44 chars] | "Taarak Mehta Ka Ooltah Chashmah" (na engleskom: "Taarak Mehta's Different Perspective") je najduže trajuća indijska sitkom serija koju proizvodi Neela Tele Films Private Limited. Serija je počela sa... [200 / 590 chars] |
+| Tajni i tehnološki napredni avioni proizvođeni su u Burbanku u Kaliforniji. [75 chars] | Burbank je grad u okrugu Los Anđeles u južnoj Kaliforniji, Sjedinjene Države, 19 km severozapadno od centra Los Anđelesa. Prema popisu iz 2010. godine, stanovništvo je iznosilo 103.340. Poznat kao "Me... [200 / 1,321 chars] |
+| Nero je osoba. [14 chars] | Termin Julijevsko-Klaudijevska dinastija odnosi se na prvih pet rimskih careva — Avgusta, Tiberija, Kaligulu, Klaudija i Nerona — ili na porodicu kojoj su pripadali. Oni su vladali Rimskim Carstvom od... [200 / 2,025 chars] |
+| "Scream 2" je isključivo nemački film. [38 chars] | Scream 2 je američki slasher film iz 1997. godine koji je režirao Wes Craven, a scenario napisao Kevin Williamson. U filmu glume David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Ja... [200 / 2,427 chars] |
 
 ### Public Sources
 
@@ -131,7 +131,7 @@ reranker for final ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | https://arxiv.org/abs/1803.05355 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

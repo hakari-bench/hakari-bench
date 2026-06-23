@@ -141,21 +141,22 @@ on evidence-aware ranking.
 
 ## Example Data
 
-### Public Sources
-
-- [Fact or Fiction: Verifying Scientific Claims](https://arxiv.org/abs/2004.14974), 2020.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-scifact](https://huggingface.co/datasets/clips/beir-nl-scifact), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Metastatische colorectale kanker behandeld met enkelvoudige fluoropyrimidinen resulteerde in vermind... [100 / 227 chars] | Chemotherapieopties bij oudere en kwetsbare patiënten met metastatische colorectale kanker (MRC FOCUS2): een open-label, gerandomiseerde factorieel onderzoek ACHTERGROND Oudere en kwetsbare patiënten... [200 / 3,389 chars] |
+| CRP is geen voorspeller van postoperatieve mortaliteit na een coronaire arteriële bypass graft (CABG... [100 / 111 chars] | Beoordeling van de kosteneffectiviteit van het gebruik van prognostische biomarkers met beslissingsmodellen: een casestudy naar prioritering van patiënten in afwachting van coronaire bypass-chirurgie... [200 / 3,250 chars] |
+| Arginine 90 in p150n is belangrijk voor de interactie met EB1. [62 chars] | Structurele basis voor de activatie van microtubulusassemblage door het EB1 en p150Glued complex. Plus-eind trackende eiwitten, zoals EB1 en het dyneïne/dynactine complex, reguleren microtubulusdynami... [200 / 1,328 chars] |
+| Obesitas wordt uitsluitend bepaald door omgevingsfactoren. [58 chars] | Genetica van obesitas bij volwassen adoptiekinderen en hun biologische broers en zussen. Er werd een adoptiestudie uitgevoerd naar genetische effecten op obesitas bij volwassenen, waarbij adoptiekinde... [200 / 1,648 chars] |
+| Koortsstuipen verhogen de drempel voor het ontwikkelen van epilepsie. [69 chars] | Febriele insulten in de zich ontwikkelende hersenen leiden tot blijvende verandering van neuronale excitabiliteit in limbische circuits Febriele (koortsgeïnduceerde) insulten treffen 3–5% van de zuige... [200 / 915 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | https://arxiv.org/abs/2004.14974 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-scifact |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-scifact |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-scifact |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-scifact](https://huggingface.co/datasets/clips/beir-nl-scifact) |
 
 ### Representative Snippets
 

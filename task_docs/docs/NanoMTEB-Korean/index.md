@@ -166,13 +166,13 @@ same report, same statute, same Wikipedia page family, or related evidence chain
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| AutoRAG: Automated Framework for optimization of Retrieval Augmented Generation Pipeline | 2024 | paper | https://arxiv.org/abs/2410.20878 |
-| Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies | 2021 | paper | https://arxiv.org/abs/2101.02235 |
-| KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension | 2019 | paper | https://arxiv.org/abs/1909.07005 |
-| MIRACL |  | benchmark page | http://miracl.ai/ |
-| Massive Text Embedding Benchmark (MTEB) |  | benchmark repository | https://github.com/embeddings-benchmark/mteb |
-| yjoonjang/markers_bm |  | dataset card | https://huggingface.co/datasets/yjoonjang/markers_bm |
-| taeminlee/Ko-StrategyQA |  | dataset card | https://huggingface.co/datasets/taeminlee/Ko-StrategyQA |
-| on-and-on/lawgov_ir-ko |  | dataset card | https://huggingface.co/datasets/on-and-on/lawgov_ir-ko |
-| mteb/MIRACLRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrieval |
-| yjoonjang/squad_kor_v1 |  | dataset card | https://huggingface.co/datasets/yjoonjang/squad_kor_v1 |
+| AutoRAG: Automated Framework for optimization of Retrieval Augmented Generation Pipeline | 2024 | paper | [https://arxiv.org/abs/2410.20878](https://arxiv.org/abs/2410.20878) |
+| Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies | 2021 | paper | [https://arxiv.org/abs/2101.02235](https://arxiv.org/abs/2101.02235) |
+| KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension | 2019 | paper | [https://arxiv.org/abs/1909.07005](https://arxiv.org/abs/1909.07005) |
+| MIRACL |  | benchmark page | [http://miracl.ai/](http://miracl.ai/) |
+| Massive Text Embedding Benchmark (MTEB) |  | benchmark repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
+| yjoonjang/markers_bm |  | dataset card | [https://huggingface.co/datasets/yjoonjang/markers_bm](https://huggingface.co/datasets/yjoonjang/markers_bm) |
+| taeminlee/Ko-StrategyQA |  | dataset card | [https://huggingface.co/datasets/taeminlee/Ko-StrategyQA](https://huggingface.co/datasets/taeminlee/Ko-StrategyQA) |
+| on-and-on/lawgov_ir-ko |  | dataset card | [https://huggingface.co/datasets/on-and-on/lawgov_ir-ko](https://huggingface.co/datasets/on-and-on/lawgov_ir-ko) |
+| mteb/MIRACLRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrieval](https://huggingface.co/datasets/mteb/MIRACLRetrieval) |
+| yjoonjang/squad_kor_v1 |  | dataset card | [https://huggingface.co/datasets/yjoonjang/squad_kor_v1](https://huggingface.co/datasets/yjoonjang/squad_kor_v1) |

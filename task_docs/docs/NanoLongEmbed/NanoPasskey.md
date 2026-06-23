@@ -134,9 +134,13 @@ name-key pair.
 
 ## Example Data
 
-Representative queries ask for the passkey associated with Ronan Day, Flora Wu,
-Summer Walton, Cassidy Wolf, and Archer Peralta. Positive documents are long
-repetitive filler contexts containing exactly the requested passkey statement.
+| Query | Positive document |
+| --- | --- |
+| what is the passkey for Ronan Day? [34 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 1,778 chars] |
+| what is the passkey for Flora Wu? [33 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 3,598 chars] |
+| what is the passkey for Summer Walton? [38 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 3,608 chars] |
+| what is the passkey for Cassidy Wolf? [37 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 1,784 chars] |
+| what is the passkey for Archer Peralta? [39 chars] | The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.... [200 / 878 chars] |
 
 ### Public Sources
 
@@ -151,8 +155,8 @@ repetitive filler contexts containing exactly the requested passkey statement.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

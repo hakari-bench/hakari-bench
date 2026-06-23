@@ -68,9 +68,13 @@ The observed scores make reranking_hybrid the most useful candidate source. Furt
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| ROS2 Map not received when using nav2_bringup I'm currently using the TurtleBot2 on Ubuntu 22.04 Hum... [100 / 1,101 chars] | ## MapIO library `MapIO` library contains following API functions declared in `map_io.hpp` to work with OccupancyGrid maps: - loadMapYaml(): Load and parse the given YAML file - loadMapFromFile(): Loa... [200 / 1,367 chars] |
+| Custom hardware interface type I would like to write a controller that needs all joint states to upd... [100 / 2,560 chars] | \| \| // END: for backward compatibility Copy link Member ### ![@saikishor](https://avatars.githubusercontent.com/u/10082428?s=48&v=4) **[ saikishor ](/saikishor) ** Mar 17, 2024 There was a problem hid... [200 / 1,633 chars] |
+| Add files to be loaded when ROS node is launched Rosanswers logo Hello ROS community, I have a pytho... [100 / 1,169 chars] | # Python In Python, you can use the ` RosPack ` class in the [ rospkg ](http://docs.ros.org/independent/api/rospkg/html/) library to get information about ROS packages. For example: 1 import rospkg 2... [200 / 631 chars] |
+| Rosdep installing python dependencies as root seems to break the installation I started with ROS2 fo... [100 / 3,039 chars] | def main(args=None): rclpy.init(args=args) sensor = Vl53l1x_publisher() rclpy.on_shutdown(Vl53l1x_publisher.stop) rclpy.spin(sensor) # Destroy the node explicitly # (optional - otherwise it will be do... [200 / 1,120 chars] |
+| ldlidar ros 2, colcon build error, pthread mutex init/lock/unlock not declared So i am trying to use... [100 / 2,759 chars] | > > > #include <[pthread.h](pthread.h.html)> > > int pthread_mutex_init(pthread_mutex_t * _mutex_ , > const pthread_mutexattr_t * _attr_ ); > int pthread_mutex_destroy(pthread_mutex_t * _mutex_ ); > p... [200 / 285 chars] |
 
 ### Source Reference Table
 

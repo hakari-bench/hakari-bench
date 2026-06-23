@@ -62,21 +62,22 @@ Models should encode geospatial operation type, software context, file format, c
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), task paper.
-- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/), VN-MTEB paper.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), benchmark paper.
-- [GreenNode/cqadupstack-gis-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Tải nhiều tập tin shapefile vào PostGIS [39 chars] | lô hàng tải shp vào postgis > **Có thể trùng lặp:** > Tải khối nhiều tập tin hình dạng vào PostGIS Liệu có khả năng tải khối tập tin shp vào postgis. Hiện tại tôi đang thử nghiệm với postgis, qgis và... [200 / 515 chars] |
+| Có công cụ nào có thể lấy lại hệ tọa độ được dùng để tạo ra một shapefile khi file prj bị thiếu khôn... [100 / 102 chars] | Xác định hệ tọa độ của Shapefile khi chưa biết? Tôi có một Shapefile nhưng hệ tọa độ của nó là Unknown, và không có tệp *.prj. Làm thế nào tôi có thể xác định được bây giờ? Có công cụ nào có thể giúp... [200 / 210 chars] |
+| .tif và .tfw sang GeoTIFF [25 chars] | tfw tif to GeoTiff Làm thế nào để kết hợp một tệp .tif với một tệp .tfw để tạo GeoTiff? Có rất nhiều câu trả lời cho tôi sử dụng gdal, nhưng tôi không có ý tưởng. Vì vậy có ai có thể cung cấp một ví d... [200 / 246 chars] |
+| Chuyển đổi tệp CSV sang shapefile [33 chars] | Làm thế nào để tôi chuyển đổi một tệp csv của dữ liệu WKT sang một tệp hình dạng sử dụng ogr2ogr? Câu hỏi này liên quan đến Shapefiles to Text. Tôi có một tệp csv, với một cột, tất cả các hàng tương ứ... [200 / 619 chars] |
+| Làm thế nào để tạo các điểm tính năng với tọa độ chính xác? [59 chars] | QGIS thêm điểm sử dụng độ thập phân Khi giấy phép được bán, chúng tôi cần thêm vị trí sử dụng lat/long. Chúng tôi đang làm việc trong ArcView nhưng muốn chuyển sang QGIS- Mọi thứ tôi có thể tìm thấy d... [200 / 539 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | https://doi.org/10.1145/2838931.2838934 |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| GreenNode/cqadupstack-gis-vn |  | dataset card | https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| GreenNode/cqadupstack-gis-vn |  | dataset card | [https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn) |
 
 ### Representative Snippets
 

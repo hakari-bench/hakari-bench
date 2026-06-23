@@ -70,11 +70,13 @@ For evaluation, this task is a clean cross-lingual retrieval probe. The expected
 
 ## Example Data
 
-### Public Sources
-
-- Belebele paper: https://arxiv.org/abs/2308.16884
-- Belebele repository: https://github.com/facebookresearch/belebele
-- MTEB task dataset card: https://huggingface.co/datasets/mteb/belebele
+| Query | Positive document |
+| --- | --- |
+| การเปลี่ยนแปลงใดที่เกิดจากการปฏิวัติฝรั่งเศสมีผลกระทบอย่างมากต่อพลเมืองชนชั้นแรงงาน [83 chars] | There are a lot of social and political effects such as the use of metric system, a shift from absolutism to republicanism, nationalism and the belief the country belongs to the people not to one sole... [200 / 576 chars] |
+| จากบทความ ใครน่าจะเป็นผู้สร้างสังคมเกษตรกรรมขึ้น [48 chars] | For a long time during the nineteenth and twentieth centuries, it was believed the first inhabitants of New Zealand were the Maori people, who hunted giant birds called moas. The theory then establish... [200 / 747 chars] |
+| ข้อใดต่อไปนี้กล่าวถึงเกษตรกรรมเพื่อยังชีพได้ถูกต้อง [51 chars] | Subsistence agriculture is agriculture carried out for the production of enough food to meet just the needs of the agriculturalist and his/her family. Subsistence agriculture is a simple, often organi... [200 / 456 chars] |
+| จากบทความ ข้อใดเป็นยุคที่มีการนองเลือดที่สุดยุคหนึ่งของจีน [58 chars] | Ancient China had a unique way of showing different time periods; each stage of China or each family that was in power was a distinctive dynasty. Also between each dynasty was an unstable age of divid... [200 / 596 chars] |
+| กษัตริย์ตุตันคามุนมีชื่อเสียงในแง่ลบตอนไหน [42 chars] | "Yes! King Tutankhamun, sometimes referred to as ""King Tut"" or ""The Boy King"", is one of the most well known ancient Egyptian kings in modern times. Interestingly, he was not considered to be very... [200 / 570 chars] |
 
 ### Source Reference Table
 

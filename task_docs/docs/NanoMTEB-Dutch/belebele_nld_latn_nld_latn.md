@@ -174,21 +174,22 @@ rather than a pure dense-only benchmark.
 
 ## Example Data
 
-### Public Sources
-
-- [The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants](https://arxiv.org/abs/2308.16884), 2023.
-- [facebookresearch/belebele](https://github.com/facebookresearch/belebele), source repository.
-- [mteb/belebele](https://huggingface.co/datasets/mteb/belebele), MTEB dataset card.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
+| Query | Positive document |
+| --- | --- |
+| Welke uitspraak over het evenement waar de schietpartij plaatsvond, is juist? [77 chars] | Er waren op zijn minst 100 mensen op het feest aanwezig die de eerste huwelijksdag vierden van een koppel dat vorig jaar trouwde. Er stond een formeel verjaardagsevenement gepland voor een latere datu... [200 / 469 chars] |
+| Wat moeten arrestanten volgens het tijdelijke contactverbod dat in de tekst wordt genoemd, krijgen o... [100 / 149 chars] | In de afgelopen 3 maanden zijn er meer dan 80 arrestanten uit de Central Booking-inrichting vrijgelaten zonder dat ze officieel zijn aangeklaagd. In april van dit jaar heeft rechter Glynn een tijdelij... [200 / 748 chars] |
+| Welke uitspraak over de maansonde van de Chandrayaan-1 is niet waar? [68 chars] | De onbemande ruimtesonde Chandrayaan-1 wierp zijn Moon Impact Probe (MIP) uit, die vervolgens met 1,5 kilometer per seconde (3000 mijl per uur) over de oppervlakte van de maan werd geslingerd en met s... [200 / 409 chars] |
+| Wie stelde voor om de 'Clean Air Act' te herschrijven? [54 chars] | Premier Stephen Harper is akkoord gegaan om de 'Clean Air Act' van de overheid naar een commissie voor alle partijen te sturen voor herziening, voorafgaand aan de tweede lezing, na de 25 minuten duren... [200 / 1,010 chars] |
+| Welke van de volgende heeft de NBA besloten op te schorten? [59 chars] | Als gevolg van COVID-19 werd door de National Basketball Association (NBA) van de Verenigde Staten afgelopen woensdag het professionele basketbalseizoen opgeschort. De beslissing van de NBA werd genom... [200 / 274 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | https://arxiv.org/abs/2308.16884 |
-| facebookresearch/belebele | 2023 | repository | https://github.com/facebookresearch/belebele |
-| mteb/belebele |  | dataset card | https://huggingface.co/datasets/mteb/belebele |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| facebookresearch/belebele | 2023 | repository | [https://github.com/facebookresearch/belebele](https://github.com/facebookresearch/belebele) |
+| mteb/belebele |  | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
 
 ### Representative Snippets
 

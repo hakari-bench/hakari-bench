@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "dc3e9f13605bb0a21a424f6e9c53c96510d148b60c46a18d2d711bf94641834b",
+        "document_id": "f37b1fe7c5c6758e122d0175d1785efdfbc725d092328f54e2e747e04fe698ac",
+        "query": {
+          "text": "কেতিয়া কেইবাটাও হাতী আৰু দুটা গঁড় মানাহ ৰাষ্ট্ৰীয় উদ্যানলৈ প্ৰেৰণ কৰা হৈছিল?",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "[উদ্ধৃতিৰ প্ৰয়োজন] ১৯৬৮ চনত চৰকাৰে প্ৰণয়ন কৰে 'অসম ৰাষ্ট্ৰীয় উদ্যান আইন, ১৯৬৮ চন' (The Assam National Park Act of 1968) আৰু এই আইনৰ জৰিয়তে কাজিৰঙাক ৰাষ্ট্ৰীয় উদ্যানৰ ময্যদা দিয়া হয়। [উদ্ধৃতিৰ প",
+          "full_chars": 1207,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26be0e465e712cd33e57bda90cd6e9542dc2d79e1789f17e2bb5e30f4853d2e3",
+        "document_id": "29daa8301c918c081f406e8dfe384fbb3f6bf6de2fe31a4417afa95f34085b1b",
+        "query": {
+          "text": "উগ্ৰস সৌতীয়ে কিমানটা শ্লোক আবৃত্তি কৰিছিল?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "আগতেই কৈ অহা হৈছে যে পৰম্পৰাগতভাৱে ব্যাসক মহাভাৰতৰ লেখক বুলি কোৱা হয়। মহাভাৰতৰ প্ৰথম অনুচ্ছেদৰ মতে ব্যাসে গণেশক তেওঁৰ শ্ৰুতলিপি অনুসৰি শ্লোকসমূহ লিখিবলৈ অনুৰোধ কৰে। তেতিয়া গণেশে চৰ্ত্ত দিয়ে যে ব্যা",
+          "full_chars": 2113,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0c3156a979c5be0e1fa1b4c01799e803fd287d00b44ba8f601c4871231e2f1e8",
+        "document_id": "b830e687e04b772e2001a19e52d4a8e6f590faaea4ff7f64ea8478d8681525d6",
+        "query": {
+          "text": "জাপি কিহেৰে নিৰ্মাণ কৰা হয়?",
+          "full_chars": 27,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "অসমীয়া সমাজ জীৱনত বিভিন্ন বিশ্বাস, অনুভৱ আৰু আদৰ বা সন্মানৰ ক্ষেত্ৰত তামোল-পান, গামোছা আৰু শৰাইৰ বিশেষ ভূমিকা আছে। যিকোনো সামাজিক কামত তামোল-পাণ ব্যৱহাৰ কৰা হয়। কাৰোবাৰ ঘৰলৈ অহা অতিথিক আন নহ'লেও তাম",
+          "full_chars": 938,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f8574b4556844b07e6f8c135ce8da00a5b94818cd0a2207f8a3b939ba7a872ef",
+        "document_id": "34af817661a32da3c443212f3ade6216edff33b1e87ee8af38d826be1e9b3da2",
+        "query": {
+          "text": "মন খেমাৰে কি কি ভাষা কৈছিল?",
+          "full_chars": 27,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "অতি কমেও কেইবা শতিকাৰ পৰা এই দ্বীপ মালাত মানুহে বসবাস কৰি আহিছে। পুৰাতত্ববিদ সকলৰ মতে প্ৰায় ২,২০০ বছৰ মানৰ পৰা ইয়াত মানুহ থকাৰ প্ৰমাণ আছে, আনহাতেদি জিনীয় আৰু সাংস্কৃতিক অধ্যয়ণৰ পৰা দেখা গৈছে খিলঞ্",
+          "full_chars": 1224,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5dfbd0ce4129fa2a0544a8ca4858d0375430b7fe8b4ab34470fe0b5dfa572925",
+        "document_id": "3f5d710ac84d112043f1f6731ab9e8aee5ed3cd114b38fb0a38fa315f71638b5",
+        "query": {
+          "text": "আৰৱ সাগৰৰ সৰ্বাধিক প্ৰস্থ কিমান?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "আৰৱ সাগৰৰ আয়তন ৩৮,৬২,০০০ বৰ্গ কিলোমিটাৰ। ইয়াৰ সৰ্বোচ্চ প্ৰস্থ প্ৰায় ২,৪০০ কিলোমিটাৰ আৰু ইয়াৰ সৰ্বনিম্ন গভীৰতা ৪,৬০০ মিটাৰ। সিন্ধু নদ আৰৱ সাগৰলৈ প্ৰবাহিত সৰ্ববৃহৎ নদী। আৰৱ সাগৰৰ দুটা গুৰুত্বপূৰ্ণ শ",
+          "full_chars": 1063,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

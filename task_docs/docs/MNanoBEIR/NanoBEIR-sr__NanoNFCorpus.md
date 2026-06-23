@@ -113,11 +113,11 @@ coverage, because no candidate profile provides high recall in this subset.
 
 | Query | Positive document |
 | --- | --- |
-| Zdrav čokoladni milkshake | Cilj: Ispitati odnos između unosa trešanja i rizika od ponovljenih napada gihta kod osoba sa gihtom... |
-| medicinska etika | Pozadina: Jedan od glavnih problema u kontroli holesterola u krvi putem dijetetskih mera čini se potreba za poboljšanjem pridržavanja... |
-| grah | Tokom proteklih 20 godina, rastući interes za biohemiju, ishranu i farmakologiju L-arginina doveo je do opsežnih studija... |
-| Šta se zapravo nalazi u pilećim nuggetsima? | Namena: Utvrditi sastav pilećih nugeta iz 2 nacionalna lanca prehrambenih prodavnica... |
-| zasićena mast | Povećan je interes za mogućnost da ishrana majke tokom trudnoće može uticati na razvoj alergijskih oboljenja kod dece... |
+| Zdrav čokoladni milkshake [25 chars] | Cilj Ispitati odnos između unosa trešanja i rizika od ponovljenih napada gihta kod osoba sa gihtom. Metode Sproveli smo studiju preseka slučajeva kako bismo ispitali povezanost niza pretpostavljenih f... [200 / 1,596 chars] |
+| medicinska etika [16 chars] | POZADINA: Jedan od glavnih problema u kontroli holesterola u krvi putem dijetetskih mera čini se potreba za poboljšanjem pridržavanja pacijenata preporukama. CILJEVI: Ispitati brojna pitanja u vezi s... [200 / 1,853 chars] |
+| grah [4 chars] | Tokom proteklih 20 godina, rastući interes za biohemiju, ishranu i farmakologiju L-arginina doveo je do opsežnih studija koje istražuju njegovu nutritivnu i terapeutsku ulogu u lečenju i prevenciji me... [200 / 1,179 chars] |
+| Šta se zapravo nalazi u pilećim nuggetsima? [43 chars] | NAMENA: Utvrditi sastav pilećih nugeta iz 2 nacionalna lanca prehrambenih prodavnica. POZADINA: Pileći nugeti su postali glavna komponenta američke ishrane. Želeli smo da utvrdimo trenutni sastav ove... [200 / 718 chars] |
+| zasićena mast [13 chars] | Povećan je interes za mogućnost da ishrana majke tokom trudnoće može uticati na razvoj alergijskih oboljenja kod dece. Ova prospektivna studija ispitivala je povezanost unosa odabrane hrane bogate mas... [200 / 1,942 chars] |
 
 ### Public Sources
 
@@ -131,7 +131,7 @@ coverage, because no candidate profile provides high recall in this subset.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

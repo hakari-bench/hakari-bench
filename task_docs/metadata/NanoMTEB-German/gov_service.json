@@ -133,7 +133,7 @@
         "url": "https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA",
         "year": 2022,
         "is_paper": false,
-        "source_confidence": "definitive_dataset_link"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
@@ -148,8 +148,91 @@
         "url": "https://arxiv.org/abs/2502.13595",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q_d37462f2486cd33c314bf943945edead",
+        "document_id": "d_2593920fca8f128f1b19c4bc37c46e2d",
+        "query": {
+          "text": "Was bietet die Abteilung Ferienangebote/Familienpass für die Betreuer:innen an?",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Betreuer-innen für Ferienangebote Betreuer*innen für Ferienangebote Du hast Freude im Umgang mit Kindern und Jugendlichen, bist mindestens 18 Jahre alt und suchst einen sinnvollen Ferienjob? Dann meld",
+          "full_chars": 1283,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_27c89da63cbc17e2e010c9a87b046859",
+        "document_id": "d_7406c4e760408b595d1e1261f67f9d71",
+        "query": {
+          "text": "Was kostet die Heilpraktikerprüfung?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Allgemeine Heilpraktikererlaubnis kertätigkeit in München: Wenn Ihr amtlicher Wohnsitz nicht im Stadtgebiet München liegt, legen Sie Ihren Mietvertrag, Anstellungsvertrag oder andere Dokumente bei, di",
+          "full_chars": 1243,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_0805fed857683df2f345a103adca6c95",
+        "document_id": "d_b5a654426d6b6c245547a939f1e0f4cb",
+        "query": {
+          "text": "Wo muss ich anrufen, wenn ich Fragen zum Thema Ferienangebote habe?",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Betreuer-innen für Ferienangebote leitungen und Fachkräfte - eine faire Aufwandsentschädigung, sowie freie Unterkunft und Verpflegung - Tätigkeitsnachweis über dein ehrenamtliches Engagement Benötigte",
+          "full_chars": 1108,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_ee1ee35e7239d4226fd80583ab1466e7",
+        "document_id": "d_7e1d1885efd42ebd4d7b15982d8da90a",
+        "query": {
+          "text": "Wo bekomme ich einen Antrag auf Wohngeld?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wohngeld – Mietzuschuss für Mietwohnungen Nachweis Kontoauszüge vorlegen, dürfen Sie Verwendungszweck bzw. Empfänger einer Überweisung – nicht aber deren Höhe - schwärzen, wenn es sich um besondere Ka",
+          "full_chars": 1262,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_52c3eff7b1d247c67098aed0531595b6",
+        "document_id": "d_67d8c861948731aed9586b6acd5fcfd2",
+        "query": {
+          "text": "Woher weiß ich als Mieter wie meine Rauchmelder funktionieren?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Rauchmelder werden? Die Rauchwarnmelder müssen so eingebaut oderangebracht und betrieben werden, dass Brandrauchfrühzeitig erkannt und gemeldet wird. Genaue Angabenzur Standortwahl, Montage und Wartun",
+          "full_chars": 1174,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -117,11 +117,11 @@ exact biomedical matching with semantic evidence reasoning.
 
 | Query | Positive document |
 | --- | --- |
-| Ly49Q controla a migração de neutrófilos para locais de inflamação regulando as funções das rafts de membrana. | Neutrófilos sofrem polarização e movimento direcionado rapidamente para infiltrar os locais de infecção e inflamação... |
-| Terapia antirretroviral reduz as taxas de tuberculose em diferentes níveis de contagem de CD4. | A infecção pelo vírus da imunodeficiência humana é o principal fator de risco para o desenvolvimento da tuberculose... |
-| Aumento rápido e expressão basal aumentada de genes induzidos por interferon reduzem a sobrevivência de neurônios de células granulares infectados pelo vírus do Nilo Ocidental. | Embora a suscetibilidade dos neurônios do cérebro à infecção microbiana seja um grande determinante do resultado clínico... |
-| O rastreamento primário de câncer cervical com detecção de HPV apresenta maior sensibilidade longitudinal em comparação com a citologia convencional. | O rastreamento do câncer cervical baseado na detecção do papilomavírus humano aumenta a sensibilidade na detecção de neoplasia intraepitelial... |
-| Bloquear a interação entre TDP-43 e as proteínas ND3 e ND6 do complexo respiratório I resulta em aumento da perda neuronal. | Mutações genéticas na proteína de ligação ao DNA TAR 43 causam esclerose lateral amiotrófica... |
+| Ly49Q controla a migração de neutrófilos para locais de inflamação regulando as funções das rafts de... [100 / 110 chars] | Neutrófilos sofrem polarização e movimento direcionado rapidamente para infiltrar os locais de infecção e inflamação. Aqui, mostramos que um receptor inibitório MHC I, Ly49Q, foi essencial para a pola... [200 / 1,050 chars] |
+| Terapia antirretroviral reduz as taxas de tuberculose em diferentes níveis de contagem de CD4. [94 chars] | CONTEXTO A infecção pelo vírus da imunodeficiência humana (HIV) é o principal fator de risco para o desenvolvimento da tuberculose e tem impulsionado seu ressurgimento, especialmente na África subsaar... [200 / 2,345 chars] |
+| Aumento rápido e expressão basal aumentada de genes induzidos por interferon reduzem a sobrevivência... [100 / 176 chars] | Embora a suscetibilidade dos neurônios do cérebro à infecção microbiana seja um grande determinante do resultado clínico, pouco se sabe sobre os fatores moleculares que governam essa vulnerabilidade.... [200 / 1,256 chars] |
+| O rastreamento primário de câncer cervical com detecção de HPV apresenta maior sensibilidade longitu... [100 / 204 chars] | CONTEXTO O rastreamento do câncer cervical baseado na detecção do papilomavírus humano (HPV) aumenta a sensibilidade na detecção de neoplasia intraepitelial cervical de alto grau (grau 2 ou 3), mas nã... [200 / 2,486 chars] |
+| Bloquear a interação entre TDP-43 e as proteínas ND3 e ND6 do complexo respiratório I resulta em um... [100 / 146 chars] | Mutações genéticas na proteína de ligação ao DNA TAR 43 (TARDBP, também conhecida como TDP-43) causam esclerose lateral amiotrófica (ELA), e um aumento na presença de TDP-43 (codificada por TARDBP) no... [200 / 1,369 chars] |
 
 ### Public Sources
 
@@ -135,7 +135,7 @@ exact biomedical matching with semantic evidence reasoning.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SciFact: Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | https://arxiv.org/abs/2004.14974 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SciFact: Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

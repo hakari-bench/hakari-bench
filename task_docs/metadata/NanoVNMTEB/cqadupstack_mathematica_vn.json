@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "54993",
+        "document_id": "35107",
+        "query": {
+          "text": "nguồn giao nhau giữa hai đường cong trong Mathematica",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Giao điểm của hai đường cong bậc hai Tôi có một tập hợp các tập hợp điểm, mỗi tập hợp xác định phân đoạn của một đường cong (đẹp) trên cầu đơn vị $S^2 \\subset \\mathbb {R}^3$. Các điểm được tính toán b",
+          "full_chars": 2327,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "18310",
+        "document_id": "15647",
+        "query": {
+          "text": "Mathematica và Python tích hợp?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Có cách nào để chạy Python từ Mathematica không? Tôi biết có một số hỗ trợ cho việc chạy _Mathematica_ từ Python, nhưng có cách nào để làm ngược lại không? Ví dụ như nhập một vài lớp Python và sử dụng",
+          "full_chars": 228,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11950",
+        "document_id": "51618",
+        "query": {
+          "text": "Cách tránh lỗi NIntegrate::slwcon",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Làm thế nào để tính tích phân số học của một hàm, mà kết quả phải là 0? Tôi muốn tích phân số học hàm 'berrycur' theo kx và ky. Định nghĩa của 'berrycur' được đưa ra ở cuối câu hỏi. Đồ thị của 'berryc",
+          "full_chars": 3054,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8865",
+        "document_id": "14112",
+        "query": {
+          "text": "Truyền hàm hoặc công thức như là tham số của hàm",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Truyền một hàm như một tham số của một hàm khác > **Có thể trùng lặp:** > Pass hàm hoặc công thức như tham số hàm Tôi đang cố gắng thực hiện một hàm Plot[] giống nhau, với bản tóm tắt tương tự; lần th",
+          "full_chars": 909,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26857",
+        "document_id": "2099",
+        "query": {
+          "text": "Có cách nào để thêm các mũi tên dọc theo một đường cong tham số bên trong một hàm thao tác (Mathemat",
+          "full_chars": 105,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Vẽ đồ thị của một tập hợp các đường cong (không phải là trường vectơ) trong không gian 3 chiều Hãy xem xét một tập hợp các quỹ đạo trong không gian 3D, có thể hội tụ. Bằng cách trực quan hóa các quỹ đ",
+          "full_chars": 3641,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

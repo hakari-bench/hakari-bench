@@ -139,7 +139,7 @@
         "url": "https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -153,8 +153,91 @@
         "title": "BeIR/nq",
         "url": "https://huggingface.co/datasets/BeIR/nq",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "where is final four being held this year",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The 2018 NCAA Division I Men's Basketball Tournament was a 68-team single-elimination tournament to determine the men's National Collegiate Athletic Association (NCAA) Division I college basketball na",
+          "full_chars": 391,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "was nightmare before christmas originally a disney movie",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Nightmare Before Christmas originated in a poem written by Tim Burton in 1982, while he was working as an animator at Walt Disney Feature Animation. With the success of Vincent in the same year, W",
+          "full_chars": 650,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "why is the angel of the north there",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "According to Gormley, the significance of an angel was three-fold: first, to signify that beneath the site of its construction, coal miners worked for two centuries; second, to grasp the transition fr",
+          "full_chars": 308,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test826",
+        "document_id": "doc29757",
+        "query": {
+          "text": "where was the 3/5 compromise originally stated in the constitution",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Three-Fifths Compromise is found in Article 1, Section 2, Clause 3 of the United States Constitution, which reads:",
+          "full_chars": 118,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test2079",
+        "document_id": "doc72413",
+        "query": {
+          "text": "who sings somebody's watching me with michael jackson",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Somebody's Watching Me\" is a song by American singer Rockwell from his debut studio album Somebody's Watching Me (1984). It was released as Rockwell's debut single and lead single from the album on J",
+          "full_chars": 356,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

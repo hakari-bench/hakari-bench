@@ -161,4 +161,4 @@ member of the same patent family can leak the invention.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval | 2025 | paper | https://arxiv.org/abs/2506.22141 |
+| DAPFAM: A Domain-Aware Family-level Dataset to benchmark cross domain patent retrieval | 2025 | paper | [https://arxiv.org/abs/2506.22141](https://arxiv.org/abs/2506.22141) |

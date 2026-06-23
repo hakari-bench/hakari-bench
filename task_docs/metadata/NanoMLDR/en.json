@@ -130,8 +130,91 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-en-581",
+        "document_id": "doc-en-4490",
+        "query": {
+          "text": "Who was the last person mentioned in the text?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chronological Classics was a French compact disc reissue label. Gilles Pétard, the original owner, intended to release the complete master takes of all jazz and swing recordings that were issued on 78",
+          "full_chars": 31958,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-en-160",
+        "document_id": "doc-en-1263",
+        "query": {
+          "text": "What is one major limitation of PCR?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Polymerase chain reaction (PCR) is a method widely used to rapidly make millions to billions of copies (complete copies or partial copies) of a specific DNA sample, allowing scientists to take a very",
+          "full_chars": 49157,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-en-110",
+        "document_id": "doc-en-873",
+        "query": {
+          "text": "What did Ambassador Goldberg say about the US view of Jordan?",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "United Nations Security Council Resolution 242 (S/RES/242) was adopted unanimously by the UN Security Council on November 22, 1967, in the aftermath of the Six-Day War. It was adopted under Chapter VI",
+          "full_chars": 44540,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-en-660",
+        "document_id": "doc-en-5100",
+        "query": {
+          "text": "What is the time period in which Roman stiffeners are attributed to?",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A composite bow is a traditional bow made from horn, wood, and sinew laminated together, a form of laminated bow. The horn is on the belly, facing the archer, and sinew on the outer side of a wooden c",
+          "full_chars": 24773,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-en-272",
+        "document_id": "doc-en-2130",
+        "query": {
+          "text": "What is the first step in the USERec method of DNA recombination?",
+          "full_chars": 65,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Protein engineering is the process of developing useful or valuable proteins. It is a young discipline, with much research taking place into the understanding of protein folding and recognition for pr",
+          "full_chars": 46771,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

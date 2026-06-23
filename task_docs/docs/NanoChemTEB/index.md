@@ -133,7 +133,7 @@ used, audit the chemistry-filtered examples for overlap before training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| ChemTEB: Chemical Text Embedding Benchmark | 2024 | paper | https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html |
-| ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings | 2025 | paper | https://arxiv.org/abs/2508.01643 |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | paper | https://aclanthology.org/D18-1259/ |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | paper | https://aclanthology.org/Q19-1026/ |
+| ChemTEB: Chemical Text Embedding Benchmark | 2024 | paper | [https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html](https://proceedings.mlr.press/v262/shiraee-kasmaee24a.html) |
+| ChEmbed: Enhancing Chemical Literature Search Through Domain-Specific Text Embeddings | 2025 | paper | [https://arxiv.org/abs/2508.01643](https://arxiv.org/abs/2508.01643) |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | paper | [https://aclanthology.org/D18-1259/](https://aclanthology.org/D18-1259/) |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |

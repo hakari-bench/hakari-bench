@@ -142,29 +142,112 @@
         "url": "https://arxiv.org/abs/2305.19840",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language",
         "url": "https://aclanthology.org/2024.lrec-main.194/",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID",
         "url": "https://arxiv.org/abs/2104.09632",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "TREC-COVID data archive",
         "url": "https://ir.nist.gov/trec-covid/",
         "year": 2020,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "46",
+        "document_id": "038lkmye",
+        "query": {
+          "text": "jakie są dowody na to, że deksametazon może być stosowany w leczeniu COVID-19?",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Połączenie tocilizumabu i metyloprednizolonu wraz ze wstępną strategią rekrutacji płuc w chorobie koronawirusowej 2019 Pacjenci wymagający wentylacji mechanicznej: seria 21 kolejnych przypadków CEL: O",
+          "full_chars": 1767,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "0a5fccio",
+        "query": {
+          "text": "jak długo koronawirus pozostaje stabilny na powierzchniach?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Płyny ustrojowe mogą przyczyniać się do przenoszenia z człowieka na człowieka koronawirusa zespołu ostrej ostrej niewydolności oddechowej 2: dowody i doświadczenia praktyczne TŁO: W grudniu 2019 r. w",
+          "full_chars": 1201,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "01f5mvsc",
+        "query": {
+          "text": "czy dystans społeczny miał wpływ na spowolnienie rozprzestrzeniania się COVID-19?",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Zwiększona wykrywalność w połączeniu z planowaniem dystansu społecznego i zdrowia Zmniejsz obciążenie przypadkami i ofiarami śmiertelnymi związanymi z COVID-19: badanie weryfikujące koncepcję przy uży",
+          "full_chars": 1773,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "7",
+        "document_id": "01mo6yo9",
+        "query": {
+          "text": "czy istnieją testy serologiczne wykrywające przeciwciała przeciwko koronawirusowi?",
+          "full_chars": 82,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Serodiagnostyka dla koronawirusa-2 związanego z ciężkim ostrym zespołem oddechowym: przegląd narracyjny Dokładne testy serologiczne w celu wykrycia przeciwciał gospodarza przeciwko koronawirusowi-2 zw",
+          "full_chars": 1507,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25",
+        "document_id": "033q671f",
+        "query": {
+          "text": "które biomarkery przewidują ciężki przebieg kliniczny zakażenia 2019-nCOV?",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cechy kliniczne i predyktory dla pacjentów z ciężkim zapaleniem płuc SARS-CoV-2: retrospektywne wieloośrodkowe badanie kohortowe Cele: Badanie to przeprowadzono w celu zbadania cech klinicznych pacjen",
+          "full_chars": 1578,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

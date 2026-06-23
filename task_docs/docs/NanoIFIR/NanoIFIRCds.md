@@ -70,9 +70,13 @@ For reranking, the model should assess whether an article is useful for the spec
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the IFIR paper and the TREC 2015 Clinical Decision Support track overview. The Nano split is published in `hakari-bench/NanoIFIR`.
+| Query | Positive document |
+| --- | --- |
+| Given some infomation about patient.A 46-year-old woman with sweaty hands, exophthalmia, and weight... [100 / 162 chars] | Recognizing thyrotoxicosis in a patient with bipolar mania: a case report A thyroid stimulating hormone level is commonly measured in patients presenting with symptoms of mania in order to rule out an... [200 / 949 chars] |
+| Given some infomation about patient.6-month-old male with decreased urine output and edema several h... [100 / 289 chars] | Serum cystatin C concentration as a marker of acute renal dysfunction in critically ill patients In critically ill patients sudden changes in glomerular filtration rate (GFR) are not instantly followe... [200 / 1,849 chars] |
+| Given some infomation about patient.40-year-old woman with severe right arm pain and hypotension. Sh... [100 / 216 chars] | A simple statistical model for prediction of acute coronary syndrome in chest pain patients in the emergency department Several models for prediction of acute coronary syndrome (ACS) among chest pain... [200 / 1,449 chars] |
+| Given some infomation about patient.2-year-old boy with fever and irritability for 5 days. Physical... [100 / 396 chars] | Behaviour sequelae following acute Kawasaki disease Kawasaki disease is a systemic vasculitis and may affect cerebral function acutely. The aim of the present study was to measure a number of behaviou... [200 / 1,803 chars] |
+| Given some infomation about patient.31-year-old female with amenorrhea, milky nipple discharge, nega... [100 / 190 chars] | Prolactinomas, Cushing's disease and acromegaly: debating the role of medical therapy for secretory pituitary adenomas Pituitary adenomas are associated with a variety of clinical manifestations resul... [200 / 2,805 chars] |
 
 ### Source Reference Table
 

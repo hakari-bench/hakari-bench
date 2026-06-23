@@ -62,21 +62,22 @@ Models should learn to infer the test target from clinical clues and retrieve pa
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/MedXpertQA-Exam dataset card](https://huggingface.co/datasets/R2MED/MedXpertQA-Exam).
+| Query | Positive document |
+| --- | --- |
+| A 27-year-old male presents with anxiety and ongoing moodiness, citing stress at home and work. His... [100 / 703 chars] | Applications The National Institute for Health and Clinical Excellence endorsed the PHQ-9 for measuring depression severity and responsiveness to treatment in adults in a primary care setting. The Beh... [200 / 865 chars] |
+| A 65-year-old woman presents with an 8-month history of progressive difficulty swallowing food and r... [100 / 954 chars] | Procedure Clinical status and relevant medical history are reviewed prior to the studies. Patient consent is required. Barium swallow A barium swallow study is also known as a barium esophagram and ne... [200 / 787 chars] |
+| A 27-year-old primigravida at 33 weeks gestation visits her primary care physician with concerns abo... [100 / 489 chars] | Immune factors may also play a role. Diagnosis Testing for pre-eclampsia is recommended throughout pregnancy via measuring a woman's blood pressure. Diagnostic criteria Pre-eclampsia is diagnosed when... [200 / 902 chars] |
+| A 43-year-old female daycare teacher seeks medical attention for one month of fatigue and lightheade... [100 / 675 chars] | Diagnosis The presence of a uterine fibroid versus an adnexal tumor is made. Fibroids can be mistaken for ovarian neoplasms. An uncommon tumor which may be mistaken for a fibroid is Sarcoma botryoides... [200 / 890 chars] |
+| A 14-year-old girl with no notable medical history reports having intermittent mild pain in her uppe... [100 / 2,334 chars] | Hereditary hemochromatosis usually presents with a family history of cirrhosis, skin hyperpigmentation, diabetes mellitus, pseudogout, or cardiomyopathy, all due to signs of iron overload. Wilson's di... [200 / 929 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/MedXpertQA-Exam | 2025 | dataset card | https://huggingface.co/datasets/R2MED/MedXpertQA-Exam |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/MedXpertQA-Exam | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/MedXpertQA-Exam](https://huggingface.co/datasets/R2MED/MedXpertQA-Exam) |
 
 ### Representative Snippets
 

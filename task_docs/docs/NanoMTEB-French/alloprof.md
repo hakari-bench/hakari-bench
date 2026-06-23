@@ -135,19 +135,21 @@ school terms while adding semantic concept matching.
 
 ## Example Data
 
-### Public Sources
-
-- [MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis](https://arxiv.org/abs/2405.20468), 2024.
-- [mteb/AlloprofRetrieval](https://huggingface.co/datasets/mteb/AlloprofRetrieval), source dataset card.
-- [antoinelb7/alloprof](https://huggingface.co/datasets/antoinelb7/alloprof), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Bonjour, j'ai de la difficulté à comprendre les différences entre le simple past et le past progress... [100 / 169 chars] | Was he playing soccer when his mom arrived? They were watching a movie while their parents were preparing dinner. The past continuous is used to describe two types of actions happening in the past. On... [200 / 768 chars] |
+| Bonjour! Je suis en 5e année du primaire et je voudrais des trucs pour mémoriser les fractions irréd... [100 / 218 chars] | Les fractions équivalentes sont des fractions qui représentent le même nombre, la même proportion. Pour passer d'une fraction à une autre fraction équivalente, on peut multiplier ou diviser cette frac... [200 / 3,529 chars] |
+| bonjour, on comence a voir les cirquit électrique en science. ma question sais a quoi serve les Rési... [100 / 106 chars] | La résistance électrique est une propriété physique d'un matériau qui limite le passage du courant électrique dans un circuit. Les composantes qui possèdent cette propriété servent à limiter le passag... [200 / 2,507 chars] |
+| bonjour, l'eau est un PH7, alors le papier tournesol rouge et bleu ne réagient pas? merci [89 chars] | Il existe quatre façons de déterminer la nature d'une substance. Le papier tournesol est imbibé de teinture de tournesol ou d'extrait de poudre de lichen. Il sert d'indicateur coloré pour déterminer l... [200 / 4,326 chars] |
+| C'est quoi une somme [20 chars] | L'addition est une opération qui consiste à ajouter un nombre (ou plusieurs nombres) à un autre nombre. Les nombres qui composent l'addition se nomment les termes. La somme désigne le résultat de cett... [200 / 774 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | https://arxiv.org/abs/2405.20468 |
-| mteb/AlloprofRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/AlloprofRetrieval |
-| antoinelb7/alloprof |  | dataset card | https://huggingface.co/datasets/antoinelb7/alloprof |
+| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | [https://arxiv.org/abs/2405.20468](https://arxiv.org/abs/2405.20468) |
+| mteb/AlloprofRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/AlloprofRetrieval](https://huggingface.co/datasets/mteb/AlloprofRetrieval) |
+| antoinelb7/alloprof |  | dataset card | [https://huggingface.co/datasets/antoinelb7/alloprof](https://huggingface.co/datasets/antoinelb7/alloprof) |
 
 ### Representative Snippets
 

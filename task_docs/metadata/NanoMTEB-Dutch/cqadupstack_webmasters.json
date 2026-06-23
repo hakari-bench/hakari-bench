@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,118 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "58280",
+        "document_id": "67202",
+        "query": {
+          "text": "vind-nieuwe/berichten&recent=1 als homepage: wat met SEO?",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Best practice URL-structuur voor paginering Is een van deze formaten voor paginering beter voor SEO? * www.example.com/list/1 * www.example.com/list?page=1 Welke overwegingen of factoren moeten worden",
+          "full_chars": 332,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16390",
+        "document_id": "35486",
+        "query": {
+          "text": "Het voorkomen dat robots een specifiek gedeelte van een pagina crawlen",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Voorkom dat zoekmachines specifieke content op uw site indexeren **Mogelijk duplicaat:** > Voorkomen dat robots een specifiek gedeelte van een pagina crawlen Ik heb een nogal vreemd scenario waar ik m",
+          "full_chars": 1067,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11560",
+        "document_id": "20302",
+        "query": {
+          "text": "SEO-voorkeur voor WWW of HTTP:// protocolredirectie? Ranken www-websites beter dan niet-www?",
+          "full_chars": 92,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wat is de beste werkwijze voor het kiezen van een standaarddomein - www.example.com of example.com? **Mogelijk duplicaat:** > SEO-voorkeur voor WWW of HTTP:// protocolredirectie? Ranken www-websites >",
+          "full_chars": 458,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8354",
+        "document_id": "28330",
+        "query": {
+          "text": "Wat betekenen dubbele slashes in URL\\'s?",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Is er een probleem met het gebruik van twee slashes in het midden van een URL? **Mogelijke dubbel:",
+          "full_chars": 99,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "26240",
+        "document_id": "37628",
+        "query": {
+          "text": "Waarom werken Google Rich Snippets voor de ene site-auteur wel en voor de andere niet?",
+          "full_chars": 86,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Rich snippets genegeerd door Google **Mogelijk duplicaat:** Waarom werken Google Rich Snippets voor de ene site-auteur wel en voor de andere niet? Ik loop tegen een probleem aan. Ik heb rich snippets",
+          "full_chars": 764,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

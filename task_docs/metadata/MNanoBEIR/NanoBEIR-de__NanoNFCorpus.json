@@ -148,7 +148,7 @@
         "title": "NFCorpus project page",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -156,7 +156,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -164,15 +164,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Gesunde Schokoladen-Milchshakes",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ziel: Untersuchung der Beziehung zwischen dem Verzehr von Kirschen und dem Risiko von wiederkehrenden Gichtanfällen bei Personen mit Gicht. Methoden: Wir führten eine Fall-Kreuz-Studie durch, um die Z",
+          "full_chars": 1915,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "Medizinische Ethik",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "HINTERGRUND: Ein Hauptproblem bei der Kontrolle des Serumcholesterins durch diätetische Maßnahmen scheint die Notwendigkeit zu sein, die Patientencompliance zu verbessern. ZIELE: Untersuchung der vers",
+          "full_chars": 2153,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "Saubohnen",
+          "full_chars": 9,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In den letzten 20 Jahren hat das wachsende Interesse an der Biochemie, Ernährung und Pharmakologie von L-Arginin zu umfangreichen Studien geführt, um seine ernährungsphysiologischen und therapeutische",
+          "full_chars": 1445,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-68",
+        "document_id": "MED-2991",
+        "query": {
+          "text": "Was steckt eigentlich in Chicken Nuggets?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ZIEL: Untersuchung der Inhaltsstoffe von Hähnchen-Nuggets zweier nationaler Fast-Food-Ketten. HINTERGRUND: Hähnchen-Nuggets sind ein wesentlicher Bestandteil der amerikanischen Ernährung geworden. Wir",
+          "full_chars": 821,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2051",
+        "document_id": "MED-4551",
+        "query": {
+          "text": "gesättigte Fette",
+          "full_chars": 16,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Das Interesse an der Möglichkeit, dass die Ernährung der Mutter während der Schwangerschaft die Entwicklung von Allergien bei Kindern beeinflussen könnte, hat zugenommen. Die vorliegende prospektive S",
+          "full_chars": 2356,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

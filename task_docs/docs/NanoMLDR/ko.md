@@ -139,11 +139,13 @@ ordering still needs improvement.
 
 ## Example Data
 
-Representative queries ask why a character does not recognize magical ability,
-what role historical lineage members played, whether clinical-trial stages can
-be optimized, how daylight changes in Novosibirsk, and what roles characters
-play in a voice actor's works. Positive documents are Korean long articles
-containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| 자신의 마법 능력에 대해 인식하지 못하는 이유는 무엇인가요? [33 chars] | 테일즈위버(Talesweaver)는 넥슨과 소프트맥스가 소설 룬의 아이들을 원작으로 공동개발한 엠엠오알피지(MMORPG)다. 2003년 6월부터 정식 서비스를 개시한 이후 꾸준히 사랑받고 있다. 개요 원작은 전민희의 룬의 아이들로, 이것에서 비롯되었다. 시스템 일본에서는 2004년 9월부터 정식 서비스 중이다. 중화인민공화국에서는 2004년 5월에 처음 정... [200 / 12,131 chars] |
+| 왕조 시대에 존재한 김숙검과 김희삼은 어떤 역할을 했으며, 그들의 기여는 어떤 영향을 미쳤을까요? [54 chars] | 의성 김씨(義城 金氏)는 경상북도 의성군을 본관으로 하는 한국의 성씨이다. 의성의 고호가 문소인 관계로 혹칭 문소 김씨(聞韶 金氏)라고도 한다. 역사 초기 족보인 1530년 계축보 부터 1801년 신유보 까지 3백여 년간에 걸쳐 고려 말 태자첨사를 지낸 김용비(金龍庇)를 시조로 하고, 관향을 의성으로 하여 세계를 이어왔다. 상계는 실전되어 전하지 않는다고... [200 / 8,969 chars] |
+| 의 안전성을 평가하기 위해 추가적인 임상시험이 필요하다. 이러한 비용과 시간 소요를 고려할 때, 신약 개발 프로세스에서 임상시험 단계를 최적화하거나 대체할 수 있는 방법이 있는지... [100 / 106 chars] | 임상시험(臨床試驗, ) 또는 임상연구는 사람을 직접 대상으로, 사람에게서 추출(또는 적출)된 검체나 사람에 대한 정보를 이용하여 이루어지는 모든 시험 또는 연구이자 개발중인 신약의 사용 허가 전에 그 약의 효과와 안전성을 증명하는 과정이다. 참가자에 대한 이러한 전향적 생의학이나 행동 치료는 새로운 치료법 (신규 백신, 약물, 식이 선택, 식이 보충제 및... [200 / 13,280 chars] |
+| 노보시비르스크에서 겨울과 여름에는 어떻게 해가 떠 있는 시간이 변하는가? [40 chars] | 노보시비르스크(, )는 인구 수 기준으로 러시아 제3의 도시이며 시베리아 제1의 도시다. 시베리아 연방관구, 노보시비르스크주, 노보시비르스크구의 행정수도(주도)이며 서시베리아경제구역의 중심지이다. 노보시비르스크는 의의가 있는 도시로서, 도시구의 지위를 가진 시市 구성체 노보시비르스크시를 구성하는데, 이는 러시아에서 가장 인구가 많은 시 구성체이다. 또한 노... [200 / 12,930 chars] |
+| 이 작품에서 주인공들은 어떤 역할을 맡고 있나요? [27 chars] | 최원형(1968년 1월 3일 ~ )은 한국의 남자 성우다. 1993년 문화방송 11기 공채 성우로 데뷔했다. 출연 작품 굵은 글씨는 메인 캐릭터. TV 애니메이션 3x3 아이즈 : 성마전설 ova - 나파르바 DNA^2 (애니맥스) - 모모나리 준타 S.A 스페셜 에이 (애니맥스) - 타키시마 케이 가이스터즈 (MBC) - 딘 호너스 고미의 만화 호기심 천... [200 / 9,813 chars] |
 
 ### Public Sources
 
@@ -159,9 +161,9 @@ containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

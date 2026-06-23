@@ -62,9 +62,13 @@ A model targeting this task should improve domain-specific answer matching while
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FiQA-2018, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| What type of returns Vanguard is quoting? [41 chars] | "From the Vanguard page - This seemed the easiest one as S&P data is simple to find. I use MoneyChimp to get - which confirms that Vanguard's page is offering CAGR, not arithmetic Average. Note: Vangu... [200 / 387 chars] |
+| Freelancing Tax implication [27 chars] | If you have income in the US, you will owe US income tax on it, unless there is a treaty with your country that says otherwise. [127 chars] |
+| What is considered high or low when talking about volume? [57 chars] | The daily Volume is usually compared to the average daily volume over the past 50 days for a stock. High volume is usually considered to be 2 or more times the average daily volume over the last 50 da... [200 / 684 chars] |
+| Using credit card points to pay for tax deductible business expenses [68 chars] | "For simplicity, let's start by just considering cash back. In general, cash back from credit cards for personal use is not taxable, but for business use it is taxable (sort of, I'll explain later). T... [200 / 3,496 chars] |
+| How should I file my taxes as a contractor? [43 chars] | For tax purposes you will need to file as an employee (T4 slips and tax withheld automatically), but also as an entrepreneur. I had the same situation myself last year. Employee and self-employed is a... [200 / 689 chars] |
 
 ### Source Reference Table
 

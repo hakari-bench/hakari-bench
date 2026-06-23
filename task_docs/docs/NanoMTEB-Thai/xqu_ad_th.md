@@ -62,19 +62,21 @@ This task is best used to verify Thai QA-context retrieval behavior and error mo
 
 ## Example Data
 
-### Public Sources
-
-- [On the Cross-lingual Transferability of Monolingual Representations](https://arxiv.org/abs/1910.11856), source paper for XQuAD.
-- [google-deepmind/xquad](https://github.com/google-deepmind/xquad), source repository.
-- [google/xquad](https://huggingface.co/datasets/google/xquad), Hugging Face dataset card.
+| Query | Positive document |
+| --- | --- |
+| ศิลปินท่านใดที่ทำงานแกะสลักไม้ให้กับไบเบิลของลูเทอร์? [53 chars] | ถูกเผยแพร่ในเวลาที่มีความต้องการเพิ่มมากขึ้นสำหรับ สิ่งพิมพ์ภาษาเยอรมัน งานแปล คัมภีร์ไบเบิล เวอร์ชั่นของลูเทอร์กลายเป็นที่นิยมและมีอิทธิพลอย่างรวดเร็ว เช่นนั้น งานชิ้นนี้เป็นส่วนช่วยสำคัญแก่ วิวัฒนาก... [200 / 523 chars] |
+| ระหว่างการแข่งขันเพลย์ออฟ ใครไม่ได้ขว้างลูกบอลเลย [49 chars] | ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในกา... [200 / 453 chars] |
+| ทีมบรอนคอสทำคะแนนได้เท่าไรในสามนาทีสุดท้ายของการแข่งขันกับทีมพิตต์สเบิร์ก [73 chars] | ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในกา... [200 / 453 chars] |
+| ตลาดหลักทรัพย์วอร์ซอว์ตั้งอยู่ในอดีตสำนักงานใหญ่ของใครจนกระทั่งปี 2000 [70 chars] | ตลาดหลักทรัพย์แห่งแรกของวอร์ซอว์ก่อตั้งขึ้นในปี 1817 โดยทำการซื้อขายหลักทรัพย์เรื่อยมาจนถึง สงครามโลกครั้งที่สอง และได้รับการก่อตั้งขึ้นใหม่ใน เดือนเมษายน ปี 1991 หลังจากที่การปกครองของคอมมิวนิสต์ภายห... [200 / 605 chars] |
+| เดนเวอร์ถูกกันให้อยู่นอกเอนด์โซนกี่เกม หลังจากแย่งลูกบอลไปจากนิวตัน [67 chars] | ขณะที่เหลือเวลาอีก 4:51 นาทีแคโรไลนาได้ครองลูกบอลที่เส้น 24 หลาในเขตของตัวเอง โดยมีโอกาสทำคะแนนนำไปสู่ชัยชนะ และในไม่ช้าก็ไปถึงเส้นที่ 3 หลาตัดกับ 9 หลา ในการเล่นครั้งต่อไป มิลเลอร์ แย่งลูกบอลมาจาก นิ... [200 / 948 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| On the Cross-lingual Transferability of Monolingual Representations | 2019 | paper | https://arxiv.org/abs/1910.11856 |
-| google-deepmind/xquad |  | repository | https://github.com/google-deepmind/xquad |
-| google/xquad |  | dataset card | https://huggingface.co/datasets/google/xquad |
+| On the Cross-lingual Transferability of Monolingual Representations | 2019 | paper | [https://arxiv.org/abs/1910.11856](https://arxiv.org/abs/1910.11856) |
+| google-deepmind/xquad |  | repository | [https://github.com/google-deepmind/xquad](https://github.com/google-deepmind/xquad) |
+| google/xquad |  | dataset card | [https://huggingface.co/datasets/google/xquad](https://huggingface.co/datasets/google/xquad) |
 
 ### Representative Snippets
 

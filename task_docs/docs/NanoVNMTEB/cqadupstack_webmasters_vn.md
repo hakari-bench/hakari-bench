@@ -70,12 +70,13 @@ Error analysis should check whether false positives are same-brand, same-policy,
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-webmasters-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-webmasters-vn)
+| Query | Positive document |
+| --- | --- |
+| find-new/posts&recent=1 làm trang chủ: còn SEO thì sao? [55 chars] | Một URL với chuỗi truy vấn tốt hơn hay xấu hơn cho SEO so với một URL không có chuỗi truy vấn? Tôi muốn biết, có sự khác biệt đáng kể về SEO giữa hai URL này không: > mysite.com/ontario/toronto/listin... [200 / 327 chars] |
+| Đặt các từ khóa liên quan trong một phần tử div ẩn có phải là một thói quen tốt để thực hiện SEO khô... [100 / 103 chars] | Văn bản ẩn và xếp hạng của công cụ tìm kiếm Tôi đang sử dụng các văn bản ẩn trong một trang web của mình để xếp hạng công cụ tìm kiếm tốt hơn. Sau khi duyệt web, tôi thấy tốt nhất không nên sử dụng vă... [200 / 365 chars] |
+| Tôi có thể giúp Google xây dựng SiteLinks như thế nào? [54 chars] | Những điều quan trọng nhất tôi cần làm để khuyến khích Google Sitelinks là gì? Trang web của tôi đã từng có sitelinks và bây giờ không còn nữa. Rất có thể là do thay đổi trang web sang một thiết kế th... [200 / 479 chars] |
+| google analytics - tính toán người dùng đồng thời cao nhất cho một giờ nhất định [80 chars] | Đo lường số lượng khách truy cập cùng lúc cao nhất thông qua Google Analytics Có thể tìm ra qua Google Analytics số lượng người truy cập đồng thời cao nhất ở bất kỳ thời điểm nào không? [186 chars] |
+| Làm thế nào để tôi có thể khiến các công cụ tìm kiếm thu thập dữ liệu trên trang web của tôi và xem... [100 / 146 chars] | Các yếu tố cần cân nhắc khi tối ưu hóa trang web đa ngôn ngữ > **Có thể trùng lặp:** > Tôi có thể làm thế nào để các công cụ tìm kiếm thu thập dữ liệu và xem một phiên bản địa phương của trang web của... [200 / 965 chars] |
 
 ### Source Reference Table
 

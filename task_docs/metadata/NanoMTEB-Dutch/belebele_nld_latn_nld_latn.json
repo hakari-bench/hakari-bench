@@ -158,7 +158,89 @@
         "url": "https://github.com/facebookresearch/belebele",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C34",
+        "query": {
+          "text": "Welke uitspraak over het evenement waar de schietpartij plaatsvond, is juist?",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Er waren op zijn minst 100 mensen op het feest aanwezig die de eerste huwelijksdag vierden van een koppel dat vorig jaar trouwde. Er stond een formeel verjaardagsevenement gepland voor een latere datu",
+          "full_chars": 469,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C64",
+        "query": {
+          "text": "Wat moeten arrestanten volgens het tijdelijke contactverbod dat in de tekst wordt genoemd, krijgen o",
+          "full_chars": 149,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In de afgelopen 3 maanden zijn er meer dan 80 arrestanten uit de Central Booking-inrichting vrijgelaten zonder dat ze officieel zijn aangeklaagd. In april van dit jaar heeft rechter Glynn een tijdelij",
+          "full_chars": 748,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C54",
+        "query": {
+          "text": "Welke uitspraak over de maansonde van de Chandrayaan-1 is niet waar?",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De onbemande ruimtesonde Chandrayaan-1 wierp zijn Moon Impact Probe (MIP) uit, die vervolgens met 1,5 kilometer per seconde (3000 mijl per uur) over de oppervlakte van de maan werd geslingerd en met s",
+          "full_chars": 409,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q9",
+        "document_id": "C5",
+        "query": {
+          "text": "Wie stelde voor om de 'Clean Air Act' te herschrijven?",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Premier Stephen Harper is akkoord gegaan om de 'Clean Air Act' van de overheid naar een commissie voor alle partijen te sturen voor herziening, voorafgaand aan de tweede lezing, na de 25 minuten duren",
+          "full_chars": 1010,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q161",
+        "document_id": "C84",
+        "query": {
+          "text": "Welke van de volgende heeft de NBA besloten op te schorten?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Als gevolg van COVID-19 werd door de National Basketball Association (NBA) van de Verenigde Staten afgelopen woensdag het professionele basketbalseizoen opgeschort. De beslissing van de NBA werd genom",
+          "full_chars": 274,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "example_count": 5

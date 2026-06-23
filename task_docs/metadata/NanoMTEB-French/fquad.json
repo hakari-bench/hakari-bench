@@ -135,15 +135,98 @@
         "url": "https://arxiv.org/abs/2109.13209",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "manu/fquad2_test",
         "url": "https://huggingface.co/datasets/manu/fquad2_test",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "66",
+        "document_id": "pierre-lambert-de-la-motte_2_36",
+        "query": {
+          "text": "Quand est-ce que Pierre Lambert est proche des Jésuites ?",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "pierre-lambert-de-la-motte_2_36 La spiritualité de Pierre Lambert de La Motte évolue tout au long de sa vie. Il est marqué par son époque et principalement par le centralisme issue de l'Église post tr",
+          "full_chars": 786,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "sadi-carnot-(physicien)_12_8",
+        "query": {
+          "text": "Comment se nomme le frère de Carnot ?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "sadi-carnot-(physicien)_12_8 Parmi ses écrits posthumes, un manuscrit intitulé Recherche d’une formule propre à représenter la puissance motrice de la vapeur d’eau, rédigé entre novembre 1819 et mars",
+          "full_chars": 1382,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "casablanca-(film)_7_9",
+        "query": {
+          "text": "Pour quoi sont réputés les deux frères engagés par Wallis ?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "casablanca-(film)_7_9 Ce sont Julius J. et Philip G. Epstein qui sont engagés par Wallis pour adapter la pièce au grand écran. Réputés pour leur esprit ironique, les deux frères introduisent plusieurs",
+          "full_chars": 732,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9",
+        "document_id": "casablanca-(film)_7_7",
+        "query": {
+          "text": "Qui tire sur Strasser ?",
+          "full_chars": 23,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "casablanca-(film)_7_7 Lorsque Renault tente d'arrêter Laszlo, Rick double le policier en l'obligeant, sous la menace d'une arme, à laisser partir le couple. Il convainc également Ilsa de prendre l'avi",
+          "full_chars": 640,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "161",
+        "document_id": "casablanca-(film)_7_18",
+        "query": {
+          "text": "De quelle société Hal B. Wallis fait-il parti ?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "casablanca-(film)_7_18 Dans les années 1940, Casablanca était une ville paisible sur l'Atlantique jusqu'au jour où Hal B. Wallis, producteur de la Warner Bros., tombe sur la pièce Everybody Comes to R",
+          "full_chars": 857,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

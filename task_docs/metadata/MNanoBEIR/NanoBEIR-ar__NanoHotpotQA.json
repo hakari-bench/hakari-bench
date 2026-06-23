@@ -144,7 +144,7 @@
         "title": "HotpotQA official site",
         "url": "https://hotpotqa.github.io/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "شاركت بيني راي بريدجز في مسلسل كوميدي تلفزيوني مع أي ممثل آخر؟",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بيني راي بريدجز (ولدت في 29 يوليو 1990) ممثلة أمريكية. شاركت في العديد من الأعمال التلفزيونية مثل \"لأجل حبك\"، \"القانون العائلي\"، \"ولد يلتقي العالم\"، و\"بيت الآباء\". تشتهر بدورها في مسلسل \"نصف ونصف\" كشا",
+          "full_chars": 208,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "من منح كاغانوي شيجيموتشي سيفًا صنعه مؤسس مدرسة موراماسا؟",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "كاغانوي شيجيموتشي (加賀井 重望، 1561 – 27 أغسطس 1600) كان ساموراي يابانيًا في فترة أزوتشي-موموياما، خدم عشيرة أودا. كان حاكمًا على قلعة كاغانوي. خلال معركة كوماكي وناغاكوت، قاتل شيجيموتشي تحت قيادة والده ش",
+          "full_chars": 457,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "أي فيلم كتب وأخرجه جوبي هارولد مع موسيقى كتبها صموئيل سيم؟",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "سامويل سيم هو ملحن أفلام وتلفزيون. استطاع أن يحصل على الشهرة لأول مرة بموسيقى حازت على جوائز لسلسلة الدراما البريطانية \"دونكيرك\". منذ ذلك الحين، كتب الموسيقى لأعمال متنوعة من الأفلام والتلفزيون، وأحدث",
+          "full_chars": 452,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae63b2255429908198fa526",
+        "document_id": "46395880",
+        "query": {
+          "text": "ما هو تاريخ مباراة كرة القدم الجامعية التي لعبت في ملعب صن لايف في ميامي جاردنز، فلوريدا، حيث هزم كل",
+          "full_chars": 146,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "فريق كرة القدم كليمسون تايجرز لعام 2015 كان يمثل جامعة كليمسون في موسم كرة القدم NCAA Division I FBS لعام 2015. كان الفريق بقيادة المدرب الرئيسي دابو سويني في عامه السابع الكامل والثامن بشكل عام منذ ت",
+          "full_chars": 1006,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a84fd085542994c784ddaba",
+        "document_id": "1854777",
+        "query": {
+          "text": "Devil's Food هي مجموعة من الأغاني الفردية من فرقة روك أند رول أمريكية كانت معروفة أيضًا بأداء عروض ك",
+          "full_chars": 120,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Devil's Food هي مجموعة من الأغاني الفردية المفضلة من فرقة الروك الأمريكية Supersuckers، صدرت في أبريل 2005 عن طريق شركة Mid-Fi Records.",
+          "full_chars": 135,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "Argument Mining for Understanding Peer Reviews",
-        "url": "https://aclanthology.org/P18-1023/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Argument Mining for Understanding Peer Reviews",
+        "url": "https://aclanthology.org/P18-1023/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "Javnost je apatična prema reformi. Da li bi reforma Doma lordova trebalo da bude glavni prioritet u",
+          "full_chars": 737,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Kampanja za alternativni glas ne može se porediti sa reformom Doma lordova, štaviše, ne treba mešati neinformisanu javnost usled političkog spinovanja sa apatijom. Često glasači izražavaju da su apati",
+          "full_chars": 404,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "Proširenje Hitroua je od vitalnog značaja za ekonomiju. Širenje Hitroua bi osiguralo mnoga postojeća",
+          "full_chars": 1430,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Poslovna zajednica je daleko od jedinstva u svom navodnom podržavanju treće piste. Ankete pokazuju da mnoge uticajne kompanije zapravo ne podržavaju proširenje. Pismo izražavajući zabrinutost potpisal",
+          "full_chars": 1272,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "Ljudi imaju previše izbora, što ih čini manje srećnim. Oglašavanje dovodi do toga da su mnogi prepla",
+          "full_chars": 1016,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Ljudi su nesrećni jer ne mogu da imaju sve, a ne zato što im se daje previše izbora i to im stvara stres. Zapravo, reklame igraju ključnu ulogu u obezbeđivanju da novac koji ljudi imaju potroše na naj",
+          "full_chars": 876,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "Kibernetički napadi se često izvode od strane ne-državnih aktera, kao što su kiberteroristi ili hakt",
+          "full_chars": 941,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "U slučaju napada od strane nedržavnih aktera, mnogi praktičari međunarodnog prava slažu se da država i dalje može uzvratiti u samoodbrani ako druga država 'nije voljna ili nije u stanju da preduzme ef",
+          "full_chars": 578,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "Pošto religija podstiče izvesnost u verovanju, mržnja nadahuta božanskim lako se koristi da opravda",
+          "full_chars": 1259,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Niko nije primoran da izvrši nasilne radnje zbog tuđih reči; to je njihov izbor. Isto tako, postoji mnogo ljudi koji zastupaju stavove koji bi se mogli smatrati homofobičnim, ali bi bili zgroženi nasi",
+          "full_chars": 569,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "71",
+        "document_id": "Pony/4_control-structures_13.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: You are given an array of integers stones where s",
+          "full_chars": 730,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "So first we ask if there are any more names to get. If there are then we get a name and see if it's \"Jack\" or \"Jill\". If it is we're done and we break out of the loop, handing back the name we've foun",
+          "full_chars": 676,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "110",
+        "document_id": "Pony/2_ops_11.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: You are given an integer array nums. The unique e",
+          "full_chars": 323,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "We can see that it makes more sense for the unary operator to be applied before either infix as it only acts on a single number in the expression so it is never ambiguous. Unary operators can also be",
+          "full_chars": 380,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "Pony/1_variables_1.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: Given an array of integers nums, write a function",
+          "full_chars": 281,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Local variables Local variables in Pony work very much as they do in other languages, allowing you to store temporary values while you perform calculations. Local variables live within a chunk of co",
+          "full_chars": 1245,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "83",
+        "document_id": "Pony/2_ops_1.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: Given an integer number n, write a function that",
+          "full_chars": 370,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Infix Operators Infix operators take two operands and are written between those operands. Arithmetic and comparison operators are the most common: ```pony 1 + 2 a < b ``` Pony has pretty much the sa",
+          "full_chars": 248,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "3",
+        "document_id": "Pony/4_control-structures_13.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: A string s is nice if, for every letter of the al",
+          "full_chars": 592,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "So first we ask if there are any more names to get. If there are then we get a name and see if it's \"Jack\" or \"Jill\". If it is we're done and we break out of the loop, handing back the name we've foun",
+          "full_chars": 676,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Pony"
+    "source_task": "Pony",
+    "example_count": 5
   }
 }

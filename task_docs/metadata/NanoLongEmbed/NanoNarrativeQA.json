@@ -143,8 +143,91 @@
         "url": "https://huggingface.co/datasets/dwzhu/LongEmbed",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "query_66",
+        "document_id": "doc_291",
+        "query": {
+          "text": "Why hasn't Irena killed herself before?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ï»¿The Project Gutenberg EBook of When We Dead Awaken, by Henrik Ibsen This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away",
+          "full_chars": 131749,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_123",
+        "document_id": "doc_221",
+        "query": {
+          "text": "What does the bomber leave behind that reveals his identity?",
+          "full_chars": 60,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "<html> <head><title>Source Code Script at IMSDb.</title> <meta name=\"description\" content=\"Source Code script at the Internet Movie Script Database.\"> <meta name=\"keywords\" content=\"Source Code script",
+          "full_chars": 219018,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_103",
+        "document_id": "doc_115",
+        "query": {
+          "text": "Whose hand does Grayes reluctantly take in marriage?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ï»¿The Project Gutenberg EBook of Desperate Remedies, by Thomas Hardy This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away",
+          "full_chars": 817284,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_9",
+        "document_id": "doc_283",
+        "query": {
+          "text": "Who did Plato not deter from writing according to Cicero in speaking to Romans?",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ï»¿The Project Gutenberg EBook of Cicero's Brutus or History of Famous Orators; also His Orator, or Accomplished Speaker., by Cicero This eBook is for the use of anyone anywhere at no cost and with al",
+          "full_chars": 481075,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_161",
+        "document_id": "doc_271",
+        "query": {
+          "text": "What did Mrs. Lovett reveal to Todd?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "<html> <head><title>Sweeney Todd: The Demon Barber of Fleet Street Script at IMSDb.</title> <meta name=\"description\" content=\"Sweeney Todd: The Demon Barber of Fleet Street script at the Internet Movi",
+          "full_chars": 252633,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

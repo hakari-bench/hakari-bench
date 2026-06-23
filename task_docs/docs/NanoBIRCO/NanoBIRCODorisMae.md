@@ -62,9 +62,13 @@ A model targeting this task should represent individual query facets and then sc
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BIRCO's complex-objective retrieval benchmark, with NanoBIRCO providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| My objective is to devise a methodology for constructing intelligent robots that mimic human-like be... [100 / 1,172 chars] | In this paper, we propose a novel task, Manipulation Question Answering (MQA), where the robot performs manipulation actions to change the environment in order to answer a given question. To solve thi... [200 / 915 chars] |
+| I want to build a healthcare decision support system that will recommend treatment plans for patient... [100 / 1,255 chars] | Although reinforcement learning (RL) has tremendous success in many fields, applying RL to real-world settings such as healthcare is challenging when the reward is hard to specify and no exploration i... [200 / 773 chars] |
+| I am working on a project analyzing customer feedback for a new product launch, so I need a method t... [100 / 730 chars] | With the evolution of the cloud and customer centric culture, we inherently accumulate huge repositories of textual reviews, feedback, and support data.This has driven enterprises to seek and research... [200 / 1,906 chars] |
+| I am interested in understanding how modern computer programs can emulate human causal logic. To ach... [100 / 749 chars] | Research in Cognitive Science suggests that humans understand and represent knowledge of the world through causal relationships. In addition to observations, they can rely on experimenting and counter... [200 / 1,606 chars] |
+| As a data scientist, I am currently developing an early detection system designed to identify the on... [100 / 1,196 chars] | Deep learning is attracting significant interest in the neuroimaging community as a means to diagnose psychiatric and neurological disorders from structural magnetic resonance images. However, there i... [200 / 1,359 chars] |
 
 ### Source Reference Table
 

@@ -62,9 +62,13 @@ A model targeting this task should preserve exact entity and alias recall while 
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on DBpedia-Entity, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| fitzgerald auto mall chambersburg pa [36 chars] | Fitzgerald Auto Malls is a family owned and operated auto dealership that was founded in 1966, with its first location opening in Bethesda, Maryland. As of 2014, Fitzgerald Auto Malls ranked number 59... [200 / 429 chars] |
+| 1994 short story collection Alice Munro is Open [47 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, née Laidlaw /ˈleɪdlɔː/; born 10 July 1931) is a Canadian author. Munro's work has been described as having revolutionized the architecture of short stories, espec... [200 / 499 chars] |
+| gallo roman architecture in paris [33 chars] | Art in Paris is an article on the art culture and history in Paris, the capital of France. For centuries, Paris has attracted artists from around the world, arriving in the city to educate themselves... [200 / 333 chars] |
+| republics of the former Yugoslavia [34 chars] | The 1974 Yugoslav Constitution was the fourth and final constitution of the Socialist Federal Republic of Yugoslavia. It came into effect on February 21.With 406 original articles, the 1974 constituti... [200 / 436 chars] |
+| films shot in Venice [20 chars] | A Little Romance is a 1979 American Technicolor and Panavision romantic comedy film directed by George Roy Hill and starring Laurence Olivier, Thelonious Bernard, and Diane Lane in her film debut. The... [200 / 371 chars] |
 
 ### Source Reference Table
 

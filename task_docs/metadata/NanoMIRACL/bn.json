@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "849",
+        "document_id": "1197#1",
+        "query": {
+          "text": "শ্রীনিবাস রামানুজনের বাবার নাম কি ছিল ?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "শ্রীনিবাস রামানুজন রামানুজন ১৮৮৭ খ্রিস্টাব্দের ২২ ডিসেম্বর প্রাচীন ভারতের মাদ্রাজ প্রদেশের তাঞ্জোর জেলার ইরেভদ শহরের এক দরিদ্র ব্রাহ্মণ পরিবারে জন্মগ্রহণ করেন। তাঁর পিতা \"কে শ্রীনিবাস ইয়েঙ্গার\" ছিলেন",
+          "full_chars": 589,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "226",
+        "document_id": "6025#2",
+        "query": {
+          "text": "জে কে রাউলিং রচিত হ্যারি পটার উপন্যাসের প্রকাশক কে ?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "হ্যারি পটার এই বইয়ের সাফল্য রাউলিংকে ইতিহাসে সবচেয়ে বেশী উপার্জন করা লেখকের তালিকায় শীর্ষস্থান দিয়েছে। বইগুলোর ইংরেজি সংস্করণণ প্রকাশ করে ব্লুমসবারি যুক্তরাজ্যে, স্কলাস্টিক প্রেস যুক্তরাষ্ট্রে, অ্",
+          "full_chars": 256,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "128",
+        "document_id": "282430#4",
+        "query": {
+          "text": "খেজুর গাছে খেজুর ফল আসতে কতদিন সময় লাগে ?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "খেজুর গাছে ফল উৎপাদনের জন্য সচরাচর ৪ থেকে ৮ বছর পর্যন্ত অপেক্ষা করতে হয়। তবে বাণিজ্যিকভাবে ফসল উৎপাদন উপযোগী খেজুর গাছে ফল আসতে ৭ থেকে ১০ বছর সময় লেগে যায়। পূর্ণাঙ্গ খেজুর গাছে প্রতি মৌসুমে গড়ে ৮০",
+          "full_chars": 417,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "955",
+        "document_id": "82827#1",
+        "query": {
+          "text": "ওড়িশার কোন শহরে জগন্নাথের প্রধান মন্দিরটি অবস্থিত ?",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "জগন্নাথ জগন্নাথের মূর্তি সাধারণত কাঠে তৈরি করা হয়। এই মূর্তির চোখদুটি বড়ো বড়ো ও গোলাকার। হাত অসম্পূর্ণ। মূর্তিতে কোনো পা দেখা যায় না। জগন্নাথের পূজাপদ্ধতিও অন্যান্য হিন্দু দেবতাদের পূজাপদ্ধতির চেয",
+          "full_chars": 310,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "436",
+        "document_id": "36117#1",
+        "query": {
+          "text": "সাদ্দাম হোসেন আবদুল মাজিদ আল তিকরিতি কবে নিহত হন ?",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "সাদ্দাম হুসাইন প্রথমে সাদ্দাম হোসেন জেনারেল আহমেদ হাসান আল বকরের উপ-রাষ্ট্রপতি ছিলেন। সেই সময় সাদ্দাম দৃঃঢ় ভাবে সরকার ও সামরিক বাহিনীর মধ্যকার বিরোধের অবসান ঘটান। এই উদ্দেশ্যে তিনি নিরাপত্তা বাহিনী",
+          "full_chars": 1237,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

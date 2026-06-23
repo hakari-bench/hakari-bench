@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "779",
+        "document_id": "1767314#0",
+        "query": {
+          "text": "В честь кого назван ЭВС «Сапсан»?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Сапсан (электропоезд) ЭВС «Сапсан» (\"Velaro RUS\") — высокоскоростные электропоезда из семейства электропоездов Velaro производства компании Siemens, приобретённые ОАО «РЖД» для эксплуатации на российс",
+          "full_chars": 429,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "204",
+        "document_id": "1602089#0",
+        "query": {
+          "text": "Когда Тимофе́й Па́влович Мозго́в стал игроком команды НБА «Орландо Мэджик»?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Мозгов, Тимофей Павлович Тимофе́й Па́влович Мозго́в (16 июля 1986, Ленинград) — российский профессиональный баскетболист, выступающий за команду НБА «Орландо Мэджик». Играет на позиции центрового. Пер",
+          "full_chars": 574,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "121",
+        "document_id": "4910544#42",
+        "query": {
+          "text": "Вавилон был центром держави Александра Македонского?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "История Вавилона В октябре 331 г до н. э. Александр Македонский торжественно вступил в Вавилон, принёс жертву Белу и был провозглашён \"«царём Вавилона и четырёх сторон света»\". Македонское войско преб",
+          "full_chars": 1161,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "952",
+        "document_id": "49798#2",
+        "query": {
+          "text": "Как умер последний царь России Николай Второй?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Николай II Николай II отрёкся от престола в ходе Февральской революции 1917 года, после чего находился вместе с семьёй под домашним арестом в Александровском дворце Царского Села. Летом 1917 года по р",
+          "full_chars": 459,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "391",
+        "document_id": "1905858#9",
+        "query": {
+          "text": "Где построили первую кирпичную церковь на Руси?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Советское (Саратовская область) В XVIII веке колония имела сначала молитвенный дом, а затем небольшую деревянную кирху Вознесения пресвятой девы Марии. Первая кирпичная церковь была построена в 1800 г",
+          "full_chars": 698,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

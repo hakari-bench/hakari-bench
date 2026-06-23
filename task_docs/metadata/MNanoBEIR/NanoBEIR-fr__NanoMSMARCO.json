@@ -85,42 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MS MARCO dataset site",
-        "url": "https://microsoft.github.io/msmarco/Datasets.html",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-fr",
       "source_urls": [
@@ -129,6 +93,125 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MS MARCO dataset site",
+        "url": "https://microsoft.github.io/msmarco/Datasets.html",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "Qu'est-ce que le syndrome de rumination ?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Syndrome de rumination. Le syndrome de rumination, également appelé merycisme, est un trouble alimentaire non spécifié qui provoque la régurgitation des aliments. Bien qu'il ne soit pas identifié comm",
+          "full_chars": 316,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "Qui a chanté \"Here I Go Again\" ?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pour d'autres usages, voir Here I Go Again (homonymie). \"Here I Go Again\" est une chanson du groupe de rock britannique Whitesnake. Parue à l'origine sur leur album de 1982, Saints & Sinners, la chans",
+          "full_chars": 359,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "Quel rôle joue Cameron Boyce dans la série Liv et Maddie ?",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Préparez-vous à bien rire, les amis. Dans un EXCLUSIF avant-première de l'épisode du 19 avril de Liv & Maddie intitulé “Prom-A-Rooney.” Évidemment. Dans cet extra hilarant, on voit l'acteur de Jessie,",
+          "full_chars": 334,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971233",
+        "document_id": "4589415",
+        "query": {
+          "text": "Où se situent la plupart des grands déserts de la Terre ?",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Les autres déserts de la Terre se situent en dehors des régions polaires. Le plus grand est le désert du Sahara, un désert subtropical situé en Afrique du Nord.",
+          "full_chars": 160,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1093082",
+        "document_id": "7778956",
+        "query": {
+          "text": "Que signifie le mot \"flic\" ?",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Selon les résultats actuels, il semble que le terme « copper » (un policier, littéralement « celui qui arrête ») soit antérieur à « cop » (utilisé soit verbalement pour signifier « arrêter » ou comme",
+          "full_chars": 412,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

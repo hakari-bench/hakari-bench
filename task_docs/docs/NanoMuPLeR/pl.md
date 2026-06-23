@@ -62,19 +62,21 @@ Models should jointly preserve Polish legal morphology, exact institutional name
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Kto ponownie zaapelował o powołanie doświadczonych specjalistów, powołując się na reguły nadzoru, po... [100 / 157 chars] | Komitet zdaje sobie sprawę, że taki postulat wpływa na niełatwy kompromis pomiędzy wymogiem przejrzystości, przepisami Europejskiego Trybunału Obrachunkowego i polem manewru wszystkich decydentów. To... [200 / 702 chars] |
+| Które chronione Kartą prawo dostępu do usług w ogólnym interesie gospodarczym wymaga analizy na mocy... [100 / 137 chars] | Jeśli chodzi o wpływ zaproponowanych przez Komisję ram regulacyjnych na prawa użytkowników, należy przypomnieć, że w określonych wypadkach konieczna będzie konkretna analiza dotycząca zachowania prawa... [200 / 677 chars] |
+| Która decyzja sądowa pokazała ostatnio, że sądy przekształcają krajowe opodatkowanie przedsiębiorstw... [100 / 165 chars] | Niepożądanym skutkiem ubocznym dotychczasowego braku porozumienia ze strony Rady i Parlamentu Europejskiego w kwestiach wspólnej podstawy wymiaru opodatkowania przedsiębiorstw jest to, iż niezbędne de... [200 / 680 chars] |
+| Które orzeczenie skrytykowało sąd niższej instancji za przecenianie różnic brzmieniowych i niedoceni... [100 / 166 chars] | Sąd mylnie wyszedł z założenia, że pomiędzy spornymi znakami towarowymi istnieje wystarczająca różnica brzmieniowa, ponieważ rejestracja zgłoszonego znaku towarowego podlega odmowie już z uwagi na sam... [200 / 669 chars] |
+| Którego organu utworzenie uznano za zachęcający pierwszy krok do włączenia doświadczonych praktyków... [100 / 134 chars] | Nie jest z tym sprzeczne żądanie, by w większym stopniu niż dotychczas włączać doświadczonych ekspertów i wybitnych przedstawicieli nauki i techniki w procesy decyzyjne i sprawy administracyjne w zakr... [200 / 584 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

@@ -68,9 +68,13 @@ The task is useful for evaluating multilingual retrieval models on Chinese MS MA
 
 ## Example Data
 
-### Public Sources
-
-The task is based on mMARCO and appears in the C-MTEB/C-Pack Chinese retrieval benchmark family.
+| Query | Positive document |
+| --- | --- |
+| 黑死病对欧洲文化的影响 [11 chars] | 继续阅读以了解他们的发现。在接下来的几个世纪里，黑死病在欧洲偶尔抬头。但到了 1352 年，它基本上已经放松了控制。欧洲人口受到重创，这对经济产生了影响。劳动力被摧毁——农场被废弃，建筑物倒塌。劳动力短缺，劳动力价格飞涨，商品成本上升。 [118 chars] |
+| adh 的增加会导致肾脏 ________ 重吸收水分，从而产生 _______ 尿液。 [44 chars] | 抗利尿激素 (ADH) 和肾功能。 ADH 的主要作用是通过增加重新吸收到血液中的水量来限制尿液中丢失的水量。 [55 chars] |
+| 拒绝漂亮女人和鬼魂的女演员 [13 chars] | 莫莉·林沃德拒绝了《漂亮女人》中薇薇安的角色和《鬼魂》中莫莉的角色等。她还获得了《尖叫》中的一个角色，但她拒绝了，因为她已经 20 岁了，不想扮演青少年角色。 [79 chars] |
+| 索尼 PS-LX300USB 如何连接电脑 [21 chars] | 连接 USB 电缆 使用随附的 USB 电缆连接唱盘和计算机。USB 电缆（提供）到 USB 端口到 USB 插孔计算机（未提供）。 11 GB 操作 PS-LX300USB.GB.3-198-123-15(1) 续 ÃƒÂ®Ã‚â€‚‚Â¼ Notes ÃƒÂ®Ã‚ ‚ 不保证转盘可与 USB 集线器或 USB 一起使用延长线。使用随附的 USB 线。 ÃƒÂ®Ã‚ ‚ 将 USB 电缆牢固地连... [200 / 342 chars] |
+| 争论辩论的意义 [7 chars] | 同义词讨论辩论。讨论，争论，辩论的意思是为了得出结论或说服而进行的讨论。讨论意味着对可能性的筛选，特别是通过提出正反两方面的考虑，讨论对新高速公路的需求。 [77 chars] |
 
 ### Source Reference Table
 

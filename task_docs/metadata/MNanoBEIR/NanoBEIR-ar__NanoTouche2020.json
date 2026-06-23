@@ -153,7 +153,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -161,15 +161,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "هل الواجبات المدرسية مفيدة؟",
+          "full_chars": 27,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "أولاً، هناك ثلاثة حجج تدعم أهمية الواجبات المنزلية في المدارس الحديثة. 1. الواجبات المنزلية تساعد المتعلمين الذين يتعلمون من خلال الفعل. هناك ثلاثة أنواع من المتعلمين: الذين يتعلمون من خلال السمع، وال",
+          "full_chars": 3157,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "هل يجب أن تُعلن الأدوية الموصوفة مباشرة للأفراد؟",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "كثير من الإعلانات لا تحتوي على معلومات كافية حول فعالية الأدوية. على سبيل المثال، يتم الإعلان عن الدواء \"لونستا\" عبر فراشة تطير عبر نافذة غرفة نوم فوق شخص نائم بسلام. في الواقع، يساعد \"لونستا\" المرضى",
+          "full_chars": 1033,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "هل يجب تطعيم الأطفال؟",
+          "full_chars": 21,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ليس هناك قضية كاملة بعد... مجرد بعض النقاط التي جمعتها... لا يجب أن يكون للحكومة الحق في التدخل في قرارات الصحة التي يتخذها الآباء لأطفالهم. وفقًا لاستطلاع أجرته جامعة ميشيغان في عام 2010، يعتقد 31% م",
+          "full_chars": 3842,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
+        "query": {
+          "text": "هل يجب أن تكون الإجهاض قانونيًا؟",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "يجب أن تكون الإجهاض قانونيًا، حيث تبدأ الشخصية بعد أن يصبح الجنين قادرًا على الحياة أو بعد الولادة، وليس عند الحمل. وفقًا لمحكمة العدل العليا الأمريكية، يبدأ الشخص في الحصول على عمره بعد الولادة عندما",
+          "full_chars": 261,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26",
+        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
+        "query": {
+          "text": "هل اختبارات القياس الموحد تحسن من جودة التعليم؟",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "القرار: اختبارات SAT وACT وغيرها من الاختبارات المعيارية توفر رؤى أكبر حول استعداد طالب المدرسة الثانوية للتعليم في الكليات والجامعات النخبة مقارنة بمعدل التخرج من المدرسة الثانوية، وبالتالي يجب أن تل",
+          "full_chars": 3549,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

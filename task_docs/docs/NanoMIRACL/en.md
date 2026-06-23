@@ -156,11 +156,13 @@ then rerank aggressively for evidence specificity.
 
 ## Example Data
 
-Representative queries ask how many people visit the Eiffel Tower each year,
-how long the Omo River is, where Sun Yat-sen studied medicine, what the
-population of Lagos is, or when Marxism developed. Positive documents are
-English Wikipedia passages containing the requested statistic, location,
-definition, date, or historical relation.
+| Query | Positive document |
+| --- | --- |
+| How many people visit the Eiffel Tower each year? [49 chars] | Tourism in Paris The Eiffel Tower is acknowledged as the universal symbol of Paris and France. It was originally designed by Émile Nouguier and Maurice Koechlin. In March 1885 Gustave Eiffel, known pr... [200 / 752 chars] |
+| How long is the Omo River? [26 chars] | Omo River Its course is generally to the south, however with a major bend to the west at about 7° N 37° 30' E to about 36° E where it turns south until 5° 30' N where it makes a large S- bend then res... [200 / 367 chars] |
+| Where did Sun Yat-sen study medicine? [37 chars] | Sun Yat Sen Memorial House Whilst studying at the Hong Kong College of Medicine for Chinese, the young Dr. Sun constantly travelled between Hong Kong and Macau to criticise the corruption of the Qing... [200 / 537 chars] |
+| What is the population of Lagos? [32 chars] | Lagos Colony Lagos Colony was a British colonial possession centred on the port of Lagos in what is now southern Nigeria. Lagos was annexed on 6 August 1861 under the threat of force by Commander Bedd... [200 / 1,092 chars] |
+| Who was the first executive producer of EastEnders? [51 chars] | Jules Tavernier (EastEnders) In the latter part of 1989 "EastEnders" acquired a new executive producer named Michael Ferguson, who took over from Mike Gibbon. Ferguson had previously been a producer o... [200 / 518 chars] |
 
 ### Public Sources
 
@@ -178,10 +180,10 @@ definition, date, or historical relation.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

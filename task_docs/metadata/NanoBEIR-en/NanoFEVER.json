@@ -129,7 +129,7 @@
         "title": "FEVER project site",
         "url": "http://fever.ai",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -137,8 +137,91 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "Keith Godchaux knew the Grateful Dead.",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Grateful Dead was an American rock band formed in 1965 in Palo Alto , California . Ranging from quintet to septet , the band is known for its unique and eclectic style , which fused elements of ro",
+          "full_chars": 3024,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah is a sitcom.",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah ( English : Taarak Mehta 's Different Perspective ) is India 's longest running sitcom serial produced by Neela Tele Films Private Limited . The show went on-air on Jul",
+          "full_chars": 581,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Secret and technologically advanced airplanes were produced in Burbank, California.",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank is a city in Los Angeles County in Southern California , United States , 12 mi northwest of downtown Los Angeles . The population at the 2010 census was 103,340 . Billed as the `` Media Capita",
+          "full_chars": 1401,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "85454",
+        "document_id": "Julio-Claudian_dynasty",
+        "query": {
+          "text": "Nero is a person.",
+          "full_chars": 17,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The term Julio-Claudian dynasty refers to the first five Roman emperors -- Augustus , Tiberius , Caligula , Claudius , and Nero -- or the family to which they belonged . They ruled the Roman Empire fr",
+          "full_chars": 2069,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172320",
+        "document_id": "Scream_2",
+        "query": {
+          "text": "Scream 2 is exclusively a German film.",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Scream 2 is a 1997 American slasher film directed by Wes Craven and written by Kevin Williamson . It stars David Arquette , Neve Campbell , Courteney Cox , Sarah Michelle Gellar , Jamie Kennedy , Laur",
+          "full_chars": 2542,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

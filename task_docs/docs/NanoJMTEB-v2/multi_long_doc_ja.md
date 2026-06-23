@@ -161,12 +161,13 @@ useful mainly for broadening candidate coverage.
 
 ## Example Data
 
-Representative queries ask about maternal and child health policy in a Bolivia
-article, turquoise production and trade, Ymobile and Willcom Okinawa store
-operation models, legal risks related to Scientology, and possible issues with
-stops or guidance inside Manhattan. The positive documents are full long
-articles, often thousands of characters long, where the relevant evidence may
-be only a local section.
+| Query | Positive document |
+| --- | --- |
+| 国家母子保健政策の具体的な内容は何ですか？ [21 chars] | ボリビア多民族国（ボリビアたみんぞくこく、、、）、通称ボリビアは、南アメリカ大陸西部にある立憲共和制国家。憲法上の首都はスクレだが、ラパスが実質的な首都機能を担っており、議会をはじめとした政府主要機関が所在する。ラパスは標高3600メートルで、世界で最も高所にある首都となっている。 太平洋戦争 (1879年-1884年)で敗れてチリに太平洋海岸部の領土を奪われて以降は内陸国となっており、南西はチリ... [200 / 10,747 chars] |
+| トルコ石製品の生産と取引が繁栄した地域について、以下のような質問が考えられます: - トルコ石製品の生産と取引が繁栄した理由は何ですか？ - トルコ石製品の生産と取引が繁栄した地域では、どのような特別... [100 / 418 chars] | トルコ石（トルコいし、turquoise、ターコイズ）は青色から緑色の色を持つ不透明な鉱物。化学的には水酸化銅アルミニウム燐酸塩であり、化学式では CuAl6(PO4)4(OH)8·4H2O と表される。良質のものは貴重であり、宝石とみなされる。 その色合いのために、数千年の昔から装飾品とされてきた。近年では他の多くの不透明の宝石と同様に、表面処理されたものや模造品・合成品が市場に出回っていて問題... [200 / 11,470 chars] |
+| ワイモバイルとウィルコム沖縄の直営店と代理店の運営モデルについて、以下の質問が考えられます: 1. ワイモバイルとウィルコム沖縄の直営店と代理店の運営モデルの違いは何ですか？ 2. ワイモバイルとウィ... [100 / 540 chars] | ワイモバイル株式会社（Ymobile Corporation）は、かつて存在した、日本の電気通信事業者。 2014年7月1日付けでイー・アクセス株式会社から商号変更した。 主にADSL回線の卸売、及びY!mobileのブランド名で移動体通信およびPHSサービスを提供している。2013年1月1日付で一度ソフトバンクの完全子会社となったが、議決権付株式の売却により、同年1月17日から持分法適用関連会社... [200 / 13,385 chars] |
+| ジー教会との関係を持つことは、どのような法的リスクを伴いますか？ [32 chars] | サイエントロジー（）は、アメリカの作家L・ロン・ハバードによって考案された一連の信条と実践、および関連する運動である。 概要. カルト、ビジネス、新宗教運動など、さまざまな定義がある。最新の国勢調査によると、アメリカには約25,000人（2008年）、イギリスには約2,300人（2011年）、カナダ（2011年）とオーストラリア（2016年）にはそれぞれ約1,700人のフォロワー がいるとされてい... [200 / 10,635 chars] |
+| マンハッタン内部の停留所の設置や案内不足による問題が発生している可能性がありますか？ [42 chars] | マンハッタン（Manhattan、）は、アメリカ合衆国ニューヨーク州ニューヨーク市の地区。 ハドソン川河口部の中州であるマンハッタン島 (Manhattan Island)、あるいは、マンハッタン島が大部分を占めるマンハッタン区 (Manhattan Borough) のことである。ニューヨーク州のニューヨーク郡 (New York County) の郡域もマンハッタン区と同じである。マンハッタン... [200 / 12,229 chars] |
 
 ### Public Sources
 
@@ -183,9 +184,9 @@ be only a local section.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | paper | https://arxiv.org/abs/2402.03216 |
-| mteb/MultiLongDocRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/MultiLongDocRetrieval |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| mteb/MultiLongDocRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MultiLongDocRetrieval](https://huggingface.co/datasets/mteb/MultiLongDocRetrieval) |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
 
 ### Representative Snippets
 

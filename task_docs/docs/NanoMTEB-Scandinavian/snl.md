@@ -70,11 +70,13 @@ For reranking, this task rewards models that can decide whether a long article i
 
 ## Example Data
 
-### Public Sources
-
-- Scandinavian Embedding Benchmarks paper: https://arxiv.org/abs/2406.02396
-- Source dataset card: https://huggingface.co/datasets/adrlau/navjordj-SNL_summarization_copy
-- MTEB task dataset card: https://huggingface.co/datasets/mteb/SNLRetrieval
+| Query | Positive document |
+| --- | --- |
+| Kasimir Edschmid [16 chars] | Biografi Kasimir Edschmid studerte romansk filologi i blant annet München og Paris og fikk tidlig et stort litterært kontaktnett. Under første verdenskrig arbeidet han som litteraturanmelder. Han var... [200 / 2,627 chars] |
+| Hermann Bondi [13 chars] | Biografi Bondi dro fra Wien til Cambridge i 1937 i håp om å studere med Arthur Eddington. Da andre verdenskrig brøt ut ble han internert, først på Isle of Man, senere i Canada. I denne perioden ble ha... [200 / 1,611 chars] |
+| bønn (kristendom) [35 chars] | Kristenhetens viktigste bønn er Fadervår. Den brukes i alle kristne gudstjenester, og svært mange av verdens kristne ber den daglig. Bønnen kan inneholde mange ulike elementer. Bønnen kan være lovpris... [200 / 1,823 chars] |
+| Centrum-Demokraterne [20 chars] | Centrum-Demokraterne deltok i «Firkløver»-regjeringen i 1982–1988 og i koalisjonsregjeringen i 1993–1996. Partiet falt ut av Folketinget ved valget i 2001 og fikk bare 1,8 prosent av stemmene. For val... [200 / 498 chars] |
+| Joey Baron [10 chars] | Imidlertid blir han særlig forbundet med modernister som Bill Frisell og John Zorn. Baron har deltatt på en lang rekke album, og har også utgitt flere under eget navn. Utvalgte utgivelser som bandlede... [200 / 470 chars] |
 
 ### Source Reference Table
 

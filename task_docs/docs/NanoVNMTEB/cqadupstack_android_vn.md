@@ -62,21 +62,22 @@ Models should represent troubleshooting intent, device context, Android componen
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), task paper.
-- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/), VN-MTEB paper.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), benchmark paper.
-- [GreenNode/cqadupstack-android-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Ghi chú Markdown với Dropbox đồng bộ [36 chars] | syncing markup/lời chú thích trên dropbox? Xin chào tôi muốn có chức năng sau: * Đặt một tập tin vào Dropbox (html, wordformat) - mà tôi chỉnh sửa từ máy tính của tôi * ứng dụng Android để truy cập tậ... [200 / 449 chars] |
+| Tin nhắn SMS được lưu trữ ở đâu trên hệ thống file? [51 chars] | Android đường dẫn tin nhắn SMS Tôi không thể tìm đường dẫn đến các tệp cơ sở dữ liệu tin nhắn SMS trên hệ điều hành android. Đường dẫn chính xác cho các tệp cơ sở dữ liệu tin nhắn SMS là gì? Tôi đã th... [200 / 368 chars] |
+| Dòng video từ PC đến Android? [29 chars] | Cách phát trực tuyến các video do tôi sở hữu đến một thiết bị Android? > **Có thể trùng lặp:** > Có một ứng dụng truyền tải đa phương tiện DLNA cho Android không? > Truyền tải video từ PC đến Android?... [200 / 551 chars] |
+| Làm thế nào để xóa các ứng dụng được cài sẵn trên HTC Desire? [61 chars] | Tôi có thể gỡ cài đặt những ứng dụng bị khóa bởi nhà sản xuất điện thoại như thế nào? Tôi đang dùng Samsung I9000 và có một vài ứng dụng rất phiền phức mà nhà sản xuất đã cài sẵn như một cửa hàng nhạc... [200 / 530 chars] |
+| Tại sao thiết bị S3 của tôi phát ra âm thanh khi đặt thẻ từ trên mặt sau? [73 chars] | Tại sao điện thoại Galaxy S3 của tôi phát ra âm thanh khi tôi đặt nó xuống? Đôi khi, khi tôi đặt chiếc Samsung Galaxy S3 xuống khá chắc chắn, nó tạo ra một âm thanh giống như ở giữa "BONG" và "CLANK".... [200 / 489 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | https://doi.org/10.1145/2838931.2838934 |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| GreenNode/cqadupstack-android-vn |  | dataset card | https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| GreenNode/cqadupstack-android-vn |  | dataset card | [https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn) |
 
 ### Representative Snippets
 

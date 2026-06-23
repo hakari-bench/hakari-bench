@@ -146,22 +146,105 @@
         "url": "https://r2med.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED GitHub repository",
         "url": "https://github.com/R2MED/R2MED",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED/PMC-Treatment",
         "url": "https://huggingface.co/datasets/R2MED/PMC-Treatment",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q_PMC11479900",
+        "document_id": "PMC11608180_3",
+        "query": {
+          "text": "Case Summary: - **Patient Demographics:** 43-year-old male - **Chief Complaint:** Unexplained edema",
+          "full_chars": 2067,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Daratumumab is an antibody against CD38 used for plasma cell depletion in relapsed or refractory multiple myeloma (MM). It mediates depletion of plasma cells, which overexpress CD38, through a wide ra",
+          "full_chars": 952,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC11414482",
+        "document_id": "PMC11414482_1",
+        "query": {
+          "text": "Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Long-standing therapy-resi",
+          "full_chars": 1404,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "While the observed 24 hours systolic ambulatory BD reduction at 6-months follow-up in contemporary trials such as SPYRAL ON MED is generally considered to be modest (−1.9 mmHg),6 it seems that the obs",
+          "full_chars": 664,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC11550062",
+        "document_id": "PMC11550062_0",
+        "query": {
+          "text": "Case Summary: - **Patient Demographics:** 2-day-old male neonate - **Chief Complaint:** Central cyan",
+          "full_chars": 2145,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Helen B. Taussig and Richard J. Bing were the first to describe a rare cyanotic congenital heart defect known as the Taussig-Bing anomaly (TBA) in 1949, that includes a non-restrictive subpulmonary ve",
+          "full_chars": 2503,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC11541487",
+        "document_id": "PMC11541487_0",
+        "query": {
+          "text": "Case Summary: - Patient Demographics: - Case 1: 87-year-old woman - Case 2: 84-year-old man - Chief",
+          "full_chars": 1709,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Adequate proximal seal zones are essential for durable endovascular aortic repair. Although the definition of an adequate proximal seal zone can vary depending on the underlying aortic pathology, comp",
+          "full_chars": 660,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_PMC11532174",
+        "document_id": "PMC11532174_0",
+        "query": {
+          "text": "Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Redness, pain, and decreas",
+          "full_chars": 1950,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The surgical approach for severe ocular surface burns aims to reconstruct ocular surface function, address eyelid deformities, correct limbal stem cell deficiency, and alleviate conjunctival sac const",
+          "full_chars": 634,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

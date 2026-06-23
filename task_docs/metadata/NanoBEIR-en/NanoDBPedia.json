@@ -132,7 +132,7 @@
         "title": "DBpedia-Entity official project page",
         "url": "https://iai-group.github.io/DBpedia-Entity/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -140,8 +140,91 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "fitzgerald auto mall chambersburg pa",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fitzgerald Auto Malls is a family owned and operated auto dealership that was founded in 1966, with its first location opening in Bethesda, Maryland. As of 2014, Fitzgerald Auto Malls ranked number 59",
+          "full_chars": 429,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "1994 short story collection Alice Munro is Open",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, née Laidlaw /ˈleɪdlɔː/; born 10 July 1931) is a Canadian author. Munro's work has been described as having revolutionized the architecture of short stories, espec",
+          "full_chars": 499,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "gallo roman architecture in paris",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Art in Paris is an article on the art culture and history in Paris, the capital of France. For centuries, Paris has attracted artists from around the world, arriving in the city to educate themselves",
+          "full_chars": 333,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "SemSearch_LS-35",
+        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
+        "query": {
+          "text": "republics of the former Yugoslavia",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The 1974 Yugoslav Constitution was the fourth and final constitution of the Socialist Federal Republic of Yugoslavia. It came into effect on February 21.With 406 original articles, the 1974 constituti",
+          "full_chars": 436,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_XER-72",
+        "document_id": "<dbpedia:A_Little_Romance>",
+        "query": {
+          "text": "films shot in Venice",
+          "full_chars": 20,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A Little Romance is a 1979 American Technicolor and Panavision romantic comedy film directed by George Roy Hill and starring Laurence Olivier, Thelonious Bernard, and Diane Lane in her film debut. The",
+          "full_chars": 371,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

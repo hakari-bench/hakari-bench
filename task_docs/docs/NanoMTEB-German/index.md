@@ -178,14 +178,14 @@ actual legal issue, answer, service, or product category.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| GerDaLIR: A German Dataset for Legal Information Retrieval | 2021 | paper | https://aclanthology.org/2021.nllp-1.13/ |
-| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | paper | https://arxiv.org/abs/2104.12741 |
-| Cross-Market Product Recommendation | 2021 | paper | https://arxiv.org/abs/2109.05929 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | paper | https://arxiv.org/abs/2210.07316 |
-| MMTEB arXiv |  | paper | https://arxiv.org/abs/2502.13595 |
-| GerDaLIR GitHub |  | dataset or project page | https://github.com/lavis-nlp/GerDaLIR |
-| mteb/GerDaLIR |  | dataset or project page | https://huggingface.co/datasets/mteb/GerDaLIR |
-| mteb/GermanDPR |  | dataset or project page | https://huggingface.co/datasets/mteb/GermanDPR |
-| deepset/germandpr |  | dataset or project page | https://huggingface.co/datasets/deepset/germandpr |
-| deepset/germanquad |  | dataset or project page | https://huggingface.co/datasets/deepset/germanquad |
-| it-at-m/LHM-Dienstleistungen-QA | 2022 | dataset or project page | https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA |
+| GerDaLIR: A German Dataset for Legal Information Retrieval | 2021 | paper | [https://aclanthology.org/2021.nllp-1.13/](https://aclanthology.org/2021.nllp-1.13/) |
+| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | paper | [https://arxiv.org/abs/2104.12741](https://arxiv.org/abs/2104.12741) |
+| Cross-Market Product Recommendation | 2021 | paper | [https://arxiv.org/abs/2109.05929](https://arxiv.org/abs/2109.05929) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| MMTEB arXiv |  | paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| GerDaLIR GitHub |  | dataset or project page | [https://github.com/lavis-nlp/GerDaLIR](https://github.com/lavis-nlp/GerDaLIR) |
+| mteb/GerDaLIR |  | dataset or project page | [https://huggingface.co/datasets/mteb/GerDaLIR](https://huggingface.co/datasets/mteb/GerDaLIR) |
+| mteb/GermanDPR |  | dataset or project page | [https://huggingface.co/datasets/mteb/GermanDPR](https://huggingface.co/datasets/mteb/GermanDPR) |
+| deepset/germandpr |  | dataset or project page | [https://huggingface.co/datasets/deepset/germandpr](https://huggingface.co/datasets/deepset/germandpr) |
+| deepset/germanquad |  | dataset or project page | [https://huggingface.co/datasets/deepset/germanquad](https://huggingface.co/datasets/deepset/germanquad) |
+| it-at-m/LHM-Dienstleistungen-QA | 2022 | dataset or project page | [https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA](https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA) |

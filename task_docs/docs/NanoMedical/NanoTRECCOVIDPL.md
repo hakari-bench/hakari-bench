@@ -62,23 +62,23 @@ Models should preserve biomedical entity names while supporting Polish morpholog
 
 ## Example Data
 
-### Public Sources
-
-- [BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language](https://arxiv.org/abs/2305.19840), 2024.
-- [BEIR-PL ACL Anthology record](https://aclanthology.org/2024.lrec-main.194/).
-- [Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID](https://arxiv.org/abs/2104.09632), 2021.
-- [TREC-COVID data archive](https://ir.nist.gov/trec-covid/).
-- [clarin-knext Hugging Face](https://huggingface.co/clarin-knext).
+| Query | Positive document |
+| --- | --- |
+| jakie są dowody na to, że deksametazon może być stosowany w leczeniu COVID-19? [78 chars] | Połączenie tocilizumabu i metyloprednizolonu wraz ze wstępną strategią rekrutacji płuc w chorobie koronawirusowej 2019 Pacjenci wymagający wentylacji mechanicznej: seria 21 kolejnych przypadków CEL: O... [200 / 1,767 chars] |
+| jak długo koronawirus pozostaje stabilny na powierzchniach? [59 chars] | Płyny ustrojowe mogą przyczyniać się do przenoszenia z człowieka na człowieka koronawirusa zespołu ostrej ostrej niewydolności oddechowej 2: dowody i doświadczenia praktyczne TŁO: W grudniu 2019 r. w... [200 / 1,201 chars] |
+| czy dystans społeczny miał wpływ na spowolnienie rozprzestrzeniania się COVID-19? [81 chars] | Zwiększona wykrywalność w połączeniu z planowaniem dystansu społecznego i zdrowia Zmniejsz obciążenie przypadkami i ofiarami śmiertelnymi związanymi z COVID-19: badanie weryfikujące koncepcję przy uży... [200 / 1,773 chars] |
+| czy istnieją testy serologiczne wykrywające przeciwciała przeciwko koronawirusowi? [82 chars] | Serodiagnostyka dla koronawirusa-2 związanego z ciężkim ostrym zespołem oddechowym: przegląd narracyjny Dokładne testy serologiczne w celu wykrycia przeciwciał gospodarza przeciwko koronawirusowi-2 zw... [200 / 1,507 chars] |
+| które biomarkery przewidują ciężki przebieg kliniczny zakażenia 2019-nCOV? [74 chars] | Cechy kliniczne i predyktory dla pacjentów z ciężkim zapaleniem płuc SARS-CoV-2: retrospektywne wieloośrodkowe badanie kohortowe Cele: Badanie to przeprowadzono w celu zbadania cech klinicznych pacjen... [200 / 1,578 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | https://arxiv.org/abs/2305.19840 |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | https://aclanthology.org/2024.lrec-main.194/ |
-| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | https://arxiv.org/abs/2104.09632 |
-| TREC-COVID data archive | 2020 | benchmark archive | https://ir.nist.gov/trec-covid/ |
-| clarin-knext |  | Hugging Face publisher | https://huggingface.co/clarin-knext |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | [https://arxiv.org/abs/2305.19840](https://arxiv.org/abs/2305.19840) |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | [https://aclanthology.org/2024.lrec-main.194/](https://aclanthology.org/2024.lrec-main.194/) |
+| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | [https://arxiv.org/abs/2104.09632](https://arxiv.org/abs/2104.09632) |
+| TREC-COVID data archive | 2020 | benchmark archive | [https://ir.nist.gov/trec-covid/](https://ir.nist.gov/trec-covid/) |
+| clarin-knext |  | Hugging Face publisher | [https://huggingface.co/clarin-knext](https://huggingface.co/clarin-knext) |
 
 ### Representative Snippets
 

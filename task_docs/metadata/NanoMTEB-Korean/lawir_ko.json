@@ -133,7 +133,7 @@
         "url": "https://huggingface.co/datasets/on-and-on/lawgov_ir-ko",
         "year": 2026,
         "is_paper": false,
-        "source_confidence": "definitive_dataset_link"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
@@ -148,8 +148,91 @@
         "url": "https://www.law.go.kr/LSW/main.html",
         "year": 2026,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q66",
+        "document_id": "d66",
+        "query": {
+          "text": "금융소비자 보호에 관한 법률 상 '위원의 제척ㆍ기피 및 회피'에 대한 법규는 무엇입니까?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "- 조정위원회 위원은 다음 각 호의 어느 하나에 해당하는 경우에는 그 분쟁조정신 청사건(이하 “사건”이라 한다)의 심의ㆍ의결에서 제척(--)된다. 1. 위원이나 그 배우자 또는 배우자였던 사람이 해당 사건의 당사자(당사자가 법인ㆍ단체 등인 경우에는 그 임원을 포함한다. 이하 이 호 및 제2호에서 같다)가 되거나 그 사건의 당사자와 공동권리자 또는 공동의무자",
+          "full_chars": 645,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q123",
+        "document_id": "d123",
+        "query": {
+          "text": "'식품위생법'의 전체 내용 중 '기구 및 용기ㆍ포장에 관한 기준 및 규격'에 관한 법적 정의나 적용 사항과 범위 등을 명시한 조항이 있나요?",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "- 식품의약품안전처장은 국민보건을 위하여 필요한 경우에는 판매하 거나 영업에 사용하는 기구 및 용기ㆍ포장에 관하여 다음 각 호의 사항을 정하여 고시한다. 1. 제조 방법에 관한 기준 2. 기구 및 용기ㆍ포장과 그 원재료에 관한 규격 - 식품의약품안전처장은 제1항에 따라 기준과 규격이 고시되지 아니한 기구 및 용기ㆍ포장의 기준과 규격을 인정 받으려는 자에게",
+          "full_chars": 696,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q103",
+        "document_id": "d103",
+        "query": {
+          "text": "농수산물 유통 및 가격안정에 관한 법률에서 '대금정산조직 설립의 지원'와 관련되어 시행되고 있는 조항을 설명하시오.",
+          "full_chars": 64,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "농림축산식품부장관, 해양수산부장관 및 도매시장 개설자는 도매시장법인ㆍ시 장도매인ㆍ중도매인 등이 다음 각 호의 대금의 정산을 위한 조합, 회사 등(이하 “대금정산조직”이라 한다)을 설립하 는 경우 그에 대한 지원을 할 수 있다. 1. 출하대금 2. 도매시장법인과 중도매인 또는 매매참가인 간의 농수산물 거래에 따른 판매대금",
+          "full_chars": 180,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q9",
+        "document_id": "d9",
+        "query": {
+          "text": "도로교통법 중 '고령운전자 표지'에 해당하는 부분이 뭐야?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "- 국가 또는 지방자치단체는 고령운전자의 안전운전 및 교통사고 예방을 위하여 행정안전 부령으로 정하는 바에 따라 고령운전자가 운전하는 차임을 나타내는 표지(이하 “고령운전자 표지”라 한다)를 제작하 여 배부할 수 있다. - 고령운전자는 다른 차의 운전자가 쉽게 식별할 수 있도록 차에 고령운전자 표지를 부착하고 운전할 수 있다.",
+          "full_chars": 183,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q161",
+        "document_id": "d161",
+        "query": {
+          "text": "개인정보 보호법에서 '자료의 요청 및 사실조사'에 관해 다루고 있는 하위 법령이 있나요?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "- 분쟁조정위원회는 제43조제1항에 따라 분쟁조정 신청을 받았을 때에는 해당 분쟁의 조정을 위하여 필요한 자료를 분쟁당사자에게 요청할 수 있다. 이 경우 분쟁당사자는 정당한 사유가 없으면 요청에 따라야 한다. - 분쟁조정위원회는 분쟁의 조정을 위하여 사실 확인이 필요한 경우에는 분쟁조정위원회의 위원 또는 대통령령으 로 정하는 사무기구의 소속 공무원으로 하여",
+          "full_chars": 526,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

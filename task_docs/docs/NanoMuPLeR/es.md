@@ -62,19 +62,21 @@ Models should preserve Spanish legal terminology, article-style conditions, date
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| ¿Por qué la autoridad estadística propone instrumento jurídico para consolidar datos de salud poblac... [100 / 148 chars] | Ésta es la razón por la que la Comisión (Eurostat) considera que es hora de establecer una base sólida mediante un acto jurídico fundamental sobre estadísticas de salud pública y salud y seguridad en... [200 / 722 chars] |
+| Cómo quiso el ejecutivo supranacional que corrieran las ayudas: dos años y hasta tres más al convert... [100 / 115 chars] | Dado que el régimen de ayudas (identificado con el no NN 91/A/95) adoptado por la Región de Sicilia mediante el artículo 10 de la Ley regional no 27, de 15 de mayo de 1991, preveía un mecanismo de apo... [200 / 650 chars] |
+| Cómo relaciona la prevención la explotación insostenible y las intervenciones humanas intencionadas... [100 / 154 chars] | La prevención es un principio fundamental para la protección y conservación del medio ambiente así como los daños que pudieran causarse a la población civil, y su finalidad es una utilización sostenib... [200 / 708 chars] |
+| ¿Qué impuesto sobre las importaciones intracomunitarias seguían aplicando siete Estados miembros: do... [100 / 132 chars] | La mayoría de los 25 Estados miembros aceptó la orientación del Consejo de 1985 y ha suprimido totalmente el impuesto. En la actualidad, sólo siete Estados miembros continúan aplicándolo: Polonia y Po... [200 / 687 chars] |
+| Qué órgano asesor cuestionó la guía para operadores de pools irregulares y propuso ampliar normas de... [100 / 135 chars] | Dado que las secciones que tratan sobre el transporte de tramp y los pools de transporte de tramp son menos detalladas por las razones supuestas anteriormente, el CESE se pregunta si serán suficientes... [200 / 783 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

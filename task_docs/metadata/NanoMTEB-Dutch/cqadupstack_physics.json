@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,118 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "75363",
+        "document_id": "91269",
+        "query": {
+          "text": "Hoe is de Schrödingervergelijking een golffvergelijking?",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Relatie tussen de Schrödingervergelijking en de golfvergelijking Ik ben altijd in de war geweest over de relatie tussen de Schrödingervergelijking en de golfvergelijking. $$ i\\hbar \\frac{\\partial \\psi",
+          "full_chars": 1081,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "113548",
+        "document_id": "60614",
+        "query": {
+          "text": "Metingen van actieve ruisonderdrukkingstechnologie",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Maximale vertraging voor effectieve actieve ruisonderdrukking? Actieve ruisonderdrukking vermindert ongewenste geluiden door de omgekeerde fase van de originele fase te verzenden: ![Actieve ruisonderd",
+          "full_chars": 985,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "102517",
+        "document_id": "100498",
+        "query": {
+          "text": "Zijn continue wiskundige modellen van discrete fysische verschijnselen rommelig vanwege een discrepa",
+          "full_chars": 138,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Wat is het \"discrete\" analogon van de \"continuüm\" mechanica? Als ik een discrete wiskundige benadering van de continuümmechanica wil verkennen, welke leerboeken moet ik dan raadplegen? Een kant-en-kla",
+          "full_chars": 549,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "92293",
+        "document_id": "28422",
+        "query": {
+          "text": "Gravitatie van energie",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kan een zwart gat ontstaan door Lorentz-contractie? **Mogelijke dubbel:</** > Als een massa van 1 kg bijna met de lichtsnelheid wordt versneld, zou deze dan veranderen > in een zwart gat? Stel je voor",
+          "full_chars": 1111,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1686",
+        "document_id": "98387",
+        "query": {
+          "text": "Waarom neemt de (relativistische) massa van een object toe naarmate zijn snelheid de lichtsnelheid b",
+          "full_chars": 108,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Verwarring over de (relativistische) massa van objecten Volgens Einsteins theorie hangt de (relativistische) massa van objecten af van de snelheid. Dan zullen in een inertiaal referentiesysteem 2 waar",
+          "full_chars": 371,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

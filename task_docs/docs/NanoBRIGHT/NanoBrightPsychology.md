@@ -68,9 +68,13 @@ The observed scores suggest that reranking_hybrid is useful but not sufficient t
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Asking for illogical things to make extreme views normal? A couple of months back I was reading an a... [100 / 363 chars] | **Share** All sharing options for: How Trump makes extreme things look normal * [ Reddit ](https://reddit.com/submit?title=How+Trump+makes+extreme+things+look+normal&url=https%3A%2F%2Fwww.vox.com%2F20... [200 / 2,714 chars] |
+| What term can describe the feeling that a job just does itself? Is there a term that can describe th... [100 / 943 chars] | Challenges to maintaining flow [ [ edit ](/w/index.php?title=Flow_\(psychology\)&action=edit&section=10 "Edit section: Challenges to maintaining flow") ] Some of the challenges to staying in flow incl... [200 / 1,037 chars] |
+| What is the term for the "knowing what you think but can't explain it" phenomenon? I think we all ex... [100 / 504 chars] | sitelinks- wikipedia "Edit interlanguage links") * [ Article ](/wiki/Mental_block "View the content page \[c\]") * [ Talk ](/wiki/Talk:Mental_block "Discuss improvements to the content page \[t\]") En... [200 / 3,508 chars] |
+| Saying things to shock others Is it strange or categorically bad to say things that shock others kno... [100 / 830 chars] | How excessive attention-seeking evolves in adults Brains wired to equate lack of attention as dangerous, naturally respond to it as a threat in the amygdala, a subcortical structure, where thinking do... [200 / 1,161 chars] |
+| What is the term for the inability to see past one's own current emotional state? I'm looking for a... [100 / 1,889 chars] | sitelinks- wikipedia "Edit interlanguage links") * [ Article ](/wiki/Hot-cold_empathy_gap "View the content page \[c\]") * [ Talk ](/wiki/Talk:Hot-cold_empathy_gap "Discuss improvements to the content... [200 / 4,615 chars] |
 
 ### Source Reference Table
 

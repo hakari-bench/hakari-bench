@@ -171,8 +171,91 @@
         "title": "FiQA project page",
         "url": "https://sites.google.com/view/fiqa/",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "8072",
+        "document_id": "394244",
+        "query": {
+          "text": "\"Sell on ask\", \"sell on bid\" trong chứng khoán là gì?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Giá mua (bid) và giá bán (ask) là mức giá cao nhất để mua và thấp nhất để bán trên thị trường, điều đó không có nghĩa là bạn chỉ nên mua/bán ở mức giá này. Tuy nhiên bạn có thể mua/bán theo mức giá mà",
+          "full_chars": 489,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1920",
+        "document_id": "269943",
+        "query": {
+          "text": "Giải thích chi phí sinh viên - Để khai thuế cho năm tiếp theo",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Giả sử ở đây bạn đang nói về việc khấu trừ học phí của bạn như một khoản khấu trừ dưới mức cơ bản như một chi phí kinh doanh hoặc tương tự, sau đó nó phụ thuộc. Theo 1.162-5, nếu giáo dục: Sau đó nó đ",
+          "full_chars": 966,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10628",
+        "document_id": "588116",
+        "query": {
+          "text": "Điều gì xảy ra với \"người mua dài\" của một cổ phiếu khi người bán ngắn khác thất bại (đó là, thua lỗ",
+          "full_chars": 139,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Nếu không có gì tinh tế mà tôi bỏ lỡ, chẳng có gì xảy ra với người mua. Giả sử Alice muốn bán khống 1000 cổ phiếu XYZ ở mức $5. Cô ta vay cổ phiếu từ Bob và bán chúng cho Charlie. Bây giờ Charlie thực",
+          "full_chars": 1159,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9391",
+        "document_id": "136515",
+        "query": {
+          "text": "Tôi có nên thay thế trái phiếu trong một chiến lược đầu tư thụ động không?",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Trái phiếu vẫn chắc chắn có một chỗ đứng trong nhiều danh mục đầu tư thụ động. Mặc dù đúng là lãi suất đã ở mức thấp bất thường, nhưng lợi suất trên các khoản đầu tư trái phiếu thụ động hợp lý vẫn da",
+          "full_chars": 2213,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4031",
+        "document_id": "115741",
+        "query": {
+          "text": "28 tuổi vừa thừa kế một số tiền lớn và bất động sản - không biết làm gì với nó",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chúng tôi không có một câu trả lời tốt cho việc bắt đầu đầu tư ở Ba Lan. Chúng tôi đã có những câu trả lời tốt cho trường hợp nói chung, mà cũng nên áp dụng ở Ba Lan. Ví dụ: Cách tốt nhất để bắt đầu đ",
+          "full_chars": 4316,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

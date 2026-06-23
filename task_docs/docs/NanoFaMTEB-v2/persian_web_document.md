@@ -70,9 +70,13 @@ For reranking, useful signals include title quality, snippet intent match, and r
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the FaMTEB paper, the `MCINext/persian-web-document-retrieval` dataset card, and an IEEE source reference. MTEB provides the broader retrieval evaluation framework.
+| Query | Positive document |
+| --- | --- |
+| فیلم سینمایی۳۵۶ روز بدون‌سانسور [31 chars] | دانلود فیلم 365 روز 1 (بدون سانسور) - فیلو دانلود فیلم 365 روز 1 (بدون سانسور) تیزر مووی [89 chars] |
+| کلیپ عاشفانه [12 chars] | آپارات \| کافه کلیپ عاشقانه [27 chars] |
+| واکینگ دد قسمت ۲۲ فصل ۱۱ [24 chars] | سریال مردگان متحرک :: فصل 11 قسمت 22 :: زیرنویس فارسی دانلود فصل یازدهم مجموعه واکینگ دِد(The Walking Dead - مردگان متحرک) با زیرنویس فارسی و کیفیت فول اچ دی 1080p Full HD \| رده سنی: 15+ سال \| محصول:... [200 / 596 chars] |
+| اگه ارومیه بشی روت ارس میکشم [28 chars] | دانلود آهنگ اگه ارومیه بشی روت ارس میکشم + ریمیکس (کامل + متن) دانلود آهنگ اگه ارومیه بشی روت ارس میکشم اهنگ اگه ارومیه بشی روت ارس میکشم با بالاترین کیفیت بصورت کامل Download Music Hichkas - Age Urum... [200 / 216 chars] |
+| سوره قران [9 chars] | سوره بیستم قران ⚡️ [ پاســخ کامــل و درست ] سوره بیستم قران جواب سوره بیستم قران کاملا رایگان در سایت مجله اینترنتی باحال مگ [126 chars] |
 
 ### Source Reference Table
 

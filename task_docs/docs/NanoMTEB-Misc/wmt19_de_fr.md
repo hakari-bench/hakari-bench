@@ -122,18 +122,20 @@ overlap.
 
 ## Example Data
 
-### Public Sources
-
-- [Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings](https://arxiv.org/abs/2502.08638)
-- [Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| L'article 20 du traité de l'UE dispose clairement que les citoyens de l'UE peuvent exercer leur droi... [100 / 227 chars] | Artikel 20 des EU-Vertrages besagt klipp und klar, dass EU-Bürger „in dem Mitgliedstaat, in dem sie ihren Wohnsitz haben, das aktive und passive Wahlrecht bei den Wahlen zum Europäischen Parlament“ wa... [200 / 216 chars] |
+| Il a de nombreux éléments pour étayer le credo qu'il ranime pour s'opposer aux sirènes des populiste... [100 / 331 chars] | Für sein nun wiederbelebtes Credo, dass entgegen den Sirenengesängen der Populisten der Rückzug aus Europa ein Holzweg ist, gibt es zahlreiche Belege: Klimawandel, Besteuerung der Internetkonzerne, Mi... [200 / 291 chars] |
+| De fait, Soros est venu en soutien, dans les décennies passées, à de nombreuses associations et init... [100 / 282 chars] | Tatsächlich hat Soros in den vergangenen Jahrzehnten mit Milliardensummen zahlreiche humanitäre, soziale, wissenschaftliche und künstlerische Vereine und Initiativen unterstützt. Darunter sind auch so... [200 / 242 chars] |
+| C'est également pour cette raison qu'elle ne participe pas au congrès du parti à Bonn. [86 chars] | Sie nimmt deshalb auch nicht an dem Parteitag in Bonn teil. [59 chars] |
+| C'est la première fois depuis un demi-siècle qu'un Allemand redeviendrait le chef d'une administrati... [100 / 115 chars] | Zum ersten Mal seit einem halben Jahrhundert wäre damit wieder ein Deutscher der oberste Chef der Brüsseler Behörde. [116 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | https://arxiv.org/abs/2502.08638 |
-| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | https://huggingface.co/datasets/Andrianos/clsd_wmt19_21 |
+| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | [https://arxiv.org/abs/2502.08638](https://arxiv.org/abs/2502.08638) |
+| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | [https://huggingface.co/datasets/Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21) |
 
 ### Representative Snippets
 

@@ -171,8 +171,91 @@
         "title": "HotpotQA project page",
         "url": "https://hotpotqa.github.io/",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5adf37a95542995ec70e8f97",
+        "document_id": "32971919",
+        "query": {
+          "text": "Đội bóng rổ nam đại học VCU Rams 2011-12, dẫn dắt bởi huấn luyện viên trưởng năm thứ ba Shaka Smart,",
+          "full_chars": 178,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Đội bóng rổ nam VCU Rams mùa 2011–12 Đội bóng rổ nam đại học VCU Rams 2011-12 đại diện cho trường Đại học Virginia Commonwealth trong giải bóng rổ NCAA Division I mùa giải 2011-12. Đây là mùa thứ 44 đ",
+          "full_chars": 856,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7a0e1e5542990783324e1a",
+        "document_id": "2333138",
+        "query": {
+          "text": "Con chó mà tổ tiên gồm cả Gordon và Irish Setters là giống chó gì: Manchester Terrier hay Scotch Col",
+          "full_chars": 104,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Chó Manchester Terrier Chó Manchester Terrier là một giống chó thuộc họ chó săn có lông trơn.",
+          "full_chars": 94,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "Bộ phim nào được viết kịch bản và đạo diễn bởi Joby Harold với nhạc nền của Samuel Sim?",
+          "full_chars": 87,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim Samuel Sim là một nhạc sĩ phim và truyền hình. Anh nhận được sự công nhận đầu tiên với điểm số đoạt giải cho bộ phim truyền hình \"Dunkirk\" của BBC. Từ đó, anh đã viết âm nhạc cho nhiều bộ p",
+          "full_chars": 554,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae738f75542991bbc9761c4",
+        "document_id": "1756392",
+        "query": {
+          "text": "Năm nào thì anh trai của cầu thủ được đội Washington Redskins chọn ở lượt thứ nhất trong giải tuyển",
+          "full_chars": 124,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Ba-lê Rodney \"Boss\" Bailey (sinh ngày 14 tháng 10 năm 1979) là một cựu cầu thủ bóng đá Mỹ từng thi đấu ở vị trí hậu vệ trong giải bóng đá quốc gia NFL. Anh được tuyển chọn bởi đội Detroit Lions trong",
+          "full_chars": 389,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a877e5d5542993e715abf7d",
+        "document_id": "11835533",
+        "query": {
+          "text": "Kịch bản gia có tác phẩm \"Evolution\" đã cùng viết một bộ phim mà Nicolas Cage và Téa Leoni đóng vai",
+          "full_chars": 112,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "David Weissman David Weissman là một biên kịch và đạo diễn. Các bộ phim của ông bao gồm \"The Family Man\" (năm 2000), \"Evolution\" (năm 2001) và \"\"When in Rome\"\" (năm 2010).",
+          "full_chars": 172,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

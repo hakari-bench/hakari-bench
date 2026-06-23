@@ -62,9 +62,13 @@ A model targeting this task should optimize for complete support coverage, not j
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on HotpotQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Penny Rae Bridges starred in a television sitcom with what other actor? [71 chars] | Penny Rae Bridges (born July 29, 1990) is an American actress. Her television work has included roles in "For Your Love", "Family Law", "Boy Meets World" and "The Parent 'Hood". She is best known for... [200 / 245 chars] |
+| Who bestowed Kaganoi Shigemochi with a blade made by the person that founded the Muramasa school? [97 chars] | Kaganoi Shigemochi (加賀井 重望 , 1561 – August 27, 1600) was a Japanese samurai of the Azuchi-Momoyama period, who served the Oda clan. He ruled Kaganoi Castle. During the Battle of Komaki and Nagakute, S... [200 / 575 chars] |
+| What film was written and directed by Joby Harold with music written by Samuel Sim? [83 chars] | Samuel Sim is a film and television composer. He first gained recognition with his award winning score for the BBC drama series "Dunkirk". Since then he has written the music for a wide variety of fil... [200 / 502 chars] |
+| What is the date played of this college football game at Sun Life Stadium in Miami Gardens, Florida,... [100 / 158 chars] | The 2015 Clemson Tigers football team represented Clemson University in the 2015 NCAA Division I FBS football season. The Tigers were led by head coach Dabo Swinney in his seventh full year and eighth... [200 / 1,019 chars] |
+| Devil's Food is a singles compilation by an American rock and roll band that has also been known to... [100 / 130 chars] | Devil's Food is a singles compilation by the American rock and roll band Supersuckers, released in April 2005 on Mid-Fi records. [128 chars] |
 
 ### Source Reference Table
 

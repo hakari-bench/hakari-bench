@@ -160,11 +160,13 @@ passages.
 
 ## Example Data
 
-Representative questions ask about age limits for youth hostels, Annie
-Besant's birth date, the indigenous religious role of the Sami, what groups
-citizen ombudsmen monitor, and the death date of Martin Luther King Jr. The
-positive passages are Japanese summaries that contain direct answers or
-supporting context for those facts.
+| Query | Positive document |
+| --- | --- |
+| ユースホステルに泊まるのに年齢制限はある？ [21 chars] | ユースホステル 元来、青少年の旅行者向けに開設された宿泊施設のため、ドイツ南部のバイエルン州では2004年まで原則満26歳までの利用とする年齢制限があった。2005年からは世界中の全ての地域・国で、利用できる年齢に上限を設けていない。 [118 chars] |
+| アニー・ウッド・ベサントはいつ生まれた？ [20 chars] | アニー・ベサント アニー・ウッド・ベサント（Annie Wood Besant, ベザント</b>とも表記されるが発音は「bɛsənt」, 1847年10月1日 ロンドン、クラパム - 1933年9月20日 インド、アディヤール）は、イギリスの神智学徒、女性の権利（Women's rights）積極行動主義者、作家、演説家、アイルランドおよびインドの自治支援者、神智学協会第二代会長、英国フリーメー... [200 / 242 chars] |
+| サーミ人の土着信仰は何？ [12 chars] | ノアイデ ノアイデ</b><!-- ({{lang-sme\|noaidi}}, {{lang-smj\|noajdde}}, {{lang-sma\|nåejttie}}, {{lang-sms\|nōjjd}}, {{lang-sjt\|niojte}}, {{lang-sjd\|noojd/nuojd}}) -->とは、スカンジナビア北部からコラ半島にかけて居住するサーミ人の土着宗教におけるシャーマンで... [200 / 326 chars] |
+| 市民オンブズマンは何を対象に監視していますか？ [23 chars] | 公安調査庁 また、一部の労働組合や労働争議支援団体、反戦運動・反基地運動、原子力撤廃・反核運動、市民オンブズマンなど行政監視グループ、部落解放・女性解放など人権擁護運動（アムネスティ・インターナショナル、自由法曹団、日本国民救援会、青年法律家協会等）、消費者団体（生活協同組合や産地直送運動・環境保護団体）、言論団体（日本ペンクラブ、日本ジャーナリスト会議等）などについても情報収集を行っているとされ... [200 / 236 chars] |
+| マルティン・ルーサー・キング・ジュニアはいつ死んだ？ [26 chars] | マーティン・ルーサー・キング・ジュニア マーティン・ルーサー・キング・ジュニア（English: Martin Luther King, Jr.、1929年1月15日 - 1968年4月4日）は、アメリカ合衆国のプロテスタントバプテスト派の牧師である。 [127 chars] |
 
 ### Public Sources
 
@@ -183,9 +185,9 @@ supporting context for those facts.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval | 2021 | paper | https://arxiv.org/abs/2108.08787 |
-| castorini/mr-tydi |  | dataset card | https://huggingface.co/datasets/castorini/mr-tydi |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
+| Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval | 2021 | paper | [https://arxiv.org/abs/2108.08787](https://arxiv.org/abs/2108.08787) |
+| castorini/mr-tydi |  | dataset card | [https://huggingface.co/datasets/castorini/mr-tydi](https://huggingface.co/datasets/castorini/mr-tydi) |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
 
 ### Representative Snippets
 

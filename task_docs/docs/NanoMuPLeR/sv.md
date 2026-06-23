@@ -62,19 +62,21 @@ Models should preserve exact Swedish legal names, committee labels, dates, and m
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Vilken kommitté bedömde resursinsatser i små interna utredningar ineffektiva och uppmanade att inarb... [100 / 154 chars] | Kommittén har sett över Olafs hantering av de minimisärenden och undersökte 45 utvalda ärenden med ekonomiska konsekvenser på under 50000 euro var. Kommittén kom fram till att det inte utgör god resur... [200 / 567 chars] |
+| Varför använde beslutet genomsnittlig berörd försäljning för Frankrike istället för senaste hela åre... [100 / 133 chars] | Den försäljning som påverkas av överträdelsen är försäljning av gas som tranporteras av E.ON och GDF genom MEGAL-ledningen i Tyskland, förutom försäljning av gas enligt E.ON:s gasprogram (E.ON Gas Rel... [200 / 676 chars] |
+| Vem informerar godkännandets innehavare om vilka mindre ändringar i anmälan som godkänts eller avsla... [100 / 149 chars] | När en eller flera mindre ändringar av typ IA lämnas in som en del av en anmälan ska referensmedlemsstaten informera innehavaren av godkännandet för försäljning om vilka ändringar som har godkänts ell... [200 / 788 chars] |
+| Varför måste en leverantörs totala kapacitet bedömas enbart vid urval och inte omprövas vid bedömnin... [100 / 123 chars] | Tilldelningskriterierna måste utarbetas med omsorg för att se till att dessa inte blandas ihop med urvalskriterierna. I domstolens rättspraxis erinras om betydelsen av att skilja mellan bedömningen en... [200 / 702 chars] |
+| Vilken rådgivande EU-församling välkomnade en kommissionsenhets beslut att återuppliva observationso... [100 / 158 chars] | Att känna till och förmedla villkoren för de olika kategorierna av små och medelstora företag. All gemenskapspolitik bör baseras på tydliga fakta som ger kunskap om situationen. Begreppet små och mede... [200 / 756 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/synthetic-persian-chatbot-rag-faq-retrieval",
         "url": "https://huggingface.co/datasets/MCINext/synthetic-persian-chatbot-rag-faq-retrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test_66",
+        "document_id": "8318",
+        "query": {
+          "text": "کاربر : با سلام، می‌خواستم اطلاعات بیشتری در مورد نحوه پرداخت قبوض برق دریافت کنم. چت بات : سلام! بر",
+          "full_chars": 889,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "سوال : چگونه می‌توانم صورتحساب خود را از طریق ایمیل دریافت کنم؟ پاسخ : برای دریافت صورتحساب از طریق ایمیل، کافیست اطلاعات خود را به خدمات مشتریان بدهید.",
+          "full_chars": 152,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_123",
+        "document_id": "5176",
+        "query": {
+          "text": "کاربر : چرا هنوز سفارش من ارسال نشده؟ چت بات : ما هیچ تأخیری نداریم! سفارش شما همین حالا در حال پردا",
+          "full_chars": 632,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "سوال : چگونه می‌توانم وضعیت سفارش خود را بررسی کنم؟ پاسخ : شما می‌توانید با وارد کردن شماره سفارش در بخش پیگیری سفارش، وضعیت آن را بررسی کنید.",
+          "full_chars": 142,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_103",
+        "document_id": "6816",
+        "query": {
+          "text": "کاربر : با سلام، می‌خواستم در مورد نظریه‌های کلان اجتماعی توضیح دهید. چت بات : سلام! حتماً، نظریه‌ها",
+          "full_chars": 824,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "سوال : نقش نظریه‌های اجتماعی در سیاست چیست؟ پاسخ : نظریه‌های اجتماعی به ما کمک می‌کنند تا درک بهتری از رفتارهای سیاسی و فرایندهای اجتماعی داشته باشیم.",
+          "full_chars": 150,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_9",
+        "document_id": "5736",
+        "query": {
+          "text": "کاربر : سلام! می‌تونی به من بگی چه چیزی برای خریدن خوبه؟ چت بات : سلام! البته. چه نوع کالایی مد نظرت",
+          "full_chars": 857,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "سوال : چطور می‌توانم اسباب بازی‌های مناسب برای سن خودم را پیدا کنم؟ پاسخ : شما می‌توانید با توجه به سن و سلیقه‌ی خود، از نظرات و پیشنهادات فروشندگان یا منابع آنلاین برای خرید اسباب بازی استفاده کنید.",
+          "full_chars": 199,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_161",
+        "document_id": "1241",
+        "query": {
+          "text": "پیام جدید کاربر : آیا می‌توانید توصیه‌های بهداشتی خاصی برای افراد در گروه سنی جوانان ارائه دهید؟",
+          "full_chars": 96,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "سوال : توصیه‌های بهداشتی برای نوجوانان چیست؟ پاسخ : نوجوانان باید به تغذیه متوازن، فعالیت بدنی منظم و خواب کافی توجه کنند. همچنین، کاهش مصرف قند و نمک و دوری از سیگار و مشروبات الکلی بسیار اهمیت دارد.",
+          "full_chars": 200,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

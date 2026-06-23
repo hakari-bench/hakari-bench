@@ -151,11 +151,13 @@ evidence specificity.
 
 ## Example Data
 
-Representative queries ask how many characters can fit in an Indonesian SMS
-context, where the printing press was first created, what Acta Sanctorum is,
-what audio frequency means, or where James Hepburn died. Positive documents are
-Indonesian Wikipedia passages containing the relevant numeric, historical,
-definition, technical, or biographical evidence.
+| Query | Positive document |
+| --- | --- |
+| berapakah kadar oxigen yang dibutuhkan manusia untuk bernapas? [62 chars] | Karbon dioksida Walaupun tubuh memerlukan oksigen untuk metabolisme, kadar oksigen yang rendah tidak akan menstimulasi pernapasan. Sebaliknya pernapasan distimulasi oleh kadar karbon dioksida yang tin... [200 / 638 chars] |
+| Apa penyebab kematian Mgr. Arnold Verstraelen ? [47 chars] | Vampir Cerita vampir telah dikaitkan dengan kematian yang disebabkan oleh penyakit yang misterius dan tidak diketahui, biasanya yang terjadi dalam suatu keluarga atau komunitas kecil. Epidemi jelas te... [200 / 537 chars] |
+| kapankah Romusha terjadi di indonesia? [38 chars] | Romusa Romusha (労務者 "rōmusha": "buruh", "pekerja") adalah panggilan bagi orang-orang Indonesia yang dipekerjakan secara paksa pada dari tahun 1942 hingga 1945. Kebanyakan "romusha" adalah petani, dan... [200 / 475 chars] |
+| Apakah yang dimaksud dengan frekuensi audio? [44 chars] | Modulasi amplitudo Modulasi amplitudo (AM) adalah proses memodulasi sinyal frekuensi rendah pada gelombang frekuensi tinggi dengan mengubah-ubah amplitudo gelombang frekuensi tinggi tanpa mengubah fre... [200 / 1,132 chars] |
+| Kapan kelahiran Yesus diperingati ? [35 chars] | Natal Ada juga pendapat yang berkata bahwa perayaan Natal bersumber dari tradisi Romawi pra-Kristen, peringatan bagi dewa pertanian Saturnus jatuh pada suatu pekan di bulan Desember dengan puncak peri... [200 / 882 chars] |
 
 ### Public Sources
 
@@ -173,10 +175,10 @@ definition, technical, or biographical evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q styr organiseringen av neutrofilmigration till inflammationsställen genom att reglera membranr",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Neutrofilerna genomgår snabbt polarisering och riktad rörelse för att tränga in i infektions- och inflammationsställen. Vi visar här att en inhiberande MHC I-receptor, Ly49Q, var avgörande för den sna",
+          "full_chars": 1025,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Antiretroviral behandling minskar förekomsten av tuberkulos över ett brett spektrum av CD4-strata.",
+          "full_chars": 98,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "BAKGRUND Infektion med humant immunbristvirus (HIV) är den starkaste riskfaktorn för att utveckla tuberkulos och har drivit på dess återkomst, särskilt i subsahariska Afrika. År 2010 uppskattades det",
+          "full_chars": 2152,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Snabb uppreglering och högre basala uttryck av interferoninducerade gener minskar överlevnaden hos g",
+          "full_chars": 160,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Neuronernas känslighet i hjärnan för mikrobiella infektioner är en avgörande faktor för klinisk utfall. Det finns lite kunskap om de molekylära faktorer som styr denna sårbarhet. Vi visar här att två",
+          "full_chars": 1092,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "Primär screening för livmoderhalscancer med HPV-detektion har högre longitudinell känslighet än konv",
+          "full_chars": 177,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Bakgrund: Screening för livmoderhalscancer baserat på testning för humant papillomavirus (HPV) ökar känsligheten för upptäckt av höggradig (grad 2 eller 3) livmoderhalscancerprekancerösa förändringar,",
+          "full_chars": 2333,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "Hinderar interaktionen mellan TDP-43 och komplex I-proteiner ND3 och ND6 resulterar i ökad TDP-43-in",
+          "full_chars": 125,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Genetiska mutationer i TAR DNA-bindande protein 43 (TARDBP, även känt som TDP-43) orsakar amyotrofisk lateral skleros (ALS), och en ökning av TDP-43 (kodat av TARDBP) i cytoplasman är en framträdande",
+          "full_chars": 1263,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

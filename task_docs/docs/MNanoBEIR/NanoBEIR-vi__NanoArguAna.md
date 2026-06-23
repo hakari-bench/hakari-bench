@@ -62,9 +62,13 @@ A model targeting this task should improve long-text response-relation modeling.
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on ArguAna argument retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Công chúng thờ ơ với cải cách. Liệu cải cách của Thượng viện có nên là ưu tiên hàng đầu trong bối cả... [100 / 824 chars] | Chiến dịch AV không thể so sánh với cải cách Thượng viện, hơn nữa không nên nhầm lẫn một công chúng thiếu thông tin do sự xoay chuyển chính trị với sự thờ ơ. Thường thì cử tri bày tỏ rằng họ thờ ơ vì... [200 / 412 chars] |
+| Sự mở rộng của Heathrow là rất quan trọng cho nền kinh tế Mở rộng Heathrow sẽ đảm bảo nhiều việc làm... [100 / 1,000 chars] | Cộng đồng doanh nghiệp còn xa mới thống nhất trong sự ủng hộ được cho là dành cho một đường băng thứ ba. Các cuộc khảo sát cho thấy nhiều doanh nghiệp có ảnh hưởng thực sự không ủng hộ việc mở rộng. M... [200 / 1,180 chars] |
+| Con người được đưa ra quá nhiều sự lựa chọn, điều này khiến họ kém hạnh phúc hơn. Quảng cáo dẫn đến... [100 / 952 chars] | Con người không hạnh phúc vì họ không thể có mọi thứ, chứ không phải vì họ được đưa ra quá nhiều sự lựa chọn và cảm thấy căng thẳng. Thực tế, quảng cáo đóng một vai trò quan trọng trong việc đảm bảo r... [200 / 734 chars] |
+| Các cuộc tấn công mạng thường được thực hiện bởi các tác nhân phi nhà nước Các cuộc tấn công mạng th... [100 / 1,143 chars] | Trong trường hợp các tác nhân phi nhà nước tấn công, nhiều chuyên gia trong lĩnh vực luật quốc tế đồng ý rằng nhà nước vẫn có thể trả đũa để tự vệ nếu một nhà nước khác "không sẵn sàng hoặc không có k... [200 / 592 chars] |
+| Bởi vì tôn giáo thúc đẩy sự chắc chắn trong niềm tin, sự thù hận được thần thánh hóa dễ dàng được sử... [100 / 1,172 chars] | Không ai bị buộc phải thực hiện các hành vi bạo lực bởi lời nói của người khác; đó là sự lựa chọn của họ. Tương tự, có rất nhiều người có quan điểm có thể được coi là kỳ thị đồng tính nhưng lại cảm th... [200 / 657 chars] |
 
 ### Source Reference Table
 

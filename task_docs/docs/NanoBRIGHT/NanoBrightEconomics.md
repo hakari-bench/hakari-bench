@@ -68,9 +68,13 @@ The observed metrics suggest that a practical system should use reranking_hybrid
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Would a GDP measure be improved by excluding foreign interest paid? The income method of calculating... [100 / 684 chars] | So why in these two sets of countries do economic performance and well-being not go strictly hand in hand? One explanation is that the countries that do better in terms of well-being have made the cho... [200 / 1,068 chars] |
+| Derivative to ln(K(t)) in the RBC model In the calculation of the equation of motion for capital in... [100 / 406 chars] | Example [ [ edit ](/w/index.php?title=Elasticity_of_substitution&action=edit&section=3 "Edit section: Example") ] Consider [ Cobb–Douglas production function ](/wiki/Cobb%E2%80%93Douglas_production_fu... [200 / 2,640 chars] |
+| What is the purpose of taxes if central banks can fund deficit spending? Somewhat straight forward.... [100 / 524 chars] | financial market innovations and shocks, may provide evidence of long-run inconsistencies between policies and targets and give rise to a reassessment of policy. IV CONCLUSIONS This paper has re-exami... [200 / 3,286 chars] |
+| Is it always a trade off between efficiency and equity? Is there any situations where we can achieve... [100 / 467 chars] | What is the greatest single class of distortions in the global economy? One contender for this title is the tightly binding constraints on emigration from poor countries. Vast numbers of people in low... [200 / 821 chars] |
+| How are stock prices determined in the following cases? I looked at this question already. I know th... [100 / 689 chars] | KEY TAKEAWAYS Matching orders is the process of identifying and effecting a trade between equal and opposite requests for a security (i.e., a buy and a sale at the same price). Order matching is how m... [200 / 366 chars] |
 
 ### Source Reference Table
 

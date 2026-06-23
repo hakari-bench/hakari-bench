@@ -114,11 +114,11 @@ to smooth away scientific specificity.
 
 | Query | Positive document |
 | --- | --- |
-| Ly49Qは、膜ラフト機能を制御することにより、好中球の炎症部位への移動の組織化を指示する。 | 好中球は感染部位や炎症部位へ迅速に浸潤するために、急速に偏極化し、方向性のある運動を行う。 |
-| 抗レトロウイルス療法は、広範なCD4層において結核の発生率を低下させる。 | HIV感染は結核発症の最も強い危険因子であり、抗レトロウイルス療法はHIV関連結核の予防に大きな可能性を有している。 |
-| インターフェロン誘導性遺伝子の急速な上昇調節およびより高い基礎的発現は、ウエストナイルウイルスに感染した顆粒細胞ニューロンの生存を低下させる。 | 脳内の神経細胞が微生物感染に対して感受性を示すことは、臨床的転帰を左右する主要な要因である。 |
-| HPV検出を用いた子宮頸がんの一次スクリーニングは、子宮頸部上皮内腫瘍2度を検出するための従来の細胞診よりも縦断的感度が高い。 | HPV検査に基づく子宮頸がんスクリーニングは、高度の子宮頸部上皮内腫瘍の検出感度を高める。 |
-| TDP-43と呼吸鎖複合体Iのタンパク質ND3およびND6との相互作用を阻害すると、TDP-43誘導性の神経細胞死が増加する。 | TAR DNA結合タンパク質43の遺伝的変異は筋萎縮性側索硬化症を引き起こし、神経変性疾患に関与する。 |
+| Ly49Qは、膜ラフト機能を制御することにより、好中球の炎症部位への移動の組織化を指示する。 [46 chars] | 好中球は感染部位や炎症部位へ迅速に浸潤するために、急速に偏極化し、方向性のある運動を行う。本研究では、阻害性MHC I受容体であるLy49Qが好中球の迅速な偏極化および組織への浸潤に不可欠であることを示した。恒常状態では、Ly49QはおそらくSrcキナーゼおよびPI3キナーゼの活性を阻害することにより、局在複合体の形成を妨げ、好中球の接着を抑制していた。しかし、炎症刺激が存在する状況では、Ly49... [200 / 434 chars] |
+| 抗レトロウイルス療法は、広範なCD4層において結核の発生率を低下させる。 [36 chars] | 背景 ヒト免疫不全ウイルス（HIV）感染は結核発症の最も強い危険因子であり、特にサブサハラ以南のアフリカで結核の再燃を助長している。2010年には、世界中でHIVに感染している推定3,400万人のうち、110万人が新たに結核を発症した。抗レトロウイルス療法（ART）はHIV関連結核の予防に大きな可能性を有している。我々は、HIV感染成人における結核発生率に対する抗レトロウイルス療法の影響を分析した... [200 / 992 chars] |
+| インターフェロン誘導性遺伝子の急速な上昇調節およびより高い基礎的発現は、ウエストナイルウイルスに感染した顆粒細胞ニューロンの生存を低下させる。 [71 chars] | 脳内の神経細胞が微生物感染に対して感受性を示すことは、臨床的転帰を左右する主要な要因であるが、この感受性を制御する分子的因子についてはほとんど分かっていない。本研究では、異なる脳領域に由来する2種類の神経細胞が、いくつかの正鎖RNAウイルスの複製に対して異なる許容性を示すことを明らかにした。小脳の顆粒細胞および大脳皮質の皮質神経細胞は、それぞれ独自の自然免疫プログラムを有しており、これによりウイル... [200 / 512 chars] |
+| HPV検出を用いた子宮頸がんの一次スクリーニングは、子宮頸部上皮内腫瘍2度を検出するための従来の細胞診よりも縦断的感度が高い。 [63 chars] | 背景 人乳頭腫瘍ウイルス（HPV）検査に基づく子宮頸がんスクリーニングは、高度（グレード2または3）の子宮頸部上皮内腫瘍の検出感度を高めるが、この感度の向上が過剰診断を意味するのか、それとも将来の高度子宮頸部上皮内腫瘍または子宮頸がんに対する保護を意味するのかは不明である。 方法 スウェーデンの集団ベースのスクリーニングプログラムにおいて、32〜38歳の女性12,527人を1：1の割合で無作為に割... [200 / 951 chars] |
+| TDP-43と呼吸鎖複合体Iのタンパク質ND3およびND6との相互作用を阻害すると、TDP-43誘導性の神経細胞死が増加する。 [63 chars] | TAR DNA結合タンパク質43（TARDBP、別名TDP-43）の遺伝的変異は筋萎縮性側索硬化症（ALS）を引き起こし、TDP-43（TARDBPがコードする）の細胞質への存在量の増加は、さまざまな神経変性疾患における変性神経細胞の顕著な組織病理学的特徴である。しかし、TDP-43がALSの病態生理にどのように寄与するかの分子機構は依然として不明である。本研究では、ALSまたは前頭側頭葉変性症（... [200 / 593 chars] |
 
 ### Public Sources
 
@@ -133,8 +133,8 @@ to smooth away scientific specificity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository |  | project page | https://github.com/allenai/scifact |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | task paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| SciFact repository |  | project page | [https://github.com/allenai/scifact](https://github.com/allenai/scifact) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

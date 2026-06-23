@@ -150,21 +150,22 @@ pool for that decision.
 
 ## Example Data
 
-### Public Sources
-
-- [Retrieval-Augmented Generation for Long-form Question Answering in Dutch](https://aclanthology.org/2024.nllp-1.12/), 2024.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [clips/mteb-nl-legalqa-pr](https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr), source dataset card.
-- [MTEB project repository](https://github.com/embeddings-benchmark/mteb).
+| Query | Positive document |
+| --- | --- |
+| Wanneer wordt een vergunning voor ruimtevaartactiviteiten geweigerd? [68 chars] | Wet ruimtevaartactiviteiten, Hoofdstuk2, Vergunningen, Paragraaf2, Artikel6, Aanvraag vergunning, Artikel 6 een vergunning wordt geweigerd indien: de naleving van een verdrag of een bindend besluit va... [200 / 1,073 chars] |
+| Wanneer kan het bezwaarschrift worden ingediend voor een WOB (wet openbaarheid van bestuur) verzoek? [100 chars] | Wet openbaarheid van bestuur, HoofdstukVI, Overige bepalingen, Artikel15a, Artikel 15a in afwijking van artikel 7:1, eerste lid, onderdeel f, van de algemene wet bestuursrecht kan degene aan wie het r... [200 / 1,048 chars] |
+| Wanneer kan een ontheffing volgens de opiumwet worden ingetrokken? [66 chars] | Opiumwet, Artikel8e, Artikel 8e een ontheffing kan worden ingetrokken: indien de houder van de ontheffing handelt in strijd met een bij of krachtens deze wet gesteld voorschrift; in het geval en onder... [200 / 560 chars] |
+| Wanneer heeft iemand geen recht op bijstand? [44 chars] | Participatiewet, Hoofdstuk2, Rechten en plichten, Paragraaf2.2, Artikel13, Bijstand, Artikel 13, Uitsluiting van bijstand geen recht op bijstand heeft degene: aan wie rechtens zijn vrijheid is ontnome... [200 / 1,099 chars] |
+| Wanneer wordt de gemeenschap van rechtswege ontbonden? [54 chars] | Burgerlijk Wetboek Boek 1, Boek1, Titeldeel7, Ontbinding van de gemeenschap, Afdeling3, De wettelijke gemeenschap van goederen, Artikel 99 de gemeenschap wordt van rechtswege ontbonden: in geval van h... [200 / 1,154 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Retrieval-Augmented Generation for Long-form Question Answering in Dutch | 2024 | ACL paper | https://aclanthology.org/2024.nllp-1.12/ |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| clips/mteb-nl-legalqa-pr |  | dataset card | https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| Retrieval-Augmented Generation for Long-form Question Answering in Dutch | 2024 | ACL paper | [https://aclanthology.org/2024.nllp-1.12/](https://aclanthology.org/2024.nllp-1.12/) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| clips/mteb-nl-legalqa-pr |  | dataset card | [https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr](https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

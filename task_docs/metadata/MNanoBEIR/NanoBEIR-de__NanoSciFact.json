@@ -144,7 +144,7 @@
         "title": "SciFact repository",
         "url": "https://github.com/allenai/scifact",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q steuert die Organisation der Migration von Neutrophilen zu Entzündungsherden, indem es die Fun",
+          "full_chars": 136,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Neutrophile durchlaufen eine schnelle Polarisation und gerichtete Bewegung, um Infektions- und Entzündungsherde zu infiltrieren. Wir zeigen, dass ein inhibitorischer MHC-I-Rezeptor, Ly49Q, für die sch",
+          "full_chars": 1116,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Antiretrovirale Therapie verringert die Häufigkeit von Tuberkulose bei verschiedenen CD4-Werten.",
+          "full_chars": 96,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "HINTERGRUND Die Infektion mit dem humanen Immundefizienz-Virus (HIV) ist der stärkste Risikofaktor für die Entwicklung von Tuberkulose und hat deren Wiederauftreten, insbesondere in Subsahara-Afrika,",
+          "full_chars": 2378,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Eine schnelle Hochregulierung und eine höhere basale Expression von Interferon-induzierten Genen ver",
+          "full_chars": 199,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Obwohl die Anfälligkeit von Neuronen im Gehirn für mikrobiologische Infektionen ein entscheidender Faktor für den klinischen Verlauf ist, ist wenig über die molekularen Faktoren bekannt, die diese Anf",
+          "full_chars": 1264,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "Primäre Zervixkarzinom-Screening mit HPV-Nachweis weist eine höhere longitudinale Sensitivität auf a",
+          "full_chars": 192,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "HINTERGRUND Das Screening auf Gebärmutterhalskrebs durch HPV-Tests erhöht die Sensitivität bei der Erkennung von hochgradigen (Grad 2 oder 3) zervikalen intraepithelialen Neoplasien, aber ob dieser Ge",
+          "full_chars": 2622,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "Die Hemmung der Interaktion zwischen TDP-43 und den Proteinen ND3 und ND6 des Atmungskomplexes I füh",
+          "full_chars": 157,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Genetische Mutationen im TAR-DNA-bindenden Protein 43 (TARDBP, auch bekannt als TDP-43) verursachen amyotrophe Lateralsklerose (ALS), und eine erhöhte Präsenz von TDP-43 (kodiert durch TARDBP) im Zyto",
+          "full_chars": 1463,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

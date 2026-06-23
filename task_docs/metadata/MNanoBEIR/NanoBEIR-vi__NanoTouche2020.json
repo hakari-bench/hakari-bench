@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Overview of Touché 2020: Argument Retrieval",
-        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Bài tập về nhà có lợi không?",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Đầu tiên, có ba lý do tại sao bài tập về nhà là tuyệt vời và nên tiếp tục trong các trường học hiện đại. 1. Bài tập về nhà hỗ trợ những người học thực hành. Người ta thường chấp nhận rằng có ba loại n",
+          "full_chars": 3948,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Có nên quảng cáo thuốc theo toa trực tiếp đến người tiêu dùng không?",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nhiều quảng cáo không cung cấp đủ thông tin về hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bằng hình ảnh một con bướm bay qua cửa sổ phòng ngủ, trên một người đang ngủ say. Thực tế, Lunesta giúp",
+          "full_chars": 1324,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Có cần yêu cầu tiêm vắc xin nào cho trẻ em không?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chưa phải là một trường hợp đầy đủ... Chỉ là một số điểm nhỏ mà tôi đã tổng hợp... Chính phủ không nên có quyền can thiệp vào các quyết định về sức khỏe mà cha mẹ đưa ra cho con cái của họ. 31% cha mẹ",
+          "full_chars": 3913,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
+        "query": {
+          "text": "Phá thai có nên hợp pháp không?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nạo phá thai nên hợp pháp vì nhân cách bắt đầu khi thai nhi trở nên khả thi hoặc sau khi sinh, chứ không phải tại thời điểm thụ thai. Theo Tòa án Tối cao Hoa Kỳ, một người được tính tuổi khi họ ra khỏ",
+          "full_chars": 284,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26",
+        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
+        "query": {
+          "text": "Các bài kiểm tra chuẩn hóa có cải thiện giáo dục không?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Đã giải quyết: SAT, ACT và các bài kiểm tra tiêu chuẩn khác cung cấp nhiều thông tin hơn về sự chuẩn bị của học sinh trung học cho giáo dục tại các trường cao đẳng và đại học elite hơn là GPA trung họ",
+          "full_chars": 4046,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

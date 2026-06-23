@@ -70,13 +70,13 @@ Error analysis should group failures by same-keyword distractors, same-domain bu
 
 ## Example Data
 
-### Public Sources
-
-- [SPECTER / SciDocs paper](https://arxiv.org/abs/2004.07180)
-- [SciDocs dataset page](https://allenai.org/data/scidocs)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/scidocs-vn](https://huggingface.co/datasets/GreenNode/scidocs-vn)
+| Query | Positive document |
+| --- | --- |
+| Phân tích hành vi của mã độc Android [36 chars] | Về chứng nhận ứng dụng điện thoại di động nhẹ Người dùng đã bắt đầu tải về một số lượng ngày càng lớn các ứng dụng cho điện thoại di động để đáp ứng với sự tiến bộ trong các thiết bị cầm tay và mạng k... [200 / 1,361 chars] |
+| Liên kết một từ điển ngữ nghĩa với Wordnet và chuyển đổi sang Wordnet-LMF [73 chars] | Học cách bản đồ giữa các từ vựng trên Web ngữ nghĩa Các ngữ nghĩa học đóng một vai trò nổi bật trong Semantic Web. Chúng cho phép xuất bản dữ liệu có thể hiểu được bởi máy tính, mở ra nhiều cơ hội để... [200 / 2,024 chars] |
+| Mô tả tính độ tin cậy của phần cứng điện toán đám mây [53 chars] | Xu hướng thất bại trong một quần thể ổ đĩa lớn Được ước tính rằng trên 90% thông tin mới được sản xuất ra trên thế giới đang lưu trữ trên các phương tiện từ tính, hầu hết là trên ổ cứng. Mặc dù sự qua... [200 / 1,462 chars] |
+| Nhận diện thói quen hàng ngày qua các hoạt động [47 chars] | Phát hiện nhanh đối tượng sử dụng tăng cường của thác đơn giản tính năng Bài báo này mô tả một phương pháp tiếp cận học máy cho việc phát hiện vật thể hình ảnh có khả năng xử lý hình ảnh cực nhanh và... [200 / 1,359 chars] |
+| VELNET (Môi trường ảo cho học tập mạng) [39 chars] | Môi trường học tập ảo trên mạng: Một khung nghiên cứu và đánh giá sơ bộ về hiệu quả trong việc đào tạo kỹ năng CNTT cơ bản Việc sử dụng của bạn đối với kho lưu trữ JSTOR cho thấy sự chấp nhận của bạn... [200 / 619 chars] |
 
 ### Source Reference Table
 

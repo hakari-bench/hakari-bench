@@ -117,11 +117,11 @@ reranker.
 
 | Query | Positive document |
 | --- | --- |
-| Fitzgerald Auto Mall em Chambersburg, PA | Fitzgerald Auto Malls é uma concessionária de automóveis de propriedade e operação familiar fundada em 1966... |
-| Coleção de contos de 1994 de Alice Munro está disponível | Alice Ann Munro é uma autora canadense. O trabalho de Munro é frequentemente descrito como tendo revolucionado a arquitetura dos contos... |
-| Arquitetura galo-romana em Paris | A Arte em Paris é um artigo sobre a cultura e a história da arte em Paris, a capital da França... |
-| Repúblicas da antiga Iugoslávia | A Constituição de 1974 da Iugoslávia foi a quarta e última constituição da República Federal Socialista da Iugoslávia... |
-| Filmes filmados em Veneza | A Pequena Romântica é um filme de comédia romântica americano de 1979, dirigido por George Roy Hill... |
+| Fitzgerald Auto Mall em Chambersburg, PA [40 chars] | Fitzgerald Auto Malls é uma concessionária de automóveis de propriedade e operação familiar fundada em 1966, com sua primeira localização abrindo em Bethesda, Maryland. Em 2014, a Fitzgerald Auto Mall... [200 / 436 chars] |
+| Coleção de contos de 1994 de Alice Munro está disponível [56 chars] | Alice Ann Munro (nascida Laidlaw; 10 de julho de 1931) é uma autora canadense. O trabalho de Munro é frequentemente descrito como tendo revolucionado a arquitetura dos contos, especialmente por sua te... [200 / 528 chars] |
+| Arquitetura galo-romana em Paris [32 chars] | A Arte em Paris é um artigo sobre a cultura e a história da arte em Paris, a capital da França. Há séculos, Paris atrai artistas de todo o mundo, que chegam à cidade para se educarem e buscar inspiraç... [200 / 306 chars] |
+| Repúblicas da antiga Iugoslávia [31 chars] | A Constituição de 1974 da Iugoslávia foi a quarta e última constituição da República Federal Socialista da Iugoslávia. Ela entrou em vigor em 21 de fevereiro. Com 406 artigos originais, a constituição... [200 / 440 chars] |
+| Filmes filmados em Veneza [25 chars] | A Pequena Romântica é um filme de comédia romântica americano de 1979, em Technicolor e Panavision, dirigido por George Roy Hill e estrelado por Laurence Olivier, Thelonious Bernard e Diane Lane, em s... [200 / 391 chars] |
 
 ### Public Sources
 
@@ -135,7 +135,7 @@ reranker.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DBpedia Entity Retrieval | 2017 | task paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia Entity Retrieval | 2017 | task paper | [https://doi.org/10.1145/3077136.3080751](https://doi.org/10.1145/3077136.3080751) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -62,19 +62,21 @@ Models should encode API intent, data shape, mathematical operation, and expecte
 
 ## Example Data
 
-### Public Sources
-
-- [DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation](https://arxiv.org/abs/2211.11501), task paper.
-- [xlangai/DS-1000](https://huggingface.co/datasets/xlangai/DS-1000), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| Problem: I have a list of numpy vectors of the format: [array([[-0.36314615, 0.80562619, -0.82777381... [100 / 1,055 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import numpy as np import scipy.sparse as sparse vec... [200 / 520 chars] |
+| Problem: I'm trying to reduce noise in a binary python array by removing all completely isolated sin... [100 / 925 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import numpy as np import scipy.ndimage square = pic... [200 / 777 chars] |
+| Problem: I am having a problem with minimization procedure. Actually, I could not create a correct o... [100 / 1,716 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import scipy.optimize import numpy as np a, x_true,... [200 / 614 chars] |
+| Problem: I am working with a 2D numpy array made of 512x512=262144 values. Such values are of float... [100 / 1,020 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import numpy as np from scipy import ndimage img = p... [200 / 455 chars] |
+| Problem: I'm trying to integrate X (X ~ N(u, o2)) to calculate the probability up to position `x`. H... [100 / 1,047 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import scipy.integrate import math import numpy as n... [200 / 527 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation | 2022 | task paper | https://arxiv.org/abs/2211.11501 |
-| xlangai/DS-1000 |  | dataset card | https://huggingface.co/datasets/xlangai/DS-1000 |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation | 2022 | task paper | [https://arxiv.org/abs/2211.11501](https://arxiv.org/abs/2211.11501) |
+| xlangai/DS-1000 |  | dataset card | [https://huggingface.co/datasets/xlangai/DS-1000](https://huggingface.co/datasets/xlangai/DS-1000) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

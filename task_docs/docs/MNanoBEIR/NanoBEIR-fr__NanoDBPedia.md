@@ -48,13 +48,13 @@ Strong models should combine alias normalization, exact name matching, and attri
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| concession automobile fitzgerald à chambersburg, pa | Fitzgerald Auto Malls est un concessionnaire automobile familial fondé en 1966... |
-| Le recueil de nouvelles de 1994 d'Alice Munro est disponible | Alice Ann Munro est une auteure canadienne. L'œuvre de Munro a été décrite comme ayant révolutionné la structure des nouvelles... |
-| Architecture gallo-romaine à Paris | L'art à Paris parle de la culture et de l'histoire de l'art à Paris, la capitale de la France... |
-| Républiques de l'ex-Yougoslavie | La Constitution yougoslave de 1974 était la quatrième et dernière constitution de la République fédérative socialiste de Yougoslavie... |
-| Films tournés à Venise | Un peu de romance est un film comique romantique américain de 1979 réalisé par George Roy Hill... |
+| Query | Positive document |
+| --- | --- |
+| concession automobile fitzgerald à chambersburg, pa [51 chars] | Fitzgerald Auto Malls est un concessionnaire automobile familial fondé en 1966, avec son premier emplacement ouvert à Bethesda, Maryland. En 2014, Fitzgerald Auto Malls était classé 59e sur la liste d... [200 / 444 chars] |
+| Le recueil de nouvelles de 1994 d'Alice Munro est disponible [60 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, née Laidlaw /ˈleɪdlɔː/; née le 10 juillet 1931) est une auteure canadienne. L'œuvre de Munro a été décrite comme ayant révolutionné la structure des nouvelles, no... [200 / 567 chars] |
+| Architecture gallo-romaine à Paris [34 chars] | L'art à Paris parle de la culture et de l'histoire de l'art à Paris, la capitale de la France. Depuis des siècles, Paris a attiré des artistes du monde entier, venant s'y former et y puiser l'inspirat... [200 / 321 chars] |
+| Républiques de l'ex-Yougoslavie [31 chars] | La Constitution yougoslave de 1974 était la quatrième et dernière constitution de la République fédérative socialiste de Yougoslavie. Elle est entrée en vigueur le 21 février. Avec 406 articles origin... [200 / 474 chars] |
+| Films tournés à Venise [22 chars] | Un peu de romance est un film comique romantique américain de 1979 en Technicolor et Panavision, réalisé par George Roy Hill et mettant en vedette Laurence Olivier, Thelonious Bernard, et Diane Lane d... [200 / 400 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should combine alias normalization, exact name matching, and attri
 
 | Label | URL |
 |---|---|
-| DBpedia-Entity V2 paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia-Entity V2 paper (https://doi.org/10.1145/3077136.3080751) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -146,10 +146,13 @@ duplicate policy proposals.
 
 ## Example Data
 
-Representative queries include descriptions of secure 5G strategy, a Native
-American business incubator program, worker-classification safe harbors, Middle
-East security assistance, and carbon capture or utilization research. Positive
-documents are the corresponding bill titles and summaries.
+| Query | Positive document |
+| --- | --- |
+| To require the President to develop a strategy to ensure the security of next generation mobile tele... [100 / 341 chars] | Secure 5G and Beyond Act of 2020 This bill requires the President, in consultation with relevant federal agencies, to develop (1) a strategy to secure and protect U.S. fifth and future generations (5G... [200 / 685 chars] |
+| To establish a business incubators program within the Department of the Interior to promote economic... [100 / 147 chars] | Native American Business Incubators Program Act This bill requires the Department of the Interior to establish a grant program in the Office of Indian Energy and Economic Development for establishing... [200 / 826 chars] |
+| To amend the Internal Revenue Code of 1986 to provide a safe harbor for determinations of worker cla... [100 / 168 chars] | New Economy Works to Guarantee Independence and Growth Act of 2019 or the NEW GIG Act of 2019 This bill establishes a test for determining if a service provider should be classified as an independent... [200 / 1,572 chars] |
+| To make improvements to certain defense and security assistance provisions and to authorize theappro... [100 / 283 chars] | Strengthening America's Security in the Middle East Act of 2019 This bill authorizes assistance and weapons transfers to Israel, and extends defense cooperation with Jordan. It establishes additional... [200 / 1,724 chars] |
+| To support carbon dioxide utilization and direct air capture research, to facilitate the permitting... [100 / 228 chars] | Utilizing Significant Emissions with Innovative Technologies Act or the USE IT Act This bill addresses the capture, utilization, and sequestration of carbon dioxide. The Environmental Protection Agenc... [200 / 1,562 chars] |
 
 ### Public Sources
 
@@ -165,8 +168,8 @@ documents are the corresponding bill titles and summaries.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2308.11462 |
-| corporate_lobbying | 2023 | LegalBench task page | https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html |
+| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2308.11462](https://arxiv.org/abs/2308.11462) |
+| corporate_lobbying | 2023 | LegalBench task page | [https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html](https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html) |
 
 ### Representative Snippets
 

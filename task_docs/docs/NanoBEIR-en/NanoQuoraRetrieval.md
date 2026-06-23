@@ -62,9 +62,13 @@ A model targeting this task should optimize for answer-equivalent question match
 
 ## Example Data
 
-### Public Sources
-
-The original source is Quora Question Pairs, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Is it okay to laugh at your own jokes? [38 chars] | Is it weird to laugh at my own jokes? [37 chars] |
+| What is the best lie you ever spun? [35 chars] | What's the best-crafted lie you've ever told? [45 chars] |
+| Why does Quora frequently suggest answers to my feed that put down Donald Trump? [80 chars] | Why does Quora only seem to have subjective, biased answers to questions about Donald Trump? [92 chars] |
+| How can I make my self physically strong? [41 chars] | How do I make myself physically strong? [39 chars] |
+| How will a quantum satellite work? [34 chars] | How does a Quantum satellite work and what would be some of its primary uses? [77 chars] |
 
 ### Source Reference Table
 

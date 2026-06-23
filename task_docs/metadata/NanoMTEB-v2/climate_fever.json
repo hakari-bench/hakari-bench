@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "633",
+        "document_id": "Paleocene–Eocene_Thermal_Maximum",
+        "query": {
+          "text": "Currently, sea-level rise does not seem to depend on ocean temperature, and certainly not on CO2.",
+          "full_chars": 97,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Paleocene–Eocene Thermal Maximum The Paleocene -- Eocene Thermal Maximum ( PETM ) , alternatively ( ETM1 ) , and formerly known as the `` Initial Eocene '' or '' '' was a time period with more than 8",
+          "full_chars": 2549,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "194",
+        "document_id": "Greenhouse_gas",
+        "query": {
+          "text": "The main greenhouse gas is water vapour[…]",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Greenhouse gas A greenhouse gas ( abbrev . GHG ) is a gas in an atmosphere that absorbs and emits radiation within the thermal infrared range . This process is the fundamental cause of the greenhouse",
+          "full_chars": 1706,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "Deforestation",
+        "query": {
+          "text": "the warming is not nearly as great as the climate change computer models have predicted.",
+          "full_chars": 88,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Deforestation Deforestation , clearance or clearing is the removal of a forest or stand of trees where the land is thereafter converted to a non-forest use . Examples of deforestation include conversi",
+          "full_chars": 2080,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "77",
+        "document_id": "Sun",
+        "query": {
+          "text": "[S]unspot activity on the surface of our star has dropped to a new low.",
+          "full_chars": 71,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sun The Sun is the star at the center of the Solar System . It is a nearly perfect sphere of hot plasma , with internal convective motion that generates a magnetic field via a dynamo process . It is b",
+          "full_chars": 2158,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "350",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "Since 1965, more parts of the U.S. have seen a decrease in flooding than have seen an increase.",
+          "full_chars": 95,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Effects of global warming The effects of global warming are the environmental and social changes caused ( directly or indirectly ) by human emissions of greenhouse gases . There is a scientific consen",
+          "full_chars": 1312,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/ClimateFEVER_test_top_250_only_w_correct-v2",
-    "source_task": "ClimateFEVERHardNegatives"
+    "source_task": "ClimateFEVERHardNegatives",
+    "example_count": 5
   }
 }

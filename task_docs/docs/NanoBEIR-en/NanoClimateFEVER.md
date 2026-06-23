@@ -62,9 +62,13 @@ A model targeting this task should improve claim-specific evidence ranking while
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Climate-FEVER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| From 1970 until 1998 there was a warming period that raised temperatures by about 0.7 F that helped... [100 / 143 chars] | The Paleocene ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) or Palaeocene , the `` old recent '' , is a geologic epoch that lasted from about . It is the first epoch of the Paleogene Period i... [200 / 1,126 chars] |
+| In fact, the trend, while not statistically significant, is downward.” [70 chars] | The solar cycle or solar magnetic activity cycle is the nearly periodic 11-year change in the Sun 's activity ( including changes in the levels of solar radiation and ejection of solar material ) and... [200 / 610 chars] |
+| Local and regional sea levels continue to exhibit typical natural variability—in some places rising... [100 / 122 chars] | Mean sea level ( MSL ) ( abbreviated simply sea level ) is an average level of the surface of one or more of Earth 's oceans from which heights such as elevations may be measured . MSL is a type of ve... [200 / 1,011 chars] |
+| [climate scientists] say that aspects of the case of Hurricane Harvey suggest global warming is maki... [100 / 125 chars] | The effects of global warming are the environmental and social changes caused ( directly or indirectly ) by human emissions of greenhouse gases . There is a scientific consensus that climate change is... [200 / 1,285 chars] |
+| The CERN CLOUD experiment only tested one-third of one out of four requirements necessary to blame g... [100 / 184 chars] | Attribution of recent climate change is the effort to scientifically ascertain mechanisms responsible for recent climate changes on Earth , commonly known as ` global warming ' . The effort has focuse... [200 / 2,016 chars] |
 
 ### Source Reference Table
 

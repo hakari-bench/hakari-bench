@@ -130,11 +130,13 @@ requires modeling conversational usefulness.
 
 ## Example Data
 
-Representative queries ask where to buy non-Danish potatoes, which media
-monitoring service people use, how to handle a PS5 controller that barely
-charges, whether heavy cream corresponds to Danish whipping cream, and how to
-share family photos without Google Photos or iCloud. Positive documents are
-short Danish reply tweets giving useful advice.
+| Query | Positive document |
+| --- | --- |
+| Hej #Twitterhjerne & twitterfolkens (- eller X'ere, whatever 😊) Er der nogen der kan fortælle mig hv... [100 / 278 chars] | Økologiske er vel ok? [21 chars] |
+| Hvis I betaler for medieovervågning på arbejdet - hvem bruger I så, og er I tilfredse? #dkmedier #dk... [100 / 118 chars] | Infomedia - og mnjah [20 chars] |
+| Er der andre der døjer med samme problem som mig, min controller til ps5 lader maks 1 streg om natte... [100 / 250 chars] | Du skal bare indlevere den, hvor du har købt, så får du en ny [61 chars] |
+| Hej Twitter Ofte når jeg ser madvideoer på engelsk så bruger de noget de kalder heavy cream. Svarer... [100 / 152 chars] | Er heavy cream ikke mere 48-50% fløde [37 chars] |
+| Teknisk sommerspørgsmål: Hvordan deler i fotos med familien? Krav: ikke Google Photo eller iCloud. M... [100 / 259 chars] | OneDrive. Vi har også Jottacloud til backup, men deling af billeder med andre i OneDrive fungerer fint, oplever jeg. [116 chars] |
 
 ### Public Sources
 
@@ -149,9 +151,9 @@ short Danish reply tweets giving useful advice.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Scandinavian Embedding Benchmarks | 2024 | benchmark paper | https://arxiv.org/abs/2406.02396 |
-| sorenmulli/da-hashtag-twitterhjerne | 2024 | dataset card | https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne |
-| mteb/TwitterHjerneRetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval |
+| The Scandinavian Embedding Benchmarks | 2024 | benchmark paper | [https://arxiv.org/abs/2406.02396](https://arxiv.org/abs/2406.02396) |
+| sorenmulli/da-hashtag-twitterhjerne | 2024 | dataset card | [https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne](https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne) |
+| mteb/TwitterHjerneRetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval](https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval) |
 
 ### Representative Snippets
 

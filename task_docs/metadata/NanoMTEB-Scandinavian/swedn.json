@@ -135,29 +135,112 @@
         "year": 2025,
         "is_paper": false,
         "doi": "10.23695/36v9-9017",
-        "source_confidence": "official_resource_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "The Scandinavian Embedding Benchmarks",
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Superlim: A Swedish Language Understanding Evaluation Benchmark",
         "url": "https://aclanthology.org/2023.emnlp-main.506/",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/SwednRetrieval",
         "url": "https://huggingface.co/datasets/mteb/SwednRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "540",
+        "document_id": "542",
+        "query": {
+          "text": "Gående är oskyddade i trafiken",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tror många cyklister glömmer att oavsett var en gående person befinner sig i trafiken så räknas de fortfarande som oskyddade gentemot all annan fordonstrafik och enligt lagen räknas cykel som ett ford",
+          "full_chars": 419,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "177",
+        "document_id": "179",
+        "query": {
+          "text": "Det är inte gratis att plocka bär",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Skogens bär ingår i ett ekologiskt system och är knappast till för enbart människan. Det är inte gratis att plocka bär. Det kostar både tid och pengar. Det kräver utrustning och transporter. Väl på pl",
+          "full_chars": 351,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "117",
+        "document_id": "119",
+        "query": {
+          "text": "”Skollagen ger barnen rätt till skolgång”",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "På DN-debatt (24/6) skriver regeringens nationelle samordnare för arbetet med utsatta EES-medborgare Martin Valfridsson tillsammans med Rickard Klerfors, om EU-migranters barns rätt till skolgång. De",
+          "full_chars": 4289,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "72",
+        "document_id": "74",
+        "query": {
+          "text": "”Etablerade sanningar i politiken gäller inte längre”",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Årets riksdagsval tydliggjorde att historiskt etablerade sanningar om väljarkåren inte längre gäller. Profetior från erfarna statsvetare om hur stora försprång som är möjliga att hämta in kom på skam,",
+          "full_chars": 7338,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "291",
+        "document_id": "293",
+        "query": {
+          "text": "”Ge barnen blodmat i stället för vegetariskt”",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Det är inte bara en fråga om klimatet när man som förskolan Gitarren i Umeå väljer bort kött och köttprodukter till barn. Ingen talar om viktiga mineraler som barnen går miste om. Det är väl känt att",
+          "full_chars": 1382,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

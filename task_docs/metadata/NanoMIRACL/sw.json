@@ -144,20 +144,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL corpus dataset",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL source queries and qrels",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "828",
+        "document_id": "57315#0",
+        "query": {
+          "text": "Chelsea F.C. ilizinduliwa lini?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chelsea F.C. Chelsea Football Club ni klabu ya mpira wa miguu ya nchini Uingereza iliyo na maskani yake Fulham, London. Klabu hii ilianzishwa mwaka 1905, na kwa miaka mingi sana imekuwa ikishiriki lig",
+          "full_chars": 359,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "22",
+        "document_id": "9266#1",
+        "query": {
+          "text": "Rais wa kwanza wa Gabon aliitwa nani?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Omar Bongo Kiongozi huyo amevunja rekodi ya kuwa Rais aliyekaa muda mrefu marakani kuliko Rais yeyote barani Afrika. Rais huyo amefariki dunia akiwa na umri wa miaka 73, ambapo ameiongoza Gabon kwa mi",
+          "full_chars": 1263,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "119",
+        "document_id": "94278#2",
+        "query": {
+          "text": "Je,nani mwanzilishi wa mziki wa hIhop nchini Tanzania?",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Machozi Jasho na Damu Halkadhalika ame-enzi kazi ya mwanzilishi halisi wa rap ya Kiswahili nchini Tanzania bwana Edward Mtui (maarufu kama Fresh XE) kwa kuchukua kiitikio chake cha \"Piga Makofi\" ambac",
+          "full_chars": 412,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "962",
+        "document_id": "34090#9",
+        "query": {
+          "text": "Nigeria ilipata huru mwaka gani?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ahmadu Bello Katika uchaguzi wa kwanza uliofanyika Kaskazini mwa Nigeria mwaka 1952, Bwana Ahmadu Bello alishinda [[kiti[[ cha bunge cha Kaskazini, na kuwa mwanachama wa [[baraza tendaji]] kikanda kam",
+          "full_chars": 1289,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "396",
+        "document_id": "15480#0",
+        "query": {
+          "text": "Nani alikuwa rais wa kwanza Urusi?",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Boris Yeltsin Boris Nikolayevich Yeltsin () (kwa herufi za Kirusi huita:Бори́с Никола́евич Е́льцин) (1 Februari 1931 - 23 Aprili 2007) alikuwa rais wa kwanza wa Urusi baada ya mwisho wa ukomunisti. Al",
+          "full_chars": 454,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

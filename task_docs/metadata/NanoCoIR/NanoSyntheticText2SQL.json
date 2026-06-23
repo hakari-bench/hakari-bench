@@ -137,8 +137,91 @@
         "url": "https://huggingface.co/datasets/gretelai/synthetic_text_to_sql",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q100164",
+        "document_id": "c100164",
+        "query": {
+          "text": "What is the difference in average permit cost between high-rise and low-rise buildings in British Co",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SELECT AVG(permit_cost) - LAG(AVG(permit_cost)) OVER (PARTITION BY province ORDER BY EXTRACT(YEAR FROM issue_date)) FROM permit_cost_comparison WHERE province = 'British Columbia' AND building_type IN",
+          "full_chars": 280,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q100029",
+        "document_id": "c100029",
+        "query": {
+          "text": "What is the total amount of aid provided by each government, for community development projects in S",
+          "full_chars": 178,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SELECT government.name as government, SUM(aid) as total_aid, AVG(DATEDIFF(end_date, start_date) / 365) as avg_project_duration FROM community_development_projects JOIN government ON community_developm",
+          "full_chars": 412,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q100007",
+        "document_id": "c100007",
+        "query": {
+          "text": "Find the difference in the number of trees between the tree species with the highest and lowest carb",
+          "full_chars": 151,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SELECT species_high.species AS high_species, species_low.species AS low_species, species_high.sequestration_rate - species_low.sequestration_rate AS difference FROM (SELECT species, MAX(sequestration_",
+          "full_chars": 522,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q100190",
+        "document_id": "c100190",
+        "query": {
+          "text": "Which cities have had a female mayor for the longest continuous period?",
+          "full_chars": 71,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "SELECT c.name, MAX(m.end_year - m.start_year) as max_tenure FROM city c JOIN mayor m ON c.id = m.city_id WHERE m.gender = 'Female' GROUP BY c.name HAVING MAX(m.end_year - m.start_year) >= ALL (SELECT",
+          "full_chars": 274,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q100071",
+        "document_id": "c100071",
+        "query": {
+          "text": "Which ingredients are used in products that have received a safety violation in the past year and ar",
+          "full_chars": 129,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SELECT ingredient_sources.ingredient_id FROM ingredient_sources INNER JOIN products ON ingredient_sources.product_id = products.product_id INNER JOIN safety_records ON products.product_id = safety_rec",
+          "full_chars": 318,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

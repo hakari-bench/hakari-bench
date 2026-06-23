@@ -62,9 +62,13 @@ A model targeting this task should optimize for both first-page quality and mult
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on HotpotQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Penny Rae Bridges đã đóng vai trong một bộ phim hài truyền hình cùng với diễn viên nào khác? [92 chars] | Penny Rae Bridges (sinh ngày 29 tháng 7 năm 1990) là một nữ diễn viên người Mỹ. Công việc truyền hình của cô đã bao gồm các vai diễn trong "For Your Love", "Family Law", "Boy Meets World" và "The Pare... [200 / 292 chars] |
+| Ai đã tặng Kaganoi Shigemochi một thanh kiếm được làm bởi người sáng lập trường Muramasa? [89 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 tháng 8, 1600) là một samurai Nhật Bản của thời kỳ Azuchi-Momoyama, phục vụ cho gia tộc Oda. Ông cai trị lâu đài Kaganoi. Trong trận chiến Komaki và Nagakute, Shi... [200 / 607 chars] |
+| Bộ phim nào được viết và đạo diễn bởi Joby Harold với nhạc được viết bởi Samuel Sim? [84 chars] | Samuel Sim là một nhạc sĩ phim và truyền hình. Ông lần đầu tiên được công nhận với bản nhạc đoạt giải cho loạt phim truyền hình của BBC "Dunkirk". Kể từ đó, ông đã sáng tác nhạc cho nhiều sản phẩm phi... [200 / 537 chars] |
+| Ngày diễn ra trận đấu bóng đá đại học này tại Sân vận động Sun Life ở Miami Gardens, Florida, nơi Cl... [100 / 159 chars] | Đội bóng đá Clemson Tigers năm 2015 đại diện cho Đại học Clemson trong mùa bóng đá NCAA Division I FBS năm 2015. Đội Tigers được dẫn dắt bởi huấn luyện viên trưởng Dabo Swinney trong năm thứ bảy đầy đ... [200 / 1,183 chars] |
+| Devil's Food là một album tổng hợp các bài hát đơn của một ban nhạc rock and roll người Mỹ, cũng đượ... [100 / 173 chars] | Devil's Food là một album tổng hợp các bài hát đơn của ban nhạc rock and roll Mỹ Supersuckers, phát hành vào tháng 4 năm 2005 trên hãng đĩa Mid-Fi. [147 chars] |
 
 ### Source Reference Table
 

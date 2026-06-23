@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 5
       }
     },
-    "references": [
-      {
-        "title": "Natural Questions: a Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: a Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "Onde vai ser realizado o Final Four este ano?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O Torneio de Basquetebol Masculino da Divisão I da NCAA de 2018 foi um torneio de eliminação simples com 68 equipes para determinar o campeão nacional de basquetebol universitário da NCAA para a tempo",
+          "full_chars": 355,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "O \"O Estranho Mundo de Jack\" é um filme original da Disney?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O Pesadelo Antes do Natal surgiu de um poema escrito por Tim Burton em 1982, enquanto ele trabalhava como animador na Walt Disney Feature Animation. Com o sucesso de Vincent no mesmo ano, os Estúdios",
+          "full_chars": 668,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "Por que existe o Anjo do Norte?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De acordo com Gormley, o significado de um anjo era tríplice: primeiro, para significar que, sob o local de sua construção, mineiros de carvão trabalharam por dois séculos; segundo, para compreender a",
+          "full_chars": 351,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test826",
+        "document_id": "doc29757",
+        "query": {
+          "text": "Onde foi originalmente mencionado o Compromisso dos Três Quintos na Constituição?",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O Compromisso dos Três Quintos está no Artigo 1, Seção 2, Cláusula 3 da Constituição dos Estados Unidos, que diz:",
+          "full_chars": 113,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test2079",
+        "document_id": "doc72413",
+        "query": {
+          "text": "Quem canta \"Someone's Watching Me\" com Michael Jackson?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Somebody's Watching Me\" é uma música do cantor americano Rockwell de seu álbum de estreia Somebody's Watching Me (1984). Foi lançada como o primeiro single e single principal do álbum em 14 de janeir",
+          "full_chars": 362,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

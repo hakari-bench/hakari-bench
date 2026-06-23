@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 8
       }
     },
-    "references": [
-      {
-        "title": "FiQA: A Question Answering Dataset for Financial Opinion Mining",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-fr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA: A Question Answering Dataset for Financial Opinion Mining",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Quel type de rendements Vanguard indique-t-il ?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "À partir de la page de Vanguard - Cela semblait être le plus simple, car les données S&P sont faciles à trouver. J'utilise MoneyChimp pour obtenir des informations - ce qui confirme que la page de Van",
+          "full_chars": 543,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Quelles sont les implications fiscales du travail indépendant ?",
+          "full_chars": 63,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Si vous avez un revenu aux États-Unis, vous devrez payer l'impôt sur le revenu américain. Sauf si un traité entre votre pays et les États-Unis en dispose autrement.",
+          "full_chars": 164,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "Qu'est-ce qui est considéré comme élevé ou bas en matière de volume ?",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Le volume quotidien est généralement comparé au volume quotidien moyen des 50 derniers jours pour une action. Un volume élevé est généralement considéré comme étant 2 fois ou plus le volume quotidien",
+          "full_chars": 765,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "94",
+        "document_id": "245447",
+        "query": {
+          "text": "Utiliser les points de fidélité de votre carte de crédit pour régler des dépenses professionnelles d",
+          "full_chars": 122,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Pour simplifier, commençons par considérer uniquement le remboursement en espèces. En général, le remboursement en espèces des cartes de crédit pour un usage personnel n'est pas imposable, mais pour u",
+          "full_chars": 4415,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2903",
+        "document_id": "527776",
+        "query": {
+          "text": "Comment dois-je déclarer mes impôts en tant que travailleur indépendant ?",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pour des raisons fiscales, vous devrez déclarer vos revenus en tant qu'employé (feuilles T4 et impôts retenus automatiquement), mais aussi en tant qu'entrepreneur. J'ai eu la même situation l'année de",
+          "full_chars": 853,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -146,22 +146,105 @@
         "url": "https://r2med.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED GitHub repository",
         "url": "https://github.com/R2MED/R2MED",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED/IIYi-Clinical",
         "url": "https://huggingface.co/datasets/R2MED/IIYi-Clinical",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "40539-1",
+        "document_id": "56440-1",
+        "query": {
+          "text": "[Chief Complaint]: A 28-year-old pregnant woman presents for evaluation. [Current Medical History]:",
+          "full_chars": 2601,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[Case Presentation] Chief Complaint Female, 29 years old, office worker 36+1 weeks amenorrhea, headache with lower abdominal pain for 1 day Present Illness Pregnant woman, G1P0. The patient has a hist",
+          "full_chars": 4341,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "24764-1",
+        "document_id": "56523-1",
+        "query": {
+          "text": "[Chief Complaint]: A 70-year-old male patient. Chief Reason: Intermittent dizziness and left upper l",
+          "full_chars": 1471,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[Case Presentation] Chief Complaint Male, 69 years old, farmer Chief complaint: Dizziness, numbness and weakness in the right limb for 10 hours, admitted to the hospital. Current Medical History The p",
+          "full_chars": 3582,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "56500-1",
+        "document_id": "58669-1",
+        "query": {
+          "text": "[Chief Complaint]: Male, 63 years old, farmer Admitted due to speech impairment and right-sided limb",
+          "full_chars": 2595,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[Case Presentation] Chief Complaint Male, 75 years old, farmer Right limb movement restriction for 1 hour Present History The patient reports that 1 hour before admission, he suddenly developed sympto",
+          "full_chars": 4142,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "53982-1",
+        "document_id": "54074-1",
+        "query": {
+          "text": "[Chief Complaint]: Increased vaginal discharge for 5 days, external genital itching for 1 day [Prese",
+          "full_chars": 997,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[Case Presentation] Chief Complaint Increased vaginal discharge with external genital pruritus for 3 days Present History The patient is usually in good health, with normal secretions. Three days ago,",
+          "full_chars": 1166,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "53788-1",
+        "document_id": "56085-1",
+        "query": {
+          "text": "[Chief Complaint]: Abdominal pain for 3 days after abortion 7 days ago [Present Illness]: The patien",
+          "full_chars": 1069,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[Case Presentation] Chief Complaint Female, 33, unemployed Lower abdominal pain for half a month Present History The patient is a married middle-aged female, G1P0, with a history of one induced aborti",
+          "full_chars": 3552,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

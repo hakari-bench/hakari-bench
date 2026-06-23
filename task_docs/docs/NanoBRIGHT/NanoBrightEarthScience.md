@@ -62,9 +62,13 @@ A model targeting this task should combine scientific terminology precision with
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| How is/was continental drift monitored? I am curious about current technology but I am particularly... [100 / 189 chars] | ReadEditView history General What links hereRelated changesUpload fileSpecial pagesPermanent linkPage informationCite this pageGet shortened URLDownload QR codeWikidata item Print/export Download as P... [200 / 6,171 chars] |
+| I am a lay person in meteorology, maybe this is not the right place for my question, but I would lik... [100 / 284 chars] | 48 degrees (relative to the normal). Therefore, if light strikes the back of a raindrop at an angle greater than 48 degrees, it will be reflected back. If the angle is smaller than 48 degrees, the lig... [200 / 1,114 chars] |
+| Which plant is the most efficient in making oxygen for it's weight? I want to think it is the greene... [100 / 154 chars] | more information on current conditions... Dismiss View all alerts Contact Us Algae While some plants decorate the landscape and are very visible at Rocky Mountain National Park, others are seldom seen... [200 / 4,877 chars] |
+| My son wants to replicate some experiments and try to grow plants in Martian soil for his A-level sc... [100 / 408 chars] | NASA graph of elemental composition of Mars soil. The five most abundant ingredients, account for almost 90% of the dirt taken from Mars samples. SiO2 - 49.5% Fe2O3 - 17.9% Al2O3 - 7.2% MgO - 7.7% CaO... [200 / 1,624 chars] |
+| It is said about ozone: a layer in the earth's stratosphere at an altitude of about 10 km (6.2 miles... [100 / 350 chars] | part1 ------------------- The ozone–oxygen cycle is the process by which ozone is continually regenerated in Earth's stratosphere, converting ultraviolet radiation (UV) into heat. In 1930 Sydney Chapm... [200 / 632 chars] |
 
 ### Source Reference Table
 

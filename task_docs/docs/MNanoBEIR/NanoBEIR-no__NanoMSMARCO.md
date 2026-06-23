@@ -124,11 +124,11 @@ question-passage answer relevance.
 
 | Query | Positive document |
 | --- | --- |
-| Hva er ruminasjonssyndrom? | Ruminasjonssyndrom, også kalt merykisme, er en type spiseforstyrrelse som ikke er spesifisert ellers... |
-| Hvem sang "Here I Go Again"? | Here I Go Again er en sang av det britiske rockebandet Whitesnake... |
-| Hvem spiller Cameron Boyce i TV-serien Liv og Maddie? | I en eksklusiv forhåndsvisning av episoden den 19. april av "Liv & Maddie" ser vi Jessie-stjernen Cameron Boyce... |
-| Hvor finner vi flest av jordens store ørkener? | De resterende ørkener på jorden ligger utenfor polområdene. Den største er Saharaørkenen, en subtropisk ørken i Nord-Afrika. |
-| Hva betyr "bølle"? | Ut fra nåværende funn ser det ut til at kopper er eldre enn cop, brukt verbalt og som substantiv for en politimann... |
+| Hva er ruminasjonssyndrom? [26 chars] | Ruminasjonssyndrom, også kalt merykisme, er en type spiseforstyrrelse som ikke er spesifisert ellers og som fører til oppkast av mat. Selv om det ikke er identifisert som en spesifikk spiseforstyrrels... [200 / 281 chars] |
+| Hvem sang "Here I Go Again"? [28 chars] | For andre bruk, se Here I Go Again (forklaring). Here I Go Again er en sang av det britiske rockebandet Whitesnake. Sangen ble opprinnelig utgitt på albumet Saints & Sinners fra 1982, og ble spilt inn... [200 / 306 chars] |
+| Hvem spiller Cameron Boyce i TV-serien Liv og Maddie? [53 chars] | Bli klar for mye latter, dere. I en eksklusiv forhåndsvisning av episoden den 19. april av 'Liv & Maddie' kalt 'Prom-A-Rooney.' Selvsagt. I den morsomme klippet ser vi Jessie-stjernen Cameron Boyce ho... [200 / 312 chars] |
+| Hvor finner vi flest av jordens store ørkener? [46 chars] | De resterende ørkener på jorden ligger utenfor polområdene. Den største er Saharaørkenen, en subtropisk ørken i Nord-Afrika. [124 chars] |
+| Hva betyr "bølle"? [18 chars] | Ut fra nåværende funn ser det ut til at kopper (en politimann, bokstavelig 'en som arresterer') er eldre enn cop (brukt verbalt og betyr å arrestere eller som substantiv for en politimann). Det kan go... [200 / 358 chars] |
 
 ### Public Sources
 
@@ -142,7 +142,7 @@ question-passage answer relevance.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MS MARCO: A Human Generated Machine Reading Comprehension Dataset | 2016 | task paper | https://arxiv.org/abs/1611.09268 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| MS MARCO: A Human Generated Machine Reading Comprehension Dataset | 2016 | task paper | [https://arxiv.org/abs/1611.09268](https://arxiv.org/abs/1611.09268) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

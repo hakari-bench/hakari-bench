@@ -115,11 +115,11 @@ coverage and a discourse-aware reranker for final ordering.
 
 | Query | Positive document |
 | --- | --- |
-| Javnost je apatična prema reformi. Da li bi reforma Doma lordova trebalo da bude glavni prioritet u trenutnoj ekonomskoj klimi... | Kampanja za alternativni glas ne može se porediti sa reformom Doma lordova, štaviše, ne treba mešati neinformisanu javnost... |
-| Proširenje Hitroua je od vitalnog značaja za ekonomiju. Širenje Hitroua bi osiguralo mnoga postojeća radna mesta... | Poslovna zajednica je daleko od jedinstva u svom navodnom podržavanju treće piste... |
-| Ljudi imaju previše izbora, što ih čini manje srećnim. Oglašavanje dovodi do toga da su mnogi preplavljeni... | Ljudi su nesrećni jer ne mogu da imaju sve, a ne zato što im se daje previše izbora i to im stvara stres... |
-| Kibernetički napadi se često izvode od strane ne-državnih aktera, kao što su kiberteroristi ili haktivisti... | U slučaju napada od strane nedržavnih aktera, mnogi praktičari međunarodnog prava slažu se da država može uzvratiti u samoodbrani... |
-| Pošto religija podstiče izvesnost u verovanju, mržnja nadahuta božanskim lako se koristi da opravda nasilne radnje... | Niko nije primoran da izvrši nasilne radnje zbog tuđih reči; to je njihov izbor... |
+| Javnost je apatična prema reformi. Da li bi reforma Doma lordova trebalo da bude glavni prioritet u... [100 / 737 chars] | Kampanja za alternativni glas ne može se porediti sa reformom Doma lordova, štaviše, ne treba mešati neinformisanu javnost usled političkog spinovanja sa apatijom. Često glasači izražavaju da su apati... [200 / 404 chars] |
+| Proširenje Hitroua je od vitalnog značaja za ekonomiju. Širenje Hitroua bi osiguralo mnoga postojeća... [100 / 1,430 chars] | Poslovna zajednica je daleko od jedinstva u svom navodnom podržavanju treće piste. Ankete pokazuju da mnoge uticajne kompanije zapravo ne podržavaju proširenje. Pismo izražavajući zabrinutost potpisal... [200 / 1,272 chars] |
+| Ljudi imaju previše izbora, što ih čini manje srećnim. Oglašavanje dovodi do toga da su mnogi prepla... [100 / 1,016 chars] | Ljudi su nesrećni jer ne mogu da imaju sve, a ne zato što im se daje previše izbora i to im stvara stres. Zapravo, reklame igraju ključnu ulogu u obezbeđivanju da novac koji ljudi imaju potroše na naj... [200 / 876 chars] |
+| Kibernetički napadi se često izvode od strane ne-državnih aktera, kao što su kiberteroristi ili hakt... [100 / 941 chars] | U slučaju napada od strane nedržavnih aktera, mnogi praktičari međunarodnog prava slažu se da država i dalje može uzvratiti u samoodbrani ako druga država 'nije voljna ili nije u stanju da preduzme ef... [200 / 578 chars] |
+| Pošto religija podstiče izvesnost u verovanju, mržnja nadahuta božanskim lako se koristi da opravda... [100 / 1,259 chars] | Niko nije primoran da izvrši nasilne radnje zbog tuđih reči; to je njihov izbor. Isto tako, postoji mnogo ljudi koji zastupaju stavove koji bi se mogli smatrati homofobičnim, ali bi bili zgroženi nasi... [200 / 569 chars] |
 
 ### Public Sources
 
@@ -133,7 +133,7 @@ coverage and a discourse-aware reranker for final ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Argument Mining for Understanding Peer Reviews | 2018 | task paper | https://aclanthology.org/P18-1023/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Argument Mining for Understanding Peer Reviews | 2018 | task paper | [https://aclanthology.org/P18-1023/](https://aclanthology.org/P18-1023/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

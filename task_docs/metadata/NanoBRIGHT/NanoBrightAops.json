@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "math_train_counting_and_probability_5111",
+        "document_id": "math_train_counting_and_probability_822",
+        "query": {
+          "text": "Two quadrilaterals are considered the same if one can be obtained from the other by a rotation and a",
+          "full_chars": 339,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "How many non-congruent triangles with perimeter 7 have integer side lengths? The longest side cannot be greater than 3, since otherwise the remaining two sides would not be long enough to form a trian",
+          "full_chars": 315,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "aops_2002_AIME_I_Problems/Problem_10",
+        "document_id": "math_train_geometry_6112",
+        "query": {
+          "text": "In the diagram below, angle $ABC$ is a right angle. Point $D$ is on $\\overline{BC}$, and $\\overline{",
+          "full_chars": 323,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Consider the set of all triangles $OPQ$ where $O$ is the origin and $P$ and $Q$ are distinct points in the plane with nonnegative integer coordinates $(x,y)$ such that $41x + y = 2009$. Find the numbe",
+          "full_chars": 1183,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "aops_1981_IMO_Problems/Problem_3",
+        "document_id": "aops_2000_AMC_12_Problems/Problem_4",
+        "query": {
+          "text": "Determine the maximum value of $m^2 + n^2$, where $m$ and $n$ are integers satisfying $m, n \\in \\{ 1",
+          "full_chars": 153,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Fibonacci sequence $1,1,2,3,5,8,13,21,\\ldots$ starts with two 1s, and each term afterwards is the sum of its two predecessors. Which one of the ten digits is the last to appear in the units positi",
+          "full_chars": 705,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "math_train_geometry_6116",
+        "document_id": "math_train_geometry_317",
+        "query": {
+          "text": "Triangle $ABC$ has $AC = 450$ and $BC = 300$. Points $K$ and $L$ are located on $\\overline{AC}$ and",
+          "full_chars": 1166,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In triangle $ABC$, medians $AD$ and $CE$ intersect at $P$, $PE=1.5$, $PD=2$, and $DE=2.5$. What is the area of $AEDC$? Note that $1.5^2 + 2^2 = 2.5^2,$ so $\\triangle PED$ has a right angle at $P.$ (Al",
+          "full_chars": 899,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "aops_2016_AMC_10A_Problems/Problem_7",
+        "document_id": "math_train_algebra_2826",
+        "query": {
+          "text": "The mean, median, and mode of the $7$ data values $60, 100, x, 40, 50, 200, 90$ are all equal to $x$",
+          "full_chars": 239,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The sum of 49 consecutive integers is $7^5$. What is their median? The sum of a set of integers is the product of the mean of the integers and the number of integers, and the median of a set of consec",
+          "full_chars": 293,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "AoPS"
+    "source_task": "AoPS",
+    "example_count": 5
   }
 }

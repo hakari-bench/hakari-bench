@@ -129,10 +129,13 @@ not broader retrieval alone but spatially faithful reranking.
 
 ## Example Data
 
-Representative queries describe three-block scenes with circles, squares,
-triangles, colors, sizes, containment, relative positions, and edge contacts.
-Positive documents are short answer phrases such as "both of them", "none of
-them", or an object description satisfying the relation.
+| Query | Positive document |
+| --- | --- |
+| There are three blocks. Lets call them A, B and C. Block A is below B and block B is below C. Block... [100 / 797 chars] | both of them [12 chars] |
+| We have three blocks, A, B and C. Blocks B and C are above A. Block A contains one medium black squa... [100 / 484 chars] | both of them [12 chars] |
+| We have three blocks, A, B and C. Block B is below block C and it is to the left of block A. Block A... [100 / 669 chars] | both of them [12 chars] |
+| We have three blocks. We call them A, B and C. Block B is below and C is above A. Block A contains o... [100 / 761 chars] | the yellow thing that is touching the right edge of a block [59 chars] |
+| There are three blocks, A, B and C. Block A is below C. Block C is to the right of B. Block A has a... [100 / 565 chars] | none of them [12 chars] |
 
 ### Public Sources
 
@@ -147,9 +150,9 @@ them", or an object description satisfying the relation.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning | 2021 | task paper | https://arxiv.org/abs/2104.05832 |
-| SpartQA generation repository | 2021 | repository | https://github.com/HLR/SpartQA_generation |
-| mteb/SpartQA | 2024 | dataset card | https://huggingface.co/datasets/mteb/SpartQA |
+| SpartQA: A Textual Question Answering Benchmark for Spatial Reasoning | 2021 | task paper | [https://arxiv.org/abs/2104.05832](https://arxiv.org/abs/2104.05832) |
+| SpartQA generation repository | 2021 | repository | [https://github.com/HLR/SpartQA_generation](https://github.com/HLR/SpartQA_generation) |
+| mteb/SpartQA | 2024 | dataset card | [https://huggingface.co/datasets/mteb/SpartQA](https://huggingface.co/datasets/mteb/SpartQA) |
 
 ### Representative Snippets
 

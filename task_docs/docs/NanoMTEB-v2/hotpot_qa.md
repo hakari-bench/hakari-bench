@@ -62,19 +62,21 @@ Models should optimize for evidence-set retrieval, not just first-hit retrieval.
 
 ## Example Data
 
-### Public Sources
-
-- [HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering](https://arxiv.org/abs/1809.09600), 2018.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/HotpotQA_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| The Soul of Buddha is a 1918 American silent romance film shot in a borough that is the western term... [100 / 114 chars] | The Soul of Buddha The Soul of Buddha is a 1918 American silent romance film directed by J. Gordon Edwards and starring Theda Bara, who also wrote the film's story. The film was produced by Fox Film C... [200 / 263 chars] |
+| The lamp used in many lighthouses is similiar to this type of lamp patented in 1780 by Aimé Argand? [99 chars] | Lewis lamp The Lewis lamp is a type of light fixture used in lighthouses. It was invented by Winslow Lewis who patented the design in 1810. The primary marketing point of the Lewis lamp was that it us... [200 / 708 chars] |
+| What is the shared country of ancestry between Art Laboe and Scout Tufankjian? [78 chars] | Art Laboe Art Laboe (born Arthur Egnoian on August 7, 1925) is an Armenian American disc jockey, songwriter, record producer, and radio station owner, generally credited with coining the term "Oldies... [200 / 214 chars] |
+| Sebastian Gutierrez is known for writing the screenplay for the 2003 film directed by whom? [91 chars] | Sebastian Gutierrez Sebastian Gutierrez (born September 10, 1974) is a Venezuelan film director, screenwriter and film producer. known for writing the screenplays to the films "Gothika", "Snakes on a... [200 / 354 chars] |
+| When did the character on Grey's Anatomy, played by the same actor who portrayed Rev James Lawson in... [100 / 134 chars] | Jesse Williams (actor) Jesse Wesley Williams (born August 5, 1981) is an American actor, model, and activist, best known for his role as Dr. Jackson Avery on the ABC Television series "Grey's Anatomy"... [200 / 526 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | source task paper | https://arxiv.org/abs/1809.09600 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/HotpotQA_test_top_250_only_w_correct-v2 |  | dataset card | https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2 |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | source task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/HotpotQA_test_top_250_only_w_correct-v2 |  | dataset card | [https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2) |
 
 ### Representative Snippets
 

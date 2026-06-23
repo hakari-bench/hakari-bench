@@ -113,11 +113,11 @@ important.
 
 | Query | Positive document |
 | --- | --- |
-| 宿題は有益ですか？ | まず、宿題が優れており、現代の学校で継続されるべきであるという主張には三つの理由がある。 |
-| 処方薬は消費者に直接広告されるべきでしょうか？ | 多くの広告は、薬がどれほど効果的かについて十分な情報を提供していません。 |
-| 子供にワクチン接種は義務付けるべきでしょうか？ | 政府は、親が子供のために下す健康上の決定に介入する権利を持ってはいない、という主張が述べられている。 |
-| 中絶は合法であるべきですか？ | 中絶は合法であるべきである。人格は受精時ではなく、胎児が生存可能になるか、あるいは出生後に始まる。 |
-| 標準化されたテストは教育を改善するのか？ | SAT、ACT、その他の標準化試験は、高校生が大学教育に備えているかどうかについてより深い洞察を提供する、という議論である。 |
+| 宿題は有益ですか？ [9 chars] | まず、宿題が優れており、現代の学校で継続されるべきであるという主張には三つの理由がある。1. 宿題は「行動して学ぶタイプ」の学習者に役立つ。一般的に、学習者には三つのタイプがあるとされている。すなわち、聞くことで学ぶ者、見ることで学ぶ者、そして行動することで学ぶ者である。多くの人は、ある科目について聞くことや見ることで満足できるが、中には実際にやってみなければ理解できない人もいる。したがって、宿題... [200 / 1,623 chars] |
+| 処方薬は消費者に直接広告されるべきでしょうか？ [23 chars] | 多くの広告は、薬がどれほど効果的かについて十分な情報を提供していません。たとえば、ルネスタ（Lunesta）の広告では、静かに眠っている人の上を、蛾が寝室の窓を通って漂っている様子が描かれています。しかし実際には、ルネスタは6か月間の治療後でようやく入眠が15分早まり、夜間の睡眠時間が1晩あたり37分長くなるだけです。広告の多くは感情的な訴求に基づいていますが、病状の原因、リスク要因、重要な生活習... [200 / 836 chars] |
+| 子供にワクチン接種は義務付けるべきでしょうか？ [23 chars] | まだ完全な主張ではない…ただいくつかの要点をまとめただけだ…政府は、親が子供のために下す健康上の決定に介入する権利を持ってはいない。ミシガン大学の2010年の調査によると、31％の親が、子供の学校入学に必要なワクチン接種を拒否する権利を持っていると考えている。多くの親は、ワクチン接種に反対する宗教的信念を持っている。このような親に子供へのワクチン接種を強制することは、市民が宗教を自由に実践する権利... [200 / 1,774 chars] |
+| 中絶は合法であるべきですか？ [14 chars] | 中絶は合法であるべきである。人格は受精時ではなく、胎児が生存可能になるか、あるいは出生後に始まる。米国最高裁判所によれば、人は母体の子宮から出て酸素を呼吸し始めた時点で年齢を数え始め、0歳から始まり、最終的に1歳へと成長していく。 [115 chars] |
+| 標準化されたテストは教育を改善するのか？ [20 chars] | 解決された：SAT、ACT、その他の標準化試験は、高校のGPAよりも、高校生が名門大学での教育に備えているかどうかについてより深い洞察を提供するため、入学選考においてより大きな役割を果たすべきである。議論の便宜上、応募者の15％未満しか受け入れない大学はすべて名門校と見なす。これは、より高い合格率を持つ名門校が存在しないという意味ではないが、相手が非常に低い合格率を持ちながら学問的に厳格でない大学... [200 / 1,715 chars] |
 
 ### Public Sources
 
@@ -132,8 +132,8 @@ important.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Overview of Touché 2020: Argument Retrieval | 2020 | benchmark paper | [https://doi.org/10.1007/978-3-030-58219-7_26](https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touche20-Argument-Retrieval-for-Controversial-Questions | 2022 | dataset page | [https://doi.org/10.5281/zenodo.6862281](https://doi.org/10.5281/zenodo.6862281) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

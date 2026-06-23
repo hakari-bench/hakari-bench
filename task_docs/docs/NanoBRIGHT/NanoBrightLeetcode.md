@@ -68,9 +68,13 @@ The observed scores make reranking_hybrid the best candidate source for this sli
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| You are given a **0-indexed** 2D integer array `grid` of size `m x n`. Each cell has one of two valu... [100 / 1,162 chars] | from collections import deque """You are given an `m x n` integer matrix `grid` where each cell is either `0` (empty) or `1` (obstacle). You can move up, down, left, or right from and to an empty cell... [200 / 2,061 chars] |
+| Alice and Bob want to water `n` plants in their garden. The plants are arranged in a row and are lab... [100 / 2,955 chars] | from collections import defaultdict """You want to water `n` plants in your garden with a watering can. The plants are arranged in a row and are labeled from `0` to `n - 1` from left to right where th... [200 / 3,089 chars] |
+| You are given an `m x n` binary matrix `grid`. An island is a group of `1`'s (representing land) con... [100 / 979 chars] | def islandPerimeter(grid): """You are given `row x col` `grid` representing a map where `grid[i][j] = 1` represents land and `grid[i][j] = 0` represents water. Grid cells are connected **horizontally/... [200 / 1,442 chars] |
+| You are given an array of `n` pairs `pairs` where `pairs[i] = [lefti, righti]` and `lefti < righti`.... [100 / 747 chars] | def lengthOfLIS(nums): """Given an integer array `nums`, return _the length of the longest **strictly increasing**_ _**subsequence**_. **Example 1:** **Input:** nums = \[10,9,2,5,3,7,101,18\] **Output... [200 / 868 chars] |
+| In the "100 game " two players take turns adding, to a running total, any integer from `1` to `10`.... [100 / 1,356 chars] | def getMoneyAmount(n: int) -> int: """We are playing the Guessing Game. The game will work as follows: 1. I pick a number between `1` and `n`. 2. You guess a number. 3. If you guess the right number,... [200 / 2,787 chars] |
 
 ### Source Reference Table
 

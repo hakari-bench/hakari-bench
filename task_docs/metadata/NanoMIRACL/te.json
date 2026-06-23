@@ -142,20 +142,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL corpus dataset",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL source queries and qrels",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "747",
+        "document_id": "2740#3",
+        "query": {
+          "text": "కామేపల్లి గ్రామ విస్తీర్ణం ఎంత?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "కామేపల్లి (ఖమ్మం జిల్లా) గ్రామ జనాభా: 2011 భారత జనగణన గణాంకాల ప్రకారం ఈ గ్రామం 1496 ఇళ్లతో, 5464 జనాభాతో 1380 హెక్టార్లలో విస్తరించి ఉంది. గ్రామంలో మగవారి సంఖ్య 2563, ఆడవారి సంఖ్య 2901. షెడ్యూల్డ్ కుల",
+          "full_chars": 307,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1191",
+        "document_id": "170460#3",
+        "query": {
+          "text": "ఫలక్‌నుమా ప్యాలెస్ ను ఎవరు నిర్మించారు?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ఫలక్‌నుమా ప్యాలెస్ ఫలక్ నూమా ప్యాలెస్ కు ఆంగ్లేయ ఆర్కిటెక్టర్ నిర్మాణాకృతినిచ్చారు. మార్చి3, 1884లో ఈ నిర్మాణానికి సర్ వికార్ శంకు స్థాపన చేయగా అన్ని హంగులతో నిర్మాణం పూర్తి కావడానికి తొమ్మిదేళ్లు పట్",
+          "full_chars": 1238,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1036",
+        "document_id": "82007#22",
+        "query": {
+          "text": "మదర్ థెరీసా ఎప్పుడు మరణించింది?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "మదర్ థెరీసా ఏప్రిల్ 1996,లో మదర్ థెరీసా క్రిందపడటం వలన ఆమె మెడ ఎముక విరిగింది.ఆగస్టులో ఆమె మలేరియాతో బాధ పడటంతో పాటు గుండె ఎడమభాగంలోని జఠరిక(గుండె) పనిచేయడం మానివేసింది.ఆమెకు గుండె శస్త్రచికిత్సజరిగిం",
+          "full_chars": 508,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "914",
+        "document_id": "35215#0",
+        "query": {
+          "text": "దశరథ్‌మంజీ కి ఉన్న మరో పేరేంటి?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "దశరథ్‌ మాంఝీ దశరథ్‌మంజీ (c. 1934 – 2007 ఆగష్టు 17) బీహార్ రాష్ట్రం లోని గెహ్లోర్‌ గ్రామానికి చెందిన ఒక సామాన్యుడు. ఈయన ఇరవైరెండు సంవత్సరాలు కష్టపడి మేరునగ సమానమైన పట్టుదలతో తానే ఒక సైన్యంగా కొండనే తొల",
+          "full_chars": 426,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "342",
+        "document_id": "226666#1",
+        "query": {
+          "text": "ఛార్ల్సు కారన్ వాలీసు ఎక్కడ జన్మించాడు?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "కారన్ వాలీసు 1738 డిసెంబరు 31 లండన్ లోసంపన్న కుటుంబములో జన్మించెను. తండ్రి ఎరల్ ఛార్ల్స్, తల్లి ఎలిజబెత్. ఈటన్ మరియూ కేమ్ బ్రిడ్జి లోని క్లేర్ కాలేజీ లోను చదువుకుని సైనికోద్యోగిగా చేరాడు. 1756 నుండి 1",
+          "full_chars": 2021,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

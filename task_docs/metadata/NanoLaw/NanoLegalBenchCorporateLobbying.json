@@ -135,8 +135,91 @@
         "url": "https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "ozlNAbMmKy",
+        "query": {
+          "text": "To require the President to develop a strategy to ensure the security of next generation mobile tele",
+          "full_chars": 341,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Secure 5G and Beyond Act of 2020 This bill requires the President, in consultation with relevant federal agencies, to develop (1) a strategy to secure and protect U.S. fifth and future generations (5G",
+          "full_chars": 685,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "3UDqpNVGMr",
+        "query": {
+          "text": "To establish a business incubators program within the Department of the Interior to promote economic",
+          "full_chars": 147,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Native American Business Incubators Program Act This bill requires the Department of the Interior to establish a grant program in the Office of Indian Energy and Economic Development for establishing",
+          "full_chars": 826,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "0OPk9pkjI7",
+        "query": {
+          "text": "To amend the Internal Revenue Code of 1986 to provide a safe harbor for determinations of worker cla",
+          "full_chars": 168,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "New Economy Works to Guarantee Independence and Growth Act of 2019 or the NEW GIG Act of 2019 This bill establishes a test for determining if a service provider should be classified as an independent",
+          "full_chars": 1572,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "r4Eh0C3BfQ",
+        "query": {
+          "text": "To make improvements to certain defense and security assistance provisions and to authorize theappro",
+          "full_chars": 283,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Strengthening America's Security in the Middle East Act of 2019 This bill authorizes assistance and weapons transfers to Israel, and extends defense cooperation with Jordan. It establishes additional",
+          "full_chars": 1724,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "7nJ6iUo8k2",
+        "query": {
+          "text": "To support carbon dioxide utilization and direct air capture research, to facilitate the permitting",
+          "full_chars": 228,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Utilizing Significant Emissions with Innovative Technologies Act or the USE IT Act This bill addresses the capture, utilization, and sequestration of carbon dioxide. The Environmental Protection Agenc",
+          "full_chars": 1562,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

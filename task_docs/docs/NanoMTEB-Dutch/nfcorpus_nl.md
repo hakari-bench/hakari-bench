@@ -151,21 +151,22 @@ medical evidence.
 
 ## Example Data
 
-### Public Sources
-
-- [NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf), 2016.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-nfcorpus](https://huggingface.co/datasets/clips/beir-nl-nfcorpus), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| bagels [6 chars] | Papaverzaadproducten en opiaten drugstesten – waar staan we nu? Zaden van de opiumpapaverplant worden legaal verkocht en veel geconsumeerd als voedsel. Door contaminatie tijdens de oogst kunnen de zad... [200 / 1,902 chars] |
+| druiven [7 chars] | Een beslist prikkelend idee: de potentiële rol van plantaardige polyfenolen bij de behandeling van leeftijdsgebonden cognitieve stoornissen. Tegenwoordig lijden tientallen miljoenen ouderen wereldwijd... [200 / 1,953 chars] |
+| Dr. Walter Willett [18 chars] | Cocountolie voorspelt een gunstig lipidenprofiel bij premenopauzale vrouwen in de Filipijnen Cocountolie is een veelgebruikte eetbare olie in veel landen, en er is gemengd bewijs voor de effecten erva... [200 / 1,491 chars] |
+| Chronische hoofdpijn en varkens parasieten [42 chars] | Klinische manifestaties, diagnose en behandeling van neurocysticercose. Neurocysticercose (NCC) is de meest voorkomende parasitaire ziekte van de hersenen. Moderne beeldvormende technieken, CT en MRI,... [200 / 996 chars] |
+| Inheemse Amerikanen [19 chars] | Westerse ziekten en hun ontstaan in relatie tot voeding. Veel van de meest voorkomende ziekten in economisch ontwikkelde gemeenschappen zijn kenmerkend voor de moderne Westerse cultuur. Er wordt bewij... [200 / 504 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | paper PDF | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-nfcorpus |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-nfcorpus |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | paper PDF | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-nfcorpus |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-nfcorpus](https://huggingface.co/datasets/clips/beir-nl-nfcorpus) |
 
 ### Representative Snippets
 

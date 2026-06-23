@@ -70,9 +70,13 @@ For reranking, the core question is whether the abstract provides usable evidenc
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the IFIR paper and the SciFact scientific claim verification paper. The Nano split is published in `hakari-bench/NanoIFIR`.
+| Query | Positive document |
+| --- | --- |
+| Obesity is determined in part by genetic factors. [49 chars] | Genetics of obesity in adult adoptees and their biological siblings. An adoption study of genetic effects on obesity in adulthood was carried out in which adoptees separated from their natural parents... [200 / 1,319 chars] |
+| Teaching hospitals provide better care than non-teaching hospitals. [67 chars] | Patient Outcomes with Teaching Versus Nonteaching Healthcare: A Systematic Review Background Extensive debate exists in the healthcare community over whether outcomes of medical care at teaching hospi... [200 / 2,347 chars] |
+| Risedronate reduces risk of vertebral and non-vertebral fractures. [66 chars] | Effects of risedronate treatment on vertebral and nonvertebral fractures in women with postmenopausal osteoporosis: a randomized controlled trial. Vertebral Efficacy With Risedronate Therapy (VERT) St... [200 / 2,739 chars] |
+| Bariatric surgery reduces resolution of diabetes. [49 chars] | Bariatric Surgery in the United Kingdom: A Cohort Study of Weight Loss and Clinical Outcomes in Routine Clinical Care. BACKGROUND Bariatric surgery is becoming a more widespread treatment for obesity.... [200 / 3,047 chars] |
+| BRCA 1 mutation carriers' risk of breast and ovarian cancer is not influence by the location of the... [100 / 110 chars] | Association of type and location of BRCA1 and BRCA2 mutations with risk of breast and ovarian cancer. IMPORTANCE Limited information about the relationship between specific mutations in BRCA1 or BRCA2... [200 / 2,908 chars] |
 
 ### Source Reference Table
 

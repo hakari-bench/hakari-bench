@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "807",
+        "document_id": "22207662#2",
+        "query": {
+          "text": "How many people visit the Eiffel Tower each year?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tourism in Paris The Eiffel Tower is acknowledged as the universal symbol of Paris and France. It was originally designed by Émile Nouguier and Maurice Koechlin. In March 1885 Gustave Eiffel, known pr",
+          "full_chars": 752,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "108",
+        "document_id": "1737792#2",
+        "query": {
+          "text": "How long is the Omo River?",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Omo River Its course is generally to the south, however with a major bend to the west at about 7° N 37° 30' E to about 36° E where it turns south until 5° 30' N where it makes a large S- bend then res",
+          "full_chars": 367,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1023",
+        "document_id": "11355965#6",
+        "query": {
+          "text": "Where did Sun Yat-sen study medicine?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sun Yat Sen Memorial House Whilst studying at the Hong Kong College of Medicine for Chinese, the young Dr. Sun constantly travelled between Hong Kong and Macau to criticise the corruption of the Qing",
+          "full_chars": 537,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "98",
+        "document_id": "31869205#0",
+        "query": {
+          "text": "What is the population of Lagos?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lagos Colony Lagos Colony was a British colonial possession centred on the port of Lagos in what is now southern Nigeria. Lagos was annexed on 6 August 1861 under the threat of force by Commander Bedd",
+          "full_chars": 1092,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "339",
+        "document_id": "4574503#4",
+        "query": {
+          "text": "Who was the first executive producer of EastEnders?",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jules Tavernier (EastEnders) In the latter part of 1989 \"EastEnders\" acquired a new executive producer named Michael Ferguson, who took over from Mike Gibbon. Ferguson had previously been a producer o",
+          "full_chars": 518,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
-        "url": "https://arxiv.org/abs/1803.05355",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "Keith Godchaux biết đến Grateful Dead.",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Grateful Dead là một ban nhạc rock của Mỹ được thành lập vào năm 1965 tại Palo Alto, California. Với đội hình từ quintet đến septet, ban nhạc nổi tiếng với phong cách độc đáo và đa dạng, kết hợp các y",
+          "full_chars": 3093,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah phim hài?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah (tiếng Anh: Góc Nhìn Khác Của Taarak Mehta) là bộ phim hài dài nhất Ấn Độ do Neela Tele Films Private Limited sản xuất. Chương trình bắt đầu phát sóng vào ngày 28 tháng",
+          "full_chars": 608,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Có phải những chiếc máy bay bí mật và công nghệ tiên tiến đã được sản xuất ở Burbank, California khô",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Burbank là một thành phố thuộc quận Los Angeles ở miền Nam California, Hoa Kỳ, cách trung tâm Los Angeles 12 dặm về phía tây bắc. Dân số theo điều tra năm 2010 là 103,340. Được mệnh danh là \"Thủ đô tr",
+          "full_chars": 1401,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "85454",
+        "document_id": "Julio-Claudian_dynasty",
+        "query": {
+          "text": "Nero có phải là một người không?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Thuật ngữ triều đại Julio-Claudian đề cập đến năm hoàng đế La Mã đầu tiên - Augustus, Tiberius, Caligula, Claudius và Nero - hoặc gia đình mà họ thuộc về. Họ cai trị Đế chế La Mã từ khi hình thành dướ",
+          "full_chars": 2091,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172320",
+        "document_id": "Scream_2",
+        "query": {
+          "text": "Scream 2 là một bộ phim độc quyền của Đức.",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Scream 2 là một bộ phim kinh dị slasher của Mỹ ra mắt năm 1997 do Wes Craven đạo diễn và Kevin Williamson viết kịch bản. Phim có sự tham gia của David Arquette, Neve Campbell, Courteney Cox, Sarah Mic",
+          "full_chars": 2664,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

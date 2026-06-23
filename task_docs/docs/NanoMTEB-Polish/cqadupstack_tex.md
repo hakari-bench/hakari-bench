@@ -70,12 +70,13 @@ For reranker development, this task rewards models that compare a short problem 
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-tex-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Tex-PL
+| Query | Positive document |
+| --- | --- |
+| BibLaTeX: bibliografia główna i drugorzędna [43 chars] | biblatex: drukowanie oddzielnych bibliografii Używam `biblatex` i mam to ustawione tak: W moim pliku bib mam 3 rodzaje wpisów, online, broszura i książka. A w mojej pracy dyplomowej chcę je wydrukować... [200 / 797 chars] |
+| Jak mogę przyspieszyć kompilację dokumentu z wieloma obrazami? [62 chars] | Pomiń przetwarzanie wszystkich obrazów Próbuję zrobić szkic, zmuszając LaTeX do ignorowania wszystkich obrazów. Jak mam powiedzieć LaTeX, aby pominął wszystkie nazwy plików obrazów (w poleceniu `\incl... [200 / 398 chars] |
+| Puste linie w wyrównanym środowisku [35 chars] | Błąd w wyrównaniu środowiska - niekontrolowany argument? > **Possible Duplicate:** > Puste linie w środowisku wyrównania \documentclass[12pt,a4paper]{article} \usepackage[wersja=3]{mhchem} \usepackage... [200 / 488 chars] |
+| alternatywa slashbox [20 chars] | Tworzenie tabeli, jak pokazano na rysunku Chcę utworzyć tabelę w LaTeX, która zaczyna się tak, jak pokazano na poniższym rysunku. Jak to zrobić, korzystając z pakietu tabel/tabel? Zrobiłem to za pomoc... [200 / 295 chars] |
+| Umieszczanie innego obrazu w każdym rogu strony [47 chars] | flipbook w pracy magisterskiej Właśnie piszę pracę magisterską z informatyki na temat wizualizacji. Ponieważ sednem mojej pracy magisterskiej jest złożona wizualizacja 3D, która wysyła wiadomość tylko... [200 / 2,698 chars] |
 
 ### Source Reference Table
 

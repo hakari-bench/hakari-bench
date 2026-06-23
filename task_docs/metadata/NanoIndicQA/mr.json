@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "cab01e4276bf4c3582d1ec5aa46431b5388a4a94fc57b4be475d68368cdce23a",
+        "document_id": "afa6dd7a0eeec87b5500690f8af6317180a9b392bc62976098d48aca7c6769fd",
+        "query": {
+          "text": "कोणत्या वर्षी अमर्त्य सेन आपल्या कुटुंबासह पश्चिम बंगालला गेले?",
+          "full_chars": 63,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "अमर्त्य सेनचा जन्म बंगालमधील , ब्रिटिश भारतातील एका बंगाली हिंदू वैद्य कुटुंबात झाला होता. रवींद्रनाथ टागोर यांनी अमर्त्य सेन यांना त्याचे नाव दिले (बंगाली অমৃতत्य ortमॉर्टो, लिटर. \"अमर\"). सेन यांचे क",
+          "full_chars": 1263,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1d1ba61a89cdbd209836b21799ae6dfb5a3b14b62248a313c2f6f6b80c5efd78",
+        "document_id": "bc0f767f87b5c6de07a1148312eabf3aee2a8480671d25119366594ddc4052ce",
+        "query": {
+          "text": "डेटिंगसाठी चुनखडीची साधने राज्यात उत्खनन केव्हा करण्यात आली?",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "20,000 वर्षांपूर्वी डेटिंगसाठी अश्मयुगातील साधने राज्यात excavated गेले आहेत . [ 13 ] प्रदेश Vanga किंगडम , निवडणुक भारत प्राचीन राज्यांचे एक एक भाग होता . [ 14 ] Magadha राज्य होणारी , 7 शतक इ. स. पू",
+          "full_chars": 2901,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "06b6e2942c0a88802d3a4587ed5cc217cdd90a37a3b0ad98f5b97efbed3b8235",
+        "document_id": "faba002a3ac4991d27dc779b6177d3e4ed230c2dc96cfc2e2fd58945281d29a7",
+        "query": {
+          "text": "भारतीय इतिहासातील सर्वात महत्वाचा ऐतिहासिक वारसा कोणी दिला?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "अशोकाने भारतीय इतिहासातील सर्वांत महत्त्वाचा ऐतिहासिक वारसा दिला म्हणजे त्याने त्याच्या राज्यात सर्वत्र लिहिलेले शिलालेख. अशोकाअगोदरच्या व नंतरच्या भारतीय राजांच्या फारश्या नोंदी आढळत नाहीत त्यामुळे त",
+          "full_chars": 1012,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f82267776e93c08abf7dc81944607f1334f56286bf74c12e1c531c3640a0351b",
+        "document_id": "b65dfc9cdee5ac732ce8ad7e42f1aff132cb220a63c00f8572776b3a2a0cd95a",
+        "query": {
+          "text": "दिल्लीवर राज्य करणारा शेवटचा हिंदू सम्राट कोण ठरला?",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "अकबरने राज्यावर आल्याआल्या ठरवले की शेरशाह सुरीच्या, ज्याने हुमायूॅंला दिल्लीतून हाकलुन देउन दिल्लीचे तख्त काबीज केले होते, वंशाचा नायनाट करायचा. शेरशाहची तीन मुले वेगवेगळ्या ठिकाणी स्वतंत्र राज्ये चा",
+          "full_chars": 1300,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "512184b00b430e12f4c08ffa4a78b73888c6fc08438ce6f597735b129aa73cf1",
+        "document_id": "5cf3b596db180dd43c00773e92bb22a1dbadcdf6cf583d9ded0978e4d398793c",
+        "query": {
+          "text": "त्याने कोणास सांगितले की दुसऱ्या समाजावर दबाव आणून कोणत्याही समाजाला गुलाम बनण्याचा अधिकार नाही?",
+          "full_chars": 96,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "इ. स. १९२७-३० मधील सायमन कमिशनने अस्पृश्यांच्या राजकीय हितांना फारसे महत्त्व दिले नाही. ब्रिटिश सरकार भारताला काही राजकीय हक्क राज्यघटनेच्या माध्यमातून देण्याच्या तयारीत होते तेव्हा भारताच्या भावी राज",
+          "full_chars": 6702,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

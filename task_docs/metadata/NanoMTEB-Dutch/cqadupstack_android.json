@@ -158,7 +158,89 @@
         "url": "https://arxiv.org/abs/2104.08663",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "69480",
+        "document_id": "37839",
+        "query": {
+          "text": "Waarom is een Android ROM apparaatspecifiek?",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pure Android Download **Mogelijk duplicaat:** Waarom kan Android nog steeds niet als regulier besturingssysteem worden geïnstalleerd? Ik heb rondgekeken en vroeg me af of het niet mogelijk is om Andro",
+          "full_chars": 453,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16236",
+        "document_id": "22541",
+        "query": {
+          "text": "Hoe kan ik een bestand opslaan in plaats van het te openen?",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe download ik een audiobestand van een website? Is er een manier om een audiobestand, zoals een mp3-bestand, van de Android-browser naar het apparaat te downloaden zodat ik er later offline naar kan",
+          "full_chars": 339,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10811",
+        "document_id": "22435",
+        "query": {
+          "text": "Hoe kan ik een video stream van het scherm van mijn Android telefoon vastleggen en deze op mijn lapt",
+          "full_chars": 113,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Hoe stream ik mijn Android-scherm naar mijn Mac? **Mogelijk duplicaat:** > Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie? Ik wil mijn Android-telefoon livestreamen terwij",
+          "full_chars": 741,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "82323",
+        "document_id": "69513",
+        "query": {
+          "text": "“Niet compatibel met andere applicatie(s) die dezelfde gedeelde gebruikers-ID gebruiken” bij het ins",
+          "full_chars": 134,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Kan Google Play-services niet installeren: Niet compatibel met andere applicatie(s) die dezelfde gedeelde gebruikers-ID gebruiken Ik kan Google Play-services niet installeren. Er staat: \"Niet compatib",
+          "full_chars": 304,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "30674",
+        "document_id": "37580",
+        "query": {
+          "text": "Hoe kan ik zowel het volume als het overslaan van nummers op mijn Android-apparaat bedienen met mijn",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Koptelefoonbediening op SGS-III **Mogelijk duplicaat:** > Hoe kan ik zowel het volume als het wisselen van tracks op mijn Android-apparaat bedienen met mijn > koptelefoon? Ik heb onlangs de SIII gekre",
+          "full_chars": 712,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "example_count": 5

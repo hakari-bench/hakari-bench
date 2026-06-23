@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
-        "url": "https://arxiv.org/abs/1803.05355",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "คีธ กอดชอว์ รู้จักเกรทฟูล เดด.",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Grateful Dead เป็นวงร็อคอเมริกันที่ก่อตั้งขึ้นในปี 1965 ที่พาโลอัลโต รัฐแคลิฟอร์เนีย วงนี้มีสมาชิกตั้งแต่ห้าคนถึงเจ็ดคน และเป็นที่รู้จักในสไตล์ที่เป็นเอกลักษณ์และหลากหลาย ซึ่งผสมผสานองค์ประกอบของร็อค,",
+          "full_chars": 2683,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah ซิทคอม?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ตาราค เมห์ตา คา อูลดาห์ ชัชมะ (ภาษาอังกฤษ: มุมมองที่แตกต่างของตาราค เมห์ตา) เป็นซิทคอมที่มีการออกอากาศยาวนานที่สุดในอินเดีย ผลิตโดย Neela Tele Films Private Limited รายการเริ่มออกอากาศเมื่อวันที่ 28 ก",
+          "full_chars": 565,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "มีเครื่องบินลับและมีเทคโนโลยีขั้นสูงถูกผลิตในเบอร์แบงค์ รัฐแคลิฟอร์เนียหรือไม่?",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "เบอร์แบงค์เป็นเมืองในเขตลอสแองเจลิสในแคลิฟอร์เนียตอนใต้ สหรัฐอเมริกา ห่างจากใจกลางเมืองลอสแองเจลิสไปทางตะวันตกเฉียงเหนือ 12 ไมล์ ประชากรในปี 2010 มีจำนวน 103,340 คน ถูกเรียกว่า \"เมืองหลวงแห่งสื่อของโล",
+          "full_chars": 1266,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "85454",
+        "document_id": "Julio-Claudian_dynasty",
+        "query": {
+          "text": "เนโรเป็นคนไหม?",
+          "full_chars": 14,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "คำว่า ราชวงศ์จูเลียส-คลอเดียน หมายถึง จักรพรรดิ์โรมันทั้งห้าพระองค์แรก -- ออกุสตุส, ไทเบอเรียส, คาเลกูล่า, คลอเดียส, และเนโร -- หรือครอบครัวที่พวกเขาสังกัด พวกเขาปกครองจักรวรรดิโรมันตั้งแต่การก่อตั้งภ",
+          "full_chars": 2029,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172320",
+        "document_id": "Scream_2",
+        "query": {
+          "text": "Scream 2 เป็นภาพยนตร์เยอรมันโดยเฉพาะ",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Scream 2 เป็นภาพยนตร์สแลชเชอร์อเมริกันที่ออกฉายในปี 1997 กำกับโดยเวส คราเวน และเขียนโดยเควิน วิลเลียมสัน นำแสดงโดยเดวิด อาร์เควตต์, เนฟ แคมป์เบลล์, คอร์ตนีย์ คอกซ์, ซาราห์ มิเชล เกลลาร์, เจมี่ เคนเนดี",
+          "full_chars": 2249,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

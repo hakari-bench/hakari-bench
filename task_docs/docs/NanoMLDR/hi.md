@@ -140,11 +140,13 @@ representation rather than simple score fusion.
 
 ## Example Data
 
-Representative queries ask which district Medta Road railway station is in,
-what salary and allowances apply to legislative council officers, whether Hindi
-fonts are available on a phone, what kidney tissues need to remain alive, or
-whether cultural pilgrimage development changed after 1947. Positive documents
-are long Hindi articles containing the relevant answer paragraph.
+| Query | Positive document |
+| --- | --- |
+| मेड़ता रोड रेलवे स्टेशन किस जिले में स्थित है? [46 chars] | नागौर नागौर (Nagaur) भारत के राजस्थान राज्य के नागौर ज़िले में स्थित एक ऐतिहासिक नगर है। अपने धार्मिक स्थलों के लिए प्रसिद्ध यह शहर ज़िले का मुख्यालय भी है। परिचय नागौर जिला 26°25' और 27°40' उत्तरी अक... [200 / 20,341 chars] |
+| यदि विधान परिषद् है तो, उसके सभापति और उपसभापति के वेतन और भत्ते क्या हैं? [74 chars] | सातवीं अनुसूची भारत के संविधान में राज्य सरकारों और केन्द्र सरकार के मध्य मुद्दों अथवा अधिकारों के बंटवारे के लिए विभिन्न अनुसूचियाँ परिभाषित की गयी हैं। इनमें से महत्त्वपूर्ण अनुच्छेद २४५ और २४६ के अ... [200 / 23,699 chars] |
+| आपके फोन में हिन्दी फॉण्ट उपलब्ध है क्या? [41 chars] | मोबाइल उपकरणों में हिन्दी समर्थन मोबाइल फोन आजकल हर व्यक्ति की आवश्यकता बन चुका है। इण्टरनेट पर हिन्दी के प्रयोक्ता ऐसा फोन चाहते हैं जिससे कि वे अपने फोन पर भी हिन्दी का प्रयोग कर सकें जिसमें कि हिन्... [200 / 18,819 chars] |
+| क्या आप वृक्कीय ऊतकों के बारे में अधिक जानकारी दे सकते हैं जो उन्हें जीवित रखने के लिए आवश्यक होते ह... [100 / 103 chars] | गुर्दा वृक्क या गुर्दे का जोड़ा एक मानव अंग हैं, जिनका प्रधान कार्य मूत्र उत्पादन (रक्त शोधन कर) करना है। गुर्दे बहुत से वर्टिब्रेट पशुओं में मिलते हैं। ये मूत्र-प्रणाली के अंग हैं। इनके द्वारा इलेक्त... [200 / 22,815 chars] |
+| क्या सन १९४७ के बाद सांस्कृतिक तीर्थों की उन्नति में कोई बदलाव हुआ है? [70 chars] | मथुरा मथुरा (Mathura) भारत के उत्तर प्रदेश राज्य के मथुरा ज़िले में स्थित एक नगर है। मथुरा ऐतिहासिक रूप से कुषाण राजवंश द्वारा राजधानी के रूप में विकसित नगर है। उससे पूर्व भगवान कृष्ण के समय काल से भी... [200 / 18,204 chars] |
 
 ### Public Sources
 
@@ -160,9 +162,9 @@ are long Hindi articles containing the relevant answer paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

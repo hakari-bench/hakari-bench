@@ -157,8 +157,91 @@
         "title": "MTEB project repository",
         "url": "https://github.com/embeddings-benchmark/mteb",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q20231101.nl_61528_11",
+        "document_id": "20231101.nl_61528_11",
+        "query": {
+          "text": "Wat is een \"mandiel\" en wie dragen het?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De druzenvrouwen dragen een \"mandiel\" (transparante losse witte sluier) vooral in het bijzijn van religieuze personen. Zij worden in alle aspecten als gelijkwaardig aan de mannen beschouwd. Het is hen",
+          "full_chars": 254,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q20231101.nl_13589_10",
+        "document_id": "20231101.nl_13589_10",
+        "query": {
+          "text": "Wat zijn de voorwaarden voor het uitvoeren van een t-toets bij twee steekproeven?",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In het geval van twee steekproeven dienen beide steekproeven uit een normale verdeling te komen. De twee steekproeven moeten óf onafhankelijk van elkaar zijn, óf zogenaamd gepaard zijn. In het geval v",
+          "full_chars": 385,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q20231101.nl_10854_9",
+        "document_id": "20231101.nl_10854_9",
+        "query": {
+          "text": "Welke methoden worden genoemd voor pijnbestrijding bij pancreatitis?",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pijnbestrijding via orale inname van pijnstillers, de (tijdelijke) verbranding -door alcohol- van de zenuwen rond het pancreas, een geïmplanteerde morfinepomp.",
+          "full_chars": 159,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q20231101.nl_8989_10",
+        "document_id": "20231101.nl_8989_10",
+        "query": {
+          "text": "Wie was Bongo in Apenheul?",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bongo, lange tijd het boegbeeld van Apenheul en stamvader van veel gorilla's in Europese dierentuinen.",
+          "full_chars": 102,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q20231101.nl_2032_31",
+        "document_id": "20231101.nl_2032_31",
+        "query": {
+          "text": "Wanneer vond de laatste uitzending van de draadomroep in Delft plaats?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "31 - Laatste uitzending van de draadomroep in Delft, het laatste district waar dit systeem nog operationeel was.",
+          "full_chars": 112,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

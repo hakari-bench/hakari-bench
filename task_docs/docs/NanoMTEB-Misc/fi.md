@@ -121,20 +121,21 @@ passage details.
 
 ## Example Data
 
-### Public Sources
-
-- [EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Mikä on tietosuojavaltuutetun perustelu sille, että tietojen tallentamistoimenpiteiden tarkempi tutk... [100 / 122 chars] | Tietosuojavaltuutettu myöntää, että käytettävissä on vähemmän tietoja, jos käytössä on tietojen tallentamisen kaltainen järjestelmä laajemman tietojen säilyttämisjärjestelmän sijasta. Tietojen tallent... [200 / 705 chars] |
+| Mikä rooli Eurooppalaisella viljelykasvien rinnakkaiselon toimistolla (ECo B) on kansallisten toimen... [100 / 252 chars] | COEX-NET-työryhmän kautta tapahtuvaa koordinointia ja Eurooppalaisen viljelykasvien rinnakkaiselon toimiston (ECo B) kautta annettavaa teknistä neuvontaa on tarkoitus jatkaa. ECo B pitää ajan tasalla... [200 / 607 chars] |
+| Miten ehdotus direktiiviksi yhdistää raskaana olevien ja imettävien äitien terveyden ja turvallisuud... [100 / 140 chars] | Käsillä olevan ehdotuksen pääasiallinen oikeusperusta on raskaana olevien ja imettävien äitien terveys ja turvallisuus. Terveys- ja turvallisuuskysymyksillä on kuitenkin looginen yhteys i) lasten oike... [200 / 572 chars] |
+| Mitä lähestymistapaa ETSK tukee voimakkaasti merialan toiminnan hallinnassa, ja miksi tätä lähestymi... [100 / 125 chars] | ETSK on antanut kaksi lausuntoa nyt esitetyn tiedonannon edeltäjistä eli 26. huhtikuuta 2007 lausunnon tiedonannosta Euroopan unionin tuleva meripolitiikka: meriä ja valtameriä koskeva eurooppalainen... [200 / 570 chars] |
+| Mitä toimenpiteitä jäsenvaltioiden on toteutettava direktiivin 98/37/EY 2 artiklan 1 kohdan mukaises... [100 / 143 chars] | Koneita koskevan jäsenvaltioiden lainsäädännön lähentämisestä annetun direktiivin 98/37/EY (jota sovellettiin 29 päivään joulukuuta 2009 asti) 2 artiklan 1 kohdassa säädetään, että jäsenvaltioiden on... [200 / 606 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| EuroPIRQ-retrieval | 2025 | Dataset card | https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | https://arxiv.org/abs/2502.13595 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | https://arxiv.org/abs/2210.07316 |
+| EuroPIRQ-retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

@@ -62,9 +62,13 @@ A model targeting this task should improve response-relation modeling for long a
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on ArguAna argument retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Allmänheten är likgiltig inför reformer. Om reform av Overhuset bör vara en högsta prioritet i den n... [100 / 586 chars] | AV-kampanjen kan inte jämföras med reformer av överhuset. Man bör inte förväxla en missinformerad allmänhet på grund av politisk retorik med likgiltighet. Ofta uttrycker väljare att de är likgiltiga e... [200 / 401 chars] |
+| Utbyggnaden av Heathrow är avgörande för ekonomin. En utbyggnad av Heathrow skulle säkra många befin... [100 / 1,246 chars] | Affärsvärlden är långt ifrån enad i sitt påstådda stöd för en tredje start- och landningsbana. Undersökningar tyder på att många inflytelserika företag faktiskt inte stöder expansionen. Ett brev som u... [200 / 1,407 chars] |
+| Människor får för många valmöjligheter, vilket gör dem mindre lyckliga. Reklam gör att många människ... [100 / 910 chars] | Människor är missnöjda för att de inte kan ha allt, inte för att de får för många val och tycker att det är stressande. Faktum är att reklam spelar en avgörande roll för att se till att människor anvä... [200 / 902 chars] |
+| Cyberattacker utförs ofta av icke-statliga aktörer, såsom cyberterrorister eller hacktivister (socia... [100 / 947 chars] | Vid attacker från icke-statliga aktörer är det en allmän uppfattning bland praktiker inom internationell rätt att ett land fortfarande kan försvara sig om ett annat land "inte vill eller kan vidta eff... [200 / 567 chars] |
+| Eftersom religion främjar säkerhet i tro, är gudomligt inspirerad hat lätt att använda för att rättf... [100 / 1,328 chars] | Ingen tvingas utföra våldshandlingar på grund av andras ord; det är deras eget val. Lika så finns det många människor som skulle ha åsikter som kan anses vara homofobiska men som skulle vara förskräck... [200 / 607 chars] |
 
 ### Source Reference Table
 

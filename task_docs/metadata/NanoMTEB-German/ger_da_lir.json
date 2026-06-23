@@ -150,15 +150,98 @@
         "url": "https://arxiv.org/abs/2502.13595",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/GerDaLIR",
         "url": "https://huggingface.co/datasets/mteb/GerDaLIR",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q67",
+        "document_id": "c32742",
+        "query": {
+          "text": "Die Entscheidung des Landgerichts, die Beklagte zur Erteilung der Auskunft durch Vorlage eines notar",
+          "full_chars": 1431,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor Die Rechtsbeschwerde gegen den Beschluss des 0. Familiensenats in Freiburg des Oberlandesgerichts Karlsruhe vom [DATE] wird auf Kosten des Antragsgegners zurückgewiesen. Von Rechts wegen Gründe",
+          "full_chars": 11013,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q1244",
+        "document_id": "c94948",
+        "query": {
+          "text": "Der Vergütungsanspruch des Krankenhauses entsteht unmittelbar mit Inanspruchnahme der Leistung durch",
+          "full_chars": 1165,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Der Antragsteller wendet sich mit seinem Normenkontrollantrag gegen die am [DATE] bekannt gemachte städtebauliche Entwicklungssatzung der Antragsgegnerin für das Wohnbaugebiet „B.“ am südöstlichen Ort",
+          "full_chars": 32444,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q1039",
+        "document_id": "c49748",
+        "query": {
+          "text": "Die Auslegung der in §§ 0 Abs. 0, 0 NHundG enthaltenen Vorgaben ergibt, dass das erwähnte Erforderni",
+          "full_chars": 1335,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Die Beschwerde des Antragsgegners gegen den Beschluss des Verwaltungsgerichts, mit dem dieses die aufschiebende Wirkung der gegen den Bescheid des Antragsgegners vom [DATE] gerichteten Klage des Antra",
+          "full_chars": 15391,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q919",
+        "document_id": "c3901",
+        "query": {
+          "text": "Zwar ergibt sich aus [REF] das Erfordernis, dass die Begründung einen bestimmten Antrag enthalten mu",
+          "full_chars": 818,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tenor Die Beschwerde wird zurückgewiesen. Der Antragsteller trägt die Kosten des Beschwerdeverfahrens mit Ausnahme etwaiger außergerichtlicher Kosten der Beigeladenen, die diese selbst trägt. Der Stre",
+          "full_chars": 16881,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q1500",
+        "document_id": "c18229",
+        "query": {
+          "text": "Die gerichtliche Kontrolle einer behördlichen Ermessensentscheidung beschränkt sich gemäß [REF] dara",
+          "full_chars": 667,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Der Beklagte gewährte der Klägerin im [DATE] eine Zuwendung von bis zu 0 0 0 DM aus Mitteln der Finanzhilfen des Bundes für Investitionen zur Verbesserung der Verkehrsverhältnisse der Gemeinden als An",
+          "full_chars": 14680,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

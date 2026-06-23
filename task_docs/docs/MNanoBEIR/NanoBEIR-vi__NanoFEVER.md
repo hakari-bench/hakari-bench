@@ -62,9 +62,13 @@ A model targeting this task should preserve entity recall while improving eviden
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FEVER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Keith Godchaux biết đến Grateful Dead. [38 chars] | Grateful Dead là một ban nhạc rock của Mỹ được thành lập vào năm 1965 tại Palo Alto, California. Với đội hình từ quintet đến septet, ban nhạc nổi tiếng với phong cách độc đáo và đa dạng, kết hợp các y... [200 / 3,093 chars] |
+| Taarak Mehta Ka Ooltah Chashmah phim hài? [41 chars] | Taarak Mehta Ka Ooltah Chashmah (tiếng Anh: Góc Nhìn Khác Của Taarak Mehta) là bộ phim hài dài nhất Ấn Độ do Neela Tele Films Private Limited sản xuất. Chương trình bắt đầu phát sóng vào ngày 28 tháng... [200 / 608 chars] |
+| Có phải những chiếc máy bay bí mật và công nghệ tiên tiến đã được sản xuất ở Burbank, California khô... [100 / 103 chars] | Burbank là một thành phố thuộc quận Los Angeles ở miền Nam California, Hoa Kỳ, cách trung tâm Los Angeles 12 dặm về phía tây bắc. Dân số theo điều tra năm 2010 là 103,340. Được mệnh danh là "Thủ đô tr... [200 / 1,401 chars] |
+| Nero có phải là một người không? [32 chars] | Thuật ngữ triều đại Julio-Claudian đề cập đến năm hoàng đế La Mã đầu tiên - Augustus, Tiberius, Caligula, Claudius và Nero - hoặc gia đình mà họ thuộc về. Họ cai trị Đế chế La Mã từ khi hình thành dướ... [200 / 2,091 chars] |
+| Scream 2 là một bộ phim độc quyền của Đức. [42 chars] | Scream 2 là một bộ phim kinh dị slasher của Mỹ ra mắt năm 1997 do Wes Craven đạo diễn và Kevin Williamson viết kịch bản. Phim có sự tham gia của David Arquette, Neve Campbell, Courteney Cox, Sarah Mic... [200 / 2,664 chars] |
 
 ### Source Reference Table
 

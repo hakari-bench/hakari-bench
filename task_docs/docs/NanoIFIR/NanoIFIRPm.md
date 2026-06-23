@@ -70,9 +70,13 @@ For reranking, the best behavior is explicit patient-trial compatibility: the to
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the IFIR paper and the TREC 2017 Precision Medicine track overview. The Nano split is published in `hakari-bench/NanoIFIR`.
+| Query | Positive document |
+| --- | --- |
+| A patient diagnosed with head and neck squamous cell carcinoma with a mutation in the CDKN2A gene. I... [100 / 167 chars] | De-intensification of Radiation and Chemotherapy for Low-Risk Human Papillomavirus-related Oropharyngeal Squamous Cell Carcinoma Carcinoma, Squamous Cell The purpose of this research study is to learn... [200 / 3,238 chars] |
+| Patient diagnosed with prostate cancer with PTEN inactivating gene mutation. I am looking for possib... [100 / 145 chars] | Phase II Study of RAD001 in a Neoadjuvant Setting in Men With Intermediate or High Risk Prostate Cancer Prostate Cancer The mechanisms responsible for the development of hormonal refractory prostate c... [200 / 3,481 chars] |
+| A patient diagnosed with gastric cancer with the PIK3CA (E545K) gene mutation. I am looking for poss... [100 / 147 chars] | BKM120 in Cancers With PIK3CA Activating Mutations Lung Cancer In people whos cancers have a PIK3CA mutation, this trial will be evaluating the drug BKM120as a possible treatment. BKM120 works by bloc... [200 / 2,539 chars] |
+| A patient diagnosed with papillary thyroid carcinoma and carrying the NTRK1 gene mutation. I am look... [100 / 159 chars] | Study of Oral RXDX-101 in Adult Patients With Locally Advanced or Metastatic Cancer Targeting NTRK1, NTRK2, NTRK3, ROS1, or ALK Molecular Alterations. Locally Advanced Solid Tumors Entrectinib (RXDX-1... [200 / 2,588 chars] |
+| Patient diagnosed with Ampullary carcinoma with KRAS gene mutation. Seeking possible clinical trials... [100 / 127 chars] | Combined Biological Treatment and Chemotherapy for Patients With Inoperable Cholangiocarcinoma Cholangiocarcinoma The purpose of this study is partly to continue the good experience the investigators... [200 / 2,078 chars] |
 
 ### Source Reference Table
 

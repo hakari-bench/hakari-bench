@@ -166,12 +166,13 @@ profile reflects that combination.
 
 ## Example Data
 
-Representative examples include questions about applying for support after a
-household-income change, how a public research institution should describe its
-status in an application field, what fees are required for document disclosure,
-whether a government application tool can be installed to another drive, and
-where to find recent radioactive inspection results. The matching answers range
-from multi-sentence procedural explanations to short direct statements.
+| Query | Positive document |
+| --- | --- |
+| 入学後に家計が苦しくなった場合、後から申し込むことは可能ですか。 [32 chars] | 入学後に申し込むことも可能です。災害や生計維持者（父母等）の死亡などの予期できない事情があって家計が急変した場合には、特例的に、随時申込みを受け付け、急変後の所得に基づいて要件を満たすかどうかを判定し、支援対象とします。（資料７参照）（大学等の事務担当者におかれては、「授業料等減免事務処理要領」及びJASSOからの案内を御確認 の上、学生等の相談に応じていただけるよう、お願いします。） [194 chars] |
+| 公的研究機関の場合、「事情」欄はどのように記載すればよいですか。 [32 chars] | 出願人が研究所の場合は、「出願人○○は公的研究機関である」と記載してください。なお、出願人が都道府県名等であって、当該研究所名と異なる場合は、ガイドラインのII. 5.（1）②の記載を参考にしてください。 [102 chars] |
+| どのような手数料が必要ですか。 [15 chars] | 法人文書の開示にあたっては、情報公開法の規定による「開示請求手数料」および「開示実施手数料」の納付が必要です。開示請求手数料は、法人文書1件について300円の納付が必要です。開示実施手数料は、文書の種類、開示の実施方法、開示文書の量等により計算した額から開示請求の際に納付された300円を減額した額が納付する額となります。納付する開示実施手数料の額は、開示決定通知書に記載しお知らせします。 [195 chars] |
+| 申請用総合ソフトのインストール先のドライブを変更することはできますか。 [35 chars] | 利用するＰＣの既定のシステムドライブに自動的にインストールされるため，保存先ドライブを変更することはできません。 [56 chars] |
+| 最近の実際の放射性検査の結果を知りたい。 [20 chars] | 世界で最も厳しいレベルの基準値を超える品目は、近年ほとんどありません。 [35 chars] |
 
 ### Public Sources
 
@@ -188,8 +189,8 @@ from multi-sentence procedural explanations to short direct statements.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

@@ -62,19 +62,21 @@ Models should learn robust patient-language normalization while preserving clini
 
 ## Example Data
 
-### Public Sources
-
-- [ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge](https://arxiv.org/abs/2303.14070), task paper.
-- [lavita/ChatDoctor-HealthCareMagic-100k](https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| My wife that is 31yrs old had a major operation 6mos ago. She had thymic cancer with 3 large maligna... [100 / 1,183 chars] | Thanks for the query from the history it is quite evident your wife had shad a very tough time but from the diagnosis of malignant Thomas I have to tell you that it means the liver has got metastasis... [200 / 418 chars] |
+| Okay so the past two months I have missed my first birth control pill, I finally got back on track t... [100 / 534 chars] | Hello, Thanks for writing to us. Irregular intake of birth control pill & unprotected sex close to your fertile period or ovulation day (occurs 14 days prior to due date) are quite risky for being pre... [200 / 396 chars] |
+| Hi iI have been diagnoed with thymic cancer, I do not like to take the drugs for pain that are presc... [100 / 728 chars] | Thy mic cancer causes respiratory distress. After a thy mic tumor is found and tests have been done to get a sense of its Factors important in choosing a treatment include the type and stage of the ca... [200 / 676 chars] |
+| I have some darkened tissue around the left side of the tubercle of the epiglottis, accompanied by e... [100 / 728 chars] | Hi, how did you see your epiglottis?endoscopy pictures?symptoms for ca. epiglottis are voice change(most common)pain in throathemoptysisdysphagia and loss of weight(not weight gain)increased appetite... [200 / 834 chars] |
+| hi doctor my wife had recent laparoscopic surgery,i tested my sperm countvolume 2ml,viscocite [93 chars] | Hello, Thanks for the query to Chat Doctor. Forum. I analyze your report as, Volume 2ml (normal 2-5 ml) at borderline level normal. Viscocity normal pH 7.1 (normal 6-8)SPERM COUNT (query) normally it... [200 / 946 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge | 2023 | task paper | https://arxiv.org/abs/2303.14070 |
-| lavita/ChatDoctor-HealthCareMagic-100k | 2023 | dataset card | https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge | 2023 | task paper | [https://arxiv.org/abs/2303.14070](https://arxiv.org/abs/2303.14070) |
+| lavita/ChatDoctor-HealthCareMagic-100k | 2023 | dataset card | [https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k](https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

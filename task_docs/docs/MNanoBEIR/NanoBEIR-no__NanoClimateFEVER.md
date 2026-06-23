@@ -136,11 +136,11 @@ evidence set.
 
 | Query | Positive document |
 | --- | --- |
-| Fra 1970 til 1998 var det en oppvarmingsperiode som økte temperaturen med omtrent 0,7 grader Fahrenheit... | Paleocen eller Paleocen, «den gamle nylige», er en geologisk epoke som varte fra omtrent 66 til 56 millioner år siden... |
-| Faktisk går trenden nedover, selv om den ikke er signifikant. | Solens syklus eller solmagnetisk aktivitetssyklus er en omtrent 11-årige syklus i solens aktivitet... |
-| Lokale og regionale havnivåer fortsetter å vise den vanlige naturlige variasjonen, stiger på noen steder og synker på andre. | Middelhøyde over havet er et gjennomsnittsnivå av overflaten på ett eller flere av Jordens hav... |
-| Klimatologer sier at aspekter ved orkanen Harvey tyder på at global oppvarming gjør en dårlig situasjon enda verre. | De globale oppvarmingsvirkningene er de miljømessige og sosiale endringene som skyldes menneskets utslipp av drivhusgasser... |
-| CERN CLOUD-eksperimentet testet bare en tredjedel av ett av fire krav som er nødvendige for å skylde global oppvarming på kosmiske stråler... | Attribuering av nylig klimaendring handler om å vitenskapelig fastslå mekanismene som er ansvarlige for de nylige klimaendringene på Jorden... |
+| Fra 1970 til 1998 var det en oppvarmingsperiode som økte temperaturen med omtrent 0,7 grader Fahrenh... [100 / 161 chars] | Paleocen (uttales pronˈpæliəˌsiːn, _ ˈpæ - , _ - lioʊ - ) eller Paleocen, «den gamle nylige», er en geologisk epoke som varte fra omtrent 66 til 56 millioner år siden. Det er den første epoken i Paleo... [200 / 1,051 chars] |
+| Faktisk går trenden nedover, selv om den ikke er signifikant. [61 chars] | Solens syklus eller solmagnetisk aktivitetssyklus er en omtrent 11-årige syklus i solens aktivitet (inkludert endringer i nivåene av solstråling og utkast av solmateriale) og utseende (endringer i ant... [200 / 573 chars] |
+| Lokale og regionale havnivåer fortsetter å vise den vanlige naturlige variasjonen, stiger på noen st... [100 / 124 chars] | Middelhøyde over havet (MSL) (forkortet bare havnivå) er et gjennomsnittsnivå av overflaten på ett eller flere av Jordens hav, hvorfra høyder som høyder kan måles. MSL er en type vertikal datumsstanda... [200 / 899 chars] |
+| Klimatologer sier at aspekter ved orkanen Harvey tyder på at global oppvarming gjør en dårlig situas... [100 / 115 chars] | De globale oppvarmingsvirkningene er de miljømessige og sosiale endringene som skyldes (direkte eller indirekte) menneskets utslipp av drivhusgasser. Det er en vitenskapelig konsensus om at klimaendri... [200 / 1,295 chars] |
+| CERN CLOUD-eksperimentet testet bare en tredjedel av ett av fire krav som er nødvendige for å skylde... [100 / 187 chars] | Attribuering av nylig klimaendring handler om å vitenskapelig fastslå mekanismene som er ansvarlige for de nylige klimaendringene på Jorden, vanligvis kjent som `global oppvarming`. Arbeidet har fokus... [200 / 1,979 chars] |
 
 ### Public Sources
 
@@ -154,7 +154,7 @@ evidence set.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER | 2020 | task paper | https://arxiv.org/abs/2012.00614 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| CLIMATE-FEVER | 2020 | task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

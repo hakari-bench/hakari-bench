@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "ルミネーション症候群とは何ですか",
+          "full_chars": 16,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "反芻症候群。反芻症候群（ルミネーション症候群）は、別名マリシズムとも呼ばれ、食物の再反流を引き起こす、他の特定されていないタイプの摂食障害である。DSM-IVでは特定の摂食障害として明記されていないが、この障害を診断するための一定の基準が示されている。",
+          "full_chars": 126,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "「Here I Go Again」を歌ったのは誰ですか？",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "他の用法については、Here I Go Again (曖昧さ回避) を参照してください。『Here I Go Again』は、イギリスのロックバンド、ホワイトスネイクによる楽曲です。もともとは1982年のアルバム『Saints & Sinners』に収録されていましたが、1987年の同名のアルバム『Whitesnake』用に再レコーディングされました。同年に、新たにラジオミックスバージョンとして再",
+          "full_chars": 215,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "カメロン・ボイドは『Liv and Maddie』でルーク・ロス役を演じています。",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "皆さんのために最高の笑いを用意しましたよ。4月19日の『リブ・アンド・マディー』のエピソード「プロム・ア・ルーニー」の独占先行映像です。もちろんね。この面白すぎるクリップでは、『ジェシー』のキャメロン・ボイドが別のディズニーショーに登場し、マディー（シェルビー・ウルファート）と出会います。彼のキャラクターは、ええと、かなり個性的なんです！",
+          "full_chars": 170,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "971233",
+        "document_id": "4589415",
+        "query": {
+          "text": "地球上の大きな砂漠の多くはどこにありますか",
+          "full_chars": 21,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "地球の他の砂漠は極地域の外にあります。最大のものは北アフリカにある熱帯性砂漠、サハラ砂漠です。",
+          "full_chars": 47,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1093082",
+        "document_id": "7778956",
+        "query": {
+          "text": "警察官にとっての「copper」という言葉の意味",
+          "full_chars": 24,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "現時点での調査結果によれば、「copper」（警察官、直訳すると「逮捕する者」）という語は、「cop」（動詞として「逮捕する」という意味、または名詞として「警察官」という意味で使われる）よりも古い可能性がある。これは、ロンドンの「ボビーズ」が着けていたボタンではなく、ニューヨーク市初代の警察巡査部長が持っていた銅製の徽章に由来しているのかもしれない。",
+          "full_chars": 176,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

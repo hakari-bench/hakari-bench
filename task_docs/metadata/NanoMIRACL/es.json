@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "7985731#0",
+        "document_id": "7985731#3",
+        "query": {
+          "text": "¿Cómo es la arquitectura del caravasar de Orbelián?",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Caravasar de Orbelian El caravasar está construido con bloques de basalto.",
+          "full_chars": 75,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1509489#0",
+        "document_id": "14882#2",
+        "query": {
+          "text": "¿Cómo llaman los judíos al Pentateuco?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pentateuco Se corresponde con los que en la tradición hebrea forman la \"Torá\" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el \"Tanaj\", el cual",
+          "full_chars": 679,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10165619#0",
+        "document_id": "10165619#17",
+        "query": {
+          "text": "¿Cuándo recibió Daniel Harold Rolling la inyección letal de su condenación?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación.",
+          "full_chars": 241,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9508035#0",
+        "document_id": "369987#0",
+        "query": {
+          "text": "¿Cómo definir el parlamentarismo?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Parlamentarismo El parlamentarismo, también conocido como sistema parlamentario o «régimen parlamentario» es en política, un sistema de gobierno en el que la elección del gobierno (poder ejecutivo) em",
+          "full_chars": 500,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "3774249#0",
+        "document_id": "601723#0",
+        "query": {
+          "text": "¿Cuál era la misión de la Guardia Pretoriana?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Guardia Pretoriana La Guardia Pretoriana era un cuerpo militar que servía de escolta y protección a los emperadores romanos. Antes de los emperadores, esta escolta ya era usada por los líderes militar",
+          "full_chars": 387,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

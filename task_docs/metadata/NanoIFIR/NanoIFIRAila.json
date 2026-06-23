@@ -131,8 +131,91 @@
         "url": "https://ceur-ws.org/Vol-2517/T1-1.pdf",
         "year": 2019,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "AILA_Q18_v1",
+        "document_id": "C188",
+        "query": {
+          "text": "These appeals involve a pure question of law as to whether an award by which residue assets of a par",
+          "full_chars": 1668,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "S. V. Chandra Pandian and Others v S. V. Sivalinga Nadar and Others 11 January 1993 C.As. Nos. 17491752 of 1992 The Judgment was delivered by : Hon'ble Justice A. M. Ahmadi 1. The four appellants and",
+          "full_chars": 45845,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "AILA_Q11_v1",
+        "document_id": "C131",
+        "query": {
+          "text": "The detenu P1, a French national, at the relevant time was employed as Airport Manager by A1 in L1.",
+          "full_chars": 4806,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Kavita w/o Sunder Shankardas Devidasani and another v State of Maharashtra and Others 28 July 1981 Writ Petition (Criminal) No. 2690 of 1981. (Under article 32 of the Constitution of India) AND Writ P",
+          "full_chars": 19115,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "AILA_Q2_v1",
+        "document_id": "C27",
+        "query": {
+          "text": "The appellant before us was examined as prime witness in the trial of T.R. on the file of the Specia",
+          "full_chars": 2857,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "R. K. Lakshmanan v A. K. Srinivasan and Another 1 August 1975 CRIMINAL APPELLATE JURISDICTION : Criminal Appeal No. 1 30 of 1975. Appeal by Special Leave from the Judgment and Order dated the 13th Mar",
+          "full_chars": 15767,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "AILA_Q27_v1",
+        "document_id": "C91",
+        "query": {
+          "text": "Appellant before us was detained. He is the Managing Director of a company, registered and incorpora",
+          "full_chars": 3045,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Rajinder Arora v Union of India and Others 10 March 2006 Appeal (Crl.) 311 of 2006 The Judgment was delivered by : S. B. Sinha, J. Leave granted. 1. The Appellant is an industrialist. He manufactures",
+          "full_chars": 17845,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "AILA_Q26_v1",
+        "document_id": "C87",
+        "query": {
+          "text": "The hearing before us now relates to certain objections filed to the Award made by a former Judge of",
+          "full_chars": 5936,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "K. P. Poulose v State Of Kerala & Anr 21 April 1975 CIVIL A PPELLATE JURISDICTION CIVIL APPEAL No. 1485 OF 1974 Appeal by special leave from the judgment and decree Dt. 29-1-73 of the Kerala High Cour",
+          "full_chars": 9716,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

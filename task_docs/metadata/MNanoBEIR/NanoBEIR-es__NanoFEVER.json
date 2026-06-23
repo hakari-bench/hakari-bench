@@ -144,7 +144,7 @@
         "title": "FEVER shared task site",
         "url": "https://fever.ai/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "Keith Godchaux conocía a los Grateful Dead",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "La Grateful Dead fue una banda de rock estadounidense formada en 1965 en Palo Alto, California. Conformada por entre cinco y siete miembros, la banda es conocida por su estilo único y ecléctico, que f",
+          "full_chars": 3117,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah es una comedia de situación",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah (en inglés: La Perspectiva Diferente de Taarak Mehta) es la sitcom más longeva de la India, producida por Neela Tele Films Private Limited. La serie se estrenó el 28 de",
+          "full_chars": 606,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Aviones de alta tecnología y secretos se fabricaron en Burbank, California.",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank es una ciudad en el condado de Los Ángeles, en el sur de California, Estados Unidos, a 12 millas al noroeste del centro de Los Ángeles. Según el censo de 2010, su población era de 103,340 habi",
+          "full_chars": 1475,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "85454",
+        "document_id": "Julio-Claudian_dynasty",
+        "query": {
+          "text": "Nero es una persona",
+          "full_chars": 19,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "La dinastía Julio-Claudia se refiere a los primeros cinco emperadores romanos —Augusto, Tiberio, Calígula, Claudio y Nerón— o a la familia a la que pertenecían. Gobernaron el Imperio Romano desde su f",
+          "full_chars": 2075,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172320",
+        "document_id": "Scream_2",
+        "query": {
+          "text": "Scream 2 es una película exclusivamente alemana.",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Scream 2 es una película de terror estadounidense de 1997 dirigida por Wes Craven y escrita por Kevin Williamson. Protagonizada por David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar,",
+          "full_chars": 2742,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

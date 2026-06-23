@@ -133,15 +133,98 @@
         "url": "https://doi.org/10.1016/j.array.2026.100720",
         "year": 2026,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "datalyes/DAPFAM_patent",
         "url": "https://huggingface.co/datasets/datalyes/DAPFAM_patent",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "156-982-593-034-540",
+        "document_id": "071-966-823-342-038",
+        "query": {
+          "text": "bicycle handlebar grip a bicycle handlebar grip contains a plastic inner shell having a tubular shap",
+          "full_chars": 2588,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "durable flexible membrane and method of making same a flexible membrane having a valuable combination of desirable properties is composed of a generally heavy, dense supporting and reinforcing reticul",
+          "full_chars": 28042,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "022-349-089-066-313",
+        "document_id": "136-907-585-136-939",
+        "query": {
+          "text": "method for improving belt press dewatering a method for increasing the removal of a higher fraction",
+          "full_chars": 4605,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "artificial human anti-factor b antibody problem to be solved: to provide novel engineered forms of a monoclonal antibody and antigen-binding fragments thereof that bind complement protein factor b and",
+          "full_chars": 108109,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "005-819-825-326-847",
+        "document_id": "131-939-954-950-835",
+        "query": {
+          "text": "stitch distribution control system for tufting machines a stitch distribution control system for a t",
+          "full_chars": 5968,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "method and apparatus for measuring direction or position of weft yarn of fabric the measurement of the pick or stitches course position in continuously moved fabrics involves examining at least one ga",
+          "full_chars": 24253,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "182-279-132-155-313",
+        "document_id": "165-677-658-504-642",
+        "query": {
+          "text": "low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile s",
+          "full_chars": 3799,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "modular floor covering units with built-in lighting an apparatus for guiding the occupants of a structure along a path of travel within the structure is provided. the apparatus is comprised of modular",
+          "full_chars": 35319,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "067-958-625-833-835",
+        "document_id": "049-087-326-038-715",
+        "query": {
+          "text": "method and apparatus for the zonal transmission of data using building lighting fixtures this invent",
+          "full_chars": 7344,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "shelf tag with ambient light detector the present invention relates to an electronic shelf display device which includes an optical device and an ambient light detector circuitry. the electronic shelf",
+          "full_chars": 54320,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "785",
+        "document_id": "61137#44",
+        "query": {
+          "text": "berapakah kadar oxigen yang dibutuhkan manusia untuk bernapas?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Karbon dioksida Walaupun tubuh memerlukan oksigen untuk metabolisme, kadar oksigen yang rendah tidak akan menstimulasi pernapasan. Sebaliknya pernapasan distimulasi oleh kadar karbon dioksida yang tin",
+          "full_chars": 638,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1130",
+        "document_id": "13499#73",
+        "query": {
+          "text": "Apa penyebab kematian Mgr. Arnold Verstraelen ?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Vampir Cerita vampir telah dikaitkan dengan kematian yang disebabkan oleh penyakit yang misterius dan tidak diketahui, biasanya yang terjadi dalam suatu keluarga atau komunitas kecil. Epidemi jelas te",
+          "full_chars": 537,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1038",
+        "document_id": "78137#0",
+        "query": {
+          "text": "kapankah Romusha terjadi di indonesia?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Romusa Romusha (労務者 \"rōmusha\": \"buruh\", \"pekerja\") adalah panggilan bagi orang-orang Indonesia yang dipekerjakan secara paksa pada dari tahun 1942 hingga 1945. Kebanyakan \"romusha\" adalah petani, dan",
+          "full_chars": 475,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "919",
+        "document_id": "372482#0",
+        "query": {
+          "text": "Apakah yang dimaksud dengan frekuensi audio?",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Modulasi amplitudo Modulasi amplitudo (AM) adalah proses memodulasi sinyal frekuensi rendah pada gelombang frekuensi tinggi dengan mengubah-ubah amplitudo gelombang frekuensi tinggi tanpa mengubah fre",
+          "full_chars": 1132,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "30",
+        "document_id": "6920#13",
+        "query": {
+          "text": "Kapan kelahiran Yesus diperingati ?",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Natal Ada juga pendapat yang berkata bahwa perayaan Natal bersumber dari tradisi Romawi pra-Kristen, peringatan bagi dewa pertanian Saturnus jatuh pada suatu pekan di bulan Desember dengan puncak peri",
+          "full_chars": 882,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

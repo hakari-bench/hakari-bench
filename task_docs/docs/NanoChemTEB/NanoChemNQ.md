@@ -68,9 +68,13 @@ Because the Nano split is small, this task should be interpreted as a focused di
 
 ## Example Data
 
-### Public Sources
-
-The task is based on ChemTEB's chemistry-filtered Natural Questions retrieval setting.
+| Query | Positive document |
+| --- | --- |
+| the reciprocal lattice of an fcc crystal is [43 chars] | Reciprocal lattice The reciprocal lattice to an FCC lattice is the body-centered cubic (BCC) lattice. [101 chars] |
+| suffix applied to the end of the name of enzymes [48 chars] | -ase The suffix -ase is used in biochemistry to form names of enzymes. The most common way to name enzymes is to add this suffix onto the end of the substrate, e.g. an enzyme that breaks down peroxide... [200 / 482 chars] |
+| what is the breakdown product formed when one phosphate group is removed from atp [81 chars] | ATP hydrolysis ATP hydrolysis is the reaction by which chemical energy that has been stored in the high-energy phosphoanhydride bonds in adenosine triphosphate (ATP) is released, for example in muscle... [200 / 705 chars] |
+| where does the electron transport chain pumps protons [53 chars] | Electron transport chain Electron transport chains are used for extracting energy via redox reactions from sunlight in photosynthesis or, such as in the case of the oxidation of sugars, cellular respi... [200 / 564 chars] |
+| where do they grow hops in the us [33 chars] | Hops Hops production is concentrated in moist temperate climates, with much of the world's production occurring near the 48th parallel north. Hop plants prefer the same soils as potatoes and the leadi... [200 / 611 chars] |
 
 ### Source Reference Table
 

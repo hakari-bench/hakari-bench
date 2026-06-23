@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "references": [
-      {
-        "title": "FiQA 2018",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ko",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA 2018",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "뱅가드가 제시하는 수익률은 어떤 유형인가요?",
+          "full_chars": 24,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "벤처가드 페이지에서 - S&P 데이터를 찾기 쉬워서 이 방법이 가장 쉬워 보였다. 나는 MoneyChimp를 사용해서 데이터를 얻었으며, 이는 벤처가드 페이지가 산술 평균이 아닌 CAGR(복리 성장률)을 제공하고 있다는 것을 확인시켜 준다. 참고로, 벤처가드는 \"미국 주식 시장 수익률의 경우 1926년부터 1957년 3월 3일까지 Standard & Poo",
+          "full_chars": 295,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "프리랜서의 세금 문제",
+          "full_chars": 11,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "미국에서 소득이 있는 경우, 귀하의 국가와 체결된 조세조약에서 달리 규정하지 않는 한, 해당 소득에 대해 미국 소득세를 납부해야 합니다.",
+          "full_chars": 76,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "거래량에 대해 이야기할 때 높음과 낮음은 무엇을 기준으로 하나요?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "일일 거래량은 보통 해당 주식의 과거 50일 동안의 평균 일일 거래량과 비교한다. 높은 거래량은 일반적으로 해당 주식의 최근 50일 평균 일일 거래량의 2배 이상을 의미하지만, 일부 트레이더들은 특정 패턴이나 사건의 확인을 위해 기준을 평균 일일 거래량의 3배 또는 4배로 설정하기도 한다. 거래량은 다른 주식의 거래량과 비교하기보다는 해당 주식 자체의 평균",
+          "full_chars": 360,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "94",
+        "document_id": "245447",
+        "query": {
+          "text": "신용카드 포인트를 사용하여 공제 가능한 사업 비용 납부하기",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "간단히 하기 위해 캐시백만을 먼저 고려해 보겠습니다. 일반적으로 개인용 신용카드의 캐시백은 과세 대상이 아니지만, 사업용으로 사용하는 경우는 과세 대상이 됩니다(정확히는 아닙니다. 나중에 설명하겠습니다). 그 이유는 대부분의 개인 구매가 세후 소득으로 이루어지기 때문입니다. 보통 개인 소득에서 구매한 물품 비용을 공제하지 않기 때문에, 예를 들어 100달러",
+          "full_chars": 1845,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2903",
+        "document_id": "527776",
+        "query": {
+          "text": "계약자로서 세금은 어떻게 신고해야 하나요?",
+          "full_chars": 23,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "세금 신고를 위해서는 근로자로서(자동으로 원천징수된 T4 소득공제 영수증 포함) 신고해야 할 뿐 아니라, 사업자로서도 신고해야 합니다. 저는 작년에 동일한 상황이었는데요, 캐나다국세청(Revenue Canada)에서 발행한 '근로자 및 자영업자(Employee and self-employed)'라는 안내서가 도움이 될 것입니다. 사업 활동 내역서(form)",
+          "full_chars": 395,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Dal 1970 al 1998 c'è stato un periodo di riscaldamento che ha aumentato le temperature di circa 0,4°",
+          "full_chars": 180,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Il Paleocene (pronunciato /ˈpæliəˌsiːn/ o /ˈpælioʊˌsiːn/) o Paleocene, il \"recentemente antico\", è un'epoca geologica che si estese per circa 10 milioni di anni, dal 66 al 56 milioni di anni fa. È la",
+          "full_chars": 1167,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "In realtà, la tendenza, anche se non statisticamente significativa, è in calo.",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Il ciclo solare o ciclo di attività magnetica solare è il ciclo quasi periodico di 11 anni che caratterizza le variazioni dell'attività solare (comprese le variazioni nei livelli di radiazione solare",
+          "full_chars": 738,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "I livelli del mare locali e regionali continuano a mostrare la normale variabilità naturale, salendo",
+          "full_chars": 138,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Il livello medio del mare (MSL) (abbreviato semplicemente livello del mare) è il livello medio della superficie di uno o più degli oceani della Terra, rispetto al quale si misurano le altezze, come le",
+          "full_chars": 1198,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "Gli scienziati del clima dicono che alcuni elementi legati all'uragano Harvey suggeriscono che il ri",
+          "full_chars": 162,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Gli effetti del riscaldamento globale sono i cambiamenti ambientali e sociali causati (direttamente o indirettamente) dalle emissioni di gas serra prodotte dall'uomo. C'è un consenso scientifico che i",
+          "full_chars": 1500,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "L'esperimento CLOUD del CERN ha testato solo una delle quattro condizioni necessarie per attribuire",
+          "full_chars": 198,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "L'attribuzione dei recenti cambiamenti climatici è lo sforzo di determinare scientificamente i meccanismi responsabili dei cambiamenti climatici osservati sulla Terra, comunemente noti come \"riscaldam",
+          "full_chars": 2273,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

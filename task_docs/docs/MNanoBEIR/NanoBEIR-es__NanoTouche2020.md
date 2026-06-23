@@ -48,13 +48,13 @@ Strong models should preserve exact topic matching while learning argument quali
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| ¿Son útiles las tareas? | Primero, hay tres argumentos sobre por qué los deberes son excelentes y deberían continuar en las escuelas modernas... |
-| ¿Deberían anunciarse los medicamentos con receta directamente a los consumidores? | Muchos anuncios no incluyen suficiente información sobre la eficacia de los medicamentos. Por ejemplo, Lunesta se promociona con una polilla... |
-| ¿Es necesario vacunar a los niños? | Aún no es un caso completo... Solo algunos puntos que he reunido... Los gobiernos no deberían tener el derecho de intervenir... |
-| ¿Debería ser legal el aborto? | Los abortos deberían ser legales, ya que la personalidad jurídica comienza cuando el feto es viable o después del nacimiento... |
-| ¿Mejoran las pruebas estandarizadas la educación? | El SAT, el ACT y otras pruebas estandarizadas proporcionan más información sobre la preparación de un estudiante... |
+| Query | Positive document |
+| --- | --- |
+| ¿Son útiles las tareas? [23 chars] | Primero, hay tres argumentos sobre por qué los deberes son excelentes y deberían continuar en las escuelas modernas. 1. Los deberes ayudan a los aprendices prácticos. Generalmente se acepta que hay tr... [200 / 4,011 chars] |
+| ¿Deberían anunciarse los medicamentos con receta directamente a los consumidores? [81 chars] | Muchos anuncios no incluyen suficiente información sobre la eficacia de los medicamentos. Por ejemplo, Lunesta se promociona con una polilla que entra volando por una ventana de un dormitorio, sobre u... [200 / 2,009 chars] |
+| ¿Es necesario vacunar a los niños? [34 chars] | Aún no es un caso completo... Solo algunos puntos que he reunido... Los gobiernos no deberían tener el derecho de intervenir en las decisiones de salud que los padres toman para sus hijos. Según una e... [200 / 5,062 chars] |
+| ¿Debería ser legal el aborto? [29 chars] | Los abortos deberían ser legales, ya que la personalidad jurídica comienza cuando el feto es viable o después del nacimiento, no en el momento de la concepción. Según la Corte Suprema de Estados Unido... [200 / 347 chars] |
+| ¿Mejoran las pruebas estandarizadas la educación? [49 chars] | Resuelto: El SAT, el ACT y otras pruebas estandarizadas proporcionan más información sobre la preparación de un estudiante de secundaria para la educación en universidades y colegios de élite que el p... [200 / 4,878 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should preserve exact topic matching while learning argument quali
 
 | Label | URL |
 |---|---|
-| Touché 2020 overview | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touché 2020 dataset | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Touché 2020 overview (https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touché 2020 dataset (https://doi.org/10.5281/zenodo.6862281) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

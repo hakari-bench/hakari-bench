@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "75",
+        "document_id": "bacon_grease/axzz2yzIEoMf9.txt",
+        "query": {
+          "text": "More uses for bacon grease We (my family) consume good amounts of bacon which produce a lot of bacon",
+          "full_chars": 604,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[ ![Mother Earth News](https://ogden_images.s3.amazonaws.com/www.motherearthnews.com/images/2022/03/04200002/men_logo.svg) ](https://www.motherearthnews.com) * [ Organic Gardening ](https://www.mother",
+          "full_chars": 35063,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "14",
+        "document_id": "carbon_household/beopthtml.txt",
+        "query": {
+          "text": "Determining carbon reduction vs cost of various home upgrades I've done some amount of upgrades to m",
+          "full_chars": 2158,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to main content [ ![National Renewable Energy Laboratory](/assets/images/nrel-logo-web.svg) ](/) Toggle Search Search NREL.gov Search [ Buildings ](/buildings/) Menu * Research * [ Research __ ](",
+          "full_chars": 17158,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "water_circulate/detailsofplumbing.txt",
+        "query": {
+          "text": "Forcing water circulation in solar hot water installation I'm planning an installation for heating w",
+          "full_chars": 1071,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to content [ ](https://www.firespeaking.com/wp- login.php?redirect_to=https%3A%2F%2Fwww.firespeaking.com%2Fmasonry- heaters%2Fheat-water%2Fdetails-of-plumbing) Username or Email Address Password",
+          "full_chars": 19918,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "87",
+        "document_id": "pesticide/NeonicotinoidAvailableneonicotinoidinsecticides.txt",
+        "query": {
+          "text": "How to recognize products with neonicotinoid pesticides in them? Recently, the EU has temporarily ba",
+          "full_chars": 561,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page \"Visit the main page \\[z\\]\") * [ Contents ](/wiki/Wikipedia:Contents \"Guides to browsing Wikipedia\")",
+          "full_chars": 132239,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "33",
+        "document_id": "mineral_deposit/faq.txt",
+        "query": {
+          "text": "Why don't mineral water cans carry a deposit label? I've been putting in the recycling bin all our \"",
+          "full_chars": 443,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to main content Your browser does not support iFrames [ Department of Environmental Conservation ](/) * Things To Do ## Things To Do There are many ways to experience New York’s great outdoors. M",
+          "full_chars": 27037,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Sustainable Living StackExchange long-document"
+    "source_task": "Sustainable Living StackExchange long-document",
+    "example_count": 5
   }
 }

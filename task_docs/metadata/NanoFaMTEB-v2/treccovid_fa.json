@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/trec-covid-fa-v2",
         "url": "https://huggingface.co/datasets/MCINext/trec-covid-fa-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "46",
+        "document_id": "07tdrd4w",
+        "query": {
+          "text": "چه شواهدی مبنی بر استفاده از دگزامتازون به عنوان درمان کووید-۱۹ وجود دارد؟",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بررسی نظام‌مند و آماری کارآزمایی‌های درمانی بیماری کووید-۱۹ این مرور سیستماتیک و متاآنالیز، داده‌های فعلی مربوط به کارآزمایی‌های بالینی کنترل‌شده انسانی برای درمان کووید-۱۹ را جمع‌آوری می‌کند. یک جستج",
+          "full_chars": 1536,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "0iq9s94n",
+        "query": {
+          "text": "ویروس کرونا چه مدت روی سطوح پایدار می‌ماند؟",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "راهنمای کووید-۱۹: یک همه‌گیری جهانی ناشی از ویروس کرونای جدید SARS-CoV-2 ظهور سویه SARS-CoV-2 از کروناویروس انسانی، جهان را به میانه یک همه‌گیری جدید انداخته است. این ویروس در بدن انسان باعث بیماری کو",
+          "full_chars": 975,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "01f5mvsc",
+        "query": {
+          "text": "آیا فاصله‌گذاری اجتماعی در کند کردن شیوع کووید-۱۹ تأثیر داشته است؟",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "افزایش تشخیص همراه با فاصله‌گذاری اجتماعی و برنامه‌ریزی ظرفیت بهداشتی، بار موارد و مرگ‌ومیر ناشی از کووید-۱۹ را کاهش می‌دهد: یک مطالعه اثبات مفهوم با استفاده از مدل شبیه‌سازی محاسباتی تصادفی. هدف: در",
+          "full_chars": 1491,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "7",
+        "document_id": "01mo6yo9",
+        "query": {
+          "text": "آیا آزمایش‌های سرولوژیکی برای تشخیص آنتی‌بادی‌های ویروس کرونا وجود دارد؟",
+          "full_chars": 72,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "سرودیagnostics برای سندرم حاد تنفسی مرتبط با کرونا ویروس ۲: یک مرور روایی آزمایش‌های سرولوژیک دقیق برای تشخیص آنتی‌بادی‌های میزبان علیه ویروس کرونا مرتبط با سندرم تنفسی حاد شدید-۲ (SARS-CoV-2) برای پا",
+          "full_chars": 1297,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25",
+        "document_id": "033q671f",
+        "query": {
+          "text": "کدام نشانگرهای زیستی سیر بالینی شدید عفونت کووید-۱۹ را پیش‌بینی می‌کنند؟",
+          "full_chars": 72,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ویژگی‌های بالینی و عوامل پیش‌بینی‌کننده در بیماران مبتلا به پنومونی شدید ناشی از SARS-CoV-2: یک مطالعه کوهورت چندمرکزی گذشته‌نگر اهداف: این مطالعه با هدف بررسی ویژگی‌های بالینی بیماران مبتلا به پنومون",
+          "full_chars": 1387,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Overview of the TREC 2022 NeuCLIR Track",
-        "url": "https://arxiv.org/abs/2304.12367",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NeuCLIR official site",
-        "url": "https://neuclir.github.io/",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/NeuCLIR2022RetrievalHardNegatives",
-        "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of the TREC 2022 NeuCLIR Track",
+        "url": "https://arxiv.org/abs/2304.12367",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NeuCLIR official site",
+        "url": "https://neuclir.github.io/",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/NeuCLIR2022RetrievalHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "73",
+        "document_id": "d33498a8-abab-408f-b0a1-62cb7fb7de76",
+        "query": {
+          "text": "我要查找 2019 年 11 月反政府抗议期间伊朗互联网被切断的原因和影响。",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "伊朗当局的断网行动可能会成为常态 一名伊朗青年显示，她的手机无法连上网络，2019年11月23日。 在伊朗，一些城市的网络继续被当局切断。这是伊朗当局面对示威呼吁所做出的回应。这不是第一次伊朗当局切断网络了。去年11月时，德黑兰当局曾经对互联网进行非常极端的控制，瘫痪了伊朗的网络。 广告 继续浏览后续 根据萨瓦大学（University of Savoie）IT教授和网络战略研究员萨拉曼提安（Ka",
+          "full_chars": 471,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "e3ea3fb0-a286-4cc8-b5a2-64b073a524d3",
+        "query": {
+          "text": "伊朗在伊朗生产的本土新冠疫苗CovIran Barekat Covid。",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "首批中国新冠疫苗运抵德黑兰 伊朗国家通讯社（IRNA）：早些时候，伊朗已开始接种名为“卫星V”的俄罗斯新冠疫苗。 在进口疫苗的同时，伊朗也在努力生产本国疫苗，“Covo-iran Barekat”疫苗临床试验的第一阶段已经完成。 此外，伊朗“Razi COV-Pars”疫苗的人体试验阶段也已于28日开始。 最近伊朗卫生部副部长阿里雷扎·雷西（Alireza Raeisi）说，第一批中国国家药监局已",
+          "full_chars": 510,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "a02661f1-7087-47ba-818a-9e387222efde",
+        "query": {
+          "text": "我在寻找有关人工智能如何在农业中应用的文章。",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "花蓮農業跨入AI智慧新紀元！無人機農業專班 開啟農業新商機 ▲花蓮智慧農業專班於新光兆豐休閒農場舉辦飛行演示。（圖／花蓮縣政府提供，下同） 記者王兆麟／花蓮報導 花蓮縣農業邁入智慧AI新紀元！花蓮縣政府與台灣無人機應用發展協會攜手合作，首次在花蓮開設「無人機與AI的應用花蓮智慧農業專班」，26日於新光兆豐休閒農場舉辦飛行演示記者會。期許透過科技的力量吸引青年農民返鄉加入創新農業發展，翻轉傳統農業型",
+          "full_chars": 1002,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "20",
+        "document_id": "cc575deb-f206-4399-9875-e979f1859e1e",
+        "query": {
+          "text": "我想了解在中国艾滋病患者是否遭受歧视。",
+          "full_chars": 19,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "上海愛滋遺孤咖啡館 面臨非理性歧視 上海一家以提供愛滋病患遺孤工作機會創立的公益咖啡館，面臨部分客戶的非理性歧視。這些員工本身人類免疫缺乏病毒（HIV）檢測為陰性，但仍有顧客感到不滿或害怕。 上海解放日報所屬的上海觀察曾經報導，由香港智行基金會在中國大陸上海市區創設的咖啡館「Village 127」，麵包師、咖啡師、廚師幾乎全是來自愛滋病家庭的健康子女。店名取自河南村莊中，最初受智行基金會資助的1",
+          "full_chars": 598,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "18",
+        "document_id": "1a260b18-75af-46ac-8b6d-9737e555f973",
+        "query": {
+          "text": "我有兴趣查找有关中国中小学生近视情况的信息。",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "中国高中生近九成视力不良 中国教育部对国内九个省区市中小学生视力变化情况调研结果显示，半年多来，被调查学生视力不良发生率从59.2%上升到70.6%，其中高中生视力不良率为89.3%。 据中国央视报道，报道指，当前中国各年龄段青少年的近视呈现发病年龄早、进展快、程度深的趋势。由于不少学生学业压力增大，使用电子设备的时间也大大增加，而电子产品使用时间与近视发生可能性呈正相关。疫情防控期间，80%的学",
+          "full_chars": 441,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

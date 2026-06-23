@@ -172,22 +172,22 @@ when the underlying issue is different.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Waarom is een Android ROM apparaatspecifiek? [44 chars] | Pure Android Download **Mogelijk duplicaat:** Waarom kan Android nog steeds niet als regulier besturingssysteem worden geïnstalleerd? Ik heb rondgekeken en vroeg me af of het niet mogelijk is om Andro... [200 / 453 chars] |
+| Hoe kan ik een bestand opslaan in plaats van het te openen? [59 chars] | Hoe download ik een audiobestand van een website? Is er een manier om een audiobestand, zoals een mp3-bestand, van de Android-browser naar het apparaat te downloaden zodat ik er later offline naar kan... [200 / 339 chars] |
+| Hoe kan ik een video stream van het scherm van mijn Android telefoon vastleggen en deze op mijn lapt... [100 / 113 chars] | Hoe stream ik mijn Android-scherm naar mijn Mac? **Mogelijk duplicaat:** > Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie? Ik wil mijn Android-telefoon livestreamen terwij... [200 / 741 chars] |
+| “Niet compatibel met andere applicatie(s) die dezelfde gedeelde gebruikers-ID gebruiken” bij het ins... [100 / 134 chars] | Kan Google Play-services niet installeren: Niet compatibel met andere applicatie(s) die dezelfde gedeelde gebruikers-ID gebruiken Ik kan Google Play-services niet installeren. Er staat: "Niet compatib... [200 / 304 chars] |
+| Hoe kan ik zowel het volume als het overslaan van nummers op mijn Android-apparaat bedienen met mijn... [100 / 115 chars] | Koptelefoonbediening op SGS-III **Mogelijk duplicaat:** > Hoe kan ik zowel het volume als het wisselen van tracks op mijn Android-apparaat bedienen met mijn > koptelefoon? Ik heb onlangs de SIII gekre... [200 / 712 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

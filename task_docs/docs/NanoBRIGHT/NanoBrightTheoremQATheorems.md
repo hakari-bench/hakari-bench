@@ -68,9 +68,13 @@ The low BM25 score makes this task a good stress test for models that claim math
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| A teacher wants to create a special team for a project and needs to pick 3 students out of a class o... [100 / 264 chars] | \section{Multinomial Theorem} Tags: Multinomial Coefficients, Binomial Coefficients, Discrete Mathematics, Proofs by Induction, Algebra \begin{theorem} Let $x_1, x_2, \ldots, x_k \in F$, where $F$ is... [200 / 1,275 chars] |
+| Imagine you're a graphic designer working on a 3D modeling project. You have three arrows: the first... [100 / 504 chars] | \section{Sample Matrix Independence Test} Tags: Linear Second Order ODEs, Linear Algebra \begin{theorem} Let $V$ be a vector space of real or complex-valued functions on a set $J$. Let $f_1, \ldots, f... [200 / 1,157 chars] |
+| Suppose you have a square sandbox of dimension 1 inch by 1 inch. You have 19 flags that you are goin... [100 / 412 chars] | \section{Pigeonhole Principle} Tags: Pigeonhole Principle, Named Theorems, Combinatorics \begin{theorem} Let $S$ be a finite set whose cardinality is $n$. Let $S_1, S_2, \ldots, S_k$ be a partition of... [200 / 1,575 chars] |
+| Imagine you're organizing a small dinner party with 8 friends and you have 2 identical round tables... [100 / 274 chars] | \section{Construction of Permutations} Tags: Factorials, Combinatorics, Counting Arguments, Permutation Theory, Construction of Permutations, Permutations \begin{theorem} The ${}^n P_n$ permutations o... [200 / 520 chars] |
+| Imagine you're organizing a tournament with teams from different cities, and each match can end in o... [100 / 525 chars] | \section{Ramsey's Theorem} Tags: Ramsey Theory, Named Theorems, Combinatorics \begin{theorem} In any coloring of the edges of a sufficiently large complete graph, one will find monochromatic complete... [200 / 1,743 chars] |
 
 ### Source Reference Table
 

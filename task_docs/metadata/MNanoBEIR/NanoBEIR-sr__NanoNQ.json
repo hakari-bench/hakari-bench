@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "Natural Questions: a Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: a Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "Gde se održava Final Four ove godine?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "NCAA Divizija I muški košarkaški turnir 2018. bio je turnir sa 68 timova po sistemu direktnog ispadanja, održan kako bi se odredio nacionalni šampion u muškoj koledž košarci NCAA Divizije I za sezonu",
+          "full_chars": 353,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "Da li je \"Noćna mora pre Božića\" originalno bio Diznijev film?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Pakao pre Božića\" nastao je iz pesme koju je Tim Burton napisao 1982. godine, dok je radio kao animator u studiju Walt Disney Feature Animation. Uz uspeh filma \"Vinsent\" iste godine, studijo Walt Dis",
+          "full_chars": 616,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "Zašto je anđeo severa tu?",
+          "full_chars": 25,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Prema Gormliju, značaj anđela je bio trostruk: prvo, da označi da su ispod mesta njegove izgradnje rudari uglja radili dva veka; drugo, da obuhvati prelazak iz industrijskog u informaciono doba, i tre",
+          "full_chars": 264,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test826",
+        "document_id": "doc29757",
+        "query": {
+          "text": "Gde je kompromis 3/5 prvobitno naveden u ustavu?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kompromis o tri petine nalazi se u Članu 1, Odeljku 2, Stav 3 Ustava Sjedinjenih Država, koji glasi:",
+          "full_chars": 100,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test2079",
+        "document_id": "doc72413",
+        "query": {
+          "text": "Ko peva pesmu \"Somebody's Watching Me\" sa Majklom Džeksonom?",
+          "full_chars": 60,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Somebody's Watching Me\" je pesma američkog pevača Rokvela sa njegovog debitantskog studijskog albuma Somebody's Watching Me (1984). Objavljena je kao Rokvelov debitanski singl i vodeći singl sa album",
+          "full_chars": 358,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

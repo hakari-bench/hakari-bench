@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Natural Questions: A Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ko",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: A Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "올해 파이널 포는 어디에서 열리나요?",
+          "full_chars": 20,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "2018년 NCAA 디비전 I 남자 농구 토너먼트는 2017–18시즌의 남자 전미대학체육협회(NCAA) 디비전 I 대학 농구 전국 챔피언을 가리기 위한 68개 팀이 참가하는 싱글 엘리미네이션 토너먼트였다. 제80회 대회는 2018년 3월 13일에 시작되어 4월 2일 텍사스주 샌안토니오의 알라모돔에서 열린 챔피언십 경기를 끝으로 막을 내렸다.",
+          "full_chars": 191,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "『크리스마스 전날의 악몽』은 원래 디즈니 영화였나요?",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "『크리스마스의 악몽』은 1982년 월트 디즈니 피처 애니메이션에서 애니메이터로 일하던 시절, 팀 버튼이 쓴 시에서 비롯되었다. 같은 해 『빈센트』가 성공을 거두자, 월트 디즈니 스튜디오는 『크리스마스의 악몽』을 단편 영화나 30분 분량의 텔레비전 특집 프로그램으로 제작할지 검토하기 시작했다. 수년에 걸쳐 버튼은 이 프로젝트를 계속 떠올렸고, 1990년 드디",
+          "full_chars": 320,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "왜 북쪽의 천사상이 거기에 있는가",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "고름리에 따르면, 천사의 의미는 세 가지였다. 첫째, 이 조각상이 세워진 장소 아래에서 석탄 광부들이 두 세기에 걸쳐 일했다는 것을 상징하는 것이었고, 둘째, 산업 시대에서 정보 시대로의 전환을 포착하는 것이며, 셋째, 우리 시대가 변화하는 희망과 두려움의 초점 역할을 하는 것이었다.[2]",
+          "full_chars": 162,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test826",
+        "document_id": "doc29757",
+        "query": {
+          "text": "3/5 타협안은 헌법의 어디에 처음 명시되어 있는가",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "3분의 5 타협은 미국 헌법 제1조 제2항 제3항에 명시되어 있으며, 그 내용은 다음과 같다:",
+          "full_chars": 52,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test2079",
+        "document_id": "doc72413",
+        "query": {
+          "text": "'Somebody's Watching Me'는 마이클 잭슨이 피처링한 로크웰(Rockwell)이 부른 곡입니다.",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Somebody's Watching Me\"는 미국 가수 록웰(Rockwell)이 자신의 데뷔 스튜디오 음반 『Somebody's Watching Me』(1984)에서 발표한 곡이다. 이 곡은 1984년 1월 14일 모타운(Motown)을 통해 록웰의 데뷔 싱글이자 앨범의 리드 싱글로 발매되었다. 곡에는 전 잭슨 5 멤버인 마이클 잭슨(코러스 보컬)과 제이",
+          "full_chars": 224,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

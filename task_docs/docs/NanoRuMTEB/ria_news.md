@@ -62,19 +62,21 @@ Models should preserve named entities and dates while learning event-level parap
 
 ## Example Data
 
-### Public Sources
-
-- [The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design](https://arxiv.org/abs/2408.12503), ruMTEB paper.
-- [Self-Attentive Model for Headline Generation](https://arxiv.org/abs/1901.07786), RIA corpus paper.
-- [mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| около 1 тыс человек остаются в пунктах временного содержания в дфо [66 chars] | глава мчс россии владимир пучков заявил, что около тысячи человек, пострадавших от наводнения на дальнем востоке, смогут находиться в пунктах временного размещения, пока не будут решены их жилищные пр... [200 / 1,563 chars] |
+| афганистан выдал паспорта освобожденным в пакистане главам "талибан" [68 chars] | консульство афганистана в пакистанском городе пешавар выдало афганские паспорта деятелям радикального движения "талибан", которые были на днях освобождены пакистанскими властями из тюрем по просьбе аф... [200 / 1,537 chars] |
+| минниханов не против работы "татнефти" за пределами татарстана [62 chars] | оао "татнефть" продолжит работу над существующими проектами за пределами татарстана и будет принимать участие в новых интересных проектах, если такие появятся, заявил агентству "прайм" президент тата... [200 / 1,607 chars] |
+| индекс ртс на открытии упал на 1,66%, ммвб - на 0,84% [53 chars] | индекс ртс к 10.01 мск пятницы упал на 1,66% - до 1364,83 пункта, индекс ммвб упал на 0,84% - до 1377,74 пункта, свидетельствуют данные бирж. аналитики предсказывали негативное начало торгов при смеша... [200 / 218 chars] |
+| кришито присоединится к фк "зенит" в начале июля - источник в "дженоа" [70 chars] | футболист доменико кришито, официальное объявление о переходе которого из "дженоа" в "зенит" может быть сделано уже через несколько дней, присоединится к санкт-петербургскому клубу в начале июля, соо... [200 / 1,520 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | https://arxiv.org/abs/2408.12503 |
-| Self-Attentive Model for Headline Generation | 2019 | arXiv paper | https://arxiv.org/abs/1901.07786 |
-| mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2 | 2025 | dataset card | https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2 |
+| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | [https://arxiv.org/abs/2408.12503](https://arxiv.org/abs/2408.12503) |
+| Self-Attentive Model for Headline Generation | 2019 | arXiv paper | [https://arxiv.org/abs/1901.07786](https://arxiv.org/abs/1901.07786) |
+| mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2 | 2025 | dataset card | [https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/RiaNewsRetrieval_test_top_250_only_w_correct-v2) |
 
 ### Representative Snippets
 

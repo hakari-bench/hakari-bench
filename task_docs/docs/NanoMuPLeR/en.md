@@ -62,19 +62,21 @@ Models should preserve exact legal references while learning semantic paraphrase
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Which oversight body supplied a standalone movement-management solution while later inspecting count... [100 / 142 chars] | In the beginning of the NCTS project several Member States not wishing to develop a national transit application requested the Commission to produce a standard one. MCC as supplied by the Commission i... [200 / 799 chars] |
+| Which committee urged EU-backed measures to remedy leadership skill and ethics failings after miscon... [100 / 150 chars] | The crisis of confidence among employees and consumers is made worse in many countries of the European Union by revelations about mistakes and impropriety on the part of managers and entire management... [200 / 695 chars] |
+| Which rationale links consensus on sector growth caps to both environmental resilience and long-term... [100 / 147 chars] | The arguments presented in the communication in support of the Agenda seem appropriate, in that they assess both the economic impact of tourism and its ability to create jobs for young people and also... [200 / 707 chars] |
+| What does the EU executive do when pro-rated, category-specific inflows exceed set thresholds over a... [100 / 128 chars] | On the basis of the monitoring of imports that it is carrying out in accordance with the provisions of Council Regulation (EEC) No 3030/93, the Commission will be examining regularly whether some indi... [200 / 754 chars] |
+| Who retains co-signing authority on the dual-signatory interest-bearing account to ensure proper dis... [100 / 110 chars] | In addition to these funds, there are other STABEX funds held by beneficiary ACP States. Once the Commission and the beneficiary (ACP) State have reached agreement on how the STABEX funds are to be ut... [200 / 745 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

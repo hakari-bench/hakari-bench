@@ -48,13 +48,13 @@ Strong models should improve citation-style relatedness and scientific document 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Nouveau convertisseur élévateur multiniveau CC-CC | Les convertisseurs de tension à sources multiples sont en train d'émerger comme une nouvelle génération d'options de convertisseurs de puissance... |
-| Apprentissage accéléré des champs aléatoires de Markov gaussiens creux basé sur la décomposition de Cholesky | Sure, please provide the English document text that you need translated into French. |
-| Synthèse de textures par réseaux de neurones convolutifs | Dans ce travail, nous examinons l'impact de la profondeur des réseaux convolutifs sur leur précision... |
-| Antenne annulaire plane à large bande avec polarisation circulaire pour un système RFID | Dans cet article, une technique d'alimentation à bande horizontale sinueuse est proposée... |
-| Conception d'un moniteur cardiaque numérique avancé en utilisant des composants électroniques de base | Dans cet article, nous présentons la conception et le développement d'un nouveau dispositif intégré pour mesurer la fréquence cardiaque... |
+| Query | Positive document |
+| --- | --- |
+| Nouveau convertisseur élévateur multiniveau CC-CC [49 chars] | Les convertisseurs de tension à sources multiples sont en train d'émerger comme une nouvelle génération d'options de convertisseurs de puissance pour les applications à haute puissance. Les convertiss... [200 / 1,262 chars] |
+| Apprentissage accéléré des champs aléatoires de Markov gaussiens creux basé sur la décomposition de... [100 / 108 chars] | Sure, please provide the English document text that you need translated into French. [84 chars] |
+| Synthèse de textures par réseaux de neurones convolutifs [56 chars] | Dans ce travail, nous examinons l'impact de la profondeur des réseaux convolutifs sur leur précision dans le contexte de la reconnaissance d'images à grande échelle. Notre principale contribution est... [200 / 1,020 chars] |
+| Antenne annulaire plane à large bande avec polarisation circulaire pour un système RFID [87 chars] | Dans cet article, une technique d'alimentation à bande horizontale sinueuse (HMS) est proposée pour obtenir une bonne adaptation d'impédance et des diagrammes de rayonnement symétriques en champ loint... [200 / 1,507 chars] |
+| Conception d'un moniteur cardiaque numérique avancé en utilisant des composants électroniques de bas... [100 / 101 chars] | Dans cet article, nous présentons la conception et le développement d'un nouveau dispositif intégré pour mesurer la fréquence cardiaque à l'aide du bout des doigts, afin d'améliorer l'estimation de la... [200 / 1,375 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve citation-style relatedness and scientific document 
 
 | Label | URL |
 |---|---|
-| SPECTER paper | https://arxiv.org/abs/2004.07180 |
-| SCIDOCS repository | https://github.com/allenai/scidocs |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER paper (https://arxiv.org/abs/2004.07180) |
+| SCIDOCS repository (https://github.com/allenai/scidocs) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

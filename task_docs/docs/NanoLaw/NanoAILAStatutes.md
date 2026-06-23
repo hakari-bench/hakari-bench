@@ -152,12 +152,13 @@ target is ranking the governing provisions ahead of merely related provisions.
 
 ## Example Data
 
-Representative queries include long appeal scenarios involving conviction,
-dowry death allegations, sanction requirements for criminal proceedings,
-criminal conspiracy, and partnership or property-registration questions.
-Positive documents are statute provisions such as attempt to murder, dowry
-death, punishment of criminal conspiracy, and compulsory registration of
-documents.
+| Query | Positive document |
+| --- | --- |
+| Appellant calls in question legality of the judgment rendered by High Court confirming his convictio... [100 / 3,569 chars] | Title: Attempt to murder Desc: Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty or murder, shall be punished... [200 / 1,973 chars] |
+| This appeal, by special leave, has been preferred against the judgment and order dated 23 February 2... [100 / 3,266 chars] | Title: Dowry death Desc: (1) Where the death of a woman is caused by any burns or bodily injury or occurs otherwise than under normal circumstances within seven years of her marriage and it is shown t... [200 / 856 chars] |
+| The appellant before us was examined as prime witness in the trial of T.R. on the file of the Specia... [100 / 2,857 chars] | Title: Certain laws not to be affected by this Act Desc: Nothing in this Act shall affect the provisions of any Act for punishing mutiny and desertion of officers, soldiers, sailors or airmen in the s... [200 / 337 chars] |
+| Whether sanction is required to initiate criminal proceedings in respect of offences is the question... [100 / 1,664 chars] | Title: Punishment of criminal conspiracy Desc: (1) Whoever is a party to a criminal conspiracy to commit an offence punishable with death, 1 [imprisonment for life] or rigorous imprisonment for a term... [200 / 742 chars] |
+| These appeals involve a pure question of law as to whether an award by which residue assets of a par... [100 / 1,668 chars] | Title: Documents of which registration is compulsory Desc: (1) The following documents shall be registered, if the property to which they relate is situate in a district in which, and if they of have... [200 / 10,961 chars] |
 
 ### Public Sources
 
@@ -174,8 +175,8 @@ documents.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | CEUR paper | https://ceur-ws.org/Vol-2517/T1-1.pdf |
-| AILA 2019 Precedent & Statute Retrieval Task | 2020 | Zenodo dataset | https://doi.org/10.5281/zenodo.4063986 |
+| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | CEUR paper | [https://ceur-ws.org/Vol-2517/T1-1.pdf](https://ceur-ws.org/Vol-2517/T1-1.pdf) |
+| AILA 2019 Precedent & Statute Retrieval Task | 2020 | Zenodo dataset | [https://doi.org/10.5281/zenodo.4063986](https://doi.org/10.5281/zenodo.4063986) |
 
 ### Representative Snippets
 

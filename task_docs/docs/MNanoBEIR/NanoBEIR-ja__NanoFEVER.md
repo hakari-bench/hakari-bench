@@ -114,11 +114,11 @@ semantic ordering without losing BM25's exact-match positives.
 
 | Query | Positive document |
 | --- | --- |
-| キース・ゴドーショウはグレイトフル・デッドをよく知っていた。 | グレイトフル・デッドは、1965年にカリフォルニア州パロアルトで結成されたアメリカのロックバンドである。クインテットからセプテットまでメンバー数が変化した... |
-| 『ターラク・メータのオルター・チャシュマ』はシットコムである。 | 『ターラク・メータのオルター・チャシュマー』は、ニーラ・テレ・フィルムズ・プライベート・リミテッドが制作するインドで最も長く放送されているシットコムシリーズである... |
-| カリフォルニア州バーバンクでは、極秘かつ技術的に高度な飛行機が製造されていた。 | バーバンクは、アメリカ合衆国カリフォルニア州南部、ロサンゼルス郡にある都市で、ロサンゼルス中心部から西北西約12マイルの位置にある... |
-| ネロは人物です。 | ユリオ＝クラウディウス朝という用語は、最初の5人のローマ皇帝、すなわちアウグストゥス、ティベリウス、カリグラ、クラウディウス、ネロ... |
-| 『スクリーム2』は独占的にドイツ映画である。 | 『スクリーム2』は、ウェス・クレイヴン監督、ケヴィン・ウィリアムソン脚本による1997年のアメリカのスラッシャー映画である... |
+| キース・ゴドーショウはグレイトフル・デッドをよく知っていた。 [30 chars] | グレイトフル・デッドは、1965年にカリフォルニア州パロアルトで結成されたアメリカのロックバンドである。クインテットからセプテットまでメンバー数が変化したこのバンドは、ロック、サイケデリカ、実験音楽、モードジャズ、カントリー、フォーク、ブルーグラス、ブルース、レゲエ、スペース・ロックなどの要素を融合した独自で多彩なスタイル、長時間にわたるインストゥルメンタル・ジャムのライブ演奏、そして「デッドヘッ... [200 / 1,564 chars] |
+| 『ターラク・メータのオルター・チャシュマ』はシットコムである。 [31 chars] | 『ターラク・メータのオルター・チャシュマー』（英語: Taarak Mehta's Different Perspective）は、ニーラ・テレ・フィルムズ・プライベート・リミテッドが制作するインドで最も長く放送されているシットコムシリーズである。この番組は2008年7月28日に初放送された。毎週月曜日から金曜日まで午後8時30分に放送され、SAB TVでは午後11時と翌日午後3時の再放送も行われ... [200 / 344 chars] |
+| カリフォルニア州バーバンクでは、極秘かつ技術的に高度な飛行機が製造されていた。 [39 chars] | バーバンクは、アメリカ合衆国カリフォルニア州南部、ロサンゼルス郡にある都市で、ロサンゼルス中心部から西北西約12マイル（約19キロ）の位置にある。2010年の国勢調査では人口は103,340人であった。「世界のメディア首都」と称され、ハリウッドからわずか数マイルの北東に位置するこの都市には、ザ・ウォルト・ディズニー・カンパニー、ワーナー・ブラザース・エンターテインメント、ニコロデオン・アニメーショ... [200 / 742 chars] |
+| ネロは人物です。 [8 chars] | ユリオ＝クラウディウス朝という用語は、最初の5人のローマ皇帝、すなわちアウグストゥス、ティベリウス、カリグラ、クラウディウス、ネロ、あるいは彼らが属していた家系を指す。彼らは、紀元前1世紀後半（44年／31年／27年）にアウグストゥスの下でローマ帝国が成立してから、紀元68年に最後の皇帝ネロが自殺するまで、帝国を統治した。ユリオ＝クラウディウス朝の歴史において、長子相続は顕著に見られない。アウグス... [200 / 930 chars] |
+| 『スクリーム2』は独占的にドイツ映画である。 [22 chars] | 『スクリーム2』は、ウェス・クレイヴン監督、ケヴィン・ウィリアムソン脚本による1997年のアメリカのスラッシャー映画である。デヴィッド・アーキェット、ネヴ・キャンベル、コートニー・コックス、サラ・ミシェル・ゲラー、ジェイミー・ケネディ、ローリー・メトカーフ、ジェリー・オコンネル、ジャーダ・ピンケット、リーヴ・シュライバーが出演している。本作はディメンション・フィルムズにより1997年12月12日に... [200 / 1,222 chars] |
 
 ### Public Sources
 
@@ -132,7 +132,7 @@ semantic ordering without losing BM25's exact-match positives.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | https://arxiv.org/abs/1803.05355 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

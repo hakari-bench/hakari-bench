@@ -89,36 +89,6 @@
         "rows_with_101_candidates": 9
       }
     },
-    "references": [
-      {
-        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
-        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -127,6 +97,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Zdrav čokoladni milkshake",
+          "full_chars": 25,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cilj Ispitati odnos između unosa trešanja i rizika od ponovljenih napada gihta kod osoba sa gihtom. Metode Sproveli smo studiju preseka slučajeva kako bismo ispitali povezanost niza pretpostavljenih f",
+          "full_chars": 1596,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "medicinska etika",
+          "full_chars": 16,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "POZADINA: Jedan od glavnih problema u kontroli holesterola u krvi putem dijetetskih mera čini se potreba za poboljšanjem pridržavanja pacijenata preporukama. CILJEVI: Ispitati brojna pitanja u vezi s",
+          "full_chars": 1853,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "grah",
+          "full_chars": 4,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tokom proteklih 20 godina, rastući interes za biohemiju, ishranu i farmakologiju L-arginina doveo je do opsežnih studija koje istražuju njegovu nutritivnu i terapeutsku ulogu u lečenju i prevenciji me",
+          "full_chars": 1179,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-68",
+        "document_id": "MED-2991",
+        "query": {
+          "text": "Šta se zapravo nalazi u pilećim nuggetsima?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "NAMENA: Utvrditi sastav pilećih nugeta iz 2 nacionalna lanca prehrambenih prodavnica. POZADINA: Pileći nugeti su postali glavna komponenta američke ishrane. Želeli smo da utvrdimo trenutni sastav ove",
+          "full_chars": 718,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2051",
+        "document_id": "MED-4551",
+        "query": {
+          "text": "zasićena mast",
+          "full_chars": 13,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Povećan je interes za mogućnost da ishrana majke tokom trudnoće može uticati na razvoj alergijskih oboljenja kod dece. Ova prospektivna studija ispitivala je povezanost unosa odabrane hrane bogate mas",
+          "full_chars": 1942,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

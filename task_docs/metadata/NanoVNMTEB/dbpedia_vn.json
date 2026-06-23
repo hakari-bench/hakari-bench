@@ -171,8 +171,91 @@
         "title": "DBpedia-Entity project page",
         "url": "https://iai-group.github.io/DBpedia-Entity/",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "QALD2_tr-26",
+        "document_id": "<dbpedia:25_de_Abril_Bridge>",
+        "query": {
+          "text": "Những cây cầu nào giống như Cầu Manhattan?",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cầu 25 de Abril Cầu 25 de Abril (tiếng Bồ Đào Nha: Ponte 25 de Abril, phát âm tiếng Bồ Đào Nha: [ˈpõt(ɨ) ˈvĩt i ˈsĩku ðɨ ɐˈβɾiɫ]) là cây cầu treo nối thành phố Lisbon, thủ đô của Bồ Đào Nha đến thị tr",
+          "full_chars": 464,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012311",
+        "document_id": "<dbpedia:(Just_Like)_Starting_Over>",
+        "query": {
+          "text": "John Lennon Yoko Ono album Starting Over",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "(Chỉ Như) Bắt Đầu Một Lần Nữa (Just Like) Starting Over là một ca khúc được viết và trình diễn bởi John Lennon cho album của ông, Double Fantasy. Mặt B của đĩa đơn này là \"Kiss Kiss Kiss\" thuộc về Yok",
+          "full_chars": 526,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010004",
+        "document_id": "<dbpedia:Appam>",
+        "query": {
+          "text": "Món Ấn Độ",
+          "full_chars": 9,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bánh Appam Appam là một loại bánh kếp được làm từ bột gạo lên men và sữa dừa. Nó là món ăn phổ biến ở bang Kerala miền Nam Ấn Độ. Nó cũng rất phổ biến ở Tamil Nadu và Sri Lanka. Món này thường được ăn",
+          "full_chars": 436,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "QALD2_tr-58",
+        "document_id": "<dbpedia:Charles_Newirth>",
+        "query": {
+          "text": "Ai đã sản xuất được nhiều phim nhất?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Charles Newirth Charles Newirth (sinh ngày 22 tháng 8 năm 1955 tại thành phố New York) là nhà sản xuất phim người Mỹ. Gần đây nhất, ông đã giám sát sản xuất bộ phim bom tấn \"Iron Man 3\" (năm 2013) của",
+          "full_chars": 509,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "INEX_XER-130",
+        "document_id": "<dbpedia:Captain's_Peril>",
+        "query": {
+          "text": "Các Thuyền trưởng Star Trek",
+          "full_chars": 27,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nguy Hiểm Của Thuyền Trưởng Captain's Peril là một tiểu thuyết của William Shatner, viết chung với Judith và Garfield Reeves-Stevens, dựa trên loạt phim truyền hình Star Trek. Cuốn tiểu thuyết được ph",
+          "full_chars": 345,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -131,14 +131,97 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "Climate-FEVER project site",
         "url": "http://climatefever.ai",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "From 1970 until 1998 there was a warming period that raised temperatures by about 0.7 F that helped",
+          "full_chars": 143,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Paleocene ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) or Palaeocene , the `` old recent '' , is a geologic epoch that lasted from about . It is the first epoch of the Paleogene Period i",
+          "full_chars": 1126,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "In fact, the trend, while not statistically significant, is downward.”",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The solar cycle or solar magnetic activity cycle is the nearly periodic 11-year change in the Sun 's activity ( including changes in the levels of solar radiation and ejection of solar material ) and",
+          "full_chars": 610,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Local and regional sea levels continue to exhibit typical natural variability—in some places rising",
+          "full_chars": 122,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Mean sea level ( MSL ) ( abbreviated simply sea level ) is an average level of the surface of one or more of Earth 's oceans from which heights such as elevations may be measured . MSL is a type of ve",
+          "full_chars": 1011,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "[climate scientists] say that aspects of the case of Hurricane Harvey suggest global warming is maki",
+          "full_chars": 125,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The effects of global warming are the environmental and social changes caused ( directly or indirectly ) by human emissions of greenhouse gases . There is a scientific consensus that climate change is",
+          "full_chars": 1285,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "The CERN CLOUD experiment only tested one-third of one out of four requirements necessary to blame g",
+          "full_chars": 184,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Attribution of recent climate change is the effort to scientifically ascertain mechanisms responsible for recent climate changes on Earth , commonly known as ` global warming ' . The effort has focuse",
+          "full_chars": 2016,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -62,21 +62,22 @@ Models should learn diagnosis-level similarity from full patient presentations. 
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/IIYi-Clinical dataset card](https://huggingface.co/datasets/R2MED/IIYi-Clinical).
+| Query | Positive document |
+| --- | --- |
+| [Chief Complaint]: A 28-year-old pregnant woman presents for evaluation. [Current Medical History]:... [100 / 2,601 chars] | [Case Presentation] Chief Complaint Female, 29 years old, office worker 36+1 weeks amenorrhea, headache with lower abdominal pain for 1 day Present Illness Pregnant woman, G1P0. The patient has a hist... [200 / 4,341 chars] |
+| [Chief Complaint]: A 70-year-old male patient. Chief Reason: Intermittent dizziness and left upper l... [100 / 1,471 chars] | [Case Presentation] Chief Complaint Male, 69 years old, farmer Chief complaint: Dizziness, numbness and weakness in the right limb for 10 hours, admitted to the hospital. Current Medical History The p... [200 / 3,582 chars] |
+| [Chief Complaint]: Male, 63 years old, farmer Admitted due to speech impairment and right-sided limb... [100 / 2,595 chars] | [Case Presentation] Chief Complaint Male, 75 years old, farmer Right limb movement restriction for 1 hour Present History The patient reports that 1 hour before admission, he suddenly developed sympto... [200 / 4,142 chars] |
+| [Chief Complaint]: Increased vaginal discharge for 5 days, external genital itching for 1 day [Prese... [100 / 997 chars] | [Case Presentation] Chief Complaint Increased vaginal discharge with external genital pruritus for 3 days Present History The patient is usually in good health, with normal secretions. Three days ago,... [200 / 1,166 chars] |
+| [Chief Complaint]: Abdominal pain for 3 days after abortion 7 days ago [Present Illness]: The patien... [100 / 1,069 chars] | [Case Presentation] Chief Complaint Female, 33, unemployed Lower abdominal pain for half a month Present History The patient is a married middle-aged female, G1P0, with a history of one induced aborti... [200 / 3,552 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/IIYi-Clinical | 2025 | dataset card | https://huggingface.co/datasets/R2MED/IIYi-Clinical |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/IIYi-Clinical | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/IIYi-Clinical](https://huggingface.co/datasets/R2MED/IIYi-Clinical) |
 
 ### Representative Snippets
 

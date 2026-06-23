@@ -70,12 +70,13 @@ For reranker research, this split rewards models that can read a short operation
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-webmasters-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Webmasters-PL
+| Query | Positive document |
+| --- | --- |
+| find-new/posts&recent=1 jako strona główna: co z SEO? [53 chars] | Czy adres URL z ciągiem zapytania jest lepszy lub gorszy dla SEO niż adres bez niego? Chcę wiedzieć, czy istnieje ogromna różnica pod względem SEO między tymi adresami URL: > mysite.com/ontario/toront... [200 / 309 chars] |
+| Uniemożliwianie robotom indeksowania określonej części strony [61 chars] | Jak poprosić Google o nieindeksowanie niektórych części mojej strony? > **Możliwy duplikat:** > Uniemożliwianie robotom indeksowania określonej części strony Szukałem dzisiaj starej recenzji w mojej w... [200 / 963 chars] |
+| Preferencje SEO dla przekierowania protokołu WWW lub HTTP://? Czy strony www mają wyższą pozycję niż... [100 / 116 chars] | Z www czy bez www? Którego lepiej użyć Właśnie kupiłem nową domenę `www.reversehacking.com` .... Co jest lepsze dla SEO: `http://reversehacking.com` lub `http://www.reversehacking.com` Myślę, że ludzi... [200 / 355 chars] |
+| Co oznacza podwójny ukośnik w adresach URL? [43 chars] | Czy jest jakiś problem z użyciem dwóch ukośników w środku adresu URL? > **Możliwy duplikat:** > Co oznacza podwójny ukośnik w adresach URL? Pracuję nad strukturą adresu URL mod_rewrite w następujący s... [200 / 1,149 chars] |
+| Dlaczego fragmenty rozszerzone Google miałyby działać u jednego autora witryny, a u innego nie? [95 chars] | rozszerzone fragmenty ignorowane przez google > **Możliwy duplikat:** > Dlaczego fragmenty rozszerzone Google miałyby działać u jednego autora witryny, a u innego nie? Mam tu do czynienia z jednym pro... [200 / 748 chars] |
 
 ### Source Reference Table
 

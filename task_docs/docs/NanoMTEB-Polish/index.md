@@ -174,12 +174,12 @@ named entities.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | paper | https://ir.webis.de/anthology/2015.adcs_conference-2015.3/ |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | paper | https://aclanthology.org/2024.lrec-main.194/ |
-| Developing PUGG for Polish: A Modern Approach to KBQA, MRC, and IR Dataset Construction | 2024 | paper | https://aclanthology.org/2024.findings-acl.652/ |
-| FiQA challenge site |  | project page | https://sites.google.com/view/fiqa/ |
-| Natural Questions |  | project page | https://ai.google.com/research/NaturalQuestions/ |
-| First Quora Dataset Release: Question Pairs |  | dataset page | https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs |
-| Massive Text Embedding Benchmark (MTEB) |  | benchmark repository | https://github.com/embeddings-benchmark/mteb |
-| mteb/FiQA-PL |  | dataset card | https://huggingface.co/datasets/mteb/FiQA-PL |
-| mteb/NQ-PLHardNegatives |  | dataset card | https://huggingface.co/datasets/mteb/NQ-PLHardNegatives |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | paper | [https://ir.webis.de/anthology/2015.adcs_conference-2015.3/](https://ir.webis.de/anthology/2015.adcs_conference-2015.3/) |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | paper | [https://aclanthology.org/2024.lrec-main.194/](https://aclanthology.org/2024.lrec-main.194/) |
+| Developing PUGG for Polish: A Modern Approach to KBQA, MRC, and IR Dataset Construction | 2024 | paper | [https://aclanthology.org/2024.findings-acl.652/](https://aclanthology.org/2024.findings-acl.652/) |
+| FiQA challenge site |  | project page | [https://sites.google.com/view/fiqa/](https://sites.google.com/view/fiqa/) |
+| Natural Questions |  | project page | [https://ai.google.com/research/NaturalQuestions/](https://ai.google.com/research/NaturalQuestions/) |
+| First Quora Dataset Release: Question Pairs |  | dataset page | [https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs](https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs) |
+| Massive Text Embedding Benchmark (MTEB) |  | benchmark repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
+| mteb/FiQA-PL |  | dataset card | [https://huggingface.co/datasets/mteb/FiQA-PL](https://huggingface.co/datasets/mteb/FiQA-PL) |
+| mteb/NQ-PLHardNegatives |  | dataset card | [https://huggingface.co/datasets/mteb/NQ-PLHardNegatives](https://huggingface.co/datasets/mteb/NQ-PLHardNegatives) |

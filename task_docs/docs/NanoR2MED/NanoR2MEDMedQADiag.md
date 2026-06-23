@@ -62,21 +62,22 @@ Models should learn to infer diagnoses from vignettes and retrieve evidence abou
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/MedQA-Diag dataset card](https://huggingface.co/datasets/R2MED/MedQA-Diag).
+| Query | Positive document |
+| --- | --- |
+| A 33-year-old G2P1 woman presents to the office because of poor diabetic control. She is currently a... [100 / 439 chars] | Malformations. he incidence of major malformations in women with type 1 diabetes is at least doubled and approximates 11 percent Qovanovic, 2015). These account for almost half of perinatal deaths in... [200 / 628 chars] |
+| A 68-year-old man presents with difficulty breathing for the last 3 hours. Upon asking about other s... [100 / 986 chars] | The optic nerve [II] is not a true cranial nerve, but rather an extension of the brain carrying afferent fibers from the retina of the eyeball to the visual centers of the brain. The optic nerve is su... [200 / 921 chars] |
+| A 25-year-old woman presents to her primary care provider for evaluation of a "painful mass in my le... [100 / 796 chars] | lympHogranUloma venereUm C. trachomatis serovars L1, L2, and L3 cause LGV, an invasive systemic STD. The peak inci dence of LGV corresponds with the age of greatest sexual activity: the second and thi... [200 / 995 chars] |
+| A one-week-old boy presents with yellow sclerae, severe lethargy, and decreased muscle tone. His mot... [100 / 637 chars] | Crigler-Najjar Syndrome, Type I CN-I is characterized by striking uncon jugated hyperbilirubinemia of about 340–765 μmol/L (20–45 mg/dL) that appears in the neonatal period and persists for life. Othe... [200 / 997 chars] |
+| A 4-year-old girl is brought to the emergency department with a persistent cough, fever, and vomitin... [100 / 888 chars] | Mendelian Disorders: Diseases Caused by Single-Gene Defects251 abnormally viscid mucous secretions that block the airways and the pancreatic ducts which in turn are responsible for the two most import... [200 / 845 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/MedQA-Diag | 2025 | dataset card | https://huggingface.co/datasets/R2MED/MedQA-Diag |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/MedQA-Diag | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/MedQA-Diag](https://huggingface.co/datasets/R2MED/MedQA-Diag) |
 
 ### Representative Snippets
 

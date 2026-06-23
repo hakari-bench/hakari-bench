@@ -112,11 +112,11 @@ substantive debate content from topical mentions.
 
 | Query | Positive document |
 | --- | --- |
-| Os deveres de casa são benéficos? | Existem três argumentos para justificar por que a lição de casa é excelente e deve continuar nas escolas modernas... |
-| Os medicamentos de prescrição devem ser anunciados diretamente aos consumidores? | Muitos anúncios não incluem informações suficientes sobre a eficácia dos medicamentos. Por exemplo, o Lunesta é anunciado por uma mariposa... |
-| Quais vacinas as crianças devem tomar? | Os governos não devem ter o direito de intervir nas decisões de saúde que os pais tomam para seus filhos... |
-| O aborto deve ser legalizado? | Os abortos devem ser legais, pois a personalidade jurídica começa após o feto se tornar viável ou após o nascimento... |
-| Os testes padronizados melhoram a educação? | O SAT, o ACT e outros testes padronizados fornecem mais insights sobre a preparação de estudantes para universidades de elite... |
+| Os deveres de casa são benéficos? [33 chars] | Primeiro, existem três argumentos para justificar por que a lição de casa é excelente e deve continuar nas escolas modernas. 1. A lição de casa ajuda os alunos que aprendem fazendo. É amplamente aceit... [200 / 3,935 chars] |
+| Os medicamentos de prescrição devem ser anunciados diretamente aos consumidores? [80 chars] | Muitos anúncios não incluem informações suficientes sobre a eficácia dos medicamentos. Por exemplo, o Lunesta é anunciado por uma mariposa que voa através de uma janela de quarto, acima de uma pessoa... [200 / 1,891 chars] |
+| Quais vacinas as crianças devem tomar? [38 chars] | Não é um caso completo ainda... Apenas alguns pontos que reuni... Os governos não devem ter o direito de intervir nas decisões de saúde que os pais tomam para seus filhos. De acordo com uma pesquisa d... [200 / 4,624 chars] |
+| O aborto deve ser legalizado? [29 chars] | Os abortos devem ser legais, pois a personalidade jurídica começa após o feto se tornar viável ou após o nascimento, e não na concepção. De acordo com a Suprema Corte dos Estados Unidos, uma pessoa co... [200 / 329 chars] |
+| Os testes padronizados melhoram a educação? [43 chars] | Resolvido: O SAT, o ACT e outros testes padronizados fornecem mais insights sobre a preparação de um estudante do ensino médio para a educação em faculdades e universidades de elite do que a média do... [200 / 4,471 chars] |
 
 ### Public Sources
 
@@ -130,7 +130,7 @@ substantive debate content from topical mentions.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of Touché 2020: Argument Retrieval | 2020 | task paper | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Overview of Touché 2020: Argument Retrieval | 2020 | task paper | [https://doi.org/10.1007/978-3-030-58219-7_26](https://doi.org/10.1007/978-3-030-58219-7_26) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

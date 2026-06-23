@@ -152,15 +152,98 @@
         "url": "https://code-rag-bench.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "code-rag-bench/stackoverflow-posts",
         "url": "https://huggingface.co/datasets/code-rag-bench/stackoverflow-posts",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "66",
+        "document_id": "doc_66",
+        "query": {
+          "text": "Q: How can I find the full path to a font from its display name on a Mac? I am using the Photoshop's",
+          "full_chars": 149,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Given a font name returned by the API, I want to find the actual physical font file that font name corresponds to on the disc. This is all happening in a python program running on OSX so I guess I'm l",
+          "full_chars": 5076,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "doc_123",
+        "query": {
+          "text": "Q: How do I delete a file which is locked by another process in C#? I'm looking for a way to delete",
+          "full_chars": 396,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A: If you want to do it programmatically. I'm not sure... and I'd really recommend against it. If you're just troubleshooting stuff on your own machine, SysInternals Process Explorer can help you Run",
+          "full_chars": 13199,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "doc_103",
+        "query": {
+          "text": "Q: Editing database records by multiple users I have designed database tables (normalised, on an MS",
+          "full_chars": 334,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "I am concerned that if two users start editing the same record then the last to commit the update would be the 'winner' and important information may be lost. A number of solutions come to mind but I'",
+          "full_chars": 4026,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9",
+        "document_id": "doc_9",
+        "query": {
+          "text": "Q: Throw an error preventing a table update in a MySQL trigger If I have a trigger before the update",
+          "full_chars": 177,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A: CREATE TRIGGER sample_trigger_msg BEFORE INSERT FOR EACH ROW BEGIN IF(NEW.important_value) < (1*2) THEN DECLARE dummy INT; SELECT Enter your Message Here!!! INTO dummy FROM mytable WHERE mytable.id",
+          "full_chars": 5314,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "161",
+        "document_id": "doc_161",
+        "query": {
+          "text": "Q: Bandwith throttling in IIS 6 by IP Address I am writing an application that downloads large files",
+          "full_chars": 391,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Since this is an AIR Application, I figure I will throttle via server-side since I can do it from either the server itself (IIS 6) or the web service (asp.net / C#). Throttling through IIS 6 seems to",
+          "full_chars": 922,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

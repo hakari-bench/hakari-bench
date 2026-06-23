@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "hội chứng suy nghĩ lặp lại là gì",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hội chứng nhai lại. Hội chứng nhai lại, còn được gọi là Merycism, là một loại rối loạn ăn uống không được xác định cụ thể nào khác, gây ra việc trào ngược thức ăn. Mặc dù nó không được xác định là một",
+          "full_chars": 296,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "ai đã hát bài here i go again",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Đối với các mục đích khác, xem Here I Go Again (phân định). Here I Go Again là một bài hát của ban nhạc rock người Anh Whitesnake. Ban đầu được phát hành trong album năm 1982 của họ, Saints & Sinners,",
+          "full_chars": 355,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "ai là người mà cameron boyce đóng trong liv và maddie",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chuẩn bị cho những tiếng cười nghiêng ngả, các bạn ơi. Trong một đoạn clip độc quyền của tập phim ngày 19 tháng 4 của Liv & Maddie có tên “Prom-A-Rooney.” Rõ ràng rồi. Trong đoạn clip hài hước này, ch",
+          "full_chars": 349,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971233",
+        "document_id": "4589415",
+        "query": {
+          "text": "các sa mạc lớn của trái đất chủ yếu xảy ra ở đâu",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Phần còn lại của các sa mạc trên Trái Đất nằm ngoài các khu vực cực. Sa mạc lớn nhất là Sa mạc Sahara, một sa mạc cận nhiệt đới ở Bắc Phi.",
+          "full_chars": 138,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1093082",
+        "document_id": "7778956",
+        "query": {
+          "text": "nghĩa của từ \"copper\" trong tiếng lóng chỉ cảnh sát",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dựa trên những phát hiện hiện tại, có vẻ như từ \"copper\" (một cảnh sát, nghĩa đen là 'người bắt giữ') có trước từ \"cop\" (có thể được sử dụng bằng lời và có nghĩa là bắt giữ hoặc khi là danh từ có nghĩ",
+          "full_chars": 408,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

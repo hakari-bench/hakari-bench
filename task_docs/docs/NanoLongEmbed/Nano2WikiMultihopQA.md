@@ -141,11 +141,13 @@ dense retrieval used to fill relation-paraphrase gaps and improve recall.
 
 ## Example Data
 
-Representative queries ask which of two films has the older director, where a
-film director studied, who is the mother-in-law of Queen Insun, the birthplace
-of Frankie Bridge's husband, and where Elisabeth zu Fürstenberg's husband died.
-Positive documents are long bundles of Wikipedia-style passages containing the
-required entity chain.
+| Query | Positive document |
+| --- | --- |
+| Which film has the director who is older than the other, Women'S Weapons or She Wants Me? [89 chars] | Passage 1: Scotty Fox Scott Fox is a pornographic film director who is a member of the AVN Hall of Fame. Awards 1992 AVN Award – Best Director, Video (The Cockateer) 1995 AVN Hall of Fame inductee Pas... [200 / 16,726 chars] |
+| Where did the director of film Crd (Film) study? [48 chars] | Passage 1: Peter Levin Peter Levin is an American director of film, television and theatre. Career Since 1967, Levin has amassed a large number of credits directing episodic television and television... [200 / 27,463 chars] |
+| Who is the mother-in-law of Queen Insun? [40 chars] | Passage 1: Maria Thins Maria Thins (c. 1593 – 27 December 1680) was the mother-in-law of Johannes Vermeer and a member of the Gouda Thins family. She was raised in a devout Dutch Catholic family with... [200 / 43,300 chars] |
+| What is the place of birth of Frankie Bridge's husband? [55 chars] | Passage 1: Wayne Bridge Wayne Michael Bridge (born 5 August 1980) is an English former professional footballer who played as a left back. A graduate of the Southampton academy, he made his debut in 19... [200 / 55,577 chars] |
+| Where did Elisabeth Zu Fürstenberg's husband die? [49 chars] | Passage 1: Virginia von Fürstenberg Princess Virginia Maria Clara von und zu Fürstenberg (Virginia Maria Clara Prinzessin von und zu Fürstenberg; 5 October 1974 – 10 May 2023) was an Italian artist, p... [200 / 39,248 chars] |
 
 ### Public Sources
 
@@ -162,9 +164,9 @@ required entity chain.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning Steps | 2020 | arXiv paper | https://arxiv.org/abs/2011.01060 |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning Steps | 2020 | arXiv paper | [https://arxiv.org/abs/2011.01060](https://arxiv.org/abs/2011.01060) |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

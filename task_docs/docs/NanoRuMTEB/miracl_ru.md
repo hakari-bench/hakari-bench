@@ -62,21 +62,22 @@ Models should handle Russian morphology, entity aliases, title variants, and pas
 
 ## Example Data
 
-### Public Sources
-
-- [MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages](https://arxiv.org/abs/2210.09984), task paper.
-- [The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design](https://arxiv.org/abs/2408.12503), ruMTEB paper.
-- [MIRACL project page](http://miracl.ai/), project page.
-- [mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| «Агенты "Щ.И.Т."» - это драматический сериал? [45 chars] | Агенты «Щ.И.Т.» «Аге́нты „Щ.И.Т.“» () — американский супергеройский телесериал, созданный Джоссом Уидоном и основанный на одноимённом комиксе компании Marvel о вымышленной организации по борьбе с прес... [200 / 420 chars] |
+| Китай социалистическое государство? [35 chars] | Китай Официально, Китайская Народная Республика — унитарная республика, социалистическое государство демократической диктатуры народа. Основным законом государства является конституция, принятая в 198... [200 / 574 chars] |
+| Занималось Бюро шифров взломом шифров немецкой Энигмы? [54 chars] | Бюро шифров Главным ведомством Бюро и отделением, ответственным за криптоанализ немецких систем шифрования, стало BS4, позже основной задачей отделения стал взлом немецкой шифровальной машины «Энигма»... [200 / 677 chars] |
+| Сколько лет Лев Николаевич Толстой писал роман «Война́ и мир»? [62 chars] | Война и мир Толстой писал роман на протяжении 6 лет, с 1863 по 1869 годы. По историческим сведениям, он вручную переписал его 8 раз, а отдельные эпизоды писатель переписывал более 26 раз. Исследовател... [200 / 307 chars] |
+| Сколько дней длился Евромайдан в Украине? [41 chars] | Евромайдан События в период с 21 ноября 2013 года по 22 февраля 2014 года после смены власти на Украине в украинском праве официально назывались «массовые акции гражданского протеста в Украине с 21 но... [200 / 280 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | arXiv paper | https://arxiv.org/abs/2210.09984 |
-| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | https://arxiv.org/abs/2408.12503 |
-| MIRACL project page | 2023 | project page | http://miracl.ai/ |
-| mteb/MIRACLRetrievalHardNegatives | 2025 | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | arXiv paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | [https://arxiv.org/abs/2408.12503](https://arxiv.org/abs/2408.12503) |
+| MIRACL project page | 2023 | project page | [http://miracl.ai/](http://miracl.ai/) |
+| mteb/MIRACLRetrievalHardNegatives | 2025 | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives) |
 
 ### Representative Snippets
 

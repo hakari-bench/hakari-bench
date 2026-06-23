@@ -116,11 +116,11 @@ reranker.
 
 | Query | Positive document |
 | --- | --- |
-| Od 1970. do 1998. godine postojao je period zagrevanja koji je podigao temperature za oko 0,7 stepeni Farenhajta... | Paleocen, što znači "stari novi", je geološka epoha koja je trajala od oko 66 do 56 miliona godina... |
-| Zapravo, trend je, iako nije statistički značajan, opadajući. | Solarni ciklus ili ciklus solarne magnetne aktivnosti predstavlja gotovo periodičnu 11-godišnju promenu u aktivnosti Sunca... |
-| Lokalni i regionalni nivoi mora i dalje pokazuju tipičnu prirodnu varijabilnost na nekim mestima se podižu, a na drugim spuštaju. | Srednji nivo mora je prosečan nivo površine jednog ili više Zemljinih okeana od koga se mogu meriti nadmorske visine... |
-| Klimatolozi kažu da pojedini aspekti slučaja uragana Harvey ukazuju da globalno zagrevanje pogoršava već lošu situaciju. | Posledice globalnog zagrevanja su ekološke i društvene promene uzrokovane ljudskim emisijama gasova staklene bašte... |
-| Eksperiment CERN CLOUD testirao je samo jednu trećinu jednog od četiri uslova potrebnih da se globalno zagrevanje okrivi na kosmičke zrake... | Pripisivanje nedavnih klimatskih promena predstavlja naučni pokušaj da se utvrde mehanizmi odgovorni za nedavne klimatske promene na Zemlji... |
+| Od 1970. do 1998. godine postojao je period zagrevanja koji je podigao temperature za oko 0,7 stepen... [100 / 183 chars] | Paleocen (izgovor: /ˈpæliəˌsiːn/, /ˈpæ-/, /-lioʊ-/) ili Paleocen, što znači "stari novi", je geološka epoha koja je trajala od oko 66 do 56 miliona godina. To je prva epoka paleogenog perioda u savrem... [200 / 1,072 chars] |
+| Zapravo, trend je, iako nije statistički značajan, opadajući. [61 chars] | Solarni ciklus ili ciklus solarne magnetne aktivnosti predstavlja gotovo periodičnu 11-godišnju promenu u aktivnosti Sunca (uključujući promene u nivou solarne radijacije i izbacivanju sunčevog materi... [200 / 574 chars] |
+| Lokalni i regionalni nivoi mora i dalje pokazuju tipičnu prirodnu varijabilnost — na nekim mestima s... [100 / 131 chars] | Srednji nivo mora (MSL) (skraćeno samo kao nivo mora) je prosečan nivo površine jednog ili više Zemljinih okeana od koga se mogu meriti visine kao što su nadmorske visine. MSL je vrsta vertikalne datu... [200 / 991 chars] |
+| [Klimatolozi] kažu da pojedini aspekti slučaja uragana Harvey ukazuju da globalno zagrevanje pogorša... [100 / 122 chars] | Posledice globalnog zagrevanja su ekološke i društvene promene uzrokovane (direktno ili indirektno) ljudskim emisijama gasova staklene bašte. Postoji naučni konsenzus da se klimatske promene dešavaju... [200 / 1,310 chars] |
+| Eksperiment CERN CLOUD testirao je samo jednu trećinu jednog od četiri uslova potrebnih da se global... [100 / 174 chars] | Pripisivanje nedavnih klimatskih promena predstavlja naučni pokušaj da se utvrde mehanizmi odgovorni za nedavne klimatske promene na Zemlji, poznate kao 'globalno zagrevanje'. Ovaj napor se fokusira n... [200 / 1,922 chars] |
 
 ### Public Sources
 
@@ -134,7 +134,7 @@ reranker.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | task paper | https://arxiv.org/abs/2012.00614 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -48,13 +48,13 @@ Strong models should improve alias handling, attribute-aware ranking, and catego
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Fitzgerald Auto Mall a Chambersburg, Pennsylvania | Fitzgerald Auto Malls è un'azienda a conduzione familiare che opera nel settore dell'auto... |
-| La raccolta di racconti del 1994 di Alice Munro è disponibile | Alice Ann Munro è una scrittrice canadese. Il lavoro di Munro è stato descritto come avere rivoluzionato la struttura del racconto... |
-| Architettura gallo-romana a Parigi | L'arte a Parigi è un articolo sulla cultura e la storia dell'arte nella capitale francese... |
-| Repubbliche della ex Jugoslavia | La Costituzione jugoslava del 1974 fu la quarta e ultima costituzione della Repubblica Socialista Federale di Jugoslavia... |
-| Film girati a Venezia | Un po' d'amore è un film romantico-comico in Technicolor e Panavision del 1979... |
+| Query | Positive document |
+| --- | --- |
+| Fitzgerald Auto Mall a Chambersburg, Pennsylvania [49 chars] | Fitzgerald Auto Malls è un'azienda a conduzione familiare che opera nel settore dell'auto e che è stata fondata nel 1966, con la sua prima sede aperta a Bethesda, nel Maryland. Nel 2014, Fitzgerald Au... [200 / 507 chars] |
+| La raccolta di racconti del 1994 di Alice Munro è disponibile [61 chars] | Alice Ann Munro (nata Laidlaw; 10 luglio 1931) è una scrittrice canadese. Il lavoro di Munro è stato descritto come avere rivoluzionato la struttura del racconto breve, soprattutto per la sua tendenza... [200 / 535 chars] |
+| Architettura gallo-romana a Parigi [34 chars] | L'arte a Parigi è un articolo sulla cultura e la storia dell'arte nella capitale francese. Da secoli, Parigi attira artisti da tutto il mondo, che giungono in città per formarsi e trovare ispirazione... [200 / 299 chars] |
+| Repubbliche della ex Jugoslavia [31 chars] | La Costituzione jugoslava del 1974 fu la quarta e ultima costituzione della Repubblica Socialista Federale di Jugoslavia. È entrata in vigore il 21 febbraio. Con i suoi 406 articoli originali, la Cost... [200 / 488 chars] |
+| Film girati a Venezia [21 chars] | Un po' d'amore è un film romantico-comico in Technicolor e Panavision del 1979, diretto da George Roy Hill e con Laurence Olivier, Thelonious Bernard e Diane Lane al suo esordio cinematografico. La sc... [200 / 380 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should improve alias handling, attribute-aware ranking, and catego
 
 | Label | URL |
 |---|---|
-| DBpedia-Entity V2 paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia-Entity V2 paper (https://doi.org/10.1145/3077136.3080751) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -126,20 +126,21 @@ disciplinary similarity.
 
 ## Example Data
 
-### Public Sources
-
-- [RuSciBench: Open Benchmark for Russian and English Scientific Document Representations](https://doi.org/10.1134/S1064562424602191)
-- [mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval](https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval)
-- [ru_sci_bench_mteb repository](https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Развитие геоинформационных компетенций у студентов, обучающихся по образовательной программе "Истори... [100 / 2,647 chars] | Интеграция средств информационно-коммуникационных технологий в процессе подготовки студентов по профилю "Географическое образование" Настоящая статья посвящена одной из наиболее актуальных проблем сов... [200 / 1,687 chars] |
+| ОЦЕНКА СИСТЕМ УДОБРЕНИЯ ПРИ ВОЗДЕЛЫВАНИИ ОЗИМОЙ РЖИ В УСЛОВИЯХ РАДИОАКТИВНОГО ЗАГРЯЗНЕНИЯ ТЕРРИТОРИИ... [100 / 902 chars] | ВЛИЯНИЕ ДЛИТЕЛЬНОГО ПРИМЕНЕНИЯ ОРГАНИЧЕСКИХ И МИНЕРАЛЬНЫХ УДОБРЕНИЙ И СИДЕРАТА НА УРОЖАЙНОСТЬ И КАЧЕСТВО ЗЕРНА ОЗИМОЙ РЖИ В условиях Брянской области при радиоактивном загрязнении получения стабильных... [200 / 1,260 chars] |
+| Решение задачи горного давления с нелинейной функцией разупрочнения методом конечных разностей Приво... [100 / 939 chars] | Физически нелинейно-пластическая задача о распределении напряжений вокруг выработки кругового очертания Выполнена постановка физически нелинейно-пластической задачи о распределении напряжений вокруг в... [200 / 951 chars] |
+| Восприятие Японии в российском общественном сознании Япония долгое время оставалось страной, закрыто... [100 / 2,177 chars] | ЯПОНИЯ И ЯПОНЦЫ В ЗЕРКАЛЕ РУССКОЙ ФРАЗЕОЛОГИИ В статье рассматриваются русские фразеологизмы с этнонимом «японец» и его производными («японский городовой», «японский бог», «япона мама (мать)» и др.):... [200 / 348 chars] |
+| МОДЕЛИРОВАНИЕ МЕХАНИЧЕСКИХ ХАРАКТЕРИСТИК МАСЛОНАПОЛНЕННЫХ КОМПОЗИТОВ Рассмотрены некоторые аспекты с... [100 / 576 chars] | АНАЛИЗ ВЛИЯНИЯ НАПОЛНЕНИЯ КОМПОЗИТА МАСЛОМ НА СОСТОЯНИЕ ПОВЕРХНОСТИ МЕТАЛЛИЧЕСКОГО КОНТРТЕЛА Исследовано изменение топографии металлического контртела после трения с маслонаполненным композитным матер... [200 / 1,074 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RuSciBench: Open Benchmark for Russian and English Scientific Document Representations | 2024 | Benchmark paper | https://doi.org/10.1134/S1064562424602191 |
-| mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval | 2025 | Dataset card | https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval |
-| ru_sci_bench_mteb | 2025 | Code repository | https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb |
+| RuSciBench: Open Benchmark for Russian and English Scientific Document Representations | 2024 | Benchmark paper | [https://doi.org/10.1134/S1064562424602191](https://doi.org/10.1134/S1064562424602191) |
+| mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval](https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval) |
+| ru_sci_bench_mteb | 2025 | Code repository | [https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb](https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb) |
 
 ### Representative Snippets
 

@@ -70,12 +70,13 @@ For reranking research, this split is a useful bridge between natural-language r
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-programmers-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Programmers-PL
+| Query | Positive document |
+| --- | --- |
+| Czy powinienem nadal inwestować w struktury danych i algorytmy? [63 chars] | Czy implementacja algorytmów poprawia Twoje umiejętności programistyczne? Od jakiegoś czasu uczę się samodzielnie algorytmów i struktur danych i obecnie się tym cieszę. Ilekroć rozumiem algorytm, zwyk... [200 / 545 chars] |
+| Nauka Django na przykładzie [27 chars] | Jak poprawnie zrozumieć framework django? Mam przyzwoitą znajomość php, tj. umiem wziąć framework, przeczytać jego kod i jeśli dokumentacja jest odpowiednia, zrozumieć, co robi. Głównym powodem jest t... [200 / 730 chars] |
+| Walidacja licencji i dzwonienie do domu [39 chars] | Bezpieczna walidacja licencji na oprogramowanie Obecnie pracuję nad produktem (w języku C#), który będzie dostępny do pobrania za darmo, ale wymaga miesięcznej subskrypcji, aby mógł być używany po okr... [200 / 1,698 chars] |
+| jeśli używam .NET Framework dla mojej aplikacji, czy muszę coś płacić firmie Microsoft? [87 chars] | Chcę sprzedać swoje oprogramowanie [aplikacja komputerowa C#], ale utknąłem w licencjonowaniu > **Możliwy duplikat:** > jeśli używam .NET Framework dla mojej aplikacji, czy muszę coś płacić > Microsof... [200 / 1,291 chars] |
+| Jakie jest ładne wytłumaczenie wskaźników? [42 chars] | Jaka jest definicja wskaźnika? Koncepcyjnie „wskaźnik” jest po prostu czymś, co „wskazuje” na coś innego; czy ta definicja jest wystarczająca, aby dokładnie powiedzieć, czym jest wskaźnik w językach p... [200 / 839 chars] |
 
 ### Source Reference Table
 

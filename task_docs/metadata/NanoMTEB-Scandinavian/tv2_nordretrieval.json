@@ -134,29 +134,112 @@
         "url": "https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "official_datasheet"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "The Scandinavian Embedding Benchmarks",
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Are GLLMs Danoliterate?",
         "url": "https://sorenmulli.github.io/thesis/thesis.pdf",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "alexandrainst/nordjylland-news-summarization",
         "url": "https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "392",
+        "document_id": "393",
+        "query": {
+          "text": "Højesteret har tirsdag afgjort, at Lokalbanken i Nordsjælland ikke har patent på navnet \"Lokalbanken",
+          "full_chars": 184,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Danmarks højeste retsinstans, Højesteret i København, besluttede tirsdag, at andre end Lokalbanken i Nordsjælland godt må bruge navnet. Derfor er direktøren for Spar Nord Bank også ganske glad. - Vi f",
+          "full_chars": 1259,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "148",
+        "document_id": "149",
+        "query": {
+          "text": "Royal Arctic Line A/S og Aalborg Havn A/S er uenige på en række punkter, oplyser Aalborg Havn A/S. N",
+          "full_chars": 137,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Forhandlingerne har siden oktober bølget frem og tilbage mellem Aalborg Havn A/S og Royal Arctic Line A/S. Målet var at forlænge den nuværende aftale omkring Grønlandstrafikken helt frem til 2025 - og",
+          "full_chars": 1351,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "108",
+        "document_id": "109",
+        "query": {
+          "text": "Det nordjyske affaldsselskab AVV’s bestyrelse har besluttet, at en del af virksomhedens egenkapital",
+          "full_chars": 183,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Det er en ordning, der gør, at det nordjyske affaldsselskab AVV med hovedsæde i Hjørring kan genanvende mere og bidrage positivt til verdensmål og klimamålsætninger. Finansieringen sker ved at begræ",
+          "full_chars": 1205,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "9",
+        "query": {
+          "text": "Den unge sangerinde Laura Mo får pæne ord med på vejen for sit nye album \"Motel\".",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Stjernerne drysser ned over hende og ligeledes de pæne ord. Laura Mo udgav den 12. marts sit andet album \"Motel\" og det er blevet taget pænt imod af anmelderne. Hun har blandt andet fået fem stjerner",
+          "full_chars": 707,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "222",
+        "document_id": "223",
+        "query": {
+          "text": "Sidste stemme er afgivet, og nu skal det nye byråd findes. Følg valget på tætteste hold lige her.",
+          "full_chars": 97,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kan Mogens Jespersen genvinde titlen som borgmester eller vil Leif Skaarup og de røde partier vinde så mange mandater, at de kan vippe ham af tronen? Han er ny mand på posten, og i 2013 oplevede S lig",
+          "full_chars": 744,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

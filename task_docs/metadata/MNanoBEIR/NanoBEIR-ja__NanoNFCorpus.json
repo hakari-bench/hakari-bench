@@ -89,36 +89,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "references": [
-      {
-        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
-        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -127,6 +97,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "ヘルシーなチョコレートミルクシェイク",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "目的 痛風患者におけるサクランボの摂取と再発性痛風発作リスクとの関連を検討すること。 方法 一連の疑似的なリスク因子と再発性痛風発作との関連を調査するために、ケースクロスオーバー研究を実施した。痛風患者を前向きにオンラインで登録し、1年間追跡した。参加者には、痛風発作が発生した際に、発作の発症日、症状および徴候、薬物（痛風治療薬を含む）、および発作発生前の2日間における潜在的なリスク因子（サクラン",
+          "full_chars": 701,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "医学倫理",
+          "full_chars": 4,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "背景：食事介入による血清コレステロールの管理において、主要な課題の一つは患者の服従性を高める必要性である。 目的：コレステロール低下食事の服従における障壁や動機に関する多くの疑問を検討すること。 方法：高コレステロール血症患者に対するフランスの一般医の食事指導実態を調査し、患者のそのようなアプローチに対する態度を検討した。 結果：医師234名の個人用アンケートおよび患者356名の自己記入式アンケー",
+          "full_chars": 786,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "ファバ豆",
+          "full_chars": 4,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "過去20年間、L-アルギニンの生化学、栄養学および薬理学に対する関心が高まり、その栄養的および治療的役割について、人間の代謝障害の予防および治療における広範な研究が行われてきた。最近の証拠は、食事によるL-アルギニンの補給が、遺伝的に肥満なラット、食餌誘導性肥満ラット、肥育用ブタ、および2型糖尿病を有する肥満人間において、体脂肪量を減少させることを示している。L-アルギニンの有益な効果をもたらすメ",
+          "full_chars": 537,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-68",
+        "document_id": "MED-2991",
+        "query": {
+          "text": "チキンナゲットには実際に何が入っているのか？",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "目的：2つの全国的なフードチェーンで提供されるチキンナゲットの内容物を明らかにすること。 背景：チキンナゲットはアメリカ人の食生活の主要な構成要素となっている。我々は、この高度に加工された食品の現在の構成を明らかにすることを試みた。 方法：2つの異なる全国チェーンから無作為に選ばれたチキンナゲットをホルマリンで固定し、切片を作成して顕微鏡的分析のために染色した。 結果：どちらのナゲットにおいても、",
+          "full_chars": 365,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2051",
+        "document_id": "MED-4551",
+        "query": {
+          "text": "飽和脂肪",
+          "full_chars": 4,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "妊娠中の母親の食事摂取が小児のアレルギー性疾患の発症に影響を与える可能性についての関心が高まっている。本研究は、妊娠中の特定の脂肪酸を多く含む食品および特定の脂肪酸の摂取が、3〜4か月齢の日本の乳児における疑わしいアトピー性皮膚炎のリスクに与える影響を前向きに検討したものである。対象は771組の母子である。妊娠中の母親の食事摂取に関する情報は、妥当性が確認された自己記入式の食歴調査票を用いて評価し",
+          "full_chars": 839,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

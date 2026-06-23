@@ -134,15 +134,98 @@
         "url": "https://ir.nist.gov/covidSubmit/index.html",
         "year": 2020,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/trec-covid",
         "url": "https://huggingface.co/datasets/mteb/trec-covid",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "46",
+        "document_id": "g4xh2b3g",
+        "query": {
+          "text": "what evidence is there for dexamethasone as a treatment for COVID-19?",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Targeting inflammation and cytokine storm in COVID-19",
+          "full_chars": 53,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "0a5fccio",
+        "query": {
+          "text": "how long does coronavirus remain stable on surfaces?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Body fluids may contribute to human-to-human transmission of severe acute respiratory syndrome coronavirus 2: evidence and practical experience BACKGROUND: In December 2019, an unbelievable outbreak o",
+          "full_chars": 1172,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "0xymzkzn",
+        "query": {
+          "text": "has social distancing had an impact on slowing the spread of COVID-19?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A first study on the impact of current and future control measures on the spread of COVID-19 in Germany The novel coronavirus (SARS-CoV-2), identified in China at the end of December 2019 and causing",
+          "full_chars": 948,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "7",
+        "document_id": "01mo6yo9",
+        "query": {
+          "text": "are there serological tests that detect antibodies to coronavirus?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Serodiagnostics for Severe Acute Respiratory Syndrome-Related Coronavirus-2: A Narrative Review Accurate serologic tests to detect host antibodies to severe acute respiratory syndrome-related coronavi",
+          "full_chars": 1429,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25",
+        "document_id": "033q671f",
+        "query": {
+          "text": "which biomarkers predict the severe clinical course of 2019-nCOV infection?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Clinical Features and Predictors for Patients with Severe SARS-CoV-2 Pneumonia: a retrospective multicenter cohort study Objectives: This study was performed to investigate clinical features of patien",
+          "full_chars": 1518,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

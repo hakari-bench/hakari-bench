@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "Argument Mining for Understanding Peer Reviews",
-        "url": "https://aclanthology.org/P18-1023/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Argument Mining for Understanding Peer Reviews",
+        "url": "https://aclanthology.org/P18-1023/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "Allmänheten är likgiltig inför reformer. Om reform av Overhuset bör vara en högsta prioritet i den n",
+          "full_chars": 586,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "AV-kampanjen kan inte jämföras med reformer av överhuset. Man bör inte förväxla en missinformerad allmänhet på grund av politisk retorik med likgiltighet. Ofta uttrycker väljare att de är likgiltiga e",
+          "full_chars": 401,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "Utbyggnaden av Heathrow är avgörande för ekonomin. En utbyggnad av Heathrow skulle säkra många befin",
+          "full_chars": 1246,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Affärsvärlden är långt ifrån enad i sitt påstådda stöd för en tredje start- och landningsbana. Undersökningar tyder på att många inflytelserika företag faktiskt inte stöder expansionen. Ett brev som u",
+          "full_chars": 1407,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "Människor får för många valmöjligheter, vilket gör dem mindre lyckliga. Reklam gör att många människ",
+          "full_chars": 910,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Människor är missnöjda för att de inte kan ha allt, inte för att de får för många val och tycker att det är stressande. Faktum är att reklam spelar en avgörande roll för att se till att människor anvä",
+          "full_chars": 902,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "Cyberattacker utförs ofta av icke-statliga aktörer, såsom cyberterrorister eller hacktivister (socia",
+          "full_chars": 947,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Vid attacker från icke-statliga aktörer är det en allmän uppfattning bland praktiker inom internationell rätt att ett land fortfarande kan försvara sig om ett annat land \"inte vill eller kan vidta eff",
+          "full_chars": 567,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "Eftersom religion främjar säkerhet i tro, är gudomligt inspirerad hat lätt att använda för att rättf",
+          "full_chars": 1328,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Ingen tvingas utföra våldshandlingar på grund av andras ord; det är deras eget val. Lika så finns det många människor som skulle ha åsikter som kan anses vara homofobiska men som skulle vara förskräck",
+          "full_chars": 607,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -149,12 +149,13 @@ terminology should usually remain a high-weight signal.
 
 ## Example Data
 
-Representative queries include paper titles about maximum entropy extraction of
-bilingual word pairs, automatic local summarization knowledge acquisition,
-multiple decision lists for bunsetsu grouping, related-term collection, and
-automatic extraction of colloquial strings using character statistics. The
-positive documents are the corresponding abstracts from Japanese NLP Journal
-papers.
+| Query | Positive document |
+| --- | --- |
+| 最大エントロピー法を用いた対訳単語対の抽出 [21 chars] | 機械翻訳などの多言語間自然言語処理で用いられる対訳辞書は現在，人手によって作成されることが多い．しかし，人手による作成には一貫性・網羅性などの点で限界があることから対訳コーパスから自動的に対訳辞書を作成しようとする研究が近年盛んに行われている．本論文では，最大エントロピー法を用いて対訳コーパス上に対訳関係の確率モデルを推定し，自動的に対訳単語対を抽出する手法を提案する．素性関数として共起情報を用い... [200 / 423 chars] |
+| 局所的要約知識の自動獲得手法 [14 chars] | 日本語ニュースを局所的要約する際に必要となる要約知識を，コーパスから自動獲得する手法について述べる．局所的要約とは注目個所の近傍の情報（局所的情報）を用いて行なう要約をいう．局所的情報には注目個所そのものやその前後の単語列などがある．本手法では要約知識として置換規則と置換条件を用い，これらを原文−要約文コーパスから自動獲得する．はじめに原文中の単語と要約文中の単語のすべての組み合わせに対して単語間... [200 / 392 chars] |
+| 複数決定リストの順次適用による文節まとめあげ [22 chars] | 近年の高度情報化の流れにより，自動車にも種々の情報機器が搭載されるようになり，その中で音声認識・合成の必要性が高まっている．本研究は音声合成を行うための日本語解析の中で基本となる，文節まとめあげに関する研究報告である．従来の文節まとめあげは，人手規則による手法と機械学習による手法の二つに大きく分けられる．前者は，長年の努力により非常に高い精度を得られているが，入力データ形式が固定であるために柔軟性... [200 / 589 chars] |
+| 関連用語収集問題とその解法 [13 chars] | 本論文で提案する{\em関連用語収集問題}は，与えられた専門用語に対し，それと強く関連する用語集合を求める問題である．この問題を解くためには，ある用語が専門用語であり，かつ，入力用語と強く関連するかどうかを判定する方法が必要となる．本研究では，ウェブのサーチエンジンのヒット数から計算したJaccard係数もしくは$\chi^2$統計量を用いて，この判定を行なう．作成した関連用語収集システムは，候補... [200 / 425 chars] |
+| 文字間統計情報に基づく口語文字列の自動抽出 [21 chars] | 統計情報に基づく自然言語処理が盛んになる中で，訓練データとしてのコーパスの影響は非常に大きい．生コーパスをそのまま利用する場合には，コーパスの取得が容易であるため，目的に合ったドメインのコーパスを大量に入手できるという利点がある．しかし，生コーパスは人間の言語の性質上，未登録語や未知の言い回し，非文とされるような文の出現等を多く含むことがほとんどであり，これらが処理の精度の低下を招くという問題があ... [200 / 496 chars] |
 
 ### Public Sources
 
@@ -173,9 +174,9 @@ papers.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
-| 言語処理学会論文誌 LaTeX コーパス |  | repository | https://github.com/jenio/nlp-journal-latex-corpus |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
+| 言語処理学会論文誌 LaTeX コーパス |  | repository | [https://github.com/jenio/nlp-journal-latex-corpus](https://github.com/jenio/nlp-journal-latex-corpus) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

@@ -142,7 +142,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -150,15 +150,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "¿Qué tipo de rentabilidad está ofreciendo Vanguard?",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De la página de Vanguard - Pareció la opción más sencilla, ya que los datos de S&P son fáciles de encontrar. Utilizo MoneyChimp para verificar, lo que confirma que la página de Vanguard ofrece la Tasa",
+          "full_chars": 525,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Implicaciones fiscales del trabajo freelance",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Si tienes ingresos en EE.UU., deberás pagar impuestos sobre la renta en EE.UU. a menos que exista un tratado con tu país que lo indique.",
+          "full_chars": 136,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "¿Qué se entiende por volumen alto o bajo?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "El volumen diario generalmente se compara con el volumen promedio diario de los últimos 50 días para una acción. Un volumen alto generalmente se considera que es 2 o más veces el volumen promedio diar",
+          "full_chars": 723,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "94",
+        "document_id": "245447",
+        "query": {
+          "text": "Canjear puntos de tarjeta de crédito para cubrir gastos empresariales deducibles",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Para simplificar, empecemos considerando solo el reembolso en efectivo. En general, el reembolso en efectivo de las tarjetas de crédito para uso personal no es gravable, pero para uso empresarial sí l",
+          "full_chars": 4025,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2903",
+        "document_id": "527776",
+        "query": {
+          "text": "¿Cómo debo declarar mis impuestos como autónomo?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Para efectos fiscales, deberás presentar tus impuestos como empleado (usando tus talones T4 y con retenciones automáticas) y también como emprendedor. Yo tuve la misma situación el año pasado. \"Emplea",
+          "full_chars": 780,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

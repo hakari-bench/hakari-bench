@@ -70,9 +70,13 @@ Domain adaptation can help, but should be evaluated against lexical baselines. A
 
 ## Example Data
 
-### Public Sources
-
-The public source references are the ChEmbed paper, the ChemTEB paper, the BASF-AI ChemRxivRetrieval dataset card, and the BASF-AI ChEmbed training-data collection. The NanoChemTEB task metadata records ChEmbed as the primary task paper.
+| Query | Positive document |
+| --- | --- |
+| How are the equilibrium densities from molecular dynamics simulations utilized to determine the solv... [100 / 137 chars] | Vapor-Liquid Equilibrium Simulations. Vapor-liquid equilibrium simulations were performed by setting up systems of dimensions 9 × 9 × Z nm 3 where Z ranges from ≈20 to ≈30 nm depending on the mixture;... [200 / 1,111 chars] |
+| What percentage threshold of unknown letters was used to exclude viral genome sequences during the a... [100 / 117 chars] | Genome sequences of Variants of Concern (VOCs) were aligned with the Wuhan-Hu-1 sequence using MAFFT 7 . During alignment, sequences containing over 5% unknown letters were excluded. This resulted in... [200 / 564 chars] |
+| How does increasing the steric bulk of substituents on the ligands affect the enantioselectivity in... [100 / 150 chars] | We commenced our study by investigating the cross-coupling of 2-chloronaphthalene (1a) and benzylic zinc reagent (2a, 1.5 equiv) for the synthesis of 1,1-diarylethanes (3a) (Table ). Firstly, we exami... [200 / 1,519 chars] |
+| How does water content in the ionic liquid electrolyte affect methanol formation rate and Faradaic e... [100 / 145 chars] | Were responsible for the excellent performance of NiO-V2O5/Rh. Another study reported a methanol production rate of 752.9 μmol g -1 h -1 with 77% product selectivity using CuO/CeO2 mixed oxides as ano... [200 / 835 chars] |
+| What structural features of Ligand 4 caused it to require longer simulation times for accurate bindi... [100 / 128 chars] | Average protein-ligand complex ΔG, solvated ligand ΔG, and overall ∆∆𝐺 𝐴→𝐵 𝑏𝑖𝑛𝑑 of the shortrun simulations and long-run simulations with all three equilibration methods are tabulated in Table . ∆∆𝐺 𝐴... [200 / 2,070 chars] |
 
 ### Source Reference Table
 

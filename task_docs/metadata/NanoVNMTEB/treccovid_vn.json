@@ -171,8 +171,91 @@
         "title": "TREC-COVID challenge page",
         "url": "https://ir.nist.gov/covidSubmit/",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "50",
+        "document_id": "0g7a9s5z",
+        "query": {
+          "text": "Chúng ta biết gì về vắc xin mRNA cho vi-rút SARS-CoV-2?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chống dịch COVID-19: Đánh giá nhanh chẩn đoán, liệu pháp và vắc xin Đại dịch COVID-19 do một chủng virus corona mới, SARS-CoV-2, đã lây nhiễm hơn 4.9 triệu người và gây ra trên 300.000 ca tử vong trên",
+          "full_chars": 2093,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "18",
+        "document_id": "g7dhmyyo",
+        "query": {
+          "text": "Những chiếc mặt nạ nào là tốt nhất để phòng ngừa nhiễm Covid-19?",
+          "full_chars": 64,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Đại dịch SARS, MERS và virus corona chủng mới (COVID-19), các mối đe dọa sức khỏe toàn cầu mới nhất và lớn nhất: chúng ta đã học được gì? MỤC ĐÍCH: Cung cấp tổng quan về ba loại virus corona gây chết",
+          "full_chars": 2092,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "01f5mvsc",
+        "query": {
+          "text": "có phải giãn cách xã hội đã ảnh hưởng đến việc làm chậm sự lây lan của COVID-19 không?",
+          "full_chars": 86,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tăng cường phát hiện kết hợp với giãn cách xã hội và quy hoạch năng lực y tế giảm gánh nặng các trường hợp và tử vong do COVID-19: Nghiên cứu khái niệm bằng mô hình mô phỏng tính toán ngẫu nhiên Mục t",
+          "full_chars": 1616,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "29",
+        "document_id": "02q9y011",
+        "query": {
+          "text": "Protein SARS-CoV-2 có tương tác với protein của con người cho thấy tiềm năng là mục tiêu thuốc. Có t",
+          "full_chars": 176,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Cơ sở phân tử cho sự gắn kết ADP-ribose vào miền Macro-X của Nsp3 của SARS-CoV-2 Virus gây ra COVID-19, SARS-CoV-2, có một bộ gen RNA lớn mã hóa nhiều protein có thể là mục tiêu cho các loại thuốc khá",
+          "full_chars": 841,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "27",
+        "document_id": "00rq0ggi",
+        "query": {
+          "text": "Những gì chúng ta biết về những người bị nhiễm Covid-19 nhưng không có triệu chứng?",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Đường lây truyền của virus corona trên tàu Diamond Princess Đã xảy ra một đợt bùng phát COVID-19 trên tàu du thuyền Diamond Princess vào tháng Giêng và tháng Hai năm 2020. Chúng tôi đã phân tích thông",
+          "full_chars": 2094,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

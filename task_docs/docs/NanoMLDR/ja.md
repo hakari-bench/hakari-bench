@@ -143,12 +143,13 @@ leaves room for better top-rank reranking.
 
 ## Example Data
 
-Representative queries ask about the effect of abolishing teacher license
-renewal, why the successor to the Zero fighter remained at the prototype stage,
-why North-South Arab conflict reduced tax revenue, why an author returned to
-juvenile fiction, and whether portamento is prominent in a game music track.
-Positive documents are Japanese long articles containing the relevant
-paragraph.
+| Query | Positive document |
+| --- | --- |
+| 員免許更新制の廃止により、教育における免許状の効力がどのように変化するのかについて、雇用者が評価を上げる方針をとる場合、人物面の評価においてプラスの評価をする理由は何ですか？ [87 chars] | 日本における教育職員免許状（きょういくしょくいんめんきょじょう）とは、就学前教育・初等教育・中等教育などにかかわる教育職員に就くための資格要件とされている、教育職員免許法に基づく免許状のことである。「教員免許」「免状」「教免」「教状」などと略して呼ばれることがある。 現代の日本においては、学校教員の職に必要な免許状のみがあり、学校教員の免許状は、教員免許状（きょういんめんきょじょう）とも呼ばれる。... [200 / 10,839 chars] |
+| 軍はなぜ零戦の後継機である烈風の試作途中段階に留まっていたのか、その理由は何ですか？ [42 chars] | 紫電改（しでんかい）は、太平洋戦争期における大日本帝国海軍の戦闘機である。紫電（N1K1-J）の二一型以降が紫電改と呼称される。この項では紫電改と紫電をまとめて紹介する。 局地戦闘機紫電は、水上戦闘機「強風」を陸上戦闘機化したもので、紫電二一型は強風にちなんだ中翼配置の紫電を低翼に再設計した機体であり、紫電改は新機軸の設計（自動空戦フラップ、層流翼）が特徴であった。この機体は後述するように日本海軍... [200 / 10,836 chars] |
+| ましたが、南北アラブの対立が税収の減少につながった理由は何ですか？ [33 chars] | ウマイヤ朝（ウマイヤちょう、、al-Dawla al-Umawiyya）は、イスラム史上最初の世襲イスラム王朝である。大食（唐での呼称）、またはカリフ帝国やアラブ帝国と呼ばれる体制の王朝のひとつであり、イスラム帝国のひとつでもある。 イスラームの預言者ムハンマドと父祖を同じくするクライシュ族の名門で、メッカの指導層であったウマイヤ家による世襲王朝である。第4代正統カリフであるアリーとの抗争において... [200 / 11,106 chars] |
+| 『時をかける少女』以来のジュブナイル小説を発表することに戻った理由は何ですか？ [39 chars] | は、日本の小説家・劇作家・俳優である。ホリプロ所属。身長166cm。兵庫県神戸市垂水区在住。 大阪市に生まれた。天王寺動物園長だった父の影響を受け、幼い頃から博物的な世界に憧れを持つ。同志社大学に入学し、美学・美術史を専攻。 1965年に東京に転居し、本格的な作家活動を展開、第一短編集『東海道戦争』（1965年）を刊行した。同年、『時をかける少女』『48億の妄想』では、現実と非現実をつなぐ幻想のリ... [200 / 11,047 chars] |
+| 「Love Song 探して」のBGMでは、ポルタメントが多用されていますか？ [39 chars] | 『ドラゴンクエストII 悪霊の神々』（ドラゴンクエストツー あくりょうのかみがみ）は、1987年1月26日に株式会社エニックス（現：株式会社スクウェア・エニックス）より発売されたファミリーコンピュータ用ロールプレイングゲーム。 ドラゴンクエストシリーズの第2作目。前作『ドラゴンクエスト』（1986年発売）から100年後、邪教の教祖によって破られた世界の平和を、勇者ロトの血を引く前作の主人公の子孫3... [200 / 10,767 chars] |
 
 ### Public Sources
 
@@ -164,9 +165,9 @@ paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

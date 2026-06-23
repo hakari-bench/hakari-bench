@@ -48,13 +48,13 @@ Strong models should improve answer relation matching without losing exact entit
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Où se déroule le Final Four cette année ? | Le tournoi de basket-ball universitaire de la Division I de la NCAA 2018 était un tournoi à élimination directe... |
-| Le film "L'Étrange Noël de Monsieur Jack" était-il à l'origine un film de Disney ? | L'idée de L'Étrange Noël de Monsieur Jack est née d'un poème écrit par Tim Burton en 1982... |
-| Pourquoi l'Ange du Nord se trouve-t-il à cet endroit ? | Selon Gormley, la signification de cet ange est triple : d'abord, pour indiquer que sous le site de sa construction... |
-| Où le compromis des trois cinquièmes était-il initialement mentionné dans la Constitution ? | Le Compromis des trois cinquièmes se trouve à l'Article 1, Section 2, Clause 3 de la Constitution des États-Unis... |
-| Qui chante "Someone's Watching Me" en duo avec Michael Jackson ? | "Somebody's Watching Me" est une chanson du chanteur américain Rockwell issue de son premier album studio... |
+| Query | Positive document |
+| --- | --- |
+| Où se déroule le Final Four cette année ? [41 chars] | Le tournoi de basket-ball universitaire de la Division I de la NCAA 2018 était un tournoi à élimination directe de 68 équipes visant à désigner le champion national de basket-ball universitaire de la... [200 / 383 chars] |
+| Le film "L'Étrange Noël de Monsieur Jack" était-il à l'origine un film de Disney ? [82 chars] | L'idée de L'Étrange Noël de Monsieur Jack est née d'un poème écrit par Tim Burton en 1982, alors qu'il travaillait comme animateur chez Walt Disney Feature Animation. Grâce au succès de Vincent la mêm... [200 / 678 chars] |
+| Pourquoi l'Ange du Nord se trouve-t-il à cet endroit ? [54 chars] | Selon Gormley, la signification de cet ange est triple : d'abord, pour indiquer que sous le site de sa construction, des mineurs de charbon ont travaillé pendant deux siècles ; ensuite, pour marquer l... [200 / 345 chars] |
+| Où le compromis des trois cinquièmes était-il initialement mentionné dans la Constitution ? [91 chars] | Le Compromis des trois cinquièmes se trouve à l'Article 1, Section 2, Clause 3 de la Constitution des États-Unis, qui stipule : [127 chars] |
+| Qui chante "Someone's Watching Me" en duo avec Michael Jackson ? [64 chars] | “Somebody's Watching Me” est une chanson du chanteur américain Rockwell issue de son premier album studio éponyme, Somebody's Watching Me (1984). Elle a été publiée en tant que premier single et singl... [200 / 389 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve answer relation matching without losing exact entit
 
 | Label | URL |
 |---|---|
-| Natural Questions paper | https://aclanthology.org/Q19-1026/ |
-| Natural Questions dataset page | https://ai.google.com/research/NaturalQuestions |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions paper (https://aclanthology.org/Q19-1026/) |
+| Natural Questions dataset page (https://ai.google.com/research/NaturalQuestions) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

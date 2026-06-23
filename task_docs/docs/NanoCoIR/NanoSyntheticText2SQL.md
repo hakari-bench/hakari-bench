@@ -70,9 +70,13 @@ For reranking, the most useful capability is to compare whether a SQL statement 
 
 ## Example Data
 
-### Public Sources
-
-NanoSyntheticText2SQL is documented through CoIR and the Gretel synthetic Text-to-SQL dataset card. The source dataset card is the public reference for the synthetic prompt-SQL data.
+| Query | Positive document |
+| --- | --- |
+| What is the difference in average permit cost between high-rise and low-rise buildings in British Co... [100 / 115 chars] | SELECT AVG(permit_cost) - LAG(AVG(permit_cost)) OVER (PARTITION BY province ORDER BY EXTRACT(YEAR FROM issue_date)) FROM permit_cost_comparison WHERE province = 'British Columbia' AND building_type IN... [200 / 280 chars] |
+| What is the total amount of aid provided by each government, for community development projects in S... [100 / 178 chars] | SELECT government.name as government, SUM(aid) as total_aid, AVG(DATEDIFF(end_date, start_date) / 365) as avg_project_duration FROM community_development_projects JOIN government ON community_developm... [200 / 412 chars] |
+| Find the difference in the number of trees between the tree species with the highest and lowest carb... [100 / 151 chars] | SELECT species_high.species AS high_species, species_low.species AS low_species, species_high.sequestration_rate - species_low.sequestration_rate AS difference FROM (SELECT species, MAX(sequestration_... [200 / 522 chars] |
+| Which cities have had a female mayor for the longest continuous period? [71 chars] | SELECT c.name, MAX(m.end_year - m.start_year) as max_tenure FROM city c JOIN mayor m ON c.id = m.city_id WHERE m.gender = 'Female' GROUP BY c.name HAVING MAX(m.end_year - m.start_year) >= ALL (SELECT... [200 / 274 chars] |
+| Which ingredients are used in products that have received a safety violation in the past year and ar... [100 / 129 chars] | SELECT ingredient_sources.ingredient_id FROM ingredient_sources INNER JOIN products ON ingredient_sources.product_id = products.product_id INNER JOIN safety_records ON products.product_id = safety_rec... [200 / 318 chars] |
 
 ### Source Reference Table
 

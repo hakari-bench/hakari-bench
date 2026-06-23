@@ -62,9 +62,13 @@ A model targeting this task should combine long-document topical recall with exp
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on ArguAna, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| The public is apathetic to reform. Whether or not reform of the House of Lords should be a top prior... [100 / 799 chars] | The AV campaign cannot be compared to reform to the House of Lords, furthermore one should not mistake a misinformed public due to political spin, with apathy. Often voters express that they are apath... [200 / 408 chars] |
+| The expansion of Heathrow is vital for the economy Expanding Heathrow would ensure many current jobs... [100 / 1,421 chars] | The business community is far from united in its supposed support of a third run-way. Surveys suggest that many influential businesses in fact do not support expansion. A letter expressing concern was... [200 / 1,330 chars] |
+| People are given too much choice, which makes them less happy. Advertising leads to many people bein... [100 / 1,031 chars] | People are unhappy because they can't have everything, not because they are given too much choice and find it stressful. In fact, advertisements play a crucial role in ensuring that what money people... [200 / 912 chars] |
+| Cyber attacks are often carried out by non-state actors Cyber attacks are often carried out by non-s... [100 / 1,038 chars] | In case of non-state actors attack, many practitioners in international law agree that the state can still retaliate in self-defence if another state is 'unwilling or unable to take effective action'... [200 / 547 chars] |
+| Because religion promotes certainty of belief, divinely inspired hatred is easy to use to justify an... [100 / 1,355 chars] | Nobody is being forced to perform acts of violence by the words of another; it is their choice to do so. Equally, there are plenty of people who would hold views that could be considered homophobic bu... [200 / 636 chars] |
 
 ### Source Reference Table
 

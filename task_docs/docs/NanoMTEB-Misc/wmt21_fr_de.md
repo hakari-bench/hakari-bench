@@ -118,18 +118,20 @@ not dominate final ranking.
 
 ## Example Data
 
-### Public Sources
-
-- [Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings](https://arxiv.org/abs/2502.08638)
-- [Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Am selben Tag kündigte das Büro des Premierministers an, dass Justin Trudeau, wie von der Opposition... [100 / 194 chars] | Le même jour, le bureau du premier ministre a fait savoir que Justin Trudeau témoignerait lui aussi devant cette commission, comme l'exige l'opposition, à une date restant à déterminer. [185 chars] |
+| Präsident Sebastian Piñera verkündete am 24. Juli eine historische Reform, die es den Chilenen erlau... [100 / 238 chars] | Le président Sebastian Piñera a promulgué le 24 juillet une réforme historique qui permet aux Chiliens le retrait anticipé de 10% de leurs fonds de retraite privés pour faire face à la crise économiqu... [200 / 240 chars] |
+| Geringfügige Anpassungen sollen mehr Kapital für Investoren freisetzen und es so „den Unternehmen le... [100 / 272 chars] | Des ajustements mineurs qui doivent libérer plus de capital pour les investisseurs et donc permettre aux "entreprises d'obtenir plus facilement les financements dont elles ont besoin et d'investir dan... [200 / 292 chars] |
+| Die Giganten Apple, Alphabet Inc und Amazon.com werden ihre Ergebnisse am 30. Juli vorlegen, dem gle... [100 / 270 chars] | Les géants Apple, Alphabet Inc et Amazon.com doivent publier leurs résultats le 30 juillet, le jour où le département du Commerce doit annoncer sa première estimation du PIB du deuxième trimestre, att... [200 / 239 chars] |
+| Justin Trudeau hatte zugegeben, dass er einen Fehler gemacht hat, als er sich während der Verhandlun... [100 / 174 chars] | Justin Trudeau avait admis avoir commis une erreur en ne se retirant pas des discussions lors des négociations entre son gouvernement et UNIS. [142 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | https://arxiv.org/abs/2502.08638 |
-| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | https://huggingface.co/datasets/Andrianos/clsd_wmt19_21 |
+| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | [https://arxiv.org/abs/2502.08638](https://arxiv.org/abs/2502.08638) |
+| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | [https://huggingface.co/datasets/Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21) |
 
 ### Representative Snippets
 

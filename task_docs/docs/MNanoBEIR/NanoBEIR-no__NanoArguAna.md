@@ -139,11 +139,11 @@ similarity.
 
 | Query | Positive document |
 | --- | --- |
-| Offentligheten er likegyldig overfor reformer. Det er usikkert om reform av Overhuset bør være en topprioritet i den nåværende økonomiske situasjonen... | AV-kampanjen kan ikke sammenlignes med reformer i Overhuset. Man bør ikke forveksle en misinformert offentlighet på grunn av politisk spin med likegyldighet... |
-| Utvidelse av Heathrow er avgjørende for økonomien. Utvidelse av Heathrow vil sikre mange eksisterende jobber samt skape nye... | Forretningsmiljøet er langt fra enig i sin antatte støtte til en tredje rullebane. Undersøkelser tyder på at mange innflytelsesrike bedrifter faktisk ikke støtter utvidelsen... |
-| Mennesker blir gitt for mange valgmuligheter, noe som gjør dem mindre lykkelige. Reklame fører til at mange blir overveldet... | Folk er ulykkelige fordi de ikke kan få alt, ikke fordi de får for mange valg og finner det stressende... |
-| Cyberangrep blir ofte utført av ikke-statlige aktører, som for eksempel kyberterrorister eller hacktivister, uten noen involvering fra staten... | Hvis ikke-statlige aktører angriper, er mange praktikere innen internasjonal rett enige om at staten kan gjengjelde i selvforsvar... |
-| Fordi religion gir troen en fast grunn, er guddommelig inspirert hat lett å bruke for å rettferdiggjøre og fremme voldshandlinger... | Ingen blir tvunget til å utføre voldshandlinger av andres ord; det er deres eget valg... |
+| Offentligheten er likegyldig overfor reformer. Det er usikkert om reform av Overhuset bør være en to... [100 / 587 chars] | AV-kampanjen kan ikke sammenlignes med reformer i Overhuset. Man bør ikke forveksle en misinformert offentlighet på grunn av politisk spin med likegyldighet. Ofte uttrykker velgere at de er likegyldig... [200 / 392 chars] |
+| Utvidelse av Heathrow er avgjørende for økonomien. Utvidelse av Heathrow vil sikre mange eksisterend... [100 / 1,191 chars] | Forretningsmiljøet er langt fra enig i sin antatte støtte til en tredje rullebane. Undersøkelser tyder på at mange innflytelsesrike bedrifter faktisk ikke støtter utvidelsen. Et brev som uttrykte beky... [200 / 1,173 chars] |
+| Mennesker blir gitt for mange valgmuligheter, noe som gjør dem mindre lykkelige. Reklame fører til a... [100 / 902 chars] | Folk er ulykkelige fordi de ikke kan få alt, ikke fordi de får for mange valg og finner det stressende. Faktisk spiller reklame en avgjørende rolle i å sikre at folk bruker pengene sine på det mest pa... [200 / 827 chars] |
+| Cyberangrep blir ofte utført av ikke-statlige aktører, som for eksempel kyberterrorister eller hackt... [100 / 946 chars] | Hvis ikke-statlige aktører angriper, er mange praktikere innen internasjonal rett enige om at staten kan gjengjelde i selvforsvar hvis en annen stat er 'uvillig eller ute av stand til å ta effektive t... [200 / 533 chars] |
+| Fordi religion gir troen en fast grunn, er guddommelig inspirert hat lett å bruke for å rettferdiggj... [100 / 1,307 chars] | Ingen blir tvunget til å utføre voldshandlinger av andres ord; det er deres eget valg. Likewise, det finnes mange som kan ha synspunkter som kan oppfattes som homofobiske, men som ville være sjokkert... [200 / 615 chars] |
 
 ### Public Sources
 
@@ -157,7 +157,7 @@ similarity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Argument Mining for Understanding Peer Reviews | 2018 | task paper | https://aclanthology.org/P18-1023/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Argument Mining for Understanding Peer Reviews | 2018 | task paper | [https://aclanthology.org/P18-1023/](https://aclanthology.org/P18-1023/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

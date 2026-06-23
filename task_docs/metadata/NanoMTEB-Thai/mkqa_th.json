@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 168
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering",
-        "url": "https://arxiv.org/abs/2007.15207",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "apple/ml-mkqa",
-        "url": "https://github.com/apple/ml-mkqa",
-        "year": 2020,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/MKQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/MKQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/mteb/MKQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering",
+        "url": "https://arxiv.org/abs/2007.15207",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "apple/ml-mkqa",
+        "url": "https://github.com/apple/ml-mkqa",
+        "year": 2020,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/MKQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/MKQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Q8019",
+        "document_id": "C572",
+        "query": {
+          "text": "อายุจำกัดสำหรับลูกเสือหญิงคือเท่าไหร่",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "5.0 18.0 ปี",
+          "full_chars": 11,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q2435",
+        "document_id": "C3959",
+        "query": {
+          "text": "ใครเป็นผู้เล่นเบสหนึ่งของแยงกีส์",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Edwin Encarnación",
+          "full_chars": 17,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1384",
+        "document_id": "C6537",
+        "query": {
+          "text": "เมืองแอลบูเคอร์คีในรัฐนิวเม็กซิโกมีประชากรเท่าไหร่",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "558545.0",
+          "full_chars": 8,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q9375",
+        "document_id": "C4796",
+        "query": {
+          "text": "ใครแสดงบทแม่ในเรื่อง That '70s Show",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "เดบร้า โจ รัปป์",
+          "full_chars": 15,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q4237",
+        "document_id": "C2622",
+        "query": {
+          "text": "แต่ละทีมเล่นในเอ็นบีเอกี่เกมส์",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "82.0",
+          "full_chars": 4,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 13
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Plain English Summarization of Contracts",
-        "url": "https://aclanthology.org/W19-2201/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/legal_summarization",
-        "url": "https://huggingface.co/datasets/mteb/legal_summarization",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/mteb/legal_summarization"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Plain English Summarization of Contracts",
+        "url": "https://aclanthology.org/W19-2201/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/legal_summarization",
+        "url": "https://huggingface.co/datasets/mteb/legal_summarization",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "5F21rWz5FY",
+        "query": {
+          "text": "this service may collect use and share location data.",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "apple and our partners and licensees may collect use and share precise location data including the real time geographic location of your apple computer or device. where available location based servic",
+          "full_chars": 740,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "ekoZy3uUi9",
+        "query": {
+          "text": "you may mod the game but don t distribute hacked clients.",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "if you ve bought the game you may play around with it and modify it. we d appreciate it if you didn t use this for griefing though and remember not to distribute the changed versions of our software.",
+          "full_chars": 349,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "18Y2bTu5X1",
+        "query": {
+          "text": "if you haven t played for a year you mess up or we mess up we can delete all of your virtual goods.",
+          "full_chars": 245,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "we may cancel suspend or terminate your account and your access to your trading items virtual money virtual goods the content or the services in our sole discretion and without prior notice including",
+          "full_chars": 1441,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "W1GC7dDyQE",
+        "query": {
+          "text": "the service makes critical changes to its terms without user involvement.",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "gitlab reserves the right at its sole discretion to modify or replace any part of this agreement. it is your responsibility to check this agreement periodically for changes. your continued use of or a",
+          "full_chars": 624,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "tUeC99enq5",
+        "query": {
+          "text": "dropbox along with their third parties are allowed to access scan store and duplicate content that y",
+          "full_chars": 122,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "when you use our services you provide us with things like your files content email messages contacts and so on your stuff. your stuff is yours. these terms don t give us any rights to your stuff excep",
+          "full_chars": 714,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

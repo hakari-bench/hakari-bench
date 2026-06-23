@@ -169,11 +169,11 @@ or citation context.
 
 | Query | Positive document |
 | --- | --- |
-| محول رفع الجهد متعدد المستويات DC إلى DC جديد (45 chars) | محولات مصدر الجهد المتعددة المستويات تظهر كخيار جديد من محولات الطاقة لتطبيقات الطاقة العالية. تولد محولات مصدر الجهد المتعددة المستويات عادةً موجة جهد الدرجات من عدة مستويات من جهد مكثفات التيار المستمر. واحدة من أكبر القيود ... [truncated 225 chars](794 chars) |
-| تعلم الحقول العشوائية الغاوسية الماركوفية النادرة بسرعة بناءً على تحليل تشولسكي (79 chars) | Sure, please provide the English document that you need translated into Arabic. (79 chars) |
-| توليد النسيج باستخدام الشبكات العصبية التقويمية (47 chars) | في هذا العمل، ندرس تأثير عمق الشبكات التلافيفية على دقتها في التعرف على الصور على نطاق واسع. المساهمة الرئيسية لدينا هي تقييم شامل لشبكات ذات عمق متزايد، والذي يظهر أن تحسينًا كبيرًا على التكوينات السابقة يمكن تحقيقه من خلال ... [truncated 225 chars](644 chars) |
-| مستقبِل دائري دائري عريض النطاق مسطح بقطبية دائرية لنظام RFID (61 chars) | في هذا البحث، يتم اقتراح تقنية تغذية شريط متعرج أفقيًا (HMS) لتحقيق مطابقة مقاومة جيدة وأنماط إشعاع جانبي متماثل لمستقبلات رقمية دائرية الطور ذات طبقة مزدوجة، وهي مناسبة لتطبيقات التعرف على الراديو الترددي (RFID) في نطاق التر ... [truncated 225 chars](1081 chars) |
-| تطوير جهاز مراقبة نبضات القلب الرقمي المتقدم من خلال استخدام مكونات إلكترونية أساسية (84 chars) | في هذا الورقة، قدمنا تصميم وتطوير جهاز متكامل جديد لقياس معدل ضربات القلب باستخدام الإصبع لتحسين تقدير معدل ضربات القلب. مع زيادة الأمراض المتعلقة بالقلب يوميًا، أصبح هناك حاجة ملحة إلى جهاز قياس معدل ضربات القلب دقيق وميسور ... [truncated 225 chars](855 chars) |
+| محول رفع الجهد متعدد المستويات DC إلى DC جديد [45 chars] | محولات مصدر الجهد المتعددة المستويات تظهر كخيار جديد من محولات الطاقة لتطبيقات الطاقة العالية. تولد محولات مصدر الجهد المتعددة المستويات عادةً موجة جهد الدرجات من عدة مستويات من جهد مكثفات التيار المس... [200 / 794 chars] |
+| تعلم الحقول العشوائية الغاوسية الماركوفية النادرة بسرعة بناءً على تحليل تشولسكي [79 chars] | Sure, please provide the English document that you need translated into Arabic. [79 chars] |
+| توليد النسيج باستخدام الشبكات العصبية التقويمية [47 chars] | في هذا العمل، ندرس تأثير عمق الشبكات التلافيفية على دقتها في التعرف على الصور على نطاق واسع. المساهمة الرئيسية لدينا هي تقييم شامل لشبكات ذات عمق متزايد، والذي يظهر أن تحسينًا كبيرًا على التكوينات الس... [200 / 644 chars] |
+| مستقبِل دائري دائري عريض النطاق مسطح بقطبية دائرية لنظام RFID [61 chars] | في هذا البحث، يتم اقتراح تقنية تغذية شريط متعرج أفقيًا (HMS) لتحقيق مطابقة مقاومة جيدة وأنماط إشعاع جانبي متماثل لمستقبلات رقمية دائرية الطور ذات طبقة مزدوجة، وهي مناسبة لتطبيقات التعرف على الراديو ال... [200 / 1,081 chars] |
+| تطوير جهاز مراقبة نبضات القلب الرقمي المتقدم من خلال استخدام مكونات إلكترونية أساسية [84 chars] | في هذا الورقة، قدمنا تصميم وتطوير جهاز متكامل جديد لقياس معدل ضربات القلب باستخدام الإصبع لتحسين تقدير معدل ضربات القلب. مع زيادة الأمراض المتعلقة بالقلب يوميًا، أصبح هناك حاجة ملحة إلى جهاز قياس معدل... [200 / 855 chars] |
 
 ### Public Sources
 
@@ -192,8 +192,8 @@ or citation context.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| SCIDOCS GitHub repository |  | project repository | https://github.com/allenai/scidocs |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| SCIDOCS GitHub repository |  | project repository | [https://github.com/allenai/scidocs](https://github.com/allenai/scidocs) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

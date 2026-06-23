@@ -66,9 +66,13 @@ For reranking, claim-element alignment and citation-graph-aware training may be 
 
 ## Example Data
 
-### Public Sources
-
-NanoDAPFAM is documented through the DAPFAM paper and the public DAPFAM patent dataset card.
+| Query | Positive document |
+| --- | --- |
+| bicycle handlebar grip a bicycle handlebar grip contains a plastic inner shell having a tubular shap... [100 / 2,588 chars] | durable flexible membrane and method of making same a flexible membrane having a valuable combination of desirable properties is composed of a generally heavy, dense supporting and reinforcing reticul... [200 / 7,657 chars] |
+| method for improving belt press dewatering a method for increasing the removal of a higher fraction... [100 / 4,605 chars] | artificial human anti-factor b antibody problem to be solved: to provide novel engineered forms of a monoclonal antibody and antigen-binding fragments thereof that bind complement protein factor b and... [200 / 1,425 chars] |
+| stitch distribution control system for tufting machines a stitch distribution control system for a t... [100 / 5,968 chars] | method and apparatus for measuring direction or position of weft yarn of fabric the measurement of the pick or stitches course position in continuously moved fabrics involves examining at least one ga... [200 / 5,290 chars] |
+| low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile s... [100 / 3,799 chars] | modular floor covering units with built-in lighting an apparatus for guiding the occupants of a structure along a path of travel within the structure is provided. the apparatus is comprised of modular... [200 / 17,660 chars] |
+| method and apparatus for the zonal transmission of data using building lighting fixtures this invent... [100 / 7,344 chars] | shelf tag with ambient light detector the present invention relates to an electronic shelf display device which includes an optical device and an ambient light detector circuitry. the electronic shelf... [200 / 7,219 chars] |
 
 ### Source Reference Table
 

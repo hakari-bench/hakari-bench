@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/cqadupstack-unix",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "75364",
+        "document_id": "74978",
+        "query": {
+          "text": "copy sas file from prior version directory to new version directory",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "How to copy datasets from prior version directory to latest version directory I've go a number of directories named like: /data/db/OX/8_10 /data/db/OX/9_1 /data/db/OX/9_2 And need to copy some files (",
+          "full_chars": 718,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "119999",
+        "document_id": "109464",
+        "query": {
+          "text": "Linux Mint Booting Installed Partition",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "How can I fix/install/reinstall grub? So I started out with a 250GB HDD, the stock drive from an EeePC 1015pem that I am trying to turn into a MintBook. The drive is physically operable, but all data",
+          "full_chars": 914,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103549",
+        "document_id": "2677",
+        "query": {
+          "text": "Yanked USB Key During Move",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Recovering accidentally deleted files I accidentally deleted a file from my laptop. I'm using Fedora. Is it possible to recover the file?",
+          "full_chars": 138,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "89941",
+        "document_id": "74713",
+        "query": {
+          "text": "How proc gets updated about the devices",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "How frequently is the proc file system updated on Linux? How frequently is the `proc` file system updated on Linux? Is it 20 milliseconds (time quantum)?",
+          "full_chars": 154,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "152733",
+        "document_id": "98084",
+        "query": {
+          "text": "bashrc in custom folder",
+          "full_chars": 23,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Change the location of .bashrc Is it possible to change the location of `.bashrc` from `/home/orhanc/.bashrc` to some other directory?",
+          "full_chars": 135,
+          "limit_chars": 200,
+          "truncated": false
+        }
       }
     ],
     "source_dataset_id": "mteb/cqadupstack-unix",
-    "source_task": "CQADupstackUnixRetrieval"
+    "source_task": "CQADupstackUnixRetrieval",
+    "example_count": 5
   }
 }

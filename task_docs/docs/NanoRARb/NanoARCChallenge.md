@@ -62,17 +62,20 @@ Models should learn to map questions to concise answer phrases through science r
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge](https://arxiv.org/abs/1803.05457), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Some students are performing hardness tests on several substances. X scratches Y. Y scratches Z. Z s... [100 / 176 chars] | W is the softest of the four substances tested. [47 chars] |
+| Hurricanes form over equatorial areas. This is because [54 chars] | solar heating is greatest near the equator. [43 chars] |
+| The best description of the troposphere is the layer of the atmosphere with the [79 chars] | greatest density. [17 chars] |
+| Copper is an element that is used in electrical wires. What is the smallest unit of copper that stil... [100 / 142 chars] | the atom [8 chars] |
+| If you throw each one of these things away, which will decay fastest? [69 chars] | An apple core [13 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge | 2018 | arXiv paper | https://arxiv.org/abs/1803.05457 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge | 2018 | arXiv paper | [https://arxiv.org/abs/1803.05457](https://arxiv.org/abs/1803.05457) |
 
 ### Representative Snippets
 

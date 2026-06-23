@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 50
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-wordpress-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-wordpress-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,111 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Wordpress-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-wordpress-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-wordpress-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "66180",
+        "document_id": "8357",
+        "query": {
+          "text": "Programowe wstawianie terminów hierarchicznych i ustalanie terminów dla postów powoduje usterkę?",
+          "full_chars": 96,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wstawianie terminów w taksonomii hierarchicznej Naprawdę mam kilka problemów z wstawianiem terminów. Oto mój scenariusz: mam taksonomię o nazwie veda_release_type: //Release Type and Region $labels =",
+          "full_chars": 3822,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "119899",
+        "document_id": "69436",
+        "query": {
+          "text": "Jak zwiększyć długość fragmentu w wordpressie?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "fragment w postaciach Mam kod w functions.php: function string_limit_words($string, $word_limit) { $words = explode(' ', $string, ($word_limit + 1)); if(count($słowa) > $word_limit) array_pop($słowa);",
+          "full_chars": 306,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104722",
+        "document_id": "98644",
+        "query": {
+          "text": "Strona biblioteki multimediów bardzo wolno, ładuje obrazy w pełnej jakości",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wordpress 3.5 Media Manager - Zmień rozmiar załadowanego obrazu Nowy menedżer mediów ładuje obrazy w PEŁNYM rozmiarze, co jest NAPRAWDĘ nieefektywne dla miniatury. Chciałbym go zastąpić miniaturą o in",
+          "full_chars": 344,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "88062",
+        "document_id": "77504",
+        "query": {
+          "text": "Predefiniowane kategorie w wordpressie według parametrów GET",
+          "full_chars": 60,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jak dodać kategorię do: 'wp-admin/post-new.php'? Chcę mieć link do tworzenia nowego posta, który również ustawia kategorię. Próbowałem `wp-admin/post-new.php?post_category=12` i `wp-admin/post-new.php",
+          "full_chars": 390,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "140966",
+        "document_id": "37893",
+        "query": {
+          "text": "Jak wyłączyć komentarze na stronie?",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jak usunąć możliwość komentowania lub publikowania przez użytkownika na stronie? Tworzę nową stronę internetową na Wordpress, a wszystkie moje strony mają na dole pole dodawania komentarza. Chciałbym,",
+          "full_chars": 482,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

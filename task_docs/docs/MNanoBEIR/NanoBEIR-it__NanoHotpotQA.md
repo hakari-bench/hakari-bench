@@ -136,11 +136,11 @@ retrieve the complete evidence pair.
 
 | Query | Positive document |
 | --- | --- |
-| In quale sitcom televisiva Penny Rae Bridges ha recitato insieme a quale altro attore? | Penny Rae Bridges (nata il 29 luglio 1990) è un'attrice americana. Ha recitato in "For Your Love", "Family Law", "Boy Meets World" e "The Parent 'Hood"... |
-| Chi ha donato a Kaganoi Shigemochi una spada forgiata dal fondatore della scuola Muramasa? | Kaganoi Shigemochi (加賀井 重望, 1561 - 27 agosto 1600) fu un samurai giapponese durante il periodo Azuchi-Momoyama, al servizio del clan Oda... |
-| Quale film è stato scritto e diretto da Joby Harold con la musica di Samuel Sim? | Samuel Sim è un compositore di film e televisione. Ha ottenuto il primo riconoscimento con la colonna sonora premiata della serie drammatica della BBC "Dunkirk"... |
-| Qual è la data di questa partita di football universitario al Sun Life Stadium a Miami Gardens, Florida, dove i Clemson Tigers hanno sconfitto gli Oklahoma Sooners al quarto posto, 37-17? | La squadra di football dei Clemson Tigers del 2015 ha rappresentato l'Università di Clemson nella stagione 2015 della NCAA Division I FBS... |
-| Devil's Food è una raccolta di singoli di una band rock and roll americana che è nota anche per esibirsi in concerti country con quale nome? | Devil's Food è una raccolta di singoli del gruppo rock and roll americano Supersuckers, pubblicata ad aprile 2005 per Mid-Fi Records. |
+| In quale sitcom televisiva Penny Rae Bridges ha recitato insieme a quale altro attore? [86 chars] | Penny Rae Bridges (nata il 29 luglio 1990) è un'attrice americana. Ha recitato in "For Your Love", "Family Law", "Boy Meets World" e "The Parent 'Hood". È famosa per il suo ruolo in "Half & Half", nel... [200 / 226 chars] |
+| Chi ha donato a Kaganoi Shigemochi una spada forgiata dal fondatore della scuola Muramasa? [90 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 agosto 1600) fu un samurai giapponese durante il periodo Azuchi-Momoyama, al servizio del clan Oda. Governava il castello di Kaganoi. Durante la battaglia di Koma... [200 / 596 chars] |
+| Quale film è stato scritto e diretto da Joby Harold con la musica di Samuel Sim? [80 chars] | Samuel Sim è un compositore di film e televisione. Ha ottenuto il primo riconoscimento con la colonna sonora premiata della serie drammatica della BBC "Dunkirk". Da allora ha composto la musica per un... [200 / 573 chars] |
+| Qual è la data di questa partita di football universitario al Sun Life Stadium a Miami Gardens, Flor... [100 / 187 chars] | La squadra di football dei Clemson Tigers del 2015 ha rappresentato l'Università di Clemson nella stagione 2015 della NCAA Division I FBS. I Tigers erano guidati dall'allenatore capo Dabo Swinney nel... [200 / 1,178 chars] |
+| Devil's Food è una raccolta di singoli di una band rock and roll americana che è nota anche per esib... [100 / 140 chars] | Devil's Food è una raccolta di singoli del gruppo rock and roll americano Supersuckers, pubblicata ad aprile 2005 per Mid-Fi Records. [133 chars] |
 
 ### Public Sources
 
@@ -154,7 +154,7 @@ retrieve the complete evidence pair.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | https://arxiv.org/abs/1809.09600 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

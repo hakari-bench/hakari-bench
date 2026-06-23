@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "66216",
+        "document_id": "69417",
+        "query": {
+          "text": "Vẽ cung tròn trong Tikz khi trung tâm của đường tròn được chỉ định",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "vị trí cung so với vòng tròn > **Có thể là trùng lặp:** > Vẽ cung trong Tikz khi tâm của vòng tròn được chỉ định một câu hỏi rất đơn giản nhưng tôi không thể làm được! Xin lỗi nhưng tôi thấy tọa độ gâ",
+          "full_chars": 868,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "12209",
+        "document_id": "73953",
+        "query": {
+          "text": "Cách trích dẫn tài liệu pháp lý đúng cách là gì?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Làm thế nào để trích dẫn các vụ kiện pháp lý trong BibTeX > **Có thể trùng lặp:** > Cách trích dẫn văn bản pháp lý đúng cách là gì? Ai biết cách định dạng trích dẫn một vụ án pháp lý trong BibTeX khôn",
+          "full_chars": 297,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103012",
+        "document_id": "102961",
+        "query": {
+          "text": "Sử dụng ERT trong LyX",
+          "full_chars": 21,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bảng TeX của LyX quá lớn Tôi đang chèn một tập tin TeX vào tài liệu LyX bằng cách sử dụng Chèn -> Tài liệu con. Bảng trông ổn trên màn hình của LyX nhưng khi tôi xem trước PDF thì nó lớn gấp 10 lần. K",
+          "full_chars": 1052,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8863",
+        "document_id": "10825",
+        "query": {
+          "text": "Làm thế nào để sửa lỗi \"ruby.exe seems not to be installed\" trong Windows 7 khi cả Miktex 2.9 và Rub",
+          "full_chars": 122,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "TexLive không thể tìm thấy Ruby.exe > **Có thể trùng lặp:** > Làm thế nào để sửa lỗi \"ruby.exe dường như không được cài đặt\" trên Windows 7 nơi cả Miktex 2.9 và Ruby đã được cài đặt? Tôi vừa cài đặt T",
+          "full_chars": 372,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "149770",
+        "document_id": "69606",
+        "query": {
+          "text": "Định dạng hàng đầu tiên của bảng khác nhau",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\\newcommand \\multispan không được đặt đúng vị trí. Tôi đang cố gắng xây dựng một công thức nấu ăn của riêng mình, có một macro thành phần. Đôi khi các thành phần nên được tách ra và có tiêu đề, vì vậy",
+          "full_chars": 692,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

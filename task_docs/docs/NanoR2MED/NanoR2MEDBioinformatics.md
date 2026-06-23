@@ -62,21 +62,22 @@ Models should learn to connect user problems to documentation concepts rather th
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/Bioinformatics dataset card](https://huggingface.co/datasets/R2MED/Bioinformatics).
+| Query | Positive document |
+| --- | --- |
+| Compare alignment quality of multiple sequencing runs aligned against the same reference genome/nI h... [100 / 476 chars] | Qualimap Evaluating next generation sequencing alignment data What is it? Qualimap 2 is a platform-independent application written in Java and R that provides both a Graphical User Inteface (GUI) and... [200 / 871 chars] |
+| Can I index a compressed FASTA file using STAR?/nI am using STAR to align RNA-seq reads to a referen... [100 / 1,258 chars] | 3.5.6 Process Substitution Process substitution allows a process’s input or output to be referred to using a filename. It takes the form of <(list) or >(list) The process list is run asynchronously, a... [200 / 669 chars] |
+| How to manipulate a reference FASTA or bam to include variants from a VCF?/nI have some software whi... [100 / 520 chars] | 6.3.3.11. vcf2bed The vcf2bed script converts 1-based, closed [start, end] Variant Call Format v4.2 (VCF) to sorted, 0-based, half-open [start-1, start) extended BED data. Note Note that this script c... [200 / 870 chars] |
+| PDB format: remark number for free text/nI would like to add a text to PDB files that I'm processing... [100 / 650 chars] | REMARK 230 REMARK: Remark 240, Electron Diffraction Experiment Details Remark 240 is mandatory if electron diffraction study. Template 1 2 3 4 5 6 7 123456789012345678901234567890123456789012345678901... [200 / 918 chars] |
+| How to count reads in bam per bed interval with bedtools/nI recently installed Ubuntu 16.04 (because... [100 / 648 chars] | bedtools version 2.24.0 The coverage tool now takes advantage of pre-sorted intervals via the -sorted option. This allows the coverage tool to be much faster, use far less memory, and report coverage... [200 / 714 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/Bioinformatics | 2025 | dataset card | https://huggingface.co/datasets/R2MED/Bioinformatics |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/Bioinformatics | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/Bioinformatics](https://huggingface.co/datasets/R2MED/Bioinformatics) |
 
 ### Representative Snippets
 

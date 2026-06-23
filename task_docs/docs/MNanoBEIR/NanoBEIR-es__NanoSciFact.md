@@ -48,13 +48,13 @@ Strong models should combine exact scientific term matching with claim-evidence 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Ly49Q dirige la migración de los neutrófilos hacia áreas inflamadas regulando las funciones de las balsas lipídicas. | Los neutrófilos rápidamente sufren polarización y movimiento direccional para infiltrarse en los sitios de infección e inflamación... |
-| La terapia antirretroviral reduce las tasas de tuberculosis en diferentes niveles de CD4. | ANTECEDENTES La infección por el virus de la inmunodeficiencia humana es el factor de riesgo más fuerte para desarrollar tuberculosis... |
-| Aumento rápido y mayor expresión basal de genes inducidos por interferón reducen la supervivencia de neuronas infectadas por el virus del Nilo Occidental. | Aunque la susceptibilidad de las neuronas del cerebro a la infección microbiana es un determinante mayor del resultado clínico... |
-| El cribado primario de cáncer cervical con detección de VPH tiene mayor sensibilidad longitudinal que la citología convencional. | ANTECEDENTES La detección de cáncer cervical basada en la prueba del virus del papiloma humano aumenta la sensibilidad... |
-| Bloquear la interacción entre TDP-43 y las proteínas del complejo respiratorio I ND3 y ND6 aumenta la pérdida neuronal inducida por TDP-43. | Las mutaciones genéticas en la proteína TAR DNA-binding protein 43 causan esclerosis lateral amiotrófica... |
+| Query | Positive document |
+| --- | --- |
+| Ly49Q dirige la migración de los neutrófilos hacia áreas inflamadas regulando las funciones de las b... [100 / 116 chars] | Los neutrófilos rápidamente sufren polarización y movimiento direccional para infiltrarse en los sitios de infección e inflamación. Aquí mostramos que un receptor inhibidor de MHC I, Ly49Q, fue crucia... [200 / 1,125 chars] |
+| La terapia antirretroviral reduce las tasas de tuberculosis en diferentes niveles de CD4. [89 chars] | ANTECEDENTES La infección por el virus de la inmunodeficiencia humana (VIH) es el factor de riesgo más fuerte para desarrollar tuberculosis y ha impulsado su resurgimiento, especialmente en el África... [200 / 2,420 chars] |
+| Aumento rápido y mayor expresión basal de genes inducidos por interferón reducen la supervivencia de... [100 / 176 chars] | Aunque la susceptibilidad de las neuronas del cerebro a la infección microbiana es un determinante mayor del resultado clínico, se sabe poco sobre los factores moleculares que gobiernan esta vulnerabi... [200 / 1,284 chars] |
+| El cribado primario de cáncer cervical con detección de VPH tiene mayor sensibilidad longitudinal qu... [100 / 184 chars] | ANTECEDENTES La detección de cáncer cervical basada en la prueba del virus del papiloma humano (VPH) aumenta la sensibilidad para detectar neoplasia intraepitelial cervical de alto grado (grado 2 o 3)... [200 / 2,540 chars] |
+| Bloquear la interacción entre TDP-43 y las proteínas del complejo respiratorio I ND3 y ND6 resulta e... [100 / 156 chars] | Las mutaciones genéticas en la proteína TAR DNA-binding protein 43 (TARDBP, también conocida como TDP-43) causan esclerosis lateral amiotrófica (ELA), y un aumento en la presencia de TDP-43 (codificad... [200 / 1,483 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should combine exact scientific term matching with claim-evidence 
 
 | Label | URL |
 |---|---|
-| SciFact paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository | https://github.com/allenai/scifact |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SciFact paper (https://arxiv.org/abs/2004.14974) |
+| SciFact repository (https://github.com/allenai/scifact) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

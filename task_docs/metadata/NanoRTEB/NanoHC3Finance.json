@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 13
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection",
-        "url": "https://arxiv.org/abs/2301.07597",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Hello-SimpleAI/HC3",
-        "url": "https://huggingface.co/datasets/Hello-SimpleAI/HC3",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,111 @@
           "url": "https://huggingface.co/datasets/Hello-SimpleAI/HC3"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection",
+        "url": "https://arxiv.org/abs/2301.07597",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Hello-SimpleAI/HC3",
+        "url": "https://huggingface.co/datasets/Hello-SimpleAI/HC3",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "000000163",
+        "query": {
+          "text": "Is socialtrend.com or/and feelthetrend.com legitimate?",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "It's called a \"Pyramid scheme\". Its illegal in almost every country of the Western world. You're not going to earn lifetime income, of course, and these things collapse pretty quickly. Most of the \"co",
+          "full_chars": 989,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "How to read Google Finance data on dividends",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "However, you have to remember that not all dividends are paid quarterly. For example one stock I recently purchased has a price of $8.03 and the Div/yield = 0.08/11.9 . $.08 * 4 = $0.32 which is only",
+          "full_chars": 392,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "What is a good way to keep track of your credit card transactions, to reduce likelihood of fraud?",
+          "full_chars": 97,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Read your bill, question things that don't look familiar. People who steal credit card numbers don't bother to conceal themselves well. So if you live in Florida, and all of the sudden charges appear",
+          "full_chars": 725,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00189",
+        "document_id": "000000189",
+        "query": {
+          "text": "When Employees are “Granted” Stock Options, is the Company encouraging Long-Term investments from th",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "There are two things to consider: taxes - beneficial treatment for long-term holding, and for ESPP's you can get lower taxes on higher earnings. Also, depending on local laws, some share schemes allow",
+          "full_chars": 931,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "000000070",
+        "query": {
+          "text": "Does lender care what I use the money for?",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "When you borrow from a bank, there are secured loans, as with a mortgage, or unsecured lines of credit, usually a more reasonable amount of money, but also based on income. You just asked about a priv",
+          "full_chars": 429,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

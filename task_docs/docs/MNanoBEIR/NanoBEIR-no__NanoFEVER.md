@@ -127,11 +127,11 @@ claim-specific reranking over long evidence passages.
 
 | Query | Positive document |
 | --- | --- |
-| Keith Godchaux kjente Grateful Dead. | The Grateful Dead var et amerikansk rockeband som ble dannet i 1965 i Palo Alto, California... |
-| Taarak Mehta Ka Ooltah Chashmah er en situasjonskomedie. | Taarak Mehta Ka Ooltah Chashmah er Indias lengst løpende sitcom-serie, produsert av Neela Tele Films Private Limited... |
-| Hemmelige og teknologisk avanserte fly ble bygget i Burbank, California. | Burbank er en by i Los Angeles County i Sør-California, USA, 12 mil nordvest for sentrum av Los Angeles... |
-| Nero er en person. | Julio-Claudiske dynasti refererer til de første fem romerske keiserne, inkludert Augustus, Tiberius, Caligula, Claudius og Nero... |
-| Scream 2 er kun en tysk film. | Scream 2 er en amerikansk slasherfilm fra 1997, regissert av Wes Craven og skrevet av Kevin Williamson... |
+| Keith Godchaux kjente Grateful Dead. [36 chars] | The Grateful Dead var et amerikansk rockeband som ble dannet i 1965 i Palo Alto, California. Bandet, som besto av fem til syv medlemmer, er kjent for sin unike og eklektiske stil, som kombinerte eleme... [200 / 2,873 chars] |
+| Taarak Mehta Ka Ooltah Chashmah er en situasjonskomedie. [56 chars] | Taarak Mehta Ka Ooltah Chashmah (norsk: Taarak Mehtas forskjellige perspektiver) er Indias lengst løpende sitcom-serie, produsert av Neela Tele Films Private Limited. Serien ble sendt på lufta 28. jul... [200 / 575 chars] |
+| Hemmelige og teknologisk avanserte fly ble bygget i Burbank, California. [72 chars] | Burbank er en by i Los Angeles County i Sør-California, USA, 12 mil nordvest for sentrum av Los Angeles. Ved folketellingen i 2010 var befolkningen 103 340. Kjent som 'Verdens mediehovedstad' og bare... [200 / 1,248 chars] |
+| Nero er en person. [18 chars] | Julio-Claudiske dynasti refererer til de første fem romerske keiserne – Augustus, Tiberius, Caligula, Claudius og Nero – eller familien de tilhørte. De styrte Det romerske riket fra dets dannelse unde... [200 / 1,988 chars] |
+| Scream 2 er kun en tysk film. [29 chars] | Scream 2 er en amerikansk slasherfilm fra 1997, regissert av Wes Craven og skrevet av Kevin Williamson. Filmen har David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Jamie Kennedy, L... [200 / 2,419 chars] |
 
 ### Public Sources
 
@@ -145,7 +145,7 @@ claim-specific reranking over long evidence passages.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | https://arxiv.org/abs/1803.05355 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

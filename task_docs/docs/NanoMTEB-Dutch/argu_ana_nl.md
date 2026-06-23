@@ -129,10 +129,13 @@ nDCG@10.
 
 ## Example Data
 
-Representative queries argue about late-stage abortion, technological solutions
-to climate change, vegetarianism and food poisoning, baseball collisions, and
-community radio. Positive documents are Dutch counterarguments on the same
-issue with an opposing stance.
+| Query | Positive document |
+| --- | --- |
+| Tegenstand tegen abortus provocatus in late fase maakt deel uit van een strategie die erop gericht i... [100 / 804 chars] | zwangerschap filosofie ethiek leven gezin huis zou partiële geboorte-abortussen verbieden Hoewel veel mensen die tegen partiële geboorte-abortus zijn, ook tegen abortus in het algemeen zijn, is er gee... [200 / 738 chars] |
+| Nieuwe technologie heeft de wereld herhaaldelijk revolutionair veranderd door monumentale uitvinding... [100 / 1,095 chars] | Climate House gelooft dat we te laat zijn met de wereldwijde klimaatverandering Technologische verbeteringen zullen vrijwel zeker worden ontwikkeld voor degenen die het zich kunnen veroorloven (zoals... [200 / 470 chars] |
+| Vegetarisch eten vermindert het risico op voedselvergiftiging. Bijna alle gevaarlijke vormen van voe... [100 / 945 chars] | dieren milieu algemene gezondheid gezondheid algemeen gewicht filosofie ethiek Voedselveiligheid en -hygiëne zijn zeer belangrijk voor iedereen, en overheden moeten maatregelen nemen om hoge standaard... [200 / 1,743 chars] |
+| Botsingen horen bij het spel. Ten eerste maken botsingen deel uit van de traditie van honkbal. Ze ma... [100 / 2,371 chars] | Team Sports House vindt dat de Major League Baseball botsingen moet blijven toestaan Botsingen maken veel minder deel uit van het spel dan veel mensen denken. Het idee dat botsingen al eeuwenlang deel... [200 / 1,658 chars] |
+| Lokale radio geeft een stem aan het volk in plaats van de stemmen van de machtigen op te leggen. De... [100 / 1,396 chars] | Media en goed bestuur geloven dat community radio goed is Community radio kan inderdaad de vele wonderlijke dingen doen die Prop ervan lijkt te verwachten. Het kan ook min of meer alles anders doen. A... [200 / 597 chars] |
 
 ### Public Sources
 
@@ -147,10 +150,10 @@ issue with an opposing stance.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | arXiv paper | https://arxiv.org/abs/2210.07316 |
-| clips/beir-nl-arguana |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-arguana |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | arXiv paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| clips/beir-nl-arguana |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-arguana](https://huggingface.co/datasets/clips/beir-nl-arguana) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

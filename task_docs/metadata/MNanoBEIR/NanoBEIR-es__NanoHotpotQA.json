@@ -144,7 +144,7 @@
         "title": "HotpotQA official site",
         "url": "https://hotpotqa.github.io/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "¿Con qué otro actor participó Penny Rae Bridges en una sitcom de televisión?",
+          "full_chars": 76,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (nacida el 29 de julio de 1990) es una actriz estadounidense. Su trabajo en televisión incluye papeles en \"For Your Love\", \"Family Law\", \"Boy Meets World\" y \"The Parent 'Hood\". Es má",
+          "full_chars": 272,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "¿Quién otorgó a Kaganoi Shigemochi una espada fabricada por el fundador de la escuela Muramasa?",
+          "full_chars": 95,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 de agosto de 1600) fue un samurái japonés del período Azuchi-Momoyama que sirvió al clan Oda. Gobernó el Castillo Kaganoi. Durante la Batalla de Komaki y Nagakute",
+          "full_chars": 598,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "¿Qué película fue escrita y dirigida por Joby Harold y tiene música de Samuel Sim?",
+          "full_chars": 82,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim es un compositor de cine y televisión. Alcanzó reconocimiento con su premiada banda sonora para la serie dramática de la BBC \"Dunkirk\". Desde entonces, ha compuesto la música para una ampli",
+          "full_chars": 558,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae63b2255429908198fa526",
+        "document_id": "46395880",
+        "query": {
+          "text": "¿Cuál es la fecha en que se jugó este partido de fútbol americano universitario en el Sun Life Stadi",
+          "full_chars": 226,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "El equipo de fútbol americano de los Clemson Tigers de 2015 representó a la Universidad de Clemson en la temporada 2015 de la División I de la NCAA de fútbol americano. Los Tigers fueron dirigidos por",
+          "full_chars": 1260,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a84fd085542994c784ddaba",
+        "document_id": "1854777",
+        "query": {
+          "text": "¿Bajo qué nombre se conoce a una banda de rock and roll americana que también ha tocado en shows de",
+          "full_chars": 179,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Devil's Food es un recopilatorio de sencillos por la banda estadounidense de rock and roll Supersuckers, lanzado en abril de 2005 en Mid-Fi Records.",
+          "full_chars": 148,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

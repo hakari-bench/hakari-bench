@@ -130,8 +130,91 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-es-890",
+        "document_id": "doc-es-6694",
+        "query": {
+          "text": "¿Cuál es el catalizador utilizado para convertir el monóxido de carbono en un producto menos perjudi",
+          "full_chars": 169,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Etanol (combustible) El etanol es un compuesto químico obtenido a partir de la fermentación de los azúcares que puede utilizarse como combustible, solo, o bien, mezclado en cantidades variadas con gas",
+          "full_chars": 31421,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-es-1261",
+        "document_id": "doc-es-9250",
+        "query": {
+          "text": "¿Cómo perpetúa la actividad financiera en el gueto el estereotipo de la vida judía según Sara Horowi",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La lista de Schindler Argumento En Cracovia, durante la Segunda Guerra Mundial, las tropas alemanas de ocupación han forzado a los judíos polacos a vivir recluidos en un gueto. El empresario Oskar Sch",
+          "full_chars": 29815,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-es-1047",
+        "document_id": "doc-es-7784",
+        "query": {
+          "text": "¿Cuál es la altura del cerro Calzoncillo en la isla mencionada en el texto?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Golfo de Ancud Geología y orografía Tanto los golfos de Ancud y Corcovado como el seno de Reloncaví, son las cuencas de grandes lagos que, en época remota, formaron parte del valle central que luego s",
+          "full_chars": 25915,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-es-272",
+        "document_id": "doc-es-2128",
+        "query": {
+          "text": "¿Cuáles fueron los principales cambios realizados durante la remodelación del Centro Cultural Recole",
+          "full_chars": 111,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Centro Cultural Recoleta Historia El Centro Cultural Recoleta es conocido históricamente como la sede de lo nuevo. Desde su inauguración como centro cultural en 1980, sus salas se convirtieron en el l",
+          "full_chars": 26824,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-es-209",
+        "document_id": "doc-es-1644",
+        "query": {
+          "text": "¿Cuál fue la razón principal por la que los desarrolladores de Square decidieron crear un juego de r",
+          "full_chars": 151,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Final Fantasy Legend Modo de juego En The Final Fantasy Legend, el jugador recorre el mundo del juego con un equipo de hasta cuatro personajes, explorando áreas e interactuando con otros personajes no",
+          "full_chars": 26818,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

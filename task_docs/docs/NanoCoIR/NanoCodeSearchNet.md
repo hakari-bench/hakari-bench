@@ -70,9 +70,13 @@ For reranking, the candidate pool is already complete under dense and hybrid ret
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeSearchNet is documented through CoIR and the CodeSearchNet Challenge paper. The public CodeSearchNet dataset card provides the source data context for code-docstring pairs.
+| Query | Positive document |
+| --- | --- |
+| def _get_field(self, field_name, default=None): """ Fetches a field from extras, and returns it. Thi... [100 / 532 chars] | Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, credential pem files, etc. T... [200 / 257 chars] |
+| func (in *inflights) freeTo(to uint64) { if in.count == 0 \|\| to < in.buffer[in.start] { // out of th... [100 / 595 chars] | // freeTo frees the inflights smaller or equal to the given `to` flight. [72 chars] |
+| func NewCertPool(CAFiles []string) (*x509.CertPool, error) { certPool := x509.NewCertPool() for _, C... [100 / 473 chars] | // NewCertPool creates x509 certPool with provided CA files. [60 chars] |
+| def build_for(packages) metadata = packages.first.metadata name = metadata[:name] # Attempt to load... [100 / 1,985 chars] | The build object that corresponds to this package. @param [Array<Package>] packages the packages to create the build from @return [Artifactory::Resource::Build] [167 chars] |
+| function isArrayBufferView(val) { var result; if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuff... [100 / 264 chars] | Determine if a value is a view on an ArrayBuffer @param {Object} val The value to test @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false [165 chars] |
 
 ### Source Reference Table
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
-        "url": "https://arxiv.org/abs/1803.05355",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "キース・ゴドーショウはグレイトフル・デッドをよく知っていた。",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "グレイトフル・デッドは、1965年にカリフォルニア州パロアルトで結成されたアメリカのロックバンドである。クインテットからセプテットまでメンバー数が変化したこのバンドは、ロック、サイケデリカ、実験音楽、モードジャズ、カントリー、フォーク、ブルーグラス、ブルース、レゲエ、スペース・ロックなどの要素を融合した独自で多彩なスタイル、長時間にわたるインストゥルメンタル・ジャムのライブ演奏、そして「デッドヘッ",
+          "full_chars": 1564,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "『ターラク・メータのオルター・チャシュマ』はシットコムである。",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "『ターラク・メータのオルター・チャシュマー』（英語: Taarak Mehta's Different Perspective）は、ニーラ・テレ・フィルムズ・プライベート・リミテッドが制作するインドで最も長く放送されているシットコムシリーズである。この番組は2008年7月28日に初放送された。毎週月曜日から金曜日まで午後8時30分に放送され、SAB TVでは午後11時と翌日午後3時の再放送も行われ",
+          "full_chars": 344,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "カリフォルニア州バーバンクでは、極秘かつ技術的に高度な飛行機が製造されていた。",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "バーバンクは、アメリカ合衆国カリフォルニア州南部、ロサンゼルス郡にある都市で、ロサンゼルス中心部から西北西約12マイル（約19キロ）の位置にある。2010年の国勢調査では人口は103,340人であった。「世界のメディア首都」と称され、ハリウッドからわずか数マイルの北東に位置するこの都市には、ザ・ウォルト・ディズニー・カンパニー、ワーナー・ブラザース・エンターテインメント、ニコロデオン・アニメーショ",
+          "full_chars": 742,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "85454",
+        "document_id": "Julio-Claudian_dynasty",
+        "query": {
+          "text": "ネロは人物です。",
+          "full_chars": 8,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ユリオ＝クラウディウス朝という用語は、最初の5人のローマ皇帝、すなわちアウグストゥス、ティベリウス、カリグラ、クラウディウス、ネロ、あるいは彼らが属していた家系を指す。彼らは、紀元前1世紀後半（44年／31年／27年）にアウグストゥスの下でローマ帝国が成立してから、紀元68年に最後の皇帝ネロが自殺するまで、帝国を統治した。ユリオ＝クラウディウス朝の歴史において、長子相続は顕著に見られない。アウグス",
+          "full_chars": 930,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "172320",
+        "document_id": "Scream_2",
+        "query": {
+          "text": "『スクリーム2』は独占的にドイツ映画である。",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "『スクリーム2』は、ウェス・クレイヴン監督、ケヴィン・ウィリアムソン脚本による1997年のアメリカのスラッシャー映画である。デヴィッド・アーキェット、ネヴ・キャンベル、コートニー・コックス、サラ・ミシェル・ゲラー、ジェイミー・ケネディ、ローリー・メトカーフ、ジェリー・オコンネル、ジャーダ・ピンケット、リーヴ・シュライバーが出演している。本作はディメンション・フィルムズにより1997年12月12日に",
+          "full_chars": 1222,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

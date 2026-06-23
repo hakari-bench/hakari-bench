@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/webis-touche2020-v3",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Is homework beneficial?",
+          "full_chars": 23,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "First, there are three arguments for why homework is excellent and ought to continue in modern schools. 1. Homework aids doer-learners. It is generally accepted that there are three types of learners:",
+          "full_chars": 3553,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Should prescription drugs be advertised directly to consumers?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Many ads don't include enough information on how well drugs work. For example, Lunesta is advertised by a moth floating through a bedroom window, above a peacefully sleeping person. Actually, Lunesta",
+          "full_chars": 1682,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Should any vaccines be required for children?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Not a full case yet.. Just some little points I put together... Governments should not have the right to intervene in the health decisions parents make for their children. 31% of parents believe they",
+          "full_chars": 4497,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
+        "query": {
+          "text": "Should abortion be legal?",
+          "full_chars": 25,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Abortions should be legal as Personhood begins after a fetus becomes viable or after birth, not at conception. According to the U.S. Supreme Court a person is to get their age when they are out of the",
+          "full_chars": 309,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26",
+        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
+        "query": {
+          "text": "Do standardized tests improve education?",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Resolved: The SAT, ACT, and other standardized tests provided more insight into a high school student's preparedness for education at elite colleges and universities than high school GPA and therefore",
+          "full_chars": 4159,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/webis-touche2020-v3",
-    "source_task": "Touche2020Retrieval.v3"
+    "source_task": "Touche2020Retrieval.v3",
+    "example_count": 5
   }
 }

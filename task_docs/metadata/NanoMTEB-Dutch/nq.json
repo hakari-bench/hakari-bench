@@ -161,6 +161,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test66",
+        "document_id": "doc1824",
+        "query": {
+          "text": "Wanneer is Chinees Nieuwjaar en welk jaar is het",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chinees Nieuwjaar Chinees Nieuwjaar,[a][2] ook wel bekend als het Lentefeest in modern China,[b] is een belangrijk Chinees festival dat wordt gevierd bij de overgang van de traditionele lunisolaire Ch",
+          "full_chars": 620,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test123",
+        "document_id": "doc4611",
+        "query": {
+          "text": "wat is het verschil tussen ron en mon",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Octaangetal Een ander type octaangetal, Motor Octaangetal (MON) genaamd, wordt bepaald bij een motorsnelheid van 900 tpm in plaats van de 600 tpm voor RON.[1] Bij MON-tests wordt een vergelijkbare tes",
+          "full_chars": 682,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test103",
+        "document_id": "doc3528",
+        "query": {
+          "text": "aan wie behoorde puerto rico voordat het tot de VS behoorde",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Puerto Rico Oorspronkelijk bewoond door de inheemse Taíno-bevolking, werd het eiland in 1493 tijdens zijn tweede reis door Christoffel Columbus voor Spanje geclaimd. Later onderging het invasiepoginge",
+          "full_chars": 1017,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test9",
+        "document_id": "doc91",
+        "query": {
+          "text": "Wie neemt de beslissingen over wat er geproduceerd wordt in een markteconomie?",
+          "full_chars": 78,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Markteconomie Een markteconomie is een economisch systeem waarin beslissingen over investeringen, productie en distributie gebaseerd zijn op het samenspel van vraag en aanbod,[1] wat de prijzen van go",
+          "full_chars": 649,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test161",
+        "document_id": "doc5875",
+        "query": {
+          "text": "wie is de man die vanuit de ruimte sprong",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Felix Baumgartner Felix Baumgartner (Duits: [ˈfeːlɪks ˈbaʊ̯mˌɡaɐ̯tnɐ]; geboren 20 april 1969) is een Oostenrijkse parachutist, waaghals en BASE-jumper.[1] Hij staat vooral bekend om zijn sprong naar d",
+          "full_chars": 994,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

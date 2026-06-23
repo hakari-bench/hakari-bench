@@ -134,14 +134,97 @@
         "url": "https://arxiv.org/abs/2309.07597",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "definitive_benchmark_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/EcomRetrieval",
         "url": "https://huggingface.co/datasets/mteb/EcomRetrieval",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "200163",
+        "document_id": "156642",
+        "query": {
+          "text": "奥尔良味香肠调理",
+          "full_chars": 8,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "畅之味香肠调料五组合香肠调料台湾风味黑胡椒香辣蒜香新奥尔良",
+          "full_chars": 29,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "200028",
+        "document_id": "25061",
+        "query": {
+          "text": "吉莫特洗鼻器",
+          "full_chars": 6,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "新品吉莫特洗鼻专用洗鼻盐 医生推荐儿童成人洗鼻瑜伽洗鼻盐60包",
+          "full_chars": 31,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "200006",
+        "document_id": "6892",
+        "query": {
+          "text": "约肤深层滋润免蒸发膜",
+          "full_chars": 10,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "约肤免蒸发膜修护干枯倒膜改善毛躁头发护理水疗顺滑护发素女柔顺",
+          "full_chars": 30,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "200189",
+        "document_id": "181037",
+        "query": {
+          "text": "童装韩版睡衣",
+          "full_chars": 6,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "女童睡衣法兰绒秋冬季儿童珊瑚绒加厚保暖女孩家居服中大童装套装",
+          "full_chars": 30,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "200070",
+        "document_id": "66962",
+        "query": {
+          "text": "尼康z62",
+          "full_chars": 5,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nikon/尼康z6ii z7ii二代z6z7全画幅微单机身Z62Z72 2代24-70套机",
+          "full_chars": 46,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

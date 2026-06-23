@@ -130,8 +130,91 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-th-160",
+        "document_id": "doc-th-1280",
+        "query": {
+          "text": "สล็อตออนไลน์เป็นเกมที่ได้รับความนิยมมากเพราะอะไร?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "【เกมยิงปลาตายไว】เครดิต ฟรี 999 vjf | 2019-09-18 | อ่านเรื่องเต็ม(610) | ทบทวน(526) 【แจก เครดิต ฟรี 2000】แจก เงิน ฟรี 1000 h1h | 2019-09-18 | อ่านเรื่องเต็ม(122) | ทบทวน(535) 【เว็บ เล่น ดั ม มี่ ออนไลน",
+          "full_chars": 25397,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-1052",
+        "document_id": "doc-th-8405",
+        "query": {
+          "text": "ในสังคมที่เราอาศัยอยู่ในปัจจุบัน, ทำไมการมีพ่อที่ออกไปทำงานอย่างหนักเพื่อเลี้ยงครอบครัวถือว่าเป็นแบบ",
+          "full_chars": 145,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "คุณกำลังอ่าน: อุตสาหกรรมบันเทิงเกาหลีใต้ เติบโตพร้อมกับการสร้างประชาธิปไตย คุยกับ อ.จักรกริช สังขมณี Posted On 24 April 2020 Karoonporn Chetpayark ภาพยนตร์เกาหลีคว้าออสการ์ ซีรีส์ก็โด่งดัง เรตติ้งดี ม",
+          "full_chars": 28444,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-436",
+        "document_id": "doc-th-3487",
+        "query": {
+          "text": "าความสำคัญและการตัดสินใจที่ดีในการเลือกตั้งกรรมการอีกครั้งควรพิจารณาอะไรบ้างเพื่อให้คณะกรรมการมีประส",
+          "full_chars": 137,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "การกำกับดูแลกิจการ - King Wai Group (Thailand) Public Company Limited Home / นักลงทุนสัมพันธ์ / การกำกับดูแลกิจการ บริษัทมีพันธะกิจเพื่อบรรลุถึงมาตรฐานระดับสูงของหลักการกำกับดูแลกิจการและได้กำหนดแนวทา",
+          "full_chars": 29125,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-386",
+        "document_id": "doc-th-3087",
+        "query": {
+          "text": "โรงแรมใน Balaclava มีสิ่งอำนวยความสะดวกอะไรบ้างที่ทำให้เป็นที่นิยมในการเข้าพัก?",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "10 โรงแรมที่ดีที่สุด ใกล้ Port Louis Race track - TripAdvisor โรงแรมที่ดีที่สุดใกล้ Port Louis Race track, พอร์ตหลุยส์ โรงแรม พอร์ตหลุยส์ ทั้งหมด ข้อเสนอของโรงแรมใน พอร์ตหลุยส์ โรงแรมแบบกระชั้นใน พอร์",
+          "full_chars": 18946,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-361",
+        "document_id": "doc-th-2887",
+        "query": {
+          "text": "วิธีแก้ปัญหาเกี่ยวกับการลบข้อมูลในโฟลเดอร์ blocks ใน Bitcoin core คืออะไร?",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ที่อยู่ลบ bitcoin core Litecoin ราคา gbp ดูธุรกรรมของ bitcoin ที่อยู่ลบ bitcoin core - Ubs รายงาน bitcoin pdf 1060 ม ข าวล อว าจะม ร นย อยอ กร น เป นร นใช แรม 5GB หล งจากในป จจ บ นม การ ดร นน ในร นแรม",
+          "full_chars": 15292,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

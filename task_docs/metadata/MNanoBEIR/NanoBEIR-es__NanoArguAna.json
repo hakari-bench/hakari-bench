@@ -142,7 +142,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -150,15 +150,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "El público es apático ante la reforma. Es discutible si la reforma de la Cámara de los Lores debería",
+          "full_chars": 572,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La campaña de voto alternativo no puede compararse con una reforma del sistema político. Además, no se debe confundir a un público mal informado debido a la manipulación política con apatía. A menudo,",
+          "full_chars": 462,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "La expansión de Heathrow es vital para la economía. La expansión de Heathrow garantizaría muchos de",
+          "full_chars": 1285,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "La comunidad empresarial está lejos de estar unida en su supuesto apoyo a una tercera pista. Las encuestas sugieren que muchos negocios influyentes, en realidad, no apoyan la expansión. Una carta expr",
+          "full_chars": 1438,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "Las personas tienen demasiadas opciones, lo que las hace menos felices. La publicidad lleva a muchas",
+          "full_chars": 989,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Las personas están descontentas porque no pueden tenerlo todo, no porque se les ofrezca demasiadas opciones y eso les resulte estresante. De hecho, los anuncios juegan un papel crucial al asegurar que",
+          "full_chars": 983,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "Los ataques cibernéticos a menudo son perpetrados por actores no estatales, como ciberterroristas o",
+          "full_chars": 1067,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "En caso de un ataque de actores no estatales, muchos expertos en derecho internacional coinciden en que el estado puede aún retaliar en defensa propia si otro estado es 'incapaz o no está dispuesto a",
+          "full_chars": 599,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "Porque la religión promueve la certeza de la creencia, el odio divino es fácil de utilizar para just",
+          "full_chars": 1473,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Nadie está siendo obligado a cometer actos de violencia por las palabras de otra persona; es su elección hacerlo. Igualmente, hay muchas personas que podrían tener opiniones que se considerarían homof",
+          "full_chars": 680,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -70,9 +70,13 @@ For reranking research, NanoCodeSearchNetCCR is a good case where lexical candid
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeSearchNetCCR is documented through CoIR and the CodeSearchNet Challenge paper. The CoIR-Retrieval CodeSearchNet-ccr dataset card is the source-specific public reference for prefix-continuation retrieval.
+| Query | Positive document |
+| --- | --- |
+| def _get_field(self, field_name, default=None): """ Fetches a field from extras, and returns it. Thi... [100 / 337 chars] | GrpcHook._get_field full_field_name = 'extra__grpc__{}'.format(field_name) if full_field_name in self.extras: return self.extras[full_field_name] else: return default [206 chars] |
+| func (in *inflights) freeTo(to uint64) { if in.count == 0 \|\| to < in.buffer[in.start] { // out of th... [100 / 364 chars] | freeTo -= size } } // free i inflights and set new start index in.count -= i in.start = idx if in.count == 0 { // inflights is empty, reset the start index so that we don't grow the // buffer unnecess... [200 / 237 chars] |
+| func NewCertPool(CAFiles []string) (*x509.CertPool, error) { certPool := x509.NewCertPool() for _, C... [100 / 304 chars] | NewCertPool break } cert, err := x509.ParseCertificate(block.Bytes) if err != nil { return nil, err } certPool.AddCert(cert) } } return certPool, nil } [176 chars] |
+| def build_for(packages) metadata = packages.first.metadata name = metadata[:name] # Attempt to load... [100 / 843 chars] | Omnibus.ArtifactoryPublisher.build_for name: name, number: manifest.build_version, vcs_revision: manifest.build_git_revision, build_agent: { name: "omnibus", version: Omnibus::VERSION, }, modules: [ {... [200 / 1,172 chars] |
+| function isArrayBufferView(val) { var result; if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuff... [100 / 177 chars] | isArrayBufferView = (val) && (val.buffer) && (val.buffer instanceof ArrayBuffer); } return result; } [104 chars] |
 
 ### Source Reference Table
 

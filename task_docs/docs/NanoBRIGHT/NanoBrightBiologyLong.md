@@ -62,9 +62,13 @@ A model targeting this task should learn to retrieve full documents from localiz
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| What is the longest-lasting protein in a human body? Protein life times are, on average, not particu... [100 / 1,199 chars] | 2006 Function[edit] The ELN gene encodes a protein that is one of the two components of elastic fibers. The encoded protein is rich in hydrophobic amino acids such as glycine and proline, which form m... [200 / 6,263 chars] |
+| Is kissing a natural human activity? The word natural here is meant in contrast to it being a sociol... [100 / 435 chars] | A kiss is the touch or pressing of one's lips against another person or an object. Cultural connotations of kissing vary widely. Depending on the culture and context, a kiss can express sentiments of... [200 / 40,449 chars] |
+| What types of light can't a plant photosynthesize in? I have a plant on my desk, and it got me to wo... [100 / 509 chars] | Chlorophyll is any of several related green pigments found in cyanobacteria and in the chloroplasts of algae and plants. Its name is derived from the Greek words χλωρός, khloros ("pale green") and φύλ... [200 / 14,080 chars] |
+| If Tumors have lots of mutations in them how is it the immune system can't detect them? If a cancero... [100 / 425 chars] | The major histocompatibility complex (MHC) is a large locus on vertebrate DNA containing a set of closely linked polymorphic genes that code for cell surface proteins essential for the adaptive immune... [200 / 48,879 chars] |
+| Could viruses be used as antibiotics? Could we use viruses that only affect bacteria to act as antib... [100 / 204 chars] | Phage therapy, viral phage therapy, or phagotherapy is the therapeutic use of bacteriophages for the treatment of pathogenic bacterial infections. This therapeutic approach emerged at the beginning of... [200 / 41,348 chars] |
 
 ### Source Reference Table
 

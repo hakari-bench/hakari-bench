@@ -70,12 +70,13 @@ For evaluation, this split is best read as consumer-health document retrieval. T
 
 ## Example Data
 
-### Public Sources
-
-- Spanish Passage Retrieval dataset page: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
-- Spanish Passage Retrieval dataset card: https://huggingface.co/datasets/jinaai/spanish_passage_retrieval
-- S2P task dataset card: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P
-- ECIR paper DOI: https://doi.org/10.1007/978-3-030-15719-7_19
+| Query | Positive document |
+| --- | --- |
+| ¿Cuáles son los beneficios de la leche materna? [47 chars] | Del 1 al 7 de agosto se celebra la Semana Mundial de la Lactancia Materna en más de 170 países. La Alianza Mundial pro lactancia materna (WABA) coordina las numerosas iniciativas previstas para esta s... [200 / 2,811 chars] |
+| ¿Cuándo debo introducir alimentos complementarios aparte de la lactancia materna? [81 chars] | Edad corregida en niños prematuros. El desarrollo de un niño prematuro no puede compararse con el de un bebé nacido a término, al menos hasta los dos años ¿Qué es la edad gestacional? La edad gestacio... [200 / 3,006 chars] |
+| ¿Tendría que darle el pecho a mi bebé siempre que me lo pida? [61 chars] | ¿Con qué frecuencia debo amamantar al bebé? Durante el primer mes de vida, su recién nacido debería alimentarse entre ocho y 12 veces al día. Si tiene la sensación de que está amamantando a su bebé co... [200 / 12,558 chars] |
+| ¿Cuáles son las vacunas por las que no tengo que pagar? [55 chars] | Vacunas sistemáticas financiadas, las que todos los niños en España reciben de forma universal, que incluye las vacunas oficiales ofertadas gratuitamente por cada una de las CC. AA. Se incluyen las si... [200 / 3,358 chars] |
+| Me gustaría saber más sobre la vacunación para la prevención de enfermedades infecciosas [88 chars] | Actualmente, los niños en los Estados Unidos reciben vacunas rutinariamente que los protegen de más de una docena de enfermedades como sarampión, polio, tétanos, difteria y tos ferina. La mayoría de e... [200 / 1,144 chars] |
 
 ### Source Reference Table
 

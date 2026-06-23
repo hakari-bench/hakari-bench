@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 75
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-mathematica-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-mathematica-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,111 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Mathematica-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-mathematica-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-mathematica-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "55294",
+        "document_id": "56341",
+        "query": {
+          "text": "DeleteDuplicatesBy nie działa tak, jak się spodziewałem. Czy czegoś mi brakuje?",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Szybsza alternatywa dla DeleteDuplicates do usuwania elementów z listy Mam listę w tym stylu data={{a1,b1,c1,d1,e1,f1}, {a2,b2,c2,d2,e2,f2}} Muszę usunąć wszystkie elementy, w których znajduje się `b1",
+          "full_chars": 621,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "17250",
+        "document_id": "38971",
+        "query": {
+          "text": "Czy można zmienić kolor fabuły w programie Show?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Edytuj wykres/grafikę po narysowaniu. Czasami wpadam w sytuację, gdy istnieją obiekty graficzne (głównie wykresy), których rysowanie zajmuje trochę czasu. Dobra praktyka sugerowałaby, że całą ocenę pr",
+          "full_chars": 545,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11794",
+        "document_id": "50550",
+        "query": {
+          "text": "Uzyskaj wzór na interpolację wielomianową",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Określ funkcje na podstawie punktów danych Czy Mathematica może rozwiązać dla f(x,y) = 0 takie, że {x,y} zawiera `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}} `? Czy musimy najpierw określić f(x,y) ? Dzię",
+          "full_chars": 207,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8865",
+        "document_id": "14112",
+        "query": {
+          "text": "Przekaż funkcję lub formułę jako parametr funkcji",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Przekazywanie funkcji jako argumentu innej funkcji > **Możliwe duplikowanie:** > Przekaż funkcję lub formułę jako parametr funkcji Próbuję zaimplementować prostą funkcję podobną do wykresu [], z tym s",
+          "full_chars": 892,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25502",
+        "document_id": "2794",
+        "query": {
+          "text": "Jak wpisać duże „E” w Mathematica 9 za pomocą „ToExpression” i „TeXForm”?",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nie można przekonwertować danych wejściowych $\\TeX$ na matematykę Wejście ToExpression[\"\\\\sqrt{x y}\", TeXForm] daje mi wynik `$Failed`. Może mój bardzo stary komputer jest problemem, ale to jedyne pol",
+          "full_chars": 278,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

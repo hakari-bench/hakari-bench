@@ -48,13 +48,13 @@ Strong models should improve climate evidence recall while maintaining claim spe
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Dal 1970 al 1998 c'è stato un periodo di riscaldamento che ha aumentato le temperature di circa 0,4°C... | Il Paleocene è un'epoca geologica che si estese per circa 10 milioni di anni, dal 66 al 56 milioni di anni fa... |
-| In realtà, la tendenza, anche se non statisticamente significativa, è in calo. | Il ciclo solare o ciclo di attività magnetica solare è il ciclo quasi periodico di 11 anni... |
-| I livelli del mare locali e regionali continuano a mostrare la normale variabilità naturale, salendo in alcuni punti e scendendo in altri. | Il livello medio del mare è il livello medio della superficie di uno o più degli oceani della Terra... |
-| Gli scienziati del clima dicono che alcuni elementi legati all'uragano Harvey suggeriscono che il riscaldamento globale sta aggravando una situazione già critica. | Gli effetti del riscaldamento globale sono i cambiamenti ambientali e sociali causati dalle emissioni di gas serra prodotte dall'uomo... |
-| L'esperimento CLOUD del CERN ha testato solo una delle quattro condizioni necessarie per attribuire il riscaldamento globale ai raggi cosmici. | L'attribuzione dei recenti cambiamenti climatici è lo sforzo di determinare scientificamente i meccanismi responsabili dei cambiamenti climatici osservati... |
+| Query | Positive document |
+| --- | --- |
+| Dal 1970 al 1998 c'è stato un periodo di riscaldamento che ha aumentato le temperature di circa 0,4°... [100 / 180 chars] | Il Paleocene (pronunciato /ˈpæliəˌsiːn/ o /ˈpælioʊˌsiːn/) o Paleocene, il "recentemente antico", è un'epoca geologica che si estese per circa 10 milioni di anni, dal 66 al 56 milioni di anni fa. È la... [200 / 1,167 chars] |
+| In realtà, la tendenza, anche se non statisticamente significativa, è in calo. [78 chars] | Il ciclo solare o ciclo di attività magnetica solare è il ciclo quasi periodico di 11 anni che caratterizza le variazioni dell'attività solare (comprese le variazioni nei livelli di radiazione solare... [200 / 738 chars] |
+| I livelli del mare locali e regionali continuano a mostrare la normale variabilità naturale, salendo... [100 / 138 chars] | Il livello medio del mare (MSL) (abbreviato semplicemente livello del mare) è il livello medio della superficie di uno o più degli oceani della Terra, rispetto al quale si misurano le altezze, come le... [200 / 1,198 chars] |
+| Gli scienziati del clima dicono che alcuni elementi legati all'uragano Harvey suggeriscono che il ri... [100 / 162 chars] | Gli effetti del riscaldamento globale sono i cambiamenti ambientali e sociali causati (direttamente o indirettamente) dalle emissioni di gas serra prodotte dall'uomo. C'è un consenso scientifico che i... [200 / 1,500 chars] |
+| L'esperimento CLOUD del CERN ha testato solo una delle quattro condizioni necessarie per attribuire... [100 / 198 chars] | L'attribuzione dei recenti cambiamenti climatici è lo sforzo di determinare scientificamente i meccanismi responsabili dei cambiamenti climatici osservati sulla Terra, comunemente noti come "riscaldam... [200 / 2,273 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should improve climate evidence recall while maintaining claim spe
 
 | Label | URL |
 |---|---|
-| Climate-FEVER paper | https://arxiv.org/abs/2012.00614 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Climate-FEVER paper (https://arxiv.org/abs/2012.00614) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

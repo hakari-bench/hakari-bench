@@ -123,11 +123,13 @@ comes from cross-lingual dense similarity.
 
 ## Example Data
 
-Representative Dutch queries ask which statement about a shooting event is
-correct, what arrestees must receive to be held longer than 24 hours, which
-statement about Chandrayaan-1 is not true, who proposed reviewing the Clean Air
-Act, and what the NBA decided to suspend. Positive documents are English
-passages containing the answer.
+| Query | Positive document |
+| --- | --- |
+| Welke uitspraak over het evenement waar de schietpartij plaatsvond, is juist? [77 chars] | At least 100 people had attended the party, in order to celebrate the first anniversary of a couple whose wedding was held last year. A formal anniversary event was scheduled for a later date, officia... [200 / 435 chars] |
+| Wat moeten arrestanten volgens het tijdelijke contactverbod dat in de tekst wordt genoemd, krijgen o... [100 / 149 chars] | In the last 3 months, over 80 arrestees were released from the Central Booking facility without being formally charged. In April this year, a temporary restaining order was issued by Judge Glynn again... [200 / 608 chars] |
+| Welke uitspraak over de maansonde van de Chandrayaan-1 is niet waar? [68 chars] | The unmanned lunar orbiter Chandrayaan-1 ejected its Moon Impact Probe (MIP), which hurtled across the surface of the Moon at 1.5 kilometres per second (3000 miles per hour), and successfully crash la... [200 / 379 chars] |
+| Wie stelde voor om de 'Clean Air Act' te herschrijven? [54 chars] | "Prime Minister Stephen Harper has agreed to send the government's 'Clean Air Act' to an all-party committee for review, before its second reading, after Tuesday's 25 minute meeting with NDP leader Ja... [200 / 864 chars] |
+| Welke van de volgende heeft de NBA besloten op te schorten? [59 chars] | On Wednesday, the United States' National Basketball Association (NBA) suspended its professional basketball season due to concerns regarding COVID-19. The NBA's decision followed a Utah Jazz player t... [200 / 239 chars] |
 
 ### Public Sources
 
@@ -142,10 +144,10 @@ passages containing the answer.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | https://arxiv.org/abs/2308.16884 |
-| facebookresearch/belebele | 2023 | repository | https://github.com/facebookresearch/belebele |
-| mteb/belebele |  | dataset card | https://huggingface.co/datasets/mteb/belebele |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| facebookresearch/belebele | 2023 | repository | [https://github.com/facebookresearch/belebele](https://github.com/facebookresearch/belebele) |
+| mteb/belebele |  | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
 
 ### Representative Snippets
 

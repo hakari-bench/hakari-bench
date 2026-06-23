@@ -86,30 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "EuroPIRQ-retrieval",
-        "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -118,6 +94,112 @@
           "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "EuroPIRQ-retrieval",
+        "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d9019278-7bb8-44f1-b252-361c01e9c2ba",
+        "document_id": "8228",
+        "query": {
+          "text": "What is required for the ongoing process of building and operating an integrated market?",
+          "full_chars": 88,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Finally, building a fully integrated market is not a definite task with a finite end, but rather an ongoing process requiring constant effort, vigilance and updating. There are always new challenges a",
+          "full_chars": 504,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26f8bcdf-de29-42e0-babd-52c8e8f3b6bc",
+        "document_id": "1393",
+        "query": {
+          "text": "How do high-speed train connections contribute to social and economic cohesion in the EU?",
+          "full_chars": 89,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "However, the Commission notes that air transport is not the only driver of development in terms of regional accessibility. High-speed train connections also make a significant contribution to social a",
+          "full_chars": 498,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0383eed1-3967-49df-9279-d086b6d0e533",
+        "document_id": "6362",
+        "query": {
+          "text": "What are the challenges faced by Member States in implementing national lifelong learning strategies",
+          "full_chars": 117,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The implementation of national lifelong learning strategies and instruments, which are key to enabling not only young people, but also adults, to acquire, maintain and develop knowledge, skills and co",
+          "full_chars": 581,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f90f8fe8-df3a-45c5-a844-c72ad626da0a",
+        "document_id": "3738",
+        "query": {
+          "text": "How does Article 56 EC affect the taxation of dividends received by a resident company from a non-re",
+          "full_chars": 168,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Article 56 EC is, furthermore, to be interpreted as meaning that it precludes legislation of a Member State which exempts from corporation tax dividends which a resident company receives from another",
+          "full_chars": 564,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "50efd59d-5e0f-460a-9e7c-f86dffb635bb",
+        "document_id": "664",
+        "query": {
+          "text": "What is the purpose of requiring undertakings to provide sufficient information in Form RS?",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Given the above mechanism, it is crucial to the smooth operation of Article 4(5) that all Member States where the case is reviewable under national competition law, and which are hence competent to ex",
+          "full_chars": 515,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

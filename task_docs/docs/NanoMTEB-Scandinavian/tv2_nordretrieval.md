@@ -70,12 +70,13 @@ For evaluation, this split rewards exact local-news item retrieval. The stronges
 
 ## Example Data
 
-### Public Sources
-
-- Scandinavian Embedding Benchmarks paper: https://arxiv.org/abs/2406.02396
-- Nordjylland News datasheet: https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html
-- Are GLLMs Danoliterate? thesis: https://sorenmulli.github.io/thesis/thesis.pdf
-- Source dataset card: https://huggingface.co/datasets/alexandrainst/nordjylland-news-summarization
+| Query | Positive document |
+| --- | --- |
+| Højesteret har tirsdag afgjort, at Lokalbanken i Nordsjælland ikke har patent på navnet "Lokalbanken... [100 / 184 chars] | Danmarks højeste retsinstans, Højesteret i København, besluttede tirsdag, at andre end Lokalbanken i Nordsjælland godt må bruge navnet. Derfor er direktøren for Spar Nord Bank også ganske glad. - Vi f... [200 / 1,259 chars] |
+| Royal Arctic Line A/S og Aalborg Havn A/S er uenige på en række punkter, oplyser Aalborg Havn A/S. N... [100 / 137 chars] | Forhandlingerne har siden oktober bølget frem og tilbage mellem Aalborg Havn A/S og Royal Arctic Line A/S. Målet var at forlænge den nuværende aftale omkring Grønlandstrafikken helt frem til 2025 - og... [200 / 1,351 chars] |
+| Det nordjyske affaldsselskab AVV’s bestyrelse har besluttet, at en del af virksomhedens egenkapital... [100 / 183 chars] | Det er en ordning, der gør, at det nordjyske affaldsselskab AVV med hovedsæde i Hjørring kan genanvende mere og bidrage positivt til verdensmål og klimamålsætninger. Finansieringen sker ved at begræ... [200 / 1,205 chars] |
+| Den unge sangerinde Laura Mo får pæne ord med på vejen for sit nye album "Motel". [81 chars] | Stjernerne drysser ned over hende og ligeledes de pæne ord. Laura Mo udgav den 12. marts sit andet album "Motel" og det er blevet taget pænt imod af anmelderne. Hun har blandt andet fået fem stjerner... [200 / 707 chars] |
+| Sidste stemme er afgivet, og nu skal det nye byråd findes. Følg valget på tætteste hold lige her. [97 chars] | Kan Mogens Jespersen genvinde titlen som borgmester eller vil Leif Skaarup og de røde partier vinde så mange mandater, at de kan vippe ham af tronen? Han er ny mand på posten, og i 2013 oplevede S lig... [200 / 744 chars] |
 
 ### Source Reference Table
 

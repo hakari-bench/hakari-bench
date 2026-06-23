@@ -62,21 +62,22 @@ Models should encode stance, claim, premise, and rebuttal relation. Hard negativ
 
 ## Example Data
 
-### Public Sources
-
-- [Retrieval of the Best Counterargument without Prior Topic Knowledge](https://aclanthology.org/P18-1023/), task paper.
-- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/), VN-MTEB paper.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), benchmark paper.
-- [GreenNode/arguana-vn](https://huggingface.co/datasets/GreenNode/arguana-vn), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Quyền tự quyết cá nhân là quyền con người cơ bản, ngang hàng với quyền sống. Nguyên tắc cơ bản của c... [100 / 1,001 chars] | triết lý y tế đạo đức nhà cho phép quyên góp các cơ quan quan trọng ngay cả chi phí Con người cũng là một sinh vật xã hội. Trong khi chúng ta có quyền đối với cơ thể của mình, chúng ta cũng có nghĩa v... [200 / 818 chars] |
+| Động vật thí nghiệm được đối xử tốt Động vật dùng trong nghiên cứu nói chung không bị đau khổ. Mặc d... [100 / 559 chars] | thú vật khoa học khoa học đại chúng thử nghiệm trên động vật Chỉ vì một con vật được đối xử tốt khi nó được nuôi dưỡng không ngăn chặn nỗi đau rất thực tế trong khi thử nghiệm. Quy tắc nghiêm ngặt và... [200 / 353 chars] |
+| Việc xây dựng đường băng thứ ba sẽ gây ra vấn đề tiếng ồn và ô nhiễm. Mật độ dân cư cao trong khu vự... [100 / 1,302 chars] | kinh tế môi trường chung khí hậu môi trường chung ô nhiễm nhà ở Việc bổ sung đường băng không nhất thiết dẫn đến sự gia tăng đáng kể về ô nhiễm tiếng ồn, vì điều đó phụ thuộc vào vị trí đặt đường băng... [200 / 1,124 chars] |
+| Những va chạm là một phần của trò chơi. Đầu tiên, những va chạm là một phần truyền thống của bóng ch... [100 / 2,102 chars] | đội thể thao tin rằng giải bóng chày nên tiếp tục cho phép va chạm Những va chạm ít xảy ra trong trò chơi hơn những gì mọi người nghĩ. Ý tưởng rằng những va chạm đã tồn tại từ lâu trong trò chơi là mộ... [200 / 1,659 chars] |
+| Không có quyền không bị xúc phạm, việc thực thi những gì được cho là chấp nhận được để suy nghĩ hoặc... [100 / 1,230 chars] | Nhà ở khác biệt sống sẽ trừng phạt bài phát biểu thù hận tôn giáo Đây chỉ là một huyền thoại. Xã hội thường thường lập pháp để ngăn ngừa hành vi phạm tội bằng cách hạn chế những gì có thể nói hoặc làm... [200 / 675 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Retrieval of the Best Counterargument without Prior Topic Knowledge | 2018 | ACL paper | https://aclanthology.org/P18-1023/ |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| GreenNode/arguana-vn |  | dataset card | https://huggingface.co/datasets/GreenNode/arguana-vn |
+| Retrieval of the Best Counterargument without Prior Topic Knowledge | 2018 | ACL paper | [https://aclanthology.org/P18-1023/](https://aclanthology.org/P18-1023/) |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| GreenNode/arguana-vn |  | dataset card | [https://huggingface.co/datasets/GreenNode/arguana-vn](https://huggingface.co/datasets/GreenNode/arguana-vn) |
 
 ### Representative Snippets
 

@@ -170,11 +170,11 @@ need; hard negatives should share keywords but answer a different question.
 
 | Query | Positive document |
 | --- | --- |
-| ما هي متلازمة الترميم (21 chars) | متلازمة التمعن. متلازمة التمعن، المعروفة أيضًا باسم مريسيزم، هي نوع من اضطرابات الأكل غير المحددة بشكل خاص، والتي تسبب إرجاع الطعام. على الرغم من أنها لا تُعرف كاضطراب أكل محدد في الدليل التشخيصي والإحصائي الرابع، إلا أن بعض ... [truncated 225 chars](265 chars) |
-| من غنى أغنية "هنا أذهب مرة أخرى"؟ (33 chars) | للمستعمالات الأخرى، انظر هنا أذهب مرة أخرى (توضيح). "هنا أذهب مرة أخرى" هي أغنية لفريق الروك البريطاني وايتسنيك. تم إصدار الأغنية لأول مرة في ألبومهم لعام 1982، "قديسين ومذنبين"، ثم تم تسجيلها مرة أخرى لألبومهم الذي يحمل نفس ... [truncated 225 chars](323 chars) |
-| من هو دور كاميرون بويس في مسلسل ليف ومادي؟ (42 chars) | استعدوا لجلسة من الضحك الجيد، أيها الأصدقاء. في مشاهدة مسبقة حصرية لجزء من الحلقة التي ستعرض في التاسع عشر من أبريل من مسلسل 'Liv & Maddie' بعنوان 'Prom-A-Rooney'. بالطبع. في الفيديو المضحك، نرى نجم مسلسل 'Jessie' كاميرون بوي ... [truncated 225 chars](313 chars) |
-| أين توجد أغلبية الصحارى الكبيرة على الأرض؟ (42 chars) | بقية صحارى الأرض تقع خارج المناطق القطبية. أكبر صحراء هي صحراء الصحراء الكبرى، وهي صحراء استوائية في شمال أفريقيا. (114 chars) |
-| ما معنى كلمة "copper" في سياق شرطي؟ (35 chars) | وفقًا للنتائج الحالية، يبدو أن مصطلح "كوبر" (أي ضابط شرطة، بمعنى حرفي "من يقبض") سبق مصطلح "كوب" (يُستخدم إما كفعل بمعنى القبض أو كاسم بمعنى ضابط شرطة). قد يكون لشرائط الكوبر التي كان يحملها أول رتب شرطة مدينة نيويورك دور في ... [truncated 225 chars](302 chars) |
+| ما هي متلازمة الترميم [21 chars] | متلازمة التمعن. متلازمة التمعن، المعروفة أيضًا باسم مريسيزم، هي نوع من اضطرابات الأكل غير المحددة بشكل خاص، والتي تسبب إرجاع الطعام. على الرغم من أنها لا تُعرف كاضطراب أكل محدد في الدليل التشخيصي والإ... [200 / 265 chars] |
+| من غنى أغنية "هنا أذهب مرة أخرى"؟ [33 chars] | للمستعمالات الأخرى، انظر هنا أذهب مرة أخرى (توضيح). "هنا أذهب مرة أخرى" هي أغنية لفريق الروك البريطاني وايتسنيك. تم إصدار الأغنية لأول مرة في ألبومهم لعام 1982، "قديسين ومذنبين"، ثم تم تسجيلها مرة أخر... [200 / 323 chars] |
+| من هو دور كاميرون بويس في مسلسل ليف ومادي؟ [42 chars] | استعدوا لجلسة من الضحك الجيد، أيها الأصدقاء. في مشاهدة مسبقة حصرية لجزء من الحلقة التي ستعرض في التاسع عشر من أبريل من مسلسل 'Liv & Maddie' بعنوان 'Prom-A-Rooney'. بالطبع. في الفيديو المضحك، نرى نجم م... [200 / 313 chars] |
+| أين توجد أغلبية الصحارى الكبيرة على الأرض؟ [42 chars] | بقية صحارى الأرض تقع خارج المناطق القطبية. أكبر صحراء هي صحراء الصحراء الكبرى، وهي صحراء استوائية في شمال أفريقيا. [114 chars] |
+| ما معنى كلمة "copper" في سياق شرطي؟ [35 chars] | وفقًا للنتائج الحالية، يبدو أن مصطلح "كوبر" (أي ضابط شرطة، بمعنى حرفي "من يقبض") سبق مصطلح "كوب" (يُستخدم إما كفعل بمعنى القبض أو كاسم بمعنى ضابط شرطة). قد يكون لشرائط الكوبر التي كان يحملها أول رتب ش... [200 / 302 chars] |
 
 ### Public Sources
 
@@ -193,8 +193,8 @@ need; hard negatives should share keywords but answer a different question.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MS MARCO: A Human Generated MAchine Reading COmprehension Dataset | 2016 | task paper | https://arxiv.org/abs/1611.09268 |
-| MS MARCO dataset site |  | dataset page | https://microsoft.github.io/msmarco/Datasets.html |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| MS MARCO: A Human Generated MAchine Reading COmprehension Dataset | 2016 | task paper | [https://arxiv.org/abs/1611.09268](https://arxiv.org/abs/1611.09268) |
+| MS MARCO dataset site |  | dataset page | [https://microsoft.github.io/msmarco/Datasets.html](https://microsoft.github.io/msmarco/Datasets.html) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

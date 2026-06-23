@@ -62,19 +62,21 @@ Models should represent user intent, topic, risk framing, and answer specificity
 
 ## Example Data
 
-### Public Sources
-
-- [How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection](https://arxiv.org/abs/2301.07597), HC3 paper.
-- [Hello-SimpleAI/HC3](https://huggingface.co/datasets/Hello-SimpleAI/HC3), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| Is socialtrend.com or/and feelthetrend.com legitimate? [54 chars] | It's called a "Pyramid scheme". Its illegal in almost every country of the Western world. You're not going to earn lifetime income, of course, and these things collapse pretty quickly. Most of the "co... [200 / 989 chars] |
+| How to read Google Finance data on dividends [44 chars] | However, you have to remember that not all dividends are paid quarterly. For example one stock I recently purchased has a price of $8.03 and the Div/yield = 0.08/11.9 . $.08 * 4 = $0.32 which is only... [200 / 392 chars] |
+| What is a good way to keep track of your credit card transactions, to reduce likelihood of fraud? [97 chars] | Read your bill, question things that don't look familiar. People who steal credit card numbers don't bother to conceal themselves well. So if you live in Florida, and all of the sudden charges appear... [200 / 725 chars] |
+| When Employees are “Granted” Stock Options, is the Company encouraging Long-Term investments from th... [100 / 103 chars] | There are two things to consider: taxes - beneficial treatment for long-term holding, and for ESPP's you can get lower taxes on higher earnings. Also, depending on local laws, some share schemes allow... [200 / 931 chars] |
+| Does lender care what I use the money for? [42 chars] | When you borrow from a bank, there are secured loans, as with a mortgage, or unsecured lines of credit, usually a more reasonable amount of money, but also based on income. You just asked about a priv... [200 / 429 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection | 2023 | task paper | https://arxiv.org/abs/2301.07597 |
-| Hello-SimpleAI/HC3 |  | dataset card | https://huggingface.co/datasets/Hello-SimpleAI/HC3 |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection | 2023 | task paper | [https://arxiv.org/abs/2301.07597](https://arxiv.org/abs/2301.07597) |
+| Hello-SimpleAI/HC3 |  | dataset card | [https://huggingface.co/datasets/Hello-SimpleAI/HC3](https://huggingface.co/datasets/Hello-SimpleAI/HC3) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

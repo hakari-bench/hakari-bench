@@ -139,12 +139,13 @@ signals used to broaden candidate coverage.
 
 ## Example Data
 
-Representative queries ask how legal hearing under Article 103(1) of the Basic
-Law is defined, what value a complaint procedure has, whether an agent must
-return objects received for the commission, with whom construction start was
-coordinated, and whether shareholders can be obligated to increase
-contributions. Positive documents are long German decisions containing the
-corresponding legal discussion.
+| Query | Positive document |
+| --- | --- |
+| Wie ist das rechtliche Gehör nach Art. 103 Abs. 1 GG definiert? [64 chars] | TenorDer Antrag auf Zulassung der Berufung wird abgelehnt.Der Kläger trägt die Kosten des Zulassungsverfahrens; Gerichtskosten werden nicht erhoben.1G r ü n d e2Der Antrag auf Zulassung der Berufun... [200 / 13,780 chars] |
+| Welchen Wert hat das Beschwerdeverfahren? [41 chars] | TenorDie Beschwerde des Beschwerdeführers vom 27.04.2018 gegen den Beschluss des Amtsgerichts – Familiengericht – Bochum vom 21.03.2018 (57 F 17/18) in Verbindung mit dem Beschluss vom 03.04.2018 wir... [200 / 11,601 chars] |
+| Muss der Beauftragte dem Auftraggeber erhaltene Gegenstände zur Ausführung des Auftrages zurückgeben... [100 / 101 chars] | Tenor1E n t s c h e i d u n g s g r ü n d e :2##blob##nbsp;3##blob##nbsp;4Die in förmlicher Hinsicht unbedenkliche Berufung hat nach demErgebnis der zweitinstanzlichen Beweisaufnahme keinen Erfolg.5... [200 / 13,258 chars] |
+| Mit wem wurde der Baubeginn abgestimmt? [39 chars] | Tenor1.Die Anträge vom 25.04.2012 auf Erlass einer einstweiligen Verfügung werden zurückgewiesen.2.Die Verfügungsklägerin trägt die Kosten des Verfahrens.3.Das Urteil ist vorläufig vollstreckba... [200 / 13,416 chars] |
+| Können Gesellschafter zur Erhöhung von Beiträgen verpflichtet werden? [69 chars] | Auf die Berufung des Beklagten wird das Urteil der 9. Zivilkammer des Landgerichts Koblenz vom 15. Juli 2004 abgeändert und die Klage abgewiesen.Die Kläger tragen die Kosten des Rechtsstreits einsch... [200 / 13,468 chars] |
 
 ### Public Sources
 
@@ -159,8 +160,8 @@ corresponding legal discussion.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents | 2021 | IEEE DOI record | https://doi.org/10.1109/AIKE52691.2021.00011 |
-| LegalQuAD | 2025 | Hugging Face dataset card | https://huggingface.co/datasets/mteb/LegalQuAD |
+| Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents | 2021 | IEEE DOI record | [https://doi.org/10.1109/AIKE52691.2021.00011](https://doi.org/10.1109/AIKE52691.2021.00011) |
+| LegalQuAD | 2025 | Hugging Face dataset card | [https://huggingface.co/datasets/mteb/LegalQuAD](https://huggingface.co/datasets/mteb/LegalQuAD) |
 
 ### Representative Snippets
 

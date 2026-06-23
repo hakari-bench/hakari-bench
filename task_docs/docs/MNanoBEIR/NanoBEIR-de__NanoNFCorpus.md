@@ -48,13 +48,13 @@ Improvements should come from better biomedical German representations, lay-to-t
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Gesunde Schokoladen-Milchshakes | Ziel: Untersuchung der Beziehung zwischen dem Verzehr von Kirschen und dem Risiko von wiederkehrenden Gichtanfällen bei Personen mit Gicht... |
-| Medizinische Ethik | HINTERGRUND: Ein Hauptproblem bei der Kontrolle des Serumcholesterins durch diätetische Maßnahmen scheint die Notwendigkeit zu sein... |
-| Saubohnen | In den letzten 20 Jahren hat das wachsende Interesse an der Biochemie, Ernährung und Pharmakologie von L-Arginin... |
-| Was steckt eigentlich in Chicken Nuggets? | ZIEL: Untersuchung der Inhaltsstoffe von Hähnchen-Nuggets zweier nationaler Fast-Food-Ketten... |
-| gesättigte Fette | Das Interesse an der Möglichkeit, dass die Ernährung der Mutter während der Schwangerschaft die Entwicklung von Allergien bei Kindern beeinflussen könnte... |
+| Query | Positive document |
+| --- | --- |
+| Gesunde Schokoladen-Milchshakes [31 chars] | Ziel: Untersuchung der Beziehung zwischen dem Verzehr von Kirschen und dem Risiko von wiederkehrenden Gichtanfällen bei Personen mit Gicht. Methoden: Wir führten eine Fall-Kreuz-Studie durch, um die Z... [200 / 1,915 chars] |
+| Medizinische Ethik [18 chars] | HINTERGRUND: Ein Hauptproblem bei der Kontrolle des Serumcholesterins durch diätetische Maßnahmen scheint die Notwendigkeit zu sein, die Patientencompliance zu verbessern. ZIELE: Untersuchung der vers... [200 / 2,153 chars] |
+| Saubohnen [9 chars] | In den letzten 20 Jahren hat das wachsende Interesse an der Biochemie, Ernährung und Pharmakologie von L-Arginin zu umfangreichen Studien geführt, um seine ernährungsphysiologischen und therapeutische... [200 / 1,445 chars] |
+| Was steckt eigentlich in Chicken Nuggets? [41 chars] | ZIEL: Untersuchung der Inhaltsstoffe von Hähnchen-Nuggets zweier nationaler Fast-Food-Ketten. HINTERGRUND: Hähnchen-Nuggets sind ein wesentlicher Bestandteil der amerikanischen Ernährung geworden. Wir... [200 / 821 chars] |
+| gesättigte Fette [16 chars] | Das Interesse an der Möglichkeit, dass die Ernährung der Mutter während der Schwangerschaft die Entwicklung von Allergien bei Kindern beeinflussen könnte, hat zugenommen. Die vorliegende prospektive S... [200 / 2,356 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Improvements should come from better biomedical German representations, lay-to-t
 
 | Label | URL |
 |---|---|
-| NFCorpus paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| NFCorpus project page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus paper (https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| NFCorpus project page (https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -70,12 +70,13 @@ Researchers should pay attention to whether a model improves nDCG@10, recall@100
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-android-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Android-PL
+| Query | Positive document |
+| --- | --- |
+| Dlaczego urządzenie z Androidem ROM jest specyficzne? [53 chars] | Dlaczego nie ma ogólnych instalatorów systemu operacyjnego telefonu? Jestem przyzwyczajony do instalowania i usuwania różnych systemów operacyjnych na moich komputerach, nawet mając kilka naraz. Zazwy... [200 / 1,811 chars] |
+| Jak mogę zapisać plik, zamiast go otwierać? [43 chars] | Jak pobrać plik audio ze strony internetowej? Czy istnieje sposób na pobranie pliku audio, takiego jak plik mp3 z przeglądarki systemu Android na urządzenie, aby móc go później słuchać, gdy będę offli... [200 / 347 chars] |
+| Jak przechwycić strumień wideo z ekranu telefonu z systemem Android i wyświetlić go na laptopie? [96 chars] | Jak wyświetlić ekran mojego telefonu z systemem Android do prezentacji? Jak wyświetlić ekran mojego Droid Incredible, aby móc zademonstrować smartfon w pokoju pełnym ludzi? Czy ktoś wie, jak mogę połą... [200 / 241 chars] |
+| „Niezgodny z innymi aplikacjami korzystającymi z tego samego wspólnego identyfikatora użytkownika” p... [100 / 139 chars] | „Niezgodny z innymi aplikacjami korzystającymi z tego samego wspólnego identyfikatora użytkownika” podczas instalowania usługi Google Play? Muszę uruchomić Google Plus, a Google Plus potrzebuje usługi... [200 / 778 chars] |
+| Jak mogę kontrolować zarówno głośność, jak i pomijanie utworów na moim urządzeniu z Androidem za pom... [100 / 114 chars] | Sterowanie słuchawkami w SGS-III > **Możliwe powielenie:** > Jak mogę sterować zarówno głośnością, jak i pomijaniem utworów na moim urządzeniu z Androidem za pomocą > słuchawek? Więc niedawno dostałem... [200 / 674 chars] |
 
 ### Source Reference Table
 

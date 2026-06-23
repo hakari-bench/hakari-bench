@@ -48,13 +48,13 @@ Strong models should improve evidence recall while maintaining claim-specific ra
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Desde 1970 hasta 1998 hubo un período de calentamiento que elevó las temperaturas aproximadamente 0.4 grados Celsius... | El Paleoceno o Paleoceno, el "reciente antiguo", es una época geológica que duró aproximadamente desde hace 66 a 56 millones... |
-| De hecho, la tendencia, aunque no es estadísticamente significativa, está a la baja. | El ciclo solar, o ciclo de actividad magnética solar, es el cambio casi periódico de 11 años en la actividad del Sol... |
-| Los niveles del mar locales y regionales siguen mostrando su variabilidad natural, subiendo en algunas áreas y bajando en otras. | El nivel medio del mar es el nivel promedio de la superficie de uno o más de los océanos de la Tierra... |
-| Los expertos en clima afirman que ciertos elementos del caso del huracán Harvey sugieren que el calentamiento global está agravando una situación ya complicada. | Los efectos del calentamiento global son los cambios ambientales y sociales causados por las emisiones humanas de gases de efecto invernadero... |
-| El experimento CLOUD del CERN solo probó una tercera parte de uno de los cuatro requisitos necesarios para culpar al calentamiento global a los rayos cósmicos... | La atribución del cambio climático reciente se refiere al esfuerzo por determinar científicamente los mecanismos responsables de los cambios climáticos recientes... |
+| Query | Positive document |
+| --- | --- |
+| Desde 1970 hasta 1998 hubo un período de calentamiento que elevó las temperaturas aproximadamente 0.... [100 / 190 chars] | El Paleoceno (pronunciado /ˈpæliəˌsiːn/ o /ˈpæ - , - lioʊ - /) o Paleoceno, el "reciente antiguo", es una época geológica que duró aproximadamente desde hace 66 a 56 millones de años. Es la primera ép... [200 / 1,219 chars] |
+| De hecho, la tendencia, aunque no es estadísticamente significativa, está a la baja. [84 chars] | El ciclo solar, o ciclo de actividad magnética solar, es el cambio casi periódico de 11 años en la actividad del Sol (incluyendo variaciones en los niveles de radiación solar y la expulsión de materia... [200 / 683 chars] |
+| Los niveles del mar locales y regionales siguen mostrando su variabilidad natural, subiendo en algun... [100 / 128 chars] | El nivel medio del mar (NMM) (abreviado simplemente como nivel del mar) es el nivel promedio de la superficie de uno o más de los océanos de la Tierra, a partir del cual se pueden medir alturas como l... [200 / 1,181 chars] |
+| Los expertos en clima afirman que ciertos elementos del caso del huracán Harvey sugieren que el cale... [100 / 160 chars] | Los efectos del calentamiento global son los cambios ambientales y sociales causados (directa o indirectamente) por las emisiones humanas de gases de efecto invernadero. Existe un consenso científico... [200 / 1,501 chars] |
+| El experimento CLOUD del CERN solo probó una tercera parte de uno de los cuatro requisitos necesario... [100 / 205 chars] | La atribución del cambio climático reciente se refiere al esfuerzo por determinar científicamente los mecanismos responsables de los cambios climáticos recientes en la Tierra, comúnmente conocidos com... [200 / 2,352 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should improve evidence recall while maintaining claim-specific ra
 
 | Label | URL |
 |---|---|
-| Climate-FEVER paper | https://arxiv.org/abs/2012.00614 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Climate-FEVER paper (https://arxiv.org/abs/2012.00614) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

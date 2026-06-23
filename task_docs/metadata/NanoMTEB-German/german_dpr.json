@@ -145,15 +145,98 @@
         "url": "https://aclanthology.org/2021.mrqa-1.4/",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/GermanDPR",
         "url": "https://huggingface.co/datasets/mteb/GermanDPR",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q_66",
+        "document_id": "doc_48_p_0",
+        "query": {
+          "text": "Seit wann gibt es in Iowa keine Todesstrafe mehr?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Todesstrafe_in_den_Vereinigten_Staaten In der Geschichte Iowas gab es 46 Hinrichtungen, davon 43 wegen Mord und drei wegen Vergewaltigung. Alle Getöteten waren Männer. 1872 wurde die Todesstrafe erstm",
+          "full_chars": 538,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_123",
+        "document_id": "doc_123_p_0",
+        "query": {
+          "text": "Welche Personen sitzen im akademischen Senat?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Universität An der Spitze einer Universität steht ein Rektor oder Präsident, der in der Regel selbst ein Universitätsprofessor ist. Er wird üblicherweise unterstützt von mehreren Prorektoren beziehung",
+          "full_chars": 1042,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_103",
+        "document_id": "doc_103_p_0",
+        "query": {
+          "text": "Für welche Geräte konnte USB 1.0 auch als Stromzufuhr eingesetzt werden?",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Universal_Serial_Bus Schon mit USB 1.0 war eine Stromversorgung angeschlossener Geräte über die USB-Kabelverbindungen möglich. Allerdings war die maximale Leistung nur für Geräte mit geringem Strombed",
+          "full_chars": 896,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_9",
+        "document_id": "doc_9_p_0",
+        "query": {
+          "text": "Welche Institution organisiert den öffentlichen Verkehr in London?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "London London ist Dreh- und Angelpunkt des Straßen-, Schienen- und Luftverkehrs im Vereinigten Königreich. Das Verkehrswesen fällt in die direkte Zuständigkeit des Mayor of London, des Oberbürgermeist",
+          "full_chars": 617,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_161",
+        "document_id": "doc_161_p_0",
+        "query": {
+          "text": "Was war der Grund für den Absturz der Boeing 747-300 über Guam 1997?",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Guam Am 6. August 1997 wurde eine Boeing 747-300 der Korean Airlines auf dem Korean-Air-Flug 801 von Seoul nach Agana (Guam) bei heftigem Regen gegen einen Hügel 5 km vor dem Flughafen Hagåtña gefloge",
+          "full_chars": 1542,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -141,20 +141,103 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "831602#0",
+        "document_id": "5664#61",
+        "query": {
+          "text": "Welche Mechanismen helfen Computern, menschliche Sprache zu verstehen?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wissen Ein anderes Anwendungsfeld sind Dialogsysteme, die in der Mensch-Computer-Interaktion eingesetzt werden und die Kommunikation eines Menschen mit einem Computer mittels natürlicher Sprache ermög",
+          "full_chars": 1585,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11587141#0",
+        "document_id": "10477800#7",
+        "query": {
+          "text": "In welchem Jahr wurde TikTok gegründet?",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "TikTok \"Douyin\" wurde im September 2016 von Zhang Yiming, dem Gründer von ByteDance, ins Leben gerufen. Im Januar 2017 erhielt das Unternehmen mehrere Millionen Renminbi von der Toutiao-Gruppe, um die",
+          "full_chars": 298,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10570817#0",
+        "document_id": "35201#3",
+        "query": {
+          "text": "Was macht Südostasien attraktiv für Touristen?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Krabi (Stadt) Krabi ist eines der attraktivsten Reiseziele in Süd-Thailand. Die Andamanensee im Westen, an der zahllose natürliche Attraktionen liegen, ist beeindruckend. Dazu gehören die weißen Sands",
+          "full_chars": 350,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "957112#0",
+        "document_id": "2494104#0",
+        "query": {
+          "text": "Was ist das kleinste Teilchen im Universum?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Elementarteilchen Elementarteilchen sind unteilbare subatomare Teilchen und die kleinsten bekannten Bausteine der Materie. Aus der Sicht der theoretischen Physik sind sie die geringsten Anregungsstufe",
+          "full_chars": 731,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "280416#0",
+        "document_id": "4052007#14",
+        "query": {
+          "text": "Wann wurde die erste Brücke über eine Autobahn gebaut?",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Brückenlandschaft Ruhraue Die erste Autobahnbrücke an dieser Stelle wurde im Rahmen des Reichsautobahnsprogrammes geplant und am 12. Dezember 1936 eröffnet, damals noch als einfache, vierstreifige Str",
+          "full_chars": 287,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -48,13 +48,13 @@ Strong models should combine exact entity recall with relation-sensitive evidenc
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Keith Godchaux conosceva i Grateful Dead. | I Grateful Dead sono stati una band rock americana formata nel 1965 a Palo Alto, California... |
-| Taarak Mehta Ka Ooltah Chashmah è una sitcom. | Taarak Mehta Ka Ooltah Chashmah è la sitcom più longeva dell'India... |
-| Aerei segreti e tecnologicamente avanzati sono stati prodotti a Burbank, in California. | Burbank è una città nella contea di Los Angeles, nella California meridionale... |
-| Nero è una persona. | La dinastia giulio-claudia si riferisce ai primi cinque imperatori romani, tra cui Nerone... |
-| Scream 2 è un film esclusivamente tedesco. | Scream 2 è un film slasher americano del 1997 diretto da Wes Craven... |
+| Query | Positive document |
+| --- | --- |
+| Keith Godchaux conosceva i Grateful Dead. [41 chars] | I Grateful Dead sono stati una band rock americana formata nel 1965 a Palo Alto, California. Con una formazione variabile da quintetto a settetto, la band è nota per il suo stile unico ed eclettico, c... [200 / 3,080 chars] |
+| Taarak Mehta Ka Ooltah Chashmah è una sitcom. [45 chars] | Taarak Mehta Ka Ooltah Chashmah (In inglese: La Differente Prospettiva di Taarak Mehta) è la sitcom più longeva dell'India, prodotta da Neela Tele Films Private Limited. La serie è andata in onda il 2... [200 / 583 chars] |
+| Aerei segreti e tecnologicamente avanzati sono stati prodotti a Burbank, in California. [87 chars] | Burbank è una città nella contea di Los Angeles, nella California meridionale, Stati Uniti, a 12 miglia a nord-ovest del centro di Los Angeles. Secondo il censimento del 2010, la popolazione era di 10... [200 / 1,410 chars] |
+| Nero è una persona. [19 chars] | La dinastia giulio-claudia si riferisce ai primi cinque imperatori romani — Augusto, Tiberio, Caligola, Claudio e Nerone — o alla famiglia a cui appartenevano. Governarono l'Impero Romano dalla sua fo... [200 / 2,095 chars] |
+| Scream 2 è un film esclusivamente tedesco. [42 chars] | Scream 2 è un film slasher americano del 1997 diretto da Wes Craven e scritto da Kevin Williamson. Vede la partecipazione di David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Jamie... [200 / 2,802 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should combine exact entity recall with relation-sensitive evidenc
 
 | Label | URL |
 |---|---|
-| FEVER paper | https://arxiv.org/abs/1803.05355 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER paper (https://arxiv.org/abs/1803.05355) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

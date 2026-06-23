@@ -103,29 +103,113 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "PersianWebDocumentRetrieval source reference",
         "url": "https://ieeexplore.ieee.org/document/10553090",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/persian-web-document-retrieval",
         "url": "https://huggingface.co/datasets/MCINext/persian-web-document-retrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test_424",
+        "document_id": "116259",
+        "query": {
+          "text": "فیلم سینمایی۳۵۶ روز بدون‌سانسور",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "دانلود فیلم 365 روز 1 (بدون سانسور) - فیلو دانلود فیلم 365 روز 1 (بدون سانسور) تیزر مووی",
+          "full_chars": 89,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_1562",
+        "document_id": "100214",
+        "query": {
+          "text": "کلیپ عاشفانه",
+          "full_chars": 12,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "آپارات | کافه کلیپ عاشقانه",
+          "full_chars": 27,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_1132",
+        "document_id": "72901",
+        "query": {
+          "text": "واکینگ دد قسمت ۲۲ فصل ۱۱",
+          "full_chars": 24,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "سریال مردگان متحرک :: فصل 11 قسمت 22 :: زیرنویس فارسی دانلود فصل یازدهم مجموعه واکینگ دِد(The Walking Dead - مردگان متحرک) با زیرنویس فارسی و کیفیت فول اچ دی 1080p Full HD | رده سنی: 15+ سال | محصول:",
+          "full_chars": 596,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test_730",
+        "document_id": "111424",
+        "query": {
+          "text": "اگه ارومیه بشی روت ارس میکشم",
+          "full_chars": 28,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "دانلود آهنگ اگه ارومیه بشی روت ارس میکشم + ریمیکس (کامل + متن) دانلود آهنگ اگه ارومیه بشی روت ارس میکشم اهنگ اگه ارومیه بشی روت ارس میکشم با بالاترین کیفیت بصورت کامل Download Music Hichkas - Age Urum",
+          "full_chars": 216,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test_2541",
+        "document_id": "34922",
+        "query": {
+          "text": "سوره قران",
+          "full_chars": 9,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "سوره بیستم قران ⚡️ [ پاســخ کامــل و درست ] سوره بیستم قران جواب سوره بیستم قران کاملا رایگان در سایت مجله اینترنتی باحال مگ",
+          "full_chars": 126,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

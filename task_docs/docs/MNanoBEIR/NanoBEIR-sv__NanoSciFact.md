@@ -62,9 +62,13 @@ A model targeting this task should combine biomedical term precision with eviden
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on SciFact, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Ly49Q styr organiseringen av neutrofilmigration till inflammationsställen genom att reglera membranr... [100 / 115 chars] | Neutrofilerna genomgår snabbt polarisering och riktad rörelse för att tränga in i infektions- och inflammationsställen. Vi visar här att en inhiberande MHC I-receptor, Ly49Q, var avgörande för den sna... [200 / 1,025 chars] |
+| Antiretroviral behandling minskar förekomsten av tuberkulos över ett brett spektrum av CD4-strata. [98 chars] | BAKGRUND Infektion med humant immunbristvirus (HIV) är den starkaste riskfaktorn för att utveckla tuberkulos och har drivit på dess återkomst, särskilt i subsahariska Afrika. År 2010 uppskattades det... [200 / 2,152 chars] |
+| Snabb uppreglering och högre basala uttryck av interferoninducerade gener minskar överlevnaden hos g... [100 / 160 chars] | Neuronernas känslighet i hjärnan för mikrobiella infektioner är en avgörande faktor för klinisk utfall. Det finns lite kunskap om de molekylära faktorer som styr denna sårbarhet. Vi visar här att två... [200 / 1,092 chars] |
+| Primär screening för livmoderhalscancer med HPV-detektion har högre longitudinell känslighet än konv... [100 / 177 chars] | Bakgrund: Screening för livmoderhalscancer baserat på testning för humant papillomavirus (HPV) ökar känsligheten för upptäckt av höggradig (grad 2 eller 3) livmoderhalscancerprekancerösa förändringar,... [200 / 2,333 chars] |
+| Hinderar interaktionen mellan TDP-43 och komplex I-proteiner ND3 och ND6 resulterar i ökad TDP-43-in... [100 / 125 chars] | Genetiska mutationer i TAR DNA-bindande protein 43 (TARDBP, även känt som TDP-43) orsakar amyotrofisk lateral skleros (ALS), och en ökning av TDP-43 (kodat av TARDBP) i cytoplasman är en framträdande... [200 / 1,263 chars] |
 
 ### Source Reference Table
 

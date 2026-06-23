@@ -70,11 +70,13 @@ For evaluation, nDCG@10 is the primary signal for direct QA retrieval quality, w
 
 ## Example Data
 
-### Public Sources
-
-- Natural Questions paper: https://aclanthology.org/Q19-1026/
-- Natural Questions project page: https://ai.google.com/research/NaturalQuestions/
-- Source task dataset card: https://huggingface.co/datasets/mteb/NQ-PLHardNegatives
+| Query | Positive document |
+| --- | --- |
+| którzy byli sędziami tańca na lodzie 2014 [41 chars] | Taniec na lodzie Phillip Schofield i Christine Bleakley powrócili do współobecności. Dean, Torvill i Karen Barber powrócili, by mentorować celebrytów. Robin Cousins, Jason Gardiner, Barber i Ashley Ro... [200 / 483 chars] |
+| kiedy wyjdzie sezon 5 rubinu? [29 chars] | Lista odcinków RWBY RWBY to trwająca amerykańska seria internetowa w stylu anime, stworzona przez Rooster Teeth Productions. Premiera odbyła się 18 lipca 2013 r. Na stronie internetowej Rooster Teeth,... [200 / 479 chars] |
+| kiedy w alton towers zamknięto koryto z bali? [45 chars] | Korytarz (wieże Alton) The Flume był log Flume w Alton Towers w Staffordshire. Został otwarty w 1981 roku i został odnowiony w 2004 roku, co zbiegło się z jego sponsorowaniem przez Imperial Leather. P... [200 / 460 chars] |
+| który grał profesora protona w teorii Wielkiego Wybuchu [55 chars] | Boba Newharta Newhart później zajął się aktorstwem, występując jako psycholog z Chicago, dr Robert Hartley w The Bob Newhart Show w latach 70., a następnie jako karczmarz z Vermont Dick Loudon w seria... [200 / 839 chars] |
+| ile parków narodowych jest w indiach [36 chars] | Lista parków narodowych Indii Dalsze ustawodawstwo federalne wzmacniające ochronę dzikiej przyrody zostało wprowadzone w latach 80-tych. W lipcu 2017 r. istniały 103 parki narodowe o powierzchni 40 50... [200 / 285 chars] |
 
 ### Source Reference Table
 

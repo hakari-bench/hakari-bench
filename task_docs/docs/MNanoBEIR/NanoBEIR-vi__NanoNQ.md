@@ -62,9 +62,13 @@ A model targeting this task should improve semantic answer matching while keepin
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Natural Questions, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Năm nay, vòng chung kết bốn được tổ chức ở đâu [46 chars] | Giải bóng rổ NCAA Division I nam 2018 là một giải đấu loại trực tiếp 68 đội để xác định nhà vô địch quốc gia của Hiệp hội Thể thao Đại học Quốc gia (NCAA) Division I cho mùa giải 2017–18. Phiên bản th... [200 / 340 chars] |
+| Liệu Nightmare Before Christmas ban đầu có phải là một bộ phim của Disney không [79 chars] | Ác Mộng Trước Giáng Sinh bắt nguồn từ một bài thơ được viết bởi Tim Burton vào năm 1982, khi ông đang làm hoạt hình tại Walt Disney Feature Animation. Với sự thành công của Vincent trong cùng năm đó,... [200 / 664 chars] |
+| tại sao thiên thần phía bắc lại ở đó [36 chars] | Theo Gormley, ý nghĩa của một thiên thần có ba khía cạnh: đầu tiên, để chỉ ra rằng dưới địa điểm xây dựng của nó, các thợ mỏ than đã làm việc trong hai thế kỷ; thứ hai, để nắm bắt sự chuyển đổi từ thờ... [200 / 349 chars] |
+| nơi nào thỏa thuận 3/5 được nêu ra trong hiến pháp [50 chars] | Thỏa thuận Ba Năm Phần được tìm thấy trong Điều 1, Mục 2, Khoản 3 của Hiến pháp Hoa Kỳ, trong đó viết: [102 chars] |
+| ai hát bài somebody's watching me với michael jackson [53 chars] | "Somebody's Watching Me" là một bài hát của ca sĩ người Mỹ Rockwell từ album phòng thu đầu tay của anh, Somebody's Watching Me (1984). Nó được phát hành như là đĩa đơn đầu tay của Rockwell và đĩa đơn... [200 / 390 chars] |
 
 ### Source Reference Table
 

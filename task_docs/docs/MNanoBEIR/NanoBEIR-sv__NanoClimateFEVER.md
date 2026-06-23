@@ -62,9 +62,13 @@ A model targeting this task should improve evidence specificity. Sparse systems 
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on CLIMATE-FEVER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Från 1970 till 1998 fanns det en uppvärmningsperiod som höjde temperaturerna med cirka 0,7 Fahrenhei... [100 / 164 chars] | Paleocen (uttalas /ˈpæliəˌsiːn/ eller /ˈpæ - , - lioʊ - /) eller Paleocen, den "gamla nya", är en geologisk epok som varade från cirka . Det är den första epoken i Paleogenperioden under den moderna C... [200 / 1,004 chars] |
+| I själva verket är trenden nedåtgående, även om det inte är statistiskt signifikant. [84 chars] | Solarcykeln eller solaktivitetscykeln är den nästan periodiska 11-årsförändringen i solens aktivitet (inklusive förändringar i nivåerna av solstrålning och utsändning av solmaterial) och utseende (för... [200 / 607 chars] |
+| Lokala och regionala havsnivåer fortsätter visa den vanliga naturliga variationen, stiger på vissa s... [100 / 128 chars] | Medelhavsnivå (MSL) (förkortat havsnivå) är en genomsnittlig nivå av jordens havsytor, från vilken höjder som höjder kan mätas. MSL är en typ av vertikal datum, en standardiserad geodetisk referenspun... [200 / 867 chars] |
+| Klimatforskare säger att i fallet med Orkanen Harvey tyder det på att global uppvärmning förvärrar e... [100 / 124 chars] | De globala uppvärmningens effekter är de miljö- och samhällsförändringar som orsakas (direkt eller indirekt) av människans utsläpp av växthusgaser. Det finns en vetenskaplig konsensus om att klimatför... [200 / 1,368 chars] |
+| CERN:s CLOUD-experiment testade endast en tredjedel av ett av fyra krav som krävs för att skylla på... [100 / 197 chars] | Tillskrivning av den senaste klimatförändringen är ansträngningen att vetenskapligt fastställa mekanismer som är ansvariga för de senaste klimatförändringarna på jorden, vanligtvis kända som `global u... [200 / 2,098 chars] |
 
 ### Source Reference Table
 

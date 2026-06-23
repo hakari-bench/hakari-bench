@@ -62,9 +62,13 @@ A model targeting this task should encode clinical constraints explicitly. Spars
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BIRCO's complex-objective retrieval benchmark, with NanoBIRCO providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| A 31 yo male with no significant past medical history presents with productive cough and chest pain.... [100 / 585 chars] | The objective of this study is to demonstrate the safety and efficacy of IC14 in the treatment of hospitalized patients with community-acquired pneumonia and sepsis. [165 chars] |
+| A 48-year-old white male with history of common variable immunodeficiency (CVID) with acute abdomina... [100 / 452 chars] | This study will try to identify mutations in the genes responsible for primary immunodeficiency disorders (inherited diseases of the immune system) and evaluate the course of these diseases in patient... [200 / 1,420 chars] |
+| A physician is called to see a 67-year-old woman who underwent cardiac catheterization via the right... [100 / 368 chars] | The purpose of this study is to assess the safety and feasibility of the 7F Ensure Medical Vascular Closure Devices to facilitate hemostasis in patients undergoing diagnostic or interventional coronar... [200 / 1,831 chars] |
+| A 20 yo female college student with no significant past medical history presents with a chief compla... [100 / 481 chars] | The current large randomized placebo-controlled trial is testing the ability of acupuncture to treat major depression. The study is unique in that treatment effects will be from the perspective of bot... [200 / 1,787 chars] |
+| A 51-year-old woman is seen in clinic for advice on osteoporosis. She has a past medical history of... [100 / 412 chars] | This study will assess whether treatment with black cohosh is effective in reducing the frequency and intensity of menopausal hot flashes. In addition, this study will determine whether or not black c... [200 / 1,549 chars] |
 
 ### Source Reference Table
 

@@ -70,13 +70,13 @@ Error analysis should separate entity recall failures, directionality failures, 
 
 ## Example Data
 
-### Public Sources
-
-- [SciFact paper](https://arxiv.org/abs/2004.14974)
-- [SciFact GitHub repository](https://github.com/allenai/scifact)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/scifact-vn](https://huggingface.co/datasets/GreenNode/scifact-vn)
+| Query | Positive document |
+| --- | --- |
+| Mức độ nghiêm trọng của bệnh tim liên quan đến amyloidosis có thể được mô tả bằng mức độ xuyên thành... [100 / 145 chars] | Giá trị tiên lượng của quá trình tăng cường muộn gadolinium của cộng hưởng từ tim mạch trong bệnh tim amyloidosis BỐN MẠT LÝ NHIỆM: Dự đoán và điều trị 2 loại bệnh Amyloidosis tim chính, chuỗi nhẹ của... [200 / 2,127 chars] |
+| Sildenafil cải thiện chức năng cương dương ở những người đàn ông bị rối loạn cương dương do sử dụng... [100 / 126 chars] | Điều trị rối loạn chức năng tình dục liên quan đến thuốc chống trầm cảm với sildenafil: một thử nghiệm có đối chứng. Bất lực là tác dụng phụ phổ biến của thuốc chống trầm cảm thường gây nên tình trạng... [200 / 2,203 chars] |
+| Căng thẳng ethanol làm giảm biểu hiện của IBP trong vi khuẩn. [61 chars] | Sự điều chỉnh và chuyển mạch trao hóa trong quá trình tiến hóa trong phòng thí nghiệm của độ dung nạp cồn ở E. coli Hiểu được cơ sở di truyền của sự thích nghi là một vấn đề trung tâm trong sinh học.... [200 / 1,545 chars] |
+| Sự giao tiếp giữa tế bào dendritic (DCs) và tế bào bạch cầu lympho bản chất (ILCs) đóng vai trò quan... [100 / 150 chars] | Yếu tố phiên mã T-bet điều tiết viêm ruột được trung gian bởi tế bào lympho bẩm sinh thụ thể interleukin-7+ Chuột thiếu yếu tố phiên mã T-bet trong hệ miễn dịch bẩm sinh phát triển viêm đại tràng phụ... [200 / 1,347 chars] |
+| Các tế bào đang trải qua hạn chế methionine có thể kích hoạt miRNAs. [68 chars] | microRNAs: Một biện pháp bảo vệ chống lại sự hỗn loạn? Dữ liệu gần đây cho thấy rằng microRNAs (miRNAs) đóng vai trò quan trọng trong các phản ứng căng thẳng ngoài vai trò được công nhận hơn của chúng... [200 / 554 chars] |
 
 ### Source Reference Table
 

@@ -153,22 +153,22 @@ same user question.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| vind-nieuwe/berichten&recent=1 als homepage: wat met SEO? [57 chars] | Best practice URL-structuur voor paginering Is een van deze formaten voor paginering beter voor SEO? * www.example.com/list/1 * www.example.com/list?page=1 Welke overwegingen of factoren moeten worden... [200 / 332 chars] |
+| Het voorkomen dat robots een specifiek gedeelte van een pagina crawlen [70 chars] | Voorkom dat zoekmachines specifieke content op uw site indexeren **Mogelijk duplicaat:** > Voorkomen dat robots een specifiek gedeelte van een pagina crawlen Ik heb een nogal vreemd scenario waar ik m... [200 / 1,067 chars] |
+| SEO-voorkeur voor WWW of HTTP:// protocolredirectie? Ranken www-websites beter dan niet-www? [92 chars] | Wat is de beste werkwijze voor het kiezen van een standaarddomein - www.example.com of example.com? **Mogelijk duplicaat:** > SEO-voorkeur voor WWW of HTTP:// protocolredirectie? Ranken www-websites >... [200 / 458 chars] |
+| Wat betekenen dubbele slashes in URL\'s? [40 chars] | Is er een probleem met het gebruik van twee slashes in het midden van een URL? **Mogelijke dubbel: [99 chars] |
+| Waarom werken Google Rich Snippets voor de ene site-auteur wel en voor de andere niet? [86 chars] | Rich snippets genegeerd door Google **Mogelijk duplicaat:** Waarom werken Google Rich Snippets voor de ene site-auteur wel en voor de andere niet? Ik loop tegen een probleem aan. Ik heb rich snippets... [200 / 764 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

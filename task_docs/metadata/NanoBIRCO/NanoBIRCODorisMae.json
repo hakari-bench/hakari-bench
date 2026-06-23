@@ -126,8 +126,91 @@
         "title": "BIRCO GitHub repository",
         "url": "https://github.com/BIRCO-benchmark/BIRCO",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q_80",
+        "document_id": "c_137555",
+        "query": {
+          "text": "My objective is to devise a methodology for constructing intelligent robots that mimic human-like be",
+          "full_chars": 1172,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In this paper, we propose a novel task, Manipulation Question Answering (MQA), where the robot performs manipulation actions to change the environment in order to answer a given question. To solve thi",
+          "full_chars": 915,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_44",
+        "document_id": "c_12973",
+        "query": {
+          "text": "I want to build a healthcare decision support system that will recommend treatment plans for patient",
+          "full_chars": 1255,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Although reinforcement learning (RL) has tremendous success in many fields, applying RL to real-world settings such as healthcare is challenging when the reward is hard to specify and no exploration i",
+          "full_chars": 773,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_10",
+        "document_id": "c_111207",
+        "query": {
+          "text": "I am working on a project analyzing customer feedback for a new product launch, so I need a method t",
+          "full_chars": 730,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "With the evolution of the cloud and customer centric culture, we inherently accumulate huge repositories of textual reviews, feedback, and support data.This has driven enterprises to seek and research",
+          "full_chars": 1906,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_87",
+        "document_id": "c_48235",
+        "query": {
+          "text": "I am interested in understanding how modern computer programs can emulate human causal logic. To ach",
+          "full_chars": 749,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Research in Cognitive Science suggests that humans understand and represent knowledge of the world through causal relationships. In addition to observations, they can rely on experimenting and counter",
+          "full_chars": 1606,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q_58",
+        "document_id": "c_162384",
+        "query": {
+          "text": "As a data scientist, I am currently developing an early detection system designed to identify the on",
+          "full_chars": 1196,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Deep learning is attracting significant interest in the neuroimaging community as a means to diagnose psychiatric and neurological disorders from structural magnetic resonance images. However, there i",
+          "full_chars": 1359,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

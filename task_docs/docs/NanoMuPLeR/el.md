@@ -62,19 +62,21 @@ Models should preserve Greek morphology, legal terminology, article references, 
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Ποια διάταξη της Ένωσης απαιτεί τη συνεκτίμηση απασχόλησης, κοινωνικής προστασίας, καταπολέμησης απο... [100 / 159 chars] | Τούτο συμβαίνει, παραδείγματος χάρη, στην περίπτωση της κοινωνικής πολιτικής, με την ενσωμάτωση μιας γενικής διάταξης (η οποία καλείται κοινωνική ρήτρα) σύμφωνα με την οποία η Ένωση οφείλει, κατά τον... [200 / 810 chars] |
+| Ποια εταιρεία προμηθεύει 25% της ηπειρωτικής ζήτησης κινητήρων οικιακών συσκευών και στοχεύει 10% με... [100 / 137 chars] | Βάσει των σημερινών πληροφοριών, η Επιτροπή αμφιβάλλει επίσης για το κατά πόσον δεν θα υπάρξουν στρεβλώσεις στον ανταγωνισμό και για το κατά πόσον η ενίσχυση περιορίζεται στο ελάχιστο αναγκαίο. Π.χ.,... [200 / 629 chars] |
+| Ποιο όργανο πρότεινε να αναπτυχθεί πλαίσιο εσωτερικού κοινοτικού ελέγχου για τον αποτελεσματικό έλεγ... [100 / 133 chars] | Στη γνωμοδότησή του αριθ. 2/2004 το Συνέδριο τονίζει την ανάγκη για αποδοτικό και αποτελεσματικό έλεγχο επί του κοινοτικού προϋπολογισμού σε όλα τα επίπεδα διοίκησης. Κρίνει ότι υπάρχει περιθώριο βελτ... [200 / 768 chars] |
+| Ποιος Ευρωπαίος επόπτης προστασίας δεδομένων προτίμησε ευέλικτη αναλογική αποθήκευση αντί ετήσιου ορ... [100 / 136 chars] | Για τους λόγους αυτούς, ο ΕΕΠΔ προτιμά ευέλικτη αλλά αναλογική περίοδο αποθήκευσης μάλλον παρά αυστηρό a priori περιορισμό της περιόδου αποθήκευσης σε ένα έτος [όπως προτείνεται σήμερα βάσει του άρθρο... [200 / 607 chars] |
+| Ποια συμβουλευτική επιτροπή επικρότησε κατάργηση μέτρων του 7ου προγράμματος-πλαισίου και αύξηση συγ... [100 / 148 chars] | Η ΕΟΚΕ επικροτεί το γεγονός ότι η πρόταση απόφασης απλουστεύει τις διοικητικές διαδικασίες, καταργώντας, μεταξύ άλλων, ορισμένα συνοδευτικά μέτρα, δεδομένου ότι ήδη καλύπτονται από το 7ο πρόγραμμα-πλα... [200 / 665 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

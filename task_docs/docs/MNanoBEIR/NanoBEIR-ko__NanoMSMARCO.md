@@ -102,11 +102,11 @@ avoid promoting passages that merely contain the same named entity.
 
 | Query | Positive document |
 | --- | --- |
-| 회상 증후군이란 무엇인가 | 회상 증후군은 메리시즘이라고도 하며, 음식물의 역류를 유발하는 특정되지 않은 유형의 섭식장애이다. |
-| 'Here I Go Again'을 부른 사람은 누구인가요? | "Here I Go Again"은 영국의 록 밴드 화이트스네이크의 노래이다. |
-| 캠런 보이스는 《리브 앤 매디》에서 루크 콘웨이 역을 맡았다. | 'Liv & Maddie'의 에피소드 미리보기에서 캐머런 보이스가 다른 디즈니 쇼로 건너와 매디를 만나는 장면이 나온다. |
-| 지구의 대부분의 큰 사막은 어디에 위치하는가 | 지구의 나머지 사막들은 극지방 외부에 위치해 있다. 가장 큰 것은 북아프리카의 사하라 사막이다. |
-| 경찰관에게 '코퍼(copper)'라는 말의 의미 | 'copper'는 경찰관을 뜻하며, 원어 의미는 '체포하는 자'로 설명된다. |
+| 회상 증후군이란 무엇인가 [13 chars] | 회상 증후군. 회상 증후군은 메리시즘(Merycism)이라고도 하며, 음식물의 역류를 유발하는 특정되지 않은 유형의 섭식장애이다. 비록 DSM-IV에서 특정한 섭식장애로 명시되지는 않았지만, 이 장애를 진단하기 위한 특정 기준들이 제시되어 있다. [137 chars] |
+| 'Here I Go Again'을 부른 사람은 누구인가요? [32 chars] | 다른 뜻에 대해서는 'Here I Go Again' (동음이의어)를 참조하십시오. "Here I Go Again"은 영국의 록 밴드 화이트스네이크(Whitesnake)의 노래이다. 이 곡은 원래 1982년 앨범 『Saints & Sinners』에 수록되었으며, 이후 1987년 발매된 동명의 앨범 『Whitesnake』를 위해 다시 녹음되었다. 같은 해에 이... [200 / 235 chars] |
+| 캠런 보이스는 《리브 앤 매디》에서 루크 콘웨이 역을 맡았다. [34 chars] | 여러분, 진지한 웃음 준비하세요. 4월 19일 방영 예정인 'Liv & Maddie'의 에피소드 "Prom-A-Rooney"에 대한 독점 미리보기입니다. 당연히 그렇죠. 이 웃긴 클립에서 우리는 '제시'의 캐머런 보이스가 다른 디즈니 쇼로 건너와 매디(셸비 울퍼트)를 만나는 장면을 볼 수 있습니다. 그의 캐릭터는 다소 기묘하답니다! [186 chars] |
+| 지구의 대부분의 큰 사막은 어디에 위치하는가 [24 chars] | 지구의 나머지 사막들은 극지방 외부에 위치해 있다. 그 중 가장 큰 것은 북아프리카에 있는 아열대 사막인 사하라 사막이다. [68 chars] |
+| 경찰관에게 '코퍼(copper)'라는 말의 의미 [26 chars] | 현재의 연구 결과에 따르면, 'cop'보다 'copper'(경찰관, 원어 의미는 '체포하는 자')가 더 오래된 것으로 보인다. 'cop'는 말로 사용되어 체포를 의미하거나 명사로 경찰관을 의미할 수 있다. 뉴욕시 최초의 경감들이 착용한 구리 제질의 배지—런던의 '밥비(bobbies)'가 착용한 단추와는 달리—가 여기에 영향을 미쳤을 가능성이 있다. [195 chars] |
 
 ### Public Sources
 
@@ -120,7 +120,7 @@ avoid promoting passages that merely contain the same named entity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MS MARCO: A Human Generated Machine Reading Comprehension Dataset | 2016 | task paper | https://arxiv.org/abs/1611.09268 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| MS MARCO: A Human Generated Machine Reading Comprehension Dataset | 2016 | task paper | [https://arxiv.org/abs/1611.09268](https://arxiv.org/abs/1611.09268) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

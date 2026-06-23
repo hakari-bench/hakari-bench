@@ -62,17 +62,20 @@ Models should learn both disease matching and answer-type discrimination. Hard n
 
 ## Example Data
 
-### Public Sources
-
-- [A question-entailment approach to question answering](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4), 2019.
-- [DOI record](https://doi.org/10.1186/s12859-019-3119-4).
+| Query | Positive document |
+| --- | --- |
+| What are the symptoms of Nocardiosis ? [38 chars] | The symptoms of nocardiosis vary depending on which part of your body is affected. Nocardiosis infection most commonly occurs in the lung. If your lungs are infected, you can experience: - Fever - Wei... [200 / 823 chars] |
+| What are the treatments for Parasites - Babesiosis ? [52 chars] | Effective treatments are available. People who do not have any symptoms or signs of babesiosis usually do not need to be treated. Before considering treatment, the first step is to make sure the diagn... [200 / 358 chars] |
+| How to diagnose Parasites - Zoonotic Hookworm ? [47 chars] | Cutaneous larva migrans (CLM) is a clinical diagnosis based on the presence of the characteristic signs and symptoms, and exposure history to zoonotic hookworm. For example, the diagnosis can be made... [200 / 567 chars] |
+| How to prevent Parasites - Lymphatic Filariasis ? [49 chars] | The best way to prevent lymphatic filariasis is to avoid mosquito bites. The mosquitoes that carry the microscopic worms usually bite between the hours of dusk and dawn. If you live in an area with ly... [200 / 1,548 chars] |
+| How to prevent Parasites - Hookworm ? [37 chars] | The best way to avoid hookworm infection is not to walk barefoot in areas where hookworm is common and where there may be human fecal contamination of the soil. Also, avoid other skin contact with suc... [200 / 336 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A question-entailment approach to question answering | 2019 | BMC Bioinformatics article | https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4 |
-| A question-entailment approach to question answering | 2019 | DOI | https://doi.org/10.1186/s12859-019-3119-4 |
+| A question-entailment approach to question answering | 2019 | BMC Bioinformatics article | [https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4) |
+| A question-entailment approach to question answering | 2019 | DOI | [https://doi.org/10.1186/s12859-019-3119-4](https://doi.org/10.1186/s12859-019-3119-4) |
 
 ### Representative Snippets
 

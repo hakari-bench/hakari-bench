@@ -134,14 +134,97 @@
         "url": "https://arxiv.org/abs/2309.07597",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "definitive_benchmark_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/DuRetrieval",
         "url": "https://huggingface.co/datasets/mteb/DuRetrieval",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "d71110a9d6fe74172d0c2aaa2efc6a0c",
+        "document_id": "325332e54f6c80741b08a3e8a72e088e",
+        "query": {
+          "text": "吃阿莫西林后多久能喝酒",
+          "full_chars": 11,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "吃完阿莫西林后大概过五个小时喝酒就不会引起中毒，阿莫西林五小时基本全部消化一、何谓双硫仑和双硫仑样反应？双硫仑（disulfiram）是一种戒酒药物，服用该药后即使饮用少量的酒，身体也会产生严重不适，而达到戒酒的目的。双硫仑的作用机制在于——双硫仑在与乙醇联用时可抑制肝脏中的乙醛脱氢酶，使乙醇在体内氧化为乙醛后，不能再继续分解氧化，导致体内乙醛蓄积而产生一系列反应。双硫仑样反应——许多药物具有与双",
+          "full_chars": 2130,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26ab96fd88b46a0bb90a35c24701eabd",
+        "document_id": "7334ccc84a4b315fd26e7920a014b688",
+        "query": {
+          "text": "暖气只有一片热",
+          "full_chars": 7,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "林内燃气热水器家用水过滤器冰箱后面空调病治疗人类性功能缺陷中有空气的缘故。每组暖气片上都有一个跑风，也就是顶端有一个螺栓，这是放空气用的，你把它拧松，空气就会跑出来，等所跑完出来水后，再拧紧就好啦。如果没有这个放气的螺栓，那就找家政的或是物业的人用大扳手直接在暖气片组的上端把片头上的堵头拧松，放出空气就好啦。祝你幸福快乐！以下是联盟知识库http://zhishi.010lm.com总结网友的解决",
+          "full_chars": 260,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "06e462478c3f7780d2beb65ecd19314b",
+        "document_id": "4a8739e5bee9330fcfcadedd35c25385",
+        "query": {
+          "text": "如何从第三页开始设置页眉",
+          "full_chars": 12,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "通过插入分节符就可以实现此功能。第一步：将光标定在word第三页的最末尾，点击word工具栏中的“页面布局”，选择“分隔符”，再选择“下一页”；第二步：双击页眉，然后点击页眉和页脚工具栏中的“链接到前一条页眉”将选项，使其变成灰色；第三步：直接删除word前三页的页眉即可，此时后面的页眉不会被删除的。详细的图文说明可以参照此经验：http://jingyan.baidu.com/article/c",
+          "full_chars": 510,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f3ee13e53c778bdac191c1295a0d6554",
+        "document_id": "66c8377bd10f89f970e16e986976bb22",
+        "query": {
+          "text": "gpt升高的原因",
+          "full_chars": 8,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "谷丙转氨酶（简称GPT、ALT）升高在临床是很常见的现象。肝脏是人体最大的解毒器官，该脏器是不是正常，对人体来说是非常重要的。GPT升高肝脏功能出现问题的一个重要指标。在常见的因素里，各类肝炎都可以引起GPT升高，这是由于肝脏受到破坏所造成的。一些药物如抗肿瘤药、抗结核药，都会引起肝脏功能损害。大量喝酒、食用某些食物也会引起肝功能短时间损害。GPT主要存在于肝细胞浆内，其胞内浓度高于血清中1000",
+          "full_chars": 1269,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "61fd1b226f50c3954135bbe8934be2b4",
+        "document_id": "2a04774c95b2fd86711d6d1a1b0d6bfa",
+        "query": {
+          "text": "哪里的蚕丝最好",
+          "full_chars": 7,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "中国古代蚕丝主产区：长三角特别是杭嘉湖，湖州有“湖丝甲天下”的美誉，当时湖州南浔那边的蚕丝是最好的。还有就是珠三角和四川盆地。现在长三角随着经济的发展，种桑养蚕的人越来越少了，东桑西移成了一种趋势。目前全国蚕茧产量最多的是广西，质量比较好的应该属浙北、苏南还有山东等地。至于从蚕茧制成蚕丝，比较好的有这么几个地方：1、浙江桐乡：桑蚕丝产量占到全国的40%以上2、江苏吴江震泽、江苏海安县：特别是海安县",
+          "full_chars": 236,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

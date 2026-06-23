@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/scifact-fa-v2",
         "url": "https://huggingface.co/datasets/MCINext/scifact-fa-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "775",
+        "document_id": "32275758",
+        "query": {
+          "text": "موش‌هایی که نقص در پلی‌مراز I دی‌ان‌ای (polI) دارند، حساسیت بیشتری به اشعه‌ی یونیزان (IR) نشان می‌ده",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "عملکردهای غیرهمپوشانِ پلیمرازهای DNA مو، لامبدا و ترمینال دئوکسی‌نوکلئوتیدیل‌ترانسفراز در بازترکیب V(D)J ایمونوگلوبولین در شرایط زنده. پلی‌مرازهای DNA مو (pol mu)، لامبدا (pol lambda) و ترمینال دئوکسی",
+          "full_chars": 1153,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "213",
+        "document_id": "13625993",
+        "query": {
+          "text": "پروتئین واکنشی سی (CRP) نمی‌تواند مرگ و میر پس از عمل جراحی بای‌پس عروق کرونر (CABG) را پیش‌بینی کند",
+          "full_chars": 101,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ارزیابی مقرون‌به‌صرفه بودن استفاده از نشانگرهای پیش‌آگاهی در مدل‌های تصمیم‌گیری: مطالعه موردی در اولویت‌بندی بیماران در انتظار جراحی عروق کرونر هدف: تعیین اثربخشی و مقرون به صرفه بودن استفاده از اطلاع",
+          "full_chars": 2564,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "127",
+        "document_id": "21598000",
+        "query": {
+          "text": "آرژینین ۹۰ در p150n برای برهم‌کنش با EB1 مهم است.",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "مبنای ساختاری فعال‌سازی مونتاژ میکروتوبول توسط کمپلکس EB1 و p150Glued. پروتئین‌های ردیاب انتهای مثبت، مانند EB1 و کمپلکس داینین/دایناکتین، پویایی میکروتوبول‌ها را تنظیم می‌کنند. تصور می‌شود این پروتئی",
+          "full_chars": 1181,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "879",
+        "document_id": "8426046",
+        "query": {
+          "text": "اشغال ریبوزوم‌ها توسط RNAهای غیرکدکننده منجر به تولید پپتیدهای عملکردی نمی‌شود.",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "پروفایل‌بندی ریبوزوم شواهدی ارائه می‌دهد مبنی بر اینکه آر‌ان‌ای‌های غیرکدشونده بزرگ، پروتئین کد نمی‌کنند. RNAهای غیرکدکننده بزرگ به عنوان یک جزء مهم در تنظیم سلولی در حال ظهور هستند. شواهد قابل توجهی",
+          "full_chars": 1163,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "410",
+        "document_id": "14924526",
+        "query": {
+          "text": "تشنج‌های تب‌دار آستانه بروز صرع را افزایش می‌دهند.",
+          "full_chars": 50,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "تشنج‌های تب‌دار در مغز در حال رشد، منجر به تغییرات پایدار در تحریک‌پذیری نورونی در مدارهای لیمبیک می‌شوند. تشنج‌های تب‌دار ۳ تا ۵ درصد از نوزادان و کودکان خردسال را تحت تأثیر قرار می‌دهند. با وجود شیو",
+          "full_chars": 685,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

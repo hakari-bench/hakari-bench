@@ -70,9 +70,13 @@ For reranking research, this split is useful because candidate recall can reach 
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeFeedbackST is documented through CoIR and the OpenCodeInterpreter-related CodeFeedback resources. The `m-a-p/CodeFeedback-Filtered-Instruction` dataset card is the public source-data reference, but raw rows require leakage filtering before any training use.
+| Query | Positive document |
+| --- | --- |
+| Generate the resulting value of the mathematical operation, factorial, when applied to an integer nu... [100 / 321 chars] | Sure, in Python one can use the built-in library `math` for computing the factorial of any integer. However, to understand the concept behind it, you can create your own implementation for factorial c... [200 / 1,576 chars] |
+| i'd like a php-specific version of this code: import unicodedata def unicode_word_segments(s, n): vo... [100 / 774 chars] | Sure, here is a PHP-specific version of your code: ```php <?php function unicode_word_segments($s, $n) { $vowels = ['A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u']; // unicode vowels $s = preg_repla... [200 / 1,476 chars] |
+| Implement a neural network classifier in TensorFlow 2 that takes in the Iris dataset and predicts th... [100 / 120 chars] | Here's an example of a simple neural network created in TensorFlow two for the Iris dataset classification problem. Note that this is an example and might not get the highest accuracy possible for the... [200 / 1,790 chars] |
+| Dilemma: I am currently dealing with a two-dimensional numpy array composed of 512x512, equating to... [100 / 1,168 chars] | # We can use the label function in scipy.ndimage which will assign a unique id to each # connected cluster of cells in the image. # We apply this function to a binary version of the image where all va... [200 / 711 chars] |
+| Can you suggest modifications to the Ticket class that can handle timing categories in addition to s... [100 / 615 chars] | To modify the Ticket class to handle timing categories, you could add a new instance variable for timing category and modify the constructor and getters/setters to include this new variable. For examp... [200 / 2,086 chars] |
 
 ### Source Reference Table
 

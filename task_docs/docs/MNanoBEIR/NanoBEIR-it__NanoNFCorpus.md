@@ -127,11 +127,11 @@ the query while differing in the claim or biomedical finding.
 
 | Query | Positive document |
 | --- | --- |
-| Frullati di cioccolato salutari | Obiettivo: Studiare la relazione tra il consumo di ciliegie e il rischio di attacchi di gotta ricorrenti tra individui affetti da gotta... |
-| etica medica | SFONDO: Uno dei principali problemi nel controllare il colesterolo sierico attraverso l'intervento dietetico sembra essere la necessità di migliorare l'aderenza del paziente... |
-| fave | Negli ultimi 20 anni, l'interesse crescente per la biochimica, la nutrizione e la farmacologia della L-arginina ha portato a studi estesi... |
-| Cosa contengono esattamente i nugget di pollo? | SCOPO: Determinare i componenti dei nuggets di pollo di due catene di fast food nazionali. CONTESTO: I nuggets di pollo sono diventati... |
-| Grassi saturi | L'interesse per la possibilità che l'alimentazione materna durante la gravidanza possa influenzare lo sviluppo di disturbi allergici nei bambini è in aumento... |
+| Frullati di cioccolato salutari [31 chars] | Obiettivo: Studiare la relazione tra il consumo di ciliegie e il rischio di attacchi di gotta ricorrenti tra individui affetti da gotta. Metodi: Abbiamo condotto uno studio caso-crossover per esaminar... [200 / 1,901 chars] |
+| etica medica [12 chars] | SFONDO: Uno dei principali problemi nel controllare il colesterolo sierico attraverso l'intervento dietetico sembra essere la necessità di migliorare l'aderenza del paziente. OBIETTIVI: Esplorare le m... [200 / 2,032 chars] |
+| fave [4 chars] | Negli ultimi 20 anni, l'interesse crescente per la biochimica, la nutrizione e la farmacologia della L-arginina ha portato a studi estesi per esplorare i suoi ruoli nutrizionali e terapeutici nel trat... [200 / 1,443 chars] |
+| Cosa contengono esattamente i nugget di pollo? [46 chars] | SCOPO: Determinare i componenti dei nuggets di pollo di due catene di fast food nazionali. CONTESTO: I nuggets di pollo sono diventati un componente fondamentale della dieta americana. Abbiamo cercato... [200 / 807 chars] |
+| Grassi saturi [13 chars] | L'interesse per la possibilità che l'alimentazione materna durante la gravidanza possa influenzare lo sviluppo di disturbi allergici nei bambini è in aumento. Lo studio prospettico attuale ha esaminat... [200 / 2,262 chars] |
 
 ### Public Sources
 
@@ -145,7 +145,7 @@ the query while differing in the claim or biomedical finding.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

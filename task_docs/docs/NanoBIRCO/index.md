@@ -144,4 +144,4 @@ wrong literary passage, wrong abstract contribution, or wrong book identity.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives | 2024 | paper | https://arxiv.org/abs/2402.14151 |
+| BIRCO: A Benchmark of Information Retrieval Tasks with Complex Objectives | 2024 | paper | [https://arxiv.org/abs/2402.14151](https://arxiv.org/abs/2402.14151) |

@@ -161,13 +161,13 @@ while also admitting semantically inferred answer entities.
 
 ## Example Data
 
-Representative questions ask for the common name of Japan's late-April to early-
-May holiday period, the Hungarian capital known as the Pearl of the Danube, the
-mudskipper species associated with Ariake and Yatsushiro Seas, the historical
-period of European overseas expansion from the 15th to 17th centuries, and the
-weightlifting equipment made from a shaft and plates. The positives are long
-Wikipedia-style entity pages for Golden Week, Budapest, mutsugoro, the Age of
-Discovery, and barbell.
+| Query | Positive document |
+| --- | --- |
+| 1950年代に日本の映画業界で使われた宣伝文句がその語源である、毎年4月末から5月にわたる大型連休の通称は何でしょう? [59 chars] | ゴールデンウィーク ゴールデンウィーク、ゴールデンウイーク（和製英語: Golden Week, GW）とは、日本では毎年4月末から5月初めにかけての休日が多い期間のこと。大型連休（おおがたれんきゅう）、黄金週間（おうごんしゅうかん）ともいう。 本来は5月3日から5月5日までの3日間を指すが、一般的には4月29日から5月5日までとされる。また直前・直後に土曜日・日曜日・振替休日がある場合、それらを... [200 / 8,186 chars] |
+| 美しい景観から「ドナウ川の真珠」とも呼ばれる、ハンガリーの首都はどこでしょう? [39 chars] | ブダペスト ブダペストまたはブダペシュト（ハンガリー語: Budapest, 英語:[ˈbuːdəpɛst], [ˈbuːdəpɛʃt] or [ˈbʊdəpɛst]; ハンガリー語発音: [ˈbudɒpɛʃt] ( 音声ファイル)）は、ハンガリーの首都であり、同国最大の都市である。 「ブダペスト」として一つの市でドナウ川の両岸を占めるようになったのは1873年11月17日に西岸のブダとオーブダ、... [200 / 23,581 chars] |
+| 日本では有明海と八代海のみに生息するハゼ科の魚で、作家・畑正憲の愛称にもなっているのは何でしょう? [49 chars] | ムツゴロウ ムツゴロウ（鯥五郎、学名 Boleophthalmus pectinirostris ）は、スズキ目・ハゼ科に属する魚の一種。潮が引いた干潟の上で生活する魚として知られ、有明海・八代海を含む東アジアに分布する。有明海沿岸ではムツ、ホンムツなどと呼ばれる。 英語ではこれらを総称し"Mudskipper"（マッドスキッパー）と呼ぶ。 成魚は全長15センチ・メートル、最大で20センチ・メート... [200 / 2,354 chars] |
+| 人類学者の増田義郎によって命名された、ヨーロッパ人が船でアジアやアメリカに次々と進出した15~17世紀の時代を指す言葉は何でしょう? [66 chars] | 大航海時代 大航海時代（だいこうかいじだい）とは、ヨーロッパ人がアフリカ・アジア・アメリカ大陸への大規模な航海を行い、"発見"した土地で略奪や搾取の限りを尽くした時代。15世紀半ばから17世紀半ばまで続き、主にポルトガルとスペインにより行われた。 「大航海時代」の名称は、1963年岩波書店にて「大航海時代叢書」を企画していた際、それまでの「地理上の発見」、「大発見時代」（Age of Discov... [200 / 9,243 chars] |
+| シャフトと呼ばれる横棒にプレートと呼ばれる円盤状の重りを付けた、重量挙げに使われる器具は何でしょう? [50 chars] | バーベル バーベル（英: barbell）は、重量挙げ、パワーリフティング、ウエイトトレーニング等に用いられる、シャフトと呼ばれる横棒の両端に、プレートと呼ばれる円盤形の重りを付け、固定したスポーツ器具である。 プレートはシャフトに着脱可能になっており、種々の重量のプレートを取り換えることにより、全体の重量を調整して使用する。2つのプレートの間隔は肩幅よりやや広くされており、シャフトを両手で握って... [200 / 683 chars] |
 
 ### Public Sources
 
@@ -184,9 +184,9 @@ Discovery, and barbell.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| JAQKET: クイズを題材にした日本語 QA データセットの構築 | 2020 | paper | https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf |
-| mteb/jaqket |  | dataset card | https://huggingface.co/datasets/mteb/jaqket |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
+| JAQKET: クイズを題材にした日本語 QA データセットの構築 | 2020 | paper | [https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf](https://www.anlp.jp/proceedings/annual_meeting/2020/pdf_dir/P2-24.pdf) |
+| mteb/jaqket |  | dataset card | [https://huggingface.co/datasets/mteb/jaqket](https://huggingface.co/datasets/mteb/jaqket) |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
 
 ### Representative Snippets
 

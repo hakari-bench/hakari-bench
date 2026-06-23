@@ -121,6 +121,89 @@
         "doi": "10.48550/arXiv.2402.14151",
         "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-eppghwlrba-pro03a",
+        "document_id": "test-politics-eppghwlrba-pro03b",
+        "query": {
+          "text": "Sports shooting desensitizes people to the lethal nature of firearms Shooting as a sport desensitise",
+          "full_chars": 511,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "eneral politics politics general house would limit right bear arms Shooting is a major sport enjoyed by many law-abiding people, both in gun clubs with purpose-built ranges and as a field sport. These",
+          "full_chars": 763,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-epiasghbf-con04a",
+        "document_id": "test-economy-epiasghbf-con04b",
+        "query": {
+          "text": "Where are the men? Is the feminisation of labour emerging with a de-masculinisation of jobs? If so,",
+          "full_chars": 654,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "economic policy international africa society gender house believes feminisation Within Gender and Development the importance of bringing men into the picture of gender discrimination has been recognis",
+          "full_chars": 277,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mmciahbans-con04a",
+        "document_id": "test-culture-mmciahbans-con04b",
+        "query": {
+          "text": "Run education campaigns instead Education is an alternative. Campaigns such as #darkisbeautiful (dar",
+          "full_chars": 829,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "media modern culture international africa house believes african nations should Educational campaigns can and do work on many issues. However, they can only do so much in terms of making genuine progr",
+          "full_chars": 391,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-society-epsihbdns-pro02a",
+        "document_id": "test-society-epsihbdns-pro02b",
+        "query": {
+          "text": "Restrictions on migration would benefit people in the cities economically and socially Cities are ve",
+          "full_chars": 1339,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "economic policy society immigration house believes developing nations should People who move to the cities have chosen to move from their families and dear ones, because they want to create a new and",
+          "full_chars": 1414,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-health-dhgsshbesbc-con02a",
+        "document_id": "test-health-dhgsshbesbc-con02b",
+        "query": {
+          "text": "The risks of ignorance and prejudice are too high This measure could be actively dangerous for HIV-p",
+          "full_chars": 1021,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "disease health general sex sexuality house believes employees should be compelled Employers can be trusted to use this information responsibly. They are already used to keeping sensitive information (",
+          "full_chars": 583,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

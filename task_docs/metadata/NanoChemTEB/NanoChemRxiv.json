@@ -157,8 +157,91 @@
         "url": "https://huggingface.co/datasets/BASF-AI/ChemRxivRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "66",
+        "document_id": "60f3ea062b910135237380eb_32",
+        "query": {
+          "text": "How are the equilibrium densities from molecular dynamics simulations utilized to determine the solv",
+          "full_chars": 137,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Vapor-Liquid Equilibrium Simulations. Vapor-liquid equilibrium simulations were performed by setting up systems of dimensions 9 × 9 × Z nm 3 where Z ranges from ≈20 to ≈30 nm depending on the mixture;",
+          "full_chars": 1111,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "658a7fc466c1381729109408_4",
+        "query": {
+          "text": "What percentage threshold of unknown letters was used to exclude viral genome sequences during the a",
+          "full_chars": 117,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Genome sequences of Variants of Concern (VOCs) were aligned with the Wuhan-Hu-1 sequence using MAFFT 7 . During alignment, sequences containing over 5% unknown letters were excluded. This resulted in",
+          "full_chars": 564,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "6788e4666dde43c908cca650_4",
+        "query": {
+          "text": "How does increasing the steric bulk of substituents on the ligands affect the enantioselectivity in",
+          "full_chars": 150,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "We commenced our study by investigating the cross-coupling of 2-chloronaphthalene (1a) and benzylic zinc reagent (2a, 1.5 equiv) for the synthesis of 1,1-diarylethanes (3a) (Table ). Firstly, we exami",
+          "full_chars": 1519,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9",
+        "document_id": "66691d0f409abc03453294cb_34",
+        "query": {
+          "text": "How does water content in the ionic liquid electrolyte affect methanol formation rate and Faradaic e",
+          "full_chars": 145,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Were responsible for the excellent performance of NiO-V2O5/Rh. Another study reported a methanol production rate of 752.9 μmol g -1 h -1 with 77% product selectivity using CuO/CeO2 mixed oxides as ano",
+          "full_chars": 835,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "161",
+        "document_id": "6735144df9980725cf195ee7_30",
+        "query": {
+          "text": "What structural features of Ligand 4 caused it to require longer simulation times for accurate bindi",
+          "full_chars": 128,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Average protein-ligand complex ΔG, solvated ligand ΔG, and overall ∆∆𝐺 𝐴→𝐵 𝑏𝑖𝑛𝑑 of the shortrun simulations and long-run simulations with all three equilibration methods are tabulated in Table . ∆∆𝐺 𝐴",
+          "full_chars": 2070,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

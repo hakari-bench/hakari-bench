@@ -70,12 +70,13 @@ Researchers should audit false positives by subfield. If a model confuses broad 
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-physics-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-physics-vn)
+| Query | Positive document |
+| --- | --- |
+| Thương mại có ảnh hưởng đến sự quay của Trái Đất không? [55 chars] | Nhân loại và các hoạt động/cấu trúc do con người tạo ra có ảnh hưởng đến chuyển động quay của Trái Đất? Chúng ta đi bộ hay lái phương tiện đến đích hàng ngày. Hành động của chúng ta có ảnh hưởng đến s... [200 / 410 chars] |
+| Nguyên lý của Archimedes: thuật ngữ không chính xác? [52 chars] | Tại sao một cốc có 100 g nước nổi khi đặt trên một cốc khác có 50 g nước? Hãy tưởng tượng chúng ta có cốc A với 50 g nước và cốc B (nhỏ hơn so với cốc A) với 100 g nước. Bây giờ cho cốc B vào trong cố... [200 / 716 chars] |
+| Máy tính lượng tử D-Wave có thể làm gì? [39 chars] | Máy tính lượng tử do D-Wave Systems, Inc. sản xuất có hoạt động không? D-wave tuyên bố đã chế tạo được 128 máy tính lượng tử qbit thương mại? Điều tôi không hiểu là họ có thực sự làm được điều này hay... [200 / 1,857 chars] |
+| Có phải hạt Higgs là hạt cuối cùng được dự đoán bởi Mô hình chuẩn? [66 chars] | Boson Higgs trong LHC Gần đây, các hạt higgs bosons đã được phát hiện ra ở LHC. Câu hỏi của tôi là làm sao họ biết rằng những hạt được tạo ra thực sự là higgs boson? Họ xác nhận chúng là higgs boson d... [200 / 229 chars] |
+| Lực lan truyền trong vật chất nhanh như thế nào? [48 chars] | Có thể truyền tải thông tin nhanh hơn tốc độ ánh sáng bằng cách sử dụng một cây gậy cứng không? Có thể truyền tải thông tin (như 1 và 0) nhanh hơn tốc độ ánh sáng không? Ví dụ, hãy lấy một cây cột cứn... [200 / 468 chars] |
 
 ### Source Reference Table
 

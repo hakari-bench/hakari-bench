@@ -70,11 +70,13 @@ For model research, this split is useful because it isolates cross-script retrie
 
 ## Example Data
 
-### Public Sources
-
-- Belebele paper: https://arxiv.org/abs/2308.16884
-- Belebele repository: https://github.com/facebookresearch/belebele
-- MTEB task dataset card: https://huggingface.co/datasets/mteb/belebele
+| Query | Positive document |
+| --- | --- |
+| Which of the changes prompted by The French Revolution had a significant impact on working class cit... [100 / 106 chars] | ผลกระทบทางสังคมและการเมืองมีมากมาย เช่น การใช้ระบบเมตริก การเปลี่ยนจากระบอบสมบูรณาญาสิทธิราชย์ไปสู่ระบอบสาธารณรัฐ ความเป็นชาตินิยม และความเชื่อว่าประเทศเป็นของประชาชน ไม่ใช่ของผู้ปกครองคนเดียว หลังการ... [200 / 553 chars] |
+| According to the passage, who may have started an agriculture society? [70 chars] | เมื่อนานมาแล้วในช่วงศตวรรษที่สิบเก้าและยี่สิบ เชื่อกันว่าคนกลุ่มแรกที่อยู่​อาศัยในประเทศ​นิวซีแลนด์คือชนเผ่าเมารีซึ่งเป็นผู้ล่านกยักษ์โมอา จากนั้นทฤษฎีดังกล่าวได้ก่อให้เกิดแนวคิดที่ว่าชาวเมารีอพยพมาจา... [200 / 682 chars] |
+| Which of the following accurately describes the practice of subsistence agriculture? [84 chars] | การเกษตรเพื่อดำรงชีพ คือการเกษตรที่กระทำพื่อผลิตอาหารให้เพียงพอต่อความต้องการของเกษตรกรและครอบครัวของพวกเขา การเกษตรเพื่อดำรงชีพคือระบบเรียบง่ายที่มักเป็นการเกษตรอินทรีย์โดยใช้เมล็ดพันธุ์ที่ขึ้นในเขตภ... [200 / 383 chars] |
+| According to the passage, which of the following was one of China’s most violent eras? [86 chars] | จีนสมัยโบราณมีวิธีการแสดงช่วงเวลาต่าง ๆ ที่พิเศษไม่เหมือนใคร โดยแบ่งเป็นช่วงระยะของจีน หรือแต่ละตระกูลที่อยู่ในอำนาจเป็นราชวงศ์ที่มีลักษณะพิเศษ ในช่วงเวลาระหว่างแต่ละราชวงศ์เป็นยุคที่จังหวัดต่าง ๆ ซึ่... [200 / 565 chars] |
+| When did King Tutankhamun gain notoriety? [41 chars] | "ใช่แล้วล่ะ! กษัตริย์ตุตันคามุนซึ่งบางครั้งก็ถูกเรียกว่า ""กษัตริย์ทุต"" หรือ ""กษัตริย์เด็ก"" คือหนึ่งในกษัตริย์อียิปต์โบราณที่เป็นที่รู้จักกันมากที่สุดในยุคปัจจุบัน ที่น่าสนใจคือ ผู้คนไม่คิดว่าเขาเป... [200 / 550 chars] |
 
 ### Source Reference Table
 

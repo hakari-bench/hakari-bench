@@ -131,8 +131,91 @@
         "url": "https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "82",
+        "document_id": "article-18",
+        "query": {
+          "text": "Puis-je justifier d'une indemnité de licenciement si cela fait-il plus de 2 ans que je suis dans cet",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Article 18 : Indemnité de licenciement – Conditions d’attribution Modification Avenant n° 7 du 5/07/1991 Il est attribué à tout salarié licencié justifiant d’au moins 2 années d’ancienneté une indemni",
+          "full_chars": 690,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "21",
+        "document_id": "article-75",
+        "query": {
+          "text": "Mon entreprise a déposé un brevet sur mon invention. A quoi ai-je droit ?",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Article 75 : Invention des salariés dans le cadre des activités professionnelles Dispositions générales : Les règles relatives aux inventions des salariés sont fixées par la loi n° 78-742 du 13 juille",
+          "full_chars": 3628,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11",
+        "document_id": "article-25",
+        "query": {
+          "text": "Quelle est la période de prise de congés ?",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Article 25 : Période de congés Les droits à congé s’acquièrent du 1er juin de l’année précédente au 31 mai de l’année en cours. La période de prise de ces congés, dans tous les cas, est de treize mois",
+          "full_chars": 753,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "94",
+        "document_id": "article-33",
+        "query": {
+          "text": "J'ai le droit de faire combien d'heures supplémentaires sans avoir l'accord de l'inspecteur du trava",
+          "full_chars": 104,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Article 33 : Heures supplémentaires [En vigueur] ETAM hors CE : A. – Rémunération des heures supplémentaires : Les heures supplémentaires de travail contrôlées, effectuées par le personnel ETAM, sont",
+          "full_chars": 465,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "40",
+        "document_id": "article-73",
+        "query": {
+          "text": "Y a-t-il un examen médical obligatoire au retour d'un déplacement à l'étranger ?",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Article 73 : Contrôle médical En cas de séjour prolongé à l’étranger, le salarié est tenu, à la demande de l’employeur avant son départ et dans le mois qui suit son retour à son domicile, de subir, lu",
+          "full_chars": 513,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

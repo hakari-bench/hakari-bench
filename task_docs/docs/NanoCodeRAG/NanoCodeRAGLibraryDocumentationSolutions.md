@@ -70,9 +70,13 @@ For reranking, useful features include namespace match, signature match, argumen
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeRAGLibraryDocumentationSolutions is documented through CodeRAG-Bench and its public project resources. The source-specific dataset card is `code-rag-bench/library-documentation`.
+| Query | Positive document |
+| --- | --- |
+| tf.autodiff.ForwardAccumulator Computes Jacobian-vector products ("JVP"s) using forward-mode autodif... [100 / 102 chars] | tf.autodiff.ForwardAccumulator( primals, tangents ) Compare to tf.GradientTape which computes vector-Jacobian products ("VJP"s) using reverse-mode autodiff (backprop). Reverse mode is more attractive... [200 / 6,087 chars] |
+| tf.compat.v1.data.experimental.RandomDataset A Dataset of pseudorandom values. Inherits From: Datase... [100 / 110 chars] | tf.compat.v1.data.experimental.RandomDataset( seed=None ) Attributes element_spec The type specification of an element of this dataset. dataset = tf.data.Dataset.from_tensor_slices([1, 2, 3]) dataset.... [200 / 55,309 chars] |
+| tf.compat.v1.confusion_matrix Computes the confusion matrix from predictions and labels. View aliase... [100 / 132 chars] | See Migration guide for more details. tf.compat.v1.math.confusion_matrix tf.compat.v1.confusion_matrix( labels, predictions, num_classes=None, dtype=tf.dtypes.int32, name=None, weights=None ) The matr... [200 / 1,943 chars] |
+| tf.compat.v1.batch_to_space_nd BatchToSpace for N-D tensors of type T. View aliases Compat aliases f... [100 / 114 chars] | See Migration guide for more details. tf.compat.v1.manip.batch_to_space_nd tf.compat.v1.batch_to_space_nd( input, block_shape, crops, name=None ) This operation reshapes the "batch" dimension 0 into M... [200 / 3,558 chars] |
+| tf.compat.v1.distribute.OneDeviceStrategy A distribution strategy for running on a single device. In... [100 / 121 chars] | tf.compat.v1.distribute.OneDeviceStrategy( device ) Using this strategy will place any variables created in its scope on the specified device. Input distributed through this strategy will be prefetche... [200 / 30,793 chars] |
 
 ### Source Reference Table
 

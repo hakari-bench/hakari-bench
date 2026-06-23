@@ -70,12 +70,13 @@ For evaluation, nDCG@10 should be used to judge direct search quality, while rec
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-physics-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Physics-PL
+| Query | Positive document |
+| --- | --- |
+| Jak równanie Schroedingera jest równaniem falowym? [50 chars] | związek między równaniem Schrodingera a równaniem falowym Zawsze byłem zdezorientowany związkiem między równaniem Schrödingera a równaniem falowym. $$ i\hbar \frac{\partial \psi}{\partial t} = - \frac... [200 / 1,059 chars] |
+| Pomiary technologii aktywnej redukcji szumów [44 chars] | Maksymalne opóźnienie efektywnej aktywnej redukcji szumów? Aktywna redukcja szumów redukuje niechciany dźwięk, wysyłając odwróconą fazę oryginalnej fazy: ![Aktywna redukcja szumów](http://i.stack.imgu... [200 / 913 chars] |
+| Czy ciągłe modele matematyczne dyskretnych zjawisk fizycznych są bałaganiarskie z powodu rozłączenia... [100 / 133 chars] | Jaki jest „dyskretny” odpowiednik mechaniki „ciągłej”? Gdybym chciał zbadać podejście matematyki dyskretnej do mechaniki kontinuum, do jakich podręczników powinienem się zajrzeć? Przypuszczam, że goto... [200 / 536 chars] |
+| Grawitacja z energii [20 chars] | Czy energia niemasowa generuje pole grawitacyjne? Na bardzo podstawowym poziomie wiem, że grawitacja nie jest generowana przez masę, ale raczej przez tensor naprężenia-energii i kiedy często macham rę... [200 / 1,451 chars] |
+| Dlaczego (relatywistyczna) masa obiektu wzrasta, gdy jego prędkość zbliża się do prędkości światła? [99 chars] | Relatywistyczny pęd i masa Czy istnieje w ogóle relatywistyczna masa czy po prostu relatywistyczny pęd? Jaki jest powód, aby preferować jeden nad drugim? Jaki jest problem ze stwierdzeniem, że gorący... [200 / 241 chars] |
 
 ### Source Reference Table
 

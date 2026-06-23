@@ -178,8 +178,8 @@ that share surface terms but do not answer the specific relation.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project | https://github.com/project-miracl/miracl |
-| MIRACL corpus dataset |  | dataset | https://huggingface.co/datasets/miracl/miracl-corpus |
-| MIRACL source queries and qrels |  | dataset | https://huggingface.co/datasets/miracl/miracl |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| MIRACL corpus dataset |  | dataset | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
+| MIRACL source queries and qrels |  | dataset | [https://huggingface.co/datasets/miracl/miracl](https://huggingface.co/datasets/miracl/miracl) |

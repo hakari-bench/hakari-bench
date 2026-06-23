@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Conversor Elevador Multinível DC-DC Novo",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Os conversores de fonte de tensão multinível estão surgindo como uma nova geração de opções de conversores de energia para aplicações de alta potência. Os conversores de fonte de tensão multinível ger",
+          "full_chars": 1078,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Aprendizado Rápido de Campos Aleatórios de Markov Esparsos Baseado em Fatorização de Cholesky",
+          "full_chars": 93,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sure, please provide the English document text that you need translated into Portuguese.",
+          "full_chars": 88,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Síntese de Texturas Usando Redes Neurais Convolucionais",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Neste trabalho, investigamos o efeito da profundidade de redes convolucionais na sua precisão em ambientes de reconhecimento de imagens em grande escala. Nossa principal contribuição é uma avaliação d",
+          "full_chars": 917,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
+        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
+        "query": {
+          "text": "Antena anelar plana de banda larga com polarização circular para sistema RFID",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Neste artigo, é proposta uma técnica de alimentação com faixa meandrante horizontal (HMS) para alcançar uma boa adaptação de impedância e padrões de radiação simétricos em banda larga para uma antena",
+          "full_chars": 1434,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
+        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
+        "query": {
+          "text": "Projeto de monitor cardíaco digital avançado utilizando componentes eletrônicos básicos",
+          "full_chars": 87,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Neste artigo, apresentamos o design e o desenvolvimento de um novo dispositivo integrado para medir a frequência cardíaca utilizando a ponta do dedo, visando melhorar a estimativa da frequência cardía",
+          "full_chars": 1291,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

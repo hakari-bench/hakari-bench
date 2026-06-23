@@ -62,23 +62,23 @@ Models should encode entity relation semantics and Russian morphology. Hard nega
 
 ## Example Data
 
-### Public Sources
-
-- [RuBQ 2.0: An Innovated Russian Question Answering Dataset](https://openreview.net/forum?id=P5UQFFoQ4PJ), task paper.
-- [The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design](https://arxiv.org/abs/2408.12503), ruMTEB paper.
-- [RuBQ project repository](https://github.com/vladislavneon/RuBQ), source repository.
-- [RuBQ Zenodo record](https://doi.org/10.5281/zenodo.4345696), dataset record.
-- [ai-forever/rubq-retrieval](https://huggingface.co/datasets/ai-forever/rubq-retrieval), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Как иначе называется канун Рождества Христова? [46 chars] | В списке представлены страны, в которых выходными днями (государственными праздниками), являются Рождественский сочельник (день перед Рождеством), Рождество Христово, Второй день Рождества и День пода... [200 / 218 chars] |
+| На какой реке стоит город Багдад? [33 chars] | Багдад расположен почти в центре Ирака, на берегу реки Тигр, неподалёку от устья реки Дияла. Погодные условия в черте города и его окрестностях складываются под влиянием субтропического и средиземномо... [200 / 878 chars] |
+| В каком театре выступал Владимир Высоцкий? [42 chars] | После окончания Школы-студии МХАТ в жизни Высоцкого наступил четырёхлетний период, связанный с поиском «своего театра». Молодой актёр успел поработать — с перерывами — в Театре имени Пушкина и других... [200 / 818 chars] |
+| Кто придумал Алису Селезневу? [29 chars] | Али́са И́горевна Селезнёва — главная героиня цикла детских фантастических книг Кира Булычёва «Приключения Алисы» и их экранизаций и производных работ, таких, как «Тайна третьей планеты», «Гостья из бу... [200 / 289 chars] |
+| Какой из городов является столицей Швейцарской конфедерации? [60 chars] | Швейца́рия (нем. die Schweiz, фр. Suisse, итал. Svizzera, романш. Svizra), официально — Швейца́рская Конфедера́ция (лат. Confoederatio Helvetica, нем. Schweizerische Eidgenossenschaft, фр. Confédérati... [200 / 934 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RuBQ 2.0: An Innovated Russian Question Answering Dataset | 2021 | OpenReview paper | https://openreview.net/forum?id=P5UQFFoQ4PJ |
-| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | https://arxiv.org/abs/2408.12503 |
-| RuBQ project repository | 2021 | source repository | https://github.com/vladislavneon/RuBQ |
-| RuBQ Zenodo record | 2020 | dataset record | https://doi.org/10.5281/zenodo.4345696 |
-| ai-forever/rubq-retrieval | 2025 | dataset card | https://huggingface.co/datasets/ai-forever/rubq-retrieval |
+| RuBQ 2.0: An Innovated Russian Question Answering Dataset | 2021 | OpenReview paper | [https://openreview.net/forum?id=P5UQFFoQ4PJ](https://openreview.net/forum?id=P5UQFFoQ4PJ) |
+| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | [https://arxiv.org/abs/2408.12503](https://arxiv.org/abs/2408.12503) |
+| RuBQ project repository | 2021 | source repository | [https://github.com/vladislavneon/RuBQ](https://github.com/vladislavneon/RuBQ) |
+| RuBQ Zenodo record | 2020 | dataset record | [https://doi.org/10.5281/zenodo.4345696](https://doi.org/10.5281/zenodo.4345696) |
+| ai-forever/rubq-retrieval | 2025 | dataset card | [https://huggingface.co/datasets/ai-forever/rubq-retrieval](https://huggingface.co/datasets/ai-forever/rubq-retrieval) |
 
 ### Representative Snippets
 

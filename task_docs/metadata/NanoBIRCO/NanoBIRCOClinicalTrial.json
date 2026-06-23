@@ -126,8 +126,91 @@
         "title": "BIRCO GitHub repository",
         "url": "https://github.com/BIRCO-benchmark/BIRCO",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "201524",
+        "document_id": "NCT00042588",
+        "query": {
+          "text": "A 31 yo male with no significant past medical history presents with productive cough and chest pain.",
+          "full_chars": 585,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The objective of this study is to demonstrate the safety and efficacy of IC14 in the treatment of hospitalized patients with community-acquired pneumonia and sepsis.",
+          "full_chars": 165,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "201417",
+        "document_id": "NCT00006319",
+        "query": {
+          "text": "A 48-year-old white male with history of common variable immunodeficiency (CVID) with acute abdomina",
+          "full_chars": 452,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "This study will try to identify mutations in the genes responsible for primary immunodeficiency disorders (inherited diseases of the immune system) and evaluate the course of these diseases in patient",
+          "full_chars": 1420,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "201410",
+        "document_id": "NCT00533156",
+        "query": {
+          "text": "A physician is called to see a 67-year-old woman who underwent cardiac catheterization via the right",
+          "full_chars": 368,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The purpose of this study is to assess the safety and feasibility of the 7F Ensure Medical Vascular Closure Devices to facilitate hemostasis in patients undergoing diagnostic or interventional coronar",
+          "full_chars": 1831,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "20157",
+        "document_id": "NCT00010517",
+        "query": {
+          "text": "A 20 yo female college student with no significant past medical history presents with a chief compla",
+          "full_chars": 481,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The current large randomized placebo-controlled trial is testing the ability of acupuncture to treat major depression. The study is unique in that treatment effects will be from the perspective of bot",
+          "full_chars": 1787,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "201429",
+        "document_id": "NCT00010712",
+        "query": {
+          "text": "A 51-year-old woman is seen in clinic for advice on osteoporosis. She has a past medical history of",
+          "full_chars": 412,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "This study will assess whether treatment with black cohosh is effective in reducing the frequency and intensity of menopausal hot flashes. In addition, this study will determine whether or not black c",
+          "full_chars": 1549,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

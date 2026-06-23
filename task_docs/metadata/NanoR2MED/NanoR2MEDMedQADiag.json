@@ -146,22 +146,105 @@
         "url": "https://r2med.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED GitHub repository",
         "url": "https://github.com/R2MED/R2MED",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED/MedQA-Diag",
         "url": "https://huggingface.co/datasets/R2MED/MedQA-Diag",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "587",
+        "document_id": "Obstentrics_Williams_7884",
+        "query": {
+          "text": "A 33-year-old G2P1 woman presents to the office because of poor diabetic control. She is currently a",
+          "full_chars": 439,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Malformations. he incidence of major malformations in women with type 1 diabetes is at least doubled and approximates 11 percent Qovanovic, 2015). These account for almost half of perinatal deaths in",
+          "full_chars": 628,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1117",
+        "document_id": "Anatomy_Gray_2246",
+        "query": {
+          "text": "A 68-year-old man presents with difficulty breathing for the last 3 hours. Upon asking about other s",
+          "full_chars": 986,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The optic nerve [II] is not a true cranial nerve, but rather an extension of the brain carrying afferent fibers from the retina of the eyeball to the visual centers of the brain. The optic nerve is su",
+          "full_chars": 921,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1010",
+        "document_id": "InternalMed_Harrison_14074",
+        "query": {
+          "text": "A 25-year-old woman presents to her primary care provider for evaluation of a \"painful mass in my le",
+          "full_chars": 796,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "lympHogranUloma venereUm C. trachomatis serovars L1, L2, and L3 cause LGV, an invasive systemic STD. The peak inci dence of LGV corresponds with the age of greatest sexual activity: the second and thi",
+          "full_chars": 995,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "708",
+        "document_id": "InternalMed_Harrison_23361",
+        "query": {
+          "text": "A one-week-old boy presents with yellow sclerae, severe lethargy, and decreased muscle tone. His mot",
+          "full_chars": 637,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Crigler-Najjar Syndrome, Type I CN-I is characterized by striking uncon jugated hyperbilirubinemia of about 340–765 μmol/L (20–45 mg/dL) that appears in the neonatal period and persists for life. Othe",
+          "full_chars": 997,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "219",
+        "document_id": "Pathology_Robbins_1526",
+        "query": {
+          "text": "A 4-year-old girl is brought to the emergency department with a persistent cough, fever, and vomitin",
+          "full_chars": 888,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Mendelian Disorders: Diseases Caused by Single-Gene Defects251 abnormally viscid mucous secretions that block the airways and the pancreatic ducts which in turn are responsible for the two most import",
+          "full_chars": 845,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

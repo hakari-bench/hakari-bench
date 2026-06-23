@@ -111,11 +111,11 @@ on whether the passage actually supports, refutes, or contextualizes the claim.
 
 | Query | Positive document |
 | --- | --- |
-| 1970년부터 1998년까지 약 0.7°F의 온도 상승을 가져온 온난화 시기가 있었으며, 이는 전지구적 온난화 경고 운동의 출현을 도왔다. | 파레오세 또는 파라이오세는 약 사이에 지속된 지질 시대의 한 시기로, 신생대에 속하는 첫 번째 시대이다. |
-| 사실, 통계적으로 유의미하지는 않지만 하락하는 추세이다. | 태양 주기 또는 태양 자기 활동 주기는 태양의 활동과 외형에서 나타나는 거의 주기적인 11년 주기의 변화를 말한다. |
-| 지역 및 지역적인 해수면은 여전히 전형적인 자연 변동성을 나타내고 있으며, 일부 지역에서는 상승하고 다른 지역에서는 하락하고 있다. | 평균 해수면은 지구의 해양 표면의 평균 수준으로, 고도를 측정하는 기준이 된다. |
-| 기후 과학자들은 허리케인 하비의 여러 측면이 지구 온난화가 나쁜 상황을 더욱 악화시키고 있음을 시사한다고 말한다. | 지구 온난화의 영향은 온실가스의 인간 배출로 인해 직접 또는 간접적으로 발생하는 환경적 및 사회적 변화이다. |
-| CERN의 CLOUD 실험은 우주선이 지구 온난화의 원인이라고 주장하기 위해 필요한 조건 중 일부만을 테스트했다. | 최근 기후 변화의 원인 규명은 지구상에서 관측되는 최근의 기후 변화, 즉 지구 온난화의 책임 있는 메커니즘을 과학적으로 밝히는 노력을 의미한다. |
+| 1970년부터 1998년까지 약 0.7°F의 온도 상승을 가져온 온난화 시기가 있었으며, 이는 전지구적 온난화 경고 운동의 출현을 도왔다. [77 chars] | 파레오세(Paleocene, -LSB- 발음: /ˈpæliəˌsiːn/, /ˈpæ-/, /-lioʊ-/ -RSB-) 또는 파라이오세(Palaeocene)는 약 ~ 사이에 지속된 지질 시대의 한 시기로, '오래된 최근'을 의미한다. 이 시기는 현대의 신생대(제3기)에 속하는 파레오제(제3기)의 첫 번째 시대이다. 많은 지질 시대와 마찬가지로 이 시대의 시작과... [200 / 619 chars] |
+| 사실, 통계적으로 유의미하지는 않지만 하락하는 추세이다. [31 chars] | 태양 주기 또는 태양 자기 활동 주기는 태양의 활동(태양 복사량과 태양 물질 방출 정도의 변화 포함)과 외형(태양 흑점, 플레어 및 기타 현상의 수와 크기 변화)에서 나타나는 거의 주기적인 11년 주기의 변화를 말한다. 이러한 변화는 수세기 동안 태양의 외형 변화와 오로라와 같은 지구상에서 관측되는 변화를 통해 관찰되어 왔다. 태양의 변화는 우주와 대기,... [200 / 260 chars] |
+| 지역 및 지역적인 해수면은 여전히 전형적인 자연 변동성을 나타내고 있으며, 일부 지역에서는 상승하고 다른 지역에서는 하락하고 있다. [73 chars] | 평균 해수면(MSL, Mean Sea Level)은 지구의 해양 표면의 평균 수준으로, 고도(예: 해발 고도)를 측정하는 기준이 된다. MSL은 표준화된 지오데식 기준점인 수직 기준면으로, 예를 들어 지도 제작 및 해양 항해에서 사용되는 도법 기준면(chart datum)이나 항공 분야에서 대기압을 측정하여 고도를 보정하고 항공기 비행 고도층을 결정하는 기... [200 / 514 chars] |
+| [기후 과학자들]은 허리케인 하비의 사례에서 나타나는 여러 측면이 지구 온난화가 나쁜 상황을 더욱 악화시키고 있음을 시사한다고 말한다. [75 chars] | 지구 온난화의 영향은 온실가스의 인간 배출로 인해 직접 또는 간접적으로 발생하는 환경적 및 사회적 변화이다. 기후 변화가 실제로 발생하고 있으며, 인간 활동이 주요 원인이라는 데 과학계의 합의가 있다. 빙하의 후퇴, 계절적 사건의 시기 변화(예: 식물의 개화 시기 조기화), 농업 생산성 변화 등 기후 변화의 많은 영향이 이미 관측되고 있다. 기후 변화의 미... [200 / 584 chars] |
+| CERN의 CLOUD 실험은 우주선이 지구 온난화의 원인이라고 주장하기 위해 필요한 네 가지 조건 중 네 가지 중 하나의 3분의 1만을 테스트했으며, 나머지 조건 중 두 가지는 이... [100 / 115 chars] | 최근 기후 변화의 원인 규명은 지구상에서 관측되는 최근의 기후 변화, 즉 일반적으로 '지구 온난화'로 알려진 현상의 책임 있는 메커니즘을 과학적으로 밝히는 노력을 의미한다. 이 노력은 기온 기록 장비가 가장 신뢰할 수 있는 시기인 계기 온도 기록 기간 동안 관측된 변화에 초점을 맞추었으며, 특히 인간 활동이 가장 빠르게 증가하고 성층권 관측이 가능해진 최근... [200 / 948 chars] |
 
 ### Public Sources
 
@@ -129,7 +129,7 @@ on whether the passage actually supports, refutes, or contextualizes the claim.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER | 2020 | task paper | https://arxiv.org/abs/2012.00614 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| CLIMATE-FEVER | 2020 | task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

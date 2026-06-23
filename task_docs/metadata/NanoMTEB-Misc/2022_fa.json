@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Overview of the TREC 2022 NeuCLIR Track",
-        "url": "https://arxiv.org/abs/2304.12367",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NeuCLIR official site",
-        "url": "https://neuclir.github.io/",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/NeuCLIR2022RetrievalHardNegatives",
-        "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of the TREC 2022 NeuCLIR Track",
+        "url": "https://arxiv.org/abs/2304.12367",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NeuCLIR official site",
+        "url": "https://neuclir.github.io/",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/NeuCLIR2022RetrievalHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "77",
+        "document_id": "bda2d5d9-20bb-40d7-aca3-cf7ecc6a4c08",
+        "query": {
+          "text": "من علاقه مند به یافتن مقالاتی هستم که سبزیجات سرشار از کلسیم را معرفی می کنند",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "۵ خوراکی سرشار از کلسیم را بشناسید کد مطلب: 474072 نصف فنجان از انجیر خشک شده و خام مقدار بالایی کلسیم در حدود ۱۲۰ میلی گرم دارد که شامل ۱۲ درصد ارزش روزانه می شود. انجیر خشک همچنين داراي فسفر است. فس",
+          "full_chars": 1918,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "1acdaa1d-693e-4358-b469-aac783f9fba0",
+        "query": {
+          "text": "دنبال مقالاتی هستم که در مورد تولید بومی واکسن کووید کوویران برکت توسط ایران گزارش دهند.",
+          "full_chars": 88,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "واکسن مؤثر و ایمن «کوو ایران برکت» خیال مردم را راحت می‌کند واکسن مؤثر و ایمن «کوو ایران برکت» خیال مردم را راحت می‌کند مدیر گروه تحقیقات تولید واکسن ستاد اجرایی فرمان امام(ره): ۹ کشور تاکنون متقاضی خ",
+          "full_chars": 7035,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "7d4dacb8-424c-4a62-8873-151b35cca981",
+        "query": {
+          "text": "من به دنبال مقالاتی در مورد چگونگی استفاده از هوش مصنوعی در کشاورزی هستم.",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "کاربرد اینترنت اشیا در کشاورزی هوشمند نسخه الکترونیکی شماره اول از سری پنجم نشریه «صنعت سبز نوین»؛ فصلنامه انجمن علمی دانشجویی گروه مهندسی ماشین‌های کشاورزی دانشگاه تهران منتشر شد. به گزارش باشگاه دان",
+          "full_chars": 836,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25",
+        "document_id": "9abf5a03-191d-42a0-b363-4155e1ab249c",
+        "query": {
+          "text": "تلاش چین برای تصاحب بازار ۵جی در روسیه باید کرملین را نگران کند.",
+          "full_chars": 64,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "چراغ سبز روسیه به هواوی و دهان‌کجی به آمریکا دولت روسیه به منظور نمایش همبستگی خود با چین در برابر آمریکا، راه ورود شرکت هواوی به این کشور را برای راه اندازی شبکه 5G هموار کرده است. به گزارش ایسنا، وق",
+          "full_chars": 3482,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "18",
+        "document_id": "b1c31173-a2ac-4211-b8b2-587dd283fcb4",
+        "query": {
+          "text": "من علاقه مند به یافتن اطلاعاتی در مورد وضعیت نزدیک بینی در بین دانش آموزانِ مدارس چین هستم.",
+          "full_chars": 92,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "نیم میلیون نزدیک‌بین؛ چین بازی‌های ویدیویی را کنترل می‌کند حق نشر عکس Tencent Image caption چین بزرگ‌ترین بازار بازی در دنیا است مقام‌های چینی در واکنش به افزایش نزدیک‌بینی در کودکان این کشور طرح‌هایی",
+          "full_chars": 1284,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

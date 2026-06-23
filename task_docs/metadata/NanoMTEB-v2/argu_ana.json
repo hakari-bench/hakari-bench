@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/arguana",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-health-ppelfhwbpba-con02a",
+        "document_id": "test-health-ppelfhwbpba-con02b",
+        "query": {
+          "text": "Opposition to partial birth abortion is part of a strategy intended to ban abortion in general Parti",
+          "full_chars": 704,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "pregnancy philosophy ethics life family house would ban partial birth abortions Although many people who are against partial-birth abortion are against abortion in general, there is no necessary link,",
+          "full_chars": 691,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-environment-chbwtlgcc-con03a",
+        "document_id": "test-environment-chbwtlgcc-con03b",
+        "query": {
+          "text": "New Technology Humanity has revolutionized the world repeatedly through such monumental inventions a",
+          "full_chars": 1013,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "climate house believes were too late global climate change Technological improvements will almost certainly be developed for those who can afford them (as most technology is). However, climate change",
+          "full_chars": 391,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-environment-aeghhgwpe-pro04a",
+        "document_id": "test-environment-aeghhgwpe-pro04b",
+        "query": {
+          "text": "Being vegetarian reduces risks of food poisoning Almost all dangerous types of food poisoning are pa",
+          "full_chars": 810,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "animals environment general health health general weight philosophy ethics Food safety and hygiene are very important for everyone, and governments should act to ensure that high standards are in plac",
+          "full_chars": 1580,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-sport-tshbmlbscac-pro02a",
+        "document_id": "test-sport-tshbmlbscac-pro02b",
+        "query": {
+          "text": "Collisions are a part of the game. First, collisions are part of the tradition of baseball. They hav",
+          "full_chars": 2256,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "team sports house believes major league baseball should continue allow collisions Collisions are much less a part of the game than people believe. The notion that collisions have been in the game for",
+          "full_chars": 1584,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-magghbcrg-pro01a",
+        "document_id": "test-free-speech-debate-magghbcrg-pro01b",
+        "query": {
+          "text": "Community radio gives voices to the people rather than imposing those of the powerful. The events of",
+          "full_chars": 1266,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "media and good government house believes community radio good Community radio can indeed do the many wondrous things that Prop seems to trust it to do. It can also do more or less anything else. If pr",
+          "full_chars": 558,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/arguana",
-    "source_task": "ArguAna"
+    "source_task": "ArguAna",
+    "example_count": 5
   }
 }

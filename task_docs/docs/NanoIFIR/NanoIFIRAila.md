@@ -70,9 +70,13 @@ For reranking, a strong model should compare the query's legal issue and materia
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the IFIR paper and the FIRE 2019 AILA track overview. The Nano split is published in `hakari-bench/NanoIFIR`.
+| Query | Positive document |
+| --- | --- |
+| These appeals involve a pure question of law as to whether an award by which residue assets of a par... [100 / 1,668 chars] | S. V. Chandra Pandian and Others v S. V. Sivalinga Nadar and Others 11 January 1993 C.As. Nos. 17491752 of 1992 The Judgment was delivered by : Hon'ble Justice A. M. Ahmadi 1. The four appellants and... [200 / 45,845 chars] |
+| The detenu P1, a French national, at the relevant time was employed as Airport Manager by A1 in L1.... [100 / 4,806 chars] | Kavita w/o Sunder Shankardas Devidasani and another v State of Maharashtra and Others 28 July 1981 Writ Petition (Criminal) No. 2690 of 1981. (Under article 32 of the Constitution of India) AND Writ P... [200 / 19,115 chars] |
+| The appellant before us was examined as prime witness in the trial of T.R. on the file of the Specia... [100 / 2,857 chars] | R. K. Lakshmanan v A. K. Srinivasan and Another 1 August 1975 CRIMINAL APPELLATE JURISDICTION : Criminal Appeal No. 1 30 of 1975. Appeal by Special Leave from the Judgment and Order dated the 13th Mar... [200 / 15,767 chars] |
+| Appellant before us was detained. He is the Managing Director of a company, registered and incorpora... [100 / 3,045 chars] | Rajinder Arora v Union of India and Others 10 March 2006 Appeal (Crl.) 311 of 2006 The Judgment was delivered by : S. B. Sinha, J. Leave granted. 1. The Appellant is an industrialist. He manufactures... [200 / 17,845 chars] |
+| The hearing before us now relates to certain objections filed to the Award made by a former Judge of... [100 / 5,936 chars] | K. P. Poulose v State Of Kerala & Anr 21 April 1975 CIVIL A PPELLATE JURISDICTION CIVIL APPEAL No. 1485 OF 1974 Appeal by special leave from the judgment and decree Dt. 29-1-73 of the Kerala High Cour... [200 / 9,716 chars] |
 
 ### Source Reference Table
 

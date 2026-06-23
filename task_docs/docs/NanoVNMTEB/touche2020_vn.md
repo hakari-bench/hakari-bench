@@ -70,13 +70,13 @@ Error analysis should check stance balance, argument directness, and whether top
 
 ## Example Data
 
-### Public Sources
-
-- [Touché 2020 overview paper](https://ceur-ws.org/Vol-2696/paper_261.pdf)
-- [Touché 2020 Task 1 page](https://webis.de/events/touche-20/shared-task-1.html)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/webis-touche2020-vn](https://huggingface.co/datasets/GreenNode/webis-touche2020-vn)
+| Query | Positive document |
+| --- | --- |
+| Tuổi bỏ phiếu có nên được giảm xuống? [37 chars] | Pro không đưa ra bất kỳ một lý do hợp lý nào để giảm độ tuổi bầu cử. Tuy nhiên có khá nhiều lý do tại sao độ tuổi bầu cử của Anh Quốc không nên được giảm xuống. 1) Những người trẻ tuổi không quan tâm... [200 / 2,112 chars] |
+| Thuốc kê đơn có nên quảng cáo trực tiếp cho người tiêu dùng không? [66 chars] | Nhiều quảng cáo không cung cấp đủ thông tin về mức độ hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bởi một con tằm bay qua cửa sổ phòng ngủ trên một người đang ngủ yên bình. Thực tế, Lunesta giúp... [200 / 1,804 chars] |
+| Liệu năng lượng tái tạo có thể thay thế nhiên liệu hóa thạch một cách hiệu quả? [79 chars] | Trong mỗi lập luận tôi chỉ định đăng một điểm. Bây giờ để bác bỏ ý tưởng của đối thủ rằng thủy điện kết hợp với năng lượng gió và mặt trời có thể trong lý thuyết cung cấp năng lượng cho Hoa Kỳ, tôi mu... [200 / 4,070 chars] |
+| Những người phạm tội đã mãn hạn tù có được phép bỏ phiếu không? [63 chars] | Mặc dù hồ sơ của đối thủ tranh luận rằng ông ta sống ở Ấn Độ, cuộc tranh luận này là về tội phạm và quyền bầu cử trong một xã hội dân chủ. Tôi không quen với luật pháp và mong đợi của xã hội Ấn Độ cũn... [200 / 6,356 chars] |
+| Có nên ban hành thêm các luật kiểm soát súng? [45 chars] | Ngay cả trước khi bắt đầu tấn công với vụ án của đối thủ, tôi muốn giải thích rằng đối thủ của tôi đã bỏ lỡ bản chất cơ bản của cuộc tranh luận. Trong cuộc tranh luận này, "Những vụ nổ súng gần đây và... [200 / 7,757 chars] |
 
 ### Source Reference Table
 

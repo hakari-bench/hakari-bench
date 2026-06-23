@@ -158,7 +158,89 @@
         "url": "https://github.com/facebookresearch/belebele",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C346",
+        "query": {
+          "text": "Which of the changes prompted by The French Revolution had a significant impact on working class cit",
+          "full_chars": 106,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "De Revolutie heeft grote sociale en politieke gevolgen gehad, zoals het gebruik van het metrieke stelsel, een verschuiving van de absolute monarchie naar republicanisme, nationalisme en de opvatting d",
+          "full_chars": 650,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C379",
+        "query": {
+          "text": "According to the passage, who may have started an agriculture society?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Voor een groot deel van de negentiende en twintigste eeuw geloofde men dat de vroegste inwoners van Nieuw-Zeeland de Maori waren, die jacht maakten die op enorme vogels genaamd moa's. De theorie leidd",
+          "full_chars": 774,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C367",
+        "query": {
+          "text": "Which of the following accurately describes the practice of subsistence agriculture?",
+          "full_chars": 84,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Zelfvoorzienende landbouw is landbouw waarbij voldoende voedsel wordt geproduceerd om aan de behoeften van de boer en zijn gezin te voldoen. Landbouw met als doel levensonderhoud is een simpel systeem",
+          "full_chars": 552,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q9",
+        "document_id": "C313",
+        "query": {
+          "text": "According to the passage, which of the following was one of China’s most violent eras?",
+          "full_chars": 86,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Het oude China had een unieke manier om verschillende tijdsperiodes weer te geven; iedere fase van China of iedere regerende familie had een onderscheidende dynastie. Ook tussen de verschillende dynas",
+          "full_chars": 710,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "Q161",
+        "document_id": "C400",
+        "query": {
+          "text": "When did King Tutankhamun gain notoriety?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ja! Koning Toetanchamon is vandaag de dag een van de bekendste koningen van het oude Egypte. In de oudheid werd hij echter niet als belangrijk beschouwd en hij is niet opgenomen in de meeste lijsten m",
+          "full_chars": 525,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "example_count": 5

@@ -85,43 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Overview of Touché 2020: Argument Retrieval",
-        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
-        "url": "https://doi.org/10.5281/zenodo.6862281",
-        "year": 2022,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -130,6 +93,126 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
+        "url": "https://doi.org/10.5281/zenodo.6862281",
+        "year": 2022,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "È utile fare i compiti a casa?",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Prima di tutto, ci sono tre argomenti a favore del perché i compiti a casa sono eccellenti e dovrebbero continuare nelle scuole moderne. 1. I compiti aiutano gli studenti che imparano facendo. È gener",
+          "full_chars": 4034,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "È giusto che i farmaci da prescrizione siano pubblicizzati direttamente ai consumatori?",
+          "full_chars": 87,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Molti annunci pubblicitari non includono informazioni sufficienti su quanto bene funzionano i farmaci. Ad esempio, Lunesta viene pubblicizzato da una falena che vola attraverso una finestra della came",
+          "full_chars": 1972,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Quali vaccini sono necessari per i bambini?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Non è ancora un caso completo... Solo alcuni punti che ho messo insieme... I governi non dovrebbero avere il diritto di intervenire nelle decisioni sanitarie che i genitori prendono per i loro figli.",
+          "full_chars": 5135,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
+        "query": {
+          "text": "L'aborto dovrebbe essere legale?",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "L'aborto dovrebbe essere legale poiché la personalità giuridica inizia dopo che il feto diventa vitale o dopo la nascita, non al momento del concepimento. Secondo la Corte Suprema degli Stati Uniti, u",
+          "full_chars": 353,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26",
+        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
+        "query": {
+          "text": "I test standardizzati migliorano l'istruzione?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Risolto: Il SAT, l'ACT e altri test standardizzati forniscono maggiori informazioni sulla preparazione di uno studente delle superiori per l'istruzione in college e università di élite rispetto al vot",
+          "full_chars": 4640,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

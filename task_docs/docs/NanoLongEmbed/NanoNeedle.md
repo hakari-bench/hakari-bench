@@ -137,10 +137,13 @@ and dense retrieval as a recall supplement.
 
 ## Example Data
 
-Representative questions ask who developed the laws of motion and when, who
-wrote *The Grapes of Wrath*, what the Panama Canal connects, the formula for
-the area of a kite, and who wrote *One Hundred Years of Solitude*. Positive
-documents are long essay-like texts containing the inserted answer sentence.
+| Query | Positive document |
+| --- | --- |
+| Who developed the laws of motion and when? [42 chars] | Aaron Swartz created a scraped feed of the essays page. November 2021(This essay is derived from a talk at the Cambridge Union. )When I was a kid, I'd have said there wasn't. My father told me so. Som... [200 / 1,990 chars] |
+| Who wrote the novel "The Grapes of Wrath" and when was it published? [68 chars] | Aaron Swartz created a scraped feed of the essays page. November 2021(This essay is derived from a talk at the Cambridge Union. )When I was a kid, I'd have said there wasn't. My father told me so. Som... [200 / 72,045 chars] |
+| What is the Panama Canal and what does it connect? [50 chars] | Aaron Swartz created a scraped feed of the essays page. November 2021(This essay is derived from a talk at the Cambridge Union. )When I was a kid, I'd have said there wasn't. My father told me so. Som... [200 / 4,062 chars] |
+| What is the formula for calculating the area of a kite? [55 chars] | Aaron Swartz created a scraped feed of the essays page. November 2021(This essay is derived from a talk at the Cambridge Union. )When I was a kid, I'd have said there wasn't. My father told me so. Som... [200 / 2,030 chars] |
+| Who wrote the novel "One Hundred Years of Solitude" and when was it published? [78 chars] | Aaron Swartz created a scraped feed of the essays page. The novel "One Hundred Years of Solitude" was written by Gabriel Garcia Marquez and published November 2021(This essay is derived from a talk at... [200 / 1,012 chars] |
 
 ### Public Sources
 
@@ -155,8 +158,8 @@ documents are long essay-like texts containing the inserted answer sentence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

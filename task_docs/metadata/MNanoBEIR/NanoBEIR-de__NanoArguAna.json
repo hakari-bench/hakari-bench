@@ -142,7 +142,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -150,15 +150,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "Die Öffentlichkeit zeigt sich reformunwillig. Ob die Reform des Oberhauses in der aktuellen wirtscha",
+          "full_chars": 666,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Die Wahlreform lässt sich nicht mit Reformen im House of Lords vergleichen. Zudem sollte man eine durch politische Rhetorik irreführte Öffentlichkeit nicht mit Gleichgültigkeit verwechseln. Oft geben",
+          "full_chars": 461,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "Der Ausbau von Heathrow ist für die Wirtschaft von entscheidender Bedeutung. Der Ausbau von Heathrow",
+          "full_chars": 1355,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Die Geschäftswelt ist keineswegs einig in ihrer angeblichen Unterstützung für eine dritte Start- und Landebahn. Umfragen deuten darauf hin, dass viele einflussreiche Unternehmen die Erweiterung in Wir",
+          "full_chars": 1548,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "Menschen werden mit zu vielen Wahlmöglichkeiten konfrontiert, was sie unglücklicher macht. Werbung ü",
+          "full_chars": 1218,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Menschen sind unzufrieden, weil sie nicht alles haben können, nicht weil sie zu viele Wahlmöglichkeiten haben und sich dadurch gestresst fühlen. Tatsächlich spielen Werbeanzeigen eine entscheidende Ro",
+          "full_chars": 1040,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-science-wsihwclscaaw-con01a",
+        "document_id": "test-science-wsihwclscaaw-con01b",
+        "query": {
+          "text": "Cyberangriffe werden häufig von nicht-staatlichen Akteuren durchgeführt, wie Cyberterroristen oder H",
+          "full_chars": 1157,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Im Falle eines Angriffs durch nicht-staatliche Akteure sind sich viele Praktiker des Völkerrechts einig, dass der Staat sich weiterhin in Selbstverteidigung wehren kann, wenn ein anderer Staat 'unwill",
+          "full_chars": 641,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
+        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
+        "query": {
+          "text": "Weil Religion die Gewissheit des Glaubens fördert, lässt sich göttlich inspirierter Hass leicht nutz",
+          "full_chars": 1247,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Niemand wird durch die Worte eines anderen gezwungen, Gewaltakte zu begehen; es ist ihre eigene Entscheidung, dies zu tun. Ebenso gibt es viele Menschen, die Ansichten vertreten könnten, die als homop",
+          "full_chars": 709,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -62,19 +62,21 @@ French legal retrieval models should retain sensitivity to exact legal tokens, d
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Quelles deux constatations de l'enquête réglementaire ont miné l'affirmation des opérateurs selon la... [100 / 169 chars] | Pour les parties notifiantes, il existe une solution sérieuse pour les ORM, celle de l'auto-approvisionnement puisque les ORM possèdent à l'intérieur de leur entreprise les capacités et le savoir-fair... [200 / 726 chars] |
+| Quelle chambre régionale est nommée avec les institutions de l'Union pour promouvoir la parité comme... [100 / 141 chars] | Pour être efficace et significative, la démocratie doit garantir la possibilité de pleine participation des citoyens aux décisions finales contraignantes qui concernent leur vie quotidienne. Tant que... [200 / 664 chars] |
+| Quelles deux clauses la Commission, dans l'évaluation préliminaire, a‑t‑elle jugées potentiellement... [100 / 156 chars] | Il ressort de l'évaluation préliminaire de la Commission que deux des clauses de la convention soulèvent des doutes sérieux quant à leur compatibilité avec l'article 81 du traité CE et l'article 53 de... [200 / 656 chars] |
+| Quel pays a omis d'appliquer les règles de reconnaissance de l'UE aux professions sanitaires régleme... [100 / 122 chars] | juger, qu'en n'omettant de prendre les mesures législatives et réglementaires nécessaires, ou de les communiquer à la Commission, la République fédérale d'Allemagne a méconnu ses obligations de transp... [200 / 795 chars] |
+| Quelle pièce de charcuterie dont l'étymologie remonte à des termes désignant des chasseurs est une r... [100 / 138 chars] | Le nom kiełbasa myśliwska reflète les caractéristiques spécifiques du produit. Les caractéristiques spécifiques exprimées par ce nom transparaissent dans l’origine étymologique de ce dernier, qui vien... [200 / 730 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

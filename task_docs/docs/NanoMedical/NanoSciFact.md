@@ -62,17 +62,20 @@ Models should learn evidence relation, not just topic. Hard negatives should sha
 
 ## Example Data
 
-### Public Sources
-
-- [Fact or Fiction: Verifying Scientific Claims](https://arxiv.org/abs/2004.14974), 2020.
-- [SciFact ACL Anthology record](https://aclanthology.org/2020.emnlp-main.609/).
+| Query | Positive document |
+| --- | --- |
+| Metastatic colorectal cancer treated with a single agent fluoropyrimidines resulted in reduced effic... [100 / 200 chars] | Chemotherapy options in elderly and frail patients with metastatic colorectal cancer (MRC FOCUS2): an open-label, randomised factorial trial BACKGROUND Elderly and frail patients with cancer, although... [200 / 3,063 chars] |
+| CRP is not predictive of postoperative mortality following Coronary Artery Bypass Graft (CABG) surge... [100 / 103 chars] | Assessing the cost effectiveness of using prognostic biomarkers with decision models: case study in prioritising patients waiting for coronary artery surgery OBJECTIVE To determine the effectiveness a... [200 / 2,937 chars] |
+| Arginine 90 in p150n is important for interaction with EB1. [59 chars] | Structural basis for the activation of microtubule assembly by the EB1 and p150Glued complex. Plus-end tracking proteins, such as EB1 and the dynein/dynactin complex, regulate microtubule dynamics. Th... [200 / 1,198 chars] |
+| Obesity is determined solely by environmental factors. [54 chars] | Genetics of obesity in adult adoptees and their biological siblings. An adoption study of genetic effects on obesity in adulthood was carried out in which adoptees separated from their natural parents... [200 / 1,319 chars] |
+| Febrile seizures increase the threshold for development of epilepsy. [68 chars] | Febrile seizures in the developing brain result in persistent modification of neuronal excitability in limbic circuits Febrile (fever-induced) seizures affect 3–5% of infants and young children. Despi... [200 / 801 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | https://arxiv.org/abs/2004.14974 |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | ACL Anthology paper | https://aclanthology.org/2020.emnlp-main.609/ |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | ACL Anthology paper | [https://aclanthology.org/2020.emnlp-main.609/](https://aclanthology.org/2020.emnlp-main.609/) |
 
 ### Representative Snippets
 

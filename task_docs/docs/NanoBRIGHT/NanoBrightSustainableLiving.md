@@ -68,9 +68,13 @@ The task is a useful benchmark for retrieval models that must support advice wit
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| More uses for bacon grease We (my family) consume good amounts of bacon which produce a lot of bacon... [100 / 604 chars] | Tallow, or rendered beef fat, can be used to make soap. It went against my grain to throw out the tallow from a side of beef we bought, so I called our County Agent to see if he had any directions for... [200 / 2,693 chars] |
+| Determining carbon reduction vs cost of various home upgrades I've done some amount of upgrades to m... [100 / 2,158 chars] | BEopt: Building Energy Optimization Tool The BEopt™ (Building Energy Optimization Tool) software provides capabilities to evaluate residential building designs and identify cost-optimal efficiency pac... [200 / 1,457 chars] |
+| Forcing water circulation in solar hot water installation I'm planning an installation for heating w... [100 / 1,071 chars] | Here you can see the array of pipe going between the coil, the tank, and the domestic hot water plumbing. Alan transitioned to a flexible, pre-insulated stainless steel pipe to complete the thermosiph... [200 / 493 chars] |
+| How to recognize products with neonicotinoid pesticides in them? Recently, the EU has temporarily ba... [100 / 561 chars] | Market [ [ edit ](/w/index.php?title=Neonicotinoid&action=edit&section=2 "Edit section: Market") ] ![](//upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ambox_current_red.svg/42px- Ambox_current_red... [200 / 1,911 chars] |
+| Why don't mineral water cans carry a deposit label? I've been putting in the recycling bin all our "... [100 / 443 chars] | What beverages are covered by NY's Bottle Bill? Carbonated Soft Drinks Including Sparkling Water Carbonated Energy Drinks Carbonated Juice (anything less than 100% juice, containing added sugar or wat... [200 / 444 chars] |
 
 ### Source Reference Table
 

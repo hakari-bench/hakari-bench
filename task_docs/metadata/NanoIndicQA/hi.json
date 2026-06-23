@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d4fb41230a8596fe28c1df860bcb2a3e4d024621b4212aec588067e8be2ca22b",
+        "document_id": "fb64c17255f9db2c191968119e72ce028a8e00205f1aaa58af9ca28f426f7fc8",
+        "query": {
+          "text": "आर्ट डेको शैली की इमारतें दुनिया में सबसे अधिक कहाँ हैं ?",
+          "full_chars": 57,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "इनके वास्तु घटकों में यूरोपीय प्रभाव साफ दिखाई देता है, जैसे जर्मन गेबल, डच शैली की छतें, स्विस शैली में काष्ठ कला, रोमन मेहराब साथ ही परंपरागत भारतीय घटक भी दिखते हैं। कुछ इंडो सेरेनिक शैली की इमारते",
+          "full_chars": 2032,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "23386812796133422fa7e20e50df0309ddd0a9b608a9fe6497a96f20c79e005b",
+        "document_id": "e9f43987b86fec4194571c8dccd341dba8ec4abaee023a8abfbf7635b15768c9",
+        "query": {
+          "text": "नंदवंश के राजा किस वर्ण से संबंधित थे?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "इतिहास की जानकारी के अनेक विवरण पुराणों, जैन और बौद्ध ग्रंथों एवं यूनानी इतिहासकारों के वर्णन में प्राप्त होते हैं। तथापि इतना निश्चित रूप से कहा जा सकता है कि नंद एक राजवंश था जिसकी अधिकांश प्रकृतिया",
+          "full_chars": 2643,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0a10cb0aa7a948acf17bb0af0fd3a0a9c5965804ed3c6d321f2d004c2ac80992",
+        "document_id": "aa84430ed9c22f2e96b077218db029b0ae65c2e22da76ef0241cde48bb066e4d",
+        "query": {
+          "text": "अकबर की अनुमति के बिना बंगाल में मंदिर का निर्माण किसने शुरू किया था ?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "अकबर के हिन्दू सामंत उसकी अनुमति के बगैर मंदिर निर्माण तक नहीं करा सकते थे। बंगाल में राजा मानसिंह ने एक मंदिर का निर्माण बिना अनुमति के आरंभ किया, तो अकबर ने पता चलने पर उसे रुकवा दिया और १५९५ में उस",
+          "full_chars": 3441,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "efd23a47ff766daa53caf40a39df482908c40fd22c22f46145d78bfbcecbd22c",
+        "document_id": "4a8b5d4202364f8de2605650eb29867d38e35fc0ed3ec6c0f2c0da7250dec077",
+        "query": {
+          "text": "वर्ष 1542 से 1605 तक दिल्ली का राजा कौन था?",
+          "full_chars": 43,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "अकबर एक मुसलमान था, पर दूसरे धर्म एवं सम्प्रदायों के लिए भी उसके मन में आदर था। जैसे-जैसे अकबर की आयु बढ़ती गई वैसे-वैसे उसकी धर्म के प्रति रुचि बढ़ने लगी। उसे विशेषकर हिंदू धर्म के प्रति अपने लगाव के",
+          "full_chars": 2743,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "62b6abb68f8cfa6a84595d2d679757c20d9c9ffc81b94338b7a91f3cd8ccbbab",
+        "document_id": "4a8b5d4202364f8de2605650eb29867d38e35fc0ed3ec6c0f2c0da7250dec077",
+        "query": {
+          "text": "प्रयागराज का नाम इलाहाबाद किस वर्ष किया गया था?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "अकबर एक मुसलमान था, पर दूसरे धर्म एवं सम्प्रदायों के लिए भी उसके मन में आदर था। जैसे-जैसे अकबर की आयु बढ़ती गई वैसे-वैसे उसकी धर्म के प्रति रुचि बढ़ने लगी। उसे विशेषकर हिंदू धर्म के प्रति अपने लगाव के",
+          "full_chars": 2743,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

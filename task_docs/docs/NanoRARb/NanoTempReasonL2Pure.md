@@ -62,17 +62,20 @@ Models need stronger temporal knowledge and better date-conditioned retrieval be
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models](https://arxiv.org/abs/2306.08952), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Which position did Patricia de Lille hold in Sep, 2015? [55 chars] | mayor of Cape Town [18 chars] |
+| Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? [69 chars] | Member of the 11th Parliament of the United Kingdom [51 chars] |
+| Who was the head of Russia in Jul, 1999? [40 chars] | Sergei Stepashin [16 chars] |
+| Which team did Glynn Snodin play for in Jan, 1992? [50 chars] | Leeds United F.C. [17 chars] |
+| Who was the head of Romania in May, 1935? [41 chars] | Gheorghe Tătărescu [18 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2306.08952 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2306.08952](https://arxiv.org/abs/2306.08952) |
 
 ### Representative Snippets
 

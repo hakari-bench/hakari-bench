@@ -174,16 +174,16 @@ documents.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| The Belebele Benchmark | 2023 | source task paper | https://arxiv.org/abs/2308.16884 |
-| Making a MIRACL | 2022 | source task paper | https://arxiv.org/abs/2210.09984 |
-| MKQA | 2020 | source task paper | https://arxiv.org/abs/2007.15207 |
-| Mr. TyDi | 2021 | source task paper | https://arxiv.org/abs/2108.08787 |
-| M3-Embedding / MLDR | 2024 | source task paper | https://arxiv.org/abs/2402.03216 |
-| WebFAQ | 2025 | source task paper | https://arxiv.org/abs/2502.20936 |
-| On the Cross-lingual Transferability of Monolingual Representations | 2019 | source task paper | https://arxiv.org/abs/1910.11856 |
-| mteb/belebele |  | dataset card | https://huggingface.co/datasets/mteb/belebele |
-| mteb/MIRACLRetrievalHardNegatives |  | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives |
-| mteb/MKQARetrieval |  | dataset card | https://huggingface.co/datasets/mteb/MKQARetrieval |
-| mteb/mrtidy |  | dataset card | https://huggingface.co/datasets/mteb/mrtidy |
-| mteb/MultiLongDocRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/MultiLongDocRetrieval |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| The Belebele Benchmark | 2023 | source task paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| Making a MIRACL | 2022 | source task paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MKQA | 2020 | source task paper | [https://arxiv.org/abs/2007.15207](https://arxiv.org/abs/2007.15207) |
+| Mr. TyDi | 2021 | source task paper | [https://arxiv.org/abs/2108.08787](https://arxiv.org/abs/2108.08787) |
+| M3-Embedding / MLDR | 2024 | source task paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| WebFAQ | 2025 | source task paper | [https://arxiv.org/abs/2502.20936](https://arxiv.org/abs/2502.20936) |
+| On the Cross-lingual Transferability of Monolingual Representations | 2019 | source task paper | [https://arxiv.org/abs/1910.11856](https://arxiv.org/abs/1910.11856) |
+| mteb/belebele |  | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
+| mteb/MIRACLRetrievalHardNegatives |  | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives) |
+| mteb/MKQARetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MKQARetrieval](https://huggingface.co/datasets/mteb/MKQARetrieval) |
+| mteb/mrtidy |  | dataset card | [https://huggingface.co/datasets/mteb/mrtidy](https://huggingface.co/datasets/mteb/mrtidy) |
+| mteb/MultiLongDocRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MultiLongDocRetrieval](https://huggingface.co/datasets/mteb/MultiLongDocRetrieval) |

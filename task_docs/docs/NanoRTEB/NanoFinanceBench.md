@@ -62,19 +62,21 @@ Models should represent company, period, metric, table role, and calculation int
 
 ## Example Data
 
-### Public Sources
-
-- [FinanceBench: A New Benchmark for Financial Question Answering](https://arxiv.org/abs/2311.11944), task paper.
-- [virattt/financebench](https://huggingface.co/datasets/virattt/financebench), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| What Was AMCOR's Adjusted Non GAAP EBITDA for FY 2023 [53 chars] | Twelve Months Ended June 30, 2022 Twelve Months Ended June 30, 2023 ($ million) EBITDA EBIT Net Income EPS (Diluted US cents)(1) EBITDA EBIT Net Income EPS (Diluted US cents)(1) Net income attributabl... [200 / 1,049 chars] |
+| Which debt securities are registered to trade on a national securities exchange under 3M's name as o... [100 / 113 chars] | Title of each class Trading Symbol(s) Name of each exchange on which registered Common Stock, Par Value $.01 Per Share MMM New York Stock Exchange MMM Chicago Stock Exchange, Inc. 1.500% Notes due 202... [200 / 335 chars] |
+| Based on the information provided primarily in the balance sheet and the statement of income, what i... [100 / 336 chars] | Index Consolidated Statements of Income Corning Incorporated and Subsidiary Companies Year ended December 31, (In millions, except per share amounts) 2020 2019 2018 Net sales $ 11,303 $ 11,503 $ 11,29... [200 / 4,015 chars] |
+| Does Boeing have an improving gross margin profile as of FY2022? If gross margin is not a useful met... [100 / 161 chars] | The Boeing Company and Subsidiaries Consolidated Statements of Operations (Dollars in millions, except per share data) Years ended December 31, 2022 2021 2020 Sales of products $55,893 $51,386 $47,142... [200 / 479 chars] |
+| What is the FY2019 - FY2020 total revenue growth rate for Block (formerly known as Square)? Answer i... [100 / 287 chars] | SQUARE, INC. CONSOLIDATED STATEMENTS OF OPERATIONS (In thousands, except per share data) Year Ended December 31, 2020 2019 2018 Revenue: Transaction-based revenue $ 3,294,978 $ 3,081,074 $ 2,471,451 S... [200 / 1,779 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FinanceBench: A New Benchmark for Financial Question Answering | 2023 | task paper | https://arxiv.org/abs/2311.11944 |
-| virattt/financebench |  | dataset card | https://huggingface.co/datasets/virattt/financebench |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| FinanceBench: A New Benchmark for Financial Question Answering | 2023 | task paper | [https://arxiv.org/abs/2311.11944](https://arxiv.org/abs/2311.11944) |
+| virattt/financebench |  | dataset card | [https://huggingface.co/datasets/virattt/financebench](https://huggingface.co/datasets/virattt/financebench) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

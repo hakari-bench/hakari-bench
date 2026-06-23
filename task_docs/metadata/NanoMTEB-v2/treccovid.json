@@ -144,17 +144,100 @@
         "url": "https://ir.nist.gov/covidSubmit/index.html",
         "year": 2020,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/trec-covid",
         "url": "https://huggingface.co/datasets/mteb/trec-covid",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "46",
+        "document_id": "038lkmye",
+        "query": {
+          "text": "what evidence is there for dexamethasone as a treatment for COVID-19?",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Combination of Tocilizumab and Methylprednisolone Along With Initial Lung Recruitment Strategy in Coronavirus Disease 2019 Patients Requiring Mechanical Ventilation: A Series of 21 Consecutive Cas",
+          "full_chars": 1757,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "0a5fccio",
+        "query": {
+          "text": "how long does coronavirus remain stable on surfaces?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Body fluids may contribute to human-to-human transmission of severe acute respiratory syndrome coronavirus 2: evidence and practical experience BACKGROUND: In December 2019, an unbelievable outbreak o",
+          "full_chars": 1172,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "01f5mvsc",
+        "query": {
+          "text": "has social distancing had an impact on slowing the spread of COVID-19?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Increased Detection coupled with Social Distancing and Health Capacity Planning Reduce the Burden of COVID-19 Cases and Fatalities: A Proof of Concept Study using a Stochastic Computational Simulation",
+          "full_chars": 1576,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "7",
+        "document_id": "0iq9s94n",
+        "query": {
+          "text": "are there serological tests that detect antibodies to coronavirus?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A Guide to COVID‐19: a global pandemic caused by the novel coronavirus SARS‐CoV‐2 The emergence of the SARS‐CoV‐2 strain of the human coronavirus has thrown the world into the midst of a new pandemic.",
+          "full_chars": 1084,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25",
+        "document_id": "092wubsa",
+        "query": {
+          "text": "which biomarkers predict the severe clinical course of 2019-nCOV infection?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Clinical course and outcome of 107 patients infected with the novel coronavirus, SARS-CoV-2, discharged from two hospitals in Wuhan, China BACKGROUND: In December 2019, coronavirus disease 2019 (COVID",
+          "full_chars": 1932,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/trec-covid",
-    "source_task": "TRECCOVID"
+    "source_task": "TRECCOVID",
+    "example_count": 5
   }
 }

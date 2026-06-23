@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
-        "url": "https://arxiv.org/abs/1809.09600",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "Peni Rej Bridžes je glumila u televizijskoj sitkom seriji uz kojeg drugog glumca?",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (rođena 29. jula 1990) je američka glumica. Njen televizijski rad obuhvata uloge u serijama \"For Your Love\", \"Family Law\", \"Boy Meets World\" i \"The Parent 'Hood\". Najpoznatija je po",
+          "full_chars": 240,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "Ko je dao Kaganoiju Šigemočiju oštricu koju je napravila osoba koja je osnovala Muramasa školu?",
+          "full_chars": 95,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. avgust 1600) bio je japanski samuraj iz perioda Azuči-Momojama, koji je služio klanu Oda. Vladao je dvorcem Kaganoi. Tokom Bitke kod Komakija i Nagakutea, Shigem",
+          "full_chars": 584,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "Koji film je napisao i režirao Joby Harold, a muziku komponovao Samuel Sim?",
+          "full_chars": 75,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim je kompozitor za film i televiziju. Prvi put je stekao priznanje sa svojom nagrađivanom muzikom za dramsku seriju BBC-ja \"Dunkirk\". Od tada je napisao muziku za širok spektar filmskih i tel",
+          "full_chars": 521,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae63b2255429908198fa526",
+        "document_id": "46395880",
+        "query": {
+          "text": "Koji je datum odigravanja ove koledž fudbalske utakmice na Sun Life Stadium u Miami Gardens, Florida",
+          "full_chars": 182,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Fudbalska ekipa Clemson Tigers iz 2015. godine predstavljala je Univerzitet Clemson u sezoni 2015. NCAA Division I FBS. Tigrove je vodio glavni trener Dabo Swinney u svojoj sedmoj punoj godini i osmoj",
+          "full_chars": 1070,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a84fd085542994c784ddaba",
+        "document_id": "1854777",
+        "query": {
+          "text": "\"Devil's Food\" je kompilacija singlova američke rok and rol grupe koja je takođe poznata po sviranju",
+          "full_chars": 133,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "\"Devil's Food\" je kompilacija singlova američke rok and rol grupe Supersuckers, objavljena u aprilu 2005. godine za izdavačku kuću Mid-Fi.",
+          "full_chars": 138,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -161,6 +161,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "67244",
+        "document_id": "Duke_of_York",
+        "query": {
+          "text": "De huidige Hertog van York is een persoon.",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hertog van York De Hertog van York is een adellijke titel in de Peerage van het Verenigd Koninkrijk. Sinds de 15e eeuw is deze titel, wanneer verleend, meestal gegeven aan de tweede zoon van Engelse (",
+          "full_chars": 931,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "130048",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Burbank, Californië is altijd volledig verstoken geweest van industrie.",
+          "full_chars": 71,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank, Californië Burbank is een stad in Los Angeles County in Zuid-Californië, Verenigde Staten, 19 km ten noordwesten van het centrum van Los Angeles. De bevolking bedroeg bij de volkstelling van",
+          "full_chars": 1459,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "114158",
+        "document_id": "Adobe_Photoshop",
+        "query": {
+          "text": "Er is software, genaamd Adobe Photoshop, waarvan de versies met een nummer worden aangeduid.",
+          "full_chars": 92,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Adobe Photoshop Adobe Photoshop is een rastergrafische editor ontwikkeld en uitgegeven door Adobe Systems voor macOS en Windows. Photoshop werd in 1988 gecreëerd door Thomas en John Knoll. Sindsdien i",
+          "full_chars": 2249,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "86289",
+        "document_id": "Joseph_Merrick",
+        "query": {
+          "text": "Joseph Merrick was het onderwerp van duizenden haat-tweets.",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Joseph Merrick Joseph Carey Merrick (5 augustus 1862 – 11 april 1890; vaak ten onrechte John Merrick genoemd) was een Engelsman met zeer ernstige misvormingen die eerst werd tentoongesteld in een frea",
+          "full_chars": 3706,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "179831",
+        "document_id": "Vic_Mensa",
+        "query": {
+          "text": "Vic Mensa werd geboren op 12 juni 1993.",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Vic Mensa Victor Kwesi Mensah (geboren 6 juni 1993), beter bekend onder zijn artiestennaam Vic Mensa, is een Grammy-genomineerde Amerikaanse rapper uit Chicago, Illinois. Hij heeft momenteel een contr",
+          "full_chars": 552,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

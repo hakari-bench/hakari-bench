@@ -85,42 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "SciFact repository",
-        "url": "https://github.com/allenai/scifact",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -129,6 +93,125 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "SciFact repository",
+        "url": "https://github.com/allenai/scifact",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Qは、膜ラフト機能を制御することにより、好中球の炎症部位への移動の組織化を指示する。",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "好中球は感染部位や炎症部位へ迅速に浸潤するために、急速に偏極化し、方向性のある運動を行う。本研究では、阻害性MHC I受容体であるLy49Qが好中球の迅速な偏極化および組織への浸潤に不可欠であることを示した。恒常状態では、Ly49QはおそらくSrcキナーゼおよびPI3キナーゼの活性を阻害することにより、局在複合体の形成を妨げ、好中球の接着を抑制していた。しかし、炎症刺激が存在する状況では、Ly49",
+          "full_chars": 434,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "抗レトロウイルス療法は、広範なCD4層において結核の発生率を低下させる。",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "背景 ヒト免疫不全ウイルス（HIV）感染は結核発症の最も強い危険因子であり、特にサブサハラ以南のアフリカで結核の再燃を助長している。2010年には、世界中でHIVに感染している推定3,400万人のうち、110万人が新たに結核を発症した。抗レトロウイルス療法（ART）はHIV関連結核の予防に大きな可能性を有している。我々は、HIV感染成人における結核発生率に対する抗レトロウイルス療法の影響を分析した",
+          "full_chars": 992,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "インターフェロン誘導性遺伝子の急速な上昇調節およびより高い基礎的発現は、ウエストナイルウイルスに感染した顆粒細胞ニューロンの生存を低下させる。",
+          "full_chars": 71,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "脳内の神経細胞が微生物感染に対して感受性を示すことは、臨床的転帰を左右する主要な要因であるが、この感受性を制御する分子的因子についてはほとんど分かっていない。本研究では、異なる脳領域に由来する2種類の神経細胞が、いくつかの正鎖RNAウイルスの複製に対して異なる許容性を示すことを明らかにした。小脳の顆粒細胞および大脳皮質の皮質神経細胞は、それぞれ独自の自然免疫プログラムを有しており、これによりウイル",
+          "full_chars": 512,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "HPV検出を用いた子宮頸がんの一次スクリーニングは、子宮頸部上皮内腫瘍2度を検出するための従来の細胞診よりも縦断的感度が高い。",
+          "full_chars": 63,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "背景 人乳頭腫瘍ウイルス（HPV）検査に基づく子宮頸がんスクリーニングは、高度（グレード2または3）の子宮頸部上皮内腫瘍の検出感度を高めるが、この感度の向上が過剰診断を意味するのか、それとも将来の高度子宮頸部上皮内腫瘍または子宮頸がんに対する保護を意味するのかは不明である。 方法 スウェーデンの集団ベースのスクリーニングプログラムにおいて、32〜38歳の女性12,527人を1：1の割合で無作為に割",
+          "full_chars": 951,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "TDP-43と呼吸鎖複合体Iのタンパク質ND3およびND6との相互作用を阻害すると、TDP-43誘導性の神経細胞死が増加する。",
+          "full_chars": 63,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "TAR DNA結合タンパク質43（TARDBP、別名TDP-43）の遺伝的変異は筋萎縮性側索硬化症（ALS）を引き起こし、TDP-43（TARDBPがコードする）の細胞質への存在量の増加は、さまざまな神経変性疾患における変性神経細胞の顕著な組織病理学的特徴である。しかし、TDP-43がALSの病態生理にどのように寄与するかの分子機構は依然として不明である。本研究では、ALSまたは前頭側頭葉変性症（",
+          "full_chars": 593,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

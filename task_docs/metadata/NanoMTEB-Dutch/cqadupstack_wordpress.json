@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,118 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "66180",
+        "document_id": "8357",
+        "query": {
+          "text": "Programmatisch hiërarchische termen invoegen & termen instellen voor berichten veroorzaakt een stori",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Het invoegen van termen in een hiërarchische taxonomie Ik ondervind een paar problemen met het invoegen van termen. Dit is mijn scenario: Ik heb een taxonomie genaamd veda_release_type: //Release Type",
+          "full_chars": 4702,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "119899",
+        "document_id": "72150",
+        "query": {
+          "text": "Hoe de lengte van een excerpt in WordPress te vergroten?",
+          "full_chars": 56,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De korte inhoud per karakter **Mogelijk duplicaat:** > fragment in karakters Op sommige van onze sites tonen we fragmenten van berichten (de beheerders voeren geen fragmenten in). We _kunnen_ de funct",
+          "full_chars": 800,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104722",
+        "document_id": "98644",
+        "query": {
+          "text": "Media bibliotheek pagina supersnel, laad volle kwaliteit afbeeldingen",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wordpress 3.5 Media Manager - Afbeelding Formaat bij Laden Wijzigen De nieuwe media manager laadt afbeeldingen in VOLLE grootte, wat ECHT inefficiënt is voor een thumbnail. Ik wil dit graag vervangen",
+          "full_chars": 352,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "88062",
+        "document_id": "116393",
+        "query": {
+          "text": "Voorgedefinieerde categorieën in WordPress via GET-parameters",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hyperlink om nieuw bericht te maken met vooraf gedefinieerde categorie Ik ben een complete WordPress-beginner. Ik heb een site gemaakt voor mijn werk. Items worden gesorteerd op categorie. Op het dash",
+          "full_chars": 660,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "140966",
+        "document_id": "37893",
+        "query": {
+          "text": "Hoe schakel ik reacties uit op een pagina?",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe verwijder je de mogelijkheid voor een gebruiker om een reactie te plaatsen of te posten op een pagina? Ik bouw een nieuwe website op WordPress, en al mijn pagina's hebben onderaan het vak om een r",
+          "full_chars": 518,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

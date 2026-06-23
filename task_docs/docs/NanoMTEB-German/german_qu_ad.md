@@ -132,21 +132,21 @@ main challenge is selecting the paragraph that actually supports the answer.
 
 ## Example Data
 
-### Public Sources
-
-- [GermanQuAD and GermanDPR](https://arxiv.org/abs/2104.12741)
-- [ACL Anthology record](https://aclanthology.org/2021.mrqa-1.4/)
-- [mteb/germanquad-retrieval](https://huggingface.co/datasets/mteb/germanquad-retrieval)
-- [deepset/germanquad](https://huggingface.co/datasets/deepset/germanquad)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Was versuchen die Umweltorganisationen wie CSE in Indien zu verbessern? [71 chars] | Rajasthan === Umweltorganisationen fördern traditionelles Sammeln von Regenwasser === Umweltorganisationen in Indien, wie das Centre for Science and Environment (CSE), haben vor über 20 Jahren damit b... [200 / 1,933 chars] |
+| Wann muss man die Zieletage in seillosen Aufzügen auswählen? [60 chars] | Aufzugsanlage === Seilloser Aufzug === An der RWTH Aachen im Institut für Elektrische Maschinen wurde ein seilloser Aufzug entwickelt und ein Prototyp aufgebaut. Die Kabine wird hierbei durch zwei ele... [200 / 1,766 chars] |
+| Warum sind Schwarze aus Überseegebieten in Frankreich tendenziell besser integriert als Schwarze aus... [100 / 115 chars] | Schwarze ==== Frankreich ==== Die Bevölkerung Frankreichs setzt sich aus zahlreichen Ethnien zusammen, darunter sind 2,5 bis 5 Millionen schwarze Menschen. Die meisten von ihnen sind Einwanderer oder... [200 / 3,198 chars] |
+| In welcher Klimazone liegt Oklahoma City? [41 chars] | Oklahoma_City === Klima === Die Stadt befindet sich nach Köppen in der feucht-subtropischen Klimazone (Cfa). Dieses liegt in der Form des Ostseitenklimas vor. Das Klima ist ganzjährig humid mit einem... [200 / 1,293 chars] |
+| In welcher Jahreszeit wird auf die Sommerzeit umgestellt? [57 chars] | Sommerzeit Frühling: Umstellung von Normalzeit auf Sommerzeit – die Uhr wird um eine Stunde ''vor''gestellt. Herbst: Umstellung von Sommerzeit auf Normalzeit – die Uhr wird um eine Stunde ''zurück''ge... [200 / 830 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | https://arxiv.org/abs/2104.12741 |
-| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | https://aclanthology.org/2021.mrqa-1.4/ |
-| mteb/germanquad-retrieval | 2025 | Dataset card | https://huggingface.co/datasets/mteb/germanquad-retrieval |
+| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | [https://arxiv.org/abs/2104.12741](https://arxiv.org/abs/2104.12741) |
+| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | [https://aclanthology.org/2021.mrqa-1.4/](https://aclanthology.org/2021.mrqa-1.4/) |
+| mteb/germanquad-retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/germanquad-retrieval](https://huggingface.co/datasets/mteb/germanquad-retrieval) |
 
 ### Representative Snippets
 

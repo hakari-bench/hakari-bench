@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-no",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Fra 1970 til 1998 var det en oppvarmingsperiode som økte temperaturen med omtrent 0,7 grader Fahrenh",
+          "full_chars": 161,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Paleocen (uttales pronˈpæliəˌsiːn, _ ˈpæ - , _ - lioʊ - ) eller Paleocen, «den gamle nylige», er en geologisk epoke som varte fra omtrent 66 til 56 millioner år siden. Det er den første epoken i Paleo",
+          "full_chars": 1051,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "Faktisk går trenden nedover, selv om den ikke er signifikant.",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Solens syklus eller solmagnetisk aktivitetssyklus er en omtrent 11-årige syklus i solens aktivitet (inkludert endringer i nivåene av solstråling og utkast av solmateriale) og utseende (endringer i ant",
+          "full_chars": 573,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Lokale og regionale havnivåer fortsetter å vise den vanlige naturlige variasjonen, stiger på noen st",
+          "full_chars": 124,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Middelhøyde over havet (MSL) (forkortet bare havnivå) er et gjennomsnittsnivå av overflaten på ett eller flere av Jordens hav, hvorfra høyder som høyder kan måles. MSL er en type vertikal datumsstanda",
+          "full_chars": 899,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "Klimatologer sier at aspekter ved orkanen Harvey tyder på at global oppvarming gjør en dårlig situas",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "De globale oppvarmingsvirkningene er de miljømessige og sosiale endringene som skyldes (direkte eller indirekte) menneskets utslipp av drivhusgasser. Det er en vitenskapelig konsensus om at klimaendri",
+          "full_chars": 1295,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "CERN CLOUD-eksperimentet testet bare en tredjedel av ett av fire krav som er nødvendige for å skylde",
+          "full_chars": 187,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Attribuering av nylig klimaendring handler om å vitenskapelig fastslå mekanismene som er ansvarlige for de nylige klimaendringene på Jorden, vanligvis kjent som `global oppvarming`. Arbeidet har fokus",
+          "full_chars": 1979,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

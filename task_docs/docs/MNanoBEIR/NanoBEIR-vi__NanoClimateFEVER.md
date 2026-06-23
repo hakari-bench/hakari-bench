@@ -62,9 +62,13 @@ A model targeting this task should improve claim-specific evidence discriminatio
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on CLIMATE-FEVER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Từ năm 1970 đến năm 1998 đã có một giai đoạn ấm lên làm tăng nhiệt độ khoảng 0,7 độ F, điều này đã g... [100 / 159 chars] | Thế Paleocen ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) hay Palaeocene, được gọi là "cũ gần đây", là một kỷ địa chất kéo dài từ khoảng thời gian nào đó. Đây là kỷ đầu tiên của Thế Paleogen... [200 / 1,144 chars] |
+| Trên thực tế, xu hướng, mặc dù không có ý nghĩa thống kê, đang giảm. [68 chars] | Chu kỳ mặt trời hoặc chu kỳ hoạt động từ tính của mặt trời là sự thay đổi gần như định kỳ 11 năm trong hoạt động của Mặt Trời (bao gồm sự thay đổi trong mức độ bức xạ mặt trời và sự phun trào vật chất... [200 / 696 chars] |
+| Mực nước biển địa phương và khu vực tiếp tục thể hiện sự biến đổi tự nhiên điển hình - ở một số nơi... [100 / 140 chars] | Mực nước biển trung bình (MSL) (viết tắt đơn giản là mực nước biển) là mức trung bình của bề mặt một hoặc nhiều đại dương của Trái Đất từ đó có thể đo được độ cao như độ cao địa hình. MSL là một loại... [200 / 1,089 chars] |
+| [Các nhà khoa học khí hậu] nói rằng các khía cạnh của trường hợp bão Harvey cho thấy sự nóng lên toà... [100 / 136 chars] | Các tác động của sự nóng lên toàn cầu là những thay đổi môi trường và xã hội do (trực tiếp hoặc gián tiếp) khí thải khí nhà kính của con người gây ra. Có sự đồng thuận khoa học rằng biến đổi khí hậu đ... [200 / 1,376 chars] |
+| Thí nghiệm CLOUD của CERN chỉ kiểm tra một phần ba của một trong bốn yêu cầu cần thiết để đổ lỗi cho... [100 / 187 chars] | Việc quy kết biến đổi khí hậu gần đây là nỗ lực xác định một cách khoa học các cơ chế chịu trách nhiệm cho những biến đổi khí hậu gần đây trên Trái Đất, thường được gọi là "nóng lên toàn cầu". Nỗ lực... [200 / 2,045 chars] |
 
 ### Source Reference Table
 

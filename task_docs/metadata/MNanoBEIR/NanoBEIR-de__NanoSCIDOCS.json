@@ -144,7 +144,7 @@
         "title": "SCIDOCS repository",
         "url": "https://github.com/allenai/scidocs",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Neuartiger Gleichstrom-Gleichstrom-Mehrstufen-Aufwärtswandler",
+          "full_chars": 61,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Mehrstufige Spannungsquellenwandler (Multilevel Voltage Source Converters) etablieren sich als neue Optionen für leistungsstarke Anwendungen. Diese Wandler erzeugen in der Regel eine treppenförmige Sp",
+          "full_chars": 1027,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Schnelles Lernen von sparsen Gaußschen Markov-Feldern basierend auf Cholesky-Zerlegung",
+          "full_chars": 86,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sure, please provide the English document text that you need translated into German.",
+          "full_chars": 84,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Textursynthese mit Convolutional Neural Networks",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In dieser Arbeit untersuchen wir den Einfluss der Tiefe von Faltungsnetzwerken auf deren Genauigkeit in der groß angelegten Bilderkennung. Unser Hauptbeitrag ist eine gründliche Bewertung von Netzwerk",
+          "full_chars": 910,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
+        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
+        "query": {
+          "text": "Planare Breitband-Ringantenne mit zirkularer Polarisation für ein RFID-System",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In dieser Arbeit wird eine Technik mit einem horizontal mäanderförmig verlaufenden Streifen (HMS) vorgeschlagen, um eine gute Impedanzanpassung und symmetrische Strahlungsdiagramme in Breitseite für e",
+          "full_chars": 1467,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
+        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
+        "query": {
+          "text": "Entwurf eines fortschrittlichen digitalen Herzfrequenzmonitors mit einfachen elektronischen Bauteile",
+          "full_chars": 101,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "In dieser Arbeit stellen wir das Design und die Entwicklung eines neuen integrierten Geräts zur Messung der Herzfrequenz mittels Fingerspitze vor, um die Schätzung der Herzfrequenz zu verbessern. Da h",
+          "full_chars": 1254,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

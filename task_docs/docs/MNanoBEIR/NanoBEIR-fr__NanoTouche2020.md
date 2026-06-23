@@ -48,13 +48,13 @@ Strong models should preserve exact issue matching while learning argumentative 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Les devoirs sont-ils utiles ? | Premièrement, voici trois arguments en faveur du maintien des devoirs dans les écoles modernes... |
-| Les médicaments sur ordonnance doivent-ils être publicisés directement auprès des consommateurs ? | De nombreuses publicités ne fournissent pas suffisamment d'informations sur l'efficacité des médicaments... |
-| Quels vaccins les enfants doivent-ils recevoir ? | Ce n'est pas encore un dossier complet... Les gouvernements ne devraient pas avoir le droit d'intervenir... |
-| L'avortement devrait-il être légal ? | Les avortements devraient être légaux, car la personnalité juridique commence après que le fœtus devient viable... |
-| Les tests standardisés améliorent-ils l'éducation ? | Le SAT, l'ACT et autres tests standardisés fournissent plus d'informations sur la préparation d'un élève... |
+| Query | Positive document |
+| --- | --- |
+| Les devoirs sont-ils utiles ? [29 chars] | Premièrement, voici trois arguments en faveur du maintien des devoirs dans les écoles modernes. 1. Les devoirs aident les apprenants actifs. Il est généralement admis qu'il existe trois types d'appren... [200 / 4,176 chars] |
+| Les médicaments sur ordonnance doivent-ils être publicisés directement auprès des consommateurs ? [97 chars] | De nombreuses publicités ne fournissent pas suffisamment d'informations sur l'efficacité des médicaments. Par exemple, Lunesta est promu par une chenille volante entrant par la fenêtre d'une chambre,... [200 / 1,987 chars] |
+| Quels vaccins les enfants doivent-ils recevoir ? [48 chars] | Ce n'est pas encore un dossier complet... Juste quelques points que j'ai rassemblés... Les gouvernements ne devraient pas avoir le droit d'intervenir dans les décisions de santé que les parents prenne... [200 / 5,341 chars] |
+| L'avortement devrait-il être légal ? [36 chars] | Les avortements devraient être légaux, car la personnalité juridique commence après que le fœtus devient viable ou après la naissance, et non à la conception. Selon la Cour suprême des États-Unis, une... [200 / 349 chars] |
+| Les tests standardisés améliorent-ils l'éducation ? [51 chars] | Résolu : Le SAT, l'ACT et autres tests standardisés fournissent plus d'informations sur la préparation d'un élève de lycée pour des études dans des universités et collèges d'élite que le GPA (moyenne... [200 / 4,653 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should preserve exact issue matching while learning argumentative 
 
 | Label | URL |
 |---|---|
-| Touché 2020 overview | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touché 2020 dataset | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Touché 2020 overview (https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touché 2020 dataset (https://doi.org/10.5281/zenodo.6862281) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

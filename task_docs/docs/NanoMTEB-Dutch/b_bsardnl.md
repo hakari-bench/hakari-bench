@@ -130,11 +130,13 @@ quality. Better legal reranking is needed to use hybrid coverage effectively.
 
 ## Example Data
 
-Representative queries ask what rules apply to a caravan rental in Brussels,
-whether a testament can be changed, whether court costs must be paid when
-challenging a social-security decision, whether a tenant can make repairs if
-the landlord does not, and how to read a water bill in Wallonia. Positive
-documents are Dutch Belgian statutory articles.
+| Query | Positive document |
+| --- | --- |
+| Ik huur het hele jaar door een caravan op een camping. Welke regels zijn van toepassing op mijn huur... [100 / 120 chars] | Art. 234. - Beginselen Dit hoofdstuk is van toepassing op huurovereenkomsten betreffende een woning die de huurder, met uitdrukkelijke of stilzwijgende toestemming van de verhuurder, vanaf de ingenott... [200 / 1,287 chars] |
+| Ik heb een testament gemaakt. Kan ik het wijzigen? [50 chars] | Art. 969. Een testament kan eigenhandig, of bij openbare akte of in de vorm van het internationaal testament, gemaakt worden. [125 chars] |
+| Moet ik de gerechtskosten betalen als ik een beslissing van een sociale zekerheidsinstelling betwist... [100 / 101 chars] | Art. 1017. Tenzij bijzondere wetten anders bepalen, verwijst ieder eindvonnis, zelfs ambtshalve, de in het ongelijk gestelde partij in de kosten, onverminderd de overeenkomst tussen partijen, die het... [200 / 1,690 chars] |
+| Kan ik in Brussel de nodige reparaties zelf uitvoeren als mijn verhuurder deze niet doet? [89 chars] | Art. 223. - Herstellingen en onderhoud § 1. De huurder is gehouden tot de huurherstellingen, met uitzondering van die veroorzaakt door ouderdom of overmacht, en van de geringe herstellingen tot onderh... [200 / 632 chars] |
+| Hoe lees en begrijp ik mijn waterfactuur in Wallonië? [53 chars] | Art. R270bis8. Overlegging van de factuur De jaarlijkse regularisatiefactuur vermeldt hoe dan ook : - de naam en het adres van de bestemmeling; - de plaats van levering; - een historiek van het verbru... [200 / 1,242 chars] |
 
 ### Public Sources
 
@@ -149,10 +151,10 @@ documents are Dutch Belgian statutory articles.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2412.07462 |
-| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | proceedings page | https://aclanthology.org/2025.regnlp-1.3/ |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| clips/mteb-nl-bbsard |  | dataset card | https://huggingface.co/datasets/clips/mteb-nl-bbsard |
+| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2412.07462](https://arxiv.org/abs/2412.07462) |
+| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | proceedings page | [https://aclanthology.org/2025.regnlp-1.3/](https://aclanthology.org/2025.regnlp-1.3/) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| clips/mteb-nl-bbsard |  | dataset card | [https://huggingface.co/datasets/clips/mteb-nl-bbsard](https://huggingface.co/datasets/clips/mteb-nl-bbsard) |
 
 ### Representative Snippets
 

@@ -48,13 +48,13 @@ Strong models should improve answerability ranking while preserving exact entity
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Qu'est-ce que le syndrome de rumination ? | Le syndrome de rumination, également appelé merycisme, est un trouble alimentaire non spécifié... |
-| Qui a chanté "Here I Go Again" ? | "Here I Go Again" est une chanson du groupe de rock britannique Whitesnake... |
-| Quel rôle joue Cameron Boyce dans la série Liv et Maddie ? | Dans un avant-première de l'épisode de Liv & Maddie, on voit l'acteur Cameron Boyce apparaître... |
-| Où se situent la plupart des grands déserts de la Terre ? | Les autres déserts de la Terre se situent en dehors des régions polaires. Le plus grand est le désert du Sahara... |
-| Que signifie le mot "flic" ? | Selon les résultats actuels, il semble que le terme « copper » soit antérieur à « cop »... |
+| Query | Positive document |
+| --- | --- |
+| Qu'est-ce que le syndrome de rumination ? [41 chars] | Syndrome de rumination. Le syndrome de rumination, également appelé merycisme, est un trouble alimentaire non spécifié qui provoque la régurgitation des aliments. Bien qu'il ne soit pas identifié comm... [200 / 316 chars] |
+| Qui a chanté "Here I Go Again" ? [32 chars] | Pour d'autres usages, voir Here I Go Again (homonymie). "Here I Go Again" est une chanson du groupe de rock britannique Whitesnake. Parue à l'origine sur leur album de 1982, Saints & Sinners, la chans... [200 / 359 chars] |
+| Quel rôle joue Cameron Boyce dans la série Liv et Maddie ? [58 chars] | Préparez-vous à bien rire, les amis. Dans un EXCLUSIF avant-première de l'épisode du 19 avril de Liv & Maddie intitulé “Prom-A-Rooney.” Évidemment. Dans cet extra hilarant, on voit l'acteur de Jessie,... [200 / 334 chars] |
+| Où se situent la plupart des grands déserts de la Terre ? [57 chars] | Les autres déserts de la Terre se situent en dehors des régions polaires. Le plus grand est le désert du Sahara, un désert subtropical situé en Afrique du Nord. [160 chars] |
+| Que signifie le mot "flic" ? [28 chars] | Selon les résultats actuels, il semble que le terme « copper » (un policier, littéralement « celui qui arrête ») soit antérieur à « cop » (utilisé soit verbalement pour signifier « arrêter » ou comme... [200 / 412 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should improve answerability ranking while preserving exact entity
 
 | Label | URL |
 |---|---|
-| MS MARCO paper | https://arxiv.org/abs/1611.09268 |
-| MS MARCO dataset site | https://microsoft.github.io/msmarco/Datasets.html |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| MS MARCO paper (https://arxiv.org/abs/1611.09268) |
+| MS MARCO dataset site (https://microsoft.github.io/msmarco/Datasets.html) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

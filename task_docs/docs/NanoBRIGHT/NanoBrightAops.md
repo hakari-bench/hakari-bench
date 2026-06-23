@@ -62,9 +62,13 @@ A model targeting this task should represent solution strategy, not just problem
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Two quadrilaterals are considered the same if one can be obtained from the other by a rotation and a... [100 / 339 chars] | How many non-congruent triangles with perimeter 7 have integer side lengths? The longest side cannot be greater than 3, since otherwise the remaining two sides would not be long enough to form a trian... [200 / 315 chars] |
+| In the diagram below, angle $ABC$ is a right angle. Point $D$ is on $\overline{BC}$, and $\overline{... [100 / 323 chars] | Consider the set of all triangles $OPQ$ where $O$ is the origin and $P$ and $Q$ are distinct points in the plane with nonnegative integer coordinates $(x,y)$ such that $41x + y = 2009$. Find the numbe... [200 / 1,183 chars] |
+| Determine the maximum value of $m^2 + n^2$, where $m$ and $n$ are integers satisfying $m, n \in \{ 1... [100 / 153 chars] | The Fibonacci sequence $1,1,2,3,5,8,13,21,\ldots$ starts with two 1s, and each term afterwards is the sum of its two predecessors. Which one of the ten digits is the last to appear in the units positi... [200 / 705 chars] |
+| Triangle $ABC$ has $AC = 450$ and $BC = 300$. Points $K$ and $L$ are located on $\overline{AC}$ and... [100 / 1,166 chars] | In triangle $ABC$, medians $AD$ and $CE$ intersect at $P$, $PE=1.5$, $PD=2$, and $DE=2.5$. What is the area of $AEDC$? Note that $1.5^2 + 2^2 = 2.5^2,$ so $\triangle PED$ has a right angle at $P.$ (Al... [200 / 899 chars] |
+| The mean, median, and mode of the $7$ data values $60, 100, x, 40, 50, 200, 90$ are all equal to $x$... [100 / 239 chars] | The sum of 49 consecutive integers is $7^5$. What is their median? The sum of a set of integers is the product of the mean of the integers and the number of integers, and the median of a set of consec... [200 / 293 chars] |
 
 ### Source Reference Table
 

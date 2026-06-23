@@ -70,9 +70,13 @@ For reranking, the key behavior is recognizing equivalence rather than topical r
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the FaMTEB paper and the `MCINext/quora-fa-v2` dataset card. MTEB provides the broader retrieval evaluation framework.
+| Query | Positive document |
+| --- | --- |
+| بهترین سریال‌های درام کدام‌اند؟ [31 chars] | بهترین سریال‌های درام کدام‌ها هستند؟ [36 chars] |
+| آیا ریاضیات را به عنوان هنر می‌بینید یا علم؟ [44 chars] | آیا ریاضی هنر است یا علم؟ [25 chars] |
+| به نظر شما بهترین آهنگ کلاسیک تمام دوران کدام است؟ [50 chars] | بهترین قطعه موسیقی کلاسیک تمام دوران کدام است؟ [46 chars] |
+| بهترین موسسات آموزش آزمون جی‌مات در دهلی/NCR کدام‌ها هستند؟ [59 chars] | بهترین موسسه آموزش آزمون جی‌مات در منطقه دهلی ان‌سی‌آر کدام است؟ [64 chars] |
+| بهترین نقاط قوت ارتش هند کدامند؟ [32 chars] | بزرگترین نقاط قوت ارتش هند کدامند؟ [34 chars] |
 
 ### Source Reference Table
 

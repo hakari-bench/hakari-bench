@@ -70,11 +70,13 @@ For evaluation, nDCG@10 reflects answer ranking quality, while recall@100 reflec
 
 ## Example Data
 
-### Public Sources
-
-- FiQA 2018 challenge site: https://sites.google.com/view/fiqa/
-- WWW18 Open Challenge paper record: https://research.universityofgalway.ie/en/publications/www18-open-challenge-financial-opinion-mining-and-question-answer/
-- Source task dataset card: https://huggingface.co/datasets/mteb/FiQA-PL
+| Query | Positive document |
+| --- | --- |
+| Podatek od akcji lub ETF [24 chars] | „Jeśli sprzedajesz akcje bez wypłat, Twój zysk podlega opodatkowaniu zgodnie z § 1001. Ale nie wszystkie zrealizowane zyski zostaną uznane za podlegające opodatkowaniu. A niektóre zyski, które prawdop... [200 / 2,122 chars] |
+| Jaki kurs wymiany stosuje El Al przy przeliczaniu kwoty płatności końcowej na szekle? [85 chars] | „Stawka za „czeki i przelewy” jest ustalana przez każdy bank wielokrotnie w ciągu dnia w oparciu o rynek. Jest to przeciwieństwo stawki za „gotówkę/banknoty”, również ustalaną przez każdy bank, a „„st... [200 / 691 chars] |
+| Ile brokerzy płacą za wymianę za transakcję? [44 chars] | Nie ma jednej odpowiedzi na to pytanie, ale są pewne ogólniki. Większość giełd rozróżnia pasywną i agresywną stronę handlu. Uczestnik pasywny to zlecenie, które znajdowało się na rynku w momencie tran... [200 / 1,211 chars] |
+| Czy dochód freelancera uzyskany przez obywatela USA mieszkającego za granicą podlega stanowemu podat... [100 / 117 chars] | Brak podatków stanowych, ale Włochy mają również korzystny traktat z rządem federalnym Stanów Zjednoczonych. Zastanów się nad obniżeniem podatków federalnych do 5% ;) to gruba lektura, http://www.irs.... [200 / 629 chars] |
+| Ile wynosi inflacja? [20 chars] | Istnieje coś takiego jak indeks cen konsumpcyjnych (CPI). Istnieje koszyk towarów, po który ludzie, którzy prowadzą indeks, w zasadzie robią zakupy. Jest o wiele bardziej szczegółowy ze względu na dok... [200 / 614 chars] |
 
 ### Source Reference Table
 

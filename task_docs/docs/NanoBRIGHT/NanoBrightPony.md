@@ -68,9 +68,13 @@ The observed scores suggest that reranking_hybrid is the best top-10 pool, but B
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| I will use the programming language pony. Problem: You are given an array of integers stones where s... [100 / 730 chars] | So first we ask if there are any more names to get. If there are then we get a name and see if it's "Jack" or "Jill". If it is we're done and we break out of the loop, handing back the name we've foun... [200 / 676 chars] |
+| I will use the programming language pony. Problem: You are given an integer array nums. The unique e... [100 / 323 chars] | We can see that it makes more sense for the unary operator to be applied before either infix as it only acts on a single number in the expression so it is never ambiguous. Unary operators can also be... [200 / 380 chars] |
+| I will use the programming language pony. Problem: Given an array of integers nums, write a function... [100 / 281 chars] | # Local variables Local variables in Pony work very much as they do in other languages, allowing you to store temporary values while you perform calculations. Local variables live within a chunk of co... [200 / 1,245 chars] |
+| I will use the programming language pony. Problem: Given an integer number n, write a function that... [100 / 370 chars] | # Infix Operators Infix operators take two operands and are written between those operands. Arithmetic and comparison operators are the most common: ```pony 1 + 2 a < b ``` Pony has pretty much the sa... [200 / 248 chars] |
+| I will use the programming language pony. Problem: A string s is nice if, for every letter of the al... [100 / 592 chars] | So first we ask if there are any more names to get. If there are then we get a name and see if it's "Jack" or "Jill". If it is we're done and we break out of the loop, handing back the name we've foun... [200 / 676 chars] |
 
 ### Source Reference Table
 

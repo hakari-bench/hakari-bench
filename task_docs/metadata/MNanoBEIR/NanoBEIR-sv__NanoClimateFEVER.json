@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Från 1970 till 1998 fanns det en uppvärmningsperiod som höjde temperaturerna med cirka 0,7 Fahrenhei",
+          "full_chars": 164,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Paleocen (uttalas /ˈpæliəˌsiːn/ eller /ˈpæ - , - lioʊ - /) eller Paleocen, den \"gamla nya\", är en geologisk epok som varade från cirka . Det är den första epoken i Paleogenperioden under den moderna C",
+          "full_chars": 1004,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "I själva verket är trenden nedåtgående, även om det inte är statistiskt signifikant.",
+          "full_chars": 84,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Solarcykeln eller solaktivitetscykeln är den nästan periodiska 11-årsförändringen i solens aktivitet (inklusive förändringar i nivåerna av solstrålning och utsändning av solmaterial) och utseende (för",
+          "full_chars": 607,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Lokala och regionala havsnivåer fortsätter visa den vanliga naturliga variationen, stiger på vissa s",
+          "full_chars": 128,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Medelhavsnivå (MSL) (förkortat havsnivå) är en genomsnittlig nivå av jordens havsytor, från vilken höjder som höjder kan mätas. MSL är en typ av vertikal datum, en standardiserad geodetisk referenspun",
+          "full_chars": 867,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "Klimatforskare säger att i fallet med Orkanen Harvey tyder det på att global uppvärmning förvärrar e",
+          "full_chars": 124,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "De globala uppvärmningens effekter är de miljö- och samhällsförändringar som orsakas (direkt eller indirekt) av människans utsläpp av växthusgaser. Det finns en vetenskaplig konsensus om att klimatför",
+          "full_chars": 1368,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "CERN:s CLOUD-experiment testade endast en tredjedel av ett av fyra krav som krävs för att skylla på",
+          "full_chars": 197,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Tillskrivning av den senaste klimatförändringen är ansträngningen att vetenskapligt fastställa mekanismer som är ansvariga för de senaste klimatförändringarna på jorden, vanligtvis kända som `global u",
+          "full_chars": 2098,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

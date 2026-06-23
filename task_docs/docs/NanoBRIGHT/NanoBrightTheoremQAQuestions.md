@@ -68,9 +68,13 @@ The observed hybrid recall advantage suggests a practical pipeline: use hybrid o
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Imagine you have a family tree of 100 members, and you're trying to figure out how many ways you can... [100 / 277 chars] | If there exists an ordered numbering of the nodes such that for each node there are no links going to a lower-numbered node, then there are no directed cycles in a directed graph. True or false? True.... [200 / 730 chars] |
+| A teacher wants to create a special team for a project and needs to pick 3 students out of a class o... [100 / 264 chars] | What is the coefficient of $x^2y^5$ for the formula $(x + 2y)^7$? We can use the binomial theorem to expand $(x+2y)^7$ as follows: $$(x+2y)^7 = \sum_{k=0}^{7} \binom{7}{k} x^{7-k}(2y)^k$$ To find the... [200 / 539 chars] |
+| You're organizing a book club represented by the group S_3 * Z_2. What is its order? [84 chars] | What is the order of group Z_{18}? The order of a group is the number of elements in the group. In this case, Z_{18} is the group of integers modulo 18 under addition. The elements of this group are {... [200 / 293 chars] |
+| Imagine you're planning a road trip that starts at sea level and ends at the top of a mountain. Your... [100 / 534 chars] | Does cos(x) = x^k have a solution for k = 2023? To determine if cos(x) = x^k has a solution for k = 2023, we can consider the properties of the cosine function and the behavior of x^k for odd values o... [200 / 908 chars] |
+| Imagine a small neighborhood with four houses labeled 0, 1, 2, and 3. House 3 is connected by roads... [100 / 320 chars] | Let a undirected graph G with edges E = {<0,1>,<4,1>,<2,0>,<2,1>,<2,3>,<1,3>}, which <A,B> represent Node A is connected to Node B. What is the minimum vertex cover of G? Represent the vertex cover in... [200 / 896 chars] |
 
 ### Source Reference Table
 

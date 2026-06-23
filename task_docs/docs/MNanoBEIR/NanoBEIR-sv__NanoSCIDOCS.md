@@ -62,9 +62,13 @@ A model targeting this task should improve scientific relatedness rather than an
 
 ## Example Data
 
-### Public Sources
-
-The original task is connected to SCIDOCS and SPECTER-style scientific document representation evaluation, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Ny DC-DC flernivåspänningshöjande omvandlare [44 chars] | Multinivåspänningsomvandlare är på väg att bli en ny typ av kraftomvandlare för högspänningsapplikationer. Multinivåspänningsomvandlare syntetiserar vanligtvis en trappformad spänningsvåg från flera n... [200 / 923 chars] |
+| Snabb inlärning av glesa gaussiska Markovfält baserat på Cholesky-faktorisering [79 chars] | Sure, please provide the English document text that you need translated into Swedish. [85 chars] |
+| Textursyntes med konvolutiva neurala nätverk [44 chars] | I detta arbete undersöker vi effekten av djupet i ett konvolutivt nätverk på dess noggrannhet i en stor skala bildigenkänningsinställning. Vår huvudsakliga bidrag är en grundlig utvärdering av nätverk... [200 / 830 chars] |
+| Planär bredbandsringantenn med cirkulär polarisering för RFID-system [68 chars] | I denna artikel föreslås en teknik med horisontellt meanderande strimma (HMS) för att uppnå god impedansanpassning och symmetriska bredsidorstrålningsmönster för en enkelmatad bredbandscirkulärt polar... [200 / 1,261 chars] |
+| Design av en avancerad digital hjärtmonitor med grundläggande elektroniska komponenter [86 chars] | I denna artikel presenterar vi designen och utvecklingen av en ny integrerad enhet för att mäta hjärtfrekvens med hjälp av fingertoppen för att förbättra uppskattningen av hjärtfrekvensen. Eftersom hj... [200 / 1,099 chars] |
 
 ### Source Reference Table
 

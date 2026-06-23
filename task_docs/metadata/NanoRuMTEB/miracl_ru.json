@@ -154,15 +154,98 @@
         "url": "http://miracl.ai/",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/MIRACLRetrievalHardNegatives",
         "url": "https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "740",
+        "document_id": "4347829#0",
+        "query": {
+          "text": "«Агенты \"Щ.И.Т.\"» - это драматический сериал?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Агенты «Щ.И.Т.» «Аге́нты „Щ.И.Т.“» () — американский супергеройский телесериал, созданный Джоссом Уидоном и основанный на одноимённом комиксе компании Marvel о вымышленной организации по борьбе с прес",
+          "full_chars": 420,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1158",
+        "document_id": "1134#38",
+        "query": {
+          "text": "Китай социалистическое государство?",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Китай Официально, Китайская Народная Республика — унитарная республика, социалистическое государство демократической диктатуры народа. Основным законом государства является конституция, принятая в 198",
+          "full_chars": 574,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1029",
+        "document_id": "2770431#16",
+        "query": {
+          "text": "Занималось Бюро шифров взломом шифров немецкой Энигмы?",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Бюро шифров Главным ведомством Бюро и отделением, ответственным за криптоанализ немецких систем шифрования, стало BS4, позже основной задачей отделения стал взлом немецкой шифровальной машины «Энигма»",
+          "full_chars": 677,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "920",
+        "document_id": "6269#11",
+        "query": {
+          "text": "Сколько лет Лев Николаевич Толстой писал роман «Война́ и мир»?",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Война и мир Толстой писал роман на протяжении 6 лет, с 1863 по 1869 годы. По историческим сведениям, он вручную переписал его 8 раз, а отдельные эпизоды писатель переписывал более 26 раз. Исследовател",
+          "full_chars": 307,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "219",
+        "document_id": "4792619#15",
+        "query": {
+          "text": "Сколько дней длился Евромайдан в Украине?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Евромайдан События в период с 21 ноября 2013 года по 22 февраля 2014 года после смены власти на Украине в украинском праве официально назывались «массовые акции гражданского протеста в Украине с 21 но",
+          "full_chars": 280,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

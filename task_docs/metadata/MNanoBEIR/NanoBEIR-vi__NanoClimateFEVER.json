@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Từ năm 1970 đến năm 1998 đã có một giai đoạn ấm lên làm tăng nhiệt độ khoảng 0,7 độ F, điều này đã g",
+          "full_chars": 159,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Thế Paleocen ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) hay Palaeocene, được gọi là \"cũ gần đây\", là một kỷ địa chất kéo dài từ khoảng thời gian nào đó. Đây là kỷ đầu tiên của Thế Paleogen",
+          "full_chars": 1144,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "Trên thực tế, xu hướng, mặc dù không có ý nghĩa thống kê, đang giảm.",
+          "full_chars": 68,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chu kỳ mặt trời hoặc chu kỳ hoạt động từ tính của mặt trời là sự thay đổi gần như định kỳ 11 năm trong hoạt động của Mặt Trời (bao gồm sự thay đổi trong mức độ bức xạ mặt trời và sự phun trào vật chất",
+          "full_chars": 696,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Mực nước biển địa phương và khu vực tiếp tục thể hiện sự biến đổi tự nhiên điển hình - ở một số nơi",
+          "full_chars": 140,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Mực nước biển trung bình (MSL) (viết tắt đơn giản là mực nước biển) là mức trung bình của bề mặt một hoặc nhiều đại dương của Trái Đất từ đó có thể đo được độ cao như độ cao địa hình. MSL là một loại",
+          "full_chars": 1089,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "[Các nhà khoa học khí hậu] nói rằng các khía cạnh của trường hợp bão Harvey cho thấy sự nóng lên toà",
+          "full_chars": 136,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Các tác động của sự nóng lên toàn cầu là những thay đổi môi trường và xã hội do (trực tiếp hoặc gián tiếp) khí thải khí nhà kính của con người gây ra. Có sự đồng thuận khoa học rằng biến đổi khí hậu đ",
+          "full_chars": 1376,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "Thí nghiệm CLOUD của CERN chỉ kiểm tra một phần ba của một trong bốn yêu cầu cần thiết để đổ lỗi cho",
+          "full_chars": 187,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Việc quy kết biến đổi khí hậu gần đây là nỗ lực xác định một cách khoa học các cơ chế chịu trách nhiệm cho những biến đổi khí hậu gần đây trên Trái Đất, thường được gọi là \"nóng lên toàn cầu\". Nỗ lực",
+          "full_chars": 2045,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -140,7 +140,11 @@ class BenchmarkDocs:
         metadata = self._load_metadata(path)
         if metadata is None or "## Dataset Information" in markdown:
             return markdown
-        return f"{markdown.rstrip()}\n\n{_render_task_metadata_markdown(metadata)}\n"
+        rendered = markdown.rstrip()
+        examples = _examples_markdown(metadata)
+        if examples and "## Example Data" not in markdown:
+            rendered = f"{rendered}\n\n{examples}"
+        return f"{rendered}\n\n{_render_task_metadata_markdown(metadata)}\n"
 
     def _group_task_metadata(self, group_dir: Path) -> list[tuple[Path, TaskMetadata]]:
         items: list[tuple[Path, TaskMetadata]] = []
@@ -369,6 +373,30 @@ def _candidate_subsets_table(metadata: TaskMetadata) -> str:
     return _markdown_table(["Profile", "Config", "nDCG@10", "Hit@10", "Recall@100", "Candidates"], rows) if rows else ""
 
 
+def _examples_markdown(metadata: TaskMetadata) -> str:
+    if not metadata.examples:
+        return ""
+    rows = [
+        [
+            _format_example_text(example.query.text, example.query.full_chars, example.query.limit_chars, example.query.truncated),
+            _format_example_text(
+                example.positive_document.text,
+                example.positive_document.full_chars,
+                example.positive_document.limit_chars,
+                example.positive_document.truncated,
+            ),
+        ]
+        for example in metadata.examples
+    ]
+    return "\n".join(["## Example Data", "", _markdown_table(["Query", "Positive document"], rows)])
+
+
+def _format_example_text(text: str, full_chars: int, limit_chars: int, truncated: bool) -> str:
+    if truncated:
+        return f"{text}... [{_format_int(limit_chars)} / {_format_int(full_chars)} chars]"
+    return f"{text} [{_format_int(full_chars)} chars]"
+
+
 def _profile_scores(metadata: TaskMetadata) -> dict[str, float]:
     subsets = metadata.candidate_subsets
     if subsets is None:
@@ -422,7 +450,7 @@ def _references_table(metadata: TaskMetadata) -> str:
             reference.title,
             str(reference.year) if reference.year is not None else "",
             "paper" if reference.is_paper else "dataset page",
-            reference.url,
+            f"[{reference.url}]({reference.url})",
         ]
         for reference in metadata.references
     ]

@@ -62,21 +62,22 @@ Models should learn to identify the management decision latent in a case and ret
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/PMC-Treatment dataset card](https://huggingface.co/datasets/R2MED/PMC-Treatment).
+| Query | Positive document |
+| --- | --- |
+| Case Summary: - **Patient Demographics:** 43-year-old male - **Chief Complaint:** Unexplained edema... [100 / 2,067 chars] | Daratumumab is an antibody against CD38 used for plasma cell depletion in relapsed or refractory multiple myeloma (MM). It mediates depletion of plasma cells, which overexpress CD38, through a wide ra... [200 / 952 chars] |
+| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Long-standing therapy-resi... [100 / 1,404 chars] | While the observed 24 hours systolic ambulatory BD reduction at 6-months follow-up in contemporary trials such as SPYRAL ON MED is generally considered to be modest (−1.9 mmHg),6 it seems that the obs... [200 / 664 chars] |
+| Case Summary: - **Patient Demographics:** 2-day-old male neonate - **Chief Complaint:** Central cyan... [100 / 2,145 chars] | Helen B. Taussig and Richard J. Bing were the first to describe a rare cyanotic congenital heart defect known as the Taussig-Bing anomaly (TBA) in 1949, that includes a non-restrictive subpulmonary ve... [200 / 2,503 chars] |
+| Case Summary: - Patient Demographics: - Case 1: 87-year-old woman - Case 2: 84-year-old man - Chief... [100 / 1,709 chars] | Adequate proximal seal zones are essential for durable endovascular aortic repair. Although the definition of an adequate proximal seal zone can vary depending on the underlying aortic pathology, comp... [200 / 660 chars] |
+| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Redness, pain, and decreas... [100 / 1,950 chars] | The surgical approach for severe ocular surface burns aims to reconstruct ocular surface function, address eyelid deformities, correct limbal stem cell deficiency, and alleviate conjunctival sac const... [200 / 634 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/PMC-Treatment | 2025 | dataset card | https://huggingface.co/datasets/R2MED/PMC-Treatment |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/PMC-Treatment | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/PMC-Treatment](https://huggingface.co/datasets/R2MED/PMC-Treatment) |
 
 ### Representative Snippets
 

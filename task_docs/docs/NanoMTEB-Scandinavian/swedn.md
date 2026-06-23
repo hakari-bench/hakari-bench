@@ -70,12 +70,13 @@ For evaluation, researchers should consider both the single-hit behavior and the
 
 ## Example Data
 
-### Public Sources
-
-- Scandinavian Embedding Benchmarks paper: https://arxiv.org/abs/2406.02396
-- SWE-DN resource page: https://spraakbanken.gu.se/resurser/swedn
-- SuperLim paper: https://aclanthology.org/2023.emnlp-main.506/
-- Source task dataset card: https://huggingface.co/datasets/mteb/SwednRetrieval
+| Query | Positive document |
+| --- | --- |
+| Gående är oskyddade i trafiken [30 chars] | Tror många cyklister glömmer att oavsett var en gående person befinner sig i trafiken så räknas de fortfarande som oskyddade gentemot all annan fordonstrafik och enligt lagen räknas cykel som ett ford... [200 / 419 chars] |
+| Det är inte gratis att plocka bär [33 chars] | Skogens bär ingår i ett ekologiskt system och är knappast till för enbart människan. Det är inte gratis att plocka bär. Det kostar både tid och pengar. Det kräver utrustning och transporter. Väl på pl... [200 / 351 chars] |
+| ”Skollagen ger barnen rätt till skolgång” [41 chars] | På DN-debatt (24/6) skriver regeringens nationelle samordnare för arbetet med utsatta EES-medborgare Martin Valfridsson tillsammans med Rickard Klerfors, om EU-migranters barns rätt till skolgång. De... [200 / 4,289 chars] |
+| ”Etablerade sanningar i politiken gäller inte längre” [53 chars] | Årets riksdagsval tydliggjorde att historiskt etablerade sanningar om väljarkåren inte längre gäller. Profetior från erfarna statsvetare om hur stora försprång som är möjliga att hämta in kom på skam,... [200 / 7,338 chars] |
+| ”Ge barnen blodmat i stället för vegetariskt” [45 chars] | Det är inte bara en fråga om klimatet när man som förskolan Gitarren i Umeå väljer bort kött och köttprodukter till barn. Ingen talar om viktiga mineraler som barnen går miste om. Det är väl känt att... [200 / 1,382 chars] |
 
 ### Source Reference Table
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "De 1970 até 1998 houve um período de aquecimento que elevou as temperaturas em cerca de 0,39°C, o qu",
+          "full_chars": 176,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "O Paleoceno (pronunciado /paleoˈsɛnu/), ou Paleoceno, o \"recentemente antigo\", é uma época geológica que durou aproximadamente de 66 a 56 milhões de anos atrás. É a primeira época do Período Paleogeno",
+          "full_chars": 1128,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "De fato, a tendência, embora não seja estatisticamente significativa, é de queda.",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O ciclo solar, ou ciclo de atividade magnética solar, é a mudança quase periódica de 11 anos na atividade do Sol, que inclui variações nos níveis de radiação solar e na ejeção de material solar, bem c",
+          "full_chars": 641,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Os níveis do mar locais e regionais continuam a apresentar a variabilidade natural esperada, subindo",
+          "full_chars": 141,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "O nível médio do mar (NMM) (abreviado simplesmente como nível do mar) é o nível médio da superfície de um ou mais dos oceanos da Terra, a partir do qual se podem medir alturas, como elevações. O NMM é",
+          "full_chars": 1098,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "Cientistas climáticos dizem que elementos do furacão Harvey sugerem que o aquecimento global está ag",
+          "full_chars": 132,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "As mudanças climáticas são as alterações ambientais e sociais causadas (direta ou indiretamente) pelas emissões humanas de gases de efeito estufa. Há um consenso científico de que a mudança climática",
+          "full_chars": 1416,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "O experimento CLOUD do CERN testou apenas um terço de um dos quatro requisitos necessários para culp",
+          "full_chars": 192,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A atribuição das mudanças climáticas recentes refere-se ao esforço científico para determinar os mecanismos responsáveis pelas mudanças climáticas observadas na Terra, comumente conhecidas como \"aquec",
+          "full_chars": 2238,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

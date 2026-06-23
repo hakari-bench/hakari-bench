@@ -68,9 +68,13 @@ Long-document systems may benefit from section-aware pooling, passage aggregatio
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging and long-document split.
+| Query | Positive document |
+| --- | --- |
+| Asking for illogical things to make extreme views normal? A couple of months back I was reading an a... [100 / 363 chars] | Skip to main content clock menu more-arrow no yes mobile [ Vox homepage ](/) * ## Give [ Give ](http://vox.com/pages/support- now?itm_campaign=contribute&itm_medium=site&itm_source=navigation) * ## Ne... [200 / 14,364 chars] |
+| What term can describe the feeling that a job just does itself? Is there a term that can describe th... [100 / 943 chars] | Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page "Visit the main page \[z\]") * [ Contents ](/wiki/Wikipedia:Contents "Guides to browsing Wikipedia")... [200 / 132,869 chars] |
+| What is the term for the "knowing what you think but can't explain it" phenomenon? I think we all ex... [100 / 504 chars] | Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page "Visit the main page \[z\]") * [ Contents ](/wiki/Wikipedia:Contents "Guides to browsing Wikipedia")... [200 / 23,048 chars] |
+| Saying things to shock others Is it strange or categorically bad to say things that shock others kno... [100 / 830 chars] | Skip to main content Psychology Today Find a Therapist Get Help Magazine Today INTL Search Find a Therapist (City or Postcode) Verified by Psychology Today Billi Gordon Ph.D. Billi Gordon Ph.D. Obesel... [200 / 19,857 chars] |
+| What is the term for the inability to see past one's own current emotional state? I'm looking for a... [100 / 1,889 chars] | Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page "Visit the main page \[z\]") * [ Contents ](/wiki/Wikipedia:Contents "Guides to browsing Wikipedia")... [200 / 26,976 chars] |
 
 ### Source Reference Table
 

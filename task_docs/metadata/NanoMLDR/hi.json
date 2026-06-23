@@ -130,8 +130,91 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-hi-212",
+        "document_id": "doc-hi-1593",
+        "query": {
+          "text": "मेड़ता रोड रेलवे स्टेशन किस जिले में स्थित है?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "नागौर नागौर (Nagaur) भारत के राजस्थान राज्य के नागौर ज़िले में स्थित एक ऐतिहासिक नगर है। अपने धार्मिक स्थलों के लिए प्रसिद्ध यह शहर ज़िले का मुख्यालय भी है। परिचय नागौर जिला 26°25' और 27°40' उत्तरी अक",
+          "full_chars": 20341,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-hi-1032",
+        "document_id": "doc-hi-6235",
+        "query": {
+          "text": "यदि विधान परिषद् है तो, उसके सभापति और उपसभापति के वेतन और भत्ते क्या हैं?",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "सातवीं अनुसूची भारत के संविधान में राज्य सरकारों और केन्द्र सरकार के मध्य मुद्दों अथवा अधिकारों के बंटवारे के लिए विभिन्न अनुसूचियाँ परिभाषित की गयी हैं। इनमें से महत्त्वपूर्ण अनुच्छेद २४५ और २४६ के अ",
+          "full_chars": 23699,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-hi-428",
+        "document_id": "doc-hi-3049",
+        "query": {
+          "text": "आपके फोन में हिन्दी फॉण्ट उपलब्ध है क्या?",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "मोबाइल उपकरणों में हिन्दी समर्थन मोबाइल फोन आजकल हर व्यक्ति की आवश्यकता बन चुका है। इण्टरनेट पर हिन्दी के प्रयोक्ता ऐसा फोन चाहते हैं जिससे कि वे अपने फोन पर भी हिन्दी का प्रयोग कर सकें जिसमें कि हिन्",
+          "full_chars": 18819,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-hi-385",
+        "document_id": "doc-hi-2769",
+        "query": {
+          "text": "क्या आप वृक्कीय ऊतकों के बारे में अधिक जानकारी दे सकते हैं जो उन्हें जीवित रखने के लिए आवश्यक होते ह",
+          "full_chars": 103,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "गुर्दा वृक्क या गुर्दे का जोड़ा एक मानव अंग हैं, जिनका प्रधान कार्य मूत्र उत्पादन (रक्त शोधन कर) करना है। गुर्दे बहुत से वर्टिब्रेट पशुओं में मिलते हैं। ये मूत्र-प्रणाली के अंग हैं। इनके द्वारा इलेक्त",
+          "full_chars": 22815,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-hi-35",
+        "document_id": "doc-hi-277",
+        "query": {
+          "text": "क्या सन १९४७ के बाद सांस्कृतिक तीर्थों की उन्नति में कोई बदलाव हुआ है?",
+          "full_chars": 70,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "मथुरा मथुरा (Mathura) भारत के उत्तर प्रदेश राज्य के मथुरा ज़िले में स्थित एक नगर है। मथुरा ऐतिहासिक रूप से कुषाण राजवंश द्वारा राजधानी के रूप में विकसित नगर है। उससे पूर्व भगवान कृष्ण के समय काल से भी",
+          "full_chars": 18204,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

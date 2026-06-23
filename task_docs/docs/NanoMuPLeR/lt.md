@@ -62,19 +62,21 @@ Models should combine robust Lithuanian lexical matching with semantic alignment
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Kada turėjo įsigalioti harmonizuotas minimalus €380 už 1 kubinį metrą akcizas gazoliui ir benzinui? [99 chars] | Šiuo pasiūlymu iš dalies keičiama Direktyva 2003/96/EB (EMD) dėl gazolio, naudojamo kaip degalai, apmokestinimo tvarkos, kuri taikoma visose Europos Sąjungos šalyse. Praktiškai šiuo pasiūlymu numatoma... [200 / 535 chars] |
+| Kuris mokestis už ES vidaus importą vis dar buvo taikomas septynių valstybių narių: dviem ≤0,5%, vie... [100 / 123 chars] | Dauguma ES 25 valstybių narių laikėsi Tarybos 1985 m. rekomendacijos ir visiškai panaikino mokestį; šiuo metu jį taiko tik septynios valstybės narės: Lenkija ir Portugalija taiko 0,5 proc. arba mažesn... [200 / 620 chars] |
+| Kokia valdymo struktūra buvo siūloma trumpalaikiam visų narių metrologijos mokslinių tyrimų bandomaj... [100 / 156 chars] | Apibendrinant, EESRK mano, kad būtų tikslingiau nuspręsti įgyvendinti bandomąjį Europos metrologijos mokslinių tyrimų (EMMT) projektą, kurio terminas būtų apribotas iki 2013 m., remiantis i MERA Plus,... [200 / 743 chars] |
+| Kiek laiko suinteresuotos šalys turi pranešti apie save po pranešimo paskelbimo, kad išsaugotų proce... [100 / 154 chars] | Jei tyrimo metu atsižvelgiama į šalių prašymus (nusiskundimus), visos suinteresuotos šalys per 40 dienų nuo šio pranešimo paskelbimo Europos Sąjungos oficialiajame leidinyje, jei nenurodyta kitaip, tu... [200 / 595 chars] |
+| Kuris ES organas pritarė Tarybos patvirtintam veiksmų planui sustiprinti įtariamųjų ir kaltinamųjų p... [100 / 152 chars] | Įtariamųjų ir kaltinamųjų baudžiamuosiuose procesuose teisių apsauga yra viena iš pagrindinių Sąjungos vertybių, kuri yra labai svarbi siekiant išlaikyti valstybių narių tarpusavio pasitikėjimą ir vis... [200 / 556 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

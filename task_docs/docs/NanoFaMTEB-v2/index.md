@@ -163,5 +163,5 @@ share surface terms but fail the task relation.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FaMTEB: Massive Text Embedding Benchmark in Persian Language | 2025 | paper | https://arxiv.org/abs/2502.11571 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| FaMTEB: Massive Text Embedding Benchmark in Persian Language | 2025 | paper | [https://arxiv.org/abs/2502.11571](https://arxiv.org/abs/2502.11571) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |

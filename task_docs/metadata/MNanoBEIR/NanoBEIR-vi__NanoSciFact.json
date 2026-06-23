@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 5
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Quy định của Ly49Q về chức năng của màng raft trong sự di chuyển của bạch cầu trung tính đến các vị",
+          "full_chars": 109,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Các bạch cầu trung tính nhanh chóng trải qua quá trình phân cực và di chuyển theo hướng để xâm nhập vào các vị trí nhiễm trùng và viêm. Ở đây, chúng tôi cho thấy rằng một thụ thể MHC I ức chế, Ly49Q,",
+          "full_chars": 1134,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Liệu pháp kháng retrovirus và tác động của nó đến việc giảm tỷ lệ bệnh lao trên một loạt các mức CD4",
+          "full_chars": 101,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "NỀN TẢNG Nhiễm virus suy giảm miễn dịch ở người (HIV) là yếu tố nguy cơ mạnh nhất dẫn đến bệnh lao và đã thúc đẩy sự tái phát của nó, đặc biệt là ở khu vực hạ Sahara châu Phi. Năm 2010, ước tính có 1,",
+          "full_chars": 2179,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Sự điều chỉnh tăng nhanh và biểu hiện cơ bản cao hơn của các gen được kích thích bởi interferon có l",
+          "full_chars": 177,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Mặc dù độ nhạy cảm của các tế bào thần kinh trong não đối với nhiễm trùng vi sinh vật là một yếu tố quyết định chính trong kết quả lâm sàng, nhưng rất ít điều được biết về các yếu tố phân tử điều chỉn",
+          "full_chars": 1233,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "Sàng lọc ung thư cổ tử cung nguyên phát với phát hiện HPV có độ nhạy dọc cao hơn so với tế bào học t",
+          "full_chars": 159,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "NỀN TẢNG Sàng lọc ung thư cổ tử cung dựa trên việc xét nghiệm virus papilloma ở người (HPV) làm tăng độ nhạy trong việc phát hiện các tổn thương nội biểu mô cổ tử cung độ cao (độ 2 hoặc 3), nhưng khôn",
+          "full_chars": 2422,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "Chặn tương tác giữa TDP-43 và protein phức hợp hô hấp I ND3 và ND6 dẫn đến tăng cường mất neuron do",
+          "full_chars": 114,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Các đột biến gen trong protein liên kết DNA TAR (TARDBP, còn được gọi là TDP-43) gây ra bệnh xơ cứng teo cơ một bên (ALS), và sự gia tăng hiện diện của TDP-43 (được mã hóa bởi TARDBP) trong tế bào chấ",
+          "full_chars": 1368,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

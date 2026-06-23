@@ -157,22 +157,22 @@ whether the shared notation actually implies duplicate intent.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Schattingen van variantie uit een iid steekproef [48 chars] | Intuïtieve uitleg voor delen door (n-1) bij het berekenen van de standaarddeviatie? Vandaag kreeg ik in de klas de vraag waarom je de som van de gekwadrateerde afwijkingen deelt door $(n-1)$ in plaats... [200 / 435 chars] |
+| Hoe kan ik type II (bèta) fout, power en steekproefomvang het beste grafisch weergeven? [87 chars] | Reëel gebaseerd op machtsfunctie Probleem: Wat is een voorbeeld uit het echte leven van een machtsfunctie? Ik heb erover nagedacht, maar ik ben er niet uitgekomen. Weet iemand het? [181 chars] |
+| Het weergeven van een afstandsmatrix in het vlak [48 chars] | Wat is het verschil tussen principale componentenanalyse en multidimensionale schaalverdeling? Hoe verschillen PCA en klassieke MDS? En MDS versus niet-metrische MDS? Is er een situatie waarin je de v... [200 / 280 chars] |
+| Hulp bij het interpreteren van een R lineair model [50 chars] | Basisvragen over de interpretatie van resultaten van summary(lm(...~...)) in R set.seed(11) a = runif (12) b = rep(c(1,2,3),4) summary(lm(a~b))$coeff summary(lm(a~b-1))$coeff Wat betekent een p-waarde... [200 / 433 chars] |
+| Hoe om te gaan met ontbrekende waarden voor PCA? [48 chars] | Vervanging van NA-waarden voor PCA-analyse Ik heb de functie `prcomp()` gebruikt om een PCA-analyse uit te voeren in R. Er zit echter een bug in die functie waardoor de parameter `na.action` niet werk... [200 / 1,676 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

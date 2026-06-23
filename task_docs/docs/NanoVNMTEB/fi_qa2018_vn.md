@@ -70,13 +70,13 @@ Error analysis should separate failures by product mismatch, jurisdiction mismat
 
 ## Example Data
 
-### Public Sources
-
-- [FiQA 2018 paper](https://doi.org/10.1145/3184558.3192301)
-- [FiQA project page](https://sites.google.com/view/fiqa/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/fiqa-vn](https://huggingface.co/datasets/GreenNode/fiqa-vn)
+| Query | Positive document |
+| --- | --- |
+| "Sell on ask", "sell on bid" trong chứng khoán là gì? [53 chars] | Giá mua (bid) và giá bán (ask) là mức giá cao nhất để mua và thấp nhất để bán trên thị trường, điều đó không có nghĩa là bạn chỉ nên mua/bán ở mức giá này. Tuy nhiên bạn có thể mua/bán theo mức giá mà... [200 / 489 chars] |
+| Giải thích chi phí sinh viên - Để khai thuế cho năm tiếp theo [61 chars] | Giả sử ở đây bạn đang nói về việc khấu trừ học phí của bạn như một khoản khấu trừ dưới mức cơ bản như một chi phí kinh doanh hoặc tương tự, sau đó nó phụ thuộc. Theo 1.162-5, nếu giáo dục: Sau đó nó đ... [200 / 966 chars] |
+| Điều gì xảy ra với "người mua dài" của một cổ phiếu khi người bán ngắn khác thất bại (đó là, thua lỗ... [100 / 139 chars] | Nếu không có gì tinh tế mà tôi bỏ lỡ, chẳng có gì xảy ra với người mua. Giả sử Alice muốn bán khống 1000 cổ phiếu XYZ ở mức $5. Cô ta vay cổ phiếu từ Bob và bán chúng cho Charlie. Bây giờ Charlie thực... [200 / 1,159 chars] |
+| Tôi có nên thay thế trái phiếu trong một chiến lược đầu tư thụ động không? [74 chars] | "Trái phiếu vẫn chắc chắn có một chỗ đứng trong nhiều danh mục đầu tư thụ động. Mặc dù đúng là lãi suất đã ở mức thấp bất thường, nhưng lợi suất trên các khoản đầu tư trái phiếu thụ động hợp lý vẫn da... [200 / 2,213 chars] |
+| 28 tuổi vừa thừa kế một số tiền lớn và bất động sản - không biết làm gì với nó [78 chars] | Chúng tôi không có một câu trả lời tốt cho việc bắt đầu đầu tư ở Ba Lan. Chúng tôi đã có những câu trả lời tốt cho trường hợp nói chung, mà cũng nên áp dụng ở Ba Lan. Ví dụ: Cách tốt nhất để bắt đầu đ... [200 / 4,316 chars] |
 
 ### Source Reference Table
 

@@ -168,22 +168,22 @@ explanation should benefit most from the high-recall hybrid pool.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Het algemene 'het [17 chars] | Waar verwijst 'het' naar in dit voorbeeld? **Mogelijk duplicaat:** > Het regent. Wat dan? 'Het regent.' Waar verwijst 'het' naar? Ik weet dat sommige mensen 'het weer' zouden zeggen, maar je zou niet... [200 / 301 chars] |
+| Hoe moet je een bereik van getallen met een koppelteken interpunctiëren? [72 chars] | Wat is het verschil tussen - en -- in een zin? **Mogelijke dubbel:** > Wanneer moet ik een em-dash, een en-dash en een koppelteken gebruiken? Wanneer plaats ik een - in een zin? Is het een sterkere ko... [200 / 229 chars] |
+| Kiezen tussen "experimenteren met" en "waarmee te experimenteren [64 chars] | Waar moet het voorzetsel van "goedkeuren" staan? **Mogelijke dubbel:** > Wanneer is het gepast om een zin met een voorzetsel te eindigen? In dit antwoord schreef ik > [Je kunt het gebruiken] om foto's... [200 / 660 chars] |
+| Hoofdletterregels voor "the [27 chars] | De hoofdletter in bepaalde lidwoorden in namen Toen ik jonger was, een aantal _mumble-mumble-mumble_ decennia geleden, leerde ik dat in namen van personen, plaatsen en dingen met het bepaalde lidwoord... [200 / 862 chars] |
+| Wat is het verschil tussen 'part of' en 'a part of'? [52 chars] | Verschil tussen 'part' en 'a part'? Deze vraag lijkt misschien heel simpel, maar ik raak er altijd in de war wanneer ik wil spreken. Ik las een boek getiteld "re-start your English", en zag een zin. >... [200 / 517 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

@@ -139,12 +139,13 @@ quality.
 
 ## Example Data
 
-Representative queries ask which catalyst converts carbon monoxide into a less
-harmful product in ethanol hydrogen production, how financial activity in a
-ghetto perpetuates a stereotype in Schindler's List, the height of Cerro
-Calzoncillo, the main changes made during Centro Cultural Recoleta remodeling,
-or why Square developers chose an RPG instead of a Tetris-like Game Boy title.
-Positive documents are long Spanish articles containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| ¿Cuál es el catalizador utilizado para convertir el monóxido de carbono en un producto menos perjudi... [100 / 169 chars] | Etanol (combustible) El etanol es un compuesto químico obtenido a partir de la fermentación de los azúcares que puede utilizarse como combustible, solo, o bien, mezclado en cantidades variadas con gas... [200 / 31,421 chars] |
+| ¿Cómo perpetúa la actividad financiera en el gueto el estereotipo de la vida judía según Sara Horowi... [100 / 103 chars] | La lista de Schindler Argumento En Cracovia, durante la Segunda Guerra Mundial, las tropas alemanas de ocupación han forzado a los judíos polacos a vivir recluidos en un gueto. El empresario Oskar Sch... [200 / 29,815 chars] |
+| ¿Cuál es la altura del cerro Calzoncillo en la isla mencionada en el texto? [75 chars] | Golfo de Ancud Geología y orografía Tanto los golfos de Ancud y Corcovado como el seno de Reloncaví, son las cuencas de grandes lagos que, en época remota, formaron parte del valle central que luego s... [200 / 25,915 chars] |
+| ¿Cuáles fueron los principales cambios realizados durante la remodelación del Centro Cultural Recole... [100 / 111 chars] | Centro Cultural Recoleta Historia El Centro Cultural Recoleta es conocido históricamente como la sede de lo nuevo. Desde su inauguración como centro cultural en 1980, sus salas se convirtieron en el l... [200 / 26,824 chars] |
+| ¿Cuál fue la razón principal por la que los desarrolladores de Square decidieron crear un juego de r... [100 / 151 chars] | Final Fantasy Legend Modo de juego En The Final Fantasy Legend, el jugador recorre el mundo del juego con un equipo de hasta cuatro personajes, explorando áreas e interactuando con otros personajes no... [200 / 26,818 chars] |
 
 ### Public Sources
 
@@ -160,9 +161,9 @@ Positive documents are long Spanish articles containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

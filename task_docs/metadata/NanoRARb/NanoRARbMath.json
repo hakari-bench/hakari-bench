@@ -111,26 +111,113 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Training Verifiers to Solve Math Word Problems",
         "url": "https://arxiv.org/abs/2110.14168",
         "year": 2021,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Measuring Mathematical Problem Solving With the MATH Dataset",
         "url": "https://arxiv.org/abs/2103.03874",
         "year": 2021,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MetaMath: Bootstrap Your Own Mathematical Questions for Large Language Models",
         "url": "https://arxiv.org/abs/2309.12284",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "MATH-q-66",
+        "document_id": "MATH-d-66",
+        "query": {
+          "text": "Problem: Let $ABC$ be a triangle with $\\angle A = 45^\\circ$. Let $P$ be a point on side $\\overline{B",
+          "full_chars": 205,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Using the extended Sine law, we find the circumradius of $ABC$ to be $R = \\frac{BC}{2\\sin A} = 4\\sqrt 2$. [asy] unitsize(0.8 cm); pair A, B, C, O, P; A = (0,0); B = (2,2); C = (5,0); P = interp(B,C,3/",
+          "full_chars": 557,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "MATH-q-123",
+        "document_id": "MATH-d-123",
+        "query": {
+          "text": "Problem: Find the matrix that corresponds to rotating about the origin by an angle of $45^\\circ$ clo",
+          "full_chars": 107,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The transformation that rotates about the origin by an angle of $45^\\circ$ clockwise takes $\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ to $\\begin{pmatrix} 1/\\sqrt{2} \\\\ -1/\\sqrt{2} \\end{pmatrix}$ and $\\beg",
+          "full_chars": 406,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "MATH-q-103",
+        "document_id": "MATH-d-103",
+        "query": {
+          "text": "Problem: Compute $\\sin^{-1} (\\sin 3) + \\sin^{-1} (\\sin 4) + \\sin^{-1} (\\sin 5).$ All functions are i",
+          "full_chars": 111,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Since $\\sin (\\pi - 3) = \\sin 3$ and $-\\frac{\\pi}{2} \\le \\pi - 3 \\le \\frac{\\pi}{2},$ \\[\\sin^{-1} (\\sin 3) = \\pi - 3.\\]Since $\\sin (\\pi - 4) = \\sin 4$ and $-\\frac{\\pi}{2} \\le \\pi - 4 \\le \\frac{\\pi}{2},$",
+          "full_chars": 484,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "MATH-q-9",
+        "document_id": "MATH-d-9",
+        "query": {
+          "text": "Problem: Find the degree measure of the least positive angle $\\theta$ for which \\[\\tan \\theta = \\fra",
+          "full_chars": 338,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "From the angle addition formula, the numerator is \\begin{align*} &(\\cos 5^\\circ \\cos 20^\\circ - \\sin 5^\\circ \\sin 20^\\circ) + (\\cos 35^\\circ \\cos 50^\\circ - \\sin 35^\\circ \\sin 50^\\circ) \\\\ &= \\cos (5^",
+          "full_chars": 1061,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "MATH-q-161",
+        "document_id": "MATH-d-161",
+        "query": {
+          "text": "Problem: In triangle $ABC,$ \\[a^4 + b^4 + c^4 = 2c^2 (a^2 + b^2).\\]Enter the possible values of $\\an",
+          "full_chars": 140,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "From the Law of Cosines, \\[a^2 + b^2 - c^2 = 2ab \\cos C.\\]Squaring this equation, we get \\[a^4 + b^4 + c^4 + 2a^2 b^2 - 2a^2 c^2 - 2b^2 c^2 = 4a^2 b^2 \\cos^2 C.\\]From the given equation, $a^4 + b^4 +",
+          "full_chars": 615,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

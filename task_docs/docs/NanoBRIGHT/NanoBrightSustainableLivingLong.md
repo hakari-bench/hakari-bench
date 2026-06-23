@@ -68,9 +68,13 @@ The task is a good probe for whether retrieval models can support environmental 
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging and long-document split.
+| Query | Positive document |
+| --- | --- |
+| More uses for bacon grease We (my family) consume good amounts of bacon which produce a lot of bacon... [100 / 604 chars] | [ ![Mother Earth News](https://ogden_images.s3.amazonaws.com/www.motherearthnews.com/images/2022/03/04200002/men_logo.svg) ](https://www.motherearthnews.com) * [ Organic Gardening ](https://www.mother... [200 / 35,063 chars] |
+| Determining carbon reduction vs cost of various home upgrades I've done some amount of upgrades to m... [100 / 2,158 chars] | Skip to main content [ ![National Renewable Energy Laboratory](/assets/images/nrel-logo-web.svg) ](/) Toggle Search Search NREL.gov Search [ Buildings ](/buildings/) Menu * Research * [ Research __ ](... [200 / 17,158 chars] |
+| Forcing water circulation in solar hot water installation I'm planning an installation for heating w... [100 / 1,071 chars] | Skip to content [ ](https://www.firespeaking.com/wp- login.php?redirect_to=https%3A%2F%2Fwww.firespeaking.com%2Fmasonry- heaters%2Fheat-water%2Fdetails-of-plumbing) Username or Email Address Password... [200 / 19,918 chars] |
+| How to recognize products with neonicotinoid pesticides in them? Recently, the EU has temporarily ba... [100 / 561 chars] | Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page "Visit the main page \[z\]") * [ Contents ](/wiki/Wikipedia:Contents "Guides to browsing Wikipedia")... [200 / 132,239 chars] |
+| Why don't mineral water cans carry a deposit label? I've been putting in the recycling bin all our "... [100 / 443 chars] | Skip to main content Your browser does not support iFrames [ Department of Environmental Conservation ](/) * Things To Do ## Things To Do There are many ways to experience New York’s great outdoors. M... [200 / 27,037 chars] |
 
 ### Source Reference Table
 

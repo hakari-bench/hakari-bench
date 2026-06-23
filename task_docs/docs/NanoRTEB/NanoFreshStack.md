@@ -62,21 +62,22 @@ Models should preserve exact API names, error strings, and versions while learni
 
 ## Example Data
 
-### Public Sources
-
-- [FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents](https://arxiv.org/abs/2504.13128), task paper.
-- [FreshStack project site](https://fresh-stack.github.io/), project page.
-- [mteb/FreshStackRetrieval](https://huggingface.co/datasets/mteb/FreshStackRetrieval), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| My buttons are displayed (show method) after a short pause, and if I hover the mouse cursor over the... [100 / 403 chars] | <?xml version="1.0" encoding="UTF-8" ?> <class name="InputEventMouse" inherits="InputEventWithModifiers" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.x... [200 / 1,732 chars] |
+| Angular is failing to compile because of the following error and I'm really confused as to why. erro... [100 / 1,922 chars] | # Binding dynamic text, properties and attributes In Angular, a **binding** creates a dynamic connection between a component's template and its data. This connection ensures that changes to the compon... [200 / 9,518 chars] |
+| I am testing angular 16 signals and per my understanding, when I disable zone.js and call signal.upd... [100 / 734 chars] | # Resolving zone pollution **Zone.js** is a signaling mechanism that Angular uses to detect when an application state might have changed. It captures asynchronous operations like `setTimeout`, network... [200 / 5,856 chars] |
+| After exporting my project to Android a directory named .godot/exported appeared in the root of my G... [100 / 852 chars] | revent race condition on initial breakpoints from DAP ([GH-84895](https://github.com/godotengine/godot/pull/84895)). - Do not bother with line colors if `line_number_gutter` is not yet calculated ([GH... [200 / 6,827 chars] |
+| I have an Angular 17 application that uses server-side rendering. The state of the application is ma... [100 / 1,264 chars] | # Angular SSR Read the dev guide [here](https://angular.dev/guide/ssr). [72 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents | 2025 | task paper | https://arxiv.org/abs/2504.13128 |
-| FreshStack project site | 2025 | project page | https://fresh-stack.github.io/ |
-| mteb/FreshStackRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/FreshStackRetrieval |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents | 2025 | task paper | [https://arxiv.org/abs/2504.13128](https://arxiv.org/abs/2504.13128) |
+| FreshStack project site | 2025 | project page | [https://fresh-stack.github.io/](https://fresh-stack.github.io/) |
+| mteb/FreshStackRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/FreshStackRetrieval](https://huggingface.co/datasets/mteb/FreshStackRetrieval) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

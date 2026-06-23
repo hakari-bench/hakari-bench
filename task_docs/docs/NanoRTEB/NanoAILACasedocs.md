@@ -62,19 +62,21 @@ Models should represent legal issues, statutes, facts, procedural posture, and h
 
 ## Example Data
 
-### Public Sources
-
-- [Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance](https://ceur-ws.org/Vol-2517/T1-1.pdf), task paper.
-- [AILA 2019 Precedent & Statute Retrieval Task](https://doi.org/10.5281/zenodo.4063986), dataset record.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| Appellant calls in question legality of the judgment rendered by High Court confirming his convictio... [100 / 3,569 chars] | Kalarimadathil Unni v State of Kerala Supreme Court of India 22 April 1966 Criminal Appeals Nos. 102 & 103 of 1965 The Judgment was delivered by : M. Hidayatullah, J. 1. This judgment will also govern... [200 / 18,777 chars] |
+| This appeal, by special leave, has been preferred against the judgment and order dated 23 February 2... [100 / 3,266 chars] | State of Andhra Pradesh v Thadi Narayana Supreme Court of India 24 July 1961 Criminal Appeal No. 222 of 1959. Appeal by special leave from the judgment and order dated February 24, 1959, of the Andhra... [200 / 30,909 chars] |
+| The appellant before us was examined as prime witness in the trial of T.R. on the file of the Specia... [100 / 2,857 chars] | R. K. Lakshmanan v A. K. Srinivasan and Another Supreme Court of India 1 August 1975 CRIMINAL APPELLATE JURISDICTION : Criminal Appeal No. 1 30 of 1975. Appeal by Special Leave from the Judgment and O... [200 / 15,791 chars] |
+| Whether sanction is required to initiate criminal proceedings in respect of offences is the question... [100 / 1,664 chars] | Shambhoo Nath Misra v State of U. P. Supreme Court of India 14 March 1997 Appeal (Cr.) 318 of 1997 The Order of the Court was as follows : Leave granted. We have heard learned counsel on both sides. 1... [200 / 5,678 chars] |
+| These appeals involve a pure question of law as to whether an award by which residue assets of a par... [100 / 1,668 chars] | S. V. Chandra Pandian and Others v S. V. Sivalinga Nadar and Others Supreme Court of India 11 January 1993 C.As. Nos. 17491752 of 1992 The Judgment was delivered by : Hon'ble Justice A. M. Ahmadi 1. T... [200 / 45,869 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | task paper | https://ceur-ws.org/Vol-2517/T1-1.pdf |
-| AILA 2019 Precedent & Statute Retrieval Task | 2020 | dataset record | https://doi.org/10.5281/zenodo.4063986 |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance | 2019 | task paper | [https://ceur-ws.org/Vol-2517/T1-1.pdf](https://ceur-ws.org/Vol-2517/T1-1.pdf) |
+| AILA 2019 Precedent & Statute Retrieval Task | 2020 | dataset record | [https://doi.org/10.5281/zenodo.4063986](https://doi.org/10.5281/zenodo.4063986) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

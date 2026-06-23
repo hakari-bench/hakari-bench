@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 9
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Natural Questions: A Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Natural Questions project page",
-        "url": "https://ai.google.com/research/NaturalQuestions/",
-        "year": 2019,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/NQ-PLHardNegatives",
-        "url": "https://huggingface.co/datasets/mteb/NQ-PLHardNegatives",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,111 @@
           "url": "https://huggingface.co/datasets/mteb/NQ-PLHardNegatives"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: A Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Natural Questions project page",
+        "url": "https://ai.google.com/research/NaturalQuestions/",
+        "year": 2019,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/NQ-PLHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/NQ-PLHardNegatives",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test602",
+        "document_id": "doc21533",
+        "query": {
+          "text": "którzy byli sędziami tańca na lodzie 2014",
+          "full_chars": 41,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taniec na lodzie Phillip Schofield i Christine Bleakley powrócili do współobecności. Dean, Torvill i Karen Barber powrócili, by mentorować celebrytów. Robin Cousins, Jason Gardiner, Barber i Ashley Ro",
+          "full_chars": 483,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test201",
+        "document_id": "doc7251",
+        "query": {
+          "text": "kiedy wyjdzie sezon 5 rubinu?",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lista odcinków RWBY RWBY to trwająca amerykańska seria internetowa w stylu anime, stworzona przez Rooster Teeth Productions. Premiera odbyła się 18 lipca 2013 r. Na stronie internetowej Rooster Teeth,",
+          "full_chars": 479,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test124",
+        "document_id": "doc4632",
+        "query": {
+          "text": "kiedy w alton towers zamknięto koryto z bali?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Korytarz (wieże Alton) The Flume był log Flume w Alton Towers w Staffordshire. Został otwarty w 1981 roku i został odnowiony w 2004 roku, co zbiegło się z jego sponsorowaniem przez Imperial Leather. P",
+          "full_chars": 460,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test704",
+        "document_id": "doc25097",
+        "query": {
+          "text": "który grał profesora protona w teorii Wielkiego Wybuchu",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Boba Newharta Newhart później zajął się aktorstwem, występując jako psycholog z Chicago, dr Robert Hartley w The Bob Newhart Show w latach 70., a następnie jako karczmarz z Vermont Dick Loudon w seria",
+          "full_chars": 839,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test352",
+        "document_id": "doc13434",
+        "query": {
+          "text": "ile parków narodowych jest w indiach",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lista parków narodowych Indii Dalsze ustawodawstwo federalne wzmacniające ochronę dzikiej przyrody zostało wprowadzone w latach 80-tych. W lipcu 2017 r. istniały 103 parki narodowe o powierzchni 40 50",
+          "full_chars": 285,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

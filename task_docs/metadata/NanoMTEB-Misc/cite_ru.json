@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "RuSciBench: Open Benchmark for Russian and English Scientific Document Representations",
-        "url": "https://doi.org/10.1134/S1064562424602191",
-        "year": 2024,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval",
-        "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ru_sci_bench_mteb",
-        "url": "https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "RuSciBench: Open Benchmark for Russian and English Scientific Document Representations",
+        "url": "https://doi.org/10.1134/S1064562424602191",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval",
+        "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ru_sci_bench_mteb",
+        "url": "https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "48544629",
+        "document_id": "21747031",
+        "query": {
+          "text": "Развитие геоинформационных компетенций у студентов, обучающихся по образовательной программе \"Истори",
+          "full_chars": 2647,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Интеграция средств информационно-коммуникационных технологий в процессе подготовки студентов по профилю \"Географическое образование\" Настоящая статья посвящена одной из наиболее актуальных проблем сов",
+          "full_chars": 1687,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "29343901",
+        "document_id": "24985889",
+        "query": {
+          "text": "ОЦЕНКА СИСТЕМ УДОБРЕНИЯ ПРИ ВОЗДЕЛЫВАНИИ ОЗИМОЙ РЖИ В УСЛОВИЯХ РАДИОАКТИВНОГО ЗАГРЯЗНЕНИЯ ТЕРРИТОРИИ",
+          "full_chars": 902,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ВЛИЯНИЕ ДЛИТЕЛЬНОГО ПРИМЕНЕНИЯ ОРГАНИЧЕСКИХ И МИНЕРАЛЬНЫХ УДОБРЕНИЙ И СИДЕРАТА НА УРОЖАЙНОСТЬ И КАЧЕСТВО ЗЕРНА ОЗИМОЙ РЖИ В условиях Брянской области при радиоактивном загрязнении получения стабильных",
+          "full_chars": 1260,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "23206723",
+        "document_id": "21311249",
+        "query": {
+          "text": "Решение задачи горного давления с нелинейной функцией разупрочнения методом конечных разностей Приво",
+          "full_chars": 939,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Физически нелинейно-пластическая задача о распределении напряжений вокруг выработки кругового очертания Выполнена постановка физически нелинейно-пластической задачи о распределении напряжений вокруг в",
+          "full_chars": 951,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "50031952",
+        "document_id": "30681650",
+        "query": {
+          "text": "Восприятие Японии в российском общественном сознании Япония долгое время оставалось страной, закрыто",
+          "full_chars": 2177,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ЯПОНИЯ И ЯПОНЦЫ В ЗЕРКАЛЕ РУССКОЙ ФРАЗЕОЛОГИИ В статье рассматриваются русские фразеологизмы с этнонимом «японец» и его производными («японский городовой», «японский бог», «япона мама (мать)» и др.):",
+          "full_chars": 348,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "41569751",
+        "document_id": "35617870",
+        "query": {
+          "text": "МОДЕЛИРОВАНИЕ МЕХАНИЧЕСКИХ ХАРАКТЕРИСТИК МАСЛОНАПОЛНЕННЫХ КОМПОЗИТОВ Рассмотрены некоторые аспекты с",
+          "full_chars": 576,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "АНАЛИЗ ВЛИЯНИЯ НАПОЛНЕНИЯ КОМПОЗИТА МАСЛОМ НА СОСТОЯНИЕ ПОВЕРХНОСТИ МЕТАЛЛИЧЕСКОГО КОНТРТЕЛА Исследовано изменение топографии металлического контртела после трения с маслонаполненным композитным матер",
+          "full_chars": 1074,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

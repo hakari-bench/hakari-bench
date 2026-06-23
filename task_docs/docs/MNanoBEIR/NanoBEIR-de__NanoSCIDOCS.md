@@ -48,13 +48,13 @@ Strong performance should come from scientific-document pretraining, citation-in
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Neuartiger Gleichstrom-Gleichstrom-Mehrstufen-Aufwärtswandler | Mehrstufige Spannungsquellenwandler etablieren sich als neue Optionen für leistungsstarke Anwendungen... |
-| Schnelles Lernen von sparsen Gaußschen Markov-Feldern basierend auf Cholesky-Zerlegung | Sure, please provide the English document text that you need translated into German. |
-| Textursynthese mit Convolutional Neural Networks | In dieser Arbeit untersuchen wir den Einfluss der Tiefe von Faltungsnetzwerken auf deren Genauigkeit... |
-| Planare Breitband-Ringantenne mit zirkularer Polarisation für ein RFID-System | In dieser Arbeit wird eine Technik mit einem horizontal mäanderförmig verlaufenden Streifen vorgeschlagen... |
-| Entwurf eines fortschrittlichen digitalen Herzfrequenzmonitors mit einfachen elektronischen Bauteilen | In dieser Arbeit stellen wir das Design und die Entwicklung eines neuen integrierten Geräts zur Messung der Herzfrequenz... |
+| Query | Positive document |
+| --- | --- |
+| Neuartiger Gleichstrom-Gleichstrom-Mehrstufen-Aufwärtswandler [61 chars] | Mehrstufige Spannungsquellenwandler (Multilevel Voltage Source Converters) etablieren sich als neue Optionen für leistungsstarke Anwendungen. Diese Wandler erzeugen in der Regel eine treppenförmige Sp... [200 / 1,027 chars] |
+| Schnelles Lernen von sparsen Gaußschen Markov-Feldern basierend auf Cholesky-Zerlegung [86 chars] | Sure, please provide the English document text that you need translated into German. [84 chars] |
+| Textursynthese mit Convolutional Neural Networks [48 chars] | In dieser Arbeit untersuchen wir den Einfluss der Tiefe von Faltungsnetzwerken auf deren Genauigkeit in der groß angelegten Bilderkennung. Unser Hauptbeitrag ist eine gründliche Bewertung von Netzwerk... [200 / 910 chars] |
+| Planare Breitband-Ringantenne mit zirkularer Polarisation für ein RFID-System [77 chars] | In dieser Arbeit wird eine Technik mit einem horizontal mäanderförmig verlaufenden Streifen (HMS) vorgeschlagen, um eine gute Impedanzanpassung und symmetrische Strahlungsdiagramme in Breitseite für e... [200 / 1,467 chars] |
+| Entwurf eines fortschrittlichen digitalen Herzfrequenzmonitors mit einfachen elektronischen Bauteile... [100 / 101 chars] | In dieser Arbeit stellen wir das Design und die Entwicklung eines neuen integrierten Geräts zur Messung der Herzfrequenz mittels Fingerspitze vor, um die Schätzung der Herzfrequenz zu verbessern. Da h... [200 / 1,254 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong performance should come from scientific-document pretraining, citation-in
 
 | Label | URL |
 |---|---|
-| SPECTER paper | https://arxiv.org/abs/2004.07180 |
-| SCIDOCS repository | https://github.com/allenai/scidocs |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER paper (https://arxiv.org/abs/2004.07180) |
+| SCIDOCS repository (https://github.com/allenai/scidocs) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

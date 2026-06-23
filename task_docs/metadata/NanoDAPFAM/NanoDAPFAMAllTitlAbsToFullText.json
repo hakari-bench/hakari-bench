@@ -133,15 +133,98 @@
         "url": "https://doi.org/10.1016/j.array.2026.100720",
         "year": 2026,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "datalyes/DAPFAM_patent",
         "url": "https://huggingface.co/datasets/datalyes/DAPFAM_patent",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "157-957-371-093-061",
+        "document_id": "009-475-855-682-016",
+        "query": {
+          "text": "snow removal equipment with automatic walking function the invention relates to snow removal equipme",
+          "full_chars": 988,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "multifunctional device for clearing snow an apparatus and method for clearing an accumulation of matter from a surface that includes a blade configured to collect matter upon movement of the apparatus",
+          "full_chars": 59310,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "028-253-193-127-27X",
+        "document_id": "052-706-814-408-461",
+        "query": {
+          "text": "modular intelligent transportation system a modular intelligent transportation system, comprising an",
+          "full_chars": 708,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "impact media sharing an example operation includes one or more of associating a transport with an impact in proximity to one or more other transports, transmitting, by a device in proximity to the imp",
+          "full_chars": 110067,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "007-118-936-348-302",
+        "document_id": "099-807-197-261-350",
+        "query": {
+          "text": "synthetic hollow microspheres this invention relates to a method of forming a synthetic hollow micro",
+          "full_chars": 602,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "process for preparing metal-coated hollow microspheres a process for preparing a metal-coated hollow microsphere comprising the combination of steps of: (a) vigorously admixing a major quantity of hol",
+          "full_chars": 19034,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "182-279-132-155-313",
+        "document_id": "066-853-224-887-536",
+        "query": {
+          "text": "low weight carpet and carpet tile and methods of manufacture low weight and non-square carpet tile s",
+          "full_chars": 565,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "anti-static mats and carpets a novel carpet material or mat which is characterized by an extraordinary ability to quickly and comfortably discharge any build-up of a static electricity charge on a per",
+          "full_chars": 17195,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "072-700-129-647-593",
+        "document_id": "028-383-677-437-843",
+        "query": {
+          "text": "steering system with lane keeping integration a system for steering a vehicle including: an actuator",
+          "full_chars": 934,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "steer torque manager for an advanced driver assistance system of a road vehicle a steer torque manager for an advanced driver assistance system of a road vehicle and a method therefor. a driver-in-the",
+          "full_chars": 44337,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

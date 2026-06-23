@@ -62,9 +62,13 @@ A model targeting this task should combine exact entity-name precision with sema
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on DBpedia Entity Retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Fitzgerald bilmuseet Chambersburg, PA [37 chars] | Fitzgerald Auto Malls är en familjeägd och driven bilhandelskedja som grundades 1966, med sin första plats öppnad i Bethesda, Maryland. År 2014 rankades Fitzgerald Auto Malls som nummer 59 på listan ö... [200 / 404 chars] |
+| Samling av noveller från 1994 av Alice Munro är tillgänglig [59 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, född Laidlaw /ˈleɪdlɔː/; född 10 juli 1931) är en kanadensisk författare. Munros verk har beskrivits som att ha förändrat novellens struktur, särskilt i dess tend... [200 / 470 chars] |
+| Galloromansk arkitektur i Paris [31 chars] | Konst i Paris är en artikel om konstkultur och historia i Paris, Frankrikes huvudstad. Under århundraden har Paris lockat konstnärer från hela världen, som kommit till staden för att utbilda sig och f... [200 / 331 chars] |
+| De tidigare jugoslaviska republikerna [37 chars] | 1974 års jugoslaviska konstitution var den fjärde och sista konstitutionen för den socialistiska federala republiken Jugoslavien. Den trädde i kraft den 21 februari. Med sina 406 ursprungliga artiklar... [200 / 455 chars] |
+| Filmer inspelade i Venedig [26 chars] | A Little Romance är en amerikansk romantisk komedifilm från 1979 i Technicolor och Panavision, regisserad av George Roy Hill och med Laurence Olivier, Thelonious Bernard och Diane Lane i hennes filmde... [200 / 370 chars] |
 
 ### Source Reference Table
 

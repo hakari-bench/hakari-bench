@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "ตั้งแต่ปี 1970 จนถึงปี 1998 มีช่วงเวลาที่อุณหภูมิสูงขึ้นประมาณ 0.7 ฟาเรนไฮต์ ซึ่งช่วยกระตุ้นการเคลื่",
+          "full_chars": 139,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ยุคพาเลโอซีน ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) หรือ พาเลโอซีน ซึ่งหมายถึง \"เก่าใหม่\" เป็นยุคทางธรณีวิทยาที่มีระยะเวลาประมาณ . มันเป็นยุคแรกของยุคพาเลโอโจเนในยุคเซโนโซอิกสมัยใหม่ เ",
+          "full_chars": 1033,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "ในความเป็นจริง แนวโน้ม แม้จะไม่สำคัญทางสถิติ แต่ก็มีแนวโน้มลดลง",
+          "full_chars": 63,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "วงจรสุริยะหรือวงจรกิจกรรมแม่เหล็กสุริยะคือการเปลี่ยนแปลงที่เกิดขึ้นเป็นระยะเวลาเกือบ 11 ปีในกิจกรรมของดวงอาทิตย์ (รวมถึงการเปลี่ยนแปลงในระดับการแผ่รังสีจากดวงอาทิตย์และการปล่อยวัสดุจากดวงอาทิตย์) และล",
+          "full_chars": 598,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "ระดับน้ำทะเลในท้องถิ่นและระดับภูมิภาคยังคงแสดงความแปรปรวนตามธรรมชาติที่เป็นปกติ—ในบางสถานที่สูงขึ้นแ",
+          "full_chars": 120,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ระดับน้ำทะเลเฉลี่ย (MSL) (ย่อว่า ระดับน้ำทะเล) คือระดับเฉลี่ยของผิวของมหาสมุทรหนึ่งหรือมากกว่าของโลก ซึ่งใช้วัดความสูงเช่นระดับความสูง MSL เป็นประเภทของข้อมูลแนวดิ่งที่เป็นจุดอ้างอิงทางเรขาคณิตที่ได้ม",
+          "full_chars": 925,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "[นักวิทยาศาสตร์ด้านสภาพอากาศ] กล่าวว่าปัจจัยบางประการในกรณีของพายุเฮอริเคนฮาร์วีย์ชี้ให้เห็นว่าภาวะโ",
+          "full_chars": 144,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ผลกระทบจากภาวะโลกร้อนคือการเปลี่ยนแปลงทางสิ่งแวดล้อมและสังคมที่เกิดขึ้น (โดยตรงหรือโดยอ้อม) จากการปล่อยก๊าซเรือนกระจกของมนุษย์ มีความเห็นทางวิทยาศาสตร์ว่าการเปลี่ยนแปลงสภาพภูมิอากาศกำลังเกิดขึ้น และกิ",
+          "full_chars": 1269,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "การทดลอง CERN CLOUD ทดสอบเพียงหนึ่งในสามของหนึ่งในสี่ข้อกำหนดที่จำเป็นในการตำหนิการเปลี่ยนแปลงสภาพภู",
+          "full_chars": 156,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "การระบุสาเหตุของการเปลี่ยนแปลงสภาพภูมิอากาศในช่วงล่าสุดคือความพยายามในการตรวจสอบกลไกที่รับผิดชอบต่อการเปลี่ยนแปลงสภาพภูมิอากาศที่เกิดขึ้นบนโลก ซึ่งมักเรียกว่า \"ภาวะโลกร้อน\" ความพยายามนี้มุ่งเน้นไปที่ก",
+          "full_chars": 1994,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

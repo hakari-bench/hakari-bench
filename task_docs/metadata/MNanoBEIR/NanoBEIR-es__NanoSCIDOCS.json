@@ -144,7 +144,7 @@
         "title": "SCIDOCS repository",
         "url": "https://github.com/allenai/scidocs",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Convertidor elevador multinivel CC-CC innovador",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Los conversores de fuente de voltaje multinivel están emergiendo como una nueva generación de opciones de conversores de potencia para aplicaciones de alta potencia. Los conversores de fuente de volta",
+          "full_chars": 1128,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Aprendizaje rápido de campos aleatorios de Markov gaussianos esparcidos utilizando la factorización",
+          "full_chars": 111,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Sure, please provide the English document text that you need translated into Spanish.",
+          "full_chars": 85,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Síntesis de Texturas mediante Redes Neuronales Convolucionales",
+          "full_chars": 62,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "En este trabajo, investigamos el efecto de la profundidad de las redes convolucionales en su precisión en el contexto de reconocimiento de imágenes a gran escala. Nuestra principal contribución es una",
+          "full_chars": 991,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
+        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
+        "query": {
+          "text": "Antena plana de banda ancha de anillo con polarización circular para sistema RFID",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "En este artículo, se propone una técnica de alimentación con una tira meandrante horizontal (HMS) para lograr una buena adaptación de impedancia y patrones de radiación simétricos en el plano frontal",
+          "full_chars": 1522,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
+        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
+        "query": {
+          "text": "Diseño de un monitor avanzado digital de frecuencia cardíaca con componentes electrónicos básicos",
+          "full_chars": 97,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "En este artículo, presentamos el diseño y desarrollo de un nuevo dispositivo integrado para medir la frecuencia cardíaca utilizando la yema del dedo, con el fin de mejorar la estimación de la frecuenc",
+          "full_chars": 1322,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

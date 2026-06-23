@@ -151,11 +151,13 @@ important for robust candidate generation.
 
 ## Example Data
 
-Representative queries ask which countries Israel had friendly relations with,
-who the current Iranian minister of culture and Islamic guidance is, where the
-Bermuda Triangle is located, which city is the capital of Nova Scotia, or which
-plant genus a fern-like fossil plant belongs to. Positive documents are Persian
-Wikipedia passages containing the requested relation or factual evidence.
+| Query | Positive document |
+| --- | --- |
+| اسرائیل با چه کشورهایی روابط دوستانه دارد؟ [42 chars] | وزارت امور خارجه اسرائیل پیش از پیروزی انقلاب ۱۳۵۷ و به قدرت رسیدن نظام جمهوری اسلامی، ایران با کشور اسرائیل روابط دوستانه و حسنه‌ای را داشت و ایران اولین کشور اسلامی در منطقه خاورمیانه بود که کشور اس... [200 / 410 chars] |
+| وزیر کنونی فرهنگ و ارشاد اسلامی ایران چه کسی است؟ [49 chars] | محمدمهدی اسماعیلی محمدمهدی اسماعیلی (متولد ۱۳۵۴ در کبودرآهنگ) سیاستمدار ایرانی و وزیر فرهنگ و ارشاد اسلامی است. او دانش‌آموخته دکتری علوم سیاسی از پژوهشگاه علوم انسانی و مطالعات فرهنگی و عضو هیأت علمی... [200 / 399 chars] |
+| مثلث برمودا در کجا قرار دارد؟ [29 chars] | مثلث برمودا مثلث برمودا ، همچنین به عنوان مثلث شیطان شناخته می‌شود. منطقه‌ای است در ناحیه غربی اقیانوس اطلس شمالی که گفته می‌شود تعدادی هواپیما و کشتی تحت شرایط مرموز در آن ناپدید شده‌اند. [189 chars] |
+| مرکزایالت اسکوشیا کدام شهر است؟ [32 chars] | نوا اسکوشیا مرکز نوا اسکوشیا شهر هلیفکس است که بزرگ‌ترین شهر این استان نیز به حساب می‌آید و از مراکز اقتصادی منطقه است. [120 chars] |
+| گیاه سرخس از سرده کدام گیاهان است؟ [34 chars] | باستان‌سرخس باستان‌سرخس سرده‌ای منقرض‌شده از گیاهی درخت‌مانند است که برگ‌هایی شبیه به سرخس داشت. [97 chars] |
 
 ### Public Sources
 
@@ -173,10 +175,10 @@ Wikipedia passages containing the requested relation or factual evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

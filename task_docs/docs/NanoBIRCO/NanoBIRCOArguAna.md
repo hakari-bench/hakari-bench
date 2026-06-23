@@ -62,9 +62,13 @@ A model targeting this task should represent stance direction and rebuttal relat
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BIRCO's complex-objective retrieval benchmark, with NanoBIRCO providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Sports shooting desensitizes people to the lethal nature of firearms Shooting as a sport desensitise... [100 / 511 chars] | eneral politics politics general house would limit right bear arms Shooting is a major sport enjoyed by many law-abiding people, both in gun clubs with purpose-built ranges and as a field sport. These... [200 / 763 chars] |
+| Where are the men? Is the feminisation of labour emerging with a de-masculinisation of jobs? If so,... [100 / 654 chars] | economic policy international africa society gender house believes feminisation Within Gender and Development the importance of bringing men into the picture of gender discrimination has been recognis... [200 / 277 chars] |
+| Run education campaigns instead Education is an alternative. Campaigns such as #darkisbeautiful (dar... [100 / 829 chars] | media modern culture international africa house believes african nations should Educational campaigns can and do work on many issues. However, they can only do so much in terms of making genuine progr... [200 / 391 chars] |
+| Restrictions on migration would benefit people in the cities economically and socially Cities are ve... [100 / 1,339 chars] | economic policy society immigration house believes developing nations should People who move to the cities have chosen to move from their families and dear ones, because they want to create a new and... [200 / 1,414 chars] |
+| The risks of ignorance and prejudice are too high This measure could be actively dangerous for HIV-p... [100 / 1,021 chars] | disease health general sex sexuality house believes employees should be compelled Employers can be trusted to use this information responsibly. They are already used to keeping sensitive information (... [200 / 583 chars] |
 
 ### Source Reference Table
 

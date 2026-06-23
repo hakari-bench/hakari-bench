@@ -131,11 +131,13 @@ likely from dense retrieval plus a table-aware reranker.
 
 ## Example Data
 
-Representative conversations ask for provincial GDP, real GDP, growth and
-inflation; race or ethnicity by province and sex; counts of sports-specialized
-shops in Canada; annual inflation for 2019; and health data for a specific
-Indigenous community. Positive documents are StatCan table metadata records
-that satisfy the statistical need.
+| Query | Positive document |
+| --- | --- |
+| [{'content': 'Bonjour,', 'role': 'user'}, {'content': "J'aimerais connaître le moyen de trouver le P... [100 / 523 chars] | Titre: Produit intérieur brut (PIB) aux prix de base, par industries, provinces et territoires Période: 1997-01-01 to 2020-01-01 Dimensions: Géographie, Valeur, Système de classification des industrie... [200 / 26,426 chars] |
+| [{'content': "Hi, I'm having trouble finding data (custom table) that has race/ethnicity by province... [100 / 1,238 chars] | Title: Persons with and without disabilities aged 15 years and over, by age group and sex, Canada, provinces and territories Date range: 2017-01-01 to 2017-01-01 Dimensions: Geography, Age group, Sex,... [200 / 1,709 chars] |
+| [{'content': 'hello', 'role': 'user'}, {'content': 'how many shops specialized in sports are there i... [100 / 213 chars] | Title: Canadian Business Counts, with employees, June 2019 Date range: 2019-01-01 to 2019-01-01 Dimensions: Geography, Employment size, North American Industry Classification System (NAICS) Subject: B... [200 / 87,780 chars] |
+| [{'content': 'Bonjour,', 'role': 'user'}, {'content': "J'aimerais connaître le taux d'inflation au 3... [100 / 861 chars] | Titre: Indice des prix à la consommation, moyenne annuelle, non désaisonnalisé Période: 1914-01-01 to 2020-01-01 Dimensions: Géographie, Produits et groupes de produits Sujet: Prix et indices des prix... [200 / 22,778 chars] |
+| [{'content': "Hi, I was wondering if you have any health data on the Tk'emlups Te Secwepemc band?",... [100 / 564 chars] | Title: Health indicator profile, by Aboriginal identity and sex, age-standardized rate, four year estimates Date range: 2007-01-01 to 2011-01-01 Dimensions: Geography, Sex, Aboriginal identity, Indica... [200 / 4,353 chars] |
 
 ### Public Sources
 
@@ -150,9 +152,9 @@ that satisfy the statistical need.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A Dataset for Retrieving Data Tables through Conversations with Genuine Intents | 2023 | task paper | https://arxiv.org/abs/2304.01412 |
-| StatCan Dialogue Dataset project page | 2023 | project page | https://mcgill-nlp.github.io/statcan-dialogue-dataset/ |
-| mteb/StatcanDialogueDatasetRetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval |
+| A Dataset for Retrieving Data Tables through Conversations with Genuine Intents | 2023 | task paper | [https://arxiv.org/abs/2304.01412](https://arxiv.org/abs/2304.01412) |
+| StatCan Dialogue Dataset project page | 2023 | project page | [https://mcgill-nlp.github.io/statcan-dialogue-dataset/](https://mcgill-nlp.github.io/statcan-dialogue-dataset/) |
+| mteb/StatcanDialogueDatasetRetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval](https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval) |
 
 ### Representative Snippets
 

@@ -109,11 +109,11 @@ have dozens of positives.
 
 | Query | Positive document |
 | --- | --- |
-| 건강한 초콜릿 밀크쉐이크 | 목적 통풍 환자에서 체리 섭취와 재발성 통풍 발작 위험 간의 관계를 조사하는 것. |
-| 의료 윤리 | 배경: 식이요법을 통한 혈중 콜레스테롤 조절에서 주요 문제 중 하나는 환자의 준수도를 향상시켜야 할 필요성이 있는 것으로 보인다. |
-| 파바 콩 | 지난 20년 동안 L-아르기닌의 생화학, 영양학 및 약리학에 대한 관심이 증가했다. |
-| 치킨 너겟에는 실제로 무엇이 들어 있을까? | 목적: 두 개의 전국적 패스트푸드 체인에서 제공하는 치킨너겟의 구성 성분을 파악하기 위함이다. |
-| 포화 지방 | 임신 중 산모의 식이 섭취가 자녀의 알레르기 질환 발생에 영향을 미칠 수 있다는 가능성에 대한 관심이 증가하고 있다. |
+| 건강한 초콜릿 밀크쉐이크 [13 chars] | 목적 통풍 환자에서 체리 섭취와 재발성 통풍 발작 위험 간의 관계를 조사하는 것. 방법 우리는 일련의 가설적 위험 요인이 재발성 통풍 발작에 미치는 영향을 조사하기 위해 사례-교차 연구를 수행하였다. 통풍 환자들을 전향적으로 모집하여 1년간 온라인으로 추적 관찰하였다. 참가자들은 통풍 발작 발생 시 다음 정보를 보고하도록 하였다: 통풍 발작의 발병 일자,... [200 / 824 chars] |
+| 의료 윤리 [5 chars] | 배경: 식이요법을 통한 혈중 콜레스테롤 조절에서 주요 문제 중 하나는 환자의 준수도를 향상시켜야 할 필요성이 있는 것으로 보인다. 목적: 콜레스테롤 저하 식이요법 준수에 대한 장벽과 동기를 둘러싼 여러 질문을 탐색하는 것. 방법: 고콜레스테롤혈증 환자를 대상으로 한 프랑스 일반의사들의 식이요법 관행을 조사하고, 환자들의 이러한 접근법에 대한 태도를 살펴보았... [200 / 959 chars] |
+| 파바 콩 [4 chars] | 지난 20년 동안 L-아르기닌의 생화학, 영양학 및 약리학에 대한 관심이 증가함에 따라, 인간의 대사질환 예방 및 치료에서의 영양적·치료적 역할을 탐구하기 위한 광범위한 연구가 진행되어 왔다. 최근의 증거들은 식이성 L-아르기닌 보충이 유전적으로 비만한 쥐, 식이로 유도된 비만 쥐, 육성 돼지 및 제2형 당뇨병을 가진 비만 인간에게서 지방 축적을 감소시킨다... [200 / 579 chars] |
+| 치킨 너겟에는 실제로 무엇이 들어 있을까? [23 chars] | 목적: 두 개의 전국적 패스트푸드 체인에서 제공하는 치킨너겟의 구성 성분을 파악하기 위함이다. 배경: 치킨너겟은 미국인의 식생활에서 주요한 부분을 차지하게 되었다. 우리는 이 고도로 가공된 식품의 현재 구성 성분을 조사하고자 하였다. 방법: 두 개의 서로 다른 전국적 패스트푸드 체인에서 무작위로 선택한 치킨너겟을 포르말린에 고정한 후 절편을 만들어 현미경... [200 / 421 chars] |
+| 포화 지방 [5 chars] | 임신 중 산모의 식이 섭취가 자녀의 알레르기 질환 발생에 영향을 미칠 수 있다는 가능성에 대한 관심이 증가하고 있다. 본 전향적 연구는 임신 기간 동안 지방산이 풍부한 특정 식품 및 특정 지방산의 섭취가 일본에서 3~4개월 된 영아의 의심되는 아토피 피부염 위험과 어떤 관련이 있는지를 조사하였다. 연구 대상은 771쌍의 산모와 자녀였다. 임신 중 산모의 식... [200 / 948 chars] |
 
 ### Public Sources
 
@@ -127,7 +127,7 @@ have dozens of positives.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | task paper | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

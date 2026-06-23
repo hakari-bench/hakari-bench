@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents",
-        "url": "https://arxiv.org/abs/2504.13128",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "FreshStack project site",
-        "url": "https://fresh-stack.github.io/",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/FreshStackRetrieval",
-        "url": "https://huggingface.co/datasets/mteb/FreshStackRetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -123,6 +93,118 @@
           "url": "https://huggingface.co/datasets/mteb/FreshStackRetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FreshStack: Building Realistic Benchmarks for Evaluating Retrieval on Technical Documents",
+        "url": "https://arxiv.org/abs/2504.13128",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "FreshStack project site",
+        "url": "https://fresh-stack.github.io/",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/FreshStackRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/FreshStackRetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "000163",
+        "document_id": "124700",
+        "query": {
+          "text": "My buttons are displayed (show method) after a short pause, and if I hover the mouse cursor over the",
+          "full_chars": 403,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <class name=\"InputEventMouse\" inherits=\"InputEventWithModifiers\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"../class.x",
+          "full_chars": 1732,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "000028",
+        "document_id": "004659",
+        "query": {
+          "text": "Angular is failing to compile because of the following error and I'm really confused as to why. erro",
+          "full_chars": 1922,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Binding dynamic text, properties and attributes In Angular, a **binding** creates a dynamic connection between a component's template and its data. This connection ensures that changes to the compon",
+          "full_chars": 9518,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "000006",
+        "document_id": "006307",
+        "query": {
+          "text": "I am testing angular 16 signals and per my understanding, when I disable zone.js and call signal.upd",
+          "full_chars": 734,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Resolving zone pollution **Zone.js** is a signaling mechanism that Angular uses to detect when an application state might have changed. It captures asynchronous operations like `setTimeout`, network",
+          "full_chars": 5856,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "000189",
+        "document_id": "121177",
+        "query": {
+          "text": "After exporting my project to Android a directory named .godot/exported appeared in the root of my G",
+          "full_chars": 852,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "revent race condition on initial breakpoints from DAP ([GH-84895](https://github.com/godotengine/godot/pull/84895)). - Do not bother with line colors if `line_number_gutter` is not yet calculated ([GH",
+          "full_chars": 6827,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "000070",
+        "document_id": "000510",
+        "query": {
+          "text": "I have an Angular 17 application that uses server-side rendering. The state of the application is ma",
+          "full_chars": 1264,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Angular SSR Read the dev guide [here](https://angular.dev/guide/ssr).",
+          "full_chars": 72,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

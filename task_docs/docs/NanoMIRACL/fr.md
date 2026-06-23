@@ -151,10 +151,13 @@ the top of the list.
 
 ## Example Data
 
-Representative queries ask what a cardinal does, what Pablo Picasso's wife was
-called, what a referendum is, who the last Polish king was, or what branches of
-chemistry are. Positive documents are French Wikipedia passages containing the
-requested role, relationship, definition, historical fact, or classification.
+| Query | Positive document |
+| --- | --- |
+| Qu’est-ce qu’un cardinal fait? [30 chars] | Cardinal (religion) En fait, la nomination de cardinaux est une indication politique sur le pontificat en cours et la future élection, les cardinaux étant chargés d'élire le pape. Dans l'histoire, ell... [200 / 529 chars] |
+| Comment s’appelle la femme de Pablo Picasso? [44 chars] | Pablo Picasso Son fils Paulo naît le . Durant l'été, il s'installe avec Olga et Paulo à Fontainebleau. Il y peint les "Femmes à la fontaine" (Paris, musée Picasso et New York, ) et "Les Trois Musicien... [200 / 994 chars] |
+| Qu’est-ce que c’est un référendum? [34 chars] | Référendum Le référendum appartient au domaine du droit : on ne peut décider par référendum que des lois. Dans les régimes de démocratie représentative, des parlementaires discutent et amendent les lo... [200 / 721 chars] |
+| Qui est le dernier roi polonais? [32 chars] | Liste des souverains de Pologne Le dernier roi de Pologne, August, abdique en 1795, à la suite des partages du royaume par les puissances voisines. L'État polonais cesse d'exister. [181 chars] |
+| Quelles sont les branches de la chimie? [39 chars] | Chimiste La chimie étant une science de la nature, les chimistes sont présents dans plusieurs domaines, que ce soit en science des matériaux et des polymères, en énergie, en agroalimentaire, en scienc... [200 / 633 chars] |
 
 ### Public Sources
 
@@ -172,10 +175,10 @@ requested role, relationship, definition, historical fact, or classification.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

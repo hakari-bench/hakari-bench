@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,118 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "69170",
+        "document_id": "139687",
+        "query": {
+          "text": "BibLaTeX: primaire en secundaire bibliografieën",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bibliografie met verschillende namen en gesorteerd op naam Ik wil graag twee bibliografieën maken met twee verschillende namen. Mijn twee bibliografieën zijn books.bib en articles.bib. Door \\renewcomm",
+          "full_chars": 559,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "121540",
+        "document_id": "21924",
+        "query": {
+          "text": "Hoe kan ik het compileren van een document met meerdere afbeeldingen versnellen?",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Het verwerken van alle afbeeldingen onderdrukken Ik probeer een concept te maken door LaTeX te dwingen alle afbeeldingen te negeren. Hoe kan ik LaTeX vertellen alle afbeeldingsbestandsnamen (in de `\\i",
+          "full_chars": 420,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10355",
+        "document_id": "98276",
+        "query": {
+          "text": "Lege regels in align-omgeving",
+          "full_chars": 29,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Waarom geeft een extra regel witruimte voor \\end{align} een foutmelding? Ik voeg vaak extra witruimte toe aan mijn TeX-bestand voor betere leesbaarheid, en ik krijg deze foutmelding steeds wanneer er",
+          "full_chars": 312,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "9253",
+        "document_id": "110595",
+        "query": {
+          "text": "alternatief voor slashbox",
+          "full_chars": 25,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Geavanceerde tabellen maken ![voer hier een afbeeldingbeschrijving in](http://i.stack.imgur.com/PX4Jn.png) Ik probeer tabellen te genereren zoals de bovenstaande die ik in een leerboek in LaTeX heb ge",
+          "full_chars": 456,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "160046",
+        "document_id": "57997",
+        "query": {
+          "text": "Een ander plaatje plaatsen in elke paginahoek",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bladerboek in masterproef Ik schrijf momenteel mijn masterproef in de informatica over een visualisatieonderwerp. Aangezien de kern van mijn scriptie een complexe 3D-visualisatie is die zijn boodschap",
+          "full_chars": 2990,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -143,8 +143,91 @@
         "url": "https://huggingface.co/datasets/dwzhu/LongEmbed",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "query_66",
+        "document_id": "doc_232",
+        "query": {
+          "text": "Which film has the director who is older than the other, Women'S Weapons or She Wants Me?",
+          "full_chars": 89,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Scotty Fox Scott Fox is a pornographic film director who is a member of the AVN Hall of Fame. Awards 1992 AVN Award – Best Director, Video (The Cockateer) 1995 AVN Hall of Fame inductee Pas",
+          "full_chars": 16726,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_123",
+        "document_id": "doc_196",
+        "query": {
+          "text": "Where did the director of film Crd (Film) study?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Peter Levin Peter Levin is an American director of film, television and theatre. Career Since 1967, Levin has amassed a large number of credits directing episodic television and television",
+          "full_chars": 27463,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_103",
+        "document_id": "doc_235",
+        "query": {
+          "text": "Who is the mother-in-law of Queen Insun?",
+          "full_chars": 40,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Maria Thins Maria Thins (c. 1593 – 27 December 1680) was the mother-in-law of Johannes Vermeer and a member of the Gouda Thins family. She was raised in a devout Dutch Catholic family with",
+          "full_chars": 43300,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_9",
+        "document_id": "doc_126",
+        "query": {
+          "text": "What is the place of birth of Frankie Bridge's husband?",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Wayne Bridge Wayne Michael Bridge (born 5 August 1980) is an English former professional footballer who played as a left back. A graduate of the Southampton academy, he made his debut in 19",
+          "full_chars": 55577,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_161",
+        "document_id": "doc_216",
+        "query": {
+          "text": "Where did Elisabeth Zu Fürstenberg's husband die?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Virginia von Fürstenberg Princess Virginia Maria Clara von und zu Fürstenberg (Virginia Maria Clara Prinzessin von und zu Fürstenberg; 5 October 1974 – 10 May 2023) was an Italian artist, p",
+          "full_chars": 39248,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

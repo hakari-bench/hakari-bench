@@ -134,14 +134,97 @@
         "url": "https://arxiv.org/abs/2309.07597",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "definitive_benchmark_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/MMarcoRetrieval",
         "url": "https://huggingface.co/datasets/mteb/MMarcoRetrieval",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "54235",
+        "document_id": "7981606",
+        "query": {
+          "text": "黑死病对欧洲文化的影响",
+          "full_chars": 11,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "继续阅读以了解他们的发现。在接下来的几个世纪里，黑死病在欧洲偶尔抬头。但到了 1352 年，它基本上已经放松了控制。欧洲人口受到重创，这对经济产生了影响。劳动力被摧毁——农场被废弃，建筑物倒塌。劳动力短缺，劳动力价格飞涨，商品成本上升。",
+          "full_chars": 118,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "17635",
+        "document_id": "4178175",
+        "query": {
+          "text": "adh 的增加会导致肾脏 ________ 重吸收水分，从而产生 _______ 尿液。",
+          "full_chars": 44,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "抗利尿激素 (ADH) 和肾功能。 ADH 的主要作用是通过增加重新吸收到血液中的水量来限制尿液中丢失的水量。",
+          "full_chars": 55,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "11050",
+        "document_id": "3746070",
+        "query": {
+          "text": "拒绝漂亮女人和鬼魂的女演员",
+          "full_chars": 13,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "莫莉·林沃德拒绝了《漂亮女人》中薇薇安的角色和《鬼魂》中莫莉的角色等。她还获得了《尖叫》中的一个角色，但她拒绝了，因为她已经 20 岁了，不想扮演青少年角色。",
+          "full_chars": 79,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5925",
+        "document_id": "7696217",
+        "query": {
+          "text": "索尼 PS-LX300USB 如何连接电脑",
+          "full_chars": 21,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "连接 USB 电缆 使用随附的 USB 电缆连接唱盘和计算机。USB 电缆（提供）到 USB 端口到 USB 插孔计算机（未提供）。 11 GB 操作 PS-LX300USB.GB.3-198-123-15(1) 续 ÃƒÂ®Ã‚â€‚‚Â¼ Notes ÃƒÂ®Ã‚ ‚ 不保证转盘可与 USB 集线器或 USB 一起使用延长线。使用随附的 USB 线。 ÃƒÂ®Ã‚ ‚ 将 USB 电缆牢固地连",
+          "full_chars": 342,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "26485",
+        "document_id": "7983408",
+        "query": {
+          "text": "争论辩论的意义",
+          "full_chars": 7,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "同义词讨论辩论。讨论，争论，辩论的意思是为了得出结论或说服而进行的讨论。讨论意味着对可能性的筛选，特别是通过提出正反两方面的考虑，讨论对新高速公路的需求。",
+          "full_chars": 77,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

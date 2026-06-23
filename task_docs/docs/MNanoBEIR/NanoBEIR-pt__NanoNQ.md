@@ -116,11 +116,11 @@ answer-aware ordering.
 
 | Query | Positive document |
 | --- | --- |
-| Onde vai ser realizado o Final Four este ano? | O Torneio de Basquetebol Masculino da Divisão I da NCAA de 2018 foi um torneio de eliminação simples... |
-| O "O Estranho Mundo de Jack" é um filme original da Disney? | O Pesadelo Antes do Natal surgiu de um poema escrito por Tim Burton em 1982, enquanto ele trabalhava como animador na Walt Disney... |
-| Por que existe o Anjo do Norte? | De acordo com Gormley, o significado de um anjo era tríplice, incluindo a memória dos mineiros de carvão... |
-| Onde foi originalmente mencionado o Compromisso dos Três Quintos na Constituição? | O Compromisso dos Três Quintos está no Artigo 1, Seção 2, Cláusula 3 da Constituição dos Estados Unidos... |
-| Quem canta "Someone's Watching Me" com Michael Jackson? | "Somebody's Watching Me" é uma música do cantor americano Rockwell de seu álbum de estreia... |
+| Onde vai ser realizado o Final Four este ano? [45 chars] | O Torneio de Basquetebol Masculino da Divisão I da NCAA de 2018 foi um torneio de eliminação simples com 68 equipes para determinar o campeão nacional de basquetebol universitário da NCAA para a tempo... [200 / 355 chars] |
+| O "O Estranho Mundo de Jack" é um filme original da Disney? [59 chars] | O Pesadelo Antes do Natal surgiu de um poema escrito por Tim Burton em 1982, enquanto ele trabalhava como animador na Walt Disney Feature Animation. Com o sucesso de Vincent no mesmo ano, os Estúdios... [200 / 668 chars] |
+| Por que existe o Anjo do Norte? [31 chars] | De acordo com Gormley, o significado de um anjo era tríplice: primeiro, para significar que, sob o local de sua construção, mineiros de carvão trabalharam por dois séculos; segundo, para compreender a... [200 / 351 chars] |
+| Onde foi originalmente mencionado o Compromisso dos Três Quintos na Constituição? [81 chars] | O Compromisso dos Três Quintos está no Artigo 1, Seção 2, Cláusula 3 da Constituição dos Estados Unidos, que diz: [113 chars] |
+| Quem canta "Someone's Watching Me" com Michael Jackson? [55 chars] | "Somebody's Watching Me" é uma música do cantor americano Rockwell de seu álbum de estreia Somebody's Watching Me (1984). Foi lançada como o primeiro single e single principal do álbum em 14 de janeir... [200 / 362 chars] |
 
 ### Public Sources
 
@@ -134,7 +134,7 @@ answer-aware ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: a Benchmark for Question Answering Research | 2019 | task paper | https://aclanthology.org/Q19-1026/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions: a Benchmark for Question Answering Research | 2019 | task paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

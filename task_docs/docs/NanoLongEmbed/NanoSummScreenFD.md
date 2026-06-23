@@ -133,11 +133,13 @@ strongest signals.
 
 ## Example Data
 
-Representative recaps describe Angel breaking up with Buffy before prom, Haley
-and Nathan storylines in One Tree Hill, the Charmed Ones helping Brendan avoid
-a warlock destiny, Frasier's recurring dream about Gil Chesterton, and the
-Skins making humans disappear in Roswell. Positive documents are the
-corresponding full episode transcripts.
+| Query | Positive document |
+| --- | --- |
+| Angel decides to do the right thing and break up with Buffy. Meanwhile, Buffy has to save the prom f... [100 / 180 chars] | Buffy is napping in Angel's bed. Angel is watching her sleep. He smiles at her as she wakes. Buffy: (smiles) What? Do I have funny bed hair or something? Angel: Or something? Buffy: I guess we got a l... [200 / 31,147 chars] |
+| Whilst Haley cares for their new daughter, Lydia, Nathan confronts Professor Kellerman (guest star P... [100 / 476 chars] | [PREVIOUSLY_ON] IAN: What the hell? I knew you guys couldn't be complete dorks. CLAY: Complete dorks and officially your agents. NATHAN: You got a bathroom in this place? IAN: There's one in the back... [200 / 26,247 chars] |
+| Led by Prue, the Charmed Ones help a young man named Brendan ( Michael Weatherly ) who wants to beco... [100 / 447 chars] | [Scene: Church. Brendan and a priest are there.] Brendan: I wake up at night, my heart pounding, a voice whispering in my head your a fraud, you can't fool God. Priest: These are not new fears, Brenda... [200 / 31,115 chars] |
+| Frasier has a recurring erotic dream in which he wakes up in bed, hears the shower running and is sh... [100 / 557 chars] | Act One Scene One - A Seedy Motel Room. Frasier is lying in bed, asleep, in the motel room. He awakens and finds that he has a tattoo on his arm that reads "Chesty." There is a half-empty bottle of te... [200 / 23,983 chars] |
+| The Skins make all the humans in Roswell, New Mexico disappear, turning it into a ghost town. Maria... [100 / 694 chars] | "Wipe Out" 29th Episode of Roswell Production Code: 2ADA07 [SCENE_BREAK] (Episode begins with a tour bus heading towards Roswell) (At the Evans household, Diane Evans is trying out her cooking skills)... [200 / 26,102 chars] |
 
 ### Public Sources
 
@@ -154,9 +156,9 @@ corresponding full episode transcripts.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SummScreen: A Dataset for Abstractive Screenplay Summarization | 2022 | arXiv paper | https://arxiv.org/abs/2104.07091 |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| SummScreen: A Dataset for Abstractive Screenplay Summarization | 2022 | arXiv paper | [https://arxiv.org/abs/2104.07091](https://arxiv.org/abs/2104.07091) |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

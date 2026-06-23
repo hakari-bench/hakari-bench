@@ -70,11 +70,13 @@ For evaluation, this task is best read as answer-entity retrieval. Improvements 
 
 ## Example Data
 
-### Public Sources
-
-- Mintaka paper: https://arxiv.org/abs/2210.01613
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- Source task dataset card: https://huggingface.co/datasets/mteb/MintakaRetrieval
+| Query | Positive document |
+| --- | --- |
+| En orden cronológico, ¿cuál es la segunda película de Crepúsculo? [65 chars] | The Twilight Saga: New Moon [27 chars] |
+| ¿Qué película de Harry Potter es dirigida por Alfonso Cuarón? [61 chars] | Harry Potter y el prisionero de Azkaban [39 chars] |
+| ¿Quién es más joven, Drew Barrymore o Reese Whiterspoon? [56 chars] | Reese Witherspoon [17 chars] |
+| ¿Qué película de dibujos animados se estrenó en 2007 y fue dirigida por Tim Hill? [81 chars] | Alvin and the Chipmunks [23 chars] |
+| En orden cronológico, ¿cuál es la tercera película de Crepúsculo? [65 chars] | The Twilight Saga: Eclipse [26 chars] |
 
 ### Source Reference Table
 

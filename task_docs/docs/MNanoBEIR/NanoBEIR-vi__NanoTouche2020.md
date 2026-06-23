@@ -62,9 +62,13 @@ A model targeting this task should preserve strong topic recall while improving 
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Touche 2020, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Bài tập về nhà có lợi không? [28 chars] | Đầu tiên, có ba lý do tại sao bài tập về nhà là tuyệt vời và nên tiếp tục trong các trường học hiện đại. 1. Bài tập về nhà hỗ trợ những người học thực hành. Người ta thường chấp nhận rằng có ba loại n... [200 / 3,948 chars] |
+| Có nên quảng cáo thuốc theo toa trực tiếp đến người tiêu dùng không? [68 chars] | Nhiều quảng cáo không cung cấp đủ thông tin về hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bằng hình ảnh một con bướm bay qua cửa sổ phòng ngủ, trên một người đang ngủ say. Thực tế, Lunesta giúp... [200 / 1,324 chars] |
+| Có cần yêu cầu tiêm vắc xin nào cho trẻ em không? [49 chars] | Chưa phải là một trường hợp đầy đủ... Chỉ là một số điểm nhỏ mà tôi đã tổng hợp... Chính phủ không nên có quyền can thiệp vào các quyết định về sức khỏe mà cha mẹ đưa ra cho con cái của họ. 31% cha mẹ... [200 / 3,913 chars] |
+| Phá thai có nên hợp pháp không? [31 chars] | Nạo phá thai nên hợp pháp vì nhân cách bắt đầu khi thai nhi trở nên khả thi hoặc sau khi sinh, chứ không phải tại thời điểm thụ thai. Theo Tòa án Tối cao Hoa Kỳ, một người được tính tuổi khi họ ra khỏ... [200 / 284 chars] |
+| Các bài kiểm tra chuẩn hóa có cải thiện giáo dục không? [55 chars] | Đã giải quyết: SAT, ACT và các bài kiểm tra tiêu chuẩn khác cung cấp nhiều thông tin hơn về sự chuẩn bị của học sinh trung học cho giáo dục tại các trường cao đẳng và đại học elite hơn là GPA trung họ... [200 / 4,046 chars] |
 
 ### Source Reference Table
 

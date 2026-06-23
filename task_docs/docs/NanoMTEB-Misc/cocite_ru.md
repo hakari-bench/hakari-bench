@@ -126,20 +126,21 @@ are both relevant.
 
 ## Example Data
 
-### Public Sources
-
-- [RuSciBench: Open Benchmark for Russian and English Scientific Document Representations](https://doi.org/10.1134/S1064562424602191)
-- [mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval](https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval)
-- [ru_sci_bench_mteb repository](https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Трансформация промышленности в цифровой экономике: проблемы и перспективы В статье проведен анализ а... [100 / 1,319 chars] | Soft power: опыт Российской Федерации через призму международных отношений В статье рассматриваются аспекты использования «мягкой силы» в процессе формирования межнациональных связей. Особое внимание... [200 / 652 chars] |
+| КОЛЕБАНИЯ ДОННОГО ДАВЛЕНИЯ Дан обзор экспериментальных исследований низкочастотных колебаний, которы... [100 / 619 chars] | Об исследовании колебательного движения газового подвеса ротора турбохолодильных и детандерных машин. Часть II. Колебания давления в соплах питающей системы на сверхкритическом режиме работы Рассмотре... [200 / 634 chars] |
+| ЭФФЕКТИВНОСТЬ БЮДЖЕТНОГО ФИНАНСИРОВАНИЯ СЕЛЬСКОГО ХОЗЯЙСТВА НА РЕГИОНАЛЬНОМ УРОВНЕ Дана оценка эффек... [100 / 250 chars] | ПЛЕМЕННАЯ РАБОТА В МОЛОЧНОМ СКОТОВОДСТВЕ Рассматривается проблема улучшения генетического потенциала в молочном скотоводстве на современном этапе развития АПК. Приводятся основные причины, сдерживающи... [200 / 713 chars] |
+| ЭКОНОМИЧЕСКИЕ ПРОБЛЕМЫ НАУЧНО-ТЕХНИЧЕСКОГО ПРОГРЕССА В ИССЛЕДОВАНИЯХ ИНСТИТУТА ЭКОНОМИКИ РАН В стать... [100 / 894 chars] | Уголовное правоприменение в контексте процедуры банкротства В статье кратко рассмотрены составы банкротных преступлений, а также основные причины неприменения норм об ответственности за данные деяния.... [200 / 495 chars] |
+| Опытно-промышленная эксплуатация многозвенных автопоездов SCANIA в Удачнинском ГОКе В настоящее врем... [100 / 425 chars] | ПРОБЛЕМЫ ВНЕДРЕНИЯ МОДУЛЬНЫХ БОЛЬШЕГРУЗНЫХ АВТОПОЕЗДОВ В целях повышения эффективности автоперевозок, сокращения расхода топлива и токсичности отработавших газов предложены рекомендации по обеспечению... [200 / 330 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RuSciBench: Open Benchmark for Russian and English Scientific Document Representations | 2024 | Benchmark paper | https://doi.org/10.1134/S1064562424602191 |
-| mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval | 2025 | Dataset card | https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval |
-| ru_sci_bench_mteb | 2025 | Code repository | https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb |
+| RuSciBench: Open Benchmark for Russian and English Scientific Document Representations | 2024 | Benchmark paper | [https://doi.org/10.1134/S1064562424602191](https://doi.org/10.1134/S1064562424602191) |
+| mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval](https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval) |
+| ru_sci_bench_mteb | 2025 | Code repository | [https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb](https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb) |
 
 ### Representative Snippets
 

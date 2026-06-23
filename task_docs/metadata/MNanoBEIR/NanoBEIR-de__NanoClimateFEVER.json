@@ -142,7 +142,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -150,15 +150,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Von 1970 bis 1998 gab es eine Erwärmungsperiode, die die Temperaturen um etwa 0,4 Grad Celsius erhöh",
+          "full_chars": 172,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Das Paläozän (ausgesprochen: /paleoˈtseːn/ oder /ˈpaleoˌtseːn/), auch Paläozän genannt, das „alte Neue“, ist eine geologische Epoche, die etwa von 66 bis 56 Millionen Jahren dauerte. Es ist die erste",
+          "full_chars": 1266,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "Tatsächlich zeigt der Trend, wenn auch statistisch nicht signifikant, nach unten.",
+          "full_chars": 81,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Der Sonnenzyklus oder Sonnenfleckenzyklus ist ein fast periodischer 11-Jahres-Zyklus, der die Aktivität der Sonne (einschließlich Veränderungen in der Sonnenstrahlung und dem Ausstoß von Sonnenmateria",
+          "full_chars": 720,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Lokale und regionale Meeresspiegel zeigen weiterhin typische natürliche Schwankungen, an einigen Ort",
+          "full_chars": 138,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Der mittlere Meeresspiegel (MSL) (abgekürzt einfach Meeresspiegel) ist ein Durchschnittswert der Oberfläche eines oder mehrerer Ozeane der Erde, von dem Höhen wie Höhenlagen gemessen werden können. MS",
+          "full_chars": 1164,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "95",
+        "document_id": "Effects_of_global_warming",
+        "query": {
+          "text": "Klimawissenschaftler sagen, dass bei Hurrikan Harvey Hinweise darauf zu finden sind, dass der Klimaw",
+          "full_chars": 126,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Die Auswirkungen des globalen Klimawandels sind die Umwelt- und sozialen Veränderungen, die direkt oder indirekt durch menschliche Emissionen von Treibhausgasen verursacht werden. Es gibt einen wissen",
+          "full_chars": 1421,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1774",
+        "document_id": "Attribution_of_recent_climate_change",
+        "query": {
+          "text": "Das CERN CLOUD-Experiment hat nur einen von vier notwendigen Anforderungen, um die globale Erwärmung",
+          "full_chars": 221,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Die Zurechnung des jüngsten Klimawandels ist die wissenschaftliche Bemühung, die Mechanismen zu bestimmen, die für die jüngsten Klimaveränderungen auf der Erde verantwortlich sind, die gemeinhin als \"",
+          "full_chars": 2377,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

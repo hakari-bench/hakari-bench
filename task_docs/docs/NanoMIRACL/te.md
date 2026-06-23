@@ -147,10 +147,13 @@ field matching. Dense retrieval sets a strong top-rank target for this split.
 
 ## Example Data
 
-Representative queries ask for a village's area, another village's extent, the
-scientific name of pumpkin, the first war in India, or the name of Ashvaghosha's
-mother. Positive documents are Telugu Wikipedia passages containing the
-requested census, scientific, historical, or biographical evidence.
+| Query | Positive document |
+| --- | --- |
+| కామేపల్లి గ్రామ విస్తీర్ణం ఎంత? [31 chars] | కామేపల్లి (ఖమ్మం జిల్లా) గ్రామ జనాభా: 2011 భారత జనగణన గణాంకాల ప్రకారం ఈ గ్రామం 1496 ఇళ్లతో, 5464 జనాభాతో 1380 హెక్టార్లలో విస్తరించి ఉంది. గ్రామంలో మగవారి సంఖ్య 2563, ఆడవారి సంఖ్య 2901. షెడ్యూల్డ్ కుల... [200 / 307 chars] |
+| ఫలక్‌నుమా ప్యాలెస్ ను ఎవరు నిర్మించారు? [39 chars] | ఫలక్‌నుమా ప్యాలెస్ ఫలక్ నూమా ప్యాలెస్ కు ఆంగ్లేయ ఆర్కిటెక్టర్ నిర్మాణాకృతినిచ్చారు. మార్చి3, 1884లో ఈ నిర్మాణానికి సర్ వికార్ శంకు స్థాపన చేయగా అన్ని హంగులతో నిర్మాణం పూర్తి కావడానికి తొమ్మిదేళ్లు పట్... [200 / 1,238 chars] |
+| మదర్ థెరీసా ఎప్పుడు మరణించింది? [31 chars] | మదర్ థెరీసా ఏప్రిల్ 1996,లో మదర్ థెరీసా క్రిందపడటం వలన ఆమె మెడ ఎముక విరిగింది.ఆగస్టులో ఆమె మలేరియాతో బాధ పడటంతో పాటు గుండె ఎడమభాగంలోని జఠరిక(గుండె) పనిచేయడం మానివేసింది.ఆమెకు గుండె శస్త్రచికిత్సజరిగిం... [200 / 508 chars] |
+| దశరథ్‌మంజీ కి ఉన్న మరో పేరేంటి? [31 chars] | దశరథ్‌ మాంఝీ దశరథ్‌మంజీ (c. 1934 – 2007 ఆగష్టు 17) బీహార్ రాష్ట్రం లోని గెహ్లోర్‌ గ్రామానికి చెందిన ఒక సామాన్యుడు. ఈయన ఇరవైరెండు సంవత్సరాలు కష్టపడి మేరునగ సమానమైన పట్టుదలతో తానే ఒక సైన్యంగా కొండనే తొల... [200 / 426 chars] |
+| ఛార్ల్సు కారన్ వాలీసు ఎక్కడ జన్మించాడు? [39 chars] | కారన్ వాలీసు 1738 డిసెంబరు 31 లండన్ లోసంపన్న కుటుంబములో జన్మించెను. తండ్రి ఎరల్ ఛార్ల్స్, తల్లి ఎలిజబెత్. ఈటన్ మరియూ కేమ్ బ్రిడ్జి లోని క్లేర్ కాలేజీ లోను చదువుకుని సైనికోద్యోగిగా చేరాడు. 1756 నుండి 1... [200 / 2,021 chars] |
 
 ### Public Sources
 
@@ -168,10 +171,10 @@ requested census, scientific, historical, or biographical evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

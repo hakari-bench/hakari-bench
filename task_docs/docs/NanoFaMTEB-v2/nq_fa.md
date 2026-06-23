@@ -70,9 +70,13 @@ For reranking, the most valuable behavior is rejecting topically related passage
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the FaMTEB paper and the `MCINext/NQ_FA_test_top_250_only_w_correct-v2` dataset card. MTEB provides the broader retrieval evaluation framework.
+| Query | Positive document |
+| --- | --- |
+| داوران برنامه رقص روی یخ در سال ۲۰۱۴ چه کسانی بودند؟ [52 chars] | رقص روی یخ فیلیپ Schofield و Christine Bleakley برای اجرای مشترک برنامه بازگشتند. Dean، Torvill و Karen Barber برای مربیگری افراد مشهور به برنامه برگشتند. Robin Cousins، Jason Gardiner، Barber و Ashle... [200 / 469 chars] |
+| فصل پنجم روبی کی منتشر می‌شود؟ [30 chars] | فهرست قسمت‌های RWBY RWBY یک مجموعهٔ وب انیمه‌ای آمریکایی در حال تولید است که توسط شرکت Rooster Teeth Productions ساخته شده است. این مجموعه ابتدا در ۱۸ ژوئیهٔ ۲۰۱۳ در وب‌سایت Rooster Teeth منتشر شد و ب... [200 / 457 chars] |
+| چه زمانی ترن هوایی آب‌نما در آلن تاورز بسته شد؟ [47 chars] | فلوم (التون تاورز) فلوم یک ترن هوایی آبی (Log Flume) در پارک التون تاورز در استافوردشایر بود. این ترن هوایی در سال ۱۹۸۱ افتتاح شد و در سال ۲۰۰۴ همزمان با اسپانسرینگ آن توسط شرکت ایمپریال لدر، دوباره ط... [200 / 425 chars] |
+| چه کسی نقش پروفسور پروتون در سریال تئوری بیگ بنگ را بازی می‌کرد؟ [64 chars] | باب نیوهارت نیوارت بعدها به بازیگری روی آورد و در دهه 1970 در نقش دکتر رابرت هارتلی، روانشناس شیکاگویی، در سریال «نمایش باب نیوارت» و سپس در دهه 1980 در نقش دیک لادون، صاحب مسافرخانه در ورمونت، در سری... [200 / 835 chars] |
+| تعداد پارک‌های ملی در هند چند تاست؟ [35 chars] | فهرست پارک‌های ملی هند در دهه 1980، قوانین فدرال بیشتری برای تقویت حمایت از حیات وحش به تصویب رسید. تا ژوئیه 2017، 103 پارک ملی به مساحت 40,500 کیلومتر مربع (15,600 مایل مربع) وجود داشت که 1.23 درصد ا... [200 / 239 chars] |
 
 ### Source Reference Table
 

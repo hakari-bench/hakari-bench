@@ -48,13 +48,13 @@ Strong models should learn finance-domain terminology and scenario-level reasoni
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| ¿Qué tipo de rentabilidad está ofreciendo Vanguard? | De la página de Vanguard: pareció la opción más sencilla, ya que los datos de S&P son fáciles de encontrar... |
-| Implicaciones fiscales del trabajo freelance | Si tienes ingresos en EE.UU., deberás pagar impuestos sobre la renta en EE.UU. a menos que exista un tratado... |
-| ¿Qué se entiende por volumen alto o bajo? | El volumen diario generalmente se compara con el volumen promedio diario de los últimos 50 días para una acción... |
-| Canjear puntos de tarjeta de crédito para cubrir gastos empresariales deducibles | Para simplificar, empecemos considerando solo el reembolso en efectivo. En general, el reembolso en efectivo de las tarjetas de crédito... |
-| ¿Cómo debo declarar mis impuestos como autónomo? | Para efectos fiscales, deberás presentar tus impuestos como empleado y también como emprendedor... |
+| Query | Positive document |
+| --- | --- |
+| ¿Qué tipo de rentabilidad está ofreciendo Vanguard? [51 chars] | De la página de Vanguard - Pareció la opción más sencilla, ya que los datos de S&P son fáciles de encontrar. Utilizo MoneyChimp para verificar, lo que confirma que la página de Vanguard ofrece la Tasa... [200 / 525 chars] |
+| Implicaciones fiscales del trabajo freelance [44 chars] | Si tienes ingresos en EE.UU., deberás pagar impuestos sobre la renta en EE.UU. a menos que exista un tratado con tu país que lo indique. [136 chars] |
+| ¿Qué se entiende por volumen alto o bajo? [41 chars] | El volumen diario generalmente se compara con el volumen promedio diario de los últimos 50 días para una acción. Un volumen alto generalmente se considera que es 2 o más veces el volumen promedio diar... [200 / 723 chars] |
+| Canjear puntos de tarjeta de crédito para cubrir gastos empresariales deducibles [80 chars] | Para simplificar, empecemos considerando solo el reembolso en efectivo. En general, el reembolso en efectivo de las tarjetas de crédito para uso personal no es gravable, pero para uso empresarial sí l... [200 / 4,025 chars] |
+| ¿Cómo debo declarar mis impuestos como autónomo? [48 chars] | Para efectos fiscales, deberás presentar tus impuestos como empleado (usando tus talones T4 y con retenciones automáticas) y también como emprendedor. Yo tuve la misma situación el año pasado. "Emplea... [200 / 780 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should learn finance-domain terminology and scenario-level reasoni
 
 | Label | URL |
 |---|---|
-| FiQA paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA paper (https://doi.org/10.1145/3184558.3192301) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

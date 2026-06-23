@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/fiqa",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "8247",
+        "document_id": "42521",
+        "query": {
+          "text": "Tax on Stocks or ETF's",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"If you sell a stock, with no distributions, then your gain is taxable under §1001. But not all realized gains will be recognized as taxable. And some gains which are arguably not realized, will be re",
+          "full_chars": 1997,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2316",
+        "document_id": "482343",
+        "query": {
+          "text": "What exchange rate does El Al use when converting final payment amount to shekels?",
+          "full_chars": 82,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"The rate for \"\"checks and transfers\"\" is set by each bank multiple times during the day based on the market. It is as opposed to the rate for \"\"cash/banknotes\"\", also set by each bank, and the \"\"repr",
+          "full_chars": 633,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10547",
+        "document_id": "571306",
+        "query": {
+          "text": "How much do brokerages pay exchanges per trade?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "There is no one answer to this question, but there are some generalities. Most exchanges make a distinction between the passive and the aggressive sides of a trade. The passive participant is the orde",
+          "full_chars": 1241,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "932",
+        "document_id": "48722",
+        "query": {
+          "text": "Is freelance income earned by a U.S. citizen while living abroad subject to state income tax?",
+          "full_chars": 93,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "No state taxes, but Italy also has a favorable treaty with the US Federal Government. Look into to lowering your federal taxes to 5% ;) its a thick read, http://www.irs.gov/businesses/international/ar",
+          "full_chars": 552,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4415",
+        "document_id": "238234",
+        "query": {
+          "text": "How much is inflation?",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "There is a thing called the consumer price index (CPI) There is a basket of goods that the people who keep the index basically shop for. It is much more detailed for the sake of accuracy, but bottom l",
+          "full_chars": 634,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/fiqa",
-    "source_task": "FiQA2018"
+    "source_task": "FiQA2018",
+    "example_count": 5
   }
 }

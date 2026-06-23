@@ -144,7 +144,7 @@
         "title": "HotpotQA official site",
         "url": "https://hotpotqa.github.io/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "Mit welchem anderen Schauspieler spielte Penny Rae Bridges in einer Fernseh-Sitcom?",
+          "full_chars": 83,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (geboren am 29. Juli 1990) ist eine amerikanische Schauspielerin. Sie hat in folgenden Serien mitgespielt: \"For Your Love\", \"Family Law\", \"Boy Meets World\" und \"The Parent 'Hood\". Be",
+          "full_chars": 269,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "Wer hat Kaganoi Shigemochi ein Schwert überreicht, das vom Gründer der Muramasa-Schule hergestellt w",
+          "full_chars": 105,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. August 1600) war ein japanischer Samurai der Azuchi-Momoyama-Zeit, der dem Oda-Clan diente. Er herrschte über die Burg Kaganoi. Während der Schlacht von Komaki u",
+          "full_chars": 611,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "Welcher Film wurde von Joby Harold geschrieben und inszeniert und hat Musik von Samuel Sim?",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim ist ein Film- und Fernsehkomponist. Er erlangte erstmals Anerkennung durch seine preisgekrönte Filmmusik zur BBC-Dramaserie \"Dunkirk\". Seitdem hat er die Musik für eine Vielzahl von Film- u",
+          "full_chars": 509,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae63b2255429908198fa526",
+        "document_id": "46395880",
+        "query": {
+          "text": "Wann fand dieses College-Football-Spiel im Sun Life Stadium in Miami Gardens, Florida statt, bei dem",
+          "full_chars": 185,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Das Football-Team der Clemson Tigers aus dem Jahr 2015 vertrat die Clemson University in der Saison 2015 der NCAA Division I FBS. Die Tigers wurden von Head Coach Dabo Swinney angeführt, der in seinem",
+          "full_chars": 1192,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a84fd085542994c784ddaba",
+        "document_id": "1854777",
+        "query": {
+          "text": "Wie heißt die Sammlung von Singles der amerikanischen Rock-’n’-Roll-Band, die auch unter welchem Nam",
+          "full_chars": 124,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Devil's Food ist ein Sampler der amerikanischen Rock 'n' Roll-Band Supersuckers, erschienen im April 2005 bei Mid-Fi Records.",
+          "full_chars": 125,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

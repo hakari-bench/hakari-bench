@@ -146,7 +146,7 @@
         "title": "SciFact GitHub repository",
         "url": "https://github.com/allenai/scifact",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -160,8 +160,91 @@
         "title": "mteb/scifact",
         "url": "https://huggingface.co/datasets/mteb/scifact",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q directs the organization of neutrophil migration to inflammation sites by regulating membrane",
+          "full_chars": 115,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Neutrophils rapidly undergo polarization and directional movement to infiltrate the sites of infection and inflammation. Here, we show that an inhibitory MHC I receptor, Ly49Q, was crucial for the swi",
+          "full_chars": 990,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Antiretroviral therapy reduces rates of tuberculosis across a broad range of CD4 strata.",
+          "full_chars": 88,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "BACKGROUND Human immunodeficiency virus (HIV) infection is the strongest risk factor for developing tuberculosis and has fuelled its resurgence, especially in sub-Saharan Africa. In 2010, there were a",
+          "full_chars": 2144,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Rapid up-regulation and higher basal expression of interferon-induced genes reduce survival of granu",
+          "full_chars": 153,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Although susceptibility of neurons in the brain to microbial infection is a major determinant of clinical outcome, little is known about the molecular factors governing this vulnerability. Here we sho",
+          "full_chars": 1153,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971",
+        "document_id": "46695481",
+        "query": {
+          "text": "Primary cervical cancer screening with HPV detection has higher longitudinal sensitivity than conven",
+          "full_chars": 169,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "BACKGROUND Screening for cervical cancer based on testing for human papillomavirus (HPV) increases the sensitivity of detection of high-grade (grade 2 or 3) cervical intraepithelial neoplasia, but whe",
+          "full_chars": 2284,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "180",
+        "document_id": "16966326",
+        "query": {
+          "text": "Blocking the interaction between TDP-43 and respiratory complex I proteins ND3 and ND6 leads to incr",
+          "full_chars": 135,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Genetic mutations in TAR DNA-binding protein 43 (TARDBP, also known as TDP-43) cause amyotrophic lateral sclerosis (ALS), and an increase in the presence of TDP-43 (encoded by TARDBP) in the cytoplasm",
+          "full_chars": 1244,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

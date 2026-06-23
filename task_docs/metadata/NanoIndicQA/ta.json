@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 10
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d2ac256d11adc73120b95e88b71a12475758add0be09329dd3e3424f7bfa271a",
+        "document_id": "525d1e2dc0b2ac02937d3263a9f68f02a3dbcc53d6b6fe208ea85d77cc2b8aa6",
+        "query": {
+          "text": "டிஃபின் டாப்பின் மற்ற பெயர் என்ன?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1880 ஆம் ஆண்டு நிலச்சரிவில் அழிந்துபோன நைனா தேவி கோயில் பின்னாளில் மீண்டும் கட்டப்பட்டது. இது நைனி ஏரியின் வடக்குப்புறக் கரையில் காணப்படுகிறது. இந்தக் கோயிலில் இருக்கும் கடவுளான மா நைனா தேவி நேத்ராக்க",
+          "full_chars": 2917,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2e463675976b7b3e7f455bfa5b610a76f01c7738170952413b78af2742cc54e3",
+        "document_id": "c90f33b7b065dd3265d32558b8152656d48b1ddce0cdec551659ce8531f9accd",
+        "query": {
+          "text": "தொழில்நுட்ப சிறப்பு மற்றும் துல்லியமான கணித அறிவைக் கொண்ட தனித்துவமான அமைப்பின் பெயர் என்ன?",
+          "full_chars": 91,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1600 ஆண்டுகாலப் பழமை வாய்ந்த சிகிரியா ஓவியங்கள் பண்டைய இலங்கையின் கலைச் சிறப்பை வெளிக்காட்டுகின்றன. இது உலகின் பண்டைக்கால நகரத் திட்டமிடலின் ஒரு உதாரணமாகக் காணப்படுகிறது. இது இலங்கையில் உள்ள ஏழு உலக ம",
+          "full_chars": 4916,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "038962bd41885c24591f0390da14de5271a6c082ddea6d7d09755895e0b15ab5",
+        "document_id": "fa4a30e9b887337321af9c964bab1e14cffc98c9a3f78ec49f47e220d31b8fcd",
+        "query": {
+          "text": "இலங்கையில் எத்தனை ஆண்டுகள் உள்நாட்டுப் போர் நடந்தது?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1959ல் கடும்போக்கு பௌத்த பிக்கு ஒருவனால் பண்டாரநாயக்க படுகொலை செய்யப்பட்டார். 1960ல் S. W. R. D. பண்டாரநாயக்கவின் மனைவியான சிறிமாவோ பண்டாரநாயக்க பிரதமராகப் பதவியேற்றார். 1962இல் ஏற்பட்ட கலகத்தையும் வெ",
+          "full_chars": 3363,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f50dd68906167037ba42959eae4d9f100d84cb92bb3eb034bdb58db7c60e9620",
+        "document_id": "d9da30c099af296ebef29c82314e54982cfadd24b33b5df1b1d85824edac71f2",
+        "query": {
+          "text": "பஞ்சாபில் ஒரு பன்முக கலாச்சார அரசை நிறுவ விரும்பியது யார்?",
+          "full_chars": 58,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1713 ஆம் ஆண்டில், பன்டா சிங் பகதூர் பஞ்சாபில் ஒரு பன்முக கலாச்சார அரசை நிறுவ விரும்பினார். இதற்காக முகலாயர்களுடன் இவர் தளர்ச்சியின்றி போராடினார். அவரது அரசு தனது வீழ்ச்சிக்கு முன்னதாக ஒரு வருடத்திற்கு",
+          "full_chars": 1988,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "59dcfa1f76bc1fab5b545fe458f909c14922c50419ba56ab681b53ab69821300",
+        "document_id": "20f3e243a997bd0ede83af604bd399f1d797aeec05da30abed8b6da0bdfaa71a",
+        "query": {
+          "text": "எந்த மொழியிலிருந்து ஹிந்து உருவானது?",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "'இந்து' என்ற சொல் 'சிந்து' (Sindhu) என்ற சமஸ்கிருதச் சொல்லிலிருந்து ஈரானிய மொழியான பாரசீக மொழி மூலமாக உருவான ஒரு சொல் ஆகும். இந்து என்ற சொல் முதன்முதலில் பாரசீகத்தினரால் ஒரு புவியியல் சொல்லாக, அதாவது",
+          "full_chars": 1524,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

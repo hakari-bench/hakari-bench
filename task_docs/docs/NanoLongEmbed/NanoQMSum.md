@@ -143,11 +143,13 @@ candidate generation and dense retrieval for abstractive summary phrasing.
 
 ## Example Data
 
-Representative queries summarize a remote-control battery design discussion,
-parliamentary responses to COVID-19 support programs, product evaluation
-findings about unused buttons, a graduate student's qualification-exam proposal,
-and a design-team decision about remote-control buttons. Positive documents are
-the complete meeting transcripts containing those discussions.
+| Query | Positive document |
+| --- | --- |
+| They felt that the battery design should be long-lived, original, and conventional to ensure the bat... [100 / 241 chars] | User Interface: .. . Project Manager: Okay . So , this is uh first meeting of this design project . Um and I um like to show you the agenda for the meeting , I don't know if it was sent round to all o... [200 / 22,629 chars] |
+| The Prime Minister explained that the government recognized that several organizations and companies... [100 / 537 chars] | The Chair (Hon. Anthony Rota (NipissingTimiskaming, Lib.)): I call this meeting to order. Welcome to the 12th meeting of the House of Commons Special Committee on the COVID-19 Pandemic. This will be t... [200 / 120,229 chars] |
+| In the product evaluation, the team was satisfied with its success in reducing the number of unused... [100 / 362 chars] | Project Manager: That should hopefully do the trick , um . 'Kay . Sorry about the small delay . Falling a little bit behind schedule . And that's uh fifteen twenty five . Okay . So just to try and rou... [200 / 43,300 chars] |
+| Grad F explained that he was focusing on writing his proposal for his qualification exams, which was... [100 / 182 chars] | Professor B: I think for two years we were two months , uh , away from being done . PhD A: And what was that , Morgan ? What project ? Professor B: Uh , the , uh , TORRENT chip . PhD A: Oh . Professor... [200 / 56,387 chars] |
+| The team agreed that there should be 17 buttons on the remote, including number 0 to 9, volume up an... [100 / 250 chars] | Project Manager: Right uh . So um . So where's the PowerPoint presentation ? Sorry ? Microsoft PowerPoint , right . Right , okay . So . Right . Okay , so we've got uh so we've got new project requirem... [200 / 43,476 chars] |
 
 ### Public Sources
 
@@ -164,9 +166,9 @@ the complete meeting transcripts containing those discussions.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization | 2021 | arXiv paper | https://arxiv.org/abs/2104.05938 |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization | 2021 | arXiv paper | [https://arxiv.org/abs/2104.05938](https://arxiv.org/abs/2104.05938) |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

@@ -124,18 +124,20 @@ the answer span, not only whether it is topically similar.
 
 ## Example Data
 
-### Public Sources
-
-- [KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension](https://arxiv.org/abs/1909.07005)
-- [yjoonjang/squad_kor_v1](https://huggingface.co/datasets/yjoonjang/squad_kor_v1)
-- [hakari-bench/NanoMTEB-Korean](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean)
+| Query | Positive document |
+| --- | --- |
+| '행보가 비서 본연의 역할을 벗어난다', '장관들과 내각이 소외되고 대통령비서실의 권한이 너무 크다'는 의견이 제기된 대표적인 예는? [74 chars] | 임종석 "내각과 장관들이 소외되고 대통령비서실의 권한이 너무 크다", "행보가 비서 본연의 역할을 벗어난다"는 의견이 제기되었다. 대표적인 예가 10차 개헌안 발표이다. 원로 헌법학자인 허영 경희대 석좌교수는 정부의 헌법개정안 준비 과정에 대해 "청와대 비서실이 아닌 국무회의 중심으로 이뤄졌어야 했다"고 지적했다. '국무회의의 심의를 거쳐야 한다'(제89조... [200 / 480 chars] |
+| 임종석이 1989년 2월 15일에 지명수배 받은 혐의는 어떤 시위를 주도했다는 것인가? [48 chars] | 임종석 1989년 2월 15일 여의도 농민 폭력 시위를 주도한 혐의(폭력행위등처벌에관한법률위반)으로 지명수배되었다. 1989년 3월 12일 서울지방검찰청 공안부는 임종석의 사전구속영장을 발부받았다. 같은 해 6월 30일 평양축전에 임수경을 대표로 파견하여 국가보안법위반 혐의가 추가되었다. 경찰은 12월 18일~20일 사이 서울 경희대학교에서 임종석이 성명... [200 / 482 chars] |
+| 유사지질학자들이 노아의 홍수를 증명하기 위해 성경 이외에 근거라고 주장한 것들은? [45 chars] | 노아의_방주 역사학과 과학의 발달이 더뎠던 고대사회에서는, 성경이 단순한 교리적인 부분 뿐 아니라 역사책으로서의 권위도 높았기에 노아의 방주를 역사적인 존재로서 다루고 있었다. 이는 제칠일안식교에서 비롯된 의사과학의 한 종류인 유사지질학인 홍수지질학과 같은 것에 영향을 주었으며, 과거 신학에서는 이러한 근본주의적 해석을 받아들여 역사와 사회적인 모든 부분에... [200 / 588 chars] |
+| 반기문이 유엔 차기 사무총장 선거에 공식적으로 출마 선언을 한 날짜는? [39 chars] | 반기문 2006년 2월 14일에 유엔 차기 사무총장 선거에 공식적으로 출마 선언을 하여 선거운동을 시작했다. 반기문은 대한민국의 외교통상부 장관으로서 유엔 안전보장 이사회의 모든 나라를 순방할 수 있었다. 2006년 10월 14일에 한국인으로서는 최초로 유엔 사무총장에 당선되었다. 그러나 그가 출마를 선언했을 당시엔 그의 당선을 예상한 외신은 그다지 많지... [200 / 551 chars] |
+| 중화민국 수립 후 임세영은 자신의 스승이었던 누구를 재조명하는 작업에 착수하였는가? [46 chars] | 린스룽 임세영은 자신의 제자들과 연극을 구경하러 갔다가 우연히 깡패들과 시비가 붙었는데 깡패들이 임세영의 무공이 고강한 것을 알고 물러갔으나 임세영이 홀로 있을 때 몰래 기습을 해왔다. 그러자 임세영은 그들의 무리수가 많아 방어만 하기에는 곤란한 것을 깨닫고 할 수 없이 공격을 하여 깡패들을 쓰러뜨렸으나 결국 광주 전역에 임세영을 체포한다는 수배령이 내려졌... [200 / 460 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension | 2019 | Paper | https://arxiv.org/abs/1909.07005 |
-| yjoonjang/squad_kor_v1 | 2025 | Dataset card | https://huggingface.co/datasets/yjoonjang/squad_kor_v1 |
+| KorQuAD1.0: Korean QA Dataset for Machine Reading Comprehension | 2019 | Paper | [https://arxiv.org/abs/1909.07005](https://arxiv.org/abs/1909.07005) |
+| yjoonjang/squad_kor_v1 | 2025 | Dataset card | [https://huggingface.co/datasets/yjoonjang/squad_kor_v1](https://huggingface.co/datasets/yjoonjang/squad_kor_v1) |
 
 ### Representative Snippets
 

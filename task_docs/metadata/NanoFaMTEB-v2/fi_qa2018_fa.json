@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/fiqa-fa-v2",
         "url": "https://huggingface.co/datasets/MCINext/fiqa-fa-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "8247",
+        "document_id": "42521",
+        "query": {
+          "text": "مالیات بر سهام یا صندوق‌های قابل معامله در بورس (ETF)",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "اگر سهامی را بفروشید و هیچ توزیعی نداشته باشید، سود شما مشمول مالیات طبق ماده ۱۰٠١ می‌شود. اما همه سودهای محقق شده به عنوان مالیات شناسایی نمی‌شوند. و برخی از سودهایی که ممکن است محقق نشده باشند، به ع",
+          "full_chars": 1940,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2316",
+        "document_id": "482343",
+        "query": {
+          "text": "ال عال از چه نرخی برای تبدیل مبلغ نهایی پرداخت به شکل استفاده می‌کند؟",
+          "full_chars": 69,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "نرخ \"چک و حواله\" توسط هر بانک چندین بار در طول روز و بر اساس بازار تعیین می‌شود. این نرخ با نرخ \"نقد/اسکناس\" که آن هم توسط هر بانک تعیین می‌شود و همچنین \"نرخ نماینده\" (שער היציג) که توسط بانک اسرائیل",
+          "full_chars": 630,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10547",
+        "document_id": "571306",
+        "query": {
+          "text": "کارمزد‌هایی که کارگزاری‌ها بابت هر معامله به بورس‌ها پرداخت می‌کنند چقدر است؟",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "پاسخی قطعی برای این سوال وجود ندارد، اما کلیاتی در این زمینه وجود دارد. اکثر بورس‌ها تمایزی بین طرف منفعل و طرف فعال یک معامله قائل می‌شوند. شرکت‌کننده منفعل، سفارشی است که در زمان معامله در بازار وجو",
+          "full_chars": 1192,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "932",
+        "document_id": "48722",
+        "query": {
+          "text": "آیا درآمد حاصل از کار آزاد یک شهروند آمریکایی در حالی که در خارج از کشور زندگی می‌کند، مشمول مالیات",
+          "full_chars": 123,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "مالیات ایالتی وجود ندارد، اما ایتالیا نیز با دولت فدرال آمریکا پیمان مالیاتی مطلوبی دارد. بررسی کنید که چگونه می‌توانید مالیات فدرال خود را به ۵٪ کاهش دهید؛ البته مطالعه‌ی آن کمی طولانی است: http://ww",
+          "full_chars": 658,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4415",
+        "document_id": "238234",
+        "query": {
+          "text": "نرخ تورم چقدر است؟",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "چیزی به نام شاخص قیمت مصرف‌کننده (CPI) وجود دارد. اساساً یک سبد کالا وجود دارد که افرادی که این شاخص را محاسبه می‌کنند، برای آن خرید می‌کنند. این سبد کالا بسیار مفصل‌تر است تا دقت بالاتری داشته باشد،",
+          "full_chars": 650,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

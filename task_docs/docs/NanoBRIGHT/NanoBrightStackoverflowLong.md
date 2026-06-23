@@ -68,9 +68,13 @@ The observed metrics show that reranking_hybrid is the best pool for both top-10
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging and long-document split.
+| Query | Positive document |
+| --- | --- |
+| Sort tbody list which is populated with Javascript getList? I have a router with a DHCP page which i... [100 / 12,432 chars] | * Skip to main content * Skip to search * Skip to select language [ MDN Web Docs ](/en-US/) Open main menu * References [ References ](/en-US/docs/Web) * [ Overview / Web Technology Web technology ref... [200 / 951,658 chars] |
+| Copy and delete files from SFTP folder I have to pick (remove) the files with file mask `FileName_A_... [100 / 1,125 chars] | Menu Toggle search [ ![](https://winscp- static-746341.c.cdn77.org/assets/images/logos/logo.png?v=7032) WinSCP Free SFTP, SCP, S3 and FTP client for Windows ](https://winscp.net/) * [ Home ](/eng/inde... [200 / 190,917 chars] |
+| DAX RLS Function using LOOKUPVALUE Parsing but not working I have a table that I'm trying to impleme... [100 / 1,525 chars] | Skip to main content This browser is no longer supported. Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support. [ Download Microsoft Edge ](https... [200 / 42,606 chars] |
+| How can I get LLM to only respond in JSON strings? This is how I am defining the executor ``` const... [100 / 1,063 chars] | Text generation models OpenAI's text generation models (often called generative pre-trained transformers or large language models) have been trained to understand natural language, code, and images. T... [200 / 67,273 chars] |
+| How can I initialise a constexpr array with values using std::generate For example, if I wanted a co... [100 / 565 chars] | ##### [ cppreference.com ](/) [ Log in ](/mwiki/index.php?title=Special:UserLogin&returnto=cpp%2Futility%2Fpair "You are encouraged to log in; however, it is not mandatory \[o\]") ##### Namespaces * [... [200 / 128,018 chars] |
 
 ### Source Reference Table
 

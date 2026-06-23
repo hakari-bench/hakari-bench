@@ -62,17 +62,20 @@ Models should learn query-to-hypothesis coherence over short text. Hard negative
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Abductive Commonsense Reasoning](https://arxiv.org/abs/1908.05739), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Start: Scott has felt increasingly unhappy in his last few Year's in New York. End: Driving out of N... [100 / 149 chars] | The daily grind, extreme traffic and rude city dwellers left Scott longing for small town living. [97 chars] |
+| Start: Joe's mother bugged him constantly to tie his shoelaces. End: As he lay at the bottom of the... [100 / 131 chars] | Joe tripped down the stairs with his shoes untied. [50 chars] |
+| Start: Alex was at target with his mom. End: He begged his mother to buy it until she gave in. [94 chars] | Alex saw a game he really wanted. [33 chars] |
+| Start: Ali's mom enrolled her in a karate class. End: Ali was so embarrassed she didn't tell any of... [100 / 112 chars] | Ali did not want to take karate. [32 chars] |
+| Start: Once there was a girl named Mia who could spell well. End: Mia won the spelling bee and felt... [100 / 132 chars] | She studied hard because she wanted to spell. [45 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Abductive Commonsense Reasoning | 2019 | arXiv paper | https://arxiv.org/abs/1908.05739 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Abductive Commonsense Reasoning | 2019 | arXiv paper | [https://arxiv.org/abs/1908.05739](https://arxiv.org/abs/1908.05739) |
 
 ### Representative Snippets
 

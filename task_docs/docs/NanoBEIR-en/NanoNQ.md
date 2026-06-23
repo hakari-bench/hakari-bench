@@ -62,9 +62,13 @@ A model targeting this task should improve relation-aware answer passage ranking
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Natural Questions, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| where is final four being held this year [40 chars] | The 2018 NCAA Division I Men's Basketball Tournament was a 68-team single-elimination tournament to determine the men's National Collegiate Athletic Association (NCAA) Division I college basketball na... [200 / 391 chars] |
+| was nightmare before christmas originally a disney movie [56 chars] | The Nightmare Before Christmas originated in a poem written by Tim Burton in 1982, while he was working as an animator at Walt Disney Feature Animation. With the success of Vincent in the same year, W... [200 / 650 chars] |
+| why is the angel of the north there [35 chars] | According to Gormley, the significance of an angel was three-fold: first, to signify that beneath the site of its construction, coal miners worked for two centuries; second, to grasp the transition fr... [200 / 308 chars] |
+| where was the 3/5 compromise originally stated in the constitution [66 chars] | The Three-Fifths Compromise is found in Article 1, Section 2, Clause 3 of the United States Constitution, which reads: [118 chars] |
+| who sings somebody's watching me with michael jackson [53 chars] | "Somebody's Watching Me" is a song by American singer Rockwell from his debut studio album Somebody's Watching Me (1984). It was released as Rockwell's debut single and lead single from the album on J... [200 / 356 chars] |
 
 ### Source Reference Table
 

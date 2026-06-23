@@ -103,29 +103,113 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "NeuCLIR",
         "url": "https://neuclir.github.io/",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/NeuCLIR2023RetrievalHardNegatives",
         "url": "https://huggingface.co/datasets/mteb/NeuCLIR2023RetrievalHardNegatives",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "214",
+        "document_id": "01232dc4-16f0-4e50-82db-8a22458a6896",
+        "query": {
+          "text": "اطلاعاتی درباره شرکت های چینی تحریم شده توسط ایالات متحده، به استثنای هواوی، پیدا کنید.",
+          "full_chars": 87,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "گنجانده شدن چند شرکت چینی در لیست سیاه پنتاگون+ جزئیات به گزارش اسپوتنیک، شرکت China Construction Technology Co. Ltd. (CCTC) ، China International Engineering Consulting Corp. (CIECC) ، شرکت China Nat",
+          "full_chars": 1417,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "203",
+        "document_id": "0003bb25-bfbc-49e1-b97b-9116f8d8623b",
+        "query": {
+          "text": "اطلاعاتی در مورد کشتی \"اورگرین\" که در کانال سوئز گیر کرده است را پیدا کنید",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "تلاش تازه برای شناور کردن کشتی گرفتار در کانال سوئز تلاش تازه برای شناور کردن کشتی گرفتار در کانال سوئز ۳۳ دقیقه پیش منبع تصویر، EPA تلاشی تازه برای به شناور کردن یک کشتی عظیم باربری که کانال سوئز در",
+          "full_chars": 2891,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "236",
+        "document_id": "0c399a63-6d49-4881-af58-367673eb1b84",
+        "query": {
+          "text": "پتانسیل گردشگری بين ازبکستان و ایران چقدر است؟",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "جاده ابریشم پل ارتباطی گردشگری ایران و ازبکستان غلامحسین ابراهیمی با سابقه فعالیت در بخش های اقتصادی و گردشگری در کشورهای تونس، اردن، لهستان، لیتوانی ، ازبکستان و مالزی به خبرنگار مهر گفت: ازبکستان ما",
+          "full_chars": 4940,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "232",
+        "document_id": "09a35fe3-adc3-4aca-97c7-ec6ca9d17979",
+        "query": {
+          "text": "تاثیرات اکولوژیکی و زیست محیطی برخورد نفتکش سانچی در 6 ژانویه 2018 چه بود؟",
+          "full_chars": 74,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "افزایش مساحت لکه نفتی در سواحل چین به گزارش اسپوتنیک، نفتکش سانچی که حامل 136 هزار تن کندنسانت گاز بود و به شرکت ایرانی تعلق داشت و تحت پرچم پاناما شناوری می کرد با کشتی باری هنگ کنگی در سواحل چین تصا",
+          "full_chars": 1072,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "228",
+        "document_id": "00434b51-6b52-4feb-a51c-e4cdcc6ad877",
+        "query": {
+          "text": "اینترنت 5G چه پتانسیل ها و چالش هایی را برای افراد و شرکت ها به ارمغان می آورد؟",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "توسعه 5G بدون آزادسازی باند ۷۰۰ مگاهرتزی مشکل است معاون فنی و توسعه شبکه همراه اول با اشاره به طیف‌های فرکانسی موردنیاز برای توسعه شبکه 5G گفت: باند ۷۰۰-۸۰۰ مگاهرتز در اکثر کشورهای دنیا برای 5G آزاد ش",
+          "full_chars": 4473,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

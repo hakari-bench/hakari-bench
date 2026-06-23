@@ -132,11 +132,13 @@ hybrid designs need language-aware weighting.
 
 ## Example Data
 
-Representative queries ask what language interpretation is used for, what
-technologies are used for mobile internet access, what was introduced in the
-1990s, what kind of vehicle the TB-3 was, and what epidermal cells can do.
-Positive documents are Wikipedia-style passages containing the answer span,
-sometimes in a different language from the query.
+| Query | Positive document |
+| --- | --- |
+| Phiên dịch được sử dụng cho ngôn ngữ nào? [41 chars] | Nói chung, tất cả mọi người trong nước đều hiểu và nói tiếng Nga, ngoại trừ tại một số vùng xa xôi hẻo lánh. Tiếng Nga là tiếng mẹ đẻ của đa số dân cư Bishkek, và hầu hết các giao dịch thương mại cũng... [200 / 539 chars] |
+| ما هي التقنيات الحديثة المستخدمة للوصول إلى الإنترنت عبر الهاتف المحمول؟ [72 chars] | Reichweite und Bandbreite: Mobiler Internetzugriff ist generell langsamer als direkte Kabelverbindungen. Verwendete Technologien sind hier GPRS, oder EDGE, aktuell auch HSDPA und HSUPA, 3G und 4G Netz... [200 / 435 chars] |
+| Was wurde in den 1990er Jahren eingeführt? [42 chars] | أما القديس فالنتين الذي كان يعيش في تورني فقد أصبح أسقفًا لمدينة انترامنا (الاسم الحديث لمدينة تورني) تقريبًا في عام 197 بعد الميلاد، ويُقال إنه قد قُتل فترة الاضطهاد التي تعرض له المسيحيون أثناء عهد... [200 / 407 chars] |
+| TB-3 là loại phương tiện vận tải gì? [36 chars] | 图波列夫TB-3（俄语：Тяжёлый Бомбардировщик，转写：Tyazholy Bombardirovschik，意为重型轰炸机；民用型则称为ANT-6）是西元1930年代苏联空军列装的重型轰炸机，并被使用于第二次世界大战。它是世界上第一个悬翼四引擎的重型轰炸机。 西元1939年，TB-3因过时而正式退役，但TB-3仍在整个二次世界大战进行轰炸和运输工作。 TB-3也以Zveno计划... [200 / 221 chars] |
+| बाह्यत्वचा की कोशिकाएं क्या कर सकती हैं? [40 chars] | The plant epidermis is specialised tissue, composed of parenchyma cells, that covers the external surfaces of leaves, stems and roots. Several cell types may be present in the epidermis. Notable among... [200 / 1,229 chars] |
 
 ### Public Sources
 
@@ -151,9 +153,9 @@ sometimes in a different language from the query.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MLQA: Evaluating Cross-lingual Extractive Question Answering | 2019 | task paper | https://arxiv.org/abs/1910.07475 |
-| MLQA dataset | 2019 | dataset card | https://huggingface.co/datasets/mlqa |
-| mteb/MLQARetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/MLQARetrieval |
+| MLQA: Evaluating Cross-lingual Extractive Question Answering | 2019 | task paper | [https://arxiv.org/abs/1910.07475](https://arxiv.org/abs/1910.07475) |
+| MLQA dataset | 2019 | dataset card | [https://huggingface.co/datasets/mlqa](https://huggingface.co/datasets/mlqa) |
+| mteb/MLQARetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/MLQARetrieval](https://huggingface.co/datasets/mteb/MLQARetrieval) |
 
 ### Representative Snippets
 

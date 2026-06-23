@@ -62,19 +62,21 @@ Models should handle Latvian legal morphology, exact institutional names, numeri
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Kura Savienības norma paredz ņemt vērā nodarbinātības veicināšanu, sociālo aizsardzību, izslēgtības... [100 / 134 chars] | Tas, piemēram, ir gadījums sociālajā politikā, kur tika ietverts vispārēji piemērojams noteikums (tā sauktā sociālā klauzula), pēc kura Savienībai, nosakot un īstenojot politiku un pasākumus, ir jārēķ... [200 / 719 chars] |
+| Kā priekšlikumos plānot esošo digitālās kompetences projektu ilgtspējīgu izplatīšanu, nosaucot starp... [100 / 155 chars] | Priekšlikumos jākoncentrējas uz esošo digitālās kompetences projektu, darbību vai instrumentu rezultātu efektīvu un ilgtspējīgu izplatīšanu un izmantošanu. Īpašs uzsvars jāliek uz mērķgrupu un to vaja... [200 / 624 chars] |
+| Kura komiteja secināja, ka resursu piešķiršana maznozīmīgām iekšējām izmeklēšanām ir neefektīva un a... [100 / 168 chars] | Uzraudzības komiteja izvērtēja OLAF de minimis politiku un pārbaudīja 45 izvēlētas lietas, kuru aplēstā finansiālā ietekme nepārsniedz EUR 50000. Uzraudzības komiteja secināja, ka OLAF resursu piešķir... [200 / 576 chars] |
+| Kura ES konsultatīvā komiteja atbalsta Komisijas pūles iekļaut veselības un sociālās ietekmes akcīze... [100 / 138 chars] | Kaut arī sākotnēji akcīzes nodokļa, ar ko apliek tabaku, galvenais mērķis bija tikai fiskāls, mūsdienu pasaulē tā funkcijas mainās, un šis nodoklis arvien vairāk kļūst par sabiedrības veselības un soc... [200 / 666 chars] |
+| Kurš regulējums ļāva iestādēm atzīt uzņēmumus par dominējošiem ar aptuveni 25% tirgus daļas, ņemot v... [100 / 138 chars] | Saskaņā ar 1998. gada reglamentējošiem noteikumiem attiecīgajās direktīvās tika noteiktas telekomunikāciju sektora tirgus jomas, kuras bija saskaņā ar ex ante regulu, bet nebija saskaņā ar konkurences... [200 / 684 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

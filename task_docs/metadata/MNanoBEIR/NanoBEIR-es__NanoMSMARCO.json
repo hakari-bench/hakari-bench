@@ -144,7 +144,7 @@
         "title": "MS MARCO dataset site",
         "url": "https://microsoft.github.io/msmarco/Datasets.html",
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "¿Qué es el síndrome de rumiación?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Síndrome de rumiación. El síndrome de rumiación, también conocido como mericismo, es un tipo de trastorno de la alimentación no especificado de otra manera que provoca la regurgitación de alimentos. A",
+          "full_chars": 354,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "¿Quién canta \"Here I Go Again\"?",
+          "full_chars": 31,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Para otros usos, consulte Aquí Voy Otra Vez (desambiguación). Aquí Voy Otra Vez es una canción de la banda de rock británica Whitesnake. La canción fue lanzada originalmente en su álbum de 1982, Santo",
+          "full_chars": 355,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "¿Quién interpreta Cameron Boyce en Liv y Maddie?",
+          "full_chars": 48,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Prepárense para reírse a carcajadas, chicos. En un adelanto EXCLUSIVO del episodio del 19 de abril de 'Liv & Maddie' titulado 'Prom-A-Rooney.' ¡Obviamente! En el divertido clip, vemos a Cameron Boyce,",
+          "full_chars": 347,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "971233",
+        "document_id": "4589415",
+        "query": {
+          "text": "¿Dónde se encuentran la mayoría de los grandes desiertos del mundo?",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Los demás desiertos del planeta se encuentran fuera de las regiones polares. El más extenso es el desierto del Sahara, un desierto subtropical en el norte de África.",
+          "full_chars": 165,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1093082",
+        "document_id": "7778956",
+        "query": {
+          "text": "¿Qué significa \"copper\" en el contexto de la policía?",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Según los hallazgos actuales parece que \"copper\" (un policía, literalmente 'el que detiene') precede a \"cop\" (tanto como verbo, que significa detener, como sustantivo, que significa policía). Es posib",
+          "full_chars": 382,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

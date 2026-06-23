@@ -86,36 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Quora Question Pairs",
-        "url": "https://kaggle.com/competitions/quora-question-pairs",
-        "year": 2017,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -124,6 +94,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Quora Question Pairs",
+        "url": "https://kaggle.com/competitions/quora-question-pairs",
+        "year": 2017,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "461149",
+        "document_id": "461148",
+        "query": {
+          "text": "Có được cười vào những câu chuyện cười của chính mình không?",
+          "full_chars": 60,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Có kỳ lạ không khi cười với những câu đùa của chính mình?",
+          "full_chars": 57,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "145739",
+        "document_id": "145740",
+        "query": {
+          "text": "Điều dối trá tốt nhất mà bạn từng tạo ra là gì?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lời nói dối được chế tác tốt nhất mà bạn từng nói là gì?",
+          "full_chars": 56,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "127728",
+        "document_id": "127729",
+        "query": {
+          "text": "Tại sao Quora thường gợi ý những câu trả lời trong nguồn cấp dữ liệu của tôi chê bai Donald Trump?",
+          "full_chars": 98,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tại sao Quora dường như chỉ có những câu trả lời chủ quan, thiên lệch cho các câu hỏi về Donald Trump?",
+          "full_chars": 102,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "516276",
+        "document_id": "516277",
+        "query": {
+          "text": "Làm thế nào tôi có thể làm cho cơ thể mình mạnh mẽ?",
+          "full_chars": 51,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Làm thế nào để tôi trở nên mạnh mẽ về thể chất?",
+          "full_chars": 47,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "250143",
+        "document_id": "250142",
+        "query": {
+          "text": "Một vệ tinh lượng tử sẽ hoạt động như thế nào?",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Một vệ tinh lượng tử hoạt động như thế nào và một số ứng dụng chính của nó sẽ là gì?",
+          "full_chars": 84,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

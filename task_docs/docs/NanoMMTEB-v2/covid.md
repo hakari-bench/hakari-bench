@@ -130,12 +130,13 @@ public-notice passages.
 
 ## Example Data
 
-Representative queries ask how many measures Beijing issued for small and
-micro enterprises, when Jiangsu sent its first medical team to Hubei, how Wuzhou
-schools carried out online teaching, what older adults or chronic-disease
-patients should do when symptoms appear, and which people the transport
-authority said should be held accountable. Positive documents are Chinese
-passages containing the requested fact.
+| Query | Positive document |
+| --- | --- |
+| 北京市出台多少条措施帮助中小微企业应对疫情影响？ [24 chars] | 助力中小微企业度难关这些地方减租了抗疫战斗仍在继续，北京市发文出台16条措施帮助中小微企业应对疫情影响，其中房租减免措施备受关注，中关村各空间载体将如何落实该项措施？截至目前，中关村分园、特色产业园区纷纷推出减租措施，汇龙森、翠湖科创平台、中关村意谷等68家孵化器提出对房租进行减免，已推出的减免方案基本参照现行政策，减免租金15至30天。一起来看看它们的落实细则。亦庄园：2月房租最高减免100%中... [200 / 1,481 chars] |
+| 江苏援湖北第一批医疗队是什么时间？ [17 chars] | ——“散装江苏”星夜集结驰援湖北新华社南京2月12日电题：“必须打赢这场仗！”——“散装江苏”星夜集结驰援湖北新华社记者沈汝发、邱冰清11日，江苏支援黄石医疗队310人出发，开赴抗击新冠肺炎疫情战场。从1月25日首批江苏援湖北医疗队出发，到2月11日江苏支援黄石医疗队出发，被网友戏称为“散装”的江苏，截至目前已派出7批医疗队共计1792人赴湖北省参与医疗救治和疫情防控工作。“我做了30多年医生，作... [200 / 1,173 chars] |
+| 梧州市教育局开展的线上教学活动是怎么执行的？ [22 chars] | 我市各中小学校继续延迟开学2月26日，自治区新冠肺炎疫情防控三级应急响应工作指导意见出台，意见提出，将继续延迟学校开学时间。对此，梧州市教育局在继续落实各中小学校开学前後防控责任和开展线上教学活动的同时，也利用安全教育平台做好学生的疫情防控安全教育，让学生在家安心学习。工作指导意见指出，各级各类学校，包括大中小学、幼儿园、中职学校、技工学校等继续延迟开学，具体开学时间将根据疫情防控形势科学评估後提... [200 / 442 chars] |
+| 告知老年人、慢性病患者出现发热、咳嗽、鼻塞、头痛、乏力、气促、结膜充血或消化道症状时，应该怎么做？ [49 chars] | 关于印发基层医疗卫生机构在新冠肺炎疫情防控期间为老年人关于印发基层医疗卫生机构在新冠肺炎疫情防控期间为老年人慢性病患者提供医疗卫生服务指南（试行）的通知国卫基层家医便函〔2020〕2号各省、自治区、直辖市及新疆生产建设兵团卫生健康委基层处：为指导基层医疗卫生机构在新冠肺炎疫情防控期间为老年人、慢性病患者更好地提供医疗卫生服务，结合《国家基本公共卫生服务规范（第三版）》和国家卫生健康委有关疫情防控的... [200 / 1,161 chars] |
+| 交通运输部规定对哪类人进行问责和严肃处理？ [21 chars] | 交通运输部要求进一步加强疫情防控监督工作交通运输部应对新冠肺炎联防联控机制发出通知要求，增强做好疫情防控监督工作的责任感和使命感确保疫情防控部署到哪里监督检查就跟进到哪里2月11日，交通运输部应对新冠肺炎联防联控机制发出通知，要求进一步加强疫情防控监督工作。通知指出，当前，全国上下正在认真贯彻落实习近平总书记对新型冠状病毒感染肺炎疫情的重要指示，众志成城、万众一心防控疫情。部党组坚决贯彻落实党中央... [200 / 1,076 chars] |
 
 ### Public Sources
 
@@ -151,9 +152,9 @@ passages containing the requested fact.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval | 2022 | task paper | https://arxiv.org/abs/2203.03367 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| mteb/CovidRetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/CovidRetrieval |
+| Multi-CPR: A Multi Domain Chinese Dataset for Passage Retrieval | 2022 | task paper | [https://arxiv.org/abs/2203.03367](https://arxiv.org/abs/2203.03367) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| mteb/CovidRetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/CovidRetrieval](https://huggingface.co/datasets/mteb/CovidRetrieval) |
 
 ### Representative Snippets
 

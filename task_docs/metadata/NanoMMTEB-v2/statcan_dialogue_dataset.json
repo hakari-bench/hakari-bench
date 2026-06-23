@@ -134,15 +134,98 @@
         "url": "https://mcgill-nlp.github.io/statcan-dialogue-dataset/",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/StatcanDialogueDatasetRetrieval",
         "url": "https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "statcan-dialogue-dataset__french::q::Q4266",
+        "document_id": "statcan-dialogue-dataset__french::d::D36100402",
+        "query": {
+          "text": "[{'content': 'Bonjour,', 'role': 'user'}, {'content': \"J'aimerais connaître le moyen de trouver le P",
+          "full_chars": 523,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Titre: Produit intérieur brut (PIB) aux prix de base, par industries, provinces et territoires Période: 1997-01-01 to 2020-01-01 Dimensions: Géographie, Valeur, Système de classification des industrie",
+          "full_chars": 26426,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "statcan-dialogue-dataset__english::q::Q18224",
+        "document_id": "statcan-dialogue-dataset__english::d::D13100374",
+        "query": {
+          "text": "[{'content': \"Hi, I'm having trouble finding data (custom table) that has race/ethnicity by province",
+          "full_chars": 1238,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Persons with and without disabilities aged 15 years and over, by age group and sex, Canada, provinces and territories Date range: 2017-01-01 to 2017-01-01 Dimensions: Geography, Age group, Sex,",
+          "full_chars": 1709,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "statcan-dialogue-dataset__english::q::Q10979",
+        "document_id": "statcan-dialogue-dataset__english::d::D33100214",
+        "query": {
+          "text": "[{'content': 'hello', 'role': 'user'}, {'content': 'how many shops specialized in sports are there i",
+          "full_chars": 213,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Canadian Business Counts, with employees, June 2019 Date range: 2019-01-01 to 2019-01-01 Dimensions: Geography, Employment size, North American Industry Classification System (NAICS) Subject: B",
+          "full_chars": 87780,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "statcan-dialogue-dataset__french::q::Q7534",
+        "document_id": "statcan-dialogue-dataset__french::d::D18100005",
+        "query": {
+          "text": "[{'content': 'Bonjour,', 'role': 'user'}, {'content': \"J'aimerais connaître le taux d'inflation au 3",
+          "full_chars": 861,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Titre: Indice des prix à la consommation, moyenne annuelle, non désaisonnalisé Période: 1914-01-01 to 2020-01-01 Dimensions: Géographie, Produits et groupes de produits Sujet: Prix et indices des prix",
+          "full_chars": 22778,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "statcan-dialogue-dataset__english::q::Q4196",
+        "document_id": "statcan-dialogue-dataset__english::d::D13100099",
+        "query": {
+          "text": "[{'content': \"Hi, I was wondering if you have any health data on the Tk'emlups Te Secwepemc band?\",",
+          "full_chars": 564,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Health indicator profile, by Aboriginal identity and sex, age-standardized rate, four year estimates Date range: 2007-01-01 to 2011-01-01 Dimensions: Geography, Sex, Aboriginal identity, Indica",
+          "full_chars": 4353,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

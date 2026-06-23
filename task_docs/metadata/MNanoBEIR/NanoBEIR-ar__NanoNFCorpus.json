@@ -148,7 +148,7 @@
         "title": "NFCorpus project page",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -156,7 +156,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -164,15 +164,98 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "ميلشيكات الشوكولاتة الصحية",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "الهدف: دراسة العلاقة بين استهلاك الكيريز وتكرار هجمات النقرس لدى الأفراد المصابين بالنقرس. الطرق: أجرينا دراسة تقاطع الحالات لدراسة العلاقات بين مجموعة من العوامل المخاطرة المحتملة مع تكرار هجمات النق",
+          "full_chars": 1438,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "الأخلاق الطبية",
+          "full_chars": 14,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "الخلفية: يبدو أن أحد المشاكل الرئيسية في التحكم في الكوليسترول في الدم من خلال التدخل الغذائي هو الحاجة إلى تحسين الالتزام بالمريض. الأهداف: استكشاف العديد من الأسئلة المتعلقة بالحواجز والمحفزات للالت",
+          "full_chars": 1557,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "فول",
+          "full_chars": 3,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "في السنوات العشرين الماضية، زادت الاهتمامات بالبيوكيمياء، التغذية، والعلاج الكيميائي للأرجينين، مما أدى إلى إجراء دراسات شاملة لاستكشاف أدواره الغذائية والعلاجية في علاج ووقاية الاضطرابات الأيضية لدى",
+          "full_chars": 1064,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-68",
+        "document_id": "MED-2991",
+        "query": {
+          "text": "ما يحتوي على النيوجتات الدجاجية؟",
+          "full_chars": 32,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "غرض: تحديد مكونات قطع الدجاج من 2 سلاسل غذائية وطنية. الخلفية: أصبحت قطع الدجاج مكونًا رئيسيًا في النظام الغذائي الأمريكي. حاولنا تحديد التركيبة الحالية لهذه الأطعمة المعالجة بشكل كبير. الطرق: تم اختي",
+          "full_chars": 625,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2051",
+        "document_id": "MED-4551",
+        "query": {
+          "text": "الدسم المشبع",
+          "full_chars": 12,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "الاهتمام باحتمالية أن تناول الأمهات للأغذية أثناء الحمل قد يؤثر على تطور اضطرابات الحساسية لدى الأطفال قد زادت. درس هذا الدراسة المستقبلية الارتباط بين تناول الأمهات لبعض الأغذية الغنية بالحموض الدهني",
+          "full_chars": 1884,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

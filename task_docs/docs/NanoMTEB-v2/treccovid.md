@@ -62,21 +62,22 @@ Models should preserve biomedical exactness while improving semantic recall. Dom
 
 ## Example Data
 
-### Public Sources
-
-- [TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection](https://arxiv.org/abs/2005.04474), 2020.
-- [NIST TREC-COVID challenge page](https://ir.nist.gov/covidSubmit/index.html).
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/trec-covid](https://huggingface.co/datasets/mteb/trec-covid), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| what evidence is there for dexamethasone as a treatment for COVID-19? [69 chars] | The Combination of Tocilizumab and Methylprednisolone Along With Initial Lung Recruitment Strategy in Coronavirus Disease 2019 Patients Requiring Mechanical Ventilation: A Series of 21 Consecutive Cas... [200 / 1,757 chars] |
+| how long does coronavirus remain stable on surfaces? [53 chars] | Body fluids may contribute to human-to-human transmission of severe acute respiratory syndrome coronavirus 2: evidence and practical experience BACKGROUND: In December 2019, an unbelievable outbreak o... [200 / 1,172 chars] |
+| has social distancing had an impact on slowing the spread of COVID-19? [70 chars] | Increased Detection coupled with Social Distancing and Health Capacity Planning Reduce the Burden of COVID-19 Cases and Fatalities: A Proof of Concept Study using a Stochastic Computational Simulation... [200 / 1,576 chars] |
+| are there serological tests that detect antibodies to coronavirus? [66 chars] | A Guide to COVID‐19: a global pandemic caused by the novel coronavirus SARS‐CoV‐2 The emergence of the SARS‐CoV‐2 strain of the human coronavirus has thrown the world into the midst of a new pandemic.... [200 / 1,084 chars] |
+| which biomarkers predict the severe clinical course of 2019-nCOV infection? [75 chars] | Clinical course and outcome of 107 patients infected with the novel coronavirus, SARS-CoV-2, discharged from two hospitals in Wuhan, China BACKGROUND: In December 2019, coronavirus disease 2019 (COVID... [200 / 1,932 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection | 2020 | source task paper | https://arxiv.org/abs/2005.04474 |
-| NIST TREC-COVID | 2020 | challenge page | https://ir.nist.gov/covidSubmit/index.html |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/trec-covid |  | dataset card | https://huggingface.co/datasets/mteb/trec-covid |
+| TREC-COVID: Constructing a Pandemic Information Retrieval Test Collection | 2020 | source task paper | [https://arxiv.org/abs/2005.04474](https://arxiv.org/abs/2005.04474) |
+| NIST TREC-COVID | 2020 | challenge page | [https://ir.nist.gov/covidSubmit/index.html](https://ir.nist.gov/covidSubmit/index.html) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/trec-covid |  | dataset card | [https://huggingface.co/datasets/mteb/trec-covid](https://huggingface.co/datasets/mteb/trec-covid) |
 
 ### Representative Snippets
 

@@ -170,8 +170,91 @@
         "title": "Touché 2020 Task 1 page",
         "url": "https://webis.de/events/touche-20/shared-task-1.html",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "48",
+        "document_id": "6ead9505-2019-04-18T18:25:41Z-00000-000",
+        "query": {
+          "text": "Tuổi bỏ phiếu có nên được giảm xuống?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pro không đưa ra bất kỳ một lý do hợp lý nào để giảm độ tuổi bầu cử. Tuy nhiên có khá nhiều lý do tại sao độ tuổi bầu cử của Anh Quốc không nên được giảm xuống. 1) Những người trẻ tuổi không quan tâm",
+          "full_chars": 2112,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Thuốc kê đơn có nên quảng cáo trực tiếp cho người tiêu dùng không?",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nhiều quảng cáo không cung cấp đủ thông tin về mức độ hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bởi một con tằm bay qua cửa sổ phòng ngủ trên một người đang ngủ yên bình. Thực tế, Lunesta giúp",
+          "full_chars": 1804,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13",
+        "document_id": "f4c49f83-2019-04-18T19:00:07Z-00002-000",
+        "query": {
+          "text": "Liệu năng lượng tái tạo có thể thay thế nhiên liệu hóa thạch một cách hiệu quả?",
+          "full_chars": 79,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Trong mỗi lập luận tôi chỉ định đăng một điểm. Bây giờ để bác bỏ ý tưởng của đối thủ rằng thủy điện kết hợp với năng lượng gió và mặt trời có thể trong lý thuyết cung cấp năng lượng cho Hoa Kỳ, tôi mu",
+          "full_chars": 4070,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "7",
+        "document_id": "8fa3a9aa-2019-04-18T19:35:39Z-00004-000",
+        "query": {
+          "text": "Những người phạm tội đã mãn hạn tù có được phép bỏ phiếu không?",
+          "full_chars": 63,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Mặc dù hồ sơ của đối thủ tranh luận rằng ông ta sống ở Ấn Độ, cuộc tranh luận này là về tội phạm và quyền bầu cử trong một xã hội dân chủ. Tôi không quen với luật pháp và mong đợi của xã hội Ấn Độ cũn",
+          "full_chars": 6356,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "27",
+        "document_id": "a24807d1-2019-04-18T17:57:45Z-00002-000",
+        "query": {
+          "text": "Có nên ban hành thêm các luật kiểm soát súng?",
+          "full_chars": 45,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ngay cả trước khi bắt đầu tấn công với vụ án của đối thủ, tôi muốn giải thích rằng đối thủ của tôi đã bỏ lỡ bản chất cơ bản của cuộc tranh luận. Trong cuộc tranh luận này, \"Những vụ nổ súng gần đây và",
+          "full_chars": 7757,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

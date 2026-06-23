@@ -162,6 +162,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "54451",
+        "document_id": "136860",
+        "query": {
+          "text": "Thư viện so với khung so với API?",
+          "full_chars": 33,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sự khác biệt giữa API, thư viện, runtime và khung làm việc là gì? > **Có thể trùng lặp:** > Thư viện so với framework so với API? Tôi đang gặp khó khăn trong việc hiểu những khái niệm này thực sự có n",
+          "full_chars": 523,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123834",
+        "document_id": "5153",
+        "query": {
+          "text": "Điều kiện tiên quyết để trở thành kiến trúc sư kỹ thuật",
+          "full_chars": 55,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Những điều cần thiết để trở thành kiến trúc sư kỹ thuật tốt là gì? Tôi chỉ tò mò muốn biết làm thế nào để trở thành một kiến trúc sư kỹ thuật tốt. Hoặc những điều gì tạo nên một nhà phát triển kiến tr",
+          "full_chars": 248,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "108292",
+        "document_id": "81718",
+        "query": {
+          "text": "Java phát triển giải pháp server-client",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tôi nên tiếp cận phát triển ứng dụng client-server dựa trên Java như thế nào? Tôi đã được yêu cầu phát triển một ứng dụng khách hàng-máy chủ (yêu cầu cơ sở dữ liệu) cho một công ty. Tôi rất thành thạo",
+          "full_chars": 1358,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "89944",
+        "document_id": "121829",
+        "query": {
+          "text": "Nếu tôi sử dụng .NET Framework cho ứng dụng của mình, tôi có phải trả tiền cho Microsoft không?",
+          "full_chars": 95,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tôi muốn bán phần mềm của tôi [ứng dụng C # trên máy tính để bàn] nhưng tôi bị kẹt trong giấy phép > **Có thể trùng lặp:** > nếu tôi sử dụng .NET Framework cho ứng dụng của tôi, tôi có phải trả tiền g",
+          "full_chars": 1258,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "189426",
+        "document_id": "15515",
+        "query": {
+          "text": "Về cách sử dụng của các khẳng định",
+          "full_chars": 34,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sử dụng những khẳng định so với ném ngoại lệ? Khi viết một hàm thường tôi muốn chắc rằng đầu vào cho nó là hợp lệ để phát hiện các lỗi càng sớm càng tốt (tôi nghĩ những điều này được gọi là tiền điều",
+          "full_chars": 497,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

@@ -62,19 +62,21 @@ Models should learn argument responsiveness and not only topicality. Rerankers s
 
 ## Example Data
 
-### Public Sources
-
-- [Overview of Touché 2020: Argument Retrieval](https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf), 2020.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/webis-touche2020-v3](https://huggingface.co/datasets/mteb/webis-touche2020-v3), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Is homework beneficial? [23 chars] | First, there are three arguments for why homework is excellent and ought to continue in modern schools. 1. Homework aids doer-learners. It is generally accepted that there are three types of learners:... [200 / 3,553 chars] |
+| Should prescription drugs be advertised directly to consumers? [62 chars] | Many ads don't include enough information on how well drugs work. For example, Lunesta is advertised by a moth floating through a bedroom window, above a peacefully sleeping person. Actually, Lunesta... [200 / 1,682 chars] |
+| Should any vaccines be required for children? [45 chars] | Not a full case yet.. Just some little points I put together... Governments should not have the right to intervene in the health decisions parents make for their children. 31% of parents believe they... [200 / 4,497 chars] |
+| Should abortion be legal? [25 chars] | Abortions should be legal as Personhood begins after a fetus becomes viable or after birth, not at conception. According to the U.S. Supreme Court a person is to get their age when they are out of the... [200 / 309 chars] |
+| Do standardized tests improve education? [40 chars] | Resolved: The SAT, ACT, and other standardized tests provided more insight into a high school student's preparedness for education at elite colleges and universities than high school GPA and therefore... [200 / 4,159 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Overview of Touché 2020: Argument Retrieval | 2020 | source task paper | https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/webis-touche2020-v3 |  | dataset card | https://huggingface.co/datasets/mteb/webis-touche2020-v3 |
+| Overview of Touché 2020: Argument Retrieval | 2020 | source task paper | [https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf](https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/webis-touche2020-v3 |  | dataset card | [https://huggingface.co/datasets/mteb/webis-touche2020-v3](https://huggingface.co/datasets/mteb/webis-touche2020-v3) |
 
 ### Representative Snippets
 

@@ -118,11 +118,11 @@ focus on answer-bearing specificity rather than broad finance-topic similarity.
 
 | Query | Positive document |
 | --- | --- |
-| ヴァンガードが提示しているリターンの種類は何ですか？ | ヴァンガードのページから - S&Pのデータが見つけやすいため、これが最も簡単な方法に思えた。私はMoneyChimpを使用して確認した... |
-| フリーランスの税務上の影響 | 米国で所得がある場合、あなたの国と米国との間に別段の規定を定める条約がない限り、米国所得税が課税されます。 |
-| 「ボリューム」について話す際に、高いまたは低いとは何を指すのでしょうか？ | 1日の出来高は、通常、その銘柄の過去50日間の平均1日出来高と比較されます。高い出来高とは、その銘柄の過去50日間の平均1日出来高の2倍以上を指すことが一般的です... |
-| クレジットカードのポイントを、税務上の経費として計上可能なビジネス支出の支払いに使用する | 単純化するために、まずキャッシュバックについてのみ考えましょう。一般的に、個人利用のクレジットカードからのキャッシュバックは課税対象ではありません... |
-| 請負業として税金を申告するにはどうすればよいですか？ | 税務上の目的で、従業員として申告するだけでなく、起業家としても申告する必要があります。昨年、私も同じ状況でした... |
+| ヴァンガードが提示しているリターンの種類は何ですか？ [26 chars] | ヴァンガードのページから - S&Pのデータが見つけやすいため、これが最も簡単な方法に思えた。私はMoneyChimpを使用して確認したが、そこではヴァンガードのページが算術平均ではなくCAGR（複利成長率）を提示していることを裏付けている。注：ヴァンガードは「米国株式市場のリターンについては、1926年から1957年3月3日まではS&P 90を使用している」と述べているが、Chimpはノーベル賞... [200 / 230 chars] |
+| フリーランスの税務上の影響 [13 chars] | 米国で所得がある場合、あなたの国と米国との間に別段の規定を定める条約がない限り、米国所得税が課税されます。 [53 chars] |
+| 「ボリューム」について話す際に、高いまたは低いとは何を指すのでしょうか？ [36 chars] | 1日の出来高は、通常、その銘柄の過去50日間の平均1日出来高と比較されます。高い出来高とは、その銘柄の過去50日間の平均1日出来高の2倍以上を指すことが一般的ですが、あるトレーダーは特定のパターンや出来事の確認のために、3倍または4倍の平均1日出来高を基準とすることもあります。出来高はその銘柄自身の平均1日出来高（ADV）と比較されるため、他の銘柄の出来高と比較することはしません。これは、異なる企... [200 / 294 chars] |
+| クレジットカードのポイントを、税務上の経費として計上可能なビジネス支出の支払いに使用する [44 chars] | 単純化するために、まずキャッシュバックについてのみ考えましょう。一般的に、個人利用のクレジットカードからのキャッシュバックは課税対象ではありませんが、事業利用の場合は課税対象になります（ただし、後で説明しますが、完全にそうというわけではありません）。その理由は、個人での購入のほとんどが税後所得で行われるためです。通常、個人的な購入品の費用を個人の所得から控除することはないため、100ドルの商品を購... [200 / 1,624 chars] |
+| 請負業として税金を申告するにはどうすればよいですか？ [26 chars] | 税務上の目的で、従業員として（T4スリップで自動的に税金が控除される）申告するだけでなく、起業家としても申告する必要があります。昨年、私も同じ状況でした。「Employee and self-employed」はカナダ税務局（Revenue Canada）が発行している資料で、参考になります。事業活動明細書のフォームを記入し、控除可能なすべての経費について詳細な記録を残す必要があります。コピーを取... [200 / 317 chars] |
 
 ### Public Sources
 
@@ -136,7 +136,7 @@ focus on answer-bearing specificity rather than broad finance-topic similarity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FiQA 2018 | 2018 | task paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA 2018 | 2018 | task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

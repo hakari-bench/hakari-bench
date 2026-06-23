@@ -62,19 +62,21 @@ Models should learn evidence specificity, not only topic similarity. Training sh
 
 ## Example Data
 
-### Public Sources
-
-- [CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims](https://arxiv.org/abs/2012.00614), 2020.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/ClimateFEVER_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Currently, sea-level rise does not seem to depend on ocean temperature, and certainly not on CO2. [97 chars] | Paleocene–Eocene Thermal Maximum The Paleocene -- Eocene Thermal Maximum ( PETM ) , alternatively ( ETM1 ) , and formerly known as the `` Initial Eocene '' or '' '' was a time period with more than 8... [200 / 2,549 chars] |
+| The main greenhouse gas is water vapour[…] [42 chars] | Greenhouse gas A greenhouse gas ( abbrev . GHG ) is a gas in an atmosphere that absorbs and emits radiation within the thermal infrared range . This process is the fundamental cause of the greenhouse... [200 / 1,706 chars] |
+| the warming is not nearly as great as the climate change computer models have predicted. [88 chars] | Deforestation Deforestation , clearance or clearing is the removal of a forest or stand of trees where the land is thereafter converted to a non-forest use . Examples of deforestation include conversi... [200 / 2,080 chars] |
+| [S]unspot activity on the surface of our star has dropped to a new low. [71 chars] | Sun The Sun is the star at the center of the Solar System . It is a nearly perfect sphere of hot plasma , with internal convective motion that generates a magnetic field via a dynamo process . It is b... [200 / 2,158 chars] |
+| Since 1965, more parts of the U.S. have seen a decrease in flooding than have seen an increase. [95 chars] | Effects of global warming The effects of global warming are the environmental and social changes caused ( directly or indirectly ) by human emissions of greenhouse gases . There is a scientific consen... [200 / 1,312 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | source task paper | https://arxiv.org/abs/2012.00614 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/ClimateFEVER_test_top_250_only_w_correct-v2 |  | dataset card | https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2 |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | source task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/ClimateFEVER_test_top_250_only_w_correct-v2 |  | dataset card | [https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2) |
 
 ### Representative Snippets
 

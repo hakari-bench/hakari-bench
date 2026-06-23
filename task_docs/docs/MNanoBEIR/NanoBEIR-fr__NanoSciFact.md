@@ -48,13 +48,13 @@ Strong models should combine exact biomedical term recall with claim-evidence se
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Ly49Q dirige l'organisation de la migration des neutrophiles vers les sites d'inflammation en régulant les fonctions des rafts membranaires. | Les neutrophiles subissent rapidement une polarisation et un mouvement directionnel pour infiltrer les sites d'infection et d'inflammation... |
-| La thérapie antirétrovirale réduit les taux de tuberculose chez les patients ayant différents niveaux de CD4. | CONTEXTE L'infection par le virus de l'immunodéficience humaine est le principal facteur de risque de développement de la tuberculose... |
-| La régulation rapide et l'expression basale plus élevée des gènes induits par les interférons diminuent la survie de neurones infectés par le virus du Nil occidental. | Bien que la sensibilité des neurones du cerveau aux infections microbiennes soit un facteur déterminant majeur des résultats cliniques... |
-| Le dépistage primaire du cancer du col de l'utérus avec détection du HPV présente une sensibilité supérieure à celle de la cytologie conventionnelle. | CONTEXTE Le dépistage du cancer du col de l'utérus basé sur le test du papillomavirus humain augmente la sensibilité... |
-| Empêcher l'interaction entre TDP-43 et les protéines du complexe respiratoire I ND3 et ND6 entraîne une augmentation de la perte neuronale. | Les mutations génétiques de la protéine TAR DNA-binding protein 43 provoquent la sclérose latérale amyotrophique... |
+| Query | Positive document |
+| --- | --- |
+| Ly49Q dirige l'organisation de la migration des neutrophiles vers les sites d'inflammation en régula... [100 / 140 chars] | Les neutrophiles subissent rapidement une polarisation et un mouvement directionnel pour infiltrer les sites d'infection et d'inflammation. Nous démontrons ici que le récepteur inhibiteur MHC I, Ly49Q... [200 / 1,134 chars] |
+| La thérapie antirétrovirale réduit les taux de tuberculose chez les patients ayant différents niveau... [100 / 109 chars] | CONTEXTE L'infection par le virus de l'immunodéficience humaine (VIH) est le principal facteur de risque de développement de la tuberculose et a contribué à sa résurgence, notamment en Afrique subsaha... [200 / 2,452 chars] |
+| La régulation rapide et l'expression basale plus élevée des gènes induits par les interférons diminu... [100 / 192 chars] | Bien que la sensibilité des neurones du cerveau aux infections microbiennes soit un facteur déterminant majeur des résultats cliniques, peu de choses sont connues sur les facteurs moléculaires régissa... [200 / 1,344 chars] |
+| Le dépistage primaire du cancer du col de l'utérus avec détection du HPV présente une sensibilité lo... [100 / 229 chars] | CONTEXTE Le dépistage du cancer du col de l'utérus basé sur le test du papillomavirus humain (HPV) augmente la sensibilité de la détection des néoplasies intraépithéliales cervicales de haut grade (gr... [200 / 2,577 chars] |
+| Empêcher l'interaction entre TDP-43 et les protéines du complexe respiratoire I ND3 et ND6 entraîne... [100 / 158 chars] | Les mutations génétiques de la protéine TAR DNA-binding protein 43 (TARDBP, également connue sous le nom de TDP-43) provoquent la sclérose latérale amyotrophique (SLA), et une augmentation de la prése... [200 / 1,531 chars] |
 
 ## Public Sources
 
@@ -68,8 +68,8 @@ Strong models should combine exact biomedical term recall with claim-evidence se
 
 | Label | URL |
 |---|---|
-| SciFact paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository | https://github.com/allenai/scifact |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SciFact paper (https://arxiv.org/abs/2004.14974) |
+| SciFact repository (https://github.com/allenai/scifact) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

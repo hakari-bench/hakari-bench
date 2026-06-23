@@ -106,11 +106,11 @@ rather than a single high-confidence support passage.
 
 | Query | Positive document |
 | --- | --- |
-| 페니 레이 브리지스는 어떤 다른 배우와 함께 텔레비전 시트콤에 출연했는가? | 페니 레이 브리지스는 미국의 여배우이다. 그녀는 여러 텔레비전 프로그램에 출연했으며, 『할프 앤드 할프』에서 어린 모나 역할로 알려져 있다. |
-| 무라마사 학파를 창립한 인물이 만든 칼을 가가노이 시게모치에게 하사한 사람은 누구인가? | 가가노이 시게모치는 아즈치모모야마 시대의 일본 무사로, 오다 가문을 섬겼다. |
-| 음악을 사무엘 심이 작곡하고 조비 할로드가 각본을 쓰고 감독한 영화는 무엇인가요? | 사무엘 심은 영화 및 텔레비전 음악 작곡가이다. |
-| 플로리다주 마이애미 가든스의 선 라이프 스타디움에서 열린 이 대학 미식축구 경기의 경기 일자는 무엇인가? | 2015년 클렘슨 타이거스 미식축구 팀은 2015년 NCAA 디비전 I FBS 시즌에서 클렘슨 대학교를 대표했다. |
-| Devil's Food은 미국의 록 앤드롤 밴드가 발매한 싱글 컴필레이션이다. | 『Devil's Food』은 미국의 록 앤드 롤 밴드 슈퍼서커스가 2005년 4월 미드파이 레코드를 통해 발매한 음반이다. |
+| 페니 레이 브리지스는 어떤 다른 배우와 함께 텔레비전 시트콤에 출연했는가? [41 chars] | 페니 레이 브리지스(Penny Rae Bridges, 1990년 7월 29일 출생)는 미국의 여배우이다. 그녀는 드라마 『포 유어 러브』, 『패밀리 로』, 『보이 미츠 월드』, 『더 페어런트 후드』 등에 출연했으며, 특히 『할프 앤드 할프』에서 어린 모나 역할로 가장 잘 알려져 있다. [159 chars] |
+| 무라마사 학파를 창립한 인물이 만든 칼을 가가노이 시게모치에게 하사한 사람은 누구인가? [48 chars] | 가가노이 시게모치(加賀井 重望, 1561년 ~ 1600년 8월 27일)는 아즈치모모야마 시대의 일본 무사로, 오다 가문을 섬겼다. 그는 가가노이 성을 다스렸다. 고마키·나가쿠테 전투 당시, 그는 오다 노부카쓰 휘하에 소속된 아버지 시게무네를 따라 싸웠다. 그 후 곧 가가노이 성은 도요토미 히데요시의 군대에 포위되었고, 시게무네는 항복하였으며, 시게모치는 히... [200 / 271 chars] |
+| 음악을 샘UEL 심이 작곡하고 조비 할로드가 각본을 쓰고 감독한 영화는 무엇인가요? [46 chars] | 사무엘 심은 영화 및 텔레비전 음악 작곡가이다. 그는 BBC 드라마 시리즈 『덩커크』의 수상작 사운드트랙으로 처음 주목을 받았다. 이후 다양한 영화와 텔레비전 작품의 음악을 작곡해왔으며, 최근에는 더 와인스타인 컴퍼니를 위해 영화 『어웨이크』와 BBC/HBO 드라마 시리즈 『사다믹 하우스』의 음악을 담당했다. 그가 최근에 높은 평가를 받은 음악은 드라마 『... [200 / 273 chars] |
+| 플로리다주 마이애미 가든스의 선 라이프 스타디움에서 열린 이 대학 미식축구 경기의 경기 일자는 무엇인가? 이 경기에서 클렘슨은 4위 오클라호마 수너스를 37-17로 꺾었다. [96 chars] | 2015년 클렘슨 타이거스 미식축구 팀은 2015년 NCAA 디비전 I FBS 미식축구 시즌에서 클렘슨 대학교를 대표했다. 타이거스는 2008년 시즌 중반에 감독직을 맡은 후 일곱 번째 정규 시즌이자 여덟 번째 해를 맞이한 데이보 스위니 감독의 지휘 아래 경기를 치렀다. 이들은 메모리얼 스타디움, 일명 "데스 벨리(Death Valley)"에서 홈 경기를... [200 / 587 chars] |
+| Devil's Food은 미국의 록 앤드롤 밴드가 발매한 싱글 컴필레이션으로, 이 밴드는 또한 어떤 이름으로 컨트리 공연을 하기도 하는가? [77 chars] | 『Devil's Food』은 미국의 록 앤드 롤 밴드 슈퍼서커스가 2005년 4월 미드파이 레코드를 통해 발매한 싱글 컴필레이션 음반이다. [77 chars] |
 
 ### Public Sources
 
@@ -124,7 +124,7 @@ rather than a single high-confidence support passage.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | https://arxiv.org/abs/1809.09600 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

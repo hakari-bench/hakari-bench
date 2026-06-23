@@ -170,13 +170,13 @@ or biomedical relevance record.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| Retrieval of the Best Counterargument without Prior Topic Knowledge | 2018 | source task paper | https://aclanthology.org/P18-1023/ |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | source task paper | https://arxiv.org/abs/2012.00614 |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | https://eltimster.github.io/www/pubs/adcs2015.pdf |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | source task paper | https://arxiv.org/abs/1803.05355 |
-| Financial Opinion Mining and Question Answering | 2018 | source task paper | https://doi.org/10.1145/3184558.3192301 |
-| HotpotQA | 2018 | source task paper | https://arxiv.org/abs/1809.09600 |
-| SPECTER | 2020 | source task paper | https://arxiv.org/abs/2004.07180 |
-| Overview of Touché 2020: Argument Retrieval | 2020 | source task paper | https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf |
-| TREC-COVID | 2020 | source task paper | https://arxiv.org/abs/2005.04474 |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| Retrieval of the Best Counterargument without Prior Topic Knowledge | 2018 | source task paper | [https://aclanthology.org/P18-1023/](https://aclanthology.org/P18-1023/) |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | source task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | [https://eltimster.github.io/www/pubs/adcs2015.pdf](https://eltimster.github.io/www/pubs/adcs2015.pdf) |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | source task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| Financial Opinion Mining and Question Answering | 2018 | source task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| HotpotQA | 2018 | source task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| SPECTER | 2020 | source task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| Overview of Touché 2020: Argument Retrieval | 2020 | source task paper | [https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf](https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf) |
+| TREC-COVID | 2020 | source task paper | [https://arxiv.org/abs/2005.04474](https://arxiv.org/abs/2005.04474) |

@@ -142,8 +142,91 @@
         "url": "https://www.kaggle.com/datasets/stackoverflow/stacksample/data",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q18101",
+        "document_id": "d18101",
+        "query": {
+          "text": "How to block mouse click events from another form I have a winforms single form application that use",
+          "full_chars": 1644,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "I'm glad to announce that the problem is finally solved. After spending a few days attempting to recreate this bug in a new application, re-constructing the main form in the application, comment out p",
+          "full_chars": 916,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q17966",
+        "document_id": "d17966",
+        "query": {
+          "text": "Passing a parameter to a $resource? I have a controller that that looks like this: (function() { ang",
+          "full_chars": 1406,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Create the $resource object with: function branchResource($resource){ ̶r̶e̶t̶u̶r̶n̶ ̶$̶r̶e̶s̶o̶u̶r̶c̶e̶(̶\"̶/̶a̶p̶i̶/̶u̶s̶e̶r̶/̶G̶e̶t̶A̶l̶l̶U̶s̶e̶r̶B̶r̶a̶n̶c̶h̶e̶s̶?̶f̶e̶d̶e̶r̶a̶t̶e̶d̶U̶s̶e̶r̶N̶a̶m̶e̶=",
+          "full_chars": 991,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q17944",
+        "document_id": "d17944",
+        "query": {
+          "text": "Chrome doesn’t show un-minified code in spite of source map present I’m using Grunt and UglifyJS to",
+          "full_chars": 910,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "\"sources\":[\"customDomain.js\"] should be relative to the customDomain.map.js file. Make sure they are in the same directory on your server if this is the case for you. \"file\":\"customDomain.js\" should b",
+          "full_chars": 641,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q18127",
+        "document_id": "d18127",
+        "query": {
+          "text": "Get looked up array count for a document i have 2 collections : words and phrases Each word document",
+          "full_chars": 2051,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "db.words.aggregate([ { \"$unwind\" : \"$phrases\"}, { \"$lookup\": { \"from\": \"phrases\", \"localField\": \"phrases\", \"foreignField\": \"id\", \"as\": \"phrases_data\" } }, { \"$match\" : { \"phrases_data.active\" : 1} },",
+          "full_chars": 683,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q18008",
+        "document_id": "d18008",
+        "query": {
+          "text": "Inno Setup Remove version number from \"Setup has detected that ... is currently running\" I've added",
+          "full_chars": 694,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "You are wrong. The message is: SetupAppRunningError=Setup has detected that %1 is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit. Where the %1",
+          "full_chars": 858,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

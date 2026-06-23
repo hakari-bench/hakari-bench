@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
-        "url": "https://arxiv.org/abs/1809.09600",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-no",
       "source_urls": [
@@ -123,6 +93,119 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "Hvilken annen skuespiller medvirket Penny Rae Bridges i en TV-sitcom sammen med?",
+          "full_chars": 80,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (født 29. juli 1990) er en amerikansk skuespiller. Hun har spilt i \"For Your Love\", \"Family Law\", \"Boy Meets World\" og \"The Parent 'Hood\". Hun er mest kjent for sin rolle i \"Half & H",
+          "full_chars": 224,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "Hvem ga Kaganoi Shigemochi et sverd laget av personen som grunnla Muramasa-skolen?",
+          "full_chars": 82,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. august 1600) var en japansk samurai fra Azuchi-Momoyama-perioden som tjenestegjorde for Oda-klanen. Han styrte Kaganoi-slottet. Under slaget ved Komaki og Nagaku",
+          "full_chars": 554,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "Hvilken film er skrevet og regissert av Joby Harold med musikk av Samuel Sim?",
+          "full_chars": 77,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim er en komponist for film og fjernsyn. Han fikk først anerkjennelse for sin prisbelønte musikk til BBC-dramaserien \"Dunkirk\". Siden da har han skrevet musikk til en bred vifte av film- og fj",
+          "full_chars": 468,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5ae63b2255429908198fa526",
+        "document_id": "46395880",
+        "query": {
+          "text": "Hvilken dato ble denne college football-kampen spilt på Sun Life Stadium i Miami Gardens, Florida, d",
+          "full_chars": 145,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Clemson Tigers fotballaget representerte Clemson University i 2015-sesongen i NCAA Division I FBS. Tigers ble ledet av hovedtrener Dabo Swinney i hans syvende fulle år og åttende år totalt siden han o",
+          "full_chars": 963,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5a84fd085542994c784ddaba",
+        "document_id": "1854777",
+        "query": {
+          "text": "Hva er Devil's Food? Det er en samling med singler av en amerikansk rock and roll-band som også har",
+          "full_chars": 161,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Devil's Food er en samleplate med singler av det amerikanske rock & roll-bandet Supersuckers, utgitt i april 2005 på Mid-Fi Records.",
+          "full_chars": 132,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

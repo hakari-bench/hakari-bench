@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "59967",
+        "document_id": "One_Flew_Over_the_Cuckoo's_Nest_(film)",
+        "query": {
+          "text": "One Flew Over the Cuckoo's Nest only won one Academy Award.",
+          "full_chars": 59,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "One Flew Over the Cuckoo's Nest (film) One Flew Over the Cuckoo 's Nest is a 1975 American comedy-drama film directed by Miloš Forman , based on the 1962 novel One Flew Over the Cuckoo 's Nest by Ken",
+          "full_chars": 1023,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13688",
+        "document_id": "Salt_River_Valley",
+        "query": {
+          "text": "Salt River Valley is on the Mississippi River.",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Salt River Valley The Salt River Valley is an extensive valley on the Salt River in central Arizona , which contains the Phoenix Metropolitan Area . Although this geographic term still identifies the",
+          "full_chars": 525,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "113106",
+        "document_id": "United_Kingdom",
+        "query": {
+          "text": "Sky UK is a British telecommunications company.",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "United Kingdom The United Kingdom of Great Britain and Northern Ireland , commonly known as the United Kingdom ( UK ) or Britain , is a sovereign country in western Europe . Lying off the north-wester",
+          "full_chars": 5000,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "81950",
+        "document_id": "Kaya_Scodelario",
+        "query": {
+          "text": "Kaya Scodelario is a director.",
+          "full_chars": 30,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaya Scodelario Kaya Scodelario-Davis ( born Kaya Rose Humphrey ; March 13 , 1992 ) is an English actress . She made her acting debut as Effy Stonem on the E4 teen drama Skins ( 2007-2010 ) , for whic",
+          "full_chars": 1626,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "183469",
+        "document_id": "Henry_III_of_France",
+        "query": {
+          "text": "A fellow Protestant murdered King Henry III of France.",
+          "full_chars": 54,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Henry III of France Henry III ( 19 September 1551 -- 2 August 1589 ; born Alexandre Édouard de France , Henryk Walezy , Henrikas Valua ) was a monarch of the House of Valois who was elected the monarc",
+          "full_chars": 2522,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/FEVER_test_top_250_only_w_correct-v2",
-    "source_task": "FEVERHardNegatives"
+    "source_task": "FEVERHardNegatives",
+    "example_count": 5
   }
 }

@@ -138,17 +138,100 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "71",
+        "document_id": "Pony/4_control-structures.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: You are given an array of integers stones where s",
+          "full_chars": 730,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon",
+          "full_chars": 12050,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "110",
+        "document_id": "Pony/4_control-structures.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: You are given an integer array nums. The unique e",
+          "full_chars": 323,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon",
+          "full_chars": 12050,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "Pony/4_control-structures.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: Given an array of integers nums, write a function",
+          "full_chars": 281,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon",
+          "full_chars": 12050,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "83",
+        "document_id": "Pony/4_control-structures.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: Given an integer number n, write a function that",
+          "full_chars": 370,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon",
+          "full_chars": 12050,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "3",
+        "document_id": "Pony/4_control-structures.txt",
+        "query": {
+          "text": "I will use the programming language pony. Problem: A string s is nice if, for every letter of the al",
+          "full_chars": 592,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon",
+          "full_chars": 12050,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Pony long-document"
+    "source_task": "Pony long-document",
+    "example_count": 5
   }
 }

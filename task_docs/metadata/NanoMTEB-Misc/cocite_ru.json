@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 18
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "RuSciBench: Open Benchmark for Russian and English Scientific Document Representations",
-        "url": "https://doi.org/10.1134/S1064562424602191",
-        "year": 2024,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval",
-        "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ru_sci_bench_mteb",
-        "url": "https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -115,6 +93,110 @@
           "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "RuSciBench: Open Benchmark for Russian and English Scientific Document Representations",
+        "url": "https://doi.org/10.1134/S1064562424602191",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval",
+        "url": "https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ru_sci_bench_mteb",
+        "url": "https://github.com/mlsa-iai-msu-lab/ru_sci_bench_mteb",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "35325592",
+        "document_id": "36288191",
+        "query": {
+          "text": "Трансформация промышленности в цифровой экономике: проблемы и перспективы В статье проведен анализ а",
+          "full_chars": 1319,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Soft power: опыт Российской Федерации через призму международных отношений В статье рассматриваются аспекты использования «мягкой силы» в процессе формирования межнациональных связей. Особое внимание",
+          "full_chars": 652,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "17866141",
+        "document_id": "18912418",
+        "query": {
+          "text": "КОЛЕБАНИЯ ДОННОГО ДАВЛЕНИЯ Дан обзор экспериментальных исследований низкочастотных колебаний, которы",
+          "full_chars": 619,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Об исследовании колебательного движения газового подвеса ротора турбохолодильных и детандерных машин. Часть II. Колебания давления в соплах питающей системы на сверхкритическом режиме работы Рассмотре",
+          "full_chars": 634,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "12903877",
+        "document_id": "24928160",
+        "query": {
+          "text": "ЭФФЕКТИВНОСТЬ БЮДЖЕТНОГО ФИНАНСИРОВАНИЯ СЕЛЬСКОГО ХОЗЯЙСТВА НА РЕГИОНАЛЬНОМ УРОВНЕ Дана оценка эффек",
+          "full_chars": 250,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ПЛЕМЕННАЯ РАБОТА В МОЛОЧНОМ СКОТОВОДСТВЕ Рассматривается проблема улучшения генетического потенциала в молочном скотоводстве на современном этапе развития АПК. Приводятся основные причины, сдерживающи",
+          "full_chars": 713,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "42714482",
+        "document_id": "43767586",
+        "query": {
+          "text": "ЭКОНОМИЧЕСКИЕ ПРОБЛЕМЫ НАУЧНО-ТЕХНИЧЕСКОГО ПРОГРЕССА В ИССЛЕДОВАНИЯХ ИНСТИТУТА ЭКОНОМИКИ РАН В стать",
+          "full_chars": 894,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Уголовное правоприменение в контексте процедуры банкротства В статье кратко рассмотрены составы банкротных преступлений, а также основные причины неприменения норм об ответственности за данные деяния.",
+          "full_chars": 495,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "22829403",
+        "document_id": "30557103",
+        "query": {
+          "text": "Опытно-промышленная эксплуатация многозвенных автопоездов SCANIA в Удачнинском ГОКе В настоящее врем",
+          "full_chars": 425,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ПРОБЛЕМЫ ВНЕДРЕНИЯ МОДУЛЬНЫХ БОЛЬШЕГРУЗНЫХ АВТОПОЕЗДОВ В целях повышения эффективности автоперевозок, сокращения расхода топлива и токсичности отработавших газов предложены рекомендации по обеспечению",
+          "full_chars": 330,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

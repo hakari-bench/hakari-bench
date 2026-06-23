@@ -156,21 +156,22 @@ here, it may be losing obvious Dutch lexical or named-entity information.
 
 ## Example Data
 
-### Public Sources
-
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [Dutch News Articles](https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles), Kaggle source dataset.
-- [clips/mteb-nl-news-articles-ret](https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret), source dataset card.
-- [MTEB project repository](https://github.com/embeddings-benchmark/mteb).
+| Query | Positive document |
+| --- | --- |
+| Hoofdagent weg na drugsgebruik [30 chars] | Een 50-jarige hoofdagent van de regiopolitie Gelderland-Midden is ontslagen wegens "zeer ernstig plichtsverzuim". Dat heeft de politie bekendgemaakt. De politieman bleek al lange tijd harddrugs te geb... [200 / 365 chars] |
+| Basisschoolleerlingen onwel tijdens kookles [43 chars] | In een buurthuis in Linden in Noord-Brabant zijn basisschoolleerlingen onwel geworden tijdens het koken, schrijft Omroep Brabant. Elf kinderen werden uit voorzorg naar het ziekenhuis gebracht. Een van... [200 / 1,001 chars] |
+| 'IS heeft vluchtelingenkamp bij Damascus in handen' [51 chars] | IS heeft het Palestijnse vluchtelingenkamp Yarmouk bij de Syrische hoofdstad Damascus in handen. De moslimterroristen bezitten nu ongeveer de helft van het kamp, zegt een hoge Palestijnse functionaris... [200 / 888 chars] |
+| Kamerzorgen over missie Oekraïne [33 chars] | In de Tweede Kamer leven zorgen over de veiligheid van de mensen die naar stoffelijke resten en bagage moeten zoeken in het rampgebied in Oekraïne. Vandaag kwamen er berichten dat er rond de rampplek... [200 / 1,521 chars] |
+| Zeven kinderen omgekomen bij brand in Mexico [44 chars] | Bij een brand in Mexico-Stad zijn zeven kinderen om het leven gekomen. De brand was in Iztapalapa, een arm en dichtbevolkt district in het oosten van de stad. Volgens de autoriteiten brak de brand uit... [200 / 414 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| Dutch News Articles |  | dataset card | https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles |
-| clips/mteb-nl-news-articles-ret |  | dataset card | https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| Dutch News Articles |  | dataset card | [https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles](https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles) |
+| clips/mteb-nl-news-articles-ret |  | dataset card | [https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret](https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

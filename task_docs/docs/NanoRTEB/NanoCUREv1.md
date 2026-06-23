@@ -62,21 +62,22 @@ Models should preserve rare biomedical terminology while learning question-to-ev
 
 ## Example Data
 
-### Public Sources
-
-- [CURE: A Dataset for Clinical Understanding & Retrieval Evaluation](https://arxiv.org/abs/2412.06954), task paper.
-- [CURE ACM proceedings record](https://doi.org/10.1145/3711896.3737435), proceedings record.
-- [clinia/CUREv1](https://huggingface.co/datasets/clinia/CUREv1), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| What are self/cutting or self-drilling screws? [46 chars] | The Use of MMF Screws: Surgical Technique, Indications, Contraindications, and Common Problems in Review of the Literature Self-cutting or self-drilling screws have a drill-shaped point to penetrate t... [200 / 231 chars] |
+| Where is the bad split in sagittal split osteotomies of the mandible usually located during orthogna... [100 / 113 chars] | Dal Pont vs Hunsuck: Which Technique Can Lead to a Lower Incidence of Bad Split during Bilateral Sagittal Split Osteotomy? A Triple-blind Randomized Clinical Trial Older age is definitely correlated t... [200 / 1,064 chars] |
+| Which are the advantages of endoscopic approach to treat massive arterial epistaxis? [84 chars] | Success Rate of Endoscopic Sphenopalatine Artery Ligation for the Management of Refractory Posterior Epistaxis Patients in a Tertiary Care Hospital: A Descriptive Cross-sectional Study The findings of... [200 / 613 chars] |
+| How do fixed orthodontic appliances contribute to the development of white spot lesions? [88 chars] | In-vivo durability of a fluoride-releasing sealant (OpalSeal) for protection against white-spot lesion formation in orthodontic patients The results of this study provide some evidence on the abatemen... [200 / 1,370 chars] |
+| What is the most frequent type of dental injury when anterior and buccal teeth are associated with f... [100 / 116 chars] | Traumatic Dental Injury—An Enigma for Adolescents: A Series of Case Reports Coronal fractures of permanent dentition are the most frequent type of dental injury. Fractured anterior teeth are usually t... [200 / 733 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2024 | task paper | https://arxiv.org/abs/2412.06954 |
-| CURE ACM proceedings record | 2025 | proceedings record | https://doi.org/10.1145/3711896.3737435 |
-| clinia/CUREv1 | 2025 | dataset card | https://huggingface.co/datasets/clinia/CUREv1 |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2024 | task paper | [https://arxiv.org/abs/2412.06954](https://arxiv.org/abs/2412.06954) |
+| CURE ACM proceedings record | 2025 | proceedings record | [https://doi.org/10.1145/3711896.3737435](https://doi.org/10.1145/3711896.3737435) |
+| clinia/CUREv1 | 2025 | dataset card | [https://huggingface.co/datasets/clinia/CUREv1](https://huggingface.co/datasets/clinia/CUREv1) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

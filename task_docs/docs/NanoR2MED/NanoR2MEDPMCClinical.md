@@ -62,21 +62,22 @@ Models should jointly handle rare disease terms, anatomy, imaging, pathology, an
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/PMC-Clinical dataset card](https://huggingface.co/datasets/R2MED/PMC-Clinical).
+| Query | Positive document |
+| --- | --- |
+| A 5-year-old female patient presents with swelling and pain in the right mandibular region. Initial... [100 / 532 chars] | A 33-year-old male attended the medical consultation complaining of a painful perianal lesion over the last 18 months. Previous therapeutic attempts, including different antibiotics orally or topicall... [200 / 1,579 chars] |
+| A 46-year-old man with a history of radical extirpated melanoma presents with spontaneous acute seve... [100 / 988 chars] | A 29-year-old female patient with a 6-day history of laparoscopic uterine myomectomy visited a local hospital complaining of worsening headache and mild left hand weakness since surgery. Brain compute... [200 / 1,977 chars] |
+| An 82-year-old man presented with a chief complaint of an abdominal mass and associated abdominal di... [100 / 518 chars] | A 71-year-old woman presented with complaint of progressive abdominal distension. The ultrasonography revealed a huge retroperitoneal or mesenchymal mass occupying the entire abdomen. The patient had... [200 / 2,908 chars] |
+| A 69-year-old male presents with a progressive frontal paroxysmal headache, mild vomiting, diplopia,... [100 / 749 chars] | A 52-year-old male was admitted with a paroxysmal headache in the right parietal region accompanied by visual disturbance in the right eye for over 2 months. Both symptoms mostly occurred in the morni... [200 / 1,291 chars] |
+| An 8-year-old boy was incidentally found to have a splenic mass on abdominal ultrasonography during... [100 / 966 chars] | A 39-year-old Greek woman, with no remarkable medical history, presented to the emergency room of our hospital with diffuse abdominal pain and a mass-like distention of the left side of her abdomen. N... [200 / 1,977 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/PMC-Clinical | 2025 | dataset card | https://huggingface.co/datasets/R2MED/PMC-Clinical |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/PMC-Clinical | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/PMC-Clinical](https://huggingface.co/datasets/R2MED/PMC-Clinical) |
 
 ### Representative Snippets
 

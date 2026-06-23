@@ -103,14 +103,99 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks",
         "url": "https://ojs.aaai.org/index.php/AAAI/article/view/6398",
         "year": 2020,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "quail-q-66",
+        "document_id": "quail-d-192",
+        "query": {
+          "text": "Context: It took Erin an hour and forty-five minutes to drive from their half-million dollar home in",
+          "full_chars": 1562,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "will have an argument with Erin",
+          "full_chars": 31,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "quail-q-123",
+        "document_id": "quail-d-357",
+        "query": {
+          "text": "Context: I actually managed a kind of sleep there, kneeling with the circulation cut off to my legs,",
+          "full_chars": 1943,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "After someone pulled the hood off their head.",
+          "full_chars": 45,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "quail-q-103",
+        "document_id": "quail-d-296",
+        "query": {
+          "text": "Context: I'm a senior at Cesar Chavez high in San Francisco's sunny Mission district, and that makes",
+          "full_chars": 1746,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "After I was told to report to the administration office immediately.",
+          "full_chars": 68,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "quail-q-9",
+        "document_id": "quail-d-28",
+        "query": {
+          "text": "Context: Candy watched the bearded man drive his silver BMW into the convenience store parking lot a",
+          "full_chars": 1746,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "After the bearded man drove his silver BMW into the convenience store parking lot.",
+          "full_chars": 82,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "quail-q-161",
+        "document_id": "quail-d-469",
+        "query": {
+          "text": "Context: They re-shackled and re-hooded me and left me there. A long time later, the truck started t",
+          "full_chars": 1831,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "After they took off my hood.",
+          "full_chars": 28,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

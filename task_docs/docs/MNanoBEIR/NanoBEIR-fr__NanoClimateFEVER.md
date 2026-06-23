@@ -48,13 +48,13 @@ Strong models should improve climate evidence recall without losing claim specif
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| De 1970 à 1998, il y a eu une période de réchauffement qui a fait augmenter les températures d'environ 0,7 degré Fahrenheit... | Le Paléocène, qui signifie « ancien récent », est une époque géologique qui a duré d'environ 66 à 56 millions d'années... |
-| En réalité, la tendance, bien qu'elle ne soit pas statistiquement significative, baisse. | Le cycle solaire ou cycle d'activité magnétique solaire est le cycle quasi périodique d'environ 11 ans des variations de l'activité du Soleil... |
-| Les niveaux de la mer locaux et régionaux continuent de varier naturellement, montant dans certaines régions et baissant dans d'autres. | Le niveau moyen de la mer est un niveau moyen de la surface d'un ou plusieurs des océans de la Terre... |
-| Les scientifiques du climat disent que certains aspects de l'ouragan Harvey suggèrent que le réchauffement climatique rend une situation déjà mauvaise encore plus difficile. | Les effets du réchauffement climatique sont les changements environnementaux et sociaux causés par les émissions humaines de gaz à effet de serre... |
-| L'expérience CLOUD du CERN n'a testé qu'un tiers d'une des quatre exigences nécessaires pour attribuer le réchauffement climatique aux rayons cosmiques... | L'attribution des changements climatiques récents consiste à déterminer scientifiquement les mécanismes responsables des changements climatiques observés sur Terre... |
+| Query | Positive document |
+| --- | --- |
+| De 1970 à 1998, il y a eu une période de réchauffement qui a fait augmenter les températures d'envir... [100 / 208 chars] | Le Paléocène (prononcé /paleosɛn/), ou Paléocène, qui signifie « ancien récent », est une époque géologique qui a duré d'environ 66 à 56 millions d'années. C'est la première époque de la période Paléo... [200 / 1,248 chars] |
+| En réalité, la tendance, bien qu'elle ne soit pas statistiquement significative, baisse. [88 chars] | Le cycle solaire ou cycle d'activité magnétique solaire est le cycle quasi périodique d'environ 11 ans des variations de l'activité du Soleil (y compris les changements dans les niveaux de rayonnement... [200 / 744 chars] |
+| Les niveaux de la mer locaux et régionaux continuent de varier naturellement, montant dans certaines... [100 / 135 chars] | Le niveau moyen de la mer (NMM) (abréviation simplement niveau de la mer) est un niveau moyen de la surface d'un ou plusieurs des océans de la Terre à partir duquel des hauteurs telles que les altitud... [200 / 1,206 chars] |
+| Les scientifiques du climat disent que certains aspects de l'ouragan Harvey suggèrent que le réchauf... [100 / 173 chars] | Les effets du réchauffement climatique sont les changements environnementaux et sociaux causés (directement ou indirectement) par les émissions humaines de gaz à effet de serre. Il existe un consensus... [200 / 1,619 chars] |
+| L'expérience CLOUD du CERN n'a testé qu'un tiers d'une des quatre exigences nécessaires pour attribu... [100 / 198 chars] | L'attribution des changements climatiques récents consiste à déterminer scientifiquement les mécanismes responsables des changements climatiques observés sur Terre, couramment appelés « réchauffement... [200 / 2,450 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should improve climate evidence recall without losing claim specif
 
 | Label | URL |
 |---|---|
-| Climate-FEVER paper | https://arxiv.org/abs/2012.00614 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Climate-FEVER paper (https://arxiv.org/abs/2012.00614) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

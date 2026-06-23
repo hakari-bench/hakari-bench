@@ -132,18 +132,20 @@ sharing an entity or topic with the query.
 
 ## Example Data
 
-### Public Sources
-
-- [Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies](https://arxiv.org/abs/2101.02235)
-- [taeminlee/Ko-StrategyQA](https://huggingface.co/datasets/taeminlee/Ko-StrategyQA)
-- [hakari-bench/NanoMTEB-Korean](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean)
+| Query | Positive document |
+| --- | --- |
+| 스노우다운의 연간 강수량은 얼마나 되나요? [23 chars] | Snowdon "스노우던"이라는 영어 이름은 "눈 언덕"을 의미하는 고대 영어 스노 던에서 유래되었으며, 스노우던은 종종 눈으로 덮여 있기 때문입니다. 겨울철 스노우던에 내리는 눈의 양은 매우 다양하지만, 2004년에는 1994년에 비해 55%나 적었습니다. 스노든의 경사면은 영국에서 가장 습한 기후 중 하나이며 연평균 200인치(5,100mm) 이상의 강... [200 / 211 chars] |
+| 조안 크로포드의 텔레비전 배우로서의 경력은 언제 끝났나요? [32 chars] | Joan Crawford 크로포드는 1930년대 중반까지 인기 영화 배우로서 명성을 이어갔습니다. 노 모어 레이디스(1935)는 로버트 몽고메리, 당시 남편 프랜쇼 톤과 공동 주연을 맡아 큰 성공을 거두었습니다. 크로포드는 오랫동안 MGM의 수장 루이스 B. 메이어에게 더 극적인 역할에 캐스팅해 달라고 간청했고, 메이어는 주저했지만 W.S. 반 다이크 감독... [200 / 259 chars] |
+| 엘튼 존이 기사 작위를 받았나요? [18 chars] | Elton John 존은 그래미상 5회, 브릿 어워드 5회, 아카데미상 2회, 골든 글로브상 2회, 토니상, 디즈니 레전드상, 케네디 센터 아너상 등을 수상했습니다. 2004년 롤링스톤은 로큰롤 시대의 영향력 있는 뮤지션 100인 명단에서 그를 49위로 선정했습니다. 2013년 빌보드는 그를 '빌보드 핫 100 톱 올타임 아티스트'에서 가장 성공한 남성 솔... [200 / 490 chars] |
+| 1은 어떤 식단 제한을 부과합니까? [19 chars] | Haram 하람 육류와 관련하여 무슬림은 흐르는 피를 섭취하는 것이 금지되어 있습니다. 돼지고기, 개, 고양이, 원숭이 또는 기타 하람 동물과 같이 하람으로 간주되는 고기는 사람이 굶주림에 직면하여 이 고기를 섭취함으로써 생명을 구해야 하는 긴급 상황에서만 합법적인 것으로 간주될 수 있습니다. 그러나 사회에 과잉 식량이 있는 경우에는 필요성이 존재하지 않습... [200 / 294 chars] |
+| 소아마비 백신은 누가 만들었나요? [18 chars] | Polio vaccine 최초의 효과적인 소아마비 백신은 1952년 조나스 소크와 피츠버그 대학의 줄리어스 영너, 바이런 베넷, L. 제임스 루이스, 로레인 프리드먼 등의 연구팀에 의해 개발되었으며, 이후 수년간의 후속 테스트가 필요했습니다. 소크는 1953년 3월 26일 CBS 라디오에 출연해 소수의 성인과 어린이를 대상으로 한 실험이 성공적이었다고 보고... [200 / 369 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies | 2021 | Paper | https://arxiv.org/abs/2101.02235 |
-| taeminlee/Ko-StrategyQA | 2025 | Dataset card | https://huggingface.co/datasets/taeminlee/Ko-StrategyQA |
+| Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies | 2021 | Paper | [https://arxiv.org/abs/2101.02235](https://arxiv.org/abs/2101.02235) |
+| taeminlee/Ko-StrategyQA | 2025 | Dataset card | [https://huggingface.co/datasets/taeminlee/Ko-StrategyQA](https://huggingface.co/datasets/taeminlee/Ko-StrategyQA) |
 
 ### Representative Snippets
 

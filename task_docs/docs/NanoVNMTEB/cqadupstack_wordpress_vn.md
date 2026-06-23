@@ -70,12 +70,13 @@ Error analysis should group failures by implementation area: template routing, q
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-wordpress-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-wordpress-vn)
+| Query | Positive document |
+| --- | --- |
+| Các thành viên chia sẻ giữa hai cài đặt khác nhau với các cơ sở dữ liệu khác nhau wordpress [91 chars] | Cách sử dụng các bảng db từ xa trong cấu hình hiện tại? > **Có thể trùng lặp:** > Thành viên chia sẻ giữa hai cài đặt wordpress khác nhau với các cơ sở dữ liệu khác nhau Ví dụ tôi có 2 cài đặt wordpre... [200 / 659 chars] |
+| gán 2 $args cho một wp_query [28 chars] | pagenavi với wp_query hợp nhất Tôi cần sử dụng wp_query để thực thi bài viết từ 2 từ khóa riêng biệt sử dụng `s = từ khóa` vì vậy tôi đã tìm thấy câu trả lời này và nó rất hữu ích Kết hợp các truy vấn... [200 / 6,097 chars] |
+| Giúp với chức năng Walker trong Wordpress [41 chars] | Xác định xem mục điều hướng có con không Tôi đang cố gắng xác định xem một mục có mục con với độ sâu 1 hay không. Tôi không thể tìm thấy bất cứ điều gì về việc có một hàm/query nào đó mà tôi có thể vi... [200 / 3,671 chars] |
+| Cách vô hiệu hóa WordPress từ tạo ra hình thu nhỏ? [50 chars] | Thêm hình ảnh không tạo ra hình thu nhỏ Tôi không chắc liệu yêu cầu của tôi có điên rồ hay hợp lý, nhưng tôi muốn kiểm soát cách mà hình ảnh của tôi được lưu trữ trong WordPress, tránh trường hợp một... [200 / 346 chars] |
+| Hình ảnh mặc định (logo) cho tùy chỉnh [38 chars] | wp_customize_image_control giá trị mặc định Tôi đang cố gắng tạo một chủ đề tùy chỉnh sử dụng tùy chọn tùy chỉnh trong Wordpress 3.4. Tôi muốn tạo một tùy chọn để thay đổi logo của chủ đề, nhưng tôi c... [200 / 993 chars] |
 
 ### Source Reference Table
 

@@ -48,13 +48,13 @@ Strong models should learn finance terminology and scenario reasoning. Useful si
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Quel type de rendements Vanguard indique-t-il ? | À partir de la page de Vanguard - Cela semblait être le plus simple, car les données S&P sont faciles à trouver... |
-| Quelles sont les implications fiscales du travail indépendant ? | Si vous avez un revenu aux États-Unis, vous devrez payer l'impôt sur le revenu américain... |
-| Qu'est-ce qui est considéré comme élevé ou bas en matière de volume ? | Le volume quotidien est généralement comparé au volume quotidien moyen des 50 derniers jours pour une action... |
-| Utiliser les points de fidélité de votre carte de crédit pour régler des dépenses professionnelles déductibles fiscalement | Pour simplifier, commençons par considérer uniquement le remboursement en espèces... |
-| Comment dois-je déclarer mes impôts en tant que travailleur indépendant ? | Pour des raisons fiscales, vous devrez déclarer vos revenus en tant qu'employé et aussi en tant qu'entrepreneur... |
+| Query | Positive document |
+| --- | --- |
+| Quel type de rendements Vanguard indique-t-il ? [47 chars] | À partir de la page de Vanguard - Cela semblait être le plus simple, car les données S&P sont faciles à trouver. J'utilise MoneyChimp pour obtenir des informations - ce qui confirme que la page de Van... [200 / 543 chars] |
+| Quelles sont les implications fiscales du travail indépendant ? [63 chars] | Si vous avez un revenu aux États-Unis, vous devrez payer l'impôt sur le revenu américain. Sauf si un traité entre votre pays et les États-Unis en dispose autrement. [164 chars] |
+| Qu'est-ce qui est considéré comme élevé ou bas en matière de volume ? [69 chars] | Le volume quotidien est généralement comparé au volume quotidien moyen des 50 derniers jours pour une action. Un volume élevé est généralement considéré comme étant 2 fois ou plus le volume quotidien... [200 / 765 chars] |
+| Utiliser les points de fidélité de votre carte de crédit pour régler des dépenses professionnelles d... [100 / 122 chars] | Pour simplifier, commençons par considérer uniquement le remboursement en espèces. En général, le remboursement en espèces des cartes de crédit pour un usage personnel n'est pas imposable, mais pour u... [200 / 4,415 chars] |
+| Comment dois-je déclarer mes impôts en tant que travailleur indépendant ? [73 chars] | Pour des raisons fiscales, vous devrez déclarer vos revenus en tant qu'employé (feuilles T4 et impôts retenus automatiquement), mais aussi en tant qu'entrepreneur. J'ai eu la même situation l'année de... [200 / 853 chars] |
 
 ## Public Sources
 
@@ -67,7 +67,7 @@ Strong models should learn finance terminology and scenario reasoning. Useful si
 
 | Label | URL |
 |---|---|
-| FiQA paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA paper (https://doi.org/10.1145/3184558.3192301) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

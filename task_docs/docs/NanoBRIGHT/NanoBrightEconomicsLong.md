@@ -68,9 +68,13 @@ Because most queries have only one positive, small rank changes matter. Training
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging and long-document split.
+| Query | Positive document |
+| --- | --- |
+| Would a GDP measure be improved by excluding foreign interest paid? The income method of calculating... [100 / 684 chars] | [ OECD Better Life Index ](/) ![](/media/bli/theme/img/logo-bli@2x.png) * [ Index ](/) * [ Responses ](/responses/) * Countries __ * [ Australia ](/countries/australia/) * [ Austria ](/countries/austr... [200 / 13,187 chars] |
+| Derivative to ln(K(t)) in the RBC model In the calculation of the equation of motion for capital in... [100 / 406 chars] | Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page "Visit the main page \[z\]") * [ Contents ](/wiki/Wikipedia:Contents "Guides to browsing Wikipedia")... [200 / 34,111 chars] |
+| What is the purpose of taxes if central banks can fund deficit spending? Somewhat straight forward.... [100 / 524 chars] | The Economic and Social Review, Vol. 35, No. 3, Winter, 2004, pp. 251-266 Inflation and Money Growth: Evidence from a Multi-Country Data-Set JOHN C. FRAIN* Central Bank and Financial Services Regulato... [200 / 29,854 chars] |
+| Is it always a trade off between efficiency and equity? Is there any situations where we can achieve... [100 / 467 chars] | ##### This website uses cookies. By clicking the "Accept" button or continuing to browse our site, you agree to first-party and session-only cookies being stored on your device to enhance site navigat... [200 / 5,408 chars] |
+| How are stock prices determined in the following cases? I looked at this question already. I know th... [100 / 689 chars] | INVESTING SIMULATOR BANKING PERSONAL FINANCE NEWS REVIEWS ACADEMY TRADE TRADING SKILLS TRADING BASIC EDUCATION Matching Orders: What They Are, How They Work, and Examples By GORDON SCOTT Updated April... [200 / 6,039 chars] |
 
 ### Source Reference Table
 

@@ -140,18 +140,20 @@ which article is actually relevant.
 
 ## Example Data
 
-### Public Sources
-
-- [MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis](https://arxiv.org/abs/2405.20468)
-- [lyon-nlp/mteb-fr-retrieval-syntec-s2p](https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p)
-- [hakari-bench/NanoMTEB-French](https://huggingface.co/datasets/hakari-bench/NanoMTEB-French)
+| Query | Positive document |
+| --- | --- |
+| Puis-je justifier d'une indemnité de licenciement si cela fait-il plus de 2 ans que je suis dans cet... [100 / 115 chars] | Article 18 : Indemnité de licenciement – Conditions d’attribution Modification Avenant n° 7 du 5/07/1991 Il est attribué à tout salarié licencié justifiant d’au moins 2 années d’ancienneté une indemni... [200 / 690 chars] |
+| Mon entreprise a déposé un brevet sur mon invention. A quoi ai-je droit ? [73 chars] | Article 75 : Invention des salariés dans le cadre des activités professionnelles Dispositions générales : Les règles relatives aux inventions des salariés sont fixées par la loi n° 78-742 du 13 juille... [200 / 3,628 chars] |
+| Quelle est la période de prise de congés ? [42 chars] | Article 25 : Période de congés Les droits à congé s’acquièrent du 1er juin de l’année précédente au 31 mai de l’année en cours. La période de prise de ces congés, dans tous les cas, est de treize mois... [200 / 753 chars] |
+| J'ai le droit de faire combien d'heures supplémentaires sans avoir l'accord de l'inspecteur du trava... [100 / 104 chars] | Article 33 : Heures supplémentaires [En vigueur] ETAM hors CE : A. – Rémunération des heures supplémentaires : Les heures supplémentaires de travail contrôlées, effectuées par le personnel ETAM, sont... [200 / 465 chars] |
+| Y a-t-il un examen médical obligatoire au retour d'un déplacement à l'étranger ? [80 chars] | Article 73 : Contrôle médical En cas de séjour prolongé à l’étranger, le salarié est tenu, à la demande de l’employeur avant son départ et dans le mois qui suit son retour à son domicile, de subir, lu... [200 / 513 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | Paper | https://arxiv.org/abs/2405.20468 |
-| lyon-nlp/mteb-fr-retrieval-syntec-s2p | 2024 | Dataset card | https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p |
+| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | Paper | [https://arxiv.org/abs/2405.20468](https://arxiv.org/abs/2405.20468) |
+| lyon-nlp/mteb-fr-retrieval-syntec-s2p | 2024 | Dataset card | [https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p](https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p) |
 
 ### Representative Snippets
 

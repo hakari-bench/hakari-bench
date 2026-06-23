@@ -154,21 +154,22 @@ does not penalize alternative valid evidence passages.
 
 ## Example Data
 
-### Public Sources
-
-- [FEVER: a Large-scale Dataset for Fact Extraction and Verification](https://aclanthology.org/N18-1074/), 2018.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-fever](https://huggingface.co/datasets/clips/beir-nl-fever), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| De huidige Hertog van York is een persoon. [42 chars] | Hertog van York De Hertog van York is een adellijke titel in de Peerage van het Verenigd Koninkrijk. Sinds de 15e eeuw is deze titel, wanneer verleend, meestal gegeven aan de tweede zoon van Engelse (... [200 / 931 chars] |
+| Burbank, Californië is altijd volledig verstoken geweest van industrie. [71 chars] | Burbank, Californië Burbank is een stad in Los Angeles County in Zuid-Californië, Verenigde Staten, 19 km ten noordwesten van het centrum van Los Angeles. De bevolking bedroeg bij de volkstelling van... [200 / 1,459 chars] |
+| Er is software, genaamd Adobe Photoshop, waarvan de versies met een nummer worden aangeduid. [92 chars] | Adobe Photoshop Adobe Photoshop is een rastergrafische editor ontwikkeld en uitgegeven door Adobe Systems voor macOS en Windows. Photoshop werd in 1988 gecreëerd door Thomas en John Knoll. Sindsdien i... [200 / 2,249 chars] |
+| Joseph Merrick was het onderwerp van duizenden haat-tweets. [59 chars] | Joseph Merrick Joseph Carey Merrick (5 augustus 1862 – 11 april 1890; vaak ten onrechte John Merrick genoemd) was een Engelsman met zeer ernstige misvormingen die eerst werd tentoongesteld in een frea... [200 / 3,706 chars] |
+| Vic Mensa werd geboren op 12 juni 1993. [39 chars] | Vic Mensa Victor Kwesi Mensah (geboren 6 juni 1993), beter bekend onder zijn artiestennaam Vic Mensa, is een Grammy-genomineerde Amerikaanse rapper uit Chicago, Illinois. Hij heeft momenteel een contr... [200 / 552 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and Verification | 2018 | ACL paper | https://aclanthology.org/N18-1074/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-fever |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-fever |
+| FEVER: a Large-scale Dataset for Fact Extraction and Verification | 2018 | ACL paper | [https://aclanthology.org/N18-1074/](https://aclanthology.org/N18-1074/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-fever |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-fever](https://huggingface.co/datasets/clips/beir-nl-fever) |
 
 ### Representative Snippets
 

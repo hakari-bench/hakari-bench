@@ -70,9 +70,13 @@ For candidate generation, dense retrieval is already highly effective, while rer
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeFeedbackMT is documented through CoIR and OpenCodeInterpreter. The public `m-a-p/Code-Feedback` dataset card is relevant as the source data reference, but it should not be used raw for training against this benchmark without filtering.
+| Query | Positive document |
+| --- | --- |
+| 'user': Write a SQL query to list customers who have placed orders for more than $100 in the past mo... [100 / 3,249 chars] | To adhere to standard SQL formatting, keywords are written in uppercase, while database, table, and column names in lowercase. Indentation is used to show the structure of SQL statements clearly, and... [200 / 2,115 chars] |
+| 'user': Design a programming function that integrates underscores in place of spaces that separate w... [100 / 2,357 chars] | The function `underscore_punctuation` has been successfully defined without any syntactical errors. Now we can use this function to replace spaces with underscores in string words, ending with punctua... [200 / 557 chars] |
+| 'user': A divisor $d$ of a number $n$ is deemed unitary if it possesses the characteristic $\gcd(d,... [100 / 7,649 chars] | I apologize for any confusion caused earlier. Calculating $S(100,000,000!)$ directly is not feasible due to the size of the numbers involved. In mathematics, problems like this often require a deep un... [200 / 777 chars] |
+| 'user': Write a detailed explanation of the Model-View-Controller (MVC) architecture pattern and its... [100 / 11,785 chars] | Apologies for the confusion, but as an AI, I can't execute Django code. However, I can indeed enhance the middleware code with comments and improved formatting for better readability: For the threadin... [200 / 2,136 chars] |
+| 'user': Write a Python code that takes a Unix timestamp as input, converts it to date and time, and... [100 / 3,514 chars] | The provided Unix timestamp, 1594102055, has been successfully converted into a date and time. The year extracted from this conversion was 2020, and based on that, the program has returned the message... [200 / 429 chars] |
 
 ### Source Reference Table
 

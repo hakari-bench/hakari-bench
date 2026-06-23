@@ -70,13 +70,13 @@ Error analysis should group failures by vocabulary mismatch, overly broad topic 
 
 ## Example Data
 
-### Public Sources
-
-- [NFCorpus paper](https://doi.org/10.1007/978-3-319-30671-1_58)
-- [NFCorpus project page](https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/nfcorpus-vn](https://huggingface.co/datasets/GreenNode/nfcorpus-vn)
+| Query | Positive document |
+| --- | --- |
+| phương pháp nấu ăn [18 chars] | So sánh tiềm năng độc tế bào và đột biến của hương khói thức ăn, ngưng tụ khói thuốc lá và ngưng tụ khói gỗ. Mặc dù các sản phẩm phân hủy nhiệt thường có tính độc và đột biến, nhưng mối quan hệ giữa l... [200 / 1,687 chars] |
+| kí ức [5 chars] | p-Nonyl-phenol: một loại xenoestrogen được giải phóng từ "polystyrene" "biến đổi". Alkylphenols được sử dụng rộng rãi làm chất phụ gia trong nhựa và chất tẩy rửa. Chúng tôi đã xác định một alkylphenol... [200 / 1,039 chars] |
+| ergothioneine [13 chars] | Nguồn chất dinh dưỡng và tác dụng chống oxy hóa của ergothioneine. Ergothioneine là hợp chất thiol không thấm màng bản địa tích lũy đặc hiệu trong tế bào thông qua vận chuyển chất hữu cơ dương. Ở ngườ... [200 / 1,155 chars] |
+| vitamin K [9 chars] | Khử trùng hiệu quả Mycobacterium avium subsp. paratuberculosis trong sữa tươi bị nhiễm phân từ vật nuôi tự nhiên Hiệu quả của quá trình tiệt trùng nhiệt độ cao thời gian giữ ngắn (HTST) và đồng nhất h... [200 / 1,444 chars] |
+| Stevia [6 chars] | Đánh giá tác dụng đột biến của Stevioside và Steviol sử dụng sáu xét nghiệm đột biến in vitro và một xét nghiệm đột biến in vivo. Stevioside, một thành phần của Stevia rebaudiana, được sử dụng phổ biế... [200 / 1,948 chars] |
 
 ### Source Reference Table
 

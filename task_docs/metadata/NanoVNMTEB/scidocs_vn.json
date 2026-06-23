@@ -171,8 +171,91 @@
         "title": "SciDocs dataset page",
         "url": "https://allenai.org/data/scidocs",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "c0bbc89889691aca1f81f3727a0587eadfe4e8af",
+        "document_id": "1ba779d5a5c9553ee8ecee5cf6bafb4b494ea7bc",
+        "query": {
+          "text": "Phân tích hành vi của mã độc Android",
+          "full_chars": 36,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Về chứng nhận ứng dụng điện thoại di động nhẹ Người dùng đã bắt đầu tải về một số lượng ngày càng lớn các ứng dụng cho điện thoại di động để đáp ứng với sự tiến bộ trong các thiết bị cầm tay và mạng k",
+          "full_chars": 1361,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1d1bc7c5ab704db04a72efb063fb1db6fc07f85c",
+        "document_id": "14423a62355ff3a1cff997f24534390921f854b5",
+        "query": {
+          "text": "Liên kết một từ điển ngữ nghĩa với Wordnet và chuyển đổi sang Wordnet-LMF",
+          "full_chars": 73,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Học cách bản đồ giữa các từ vựng trên Web ngữ nghĩa Các ngữ nghĩa học đóng một vai trò nổi bật trong Semantic Web. Chúng cho phép xuất bản dữ liệu có thể hiểu được bởi máy tính, mở ra nhiều cơ hội để",
+          "full_chars": 2024,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "045a50ec31973fee15ff967f18e016fae77fd1f3",
+        "document_id": "1886edb4e771c1c0aa7bae360d7f3de23ac4ac8e",
+        "query": {
+          "text": "Mô tả tính độ tin cậy của phần cứng điện toán đám mây",
+          "full_chars": 53,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Xu hướng thất bại trong một quần thể ổ đĩa lớn Được ước tính rằng trên 90% thông tin mới được sản xuất ra trên thế giới đang lưu trữ trên các phương tiện từ tính, hầu hết là trên ổ cứng. Mặc dù sự qua",
+          "full_chars": 1462,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "eaf4756c12cfdae09ad3c82696ec1c16271a9348",
+        "document_id": "12a376e621d690f3e94bce14cd03c2798a626a38",
+        "query": {
+          "text": "Nhận diện thói quen hàng ngày qua các hoạt động",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Phát hiện nhanh đối tượng sử dụng tăng cường của thác đơn giản tính năng Bài báo này mô tả một phương pháp tiếp cận học máy cho việc phát hiện vật thể hình ảnh có khả năng xử lý hình ảnh cực nhanh và",
+          "full_chars": 1359,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "4ec90b7da43e6438cbdc756624b1083f30288064",
+        "document_id": "0a45ca7d9c6ac32eeec03ce9a6d8344d4d9aaf1c",
+        "query": {
+          "text": "VELNET (Môi trường ảo cho học tập mạng)",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Môi trường học tập ảo trên mạng: Một khung nghiên cứu và đánh giá sơ bộ về hiệu quả trong việc đào tạo kỹ năng CNTT cơ bản Việc sử dụng của bạn đối với kho lưu trữ JSTOR cho thấy sự chấp nhận của bạn",
+          "full_chars": 619,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

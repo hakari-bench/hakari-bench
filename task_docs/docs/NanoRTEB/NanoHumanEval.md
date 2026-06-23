@@ -62,19 +62,21 @@ Models should represent function intent, input-output behavior, and edge cases. 
 
 ## Example Data
 
-### Public Sources
-
-- [Evaluating Large Language Models Trained on Code](https://arxiv.org/abs/2107.03374), task paper.
-- [openai/openai_humaneval](https://huggingface.co/datasets/openai/openai_humaneval), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| Filter an input list of strings only for ones that start with a given prefix. [77 chars] | return [x for x in strings if x.startswith(prefix)] [51 chars] |
+| Input to this function is a string represented multiple groups for nested parentheses separated by s... [100 / 251 chars] | def parse_paren_group(s): depth = 0 max_depth = 0 for c in s: if c == '(': depth += 1 max_depth = max(depth, max_depth) else: depth -= 1 return max_depth return [parse_paren_group(x) for x in paren_st... [200 / 331 chars] |
+| Write a function that returns true if the given number is the multiplication of 3 prime numbers and... [100 / 191 chars] | def is_prime(n): for j in range(2,n): if n%j == 0: return False return True for i in range(2,101): if not is_prime(i): continue for j in range(2,101): if not is_prime(j): continue for k in range(2,101... [200 / 396 chars] |
+| In this task, you will be given a string that represents a number of apples and oranges that are dis... [100 / 606 chars] | lis = list() for i in s.split(' '): if i.isdigit(): lis.append(int(i)) return n - sum(lis) [118 chars] |
+| brackets is a string of "(" and ")". return True if every opening bracket has a corresponding closin... [100 / 110 chars] | depth = 0 for b in brackets: if b == "(": depth += 1 else: depth -= 1 if depth < 0: return False return depth == 0 [182 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Evaluating Large Language Models Trained on Code | 2021 | task paper | https://arxiv.org/abs/2107.03374 |
-| openai/openai_humaneval |  | dataset card | https://huggingface.co/datasets/openai/openai_humaneval |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Evaluating Large Language Models Trained on Code | 2021 | task paper | [https://arxiv.org/abs/2107.03374](https://arxiv.org/abs/2107.03374) |
+| openai/openai_humaneval |  | dataset card | [https://huggingface.co/datasets/openai/openai_humaneval](https://huggingface.co/datasets/openai/openai_humaneval) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

@@ -70,13 +70,13 @@ Error analysis should separate exact-term misses, broad-topic false positives, o
 
 ## Example Data
 
-### Public Sources
-
-- [TREC-COVID paper](https://arxiv.org/abs/2005.04474)
-- [TREC-COVID challenge page](https://ir.nist.gov/covidSubmit/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/trec-covid-vn](https://huggingface.co/datasets/GreenNode/trec-covid-vn)
+| Query | Positive document |
+| --- | --- |
+| Chúng ta biết gì về vắc xin mRNA cho vi-rút SARS-CoV-2? [55 chars] | Chống dịch COVID-19: Đánh giá nhanh chẩn đoán, liệu pháp và vắc xin Đại dịch COVID-19 do một chủng virus corona mới, SARS-CoV-2, đã lây nhiễm hơn 4.9 triệu người và gây ra trên 300.000 ca tử vong trên... [200 / 2,093 chars] |
+| Những chiếc mặt nạ nào là tốt nhất để phòng ngừa nhiễm Covid-19? [64 chars] | Đại dịch SARS, MERS và virus corona chủng mới (COVID-19), các mối đe dọa sức khỏe toàn cầu mới nhất và lớn nhất: chúng ta đã học được gì? MỤC ĐÍCH: Cung cấp tổng quan về ba loại virus corona gây chết... [200 / 2,092 chars] |
+| có phải giãn cách xã hội đã ảnh hưởng đến việc làm chậm sự lây lan của COVID-19 không? [86 chars] | Tăng cường phát hiện kết hợp với giãn cách xã hội và quy hoạch năng lực y tế giảm gánh nặng các trường hợp và tử vong do COVID-19: Nghiên cứu khái niệm bằng mô hình mô phỏng tính toán ngẫu nhiên Mục t... [200 / 1,616 chars] |
+| Protein SARS-CoV-2 có tương tác với protein của con người cho thấy tiềm năng là mục tiêu thuốc. Có t... [100 / 176 chars] | Cơ sở phân tử cho sự gắn kết ADP-ribose vào miền Macro-X của Nsp3 của SARS-CoV-2 Virus gây ra COVID-19, SARS-CoV-2, có một bộ gen RNA lớn mã hóa nhiều protein có thể là mục tiêu cho các loại thuốc khá... [200 / 841 chars] |
+| Những gì chúng ta biết về những người bị nhiễm Covid-19 nhưng không có triệu chứng? [83 chars] | Đường lây truyền của virus corona trên tàu Diamond Princess Đã xảy ra một đợt bùng phát COVID-19 trên tàu du thuyền Diamond Princess vào tháng Giêng và tháng Hai năm 2020. Chúng tôi đã phân tích thông... [200 / 2,094 chars] |
 
 ### Source Reference Table
 

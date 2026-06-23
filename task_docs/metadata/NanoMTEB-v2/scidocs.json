@@ -140,10 +140,93 @@
         "url": "https://huggingface.co/datasets/mteb/scidocs",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "c79b88a8d8ba491cead38b431703d84015153a8f",
+        "document_id": "13082af1fd6bb9bfe63e73cf007de1655b7f9ae0",
+        "query": {
+          "text": "An integrated framework on mining logs files for computing system management",
+          "full_chars": 76,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Machine learning in automated text categorization The automated categorization (or classification) of texts into predefined categories has witnessed a booming interest in the last 10 years, due to the",
+          "full_chars": 1103,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "23386571ed332e4a465c0a6fa899f310caa217c8",
+        "document_id": "44b05f00f032c0d59df4b712b83ff82a913e950a",
+        "query": {
+          "text": "Topic-Relevance Map: Visualization for Improving Search Result Comprehension",
+          "full_chars": 76,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Designing for Exploratory Search on Touch Devices Exploratory search confront users with challenges in expressing search intents as the current search interfaces require investigating result listings",
+          "full_chars": 1194,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0a40663fdcf7c5fb7cfc459693116c41309e7eca",
+        "document_id": "02bb762c3bd1b3d1ad788340d8e9cdc3d85f33e1",
+        "query": {
+          "text": "Algorithmic Nuggets in Content Delivery",
+          "full_chars": 39,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web We describe a family of caching protocols for distrib-uted networks that can be used to",
+          "full_chars": 1323,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f1b7cb07e6f6b0c1cb142f8e46da4957ea7960f6",
+        "document_id": "741fd80f0a31fe77f91b1cce3d91c544d6d5b1b2",
+        "query": {
+          "text": "The Enactive Approach to Architectural Experience: A Neurophysiological Perspective on Embodiment, M",
+          "full_chars": 126,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Affective outcomes of virtual reality exposure therapy for anxiety and specific phobias: a meta-analysis. Virtual reality exposure therapy (VRET) is an increasingly common treatment for anxiety and sp",
+          "full_chars": 836,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5056e36419b95411e4c03e9c011bbdd286bbb7a9",
+        "document_id": "8b3539e359f4dd445c0651ebcb911c034d1ffc5b",
+        "query": {
+          "text": "PD control with on-line gravity compensation for robots with elastic joints: Theory and experiments",
+          "full_chars": 99,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A passivity based Cartesian impedance controller for flexible joint robots - part I: torque feedback and gravity compensation In this paper a novel approach to the Cartesian impedance control problem",
+          "full_chars": 780,
+          "limit_chars": 200,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/scidocs",
-    "source_task": "SCIDOCS"
+    "source_task": "SCIDOCS",
+    "example_count": 5
   }
 }

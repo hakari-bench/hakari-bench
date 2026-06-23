@@ -131,22 +131,105 @@
         "year": 2024,
         "is_paper": true,
         "doi": "10.48550/arXiv.2406.02396",
-        "source_confidence": "benchmark_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "adrlau/navjordj-SNL_summarization_copy",
         "url": "https://huggingface.co/datasets/adrlau/navjordj-SNL_summarization_copy",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/SNLRetrieval",
         "url": "https://huggingface.co/datasets/mteb/SNLRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "392",
+        "document_id": "393",
+        "query": {
+          "text": "Kasimir Edschmid",
+          "full_chars": 16,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Biografi Kasimir Edschmid studerte romansk filologi i blant annet München og Paris og fikk tidlig et stort litterært kontaktnett. Under første verdenskrig arbeidet han som litteraturanmelder. Han var",
+          "full_chars": 2627,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "148",
+        "document_id": "149",
+        "query": {
+          "text": "Hermann Bondi",
+          "full_chars": 13,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Biografi Bondi dro fra Wien til Cambridge i 1937 i håp om å studere med Arthur Eddington. Da andre verdenskrig brøt ut ble han internert, først på Isle of Man, senere i Canada. I denne perioden ble ha",
+          "full_chars": 1611,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "108",
+        "document_id": "109",
+        "query": {
+          "text": "bønn (kristendom)",
+          "full_chars": 35,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kristenhetens viktigste bønn er Fadervår. Den brukes i alle kristne gudstjenester, og svært mange av verdens kristne ber den daglig. Bønnen kan inneholde mange ulike elementer. Bønnen kan være lovpris",
+          "full_chars": 1823,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "8",
+        "document_id": "9",
+        "query": {
+          "text": "Centrum-Demokraterne",
+          "full_chars": 20,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Centrum-Demokraterne deltok i «Firkløver»-regjeringen i 1982–1988 og i koalisjonsregjeringen i 1993–1996. Partiet falt ut av Folketinget ved valget i 2001 og fikk bare 1,8 prosent av stemmene. For val",
+          "full_chars": 498,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "222",
+        "document_id": "223",
+        "query": {
+          "text": "Joey Baron",
+          "full_chars": 10,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Imidlertid blir han særlig forbundet med modernister som Bill Frisell og John Zorn. Baron har deltatt på en lang rekke album, og har også utgitt flere under eget navn. Utvalgte utgivelser som bandlede",
+          "full_chars": 470,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

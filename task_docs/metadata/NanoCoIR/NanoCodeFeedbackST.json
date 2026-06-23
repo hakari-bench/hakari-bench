@@ -144,8 +144,91 @@
         "url": "https://arxiv.org/abs/2402.14658",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q74056",
+        "document_id": "d74056",
+        "query": {
+          "text": "Generate the resulting value of the mathematical operation, factorial, when applied to an integer nu",
+          "full_chars": 321,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Sure, in Python one can use the built-in library `math` for computing the factorial of any integer. However, to understand the concept behind it, you can create your own implementation for factorial c",
+          "full_chars": 1576,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q115757",
+        "document_id": "d115757",
+        "query": {
+          "text": "i'd like a php-specific version of this code: import unicodedata def unicode_word_segments(s, n): vo",
+          "full_chars": 774,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Sure, here is a PHP-specific version of your code: ```php <?php function unicode_word_segments($s, $n) { $vowels = ['A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u']; // unicode vowels $s = preg_repla",
+          "full_chars": 1476,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q104732",
+        "document_id": "d104732",
+        "query": {
+          "text": "Implement a neural network classifier in TensorFlow 2 that takes in the Iris dataset and predicts th",
+          "full_chars": 120,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Here's an example of a simple neural network created in TensorFlow two for the Iris dataset classification problem. Note that this is an example and might not get the highest accuracy possible for the",
+          "full_chars": 1790,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q94088",
+        "document_id": "d94088",
+        "query": {
+          "text": "Dilemma: I am currently dealing with a two-dimensional numpy array composed of 512x512, equating to",
+          "full_chars": 1168,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# We can use the label function in scipy.ndimage which will assign a unique id to each # connected cluster of cells in the image. # We apply this function to a binary version of the image where all va",
+          "full_chars": 711,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q148199",
+        "document_id": "d148199",
+        "query": {
+          "text": "Can you suggest modifications to the Ticket class that can handle timing categories in addition to s",
+          "full_chars": 615,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "To modify the Ticket class to handle timing categories, you could add a new instance variable for timing category and modify the constructor and getters/setters to include this new variable. For examp",
+          "full_chars": 2086,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

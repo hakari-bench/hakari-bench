@@ -103,22 +103,106 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/MSMARCO_FA_test_top_250_only_w_correct-v2",
         "url": "https://huggingface.co/datasets/MCINext/MSMARCO_FA_test_top_250_only_w_correct-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "87452",
+        "document_id": "1294588",
+        "query": {
+          "text": "علل خودکشی در میان نظامیان",
+          "full_chars": 26,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "علائم اختلال استرس پس از سانحه می‌توانند خیلی زود پس از تجربه یک رویداد آسیب‌زا ظاهر شوند. مشکلات دیگری نیز معمولاً همراه با اختلال استرس پس از سانحه رخ می‌دهند، از جمله افسردگی، سایر اختلالات اضطرابی",
+          "full_chars": 580,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1113437",
+        "document_id": "1066532",
+        "query": {
+          "text": "توصیف فیزیکی درخت کاج چیست؟",
+          "full_chars": 27,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "توضیحات محصول. صنوبر چشم آبی نوزاد، یک گونه مخروطی و پرشاخه از صنوبر کلرادو با رشد یکنواخت و سوزن‌های آبی رنگ فشرده است. به طور متوسط، سالانه حدود 20 سانتی‌متر رشد عمودی دارد، در حالی که برخی از صنوبر",
+          "full_chars": 371,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104861",
+        "document_id": "1017092",
+        "query": {
+          "text": "هزینه کفپوش بتنی داخلی",
+          "full_chars": 22,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "برخی از عواملی که ممکن است به این هزینه اضافه کنند عبارتند از: آماده‌سازی محل و زیرسازی، دسترسی به محل، کف‌های کوچک زیر ۴۶ متر مربع، و بتن ضخیم‌تر. هزینه کف بتنی رنگی یکپارچه: ۳.۷۵ دلار به ازای هر متر",
+          "full_chars": 260,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "130510",
+        "document_id": "1110766",
+        "query": {
+          "text": "تعریف حکم اعلامی",
+          "full_chars": 16,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "در بیشتر ایالت‌های آمریکا و کانادا، شرکت بیمه به طور کلی در این مرحله چهار گزینه اصلی دارد: ۱. دفاع بی‌قید و شرط از بیمه‌شده؛ ۲. دفاع از بیمه‌شده با قید حفظ حقوق؛ ۳. درخواست حکم قضایی مبنی بر عدم تعهد",
+          "full_chars": 260,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1129237",
+        "document_id": "128982",
+        "query": {
+          "text": "هیدروژن در چه دمایی به حالت مایع تبدیل می‌شود؟",
+          "full_chars": 46,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "گاز. برای اینکه هیدروژن به مایع تبدیل شود، باید آن را تا 20.28 کلوین، که معادل -252.87 درجه سانتی‌گراد یا -434.45 درجه فارنهایت است، سرد کنید. ۶ نفر این مطلب را مفید دانسته‌اند.",
+          "full_chars": 177,
+          "limit_chars": 200,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

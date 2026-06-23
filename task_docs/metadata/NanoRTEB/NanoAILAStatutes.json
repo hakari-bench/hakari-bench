@@ -85,30 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance",
-        "url": "https://ceur-ws.org/Vol-2517/T1-1.pdf",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "AILA 2019 Precedent & Statute Retrieval Task",
-        "url": "https://doi.org/10.5281/zenodo.4063986",
-        "year": 2020,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -117,6 +93,112 @@
           "url": "https://huggingface.co/datasets/mteb/AILA_statutes"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of the FIRE 2019 AILA Track: Artificial Intelligence for Legal Assistance",
+        "url": "https://ceur-ws.org/Vol-2517/T1-1.pdf",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "AILA 2019 Precedent & Statute Retrieval Task",
+        "url": "https://doi.org/10.5281/zenodo.4063986",
+        "year": 2020,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00040",
+        "document_id": "f7ZJ69PqcU",
+        "query": {
+          "text": "Appellant calls in question legality of the judgment rendered by High Court confirming his convictio",
+          "full_chars": 3569,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Attempt to murder Desc: Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty or murder, shall be punished",
+          "full_chars": 1973,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00007",
+        "document_id": "DO4lKNEfvu",
+        "query": {
+          "text": "This appeal, by special leave, has been preferred against the judgment and order dated 23 February 2",
+          "full_chars": 3266,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Dowry death Desc: (1) Where the death of a woman is caused by any burns or bodily injury or occurs otherwise than under normal circumstances within seven years of her marriage and it is shown t",
+          "full_chars": 856,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00001",
+        "document_id": "AwFv0Yg7NZ",
+        "query": {
+          "text": "The appellant before us was examined as prime witness in the trial of T.R. on the file of the Specia",
+          "full_chars": 2857,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Certain laws not to be affected by this Act Desc: Nothing in this Act shall affect the provisions of any Act for punishing mutiny and desertion of officers, soldiers, sailors or airmen in the s",
+          "full_chars": 337,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00047",
+        "document_id": "Y7gbtP7ySe",
+        "query": {
+          "text": "Whether sanction is required to initiate criminal proceedings in respect of offences is the question",
+          "full_chars": 1664,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Punishment of criminal conspiracy Desc: (1) Whoever is a party to a criminal conspiracy to commit an offence punishable with death, 1 [imprisonment for life] or rigorous imprisonment for a term",
+          "full_chars": 742,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00017",
+        "document_id": "3npgW2zMj5",
+        "query": {
+          "text": "These appeals involve a pure question of law as to whether an award by which residue assets of a par",
+          "full_chars": 1668,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Title: Documents of which registration is compulsory Desc: (1) The following documents shall be registered, if the property to which they relate is situate in a district in which, and if they of have",
+          "full_chars": 10961,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

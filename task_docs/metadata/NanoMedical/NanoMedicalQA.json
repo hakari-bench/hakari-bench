@@ -127,15 +127,98 @@
         "url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "A question-entailment approach to question answering",
         "url": "https://doi.org/10.1186/s12859-019-3119-4",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "cdc7459f-56a2-4d9d-bc44-05cc5ae1a18b",
+        "document_id": "bdd254d7-d114-4a00-942a-401d7e930180",
+        "query": {
+          "text": "What are the symptoms of Nocardiosis ?",
+          "full_chars": 38,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The symptoms of nocardiosis vary depending on which part of your body is affected. Nocardiosis infection most commonly occurs in the lung. If your lungs are infected, you can experience: - Fever - Wei",
+          "full_chars": 823,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "25be7d4f-7a1c-4070-a05f-f735f32b020f",
+        "document_id": "2e2bfd35-1517-4e50-bcc6-55725dd72f12",
+        "query": {
+          "text": "What are the treatments for Parasites - Babesiosis ?",
+          "full_chars": 52,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Effective treatments are available. People who do not have any symptoms or signs of babesiosis usually do not need to be treated. Before considering treatment, the first step is to make sure the diagn",
+          "full_chars": 358,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0ac17d6b-7af4-4dfa-bf0b-4a5f1c47b24d",
+        "document_id": "89200fbf-6e53-4cc5-bf78-9124c224c70d",
+        "query": {
+          "text": "How to diagnose Parasites - Zoonotic Hookworm ?",
+          "full_chars": 47,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cutaneous larva migrans (CLM) is a clinical diagnosis based on the presence of the characteristic signs and symptoms, and exposure history to zoonotic hookworm. For example, the diagnosis can be made",
+          "full_chars": 567,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "f024421e-78f1-4f96-bacc-0e4c5a35026b",
+        "document_id": "5f4eb42a-2d14-46d6-90fc-ce2857b6507e",
+        "query": {
+          "text": "How to prevent Parasites - Lymphatic Filariasis ?",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The best way to prevent lymphatic filariasis is to avoid mosquito bites. The mosquitoes that carry the microscopic worms usually bite between the hours of dusk and dawn. If you live in an area with ly",
+          "full_chars": 1548,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "5fa6962a-e57f-47a9-89e5-09b11425017e",
+        "document_id": "b45f96aa-1bee-4638-9a97-6e7e7d9f9700",
+        "query": {
+          "text": "How to prevent Parasites - Hookworm ?",
+          "full_chars": 37,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The best way to avoid hookworm infection is not to walk barefoot in areas where hookworm is common and where there may be human fecal contamination of the soil. Also, avoid other skin contact with suc",
+          "full_chars": 336,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

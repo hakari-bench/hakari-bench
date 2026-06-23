@@ -148,11 +148,13 @@ lexical and citation-oriented signals.
 
 ## Example Data
 
-Representative queries include German passages about dispute value setting,
-immediate enforceability, notarial estate inventories, salary-law amendments,
-and comparable civil-service evaluations. Positive documents are full German
-court decisions containing tenor and reasons, often with anonymized dates and
-reference markers.
+| Query | Positive document |
+| --- | --- |
+| Die Streitwertfestsetzung bzw. änderung beruht auf den §§ 0, 0 Abs. 0 und 0, 0 Abs. 0 Satz 0 Nr. 0 i... [100 / 476 chars] | Tenor Der Antrag wird abgelehnt. Der Kläger trägt die Kosten des Zulassungsverfah-rens. Der Streitwert wird unter Abänderung der Streitwertfestsetzung des Verwaltungsgerichts für beide Rechtszüge jewe... [200 / 7,138 chars] |
+| Das Regierungspräsidium hat die Anordnung des Sofortvollzugs in einer den Anforderungen des [REF] ge... [100 / 1,266 chars] | Tenor Auf die Beschwerde des Antragsgegners wird der Beschluss des Verwaltungsgerichts Freiburg vom [DATE] [REF] geändert.Der Antrag des Antragstellers auf Wiederherstellung bzw. Anordnung der aufschi... [200 / 16,218 chars] |
+| Die Entscheidung des Landgerichts, die Beklagte zur Erteilung der Auskunft durch Vorlage eines notar... [100 / 1,431 chars] | Tenor Die Rechtsbeschwerde gegen den Beschluss des 0. Familiensenats in Freiburg des Oberlandesgerichts Karlsruhe vom [DATE] wird auf Kosten des Antragsgegners zurückgewiesen. Von Rechts wegen Gründe... [200 / 11,013 chars] |
+| Zwar müssen Neugestaltungen des Besoldungsrechts auch das Leistungsprinzip wahren . Die Anrechnungsr... [100 / 1,347 chars] | Tenor § 0 Absatz 0 des Gesetzes zum Personalrecht der Beschäftigten der früheren Deutschen Bundespost in der Fassung des [REF] es vom [DATE] ist mit dem Grundgesetz vereinbar. Gründe A. Die Vorlage de... [200 / 40,578 chars] |
+| „Ob nach ihrem Gesamtergebnis wesentlich gleiche Beurteilungen vorliegen, richtet sich aber nicht al... [100 / 627 chars] | Tenor Der Wert des Gegenstands der anwaltlichen Tätigkeit für das Verfassungsbeschwerdeverfahren wird auf 0 € und für das Verfahren über den Antrag auf Erlass einer einstweiligen Anordnung auf 0 € fes... [200 / 521 chars] |
 
 ### Public Sources
 
@@ -169,8 +171,8 @@ reference markers.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| GerDaLIR: A German Dataset for Legal Information Retrieval | 2021 | ACL paper | https://aclanthology.org/2021.nllp-1.13/ |
-| GerDaLIR | 2021 | GitHub repository | https://github.com/lavis-nlp/GerDaLIR |
+| GerDaLIR: A German Dataset for Legal Information Retrieval | 2021 | ACL paper | [https://aclanthology.org/2021.nllp-1.13/](https://aclanthology.org/2021.nllp-1.13/) |
+| GerDaLIR | 2021 | GitHub repository | [https://github.com/lavis-nlp/GerDaLIR](https://github.com/lavis-nlp/GerDaLIR) |
 
 ### Representative Snippets
 

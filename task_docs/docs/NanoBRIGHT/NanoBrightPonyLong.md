@@ -68,9 +68,13 @@ The observed metrics suggest using reranking_hybrid for top-10 quality and BM25 
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging and long-document split.
+| Query | Positive document |
+| --- | --- |
+| I will use the programming language pony. Problem: You are given an array of integers stones where s... [100 / 730 chars] | # Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon... [200 / 12,050 chars] |
+| I will use the programming language pony. Problem: You are given an integer array nums. The unique e... [100 / 323 chars] | # Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon... [200 / 12,050 chars] |
+| I will use the programming language pony. Problem: Given an array of integers nums, write a function... [100 / 281 chars] | # Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon... [200 / 12,050 chars] |
+| I will use the programming language pony. Problem: Given an integer number n, write a function that... [100 / 370 chars] | # Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon... [200 / 12,050 chars] |
+| I will use the programming language pony. Problem: A string s is nice if, for every letter of the al... [100 / 592 chars] | # Control Structures To do real work in a program you have to be able to make decisions, iterate through collections of items and perform actions repeatedly. For this, you need control structures. Pon... [200 / 12,050 chars] |
 
 ### Source Reference Table
 

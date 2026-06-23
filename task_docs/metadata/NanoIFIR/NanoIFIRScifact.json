@@ -131,8 +131,91 @@
         "url": "https://arxiv.org/abs/2503.04644",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "872_v1",
+        "document_id": "1180972",
+        "query": {
+          "text": "Obesity is determined in part by genetic factors.",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Genetics of obesity in adult adoptees and their biological siblings. An adoption study of genetic effects on obesity in adulthood was carried out in which adoptees separated from their natural parents",
+          "full_chars": 1319,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1147_v1",
+        "document_id": "13906581",
+        "query": {
+          "text": "Teaching hospitals provide better care than non-teaching hospitals.",
+          "full_chars": 67,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Patient Outcomes with Teaching Versus Nonteaching Healthcare: A Systematic Review Background Extensive debate exists in the healthcare community over whether outcomes of medical care at teaching hospi",
+          "full_chars": 2347,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1051_v1",
+        "document_id": "19878070",
+        "query": {
+          "text": "Risedronate reduces risk of vertebral and non-vertebral fractures.",
+          "full_chars": 66,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Effects of risedronate treatment on vertebral and nonvertebral fractures in women with postmenopausal osteoporosis: a randomized controlled trial. Vertebral Efficacy With Risedronate Therapy (VERT) St",
+          "full_chars": 2739,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "170_v1",
+        "document_id": "5824985",
+        "query": {
+          "text": "Bariatric surgery reduces resolution of diabetes.",
+          "full_chars": 49,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bariatric Surgery in the United Kingdom: A Cohort Study of Weight Loss and Clinical Outcomes in Routine Clinical Care. BACKGROUND Bariatric surgery is becoming a more widespread treatment for obesity.",
+          "full_chars": 3047,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "158_v1",
+        "document_id": "9394119",
+        "query": {
+          "text": "BRCA 1 mutation carriers' risk of breast and ovarian cancer is not influence by the location of the",
+          "full_chars": 110,
+          "limit_chars": 100,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Association of type and location of BRCA1 and BRCA2 mutations with risk of breast and ovarian cancer. IMPORTANCE Limited information about the relationship between specific mutations in BRCA1 or BRCA2",
+          "full_chars": 2908,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

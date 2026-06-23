@@ -152,20 +152,21 @@ if evaluation documents remain short answer strings.
 
 ## Example Data
 
-### Public Sources
-
-- [Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering](https://arxiv.org/abs/2210.01613)
-- [mteb/MintakaRetrieval](https://huggingface.co/datasets/mteb/MintakaRetrieval)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-French](https://huggingface.co/datasets/hakari-bench/NanoMTEB-French)
+| Query | Positive document |
+| --- | --- |
+| Quel film du début des année 1970 est-il celui pour lequel Bruce Lee est le plus connu ? [88 chars] | Opération Dragon [16 chars] |
+| Quel acteur a joué Hans Solo et Indiana Jones ? [47 chars] | Harrison Ford [13 chars] |
+| Quel est le nom du tout premier film du réalisateur Kevin Smith ? [65 chars] | Clerks : Les Employés modèles [29 chars] |
+| Quel film de Star Trek a le moins rapporté ? [44 chars] | Star Trek : Nemesis [19 chars] |
+| Dans quel film de Major League ne figurait pas Charlie Sheen ? [62 chars] | Les Indians 3 [13 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | Paper | https://arxiv.org/abs/2210.01613 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | https://arxiv.org/abs/2210.07316 |
-| mteb/MintakaRetrieval | 2025 | Dataset card | https://huggingface.co/datasets/mteb/MintakaRetrieval |
+| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | Paper | [https://arxiv.org/abs/2210.01613](https://arxiv.org/abs/2210.01613) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/MintakaRetrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/MintakaRetrieval](https://huggingface.co/datasets/mteb/MintakaRetrieval) |
 
 ### Representative Snippets
 

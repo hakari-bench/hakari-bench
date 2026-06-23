@@ -160,6 +160,89 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-645",
+        "document_id": "MED-3146",
+        "query": {
+          "text": "bagels",
+          "full_chars": 6,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Papaverzaadproducten en opiaten drugstesten – waar staan we nu? Zaden van de opiumpapaverplant worden legaal verkocht en veel geconsumeerd als voedsel. Door contaminatie tijdens de oogst kunnen de zad",
+          "full_chars": 1902,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1288",
+        "document_id": "MED-2663",
+        "query": {
+          "text": "druiven",
+          "full_chars": 7,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Een beslist prikkelend idee: de potentiële rol van plantaardige polyfenolen bij de behandeling van leeftijdsgebonden cognitieve stoornissen. Tegenwoordig lijden tientallen miljoenen ouderen wereldwijd",
+          "full_chars": 1953,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1066",
+        "document_id": "MED-4000",
+        "query": {
+          "text": "Dr. Walter Willett",
+          "full_chars": 18,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cocountolie voorspelt een gunstig lipidenprofiel bij premenopauzale vrouwen in de Filipijnen Cocountolie is een veelgebruikte eetbare olie in veel landen, en er is gemengd bewijs voor de effecten erva",
+          "full_chars": 1491,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-91",
+        "document_id": "MED-3178",
+        "query": {
+          "text": "Chronische hoofdpijn en varkens parasieten",
+          "full_chars": 42,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Klinische manifestaties, diagnose en behandeling van neurocysticercose. Neurocysticercose (NCC) is de meest voorkomende parasitaire ziekte van de hersenen. Moderne beeldvormende technieken, CT en MRI,",
+          "full_chars": 996,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1700",
+        "document_id": "MED-2999",
+        "query": {
+          "text": "Inheemse Amerikanen",
+          "full_chars": 19,
+          "limit_chars": 100,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Westerse ziekten en hun ontstaan in relatie tot voeding. Veel van de meest voorkomende ziekten in economisch ontwikkelde gemeenschappen zijn kenmerkend voor de moderne Westerse cultuur. Er wordt bewij",
+          "full_chars": 504,
+          "limit_chars": 200,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 5
   }
 }

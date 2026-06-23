@@ -122,11 +122,11 @@ related papers, not only the paper with the closest title wording.
 
 | Query | Positive document |
 | --- | --- |
-| Ny DC-DC Flernivå Boostkonverter | Multilevel spenningskilder omformere dukker opp som nye typer kraftomformere for høyeffektsapplikasjoner... |
-| Hurtig læringsalgoritme for sparsete Gaussiske Markov-felt basert på Cholesky-faktorisering | Sure, please provide the English document text that you need translated into Norwegian. |
-| Tekstursyntese ved hjelp av konvolusjonelle neuronnettverk | I denne arbeidet undersøker vi hvordan dybden av et konvolusjonelt nettverk påvirker dets nøyaktighet i store bildegjenkjenningssettinger... |
-| Planar bredbåndsannulærringantenne med sirkulær polarisering for RFID-system | I denne artikkelen foreslås en horisontalt meanderende strip matningsmetode for å oppnå god impedansmatching... |
-| Utforming av avansert digital hjerteovervåker ved bruk av grunnleggende elektroniske komponenter | I denne artikkelen presenterer vi design og utvikling av en ny integrert enhet for måling av hjertefrekvens... |
+| Ny DC-DC Flernivå Boostkonverter [32 chars] | AbstructMultilevel spenningskilder omformere dukker opp som nye typer kraftomformere for høyeffektsapplikasjoner. Multilevel spenningskilder omformere syntetiserer vanligvis en trappet spenningsbølge... [200 / 962 chars] |
+| Hurtig læringsalgoritme for sparsete Gaussiske Markov-felt basert på Cholesky-faktorisering [91 chars] | Sure, please provide the English document text that you need translated into Norwegian. [87 chars] |
+| Tekstursyntese ved hjelp av konvolusjonelle neuronnettverk [58 chars] | I denne arbeidet undersøker vi hvordan dybden av et konvolusjonelt nettverk påvirker dets nøyaktighet i store bildegjenkjenningssettinger. Vår hovedbidrag er en grundig vurdering av nettverk med økend... [200 / 792 chars] |
+| Planar bredbåndsannulærringantenne med sirkulær polarisering for RFID-system [76 chars] | I denne artikkelen foreslås en horisontalt meanderende strip (HMS) matningsmetode for å oppnå god impedansmatching og symmetriske bredsideutstrålingsmønstre for en enkeltmatet bredbånds sirkulært pola... [200 / 1,263 chars] |
+| Utforming av avansert digital hjerteovervåker ved bruk av grunnleggende elektroniske komponenter [96 chars] | I denne artikkelen presenterer vi design og utvikling av en ny integrert enhet for måling av hjertefrekvens ved bruk av fingertupp for å forbedre estimering av hjertefrekvens. Da hjertesykdommer øker... [200 / 1,047 chars] |
 
 ### Public Sources
 
@@ -140,7 +140,7 @@ related papers, not only the paper with the closest title wording.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

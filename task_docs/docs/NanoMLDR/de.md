@@ -145,12 +145,13 @@ top-rank profile in the current diagnostics.
 
 ## Example Data
 
-Representative queries ask which event takes place on Sunday in Lower Saxony,
-why German store design is considered protectable, what properties a Mikronell
-cleaning cloth has, what made an author want to try a game, or what effects
-artificial intelligence may have on society. Positive documents are long German
-pages containing the answer-bearing paragraph among substantial surrounding
-content.
+| Query | Positive document |
+| --- | --- |
+| Welche Veranstaltung findet am Sonntag in Niedersachsen statt? [62 chars] | Wvormyks v 15 скачать. Radeberger SV Abt. Bogenschießen gegründet 0877 FIDE-Trainerkurs 0009 Ausbildung 0005 A-Trainer 0004 0017 Männer 0016 Männer 0015 Männer 0014 Männer 0013 Männer 0012 Männer 0011... [200 / 24,762 chars] |
+| Warum wird das Design von deutschen Läden als schützenswert angesehen? [70 chars] | Kommentare zu: Apple kann sich Design seiner Geschäfte als Marke schützen lassen Der Computer-Konzern Apple kann sich das Design seiner Ladengeschäfte markenrechtlich schützen lassen. Das hat der Euro... [200 / 26,711 chars] |
+| Welche Eigenschaften hat das Mikronell Shine 2 Rainbow Reinigungstuch? [70 chars] | Mikronell Poliertuch Search Results \| Schmutzweg.de - der Schmutz weg Online Shop Sie befinden sich hier: Startseite » Mikronell Poliertuch Results for 'Mikronell Poliertuch' Suchergebnis 1 to 30 of 6... [200 / 30,575 chars] |
+| Was hat den Autor dazu gebracht, das Spiel unbedingt ausprobieren zu wollen? [76 chars] | Prey Preview - Story, Inszenierung, Morgan Yu, Madison Yu, Talos I, System Shock \| GamersGlobal.de ). Alternativ bieten wir GamersGlobal-Premium an. Prey Preview+ Benjamin Braun / 15. Februar 2017 - 1... [200 / 27,076 chars] |
+| Was sind mögliche Auswirkungen der künstlichen Intelligenz auf die Gesellschaft? [80 chars] | <{~פAnime Starlight��~}> Forum - YGO! Archiv - Andere Orte* - Atlantis - Seite 220 ForumNewsMitgliederSuchenRegistrierenMember LoginKostenloses Forum! <{~פAnime Starlight��~}> � YGO! Archiv � Andere O... [200 / 13,941 chars] |
 
 ### Public Sources
 
@@ -166,9 +167,9 @@ content.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 
