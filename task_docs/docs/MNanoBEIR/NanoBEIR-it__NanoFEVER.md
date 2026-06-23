@@ -48,13 +48,11 @@ Strong models should combine exact entity recall with relation-sensitive evidenc
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Keith Godchaux conosceva i Grateful Dead. | I Grateful Dead sono stati una band rock americana formata nel 1965 a Palo Alto, California... |
-| Taarak Mehta Ka Ooltah Chashmah è una sitcom. | Taarak Mehta Ka Ooltah Chashmah è la sitcom più longeva dell'India... |
-| Aerei segreti e tecnologicamente avanzati sono stati prodotti a Burbank, in California. | Burbank è una città nella contea di Los Angeles, nella California meridionale... |
-| Nero è una persona. | La dinastia giulio-claudia si riferisce ai primi cinque imperatori romani, tra cui Nerone... |
-| Scream 2 è un film esclusivamente tedesco. | Scream 2 è un film slasher americano del 1997 diretto da Wes Craven... |
+| Query | Positive document |
+| --- | --- |
+| Keith Godchaux conosceva i Grateful Dead. [41 chars] | I Grateful Dead sono stati una band rock americana formata nel 1965 a Palo Alto, California. Con una formazione variabile da quintetto a settetto, la band è nota per il suo stile unico ed eclettico, che fondeva elementi di rock, psichedelia, musica sperimentale, jazz modale, country, folk, bluegrass, blues, reggae e space rock, per le loro esibizioni dal vivo di jam strumentali prolungate e per la loro fedele base di fan, conosciuta come "Deadheads". La loro musica, scrive Lenny Kaye, "toccava terreni che la maggior parte degli altri gruppi nemmeno sapeva esistessero". Queste varie influenze sono state distillate in un insieme diversificato e psichedelico che ha reso i Grateful Dead "i pionieri padri del mondo delle jam band". La band è stata classificata al 57º posto da Rolling Stone nella lista dei "Greatest Artists of All Time". I Grateful Dead sono stati introdotti nella Rock and Roll Hall of Fame nel 1994 e una registrazione del loro concerto dell'8 maggio 1977 alla Barton Hall de... [1,000 / 3,080 chars] |
+| Taarak Mehta Ka Ooltah Chashmah è una sitcom. [45 chars] | Taarak Mehta Ka Ooltah Chashmah (In inglese: La Differente Prospettiva di Taarak Mehta) è la sitcom più longeva dell'India, prodotta da Neela Tele Films Private Limited. La serie è andata in onda il 28 luglio 2008. Va in onda dal lunedì al venerdì alle 20:30, con la replica alle 23:00 e il giorno successivo alle 15:00 su SAB TV. Ha iniziato le repliche su Sony Pal dal 2 novembre 2015 alle 16:30 e alle 20:00 ogni giorno. La serie è tratta dalla rubrica "Duniya Ne Oondha Chashma" scritta dal giornalista e columnist Taarak Mehta per la rivista settimanale in gujarati Chitralekha. [583 chars] |
+| Aerei segreti e tecnologicamente avanzati sono stati prodotti a Burbank, in California. [87 chars] | Burbank è una città nella contea di Los Angeles, nella California meridionale, Stati Uniti, a 12 miglia a nord-ovest del centro di Los Angeles. Secondo il censimento del 2010, la popolazione era di 103.340 abitanti. Promossa come la "Capitale Mondiale dei Media" e situata a pochi chilometri a nord-est di Hollywood, numerose aziende di media e intrattenimento hanno la loro sede o importanti strutture di produzione a Burbank, tra cui The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios con la sede della costa occidentale di Cartoon Network, e Insomniac Games. La città ospita anche l'aeroporto di Bob Hope. È stata la sede della Lockheed's Skunk Works, che ha prodotto alcuni degli aerei più segreti e tecnologicamente avanzati, tra cui i velivoli spia U-2 che scoprirono i componenti dei missili sovietici a Cuba nell'ottobre 1962. Burbank è composta da due aree distinte: una zona downtown/collinare, ai piedi delle Verdugo Mountains,... [1,000 / 1,410 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should combine exact entity recall with relation-sensitive evidenc
 
 | Label | URL |
 |---|---|
-| FEVER paper | https://arxiv.org/abs/1803.05355 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER paper (https://arxiv.org/abs/1803.05355) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

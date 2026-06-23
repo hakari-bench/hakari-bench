@@ -141,12 +141,11 @@ coverage.
 
 ## Example Data
 
-Representative queries ask about formulas for solving a kinematic equation,
-when Haydn, Mozart, and Beethoven used fugue, what is needed to adjust
-brightness in a cathode-ray tube, how PR-16 connects Curiuva to other cities,
-and how counterfeit games affected the Sega Saturn's popularity in Brazil.
-Positive documents are Portuguese long articles containing the relevant
-paragraph.
+| Query | Positive document |
+| --- | --- |
+| Qual é a relação entre as fórmulas formula_99, formula_94 e formula_47 para resolver a equação mencionada? [106 chars] | Cinemática A cinemática (do grego "κινημα", movimento) é o ramo da física que se ocupa da descrição dos movimentos de pontos, corpos ou sistemas de corpos (grupos de objetos), sem se preocupar com a análise de suas causas. Considerada uma "geometria do movimento", é ocasionalmente vista como um ramo da matemática. Neste campo, uma situação problema é iniciada ao descrever a geometria do sistema e declarando as condições iniciais de quaisquer valores de posição, velocidade e/ou aceleração dos pontos do sistema. E então, usando argumentos geométricos, pode-se determinar valores desconhecidos de posição, velocidade e/ou aceleração de partes do sistema. O estudo de como as forças agem nos corpos não é tratado na cinemática, mas na dinâmica. A cinemática é utilizada na astrofísica para descrever o movimento de corpos celestes e de conjuntos destes. Na engenharia mecânica, robótica e biomecânica a cinemática é útil para descrever o movimento de sistemas compostos por partes interdependentes,... [1,000 / 31,375 chars] |
+| Quais foram as ocasiões em que Haydn, Mozart e Beethoven redescobriram a forma fugal e a utilizaram frequentemente em suas obras durante a era Clássica? [152 chars] | Fuga Fuga em música, é um estilo de composição contrapontista, polifônica e imitativa, de um tema principal, com sua origem na música barroca. Na composição musical o tema é repetido por outras vozes que entram sucessivamente e continuam de maneira entrelaçada. Começa com um tema, declarado por uma das vozes isoladamente. Uma segunda voz entra, então, "cantando" o mesmo tema mas transposto na dominante, enquanto a primeira voz continua desenvolvendo com um acompanhamento contrapontista. As vozes restantes entram, uma a uma, cada uma iniciando com o mesmo tema. O restante da fuga desenvolve o material posterior utilizando todas as vozes e, usualmente, múltiplas declarações do tema. Estas técnicas estilísticas todas, típicas de várias peças de J. S. Bach, das suas invenções, das aberturas, nas partitas, tocatas, e especialmente usada nas fugas, deram-se origem primeiramente na forma musical chamada de cânone, mas que Bach elabora mais ainda, explorando a fuga com a forma de variações sob... [1,000 / 30,207 chars] |
+| O que é necessário para obter o ajuste de luminosidade em um tubo de raios catódicos (CRT)? [91 chars] | Osciloscópio O osciloscópio é um instrumento de medida de sinais elétricos/eletrônicos que apresenta gráficos a duas dimensões de um ou mais sinais elétricos (de acordo com a quantidade de canais de entrada). O eixo vertical (y) do ecrã (monitor) representa a intensidade do sinal (tensão) e o eixo horizontal (x) representa o tempo, tornando o instrumento útil para mostrar sinais periódicos. O monitor é constituído por um "ponto" que periodicamente "varre" a tela da esquerda para a direita. Características e usos. Descrição. Um típico osciloscópio é uma caixa retângular com uma tela, conectores de entrada, "knobs" para controle e botões na frente do painel. Atualmente existem osciloscópios fixos com tela de cristal sólido Para ajudar na medidas, uma grade chamada "graticule" ou retículo é desenhada na face da tela. Cada quadrado na graticule é conhecido como uma "divisão". O sinal a ser medido é ligado a um dos canais de entrada, geralmente através de um conector coaxial, como os conect... [1,000 / 26,731 chars] |
 
 ### Public Sources
 
@@ -162,9 +161,9 @@ paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

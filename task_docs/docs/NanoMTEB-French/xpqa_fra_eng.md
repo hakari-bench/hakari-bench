@@ -135,20 +135,19 @@ the snippet's actual answer rather than relying on broad product similarity.
 
 ## Example Data
 
-### Public Sources
-
-- [xPQA: Cross-Lingual Product Question Answering across 12 Languages](https://arxiv.org/abs/2305.09249)
-- [mteb/XPQARetrieval](https://huggingface.co/datasets/mteb/XPQARetrieval)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-French](https://huggingface.co/datasets/hakari-bench/NanoMTEB-French)
+| Query | Positive document |
+| --- | --- |
+| what is the width of a module? [30 chars] | La largeur d'un module est de 4,21 inch. [40 chars] |
+| for the color do you have white ones as in the photo? [53 chars] | Non. La couleur disponible est violet et gris. [46 chars] |
+| hello, does this spray make hair greasy? thank you. [51 chars] | Oui. Un client dit que cela rend ses cheveux un peu huileux. [60 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| xPQA: Cross-Lingual Product Question Answering across 12 Languages | 2023 | Paper | https://arxiv.org/abs/2305.09249 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | https://arxiv.org/abs/2210.07316 |
-| mteb/XPQARetrieval | 2025 | Dataset card | https://huggingface.co/datasets/mteb/XPQARetrieval |
+| xPQA: Cross-Lingual Product Question Answering across 12 Languages | 2023 | Paper | [https://arxiv.org/abs/2305.09249](https://arxiv.org/abs/2305.09249) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/XPQARetrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/XPQARetrieval](https://huggingface.co/datasets/mteb/XPQARetrieval) |
 
 ### Representative Snippets
 

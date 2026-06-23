@@ -129,10 +129,11 @@ nDCG@10.
 
 ## Example Data
 
-Representative queries argue about late-stage abortion, technological solutions
-to climate change, vegetarianism and food poisoning, baseball collisions, and
-community radio. Positive documents are Dutch counterarguments on the same
-issue with an opposing stance.
+| Query | Positive document |
+| --- | --- |
+| Tegenstand tegen abortus provocatus in late fase maakt deel uit van een strategie die erop gericht is abortus in het algemeen te verbieden. Abortus provocatus in late fase vormt een klein percentage van alle abortussen, maar vanuit medisch en psychologisch oogpunt zouden ze het minst controversieel moeten zijn. De reden voor deze focus is dat abortussen in late fase het meest evident onaangenaam zijn, omdat foetussen in late fase meer op baby's lijken dan embryo's of foetussen in een eerder ontw... [500 / 804 chars] | zwangerschap filosofie ethiek leven gezin huis zou partiële geboorte-abortussen verbieden Hoewel veel mensen die tegen partiële geboorte-abortus zijn, ook tegen abortus in het algemeen zijn, is er geen noodzakelijk verband, aangezien partiële geboorte-abortus een bijzonder gruwelijke vorm van abortus is. Dit komt om de reeds uitgelegde redenen: het omvat een opzettelijke, moorddadige fysieke aanval op een halfgeboren baby, van wie we zeker weten dat hij pijn zal voelen en zal lijden als gevolg. We accepteren dat er een legitiem medisch debat bestaat over de vraag of embryo's en vroegere foetussen pijn voelen; in dit geval is er geen dergelijk debat, en daarom is partiële geboorte-abortus uniek gruwelijk en uniek onrechtvaardig. [738 chars] |
+| Nieuwe technologie heeft de wereld herhaaldelijk revolutionair veranderd door monumentale uitvindingen als landbouw, staal, antibiotica en microchips. En naarmate de technologie verbeterde, verbeterde ook het tempo waarin de technologie zich verbeterde. Er wordt voorspeld dat er tussen 2000 en 2050 32 keer meer verandering zal zijn dan tussen 1950 en 2000. Te midden hiervan zullen veel grote geesten zich richten op emissiereductie en klimaatregelingstechnologieën. Dus, zelfs als de meest ernstig... [500 / 1,095 chars] | Climate House gelooft dat we te laat zijn met de wereldwijde klimaatverandering Technologische verbeteringen zullen vrijwel zeker worden ontwikkeld voor degenen die het zich kunnen veroorloven (zoals de meeste technologie). Klimaatverandering zal echter de grootste gevolgen hebben voor arme landen die zich geen mitigatie kunnen veroorloven. Mogelijk betekent het vermogen om de rijken te beschermen niet dat we niet te laat zijn met de wereldwijde klimaatverandering. [470 chars] |
+| Vegetarisch eten vermindert het risico op voedselvergiftiging. Bijna alle gevaarlijke vormen van voedselvergiftiging worden via vlees of eieren overgedragen. Zo worden Campylobacter-bacteriën, de meest voorkomende oorzaak van voedselvergiftiging in Engeland, meestal aangetroffen in rauw vlees en gevogelte, niet-gepasteuriseerde melk en onbehandeld water. Salmonella komt van rauw vlees, gevogelte en zuivelproducten en de meeste gevallen van Escherichia coli (E-coli) voedselvergiftiging treden op... [500 / 945 chars] | dieren milieu algemene gezondheid gezondheid algemeen gewicht filosofie ethiek Voedselveiligheid en -hygiëne zijn zeer belangrijk voor iedereen, en overheden moeten maatregelen nemen om hoge standaarden te garanderen, met name in restaurants en andere plaatsen waar mensen hun voedsel vandaan halen. Maar voedselvergiftiging kan overal voorkomen. "Mensen geven niet graag toe dat de bacteriën uit hun eigen huis zouden kunnen komen" [1], en hoewel vlees bijzonder kwetsbaar is voor besmetting, zijn er bacteriën die via groenten kunnen worden overgedragen, bijvoorbeeld Listeria monocytogenes via rauwe groenten. [2] Bijna driekwart van de zoönotische transmissies wordt veroorzaakt door pathogenen van wilde dieren; zelfs sommige die door vee zouden kunnen zijn veroorzaakt, zoals vogelgriep, zouden evengoed van wilde dieren kunnen komen. Er is weinig dat we kunnen doen aan de overdracht van dergelijke ziekten, behalve door nauw contact te verminderen. Een overstap naar vegetarisme kan dergelijk... [1,000 / 1,743 chars] |
 
 ### Public Sources
 
@@ -147,10 +148,10 @@ issue with an opposing stance.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | arXiv paper | https://arxiv.org/abs/2210.07316 |
-| clips/beir-nl-arguana |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-arguana |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | arXiv paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| clips/beir-nl-arguana |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-arguana](https://huggingface.co/datasets/clips/beir-nl-arguana) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

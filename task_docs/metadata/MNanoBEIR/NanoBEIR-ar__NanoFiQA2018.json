@@ -143,7 +143,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -151,15 +151,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "ما نوع العوائد التي تقدمها فيجارد؟",
+          "full_chars": 34,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "من صفحة فاندغارد - بدا هذا هو الأسهل لأن بيانات S&P سهلة العثور عليها. أستخدم MoneyChimp للحصول على البيانات، والتي تؤكد أن صفحة فاندغارد تقدم معدل نمو مركب سنوي، وليس متوسط حسابي. ملاحظة: تعلن فاندغارد 'لأرباح سوق الأسهم الأمريكية، نستخدم بيانات ستاندرد آند بورز 90 من عام 1926 حتى 3 مارس 1957'، بينما يستخدم MoneyChimp بيانات من موقع الحائز على جائزة نوبل، روبرت شيلر.",
+          "full_chars": 370,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "التزامات الضريبية للعمل الحر",
+          "full_chars": 28,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "إذا كان لديك دخل في الولايات المتحدة، فأنت ملزم بدفع ضريبة الدخل الأمريكية عليه، إلا إذا كان هناك اتفاقية بين بلدك والولايات المتحدة تنص على خلاف ذلك.",
+          "full_chars": 150,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "ما هو المعيار للتمييز بين الحجم العالي والنخفض؟",
+          "full_chars": 47,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "الحجم اليومي عادةً ما يقارن بالمتوسط اليومي للحجم على مدى الـ 50 يومًا الماضية لأسهم معينة. يُعتبر الحجم العالي عادةً أنه ضعف أو أكثر من المتوسط اليومي للحجم على مدى الـ 50 يومًا الماضية لأسهم معينة، ولكن قد يضع بعض المتداولين المعيار على 3 أو 4 أضعاف المتوسط اليومي للحجم (ADV) لتأكيد نمط أو حدث معين. يقارن الحجم بالمتوسط اليومي للحجم (ADV) للأسهم نفسها، حيث أن مقارنته بحجم أسهم أخرى يكون مثل مقارنته بين التفاح والبرتقال، لأن الشركات المختلفة تمتلك أعداد مختلفة من الأسهم المتاحة، ومستويات مختلفة من السيولة، ومستويات مختلفة من التقلبات، وكل ذلك يمكن أن يساهم في الحجم الذي يتم تداوله يوميًا.",
+          "full_chars": 596,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

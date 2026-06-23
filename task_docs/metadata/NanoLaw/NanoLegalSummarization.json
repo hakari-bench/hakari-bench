@@ -135,8 +135,59 @@
         "url": "https://github.com/lauramanor/legal_summarization",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "5F21rWz5FY",
+        "query": {
+          "text": "this service may collect use and share location data.",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "apple and our partners and licensees may collect use and share precise location data including the real time geographic location of your apple computer or device. where available location based services may use gps bluetooth and your ip address along with crowd sourced wi fi hotspot and cell tower locations and other technologies to determine your devices approximate location. unless you provide consent this location data is collected anonymously in a form that does not personally identify you and is used by apple and our partners and licensees to provide and improve location based products and services. for example your device may share its geographic location with application providers when you opt in to their location services.",
+          "full_chars": 740,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "ekoZy3uUi9",
+        "query": {
+          "text": "you may mod the game but don t distribute hacked clients.",
+          "full_chars": 57,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "if you ve bought the game you may play around with it and modify it. we d appreciate it if you didn t use this for griefing though and remember not to distribute the changed versions of our software. basically mods or plugins or tools are cool you can distribute those hacked versions of the game client or server are not you can t distribute those.",
+          "full_chars": 349,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "18Y2bTu5X1",
+        "query": {
+          "text": "if you haven t played for a year you mess up or we mess up we can delete all of your virtual goods. we don t have to give them back. we might even discontinue some virtual goods entirely but we ll give you 60 days advance notice if that happens.",
+          "full_chars": 245,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "we may cancel suspend or terminate your account and your access to your trading items virtual money virtual goods the content or the services in our sole discretion and without prior notice including if a your account is inactive i e not used or logged into for one year b you fail to comply with these terms c we suspect fraud or misuse by you of trading items virtual money virtual goods or other content d we suspect any other unlawful activity associated with your account or e we are acting to protect the services our systems the app any of our users or the reputation of niantic tpc or tpci. we have no obligation or responsibility to and will not reimburse or refund you for any trading items virtual money or virtual goods lost due to such cancellation suspension or termination. you acknowledge that niantic is not required to provide a refund for any reason and that you will not receive money or other compensation for unused virtual money and virtual goods when your account is closed wh",
+          "full_chars": 1441,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -62,19 +62,19 @@ Models should encode the relation between question wording, schema columns, row 
 
 ## Example Data
 
-### Public Sources
-
-- [Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning](https://arxiv.org/abs/1709.00103), task paper.
-- [Salesforce/wikisql](https://huggingface.co/datasets/Salesforce/wikisql), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| tell the final for lindsey graham {'header': ['State (linked to summaries below)', 'Senator', 'Party', 'Electoral history', 'Result', 'Candidates Winning candidate in bold'], 'page_title': '', 'page_id': '', 'types': ['text', 'text', 'text', 'text', 'text', 'text'], 'id': '1-1133844-4', 'section_title': '', 'caption': '', 'rows': [['Arkansas', 'Mark Pryor', 'Democratic', '2002', 'Incumbent re-elected', 'Mark Pryor (D) 79.5% Rebekah Kennedy (G) 20.5%'], ['Delaware', 'Joe Biden', 'Democratic', '19... [500 / 2,038 chars] | SELECT Result FROM table WHERE Senator = Lindsey Graham [55 chars] |
+| what's the total w–l where player is boro jovanović category:articles with hcards {'header': ['Player', 'Total W–L', 'Singles W–L', 'Doubles W–L', 'Ties played', 'Debut', 'Years played'], 'page_title': 'Yugoslavia Davis Cup team', 'page_id': '', 'types': ['text', 'text', 'text', 'text', 'real', 'real', 'real'], 'id': '1-10294071-1', 'section_title': 'Players', 'caption': 'Players', 'rows': [['Željko Franulović Category:Articles with hCards', '32–27', '23–15', '9–12', '22', '1967', '12'], ['Boro... [500 / 1,190 chars] | SELECT Total W–L FROM table WHERE Player = Boro Jovanović Category:Articles with hCards [87 chars] |
+| What was the date of the race in Misano? {'header': ['No', 'Date', 'Round', 'Circuit', 'Pole Position', 'Fastest Lap', 'Race winner', 'Report'], 'page_title': '2007 Supersport World Championship season', 'page_id': '', 'types': ['real', 'text', 'text', 'text', 'text', 'text', 'text', 'text'], 'id': '1-10083598-1', 'section_title': 'Season calendar', 'caption': 'Season calendar', 'rows': [['1', '24 February', 'Qatar', 'Losail', 'Kevin Curtain', 'Sébastien Charpentier', 'Kenan Sofuoğlu', 'Report']... [500 / 1,742 chars] | SELECT Date FROM table WHERE Circuit = Misano [45 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning | 2017 | task paper | https://arxiv.org/abs/1709.00103 |
-| Salesforce/wikisql |  | dataset card | https://huggingface.co/datasets/Salesforce/wikisql |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning | 2017 | task paper | [https://arxiv.org/abs/1709.00103](https://arxiv.org/abs/1709.00103) |
+| Salesforce/wikisql |  | dataset card | [https://huggingface.co/datasets/Salesforce/wikisql](https://huggingface.co/datasets/Salesforce/wikisql) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

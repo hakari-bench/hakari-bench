@@ -126,8 +126,59 @@
         "title": "BIRCO GitHub repository",
         "url": "https://github.com/BIRCO-benchmark/BIRCO",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "201524",
+        "document_id": "NCT00042588",
+        "query": {
+          "text": "A 31 yo male with no significant past medical history presents with productive cough and chest pain. He reports developing cold symptoms one week ago that were improving until two days ago, when he developed a new fever, chills, and worsening cough. He has right-sided chest pain that is aggravated by coughing. His wife also had cold symptoms a week ago but is now feeling well. Vitals signs include temperature 103.4, pulse 105, blood pressure 120/80, and respiratory rate 15. Lung exam reveals exp",
+          "full_chars": 585,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The objective of this study is to demonstrate the safety and efficacy of IC14 in the treatment of hospitalized patients with community-acquired pneumonia and sepsis.",
+          "full_chars": 165,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "201417",
+        "document_id": "NCT00006319",
+        "query": {
+          "text": "A 48-year-old white male with history of common variable immunodeficiency (CVID) with acute abdominal pain, fever, dehydration, HR of 132 bpm, BP 80/40. The physical examination is remarkable for tenderness and positive Murphy sign. Abdominal ultrasound shows hepatomegaly and abundant free intraperitoneal fluid. Exploratory laparotomy reveals a ruptured liver abscess, which is then surgically drained. After surgery, the patient is taken to the ICU.",
+          "full_chars": 452,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "This study will try to identify mutations in the genes responsible for primary immunodeficiency disorders (inherited diseases of the immune system) and evaluate the course of these diseases in patients over time to learn more about the medical problems they cause. The immune system is composed of various cells (e.g., T and B cells and phagocytes) and other substances (complement system) that protect the body from infections and cancer. Abnormalities in the gene(s) responsible for the function of these components can lead to serious infections and other immune problems. Patients with Wiskott-Aldrich syndrome, adenosine deaminase (ADA) deficiency, Janus Associated Kinase 3 (JAK3) deficiency, common variable immunodeficiency (CVID) and other immunodeficiencies may be eligible for this study. Participants will undergo a medical and family history, physical examination, and additional procedures and tests that may include the following: 1. Blood tests for: routine laboratory studies (i.e. c",
+          "full_chars": 1420,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "201410",
+        "document_id": "NCT00533156",
+        "query": {
+          "text": "A physician is called to see a 67-year-old woman who underwent cardiac catheterization via the right femoral artery earlier in the morning. She is now complaining of a cool right foot. Upon examination she has a pulsatile mass in her right groin with loss of distal pulses, and auscultation reveals a bruit over the point at which the right femoral artery was entered.",
+          "full_chars": 368,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The purpose of this study is to assess the safety and feasibility of the 7F Ensure Medical Vascular Closure Devices to facilitate hemostasis in patients undergoing diagnostic or interventional coronary procedures using a standard 7F introducer sheath. Achieving hemostasis at the arterial puncture site after percutaneous cardiac catheterization is a potential cause of bleeding, hematomas, pseudoaneurysms, and various other vascular complications. Hemostasis at the femoral artery access site after diagnostic or interventional procedures is typically achieved using either manual compression or the deployment of a vascular closure device. Manual compression is time consuming for the health-care provider, and painful for the patient. In addition, prolonged periods of immobilization and bed rest may be required. Vascular closure devices have been developed to avoid manual compression, shorten bed rest, and allow earlier ambulation. The Ensure Medical Vascular Closure device (VCD) is intended",
+          "full_chars": 1831,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

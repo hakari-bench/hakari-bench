@@ -48,13 +48,11 @@ Strong models should improve scenario-level financial matching and preserve exac
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Quali tipi di rendimenti sta indicando Vanguard? | Dalla pagina di Vanguard - Questo sembrava il più semplice da trovare, poiché i dati S&P sono facilmente reperibili... |
-| Quali sono le implicazioni fiscali del lavoro autonomo? | Se hai reddito negli Stati Uniti, dovrai pagare le tasse sul reddito negli Stati Uniti... |
-| Cosa si intende per volume alto o basso? | Il volume giornaliero viene solitamente confrontato con il volume medio giornaliero degli ultimi 50 giorni per un'azione... |
-| Utilizzare i punti accumulati con la carta di credito per pagare le spese aziendali detraibili | Per semplicità, iniziamo considerando solo il cashback. In generale, il cashback dalle carte di credito per uso personale non è tassabile... |
-| Come dovrei fare la dichiarazione dei redditi come lavoratore autonomo? | Per scopi fiscali, dovrai dichiarare sia come dipendente sia come imprenditore... |
+| Query | Positive document |
+| --- | --- |
+| Quali tipi di rendimenti sta indicando Vanguard? [48 chars] | Dalla pagina di Vanguard - Questo sembrava il più semplice da trovare, poiché i dati S&P sono facilmente reperibili. Utilizzo MoneyChimp per verificare - che conferma che la pagina di Vanguard offre il CAGR, non la media aritmetica. Nota: Vanguard afferma 'Per i rendimenti del mercato azionario statunitense, utilizziamo lo Standard & Poor's 90 dal 1926 al 3 marzo 1957,' mentre MoneyChimp utilizza i dati dal sito del vincitore del Premio Nobel, Robert Shiller. [463 chars] |
+| Quali sono le implicazioni fiscali del lavoro autonomo? [55 chars] | Se hai reddito negli Stati Uniti, dovrai pagare le tasse sul reddito negli Stati Uniti, a meno che non ci sia un accordo tra il tuo paese e gli Stati Uniti che stabilisce diversamente. [184 chars] |
+| Cosa si intende per volume alto o basso? [40 chars] | Il volume giornaliero viene solitamente confrontato con il volume medio giornaliero degli ultimi 50 giorni per un'azione. Un volume elevato è generalmente considerato pari a 2 o più volte il volume medio giornaliero degli ultimi 50 giorni per quell'azione; tuttavia, alcuni trader potrebbero fissare il criterio a 3 o 4 volte il volume medio giornaliero (ADV) per confermare un particolare schema o evento. Il volume viene confrontato con l'ADV dell'azione stessa, poiché confrontarlo con il volume di altre azioni sarebbe come paragonare mele con pere, dato che diverse aziende hanno un numero diverso di azioni totali disponibili, diversi livelli di liquidità e diversi livelli di volatilità, che possono tutti contribuire ai volumi scambiati ogni giorno. [757 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should improve scenario-level financial matching and preserve exac
 
 | Label | URL |
 |---|---|
-| FiQA paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA paper (https://doi.org/10.1145/3184558.3192301) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

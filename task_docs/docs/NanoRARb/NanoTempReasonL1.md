@@ -62,17 +62,18 @@ Models should learn or invoke exact date arithmetic. Hard negatives should inclu
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models](https://arxiv.org/abs/2306.08952), source task paper.
+| Query | Positive document |
+| --- | --- |
+| What is the time 9 year and 10 month after Nov, 1170 [52 chars] | Sep, 1180 [9 chars] |
+| What is the time 5 year and 12 month after Jun, 1243 [52 chars] | Jun, 1249 [9 chars] |
+| What is the time 6 year and 4 month after Jun, 1905 [51 chars] | Oct, 1911 [9 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2306.08952 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2306.08952](https://arxiv.org/abs/2306.08952) |
 
 ### Representative Snippets
 

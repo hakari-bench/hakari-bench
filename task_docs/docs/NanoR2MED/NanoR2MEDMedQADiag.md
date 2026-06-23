@@ -62,21 +62,20 @@ Models should learn to infer diagnoses from vignettes and retrieve evidence abou
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/MedQA-Diag dataset card](https://huggingface.co/datasets/R2MED/MedQA-Diag).
+| Query | Positive document |
+| --- | --- |
+| A 33-year-old G2P1 woman presents to the office because of poor diabetic control. She is currently at 18 weeks gestation and admits to having poor control of her type 1 diabetes before becoming pregnant. Her family history is non-contributory. The physical examination shows a pregnant woman with a fundal height of 20 cm (7.9 in). An abdominal ultrasound is ordered. What is the most likely congenital abnormality shown on the ultrasound? [439 chars] | Malformations. he incidence of major malformations in women with type 1 diabetes is at least doubled and approximates 11 percent Qovanovic, 2015). These account for almost half of perinatal deaths in diabetic pregnancies. As shown in Table 57-6, cardiovascular malformations accounted for more than half of the anomalies. In a cohort study of more than 2 million births in Canada, the risk of an isolated cardiac defect was ivefold higher in women with type 1 diabetes (Uu, 2013). he caudal regression sequence, described in Chapter 10 (p. 196), is a rare malformation frequently associated with maternal diabetes (Garne, 2012). [628 chars] |
+| A 68-year-old man presents with difficulty breathing for the last 3 hours. Upon asking about other symptoms, he mentions that he had a cough for the last 4 months which he attributes to his smoking. He says he had frequent nasal stuffiness and headaches over the last 3 months, for which he takes over-the-counter cold medications and analgesics. Over the last 2 months, he often felt that his face was mildly swollen, especially in the morning hours, but he did not consider it to be anything seriou... [500 / 986 chars] | The optic nerve [II] is not a true cranial nerve, but rather an extension of the brain carrying afferent fibers from the retina of the eyeball to the visual centers of the brain. The optic nerve is surrounded by the cranial meninges, including the subarachnoid space, which extends as far forward as the eyeball. Any increase in intracranial pressure therefore results in increased pressure in the subarachnoid space surrounding the optic nerve. This may impede venous return along the retinal veins, causing edema of the optic disc (papilledema), which can be seen when the retina is examined using an ophthalmoscope. The optic nerve leaves the orbit through the optic canal (Fig. 8.101). It is accompanied in the optic canal by the ophthalmic artery. The oculomotor nerve [III] leaves the anterior surface of the brainstem between the midbrain and the pons. It passes forward in the lateral wall of the cavernous sinus. [921 chars] |
+| A 25-year-old woman presents to her primary care provider for evaluation of a "painful mass in my left groin." She says that her symptoms began 4 days ago as a painful mass that slowly enlarged, ruptured, and ulcerated. However, she denies fever, chills, dysuria, or hematuria. Three weeks prior to her current symptoms she noted a small, painless ulcer on her labium majorum that resolved after a few days. She admits to having unprotected sex with a male partner a month ago while she was traveling... [500 / 796 chars] | lympHogranUloma venereUm C. trachomatis serovars L1, L2, and L3 cause LGV, an invasive systemic STD. The peak inci dence of LGV corresponds with the age of greatest sexual activity: the second and third decades of life. The worldwide incidence of LGV is falling, but the disease is still endemic and a major cause of morbidity in parts of Asia, Africa, South America, and the Caribbean. LGV is rare in industrialized countries; for more than a decade, the reported incidence in the United States has been only 0.1 case per 100,000 population. In the Bahamas, an apparent outbreak of LGV was described in association with a concurrent increase in heterosexual infection with HIV. Reports of outbreaks with the newly identified variant L2b in Europe, Australia, and the United States indicate that LGV is becoming more prevalent among MSM. These cases have usually presented as hemorrhagic proctocolitis in HIV-positive men. More widespread use of NAATs for identification of rectal infections may [995 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/MedQA-Diag | 2025 | dataset card | https://huggingface.co/datasets/R2MED/MedQA-Diag |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/MedQA-Diag | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/MedQA-Diag](https://huggingface.co/datasets/R2MED/MedQA-Diag) |
 
 ### Representative Snippets
 

@@ -48,13 +48,11 @@ Strong models should preserve exact scientific terminology while learning claim-
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Ly49Q steuert die Organisation der Migration von Neutrophilen zu Entzündungsherden, indem es die Funktionen von Membran-Rafts reguliert. | Neutrophile durchlaufen eine schnelle Polarisation und gerichtete Bewegung, um Infektions- und Entzündungsherde zu infiltrieren... |
-| Antiretrovirale Therapie verringert die Häufigkeit von Tuberkulose bei verschiedenen CD4-Werten. | HINTERGRUND Die Infektion mit dem humanen Immundefizienz-Virus ist der stärkste Risikofaktor für die Entwicklung von Tuberkulose... |
-| Eine schnelle Hochregulierung und eine höhere basale Expression von Interferon-induzierten Genen verringern die Überlebensfähigkeit von Granulazellneuronen, die mit dem West-Nil-Virus infiziert sind. | Obwohl die Anfälligkeit von Neuronen im Gehirn für mikrobiologische Infektionen ein entscheidender Faktor für den klinischen Verlauf ist... |
-| Primäre Zervixkarzinom-Screening mit HPV-Nachweis weist eine höhere longitudinale Sensitivität auf als die konventionelle Zytologie zur Erkennung von Zervixintraepithelialen Neoplasien Grad 2. | HINTERGRUND Das Screening auf Gebärmutterhalskrebs durch HPV-Tests erhöht die Sensitivität bei der Erkennung von hochgradigen... |
-| Die Hemmung der Interaktion zwischen TDP-43 und den Proteinen ND3 und ND6 des Atmungskomplexes I führt zu erhöhten TDP-43-induzierten neuronalen Zellschäden. | Genetische Mutationen im TAR-DNA-bindenden Protein 43 verursachen amyotrophe Lateralsklerose... |
+| Query | Positive document |
+| --- | --- |
+| Ly49Q steuert die Organisation der Migration von Neutrophilen zu Entzündungsherden, indem es die Funktionen von Membran-Rafts reguliert. [136 chars] | Neutrophile durchlaufen eine schnelle Polarisation und gerichtete Bewegung, um Infektions- und Entzündungsherde zu infiltrieren. Wir zeigen, dass ein inhibitorischer MHC-I-Rezeptor, Ly49Q, für die schnelle Polarisation und Gewebeinfiltration von Neutrophilen entscheidend ist. Im Ruhezustand hemmt Ly49Q die Neutrophilenadhäsion, indem es die Bildung von Fokalkomplexen verhindert, wahrscheinlich durch die Hemmung von Src- und PI3-Kinasen. In Gegenwart von entzündlichen Stimuli vermittelt Ly49Q jedoch eine schnelle Neutrophilenpolarisation und Gewebeinfiltration auf ITIM-Domänen-abhängige Weise. Diese gegensätzlichen Funktionen scheinen durch die unterschiedliche Nutzung der Effektor-Phosphatasen SHP-1 und SHP-2 vermittelt zu werden. Die Ly49Q-abhängige Polarisation und Migration werden durch die Regulation der Membran-Raft-Funktionen durch Ly49Q beeinflusst. Wir schlagen vor, dass Ly49Q entscheidend ist, um Neutrophile bei Entzündungen in ihre polarisierte Morphologie und schnelle Migrat... [1,000 / 1,116 chars] |
+| Antiretrovirale Therapie verringert die Häufigkeit von Tuberkulose bei verschiedenen CD4-Werten. [96 chars] | HINTERGRUND Die Infektion mit dem humanen Immundefizienz-Virus (HIV) ist der stärkste Risikofaktor für die Entwicklung von Tuberkulose und hat deren Wiederauftreten, insbesondere in Subsahara-Afrika, begünstigt. Im Jahr 2010 gab es geschätzt 1,1 Millionen neue Tuberkulosefälle unter den 34 Millionen Menschen, die weltweit mit HIV lebten. Die antiretrovirale Therapie hat ein erhebliches Potenzial, HIV-assoziierte Tuberkulose zu verhindern. Wir führten eine systematische Übersichtsarbeit durch, die Studien analysierte, die den Einfluss der antiretroviralen Therapie auf die Inzidenz von Tuberkulose bei Erwachsenen mit HIV-Infektion untersuchten. METHODEN UND ERGEBNISSE Wir durchsuchten systematisch PubMed, Embase, African Index Medicus, LILACS und klinische Studienregister. Randomisierte kontrollierte Studien, prospektive Kohortenstudien und retrospektive Kohortenstudien wurden einbezogen, wenn sie die Tuberkulose-Inzidenz nach antiretroviralem Therapiestatus bei HIV-infizierten Erwachsen... [1,000 / 2,378 chars] |
+| Eine schnelle Hochregulierung und eine höhere basale Expression von Interferon-induzierten Genen verringern die Überlebensfähigkeit von Granulazellneuronen, die mit dem West-Nil-Virus infiziert sind. [199 chars] | Obwohl die Anfälligkeit von Neuronen im Gehirn für mikrobiologische Infektionen ein entscheidender Faktor für den klinischen Verlauf ist, ist wenig über die molekularen Faktoren bekannt, die diese Anfälligkeit steuern. Hier zeigen wir, dass zwei Arten von Neuronen aus verschiedenen Hirnregionen eine unterschiedliche Anfälligkeit für die Replikation mehrerer positiv-strängiger RNA-Viren zeigen. Granulazellen des Kleinhirns und kortikale Neuronen der Großhirnrinde haben einzigartige angeborene Immunprogramme, die ihre unterschiedliche Anfälligkeit für virale Infektionen ex vivo und in vivo bestimmen. Durch die Übertragung von Genen, die in Granulazellen stärker exprimiert werden, auf kortikale Neuronen identifizierten wir drei Interferon-stimulierte Gene (ISGs; Ifi27, Irg1 und Rsad2 (auch bekannt als Viperin)), die antivirale Wirkungen gegen verschiedene neurotrophe Viren vermitteln. Darüber hinaus fanden wir heraus, dass der epigenetische Zustand und die miRNA-vermittelte Regulation von... [1,000 / 1,264 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should preserve exact scientific terminology while learning claim-
 
 | Label | URL |
 |---|---|
-| SciFact paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository | https://github.com/allenai/scifact |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SciFact paper (https://arxiv.org/abs/2004.14974) |
+| SciFact repository (https://github.com/allenai/scifact) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

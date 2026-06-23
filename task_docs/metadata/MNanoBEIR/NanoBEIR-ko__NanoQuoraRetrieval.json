@@ -86,36 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Quora Question Pairs",
-        "url": "https://kaggle.com/competitions/quora-question-pairs",
-        "year": 2017,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ko",
       "source_urls": [
@@ -124,6 +94,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Quora Question Pairs",
+        "url": "https://kaggle.com/competitions/quora-question-pairs",
+        "year": 2017,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "461149",
+        "document_id": "461148",
+        "query": {
+          "text": "자신의 농담에 웃는 것이 괜찮을까?",
+          "full_chars": 19,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "자기 자신이 한 농담에 웃는 건 이상한가요?",
+          "full_chars": 24,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "145739",
+        "document_id": "145740",
+        "query": {
+          "text": "당신이 지어낸 최고의 거짓말은 무엇입니까?",
+          "full_chars": 23,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "당신이 지금까지 지은 가장 잘 꾸며낸 거짓말은 무엇입니까?",
+          "full_chars": 32,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "127728",
+        "document_id": "127729",
+        "query": {
+          "text": "왜 Quora는 자주 내 피드에 도널드 트럼프를貶하는 답변들을 추천할까요?",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "왜 도널드 트럼프에 관한 질문에는 주관적이고 편향된 답변만 있는 것처럼 보이나요?",
+          "full_chars": 45,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

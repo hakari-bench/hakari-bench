@@ -62,9 +62,11 @@ A model targeting this task should prioritize fine-grained question intent match
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Quora Question Pairs, with retrieval formatting inherited through BEIR-style benchmark use and multilingual NanoBEIR packaging. The NanoBEIR-sr dataset is distributed on Hugging Face as part of the NanoBEIR multilingual collection.
+| Query | Positive document |
+| --- | --- |
+| Da li je u redu da se smeješ svojim šalama? [43 chars] | Je li čudno da se smejem svojim šalama? [39 chars] |
+| Koja je najbolja laž koju ste ikada ispricali? [46 chars] | Koja je najbolje osmišljena laž koju ste ikada ispričali? [57 chars] |
+| Zašto Quora često predlaže odgovore u mom feedu koji omalovažavaju Donalda Trumpa? [82 chars] | Zašto se čini da Quora ima samo subjektivne, pristrasne odgovore na pitanja o Donaldu Trampu? [93 chars] |
 
 ### Source Reference Table
 

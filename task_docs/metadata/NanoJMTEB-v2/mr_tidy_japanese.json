@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval",
-        "url": "https://arxiv.org/abs/2108.08787",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "castorini/mr-tydi",
-        "url": "https://huggingface.co/datasets/castorini/mr-tydi",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "sbintuitions/JMTEB",
-        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoJMTEB-v2",
       "source_urls": [
@@ -120,6 +97,79 @@
           "url": "https://huggingface.co/datasets/castorini/mr-tydi"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval",
+        "url": "https://arxiv.org/abs/2108.08787",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "castorini/mr-tydi",
+        "url": "https://huggingface.co/datasets/castorini/mr-tydi",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "sbintuitions/JMTEB",
+        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "4794",
+        "document_id": "20480#5",
+        "query": {
+          "text": "ユースホステルに泊まるのに年齢制限はある？",
+          "full_chars": 21,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ユースホステル 元来、青少年の旅行者向けに開設された宿泊施設のため、ドイツ南部のバイエルン州では2004年まで原則満26歳までの利用とする年齢制限があった。2005年からは世界中の全ての地域・国で、利用できる年齢に上限を設けていない。",
+          "full_chars": 118,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "4659",
+        "document_id": "1615478#0",
+        "query": {
+          "text": "アニー・ウッド・ベサントはいつ生まれた？",
+          "full_chars": 20,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "アニー・ベサント アニー・ウッド・ベサント（Annie Wood Besant, ベザント</b>とも表記されるが発音は「bɛsənt」, 1847年10月1日 ロンドン、クラパム - 1933年9月20日 インド、アディヤール）は、イギリスの神智学徒、女性の権利（Women's rights）積極行動主義者、作家、演説家、アイルランドおよびインドの自治支援者、神智学協会第二代会長、英国フリーメーソンの国際組織レ・ドロワ・ユメー創設者[1]、インド国民会議派議長（1917年）。",
+          "full_chars": 242,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "4637",
+        "document_id": "3218420#0",
+        "query": {
+          "text": "サーミ人の土着信仰は何？",
+          "full_chars": 12,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ノアイデ ノアイデ</b><!-- ({{lang-sme|noaidi}}, {{lang-smj|noajdde}}, {{lang-sma|nåejttie}}, {{lang-sms|nōjjd}}, {{lang-sjt|niojte}}, {{lang-sjd|noojd/nuojd}}) -->とは、スカンジナビア北部からコラ半島にかけて居住するサーミ人の土着宗教におけるシャーマンである。当時の行政、司法からは、ノアイデの行う儀式などはたとえばウィッチクラフトのように神秘的なもの（非科学的）であり反権力的であるとされたため、17世紀までにほとんどが衰退した。かつて行われていた儀式などはシベリアに見られるものと共通している[1]。",
+          "full_chars": 326,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

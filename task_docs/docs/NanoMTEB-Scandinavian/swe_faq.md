@@ -70,11 +70,11 @@ For deployment-like evaluation, this task is a practical test of public-service 
 
 ## Example Data
 
-### Public Sources
-
-- Scandinavian Embedding Benchmarks paper: https://arxiv.org/abs/2406.02396
-- SuperLim paper: https://aclanthology.org/2023.emnlp-main.506/
-- Source task dataset card: https://huggingface.co/datasets/mteb/SweFaqRetrieval
+| Query | Positive document |
+| --- | --- |
+| Kan Försäkringskassan utreda min arbetsskada så att jag kan få ersättning från AFA Försäkring? [94 chars] | Nej. Det beror på att vi bara får utreda om det är en arbetsskada om du uppfyller villkoren för att ha rätt till ersättning för din arbetsskada från Försäkringskassan. Det står i lagen. [185 chars] |
+| Varför behöver mitt vårdbidragsbeslut följas upp? [49 chars] | Ditt beslut om vårdbidrag ska följas upp minst vartannat år, om det inte finns skäl för uppföljning med längre mellanrum. Beslutet ska också följas upp om förhållanden som påverkar behovet av vårdbidrag ändras. [210 chars] |
+| Jag arbetar i Sverige men min familj bor i ett annat EU/EES-land. Kan jag få barnbidrag från Sverige? [101 chars] | Ja, om du arbetar i Sverige och har barn som bor i ett annat medlemsland kan du ha rätt till barnbidrag från Sverige. När föräldrarna bor eller arbetar i var sitt medlemsland behöver utbetalningen av barnbidrag samordnas mellan länderna. Kontakta oss på 010-115 10 20 för att få reda på vad som gäller i ditt fall. [314 chars] |
 
 ### Source Reference Table
 

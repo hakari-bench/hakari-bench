@@ -145,20 +145,19 @@ product is not enough.
 
 ## Example Data
 
-### Public Sources
-
-- [xPQA: Cross-Lingual Product Question Answering across 12 Languages](https://arxiv.org/abs/2305.09249)
-- [mteb/XPQARetrieval](https://huggingface.co/datasets/mteb/XPQARetrieval)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-French](https://huggingface.co/datasets/hakari-bench/NanoMTEB-French)
+| Query | Positive document |
+| --- | --- |
+| bonjour, quels sont les avantages de cette box android, comparée aux autres ? merci [83 chars] | i have had several different android boxes and find this one of the best // easy to set up and lots of memory storage. [118 chars] |
+| sur quel produit fitbit avez vous essayé cette extension ? [58 chars] | this worked great as an extender for the fitbit charge. [55 chars] |
+| bonjour, la vitre est-elle en verre ou en plastique? [52 chars] | the front transparent plastic is a good protect the pictures. [61 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| xPQA: Cross-Lingual Product Question Answering across 12 Languages | 2023 | Paper | https://arxiv.org/abs/2305.09249 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | https://arxiv.org/abs/2210.07316 |
-| mteb/XPQARetrieval | 2025 | Dataset card | https://huggingface.co/datasets/mteb/XPQARetrieval |
+| xPQA: Cross-Lingual Product Question Answering across 12 Languages | 2023 | Paper | [https://arxiv.org/abs/2305.09249](https://arxiv.org/abs/2305.09249) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/XPQARetrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/XPQARetrieval](https://huggingface.co/datasets/mteb/XPQARetrieval) |
 
 ### Representative Snippets
 

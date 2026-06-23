@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "On the Cross-lingual Transferability of Monolingual Representations",
-        "url": "https://arxiv.org/abs/1910.11856",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "google-deepmind/xquad",
-        "url": "https://github.com/google-deepmind/xquad",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "google/xquad",
-        "url": "https://huggingface.co/datasets/google/xquad",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -115,6 +93,78 @@
           "url": "https://huggingface.co/datasets/google/xquad"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "On the Cross-lingual Transferability of Monolingual Representations",
+        "url": "https://arxiv.org/abs/1910.11856",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "google-deepmind/xquad",
+        "url": "https://github.com/google-deepmind/xquad",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "google/xquad",
+        "url": "https://huggingface.co/datasets/google/xquad",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "56f86e91aef237190062606a",
+        "document_id": "e18a57fb17d560dc258ea48a997630d10b4772f62386ec81ea3c7d635b0367a4",
+        "query": {
+          "text": "ศิลปินท่านใดที่ทำงานแกะสลักไม้ให้กับไบเบิลของลูเทอร์?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ถูกเผยแพร่ในเวลาที่มีความต้องการเพิ่มมากขึ้นสำหรับ สิ่งพิมพ์ภาษาเยอรมัน งานแปล คัมภีร์ไบเบิล เวอร์ชั่นของลูเทอร์กลายเป็นที่นิยมและมีอิทธิพลอย่างรวดเร็ว เช่นนั้น งานชิ้นนี้เป็นส่วนช่วยสำคัญแก่ วิวัฒนาการของภาษาและวรรณกรรมเยอรมัน ตกแต่งด้วยบันทึกและบทนำโดยลูเทอร์ และด้วยไม้แกะสลักโดย ลูคัส ครานัค ที่มีภาพต่อต้านสมเด็จพระสันตะปาปา หนังสือนี้มีบทบาทสำคัญในการเผยแพร่คำสอนของลูเทอร์ทั่วทั้งเยอรมนี หนังสือ Luther Bible มีอิทธิพลต่องานแปลอื่น เช่นไบเบิลภาษาอังกฤษของ วิลเลียม ทนเดล (1525 ถัดมา) คัมภีร์ก่อนหน้า King James Bible",
+          "full_chars": 523,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "56bf36b93aeaaa14008c9565",
+        "document_id": "edb66c94a626de3208153cfaa7c0584fa5afbb1f835e953f48f501743fbd2343",
+        "query": {
+          "text": "ระหว่างการแข่งขันเพลย์ออฟ ใครไม่ได้ขว้างลูกบอลเลย",
+          "full_chars": 49,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในการแข่งขันแชมป์ชิงเอเอฟซี 20–18 ด้วยการอินเตอร์เซปการขว้างลูกของนิวอิงแลนด์ที่พยายามทำ 2 คะแนนหลังทัชดาวน์ โดยมีเวลาเหลือ 17 วินาที ถึงแม้ แมนนิง จะมีปัญหากับการอินเตอร์เซปในฤดูกาลนี้ แต่เขาก็ไม่ได้ขว้างลูกบอลเลยในการแข่งขันเพลย์ออฟทั้งสองครั้งของพวกเขา",
+          "full_chars": 453,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "56beb7953aeaaa14008c92ac",
+        "document_id": "edb66c94a626de3208153cfaa7c0584fa5afbb1f835e953f48f501743fbd2343",
+        "query": {
+          "text": "ทีมบรอนคอสทำคะแนนได้เท่าไรในสามนาทีสุดท้ายของการแข่งขันกับทีมพิตต์สเบิร์ก",
+          "full_chars": 73,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในการแข่งขันแชมป์ชิงเอเอฟซี 20–18 ด้วยการอินเตอร์เซปการขว้างลูกของนิวอิงแลนด์ที่พยายามทำ 2 คะแนนหลังทัชดาวน์ โดยมีเวลาเหลือ 17 วินาที ถึงแม้ แมนนิง จะมีปัญหากับการอินเตอร์เซปในฤดูกาลนี้ แต่เขาก็ไม่ได้ขว้างลูกบอลเลยในการแข่งขันเพลย์ออฟทั้งสองครั้งของพวกเขา",
+          "full_chars": 453,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

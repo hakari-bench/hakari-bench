@@ -68,9 +68,11 @@ The task is useful for evaluating entertainment search systems where the user in
 
 ## Example Data
 
-### Public Sources
-
-The task is based on the entertainment-video retrieval domain from the Multi-CPR and C-MTEB Chinese retrieval benchmark families.
+| Query | Positive document |
+| --- | --- |
+| 游泳和悦悦 [5 chars] | 悦悦游泳20170817 21m [16 chars] |
+| 甲状腺的检查 [6 chars] | 科普时间 专业仪器如何检查甲状腺 [16 chars] |
+| BAMBINo [7 chars] | bambino2016 恩率 oppa [19 chars] |
 
 ### Source Reference Table
 

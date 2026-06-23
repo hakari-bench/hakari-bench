@@ -132,18 +132,18 @@ sharing an entity or topic with the query.
 
 ## Example Data
 
-### Public Sources
-
-- [Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies](https://arxiv.org/abs/2101.02235)
-- [taeminlee/Ko-StrategyQA](https://huggingface.co/datasets/taeminlee/Ko-StrategyQA)
-- [hakari-bench/NanoMTEB-Korean](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean)
+| Query | Positive document |
+| --- | --- |
+| 스노우다운의 연간 강수량은 얼마나 되나요? [23 chars] | Snowdon "스노우던"이라는 영어 이름은 "눈 언덕"을 의미하는 고대 영어 스노 던에서 유래되었으며, 스노우던은 종종 눈으로 덮여 있기 때문입니다. 겨울철 스노우던에 내리는 눈의 양은 매우 다양하지만, 2004년에는 1994년에 비해 55%나 적었습니다. 스노든의 경사면은 영국에서 가장 습한 기후 중 하나이며 연평균 200인치(5,100mm) 이상의 강수량을 기록합니다. [211 chars] |
+| 조안 크로포드의 텔레비전 배우로서의 경력은 언제 끝났나요? [32 chars] | Joan Crawford 크로포드는 1930년대 중반까지 인기 영화 배우로서 명성을 이어갔습니다. 노 모어 레이디스(1935)는 로버트 몽고메리, 당시 남편 프랜쇼 톤과 공동 주연을 맡아 큰 성공을 거두었습니다. 크로포드는 오랫동안 MGM의 수장 루이스 B. 메이어에게 더 극적인 역할에 캐스팅해 달라고 간청했고, 메이어는 주저했지만 W.S. 반 다이크 감독의 세련된 코미디 드라마 <나는 내 인생을 산다>(1935)에 그녀를 캐스팅해 평론가들의 호평을 받았죠. [259 chars] |
+| 엘튼 존이 기사 작위를 받았나요? [18 chars] | Elton John 존은 그래미상 5회, 브릿 어워드 5회, 아카데미상 2회, 골든 글로브상 2회, 토니상, 디즈니 레전드상, 케네디 센터 아너상 등을 수상했습니다. 2004년 롤링스톤은 로큰롤 시대의 영향력 있는 뮤지션 100인 명단에서 그를 49위로 선정했습니다. 2013년 빌보드는 그를 '빌보드 핫 100 톱 올타임 아티스트'에서 가장 성공한 남성 솔로 아티스트로 선정했으며, 비틀즈와 마돈나에 이어 전체 3위를 차지했습니다. 1994년에는 로큰롤 명예의 전당에, 1992년에는 작곡가 명예의 전당에 헌액되었으며 영국 작사, 작곡가 및 작가 아카데미의 펠로우입니다. 1998년 엘리자베스 2세로부터 "음악 및 자선 활동에 대한 공로"로 기사 작위를 받았습니다. 존은 1997년 웨스트민스터 사원에서 열린 다이애나 비의 장례식, 2002년 궁전에서의 파티, 2012년 버킹엄 궁전 밖에서 열린 여왕의 다이아몬드 주빌리 콘서트 등 수많은 왕실 행사에서 공연을 펼쳤습니다. [490 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies | 2021 | Paper | https://arxiv.org/abs/2101.02235 |
-| taeminlee/Ko-StrategyQA | 2025 | Dataset card | https://huggingface.co/datasets/taeminlee/Ko-StrategyQA |
+| Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies | 2021 | Paper | [https://arxiv.org/abs/2101.02235](https://arxiv.org/abs/2101.02235) |
+| taeminlee/Ko-StrategyQA | 2025 | Dataset card | [https://huggingface.co/datasets/taeminlee/Ko-StrategyQA](https://huggingface.co/datasets/taeminlee/Ko-StrategyQA) |
 
 ### Representative Snippets
 

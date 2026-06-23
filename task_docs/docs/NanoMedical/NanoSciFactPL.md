@@ -62,23 +62,21 @@ Models should handle Polish morphology while preserving biomedical names and evi
 
 ## Example Data
 
-### Public Sources
-
-- [BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language](https://arxiv.org/abs/2305.19840), 2024.
-- [BEIR-PL ACL Anthology record](https://aclanthology.org/2024.lrec-main.194/).
-- [Fact or Fiction: Verifying Scientific Claims](https://arxiv.org/abs/2004.14974), 2020.
-- [SciFact ACL Anthology record](https://aclanthology.org/2020.emnlp-main.609/).
-- [clarin-knext Hugging Face](https://huggingface.co/clarin-knext).
+| Query | Positive document |
+| --- | --- |
+| Rak jelita grubego z przerzutami leczony pojedynczym lekiem fluoropirymidynami skutkował zmniejszoną skutecznością i niższą jakością życia w porównaniu z chemioterapią opartą na oksaliplatynie u pacjentów w podeszłym wieku. [223 chars] | Opcje chemioterapii u starszych i słabych pacjentów z przerzutowym rakiem jelita grubego (MRC FOCUS2): otwarte, randomizowane badanie czynnikowe TŁO Pacjenci w podeszłym wieku i słabi z rakiem, chociaż często leczeni chemioterapią, są niedostatecznie reprezentowani w badaniach klinicznych. Opracowaliśmy FOCUS2 w celu zbadania opcji chemioterapii ze zmniejszoną dawką i poszukiwania obiektywnych czynników predykcyjnych wyników leczenia u słabych pacjentów z zaawansowanym rakiem jelita grubego. METODY Przeprowadziliśmy otwarte badanie czynnikowe 2 × 2 w 61 ośrodkach w Wielkiej Brytanii dla pacjentów z wcześniej nieleczonym zaawansowanym rakiem jelita grubego, których uznano za niezdolnych do chemioterapii pełną dawką. Po kompleksowej ocenie stanu zdrowia (CHA), pacjenci zostali losowo przydzieleni przez minimalizację do: 48-godzinnego dożylnego fluorouracylu z lewofolinianem (grupa A); oksaliplatyna i fluorouracyl (grupa B); kapecytabina (grupa C); lub oksaliplatyna i kapecytabina (grupa... [1,000 / 3,343 chars] |
+| CRP nie pozwala przewidzieć śmiertelności pooperacyjnej po operacji pomostowania aortalno-wieńcowego (CABG). [108 chars] | Ocena opłacalności stosowania prognostycznych biomarkerów z modelami decyzyjnymi: studium przypadku w ustalaniu priorytetów pacjentów oczekujących na operację tętnicy wieńcowej CEL Określenie skuteczności i opłacalności wykorzystania informacji z krążących biomarkerów w procesie ustalania priorytetów pacjentów ze stabilną dusznicą bolesną oczekujących na operację pomostowania aortalno-wieńcowego. Model analityczny decyzji porównujący cztery strategie ustalania priorytetów bez biomarkerów (brak formalnego ustalania priorytetów, dwie oceny pilności i ocena ryzyka) oraz trzy strategie oparte na ocenie ryzyka z wykorzystaniem biomarkerów: rutynowo oceniany biomarker (szacowany współczynnik filtracji kłębuszkowej), nowy biomarker ( białko C reaktywne) lub jedno i drugie. Kolejność wykonywania pomostów aortalno-wieńcowych w kohorcie pacjentów została określona na podstawie każdej strategii ustalania priorytetów i porównano średnie koszty życia i lata życia skorygowane o jakość (QALY). ŹRÓDŁA... [1,000 / 3,169 chars] |
+| Arginina 90 w p150n jest ważna dla interakcji z EB1. [52 chars] | Strukturalne podstawy do aktywacji składania mikrotubul przez kompleks EB1 i p150Glued. Białka śledzące plus, takie jak EB1 i kompleks dyneina/dynaktyna, regulują dynamikę mikrotubul. Uważa się, że białka te stabilizują mikrotubule poprzez tworzenie kompleksu końca dodatniego na końcach wzrostu mikrotubul o słabo zdefiniowanych mechanizmach. W tym miejscu opisujemy strukturę krystaliczną dwóch składników kompleksu końca dodatniego, domeny dimeryzacji końca karboksylowego EB1 i domeny wiążącej mikrotubule (CAP-Gly) podjednostki dynaktyny p150Glued. Każda cząsteczka dimeru EB1 zawiera dwie helisy tworzące konserwatywną wiązkę czterech helis, zapewniając jednocześnie miejsca wiązania p150Glued w jej elastycznym regionie ogona. Łącząc krystalografię, NMR i analizy mutacyjne, nasze badania ujawniają krytyczne elementy oddziałujące zarówno EB1, jak i p150Glued, których mutacja zmienia aktywność polimeryzacji mikrotubul. Co więcej, usunięcie kluczowego elastycznego ogona z EB1 aktywuje tworze... [1,000 / 1,210 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | https://arxiv.org/abs/2305.19840 |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | https://aclanthology.org/2024.lrec-main.194/ |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | https://arxiv.org/abs/2004.14974 |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | ACL Anthology paper | https://aclanthology.org/2020.emnlp-main.609/ |
-| clarin-knext |  | Hugging Face publisher | https://huggingface.co/clarin-knext |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | [https://arxiv.org/abs/2305.19840](https://arxiv.org/abs/2305.19840) |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | [https://aclanthology.org/2024.lrec-main.194/](https://aclanthology.org/2024.lrec-main.194/) |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | ACL Anthology paper | [https://aclanthology.org/2020.emnlp-main.609/](https://aclanthology.org/2020.emnlp-main.609/) |
+| clarin-knext |  | Hugging Face publisher | [https://huggingface.co/clarin-knext](https://huggingface.co/clarin-knext) |
 
 ### Representative Snippets
 

@@ -158,9 +158,59 @@
         "url": "https://github.com/facebookresearch/belebele",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
     ],
-    "example_count": 5
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C346",
+        "query": {
+          "text": "Which of the changes prompted by The French Revolution had a significant impact on working class citizens?",
+          "full_chars": 106,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De Revolutie heeft grote sociale en politieke gevolgen gehad, zoals het gebruik van het metrieke stelsel, een verschuiving van de absolute monarchie naar republicanisme, nationalisme en de opvatting dat het land aan zijn inwoners toebehoort in plaats van een enkele leider. Voor alle mannelijke sollicitanten waren na de revolutie functies te verkrijgen, zodat de meest ambitieuze en geschikte kandidaten konden slagen. Hetzelfde geldt voor het leger. De legerrangen worden niet meer gebaseerd op iemands klasse maar op het kaliber van de persoon. De Franse Revolutie inspireerde ook in andere landen de onderdrukte arbeidersklasse tot een revolutie.",
+          "full_chars": 650,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C379",
+        "query": {
+          "text": "According to the passage, who may have started an agriculture society?",
+          "full_chars": 70,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Voor een groot deel van de negentiende en twintigste eeuw geloofde men dat de vroegste inwoners van Nieuw-Zeeland de Maori waren, die jacht maakten die op enorme vogels genaamd moa's. De theorie leidde tot het idee dat het Maori-volk in een grote vloot uit Polynesië kwam en Nieuw-Zeeland veroverde op de Moriori, waarna er een agrarische samenleving werd gevormd. Er zijn echter nieuwe aanwijzingen dat de Moriori een groep Maori's waren op het vasteland die van Nieuw-Zeeland naar de eilanden van Chatham trokken en daar een persoonlijke, vredevolle gemeenschap opbouwden. Een andere stam op de Cathameilanden waren Maori die vanuit Nieuw-Zeeland zijn geëmigreerd. Ze noemden zichzelf de Moriori en na een paar schermutselingen en werden de Moriori uiteindelijk weggevaagd",
+          "full_chars": 774,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C367",
+        "query": {
+          "text": "Which of the following accurately describes the practice of subsistence agriculture?",
+          "full_chars": 84,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Zelfvoorzienende landbouw is landbouw waarbij voldoende voedsel wordt geproduceerd om aan de behoeften van de boer en zijn gezin te voldoen. Landbouw met als doel levensonderhoud is een simpel systeem dat meestal biologisch is. Hierbij wordt opgeslagen zaad gebruikt dat afkomstig is uit de ecoregio, en dat wordt gecombineerd met wisselende gewassen of andere relatief eenvoudige technieken om de opbrengst te optimaal te maken. Vroeger werkten de meeste boeren in de zelfvoorzienende landbouw. In veel ontwikkelingslanden is dit nog steeds het geval.",
+          "full_chars": 552,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -48,13 +48,11 @@ Strong models should improve second-support retrieval without sacrificing exact 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Avec quel autre acteur Penny Rae Bridges a-t-elle joué dans une sitcom ? | Penny Rae Bridges est une actrice américaine. Elle a joué dans les séries "For Your Love", "Family Law"... |
-| Qui a donné à Kaganoi Shigemochi une lame forgée par Masamune, le fondateur de l'école Muramasa ? | Kaganoi Shigemochi était un samouraï japonais de la période Azuchi-Momoyama... |
-| Quel film a été écrit et réalisé par Joby Harold avec la musique de Samuel Sim ? | Samuel Sim est un compositeur de films et de séries télévisées... |
-| Quand a eu lieu ce match de football universitaire au Sun Life Stadium à Miami Gardens, en Floride ? | L'équipe de football des Tigers de Clemson de 2015 a représenté l'Université de Clemson... |
-| Plat du Diable est un album de titres d'un groupe de rock and roll américain connu aussi pour des concerts country sous quel nom ? | Diabolique est une compilation de singles du groupe américain de rock 'n' roll Supersuckers... |
+| Query | Positive document |
+| --- | --- |
+| Avec quel autre acteur Penny Rae Bridges a-t-elle joué dans une sitcom ? [72 chars] | Penny Rae Bridges (née le 29 juillet 1990) est une actrice américaine. Elle a joué dans les séries "For Your Love", "Family Law", "Boy Meets World" et "The Parent 'Hood". Elle est surtout connue pour son rôle dans "Half & Half", celui de la jeune Mona. [252 chars] |
+| Qui a donné à Kaganoi Shigemochi une lame forgée par Masamune, le fondateur de l'école Muramasa ? [97 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 août 1600) était un samouraï japonais de la période Azuchi-Momoyama, au service du clan Oda. Il gouvernait le château de Kaganoi. Lors de la bataille de Komaki et Nagakute, Shigemochi combattait sous les ordres de son père, Shigemune, qui était rattaché aux forces d'Oda Nobukatsu. Peu après, le château de Kaganoi fut encerclé par les troupes de Toyotomi Hideyoshi ; Shigemune se rendit, et Shigemochi fut employé par Hideyoshi comme messager, recevant une rente de 10 000 "koku". Il possédait également une lame forgée par Muramasa, que Hideyoshi lui offrit en 1598. [606 chars] |
+| Quel film a été écrit et réalisé par Joby Harold avec la musique de Samuel Sim ? [80 chars] | Samuel Sim est un compositeur de films et de séries télévisées. Il a acquis une notoriété avec sa bande originale récompensée pour la série dramatique de la BBC "Dunkirk". Depuis, il a composé la musique pour une grande variété de productions cinématographiques et télévisuelles. Récemment, il a signé la bande originale du film "Awake" pour The Weinstein Company et de la série dramatique BBC/HBO "House of Saddam". Sa musique la plus récemment acclamée est la bande originale de "Home Fires". "Home Fires (Bande originale de la série télévisée)" est sorti le 6 mai 2016 chez Sony Classical Records. [600 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should improve second-support retrieval without sacrificing exact 
 
 | Label | URL |
 |---|---|
-| HotpotQA paper | https://arxiv.org/abs/1809.09600 |
-| HotpotQA official site | https://hotpotqa.github.io/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA paper (https://arxiv.org/abs/1809.09600) |
+| HotpotQA official site (https://hotpotqa.github.io/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

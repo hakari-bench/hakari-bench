@@ -103,22 +103,74 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/NQ_FA_test_top_250_only_w_correct-v2",
         "url": "https://huggingface.co/datasets/MCINext/NQ_FA_test_top_250_only_w_correct-v2",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test602",
+        "document_id": "doc21533",
+        "query": {
+          "text": "داوران برنامه رقص روی یخ در سال ۲۰۱۴ چه کسانی بودند؟",
+          "full_chars": 52,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "رقص روی یخ فیلیپ Schofield و Christine Bleakley برای اجرای مشترک برنامه بازگشتند. Dean، Torvill و Karen Barber برای مربیگری افراد مشهور به برنامه برگشتند. Robin Cousins، Jason Gardiner، Barber و Ashley Roberts برای نهمین، هشتمین، هفتمین و دومین فصل حضور خود در هیئت داوران برنامه بازگشتند. Cousins به دلیل گزارشگری المپیک زمستانی 2014 در هفته‌های 6 و 7 غایب بود، بنابراین Nicky Slater، داور سابق، جای او را گرفت و Barber به طور موقت به عنوان رئیس هیئت داوران منصوب شد.",
+          "full_chars": 469,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test201",
+        "document_id": "doc7251",
+        "query": {
+          "text": "فصل پنجم روبی کی منتشر می‌شود؟",
+          "full_chars": 30,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "فهرست قسمت‌های RWBY RWBY یک مجموعهٔ وب انیمه‌ای آمریکایی در حال تولید است که توسط شرکت Rooster Teeth Productions ساخته شده است. این مجموعه ابتدا در ۱۸ ژوئیهٔ ۲۰۱۳ در وب‌سایت Rooster Teeth منتشر شد و بعداً قسمت‌های آن در یوتیوب و وب‌سایت‌های استریمینگ مانند کرانچی‌رول بارگذاری شد. تا کنون چهار فصل که به آن‌ها «بخش» گفته می‌شود منتشر شده است و فصل پنجم از ۱۴ اکتبر ۲۰۱۷ در حال پخش است.[۱] تا اکتبر ۲۰۱۷، ۵۴ قسمت که به آن‌ها «فصل» گفته می‌شود منتشر شده است.",
+          "full_chars": 457,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test124",
+        "document_id": "doc4632",
+        "query": {
+          "text": "چه زمانی ترن هوایی آب‌نما در آلن تاورز بسته شد؟",
+          "full_chars": 47,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "فلوم (التون تاورز) فلوم یک ترن هوایی آبی (Log Flume) در پارک التون تاورز در استافوردشایر بود. این ترن هوایی در سال ۱۹۸۱ افتتاح شد و در سال ۲۰۰۴ همزمان با اسپانسرینگ آن توسط شرکت ایمپریال لدر، دوباره طراحی شد. این ترن هوایی با تم حمام و سه سقوط طراحی شده بود و در زمان افتتاح، طولانی‌ترین ترن هوایی آبی در جهان به شمار می‌رفت. این جاذبه در سال ۲۰۱۵ بسته شد و یک سال بعد برای بازسازی منطقه و ساخت ترن هوایی SW8 از بین برده شد.",
+          "full_chars": 425,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -70,13 +70,11 @@ Error analysis should classify misses by entity ambiguity, attribute mismatch, t
 
 ## Example Data
 
-### Public Sources
-
-- [Natural Questions paper](https://aclanthology.org/Q19-1026/)
-- [Natural Questions official page](https://ai.google.com/research/NaturalQuestions/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/nano-nq-vn](https://huggingface.co/datasets/GreenNode/nano-nq-vn)
+| Query | Positive document |
+| --- | --- |
+| ai la cha của Dylan trong Bates Motel [37 chars] | Danh sách nhân vật trong phim Bates Motel Dylan Massett (do Max Thieriot thủ vai) [3] là con trai xa lạ của Norma và là anh cùng cha khác mẹ với Norman. Sau khi lớn lên hầu như tự lực cánh sinh, anh rất khôn ngoan, mạnh mẽ và độc lập. Anh thực sự quan tâm đến Norman, nhưng có mối quan hệ khó khăn với Norma. Anh tin rằng Norma tìm kiếm xung đột và kịch tính, và cách đối xử của cô ấy với Norman sẽ làm tổn thương anh ta. Khi đến White Pine Bay, sau khi bị sa thải gần đây, Dylan kết nối với Norman và khuyến khích anh ta sống cuộc sống ngoài Norma. Anh tham gia vào kinh doanh cần sa bất hợp pháp của thị trấn, và nhanh chóng thăng tiến trong hàng ngũ khi được những cấp trên yêu mến. Thế giới của anh sụp đổ, tuy nhiên, khi anh biết từ Norma rằng mình là kết quả của một vụ hiếp dâm loạn luân - cha thật sự của anh là anh trai của Norma, Caleb - và giữ khoảng cách với gia đình, chuyển ra khỏi nhà Bates. Cuối cùng anh kết nối lại với mẹ và em trai trong tập cuối mùa giải thứ hai. Trong mùa giải t... [1,000 / 2,150 chars] |
+| mùa 5 của Ruby ra khi nào [25 chars] | Danh sách tập RWBY RWBY là một loạt phim hoạt hình trực tuyến Mỹ được sản xuất bởi Rooster Teeth Productions. Phim ra mắt vào ngày 18 tháng 7 năm 2013 trên trang web Rooster Teeth, và sau đó các tập phim được tải lên YouTube và các trang web phát trực tuyến như Crunchyroll. Bốn mùa, được gọi là "Tập", đã được phát hành, với mùa thứ năm hiện đang phát sóng kể từ khi ra mắt vào ngày 14 tháng 10 năm 2017.[1] Tính đến tháng 10 năm 2017, 54 tập, được gọi là "Chương", đã được phát hành. [486 chars] |
+| câu nói blue moon xuất phát từ đâu [34 chars] | Trăng xanh Một giả thuyết đã được đưa ra rằng thuật ngữ "trăng xanh" cho "tháng nhuận" xuất hiện từ dân gian, trong đó "xanh" thay thế cho belewe không còn được hiểu nghĩa là "bất trung". Ý nghĩa gốc của nó sẽ là "Trăng phản bội", ám chỉ một trăng tròn mà nếu theo lịch thông thường (năm không có tháng nhuận), nó sẽ là trăng tròn mùa xuân, nhưng trong năm nhuận thì nó lại "phản bội" vì người ta sẽ phải kiêng ăn thêm một tháng nữa để tuân thủ theo thời gian Mùa Chay.[8][9] [476 chars] |
 
 ### Source Reference Table
 

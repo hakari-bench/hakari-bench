@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Från 1970 till 1998 fanns det en uppvärmningsperiod som höjde temperaturerna med cirka 0,7 Fahrenheit, vilket bidrog till att skapa rörelsen för global uppvärmning.",
+          "full_chars": 164,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Paleocen (uttalas /ˈpæliəˌsiːn/ eller /ˈpæ - , - lioʊ - /) eller Paleocen, den \"gamla nya\", är en geologisk epok som varade från cirka . Det är den första epoken i Paleogenperioden under den moderna Cenozoiska eran. Som med många geologiska perioder är de lager som definierar epokens början och slut väl identifierade, men de exakta åldrarna förblir osäkra. Paleocenepoken omfattar två stora händelser i jordens historia. Den började med massutdöendet vid slutet av Kritaperioden, känt som Krita-Paleogen-gränsen (K-Pg-gränsen). Detta var en tid präglad av försvinnandet av icke-flygande dinosaurier, jättelika havsreptiler och mycket annan fauna och flora. Dinosauriernas utdöende lämnade tomma ekologiska nischer över hela världen. Paleocen avslutades med Paleocen-Eocen-termiska maximum, en geologiskt kort (ca 0,2 miljoner år) period präglad av extrema förändringar i klimat och kolcykling. Namnet \"Paleocen\" kommer från antik grekiska och syftar på den \"gamla nya\" fauna som uppstod under epoke",
+          "full_chars": 1004,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "I själva verket är trenden nedåtgående, även om det inte är statistiskt signifikant.",
+          "full_chars": 84,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Solarcykeln eller solaktivitetscykeln är den nästan periodiska 11-årsförändringen i solens aktivitet (inklusive förändringar i nivåerna av solstrålning och utsändning av solmaterial) och utseende (förändringar i antalet och storleken på solfläckar, fläckar och andra manifestationer). De har observerats (genom förändringar i solens utseende och genom förändringar som kan ses på jorden, såsom norrsken) i århundraden. Förändringarna på solen orsakar effekter i rymden, i atmosfären och på jordens yta. Även om det är den dominerande variabeln i solaktiviteten, förekommer också icke-periodiska variationer.",
+          "full_chars": 607,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Lokala och regionala havsnivåer fortsätter visa den vanliga naturliga variationen, stiger på vissa ställen och sjunker på andra.",
+          "full_chars": 128,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Medelhavsnivå (MSL) (förkortat havsnivå) är en genomsnittlig nivå av jordens havsytor, från vilken höjder som höjder kan mätas. MSL är en typ av vertikal datum, en standardiserad geodetisk referenspunkt som används, till exempel, som ett kartdatum i kartografi och sjöfart, eller inom flyg, som standardhavsnivå vid vilken atmosfärstrycket mäts för att kalibrera höjd och därmed flygplanens flygnivåer. En vanlig och relativt enkel medelhavsnivåstandard är mittpunkten mellan medellåg- och medelhögvatten vid en viss plats. Havsnivåer kan påverkas av många faktorer och har visat sig variera mycket över geologiska tidsskalen. Noggrann mätning av variationer i MSL kan ge insikter om pågående klimatförändringar, och havsnivåhöjning har ofta citerats som bevis på pågående global uppvärmning. Termen över havsnivå hänvisar vanligtvis till över medelhavsnivå (AMSL).",
+          "full_chars": 867,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

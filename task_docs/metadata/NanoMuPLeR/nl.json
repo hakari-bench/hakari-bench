@@ -86,28 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
-        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "An overview of the European Union's highly multilingual parallel corpora",
-        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
-        "year": 2014,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "DGT-Acquis",
-        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMuPLeR",
       "source_urls": [
@@ -116,6 +94,78 @@
           "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
+        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "An overview of the European Union's highly multilingual parallel corpora",
+        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
+        "year": 2014,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DGT-Acquis",
+        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "de4ddb6e-9b89-4c41-b748-51d95735c286",
+        "document_id": "205",
+        "query": {
+          "text": "Wie heeft de Commissie op 11 oktober 2004 geïnformeerd over een aandelenverwerving die gezamenlijk zeggenschap geeft over een Finse metaalcoatonderneming?",
+          "full_chars": 154,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Op 11 oktober 2004 ontving de Commissie een aanmelding van een voorgenomen concentratie in de zin van artikel 4 van Verordening (EG) nr. 139/2004 van de Raad waarin wordt meegedeeld dat de ondernemingen Outokumpu Wasacopper Oy (Wassacopper, Finland) die deel uitmaakt van het Outokumpu-concern (Finland), en Aurajoki Oy (Aurajoki, Finland) die onder zeggenschap staat van Cap Man Oy (Finland) in de zin van artikel 3, lid 1), sub b), van genoemde verordening gezamenlijk zeggenschap verkrijgen over de onderneming Cupru Oy, waarvan de naam zal veranderd worden in Aura Coat Oy (Aura Coat Oy, Finland), door de aankoop van aandelen.",
+          "full_chars": 631,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "25b6711e-c637-433a-aab2-414a6872ff44",
+        "document_id": "3448",
+        "query": {
+          "text": "Wat is het aandeel inwoners van de Unie dat binnen drie jaar naar een derde land wil reizen?",
+          "full_chars": 92,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Toch wensen de burgers dat de Europese dimensie wordt versterkt. Zo is uit een recente Eurobarometer-enquête naar voren gekomen dat de burgers niet op de hoogte zijn van hun rechten en dat zij op dat gebied hoge verwachtingen koesteren ten aanzien van Europa. Bovendien gaf de helft van de personen met woonplaats in de Unie aan dat zij voornemens waren tijdens de komende drie jaar naar een derde land te reizen, terwijl slechts 23 % van de geënquêteerden verklaarde de door artikel 20 van het EG-Verdrag geboden mogelijkheden te kennen; tegelijkertijd was 17 % van mening dat het mogelijk is bij de delegaties van de Commissie om bescherming te verzoeken.",
+          "full_chars": 657,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "09d21343-a87e-41c3-915b-6faa457bb2f6",
+        "document_id": "9880",
+        "query": {
+          "text": "Welk EU-adviesorgaan steunde de derde optie van de Commissie en benadrukte dat buitengerechtelijke consumentenbeslechting met collectieve rechtsmiddelen moet samengaan?",
+          "full_chars": 168,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Het EESC stelde eerder al dat … invoering van een groepsactie op EG-niveau … op generlei wijze afbreuk doet aan de stelsels voor buitengerechtelijke beslechting van consumentengeschillen. Het Comité steunt deze laatste voorbehoudloos en vindt dat de mogelijkheden ervan nog verder moeten worden uitgediept en ontwikkeld, zoals wordt voorgesteld in Optie 3 van het Groenboek van de Commissie. Immers, de maatregelen die de Commissie onder die optie voorstelt, zijn bedoeld als aanvulling op en niet als vervanging van het gerechtelijke EU-instrument zoals dat hierboven is beschreven.",
+          "full_chars": 583,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

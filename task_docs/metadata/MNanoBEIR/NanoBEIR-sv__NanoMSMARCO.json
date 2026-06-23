@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "Vad är ruminationssyndrom?",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ruminationssyndrom. Ruminationssyndrom, även kallat merycism, är en ätstörning som inte passar in i andra kategorier och leder till att mat kastas upp. Även om det inte identifieras som en specifik ätstörning i DSM-IV, har vissa parametrar utarbetats för att diagnostisera störningen.",
+          "full_chars": 284,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "Vem sjöng här kommer vi igen",
+          "full_chars": 28,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "För andra användningar, se Here I Go Again (upplösning). Here I Go Again är en låt av det brittiska rockbandet Whitesnake. Låten släpptes ursprungligen på albumet Saints & Sinners från 1982 och spelades in på nytt för deras självbetitlade album Whitesnake från 1987. Låten spelades in på nytt samma år i en ny radiomix-version.",
+          "full_chars": 327,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "Vem spelar Cameron Boyce i Liv och Maddie?",
+          "full_chars": 42,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Förbered er för några riktigt roligare skratt, ni. I en EXKLUSIV förhandsvisning av avsnittet den 19 april av Liv & Maddie som heter “Prom-A-Rooney.” Självklart. I den roligaste klippet ser vi Jessie-stjärnan Cameron Boyce dyka upp i en annan Disney-serie för att träffa Maddie (Shelby Wulfert). Hans rollfigur är, eh, lite excentrisk!",
+          "full_chars": 335,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

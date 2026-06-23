@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,78 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d929daaf360660f58ba85fec96229ca5b2d71fa7d5a49c4a77d6a3d66e60faec",
+        "document_id": "5452cfff627b7f37da7ba657fb0ca85e65139650da1c5df08ceeb2a161e7e1af",
+        "query": {
+          "text": "ಮುಸ್ಲಿಂ-ಬಹುಸಂಖ್ಯಾತ ಪ್ರದೇಶ ಯಾವುದು?",
+          "full_chars": 33,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "1947ರಲ್ಲಿ, ಕಾಶ್ಮೀರದ ಜನಸಂಖ್ಯೆಯ \"ಶೇಕಡಾ 77ರಷ್ಟು ಭಾಗವು ಮುಸ್ಲಿಮರಿಂದ ಕೂಡಿತ್ತು ಮತ್ತು ತನ್ನೊಂದು ಗಡಿಯನ್ನು ಅದು ಪಾಕಿಸ್ತಾನದೊಂದಿಗೆ ಹಂಚಿಕೊಂಡಿತ್ತು. ಆದ್ದರಿಂದ, ಬ್ರಿಟಿಷ್‌ ಸಾರ್ವಭೌಮತೆಯು ಆಗಸ್ಟ್‌ನ 14-15ರಂದು ಕೊನೆಗೊಂಡಾಗ, ಮಹಾರಾಜನು ಪಾಕಿಸ್ತಾನವನ್ನು ಅಂಗೀಕರಿಸಬಹುದು ಅಥವಾ ಪಾಕಿಸ್ತಾನಕ್ಕೆ ಸೇರಿಕೊಳ್ಳಬಹುದು ಎಂದು ನಿರೀಕ್ಷಿಸಲಾಗಿತ್ತು. ಈ ರೀತಿ ಮಾಡಲು ಆತ ಹಿಂದುಮುಂದು ನೋಡಿದಾಗ, ತನ್ನ ಆಡಳಿತಗಾರನನ್ನು ಬೆದರಿಸಿ ಇದಕ್ಕೆ ಒಪ್ಪಿಸುವ ಅಥವಾ ಶರಣಾಗತನನ್ನಾಗಿಸುವ ಅಸ್ತ್ರವಾಗಿ ಪಾಕಿಸ್ತಾನವು ಗೆರಿಲ್ಲಾ ದಾಳಿಯನ್ನು ಪ್ರಾರಂಭಿಸಿತು. ಇದರ ಬದಲಿಗೆ ಮೌಂಟ್‌ಬ್ಯಾಟನ್‌ರನ್ನು ಭೇಟಿಮಾಡಿದ ಮಹಾರಾಜ ಸಹಾಯಕ್ಕಾಗಿ ಮನವಿ ಸಲ್ಲಿಸಿದ ಮತ್ತು ಆಡಳಿತಗಾರನು ಭಾರತಕ್ಕೆ ಸೇರಿಕೊಳ್ಳಬೇಕು ಎಂಬ ಷರತ್ತಿನ ಮೇಲೆ ಸದರಿ ಗೌರ್ನರ‍್-ಜನರಲ್‌ ಒಪ್ಪಿಗೆ ನೀಡಿದರು. \" ಸೇರ್ಪಡೆಯ ದಸ್ತಾವೇಜು ಒಪ್ಪಂದಕ್ಕೆ ಮಹಾರಾಜನು ಸಹಿ ಹಾಕುತ್ತಿದ್ದಂತೆ, \"ಭಾರತೀಯ ಯೋಧರು ಕಾಶ್ಮೀರವನ್ನು ಪ್ರವೇಶಿಸಿದ್ದೇ ಅಲ್ಲದೇ, ರಾಜ್ಯದ ಸಾಕಷ್ಟು ಭಾಗಗಳಿಂದ ಪಾಕಿಸ್ತಾನಿ-ಪ್ರಾಯೋಜಿತ ಅನಿಯತ ಸೈನಿಕರು ಅಥವಾ ದಂಗೆಕೋರರನ್ನು ಓಡಿಸಿದರು. ಈ ಜಗಳದ ಮಧ್ಯಸ್ಥಿಕೆಯನ್ನು ವಹಿಸಲು ಆಗ ವಿಶ್ವಸಂಸ್ಥೆಯನ್ನು ಆಹ್ವಾನಿಸಲಾಯಿತು. ಕಾಶ್ಮೀರಿಗಳ ಅಭಿಪ್ರಾಯವನ್ನು ಪರಿಗಣಿಸಬೇಕು ಎಂದು UN ನಿಯೋಗವು ಒತ್ತಾಯಿಸಿದರೆ, ರಾಜ್ಯದ ಎಲ್ಲಾ ಭಾಗಗಳಿಂದ ಅನಿಯತ ಸೈನಿಕರು ಅಥವಾ ದಂಗೆಕೋರರನ್ನು",
+          "full_chars": 1598,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1bb268e8100e828e6f0800e3d048c08e611da9c897eea83131416e8afb65938f",
+        "document_id": "8c37f374df9be977e19d7eb8fadf8c539912c89b6e304d30ef8c4544feb2b4a7",
+        "query": {
+          "text": "ಚೆನ್ನೈ ಪದದ ಅರ್ಥವೇನು?",
+          "full_chars": 20,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "'ಮದ್ರಾಸು' ಎಂಬ ಹೆಸರು 'ಮದ್ರಾಸುಪಟ್ನಂ' ಪದದಿಂದ ಬಂದಿದೆ, ಈ ಜಾಗವನ್ನು ಬ್ರಿಟೀಷ್ ಈಸ್ಟ್ ಇಂಡಿಯಾ ಕಂಪನಿ ಖಾಯಂ ನೆಲೆಗಾಗಿ 1639 ರಲ್ಲಿ ಆಯ್ಕೆ ಮಾಡಿಕೊಂಡಿತು. https://www. mapsofindia. com/on-this-day/22nd-august-1639-madras-now-chennai-is-founded-by-the-east-india-company ಮದ್ರಾಸು ನಗರದ ದಕ್ಷಿಣ ಭಾಗದಲ್ಲಿ 'ಚೆನ್ನಪಟ್ಟಣಂ' ಎಂಬ ಚಿಕ್ಕ ಪೇಟೆಯಿದೆ. ಕಾಲಾಂತರದಲ್ಲಿ ಎರಡೂ ಪಟ್ಟಣಗಳೂ ಸೇರಿ 'ಮದರಾಸು' ಬ್ರಿಟೀಷರ ಕೃಪೆಗೆ ಪಾತ್ರವಾಯಿತು. ಆದರೆ ಅಲ್ಲಿನ ಜನ ಅದನ್ನು 'ಚೆನ್ನಪಟ್ಟಣ' ಅಥವಾ 'ಚೆನ್ನಪುರಿ' ಎಂದೇ ಗುರುತಿಸುತ್ತಿದ್ದರು. 'ಚೆನ್ನು' ಎಂಬ ಪದ ತೆಲುಗು ಮೂಲದ ದಕ್ಷಿಣ ಮಧ್ಯ ದ್ರಾವಿಡ ಭಾಷೆಯ ಪದ ಇದರ ಅರ್ಥ \"ಸುಂದರ\" ಎಂದು ಹಾಗಾಗಿ 'ಚೆನ್ನಪುರಿ' ಅಥವಾ 'ಚೆನ್ನಪಟ್ಟಣಂ' ಎಂದರೆ \"ಸುಂದರ ನಗರ\" ಎಂದರ್ಥ.",
+          "full_chars": 599,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "07282fa84b64915aa08de07c6e0010ef4bfdd630c23959db891a53ed58d12b1d",
+        "document_id": "5fe9f4df45224471eeddc8b047c3922ef0f0a0b0536fd9c31fee140d31ee2430",
+        "query": {
+          "text": "ಕಾರು ಪ್ರಿಯರು ಯಾವ ವಿವಿಧ ಮಾದರಿಯ ಕಾರು ಗಳನ್ನು ನೋಡಬಹುದು ?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ಅರಮನೆಗಳು ಮತ್ತು ಕೋಟೆಗಳ ಹೊರತಾಗಿ ಜೈಪುರದಲ್ಲಿನ ಹಬ್ಬಗಳು ಮತ್ತು ಮೇಳಗಳೂ ತುಂಬಾ ಜನಪ್ರಿಯವಾಗಿದೆ. ಇಲ್ಲಿನ ಮೇಳಗಳಲ್ಲಿ ಒಂದೆಂದರೆ ಜೈಪುರ ವಿಂಟೇಜ್ ಕಾರ್ ರ್ಯಾಲಿ. ಇದನ್ನು ಜನವರಿಯಲ್ಲಿ ನಡೆಸಲಾಗುತ್ತದೆ. ಇತ್ತೀಚೆಗೆ ಈ ಮೇಳವು ತುಂಬಾ ಜನಪ್ರಿಯವಾಗುತ್ತಿದೆ. ಕಾರು ಪ್ರಿಯರು ಮರ್ಸಿಡಿಸ್‌, ಆಸ್ಟಿನ್‌ ಮತ್ತು ಫಿಯೆಟ್‌ನ ವಿವಿಧ ಮಾದರಿಯ ಕಾರುಗಳನ್ನು ನೋಡಬಹುದು. ಇಲ್ಲಿನ ಕೆಲವು ಕಾರುಗಳು 1900ರದ್ದಾಗಿರುವುದು ಗಮನಾರ್ಹ. ಇನ್ನೊಂದು ಜನಪ್ರಿಯ ಮೇಳವೆಂದರೆ ಆನೆ ಉತ್ಸವ. ಹೋಳಿ ಸಂದರ್ಭದಲ್ಲಿ ಈ ಉತ್ಸವವನ್ನು ಆಯೋಜಿಸಲಾಗುತ್ತದೆ. ಈ ಉತ್ಸವದಲ್ಲಿ ರಂಗುರಂಗಿನ ಸಾಂಸ್ಕೃತಿಕ ಕಾರ್ಯಕ್ರಮಗಳ ಜೊತೆಗೆ ಆನೆಯ ವಿವಿಧ ಆಟಗಳನ್ನೂ ನೋಡಬಹುದು. ಇದರ ಜೊತೆಗೆ, ಗಂಗಾರ್ ಹಬ್ಬ ಕೂಡಾ ಸ್ವಲ್ಪ ಮಟ್ಟಿಗೆ ಜನಪ್ರಿಯವಾಗಿದೆ. ಗನ್‌ ಎಂದರೆ ಶೀವ, ಗೌರ್ ಎಂದರೆ ಶಿವನ ಪತ್ನಿ ಪಾರ್ವತಿ. ಈ ಹಬ್ಬವು ಮದುವೆಯ ಬಂಧದ ಬಗ್ಗೆ. ಇನ್ನೂ ಕೆಲವು ಜನಪ್ರಿಯ ಹಬ್ಬಗಳು ಮತ್ತು ಮೇಳಗಳೆಂದರೆ ಭಂಗಾಂಗ ಮೇಳ, ತೀಜ್‌, ಹೋಳಿ ಮತ್ತು ಚಕ್ಸು ಮೇಳ. ಅವಕಾಶಗಳುಸಾಹಸೀ ಪ್ರವೃತ್ತಿಯವರು ಒಂಟೆ ಸವಾರಿ, ಬಿಸಿ ಗಾಳಿ ಬಲೂನಿಂಗ್‌, ಪ್ಯಾರಾಗ್ಲೈಡಿಂಗ್‌ ಮತ್ತು ರಾಕ್‌ ಕ್ಲೈಂಬಿಂಗ್‌ನ್ನು ಮಾಡಬಹುದು. ಕರೌಲಿ ಮತ್ತು ರಣಥಂಬೋರ್ ನ್ಯಾಷನಲ್‌ ಪಾರ್ಕ್‌ಗೆ ಉತ್ಸಾಹಿಗಳು ಪ್ರವಾಸ ಕೈಗೊಳ್ಳಬಹುದು. ಪ್ರವಾಸಿಗರು ಜೈಪುರದಲ್ಲಿ ಶಾಪಿಂಗ್‌ ಮಾಡುವುದನ್ನು ಇಷ್ಟಪಡುತ್ತಾರೆ.",
+          "full_chars": 978,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

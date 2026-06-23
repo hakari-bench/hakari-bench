@@ -134,15 +134,66 @@
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/norquad_retrieval",
         "url": "https://huggingface.co/datasets/mteb/norquad_retrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "407",
+        "document_id": "408",
+        "query": {
+          "text": "Når ble euroen innført?",
+          "full_chars": 23,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "I 1999",
+          "full_chars": 6,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "152",
+        "document_id": "153",
+        "query": {
+          "text": "Hvilken bok lyver flest briter om at de har lest?",
+          "full_chars": 49,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "«Bibelen»",
+          "full_chars": 9,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "110",
+        "document_id": "111",
+        "query": {
+          "text": "Hvilket land i Øst-Europa var det første til å få en ikke-kommunistisk statsminister?",
+          "full_chars": 85,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "30 år uten Berlinmur Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. FOTO: GERARD MALLE/NTB SCANPIX Det heter at muren falt. Som om den tumlet over ende av utmattelse i kamp mot tidas tann. Men Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. Tida for kommunistiske dinosaurer var ute. Ungarere og polakker hadde samme høst vist vei. Polen hadde i august fått ikke-kommunistisk statsminister, den første i Øst-Europa på 40 år. Sovjetunionens nye leder Mikhail Gorbatsjov hadde skrudd termostaten opp i verden, og under DDR-regimets 40-årsjubileum tidlig i oktober 1989 hadde han gitt østtyskernes forhatte leder Erich Honecker dødskysset ved å si at «Livet straffer de som kommer for sent». Honecker hadde sovet i timen. Hendelsene i 1989 er blitt kalt slutten på historien. Slutten på den politiske og sosiokulturelle evolusjonen. Verden var på en måte i mål. Vestens måte å tenke på hadde vunnet fram. Tilbake s",
+          "full_chars": 1948,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

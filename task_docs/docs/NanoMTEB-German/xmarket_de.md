@@ -135,20 +135,19 @@ brand names, to determine whether an item satisfies the query.
 
 ## Example Data
 
-### Public Sources
-
-- [Cross-Market Product Recommendation](https://arxiv.org/abs/2109.05929)
-- [XMRec project page](https://xmrec.github.io/)
-- [mteb/XMarket](https://huggingface.co/datasets/mteb/XMarket)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Minen, Patronen & Tintenlöscher [31 chars] | Noodler's Tinte - 90 ml - Schwarz [33 chars] |
+| Handwerkzeuge [13 chars] | AFA Tooling - (4 Pcs) Radio Removal Tool, OEM: 1C0-051-530 - Wird nicht brechen oder biegen [91 chars] |
+| Stick- & Nähgarn [16 chars] | Clover Stickwerkzeug clover needlecraft this old art of embroidery using a fine hook on a fine cloth tightly stretched in a frame called tambour is reborn with kantan couture bead embroidery tool. basic techniques with this tool can create beautiful motifs using sequins and beads. embellish create and make it your own. [321 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Cross-Market Product Recommendation | 2021 | Paper | https://arxiv.org/abs/2109.05929 |
-| XMRec project page | 2021 | Project page | https://xmrec.github.io/ |
-| mteb/XMarket | 2025 | Dataset card | https://huggingface.co/datasets/mteb/XMarket |
+| Cross-Market Product Recommendation | 2021 | Paper | [https://arxiv.org/abs/2109.05929](https://arxiv.org/abs/2109.05929) |
+| XMRec project page | 2021 | Project page | [https://xmrec.github.io/](https://xmrec.github.io/) |
+| mteb/XMarket | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/XMarket](https://huggingface.co/datasets/mteb/XMarket) |
 
 ### Representative Snippets
 

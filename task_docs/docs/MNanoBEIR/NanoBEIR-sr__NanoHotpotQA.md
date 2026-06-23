@@ -112,11 +112,9 @@ passages are available and ranked high enough to be used together.
 
 | Query | Positive document |
 | --- | --- |
-| Peni Rej Bridžes je glumila u televizijskoj sitkom seriji uz kojeg drugog glumca? | Penny Rae Bridges je američka glumica. Njen televizijski rad obuhvata uloge u serijama "For Your Love", "Family Law"... |
-| Ko je dao Kaganoiju Šigemočiju oštricu koju je napravila osoba koja je osnovala Muramasa školu? | Kaganoi Shigemochi bio je japanski samuraj iz perioda Azuči-Momojama, koji je služio klanu Oda... |
-| Koji film je napisao i režirao Joby Harold, a muziku komponovao Samuel Sim? | Samuel Sim je kompozitor za film i televiziju. Prvi put je stekao priznanje muzikom za seriju BBC-ja "Dunkirk"... |
-| Koji je datum odigravanja ove koledž fudbalske utakmice na Sun Life Stadium u Miami Gardens gde je Clemson pobedio Oklahoma Sooners? | Fudbalska ekipa Clemson Tigers iz 2015. godine predstavljala je Univerzitet Clemson u sezoni 2015... |
-| "Devil's Food" je kompilacija singlova američke rok and rol grupe koja je poznata po kantri nastupima pod kojim imenom? | "Devil's Food" je kompilacija singlova američke rok and rol grupe Supersuckers, objavljena u aprilu 2005. godine... |
+| Peni Rej Bridžes je glumila u televizijskoj sitkom seriji uz kojeg drugog glumca? [81 chars] | Penny Rae Bridges (rođena 29. jula 1990) je američka glumica. Njen televizijski rad obuhvata uloge u serijama "For Your Love", "Family Law", "Boy Meets World" i "The Parent 'Hood". Najpoznatija je po ulozi mlade Mone u seriji "Half & Half". [240 chars] |
+| Ko je dao Kaganoiju Šigemočiju oštricu koju je napravila osoba koja je osnovala Muramasa školu? [95 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27. avgust 1600) bio je japanski samuraj iz perioda Azuči-Momojama, koji je služio klanu Oda. Vladao je dvorcem Kaganoi. Tokom Bitke kod Komakija i Nagakutea, Shigemochi se borio pod komandom svog oca Shigemunea, koji je bio pridodat snagama Oda Nobukatsua. Ubrzo nakon toga, dvorac Kaganoi je opkoljen od strane snaga Tojotomi Hidejošija; Shigemune se predao, a Shigemochi je zaposlen od strane Hidejošija kao glasnik, primajući platu od 10.000 "koku-a". Takođe je posedovao mač koji je načinio Muramasa, koji mu je Hidejošii poklonio 1598. godine. [584 chars] |
+| Koji film je napisao i režirao Joby Harold, a muziku komponovao Samuel Sim? [75 chars] | Samuel Sim je kompozitor za film i televiziju. Prvi put je stekao priznanje sa svojom nagrađivanom muzikom za dramsku seriju BBC-ja "Dunkirk". Od tada je napisao muziku za širok spektar filmskih i televizijskih produkcija, a nedavno je komponovao muziku za film "Awake" za kompaniju The Weinstein i dramsku seriju BBC/HBO "House of Saddam". Njegova najnovija hvaljena muzika je soundtrack za seriju "Home Fires". "Home Fires (Music from the Television Series)" objavljen je 6. maja 2016. od strane Sony Classical Records. [521 chars] |
 
 ### Public Sources
 
@@ -130,7 +128,7 @@ passages are available and ranked high enough to be used together.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | https://arxiv.org/abs/1809.09600 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

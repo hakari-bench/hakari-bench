@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning",
-        "url": "https://arxiv.org/abs/1709.00103",
-        "year": 2017,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Salesforce/wikisql",
-        "url": "https://huggingface.co/datasets/Salesforce/wikisql",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,79 @@
           "url": "https://huggingface.co/datasets/Salesforce/wikisql"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Seq2SQL: Generating Structured Queries from Natural Language using Reinforcement Learning",
+        "url": "https://arxiv.org/abs/1709.00103",
+        "year": 2017,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Salesforce/wikisql",
+        "url": "https://huggingface.co/datasets/Salesforce/wikisql",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "000000163",
+        "query": {
+          "text": "tell the final for lindsey graham {'header': ['State (linked to summaries below)', 'Senator', 'Party', 'Electoral history', 'Result', 'Candidates Winning candidate in bold'], 'page_title': '', 'page_id': '', 'types': ['text', 'text', 'text', 'text', 'text', 'text'], 'id': '1-1133844-4', 'section_title': '', 'caption': '', 'rows': [['Arkansas', 'Mark Pryor', 'Democratic', '2002', 'Incumbent re-elected', 'Mark Pryor (D) 79.5% Rebekah Kennedy (G) 20.5%'], ['Delaware', 'Joe Biden', 'Democratic', '19",
+          "full_chars": 2038,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SELECT Result FROM table WHERE Senator = Lindsey Graham",
+          "full_chars": 55,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "what's the total w–l where player is boro jovanović category:articles with hcards {'header': ['Player', 'Total W–L', 'Singles W–L', 'Doubles W–L', 'Ties played', 'Debut', 'Years played'], 'page_title': 'Yugoslavia Davis Cup team', 'page_id': '', 'types': ['text', 'text', 'text', 'text', 'real', 'real', 'real'], 'id': '1-10294071-1', 'section_title': 'Players', 'caption': 'Players', 'rows': [['Željko Franulović Category:Articles with hCards', '32–27', '23–15', '9–12', '22', '1967', '12'], ['Boro",
+          "full_chars": 1190,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SELECT Total W–L FROM table WHERE Player = Boro Jovanović Category:Articles with hCards",
+          "full_chars": 87,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "What was the date of the race in Misano? {'header': ['No', 'Date', 'Round', 'Circuit', 'Pole Position', 'Fastest Lap', 'Race winner', 'Report'], 'page_title': '2007 Supersport World Championship season', 'page_id': '', 'types': ['real', 'text', 'text', 'text', 'text', 'text', 'text', 'text'], 'id': '1-10083598-1', 'section_title': 'Season calendar', 'caption': 'Season calendar', 'rows': [['1', '24 February', 'Qatar', 'Losail', 'Kevin Curtain', 'Sébastien Charpentier', 'Kenan Sofuoğlu', 'Report']",
+          "full_chars": 1742,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "SELECT Date FROM table WHERE Circuit = Misano",
+          "full_chars": 45,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

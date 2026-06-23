@@ -134,12 +134,11 @@ BM25 recall but does not surpass BM25 ranking quality.
 
 ## Example Data
 
-Representative queries ask about Coupe de France and UEFA Cup round-of-16
-results, the link between Xavier/Magneto and Martin Luther King/Malcolm X, the
-crossing time between Ouistreham and Portsmouth, the event that cost Bernard a
-place in the French national team, or modifications made to a Lola Formula 1
-car. Positive documents are long French articles containing the relevant
-paragraph.
+| Query | Positive document |
+| --- | --- |
+| Quels sont les résultats des huitièmes de finale de la Coupe de France et de la Coupe UEFA ? [92 chars] | Cette page concerne l'actualité sportive du mois de . Mardi mars Football : surprises à l'occasion des huitièmes de finale de la Coupe de France. Clermont Foot, modeste seizième en Ligue 2, sort l'Olympique lyonnais, leader de Ligue 1, aux tirs au but après un match nul 1-1 arraché dans les arrêts de jeu par Sylvain Wiltord. Nîmes Olympique (National) poursuit également sa route en éliminant un troisième sociétaire de Ligue 1 : OGC Nice. Le score est sans appel, 4-0! Troisième match au programme ce soir : Sedan (L1) élimine logiquement l'US Quevilly (CFA) par 2-0. Le match US Boulogne - FC Nantes est reporté en raisons des mauvaises conditions météo. Suite du programme demain avec notamment le choc Auxerre – Paris Saint-Germain. Mercredi 2 mars Football : suite des huitièmes de finale de la Coupe de France. Monaco élimine Rennes (0-1 après prolongation) et Sochaux s'impose logiquement à Albi (0-3). Surprise à Lille avec la victoire du sociétaire de Ligue 2, Grenoble : 1-3! Le choc Auxe... [1,000 / 24,419 chars] |
+| Quel est le lien entre les personnages Xavier et Magnéto et les figures historiques de Martin Luther King et Malcolm X dans le projet proposé par Bryan Singer et Tom DeSanto à la Fox en 1998? [191 chars] | X-Men est un film américain réalisé par Bryan Singer, sorti en 2000. C'est le premier film de la série X-Men mettant en scène les personnages de la série de comics X-Men de Marvel Comics, créés par le scénariste Stan Lee et le dessinateur Jack Kirby. Le film marque le début de la saga cinématographique X-Men. Résumé Pologne, 1944. Un groupe de prisonniers juifs est conduit vers un camp nazi où une sinistre sélection met d'un côté un jeune adolescent et de l'autre le restant de sa famille. Comprenant leur funeste destin, le garçon, agissant par instinct, veut rejoindre ses parents mais les gardes ne peuvent l'emmener, son corps étant bloqué par l'attraction magnétique qui le lie aux portes du camp de la mort. Ce n'est qu'une fois assommé que le garçon est emmené alors que ses proches sont exterminés. Des années plus tard, aux États-Unis, un vieil homme quitte en colère une assemblée où le sénateur Robert Kelly prône une loi pour l'identification et l'enfermement des mutants dont l'exist... [1,000 / 22,611 chars] |
+| Quel est le temps de traversée entre Ouistreham et Portsmouth en utilisant la ligne de ferry de Brittany Ferries ? [114 chars] | Le port de Caen-Ouistreham est un port de commerce, un port passager et un port de plaisance français s'étendant sur le canal de Caen à la mer depuis l'embouchure de l'Orne à Ouistreham jusqu'à la ville de Caen, dans le département du Calvados et la région Normandie. Il reste aussi un port de pêche artisanale et côtière. Histoire Du Moyen Âge à l'époque moderne Au , un vicus se constitue sur les bords de l'Odon à l'emplacement de l'actuelle abbaye aux Hommes. Des fouilles menées dans les années 1970 ont montré qu'après l'échec d'une première tentative pour stabiliser les berges de la rivière un canal a été creusé d'est en ouest à travers le bourg. Ce canal avait pour but d'assainir le terrain, mais il est probable que les berges aménagées de ce canal tenaient également lieu d'installations portuaires sommaires. Le cabotage jusqu'à l'Orne assuré par des barques à fond plat devaient permettre l'échange de produits locaux. Les différents bourgs dispersés dans la vallée de l'Orne connaisse... [1,000 / 22,300 chars] |
 
 ### Public Sources
 
@@ -155,9 +154,9 @@ paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

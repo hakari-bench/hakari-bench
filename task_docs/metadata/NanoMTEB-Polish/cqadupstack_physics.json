@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 27
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-physics-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-physics-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Physics-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-physics-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-physics-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "75363",
+        "document_id": "91269",
+        "query": {
+          "text": "Jak równanie Schroedingera jest równaniem falowym?",
+          "full_chars": 50,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "związek między równaniem Schrodingera a równaniem falowym Zawsze byłem zdezorientowany związkiem między równaniem Schrödingera a równaniem falowym. $$ i\\hbar \\frac{\\partial \\psi}{\\partial t} = - \\frac{\\hbar^2}{2m} \\nabla^2+ U \\psi \\hspace{0.25in}\\text{-vs -}\\hspace{0.25in}\\nabla^2 E = \\frac{1}{c^2}\\frac{\\partial^2 E}{\\partial^2 t} $$ Ze względu na pierwszą pochodną Schrödingera równanie wygląda bardziej jak równanie ciepła. Niektóre wyprowadzenia równania Schrodingera zaczynają się od dualizmu falowo-cząsteczkowego dla światła i dowodzą, że materia również powinna wykazywać to zjawisko. W niektórych notatkach Fermiego została ona wyprowadzona przez porównanie zasady najmniejszego czasu Fermata $\\delta \\int n \\;ds = 0 $ i zasady najmniejszego działania Maupertuisa $\\delta \\int 2T(t) \\; dt = 0 zł. Czy to kiedykolwiek zostało wyjaśnione? Jak możemy bardziej ilościowo zobaczyć ideę fali materii? * * * Podsumowując, próbuję zrozumieć, dlaczego równanie fal elektromagnetycznych jest hiperbol",
+          "full_chars": 1059,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "113548",
+        "document_id": "60614",
+        "query": {
+          "text": "Pomiary technologii aktywnej redukcji szumów",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Maksymalne opóźnienie efektywnej aktywnej redukcji szumów? Aktywna redukcja szumów redukuje niechciany dźwięk, wysyłając odwróconą fazę oryginalnej fazy: ![Aktywna redukcja szumów](http://i.stack.imgur.com/0jSp8.png) (Źródło: Wikipedia) Teoretycznie wydaje się to logiczne ja. Jednak w rzeczywistości eliminacja szumów musi być tworzona przez jakiś system sprzętowy lub programowy (np. słuchawki z aktywną redukcją szumów), co wymaga czasu. Zakładam więc, że anty-hałas jest zawsze opóźniony do oryginalnego dźwięku: ![Aktywna redukcja szumów z opóźnieniem](http://i.stack.imgur.com/XBMyk.png) Moje pytania: * Ile (w milisekundach) lub cokolwiek) jest _maksymalnym_ opóźnieniem, które jest „dozwolone” dla aktywnej redukcji szumów, tak aby słuchacz hałasu + antyhałas nadal zauważał efekt? * Czy „dozwolone” opóźnienie zależy od tego, jaki hałas ma zostać skasowany (np. jazda samochodem, ludzie mówiący, muzyka)?",
+          "full_chars": 913,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "102517",
+        "document_id": "100498",
+        "query": {
+          "text": "Czy ciągłe modele matematyczne dyskretnych zjawisk fizycznych są bałaganiarskie z powodu rozłączenia między „ciągłym” i „nieciągłym”?",
+          "full_chars": 133,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jaki jest „dyskretny” odpowiednik mechaniki „ciągłej”? Gdybym chciał zbadać podejście matematyki dyskretnej do mechaniki kontinuum, do jakich podręczników powinienem się zajrzeć? Przypuszczam, że gotową odpowiedzią na to pytanie może być: „obliczeniowa mechanika kontinuum”, ale zwykle podręczniki poruszające taki temat koncentrują się zwykle na zastosowaniu analizy numerycznej do teorii ciągłych (tj. baza jest ciągła), natomiast chciałbym wiedzieć, czy istnieje traktowanie tematu, które buduje się z podstawy, która jest dyskretna.",
+          "full_chars": 536,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

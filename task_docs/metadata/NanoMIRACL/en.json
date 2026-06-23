@@ -141,20 +141,71 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "807",
+        "document_id": "22207662#2",
+        "query": {
+          "text": "How many people visit the Eiffel Tower each year?",
+          "full_chars": 49,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tourism in Paris The Eiffel Tower is acknowledged as the universal symbol of Paris and France. It was originally designed by Émile Nouguier and Maurice Koechlin. In March 1885 Gustave Eiffel, known primarily as a successful iron engineer, submitted a plan for a tower to the French Ministre du Commerce et de l'Industrie. He entered a competition for students studying at the university. The winning proposal would stand as the centerpiece of the 1889 Exposition. Eiffel's was one of over 100 submissions. Eiffel's proposal was finally chosen in June 1886. Even before its construction, the Tower's uniqueness was noticed. The Eiffel Tower was finally inaugurated on March 31, 1889. Currently about 6.9 million people visit the Eiffel tower each year.",
+          "full_chars": 752,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "108",
+        "document_id": "1737792#2",
+        "query": {
+          "text": "How long is the Omo River?",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Omo River Its course is generally to the south, however with a major bend to the west at about 7° N 37° 30' E to about 36° E where it turns south until 5° 30' N where it makes a large S- bend then resumes its southerly course to Lake Turkana. According to materials published by the Ethiopian Central Statistical Agency, the Omo-Bottego River is 760 kilometers long.",
+          "full_chars": 367,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1023",
+        "document_id": "11355965#6",
+        "query": {
+          "text": "Where did Sun Yat-sen study medicine?",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sun Yat Sen Memorial House Whilst studying at the Hong Kong College of Medicine for Chinese, the young Dr. Sun constantly travelled between Hong Kong and Macau to criticise the corruption of the Qing regime and agitated for revolution to save the country. He, along with Chan Siu-bak, Yau Lit and Yeung Hok-ling, were known as the \"Si Da Kou\" (Four Bandits). During this period, Sun Yat-Sen made many revolutionary statements and his first great essay—\"Letter to Zheng Zaoru\"—in his anthology was published by a Macau newspaper in 1890.",
+          "full_chars": 537,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

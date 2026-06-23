@@ -170,8 +170,59 @@
         "title": "Touché 2020 Task 1 page",
         "url": "https://webis.de/events/touche-20/shared-task-1.html",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "48",
+        "document_id": "6ead9505-2019-04-18T18:25:41Z-00000-000",
+        "query": {
+          "text": "Tuổi bỏ phiếu có nên được giảm xuống?",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pro không đưa ra bất kỳ một lý do hợp lý nào để giảm độ tuổi bầu cử. Tuy nhiên có khá nhiều lý do tại sao độ tuổi bầu cử của Anh Quốc không nên được giảm xuống. 1) Những người trẻ tuổi không quan tâm đến chính trị, và số liệu thống kê cho thấy điều này. 2) Những người trẻ tuổi biết ít hơn về các chính trị gia tham gia tranh cử so với những người lớn tuổi. 3) Thực tế là không có sự cần thiết phải mở rộng quyền bầu cử. 4) Hãy đối mặt với vấn đề, ai mà biết họ sẽ làm gì cho Vương Quốc Anh. .. - 1 - Tại sao nên giảm độ tuổi bầu cử nếu những người trẻ tuổi ngay cả không đi bỏ phiếu? . http://www.theticker.org...http://voices.yahoo.com...http://trace.tennessee.edu...http://mypolitikal.com... Điểm mấu chốt ở đây là, những người trẻ tuổi không quan tâm đến việc bầu cử, và càng trẻ tuổi thì họ càng thờ ơ với chính trị. - 2 - Tự nhiên, những người trẻ tuổi không hiểu rõ về chính trị và các chính trị gia. http://www.policymic.com...http://www.appeal-democrat.com... Đơn giản nói một trong những lý",
+          "full_chars": 2112,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Thuốc kê đơn có nên quảng cáo trực tiếp cho người tiêu dùng không?",
+          "full_chars": 66,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nhiều quảng cáo không cung cấp đủ thông tin về mức độ hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bởi một con tằm bay qua cửa sổ phòng ngủ trên một người đang ngủ yên bình. Thực tế, Lunesta giúp bệnh nhân ngủ nhanh hơn 15 phút sau sáu tháng điều trị và cho thêm 37 phút ngủ mỗi đêm. Phần lớn quảng cáo dựa trên những lời kêu gọi cảm xúc, nhưng ít có những thông tin về nguyên nhân của tình trạng, các yếu tố nguy cơ, hoặc thay đổi lối sống quan trọng. Trong một nghiên cứu về 38 quảng cáo dược phẩm, các nhà nghiên cứu tìm thấy rằng 82 phần trăm đưa ra yêu cầu thực tế và 86 phần trăm đưa ra lý do hợp lý cho việc sử dụng sản phẩm. Chỉ có 26 phần trăm mô tả nguyên nhân của tình trạng, các yếu tố nguy cơ, hoặc tỷ lệ mắc bệnh.[1] Vậy là không cung cấp cho bệnh nhân thông tin cân bằng mà sẽ làm cho họ nhận thức rằng uống một trong những viên thuốc đó không phải là giải pháp thần kỳ cho vấn đề của họ. Thực tế, theo một nghiên cứu được tiến hành tại Mỹ và New Zealand, bệnh nhân yêu cầu kê đơn",
+          "full_chars": 1804,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13",
+        "document_id": "f4c49f83-2019-04-18T19:00:07Z-00002-000",
+        "query": {
+          "text": "Liệu năng lượng tái tạo có thể thay thế nhiên liệu hóa thạch một cách hiệu quả?",
+          "full_chars": 79,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Trong mỗi lập luận tôi chỉ định đăng một điểm. Bây giờ để bác bỏ ý tưởng của đối thủ rằng thủy điện kết hợp với năng lượng gió và mặt trời có thể trong lý thuyết cung cấp năng lượng cho Hoa Kỳ, tôi muốn chỉ ra rằng thủy điện gây ra sự phá hủy môi trường sống khổng lồ và liên quan đến việc ngập lụt một khu vực để xây dựng đập cần thiết. Vấn đề chính với thủy điện đơn giản là nó đòi hỏi nước để xây dựng và thường liên quan đến việc chặn một con sông. Tuy nhiên, ở nhiều tiểu bang và ở Mỹ và những nơi trên thế giới, có những nơi mà nước không dồi dào đủ để bị chặn lại trái ngược với việc sử dụng. Bây giờ, để bác bỏ điểm thứ hai của anh ta rằng năng lượng dễ tìm thấy nhất là năng lượng \"tốt nhất\" được giả định. Theo logic của đối thủ của tôi, sau đó nhiên liệu hóa thạch nên là lựa chọn tốt nhất vì có một lượng lớn của nó. Tôi không đồng ý. Hơn nữa, điểm của anh ấy về cách đã có thảm họa \"thảm khốc\" trong hạt nhân, không có thương vong hoặc thậm chí chấn thương trong tất cả các năm mà Mỹ đã",
+          "full_chars": 4070,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

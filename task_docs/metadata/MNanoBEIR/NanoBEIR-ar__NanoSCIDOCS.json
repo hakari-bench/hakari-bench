@@ -144,7 +144,7 @@
         "title": "SCIDOCS GitHub repository",
         "url": "https://github.com/allenai/scidocs",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "محول رفع الجهد متعدد المستويات DC إلى DC جديد",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "محولات مصدر الجهد المتعددة المستويات تظهر كخيار جديد من محولات الطاقة لتطبيقات الطاقة العالية. تولد محولات مصدر الجهد المتعددة المستويات عادةً موجة جهد الدرجات من عدة مستويات من جهد مكثفات التيار المستمر. واحدة من أكبر القيود في محولات الجهد المتعددة المستويات هي عدم التوازن في الجهد بين المستويات المختلفة. تستخدم تقنيات توازن الجهد بين المستويات المختلفة عادةً تقنيات تثبيت الجهد أو التحكم في شحن المكثفات. هناك عدة طرق لتنفيذ توازن الجهد في محولات الجهد المتعددة المستويات. بدون النظر في محولات التوصيل المغناطيسي التقليدية، يقدم هذا البحث ثلاثة محولات مصدر جهد متعددة المستويات تم تطويرها مؤخرًا: 1) محولات تثبيت الجهد بالديود، 2) محولات المكثفات الطائر، و3) محولات العاكسات المتتالية بمصادر تيار مستمر منفصلة. سيتم مناقشة مبدأ التشغيل، المميزات، القيود، والتطبيقات المحتملة لهذه المحولات.",
+          "full_chars": 794,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "تعلم الحقول العشوائية الغاوسية الماركوفية النادرة بسرعة بناءً على تحليل تشولسكي",
+          "full_chars": 79,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sure, please provide the English document that you need translated into Arabic.",
+          "full_chars": 79,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "توليد النسيج باستخدام الشبكات العصبية التقويمية",
+          "full_chars": 47,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "في هذا العمل، ندرس تأثير عمق الشبكات التلافيفية على دقتها في التعرف على الصور على نطاق واسع. المساهمة الرئيسية لدينا هي تقييم شامل لشبكات ذات عمق متزايد، والذي يظهر أن تحسينًا كبيرًا على التكوينات السابقة يمكن تحقيقه من خلال زيادة العمق إلى 16–19 طبقة وزن. كانت هذه النتائج أساسًا لتقديمنا في تحدي ImageNet 2014، حيث حاز فريقنا على المركز الأول والثاني في مسارات تحديد الموقع وتصنيف الصور على التوالي. كما نظهر أن تمثيلاتنا تتعمم جيدًا إلى مجموعات بيانات أخرى، حيث تحقق نتائج متقدمة. من المهم أن نذكر أننا قد جعلنا نموذجين من أفضل شبكاتنا التلافيفية متاحين للجمهور لتسهيل المزيد من الأبحاث حول استخدام التمثيلات البصرية العميقة في رؤية الحاسوب.",
+          "full_chars": 644,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

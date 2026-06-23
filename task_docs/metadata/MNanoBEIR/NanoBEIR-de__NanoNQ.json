@@ -144,7 +144,7 @@
         "title": "Natural Questions dataset page",
         "url": "https://ai.google.com/research/NaturalQuestions",
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "Wo findet dieses Jahr die Final Four statt?",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Das NCAA Division I Men's Basketball Tournament 2018 war ein 68-Team-K.-o.-Turnier, um den nationalen Meister im Basketball der NCAA Division I für die Saison 2017/18 zu ermitteln. Die 80. Auflage des Turniers begann am 13. März 2018 und endete mit dem Finale am 2. April im Alamodome in San Antonio, Texas.",
+          "full_chars": 307,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "War \"Die Nacht vor Weihnachten\" ursprünglich ein Disney-Film?",
+          "full_chars": 61,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Die Idee zu \"The Nightmare Before Christmas\" entstand 1982 in einem Gedicht, das Tim Burton schrieb, während er als Animator bei Walt Disney Feature Animation arbeitete. Nach dem Erfolg von \"Vincent\" im selben Jahr begann Walt Disney Studios, die Entwicklung von \"The Nightmare Before Christmas\" als Kurzfilm oder 30-minütige Fernsehsendung in Betracht zu ziehen. Im Laufe der Jahre kehrte Burton immer wieder zu diesem Projekt zurück, und 1990 schloss er einen Entwicklungsvertrag mit Disney ab. Die Produktion begann im Juli 1991 in San Francisco; Disney veröffentlichte den Film unter seinem Touchstone Pictures-Label, da das Studio der Meinung war, der Film sei \"zu dunkel und gruselig für Kinder\".[4]",
+          "full_chars": 705,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "Warum steht der Engel des Nordens in Gateshead?",
+          "full_chars": 47,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Laut Gormley hatte die Bedeutung des Engels eine dreifache Bedeutung: Erstens, um darauf hinzuweisen, dass unter der Baustelle über zwei Jahrhunderte hinweg Bergleute arbeiteten; zweitens, um den Übergang von der Industrie- zur Informationsgesellschaft zu erfassen; und drittens, um als Brennpunkt für unsere sich wandelnden Hoffnungen und Ängste zu dienen.",
+          "full_chars": 357,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -128,11 +128,9 @@ category constraints would be the most natural architecture.
 
 | Query | Positive document |
 | --- | --- |
-| Fitzgerald bilutstillingssenter i Chambersburg, PA | Fitzgerald Auto Malls er en familieeid og drevet bilforhandler som ble grunnlagt i 1966, med sin første lokalisering åpnet i Bethesda, Maryland... |
-| Hvor kan jeg finne samlingen av kortfortellinger fra 1994 av Alice Munro? | Alice Ann Munro er en kanadisk forfatter. Munros arbeid er blitt beskrevet som å ha revolusjonert kortprosasjangeren... |
-| Galloromersk arkitektur i Paris | Kunst i Paris er en artikkel om kunstkulturen og historien i Paris, Frankrikes hovedstad... |
-| De tidligere jugoslaviske republikkene | Den jugoslaviske grunnloven av 1974 var den fjerde og siste grunnloven for Den sosialistiske føderale republikken Jugoslavia... |
-| Filmer innspilt i Venezia | En liten romanse er en amerikansk romantisk komedie fra 1979, innspilt i Technicolor og Panavision... |
+| Fitzgerald bilutstillingssenter i Chambersburg, PA [50 chars] | Fitzgerald Auto Malls er en familieeid og drevet bilforhandler som ble grunnlagt i 1966, med sin første lokalisering åpnet i Bethesda, Maryland. Per 2014, Fitzgerald Auto Malls var rangert som nummer 59 på listen over 'Topp 125 Bilforhandlere' i USA, som blir publisert årlig av Automotive News. Fitzgerald-forhandlere dukker opp fem ganger på WardsAuto e-Dealer 100 i 2013, på plass nr. 8, nr. 25, nr. 30, nr. 43 og nr. 98. [424 chars] |
+| Hvor kan jeg finne samlingen av kortfortellinger fra 1994 av Alice Munro? [73 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, født Laidlaw /ˈleɪdlɔː/; født 10. juli 1931) er en kanadisk forfatter. Munros arbeid er blitt beskrevet som å ha revolusjonert kortprosasjangeren, spesielt i sin tendens til å bevege seg frem og tilbake i tid. Hennes historier inneholder mer enn å annonsere, avslører mer enn å fremvise. Munros fiksjon er oftest satt i hennes hjemfylke Huron County i sørvestlige Ontario. Hennes historier utforsker menneskelige kompleksiteter i en enkel og klar prosa. [491 chars] |
+| Galloromersk arkitektur i Paris [31 chars] | Kunst i Paris er en artikkel om kunstkulturen og historien i Paris, Frankrikes hovedstad. I århundrer har Paris tiltrukket kunstnere fra hele verden, som kommer til byen for å utdanne seg og finne inspirasjon i byens kunstneriske ressurser og gallerier. Paris har derfor fått tilnavnet 'Kunstens by'. [300 chars] |
 
 ### Public Sources
 
@@ -146,7 +144,7 @@ category constraints would be the most natural architecture.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DBpedia-Entity V2 | 2017 | task paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia-Entity V2 | 2017 | task paper | [https://doi.org/10.1145/3077136.3080751](https://doi.org/10.1145/3077136.3080751) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -141,8 +141,8 @@ before training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | paper | https://aclanthology.org/2024.emnlp-main.47/ |
-| The NarrativeQA Reading Comprehension Challenge | 2018 | paper | https://aclanthology.org/Q18-1023 |
-| SummScreen: A Dataset for Abstractive Screenplay Summarization | 2022 | paper | https://aclanthology.org/2022.acl-long.589 |
-| QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization | 2021 | paper | https://aclanthology.org/2021.naacl-main.472 |
-| Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning Steps | 2020 | paper | https://aclanthology.org/2020.coling-main.580 |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | paper | [https://aclanthology.org/2024.emnlp-main.47/](https://aclanthology.org/2024.emnlp-main.47/) |
+| The NarrativeQA Reading Comprehension Challenge | 2018 | paper | [https://aclanthology.org/Q18-1023](https://aclanthology.org/Q18-1023) |
+| SummScreen: A Dataset for Abstractive Screenplay Summarization | 2022 | paper | [https://aclanthology.org/2022.acl-long.589](https://aclanthology.org/2022.acl-long.589) |
+| QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization | 2021 | paper | [https://aclanthology.org/2021.naacl-main.472](https://aclanthology.org/2021.naacl-main.472) |
+| Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning Steps | 2020 | paper | [https://aclanthology.org/2020.coling-main.580](https://aclanthology.org/2020.coling-main.580) |

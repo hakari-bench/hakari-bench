@@ -155,11 +155,11 @@ profile is the strongest of the three.
 
 ## Example Data
 
-Representative queries ask whether Instagram and Facebook share user data,
-whether a user might have to pay for services, whether minors need parental
-permission for YouTube, whether automated scraping of YouTube data is allowed,
-and whether eBay prohibits account transfers. Positive documents are the
-specific terms-of-service sections that answer those questions.
+| Query | Positive document |
+| --- | --- |
+| Does data sharing (including sharing of user data) take place between and among Instagram and Facebook? [103 chars] | Welcome to Instagram! These Terms of Use (or Terms) govern your use of Instagram, except where we expressly state that separate terms (and not these) apply, and provide information about the Instagram Service (the Service), outlined below. When you create an Instagram account or use Instagram, you agree to these terms. The Facebook Terms of Service do not apply to this Service. The Instagram Service is one of the Facebook Products, provided to you by Facebook, Inc. These Terms of Use therefore constitute an agreement between you and Facebook, Inc. The Instagram Service We agree to provide you with the Instagram Service. The Service includes all of the Instagram products, features, applications, services, technologies, and software that we provide to advance Instagram's mission: To bring you closer to the people and things you love. The Service is made up of the following aspects (the Service): Offering personalized opportunities to create, connect, communicate, discover, and share. Peo... [1,000 / 4,112 chars] |
+| Is it possible that Ill have to pay money for the services? [59 chars] | Using the Services Authority. You agree that you are permitted to use the Services under applicable law. If you are using the Services on behalf of a company, business or other entity, you represent that you have the legal authority to accept these Terms on behalf of that entity, in which case that entity accepts these Terms, and "you" means that entity. If you are accessing an account(s) on behalf of the account owner (e.g., as an administrator, consultant, analyst, etc.), the Terms apply to your activities on behalf of the account owner. Indemnity. If you are using the Services on behalf of a company, business or other entity, or if you are using the Services for commercial purposes, you and the entity will hold harmless and indemnify the Verizon Media Entities (defined in Section 8 below) from any suit, claim or action arising from or related to the use of the Services or violation of these Terms, including any liability or expense arising from claims (including claims for negligenc... [1,000 / 7,928 chars] |
+| Do minors require parental permission in order to access Youtubes services? [75 chars] | Introduction Thank you for using the YouTube platform and the products, services and features we make available to you as part of the platform (collectively, the Service). Our Service The Service allows you to discover, watch and share videos and other content, provides a forum for people to connect, inform, and inspire others across the globe, and acts as a distribution platform for original content creators and advertisers large and small. We provide lots of information about our products and how to use them in our Help Center. Among other things, you can find out about YouTube Kids, the YouTube Partner Program and YouTube Paid Memberships and Purchases (where available).You can also read all about enjoying content on other devices like your television, your games console, or Google Home. Your Service Provider The entity providing the Service is Google LLC, a company operating under the laws of Delaware, located at 1600 Amphitheatre Parkway, Mountain View, CA 94043 (referred to as Yo... [1,000 / 2,811 chars] |
 
 ### Public Sources
 
@@ -177,9 +177,9 @@ specific terms-of-service sections that answer those questions.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2308.11462 |
-| consumer_contracts_qa | 2023 | LegalBench task page | https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html |
-| Predicting Consumer Contracts | 2022 | law review article | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988 |
+| LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2308.11462](https://arxiv.org/abs/2308.11462) |
+| consumer_contracts_qa | 2023 | LegalBench task page | [https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html](https://hazyresearch.stanford.edu/legalbench/tasks/consumer_contracts_qa.html) |
+| Predicting Consumer Contracts | 2022 | law review article | [https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3844988) |
 
 ### Representative Snippets
 

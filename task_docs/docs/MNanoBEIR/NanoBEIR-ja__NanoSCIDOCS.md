@@ -112,11 +112,9 @@ method, task, and application alignment rather than simple topic overlap.
 
 | Query | Positive document |
 | --- | --- |
-| 新規DC-DC多レベルブーストコンバータ | マルチレベル電圧源コンバータは、大電力用途向けの新しいタイプの電力変換装置として登場している。 |
-| Cholesky分解に基づく高速スパースガウスマルコフ確率場の学習 | （空の入力のため、翻訳なし） |
-| 畳み込みニューラルネットワークを用いたテクスチャ合成 | 本研究では、大規模画像認識の設定において、畳み込みネットワークの深さがその精度に与える影響を調査する。 |
-| RFIDシステム用の円偏波を備えた平面広帯域環状リングアンテナ | 本論文では、単一給電の広帯域円偏波スタックパッチアンテナに対して、水平メアンダストリップ給電方式を提案する。 |
-| 基本的な電子部品を使用した高度なデジタル心拍モニターの設計 | 本論文では、心拍数の推定精度を向上させるために指先を使用した新しい統合型心拍数測定装置の設計と開発について報告する。 |
+| 新規DC-DC多レベルブーストコンバータ [20 chars] | アブストラクト マルチレベル電圧源コンバータは、大電力用途向けの新しいタイプの電力変換装置として登場している。マルチレベル電圧源コンバータは、通常、複数段階の直流コンデンサ電圧を用いて階段状の電圧波形を合成する。マルチレベルコンバータの主な制限の一つは、異なるレベル間での電圧の不均衡である。異なるレベル間の電圧を平衡にする技術は、通常、電圧クランプまたはコンデンサの電荷制御を含む。マルチレベルコンバータにおいて電圧バランスを実現する方法にはいくつかの方式がある。従来の磁気結合型コンバータを考慮せずに、本論文では最近開発された3種類のマルチレベル電圧源コンバータについて述べる。1）ダイオードクランプ型、2）フライングコンデンサ型、3）個別の直流電源を持つカスケードインバータ型である。これらのコンバータの動作原理、特徴、制約、および潜在的な応用について議論する。 [386 chars] |
+| Cholesky分解に基づく高速スパースガウスマルコフ確率場の学習 [33 chars] | （空の入力のため、翻訳なし） [14 chars] |
+| 畳み込みニューラルネットワークを用いたテクスチャ合成 [26 chars] | 本研究では、大規模画像認識の設定において、畳み込みネットワークの深さがその精度に与える影響を調査する。我々の主な貢献は、深さを増加させたネットワークを徹底的に評価したことであり、従来の構成に対して、重み付き層を16～19層まで深くすることで、著しい性能向上が達成できることを示している。これらの知見は、ImageNet Challenge 2014への我々の提出の基礎となり、その際、我々のチームは位置特定および分類の部門でそれぞれ第1位および第2位を獲得した。また、我々の表現は他のデータセットに対しても良好に汎化し、そこで最先端の結果を達成していることも示している。特に重要なのは、コンピュータビジョンにおける深層視覚表現の利用に関するさらなる研究を促進するため、性能が最も高かった2つのConvNetモデルを一般に公開した点である。 [369 chars] |
 
 ### Public Sources
 
@@ -130,7 +128,7 @@ method, task, and application alignment rather than simple topic overlap.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

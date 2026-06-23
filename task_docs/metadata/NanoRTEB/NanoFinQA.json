@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "FinQA: A Dataset of Numerical Reasoning over Financial Data",
-        "url": "https://aclanthology.org/2021.emnlp-main.300/",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ibm/finqa",
-        "url": "https://huggingface.co/datasets/ibm/finqa",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,79 @@
           "url": "https://huggingface.co/datasets/ibm/finqa"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FinQA: A Dataset of Numerical Reasoning over Financial Data",
+        "url": "https://aclanthology.org/2021.emnlp-main.300/",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ibm/finqa",
+        "url": "https://huggingface.co/datasets/ibm/finqa",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "000000136",
+        "query": {
+          "text": "what was the difference in the companies high compared to its low sales price for the second quarter of 2001?",
+          "full_chars": 109,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "part ii item 5 2014market for registrant 2019s common equity and related stockholder matters ( a ) market information . the common stock of the company is currently traded on the new york stock exchange ( nyse ) under the symbol 2018 2018aes 2019 2019 . the following tables set forth the high and low sale prices for the common stock as reported by the nyse for the periods indicated . price range of common stock .[['2001 first quarter', 'high $ 60.15', 'low $ 41.30', '2000 first quarter', 'high $ 44.72', 'low $ 34.25'], ['second quarter', '52.25', '39.95', 'second quarter', '49.63', '35.56'], ['third quarter', '44.50', '12.00', 'third quarter', '70.25', '45.13'], ['fourth quarter', '17.80', '11.60', 'fourth quarter', '72.81', '45.00']]( b ) holders . as of march 2 , 2002 , there were 9967 record holders of the company 2019s common stock , par value $ 0.01 per share . ( c ) dividends . under the terms of the company 2019s corporate revolving loan and letters of credit facility of $ 850 m",
+          "full_chars": 2073,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "000000027",
+        "query": {
+          "text": "what was the total impairment costs recorded from 2003 to 2005 in millions",
+          "full_chars": 74,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "notes to consolidated financial statements for the years ended february 3 , 2006 , january 28 , 2005 , and january 30 , 2004 , gross realized gains and losses on the sales of available-for-sale securities were not mate- rial . the cost of securities sold is based upon the specific identification method . merchandise inventories inventories are stated at the lower of cost or market with cost determined using the retail last-in , first-out ( 201clifo 201d ) method . the excess of current cost over lifo cost was approximately $ 5.8 million at february 3 , 2006 and $ 6.3 million at january 28 , 2005 . current cost is deter- mined using the retail first-in , first-out method . lifo reserves decreased $ 0.5 million and $ 0.2 million in 2005 and 2004 , respectively , and increased $ 0.7 million in 2003 . costs directly associated with warehousing and distribu- tion are capitalized into inventory . in 2005 , the company expanded the number of inven- tory departments it utilizes for its gross p",
+          "full_chars": 4728,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "what percent of total recourse debt is current?",
+          "full_chars": 47,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "the aes corporation notes to consolidated financial statements 2014 ( continued ) december 31 , 2010 , 2009 , and 2008 recourse debt as of december 31 , 2010 is scheduled to reach maturity as set forth in the table below : december 31 , annual maturities ( in millions ) .[['december 31,', 'annual maturities ( in millions )'], ['2011', '$ 463'], ['2012', '2014'], ['2013', '2014'], ['2014', '497'], ['2015', '500'], ['thereafter', '3152'], ['total recourse debt', '$ 4612']]recourse debt transactions during 2010 , the company redeemed $ 690 million aggregate principal of its 8.75% ( 8.75 % ) second priority senior secured notes due 2013 ( 201cthe 2013 notes 201d ) . the 2013 notes were redeemed at a redemption price equal to 101.458% ( 101.458 % ) of the principal amount redeemed . the company recognized a pre-tax loss on the redemption of the 2013 notes of $ 15 million for the year ended december 31 , 2010 , which is included in 201cother expense 201d in the accompanying consolidated stat",
+          "full_chars": 3155,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

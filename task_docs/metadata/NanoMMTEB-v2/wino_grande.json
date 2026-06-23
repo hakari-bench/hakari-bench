@@ -134,15 +134,66 @@
         "url": "https://winogrande.allenai.org/",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/WinoGrande",
         "url": "https://huggingface.co/datasets/mteb/WinoGrande",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "wino-q-66",
+        "document_id": "wino-d-85",
+        "query": {
+          "text": "Sentence: Mary wanted to get another piercing in her ear, but the _ was much too tiny..",
+          "full_chars": 87,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ear",
+          "full_chars": 3,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "wino-q-123",
+        "document_id": "wino-d-129",
+        "query": {
+          "text": "Sentence: She counted her calories for her diet and found she needed more so she ate a brownie instead of an apple since the _ has fewer..",
+          "full_chars": 138,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "apple",
+          "full_chars": 5,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "wino-q-103",
+        "document_id": "wino-d-49",
+        "query": {
+          "text": "Sentence: The game of chess was easy to play for Angela but not Rebecca because _ had a analytical mind..",
+          "full_chars": 105,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Angela",
+          "full_chars": 6,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

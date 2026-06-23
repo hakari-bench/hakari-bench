@@ -62,17 +62,18 @@ Models should learn question-aware compression of long contexts into answer cand
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks](https://ojs.aaai.org/index.php/AAAI/article/view/6398), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Context: It took Erin an hour and forty-five minutes to drive from their half-million dollar home in Plano to the small rented cabin at Lake Texoma, near the Oklahoma state line. It was Thursday night, and she could have been in their backyard, sitting by the pool in an ultra-skimpy bikini, drinking and laughing with her friends. Like every other night. She walked in and slammed the door. "Okay, I'm here. Now, will you please tell me why it was so important for me to drive all the way up here to... [500 / 1,562 chars] | will have an argument with Erin [31 chars] |
+| Context: I actually managed a kind of sleep there, kneeling with the circulation cut off to my legs, my head in canvas twilight. My body had squirted a year's supply of adrenalin into my bloodstream in the space of 30 minutes, and while that stuff can give you the strength to lift cars off your loved ones and leap over tall buildings, the payback's always a bitch. I woke up to someone pulling the hood off my head. They were neither rough nor careful -- just...impersonal. Like someone at McDonald... [500 / 1,943 chars] | After someone pulled the hood off their head. [45 chars] |
+| Context: I'm a senior at Cesar Chavez high in San Francisco's sunny Mission district, and that makes me one of the most surveilled people in the world. My name is Marcus Yallow, but back when this story starts, I was going by w1n5t0n. Pronounced "Winston." Not pronounced "Double-you-one-enn-five-tee-zero-enn" -- unless you're a clueless disciplinary officer who's far enough behind the curve that you still call the Internet "the information superhighway." I know just such a clueless person, and h... [500 / 1,746 chars] | After I was told to report to the administration office immediately. [68 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks | 2020 | proceedings paper | https://ojs.aaai.org/index.php/AAAI/article/view/6398 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks | 2020 | proceedings paper | [https://ojs.aaai.org/index.php/AAAI/article/view/6398](https://ojs.aaai.org/index.php/AAAI/article/view/6398) |
 
 ### Representative Snippets
 

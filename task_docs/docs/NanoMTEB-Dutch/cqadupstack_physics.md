@@ -160,22 +160,20 @@ surface terms repeat across many non-duplicate questions.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Hoe is de Schrödingervergelijking een golffvergelijking? [56 chars] | Relatie tussen de Schrödingervergelijking en de golfvergelijking Ik ben altijd in de war geweest over de relatie tussen de Schrödingervergelijking en de golfvergelijking. $$ i\hbar \frac{\partial \psi}{\partial t} = - \frac{\hbar^2}{2m} \nabla^2+ U \psi \hspace{0.25in}\text{-vs-}\hspace{0.25in}\nabla^2 E = \frac{1}{c^2}\frac{\partial^2 E}{\partial^2 t} $$ Vanwege de eerste afgeleide lijkt de Schrödingervergelijking meer op de warmtevergelijking. Sommige afleidingen van de Schrödingervergelijking beginnen met golf-deeltjes dualiteit voor licht en betogen dat materie dit fenomeen ook zou moeten vertonen. In sommige aantekeningen van Fermi werd deze afgeleid door het Fermat principe van de kortste tijd $\delta \int n \;ds = 0 $ en het Maupertuis principe van de kleinste actie $\delta \int 2T(t) \; dt = 0 $ te vergelijken. Is dit ooit verduidelijkt? Hoe kunnen we het idee van een materiegolf kwantitatiever bekijken? * * * Samengevat, ik probeer te begrijpen waarom de elektromagnetische gol... [1,000 / 1,081 chars] |
+| Metingen van actieve ruisonderdrukkingstechnologie [50 chars] | Maximale vertraging voor effectieve actieve ruisonderdrukking? Actieve ruisonderdrukking vermindert ongewenste geluiden door de omgekeerde fase van de originele fase te verzenden: ![Actieve ruisonderdrukking](http://i.stack.imgur.com/0jSp8.png) (Bron: Wikipedia) Theoretisch lijkt dit logisch. In de praktijk moet het antigeluid echter worden gegenereerd door een hardware- of softwaresysteem (zoals actieve ruisonderdrukkende hoofdtelefoons), wat tijd kost. Ik neem daarom aan dat het antigeluid altijd vertraagd is ten opzichte van het originele geluid: ![Actieve ruisonderdrukking met vertraging](http://i.stack.imgur.com/XBMyk.png) Mijn vragen: * Hoeveel (in milliseconden of wat dan ook) is de _maximale_ vertraging die "toegestaan" is voor actieve ruisonderdrukking zodat de luisteraar van het geluid+antigeluid het effect nog steeds merkt? * Hangt de "toegestane" vertraging af van welk geluid er moet worden onderdrukt (bijv. een rijdende auto, mensen die praten, muziek)? [985 chars] |
+| Zijn continue wiskundige modellen van discrete fysische verschijnselen rommelig vanwege een discrepantie tussen "continu" en "discontinu"? [138 chars] | Wat is het "discrete" analogon van de "continuüm" mechanica? Als ik een discrete wiskundige benadering van de continuümmechanica wil verkennen, welke leerboeken moet ik dan raadplegen? Een kant-en-klaar antwoord op de vraag zou kunnen zijn: "computationele continuümmechanica", maar leerboeken die dit onderwerp behandelen, zijn meestal gericht op het toepassen van numerieke analyse op continue theorieën (d.w.z. de basis is continu), terwijl ik wil weten of er een behandeling van het onderwerp bestaat die opgebouwd is vanuit een discrete basis. [549 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

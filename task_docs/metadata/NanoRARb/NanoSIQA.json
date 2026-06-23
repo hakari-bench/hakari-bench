@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "SocialIQA: Commonsense Reasoning about Social Interactions",
         "url": "https://arxiv.org/abs/1904.09728",
         "year": 2019,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "siqa-q-66",
+        "document_id": "siqa-d-194",
+        "query": {
+          "text": "Context: Cameron's parents told them to do well at school or they would be grounded. Cameron took their words seriously. Question: What will happen to Cameron?",
+          "full_chars": 160,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "study very hard",
+          "full_chars": 15,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "siqa-q-123",
+        "document_id": "siqa-d-350",
+        "query": {
+          "text": "Context: Riley had a lot of friends. Question: What will happen to Riley?",
+          "full_chars": 73,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "they will play with Riley",
+          "full_chars": 25,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "siqa-q-103",
+        "document_id": "siqa-d-297",
+        "query": {
+          "text": "Context: Sydney is a fan of Hillary Clinton. One day she found a biography of Hillary Clinton. Sydney wanted to read it. Question: Why did Sydney do this?",
+          "full_chars": 154,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "know more about Hillary Clinton",
+          "full_chars": 31,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

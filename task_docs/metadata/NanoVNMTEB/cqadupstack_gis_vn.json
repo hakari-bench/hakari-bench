@@ -162,6 +162,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "7803",
+        "document_id": "12860",
+        "query": {
+          "text": "Tải nhiều tập tin shapefile vào PostGIS",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "lô hàng tải shp vào postgis > **Có thể trùng lặp:** > Tải khối nhiều tập tin hình dạng vào PostGIS Liệu có khả năng tải khối tập tin shp vào postgis. Hiện tại tôi đang thử nghiệm với postgis, qgis và geoserver (như một máy chủ arcgis tiềm năng, thay thế arcmap và arcsde) và muốn tôi có thể chạy một tập tin lô (tôi đoán) sẽ tải lên một số tập tin shp (xuất khẩu từ arcsde) ghi đè các tập tin shapfile / bảng hiện có trong postgis. Về hiệu ứng postgis sẽ là một cơ sở dữ liệu nô lệ (cho thời gian hiện tại). Med",
+          "full_chars": 515,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "14142",
+        "document_id": "7839",
+        "query": {
+          "text": "Có công cụ nào có thể lấy lại hệ tọa độ được dùng để tạo ra một shapefile khi file prj bị thiếu không?",
+          "full_chars": 102,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Xác định hệ tọa độ của Shapefile khi chưa biết? Tôi có một Shapefile nhưng hệ tọa độ của nó là Unknown, và không có tệp *.prj. Làm thế nào tôi có thể xác định được bây giờ? Có công cụ nào có thể giúp đỡ không?",
+          "full_chars": 210,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "103514",
+        "document_id": "103760",
+        "query": {
+          "text": ".tif và .tfw sang GeoTIFF",
+          "full_chars": 25,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "tfw tif to GeoTiff Làm thế nào để kết hợp một tệp .tif với một tệp .tfw để tạo GeoTiff? Có rất nhiều câu trả lời cho tôi sử dụng gdal, nhưng tôi không có ý tưởng. Vì vậy có ai có thể cung cấp một ví dụ từng bước về cách thực hiện điều này không?",
+          "full_chars": 246,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

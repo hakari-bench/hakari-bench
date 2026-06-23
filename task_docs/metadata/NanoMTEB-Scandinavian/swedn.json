@@ -135,29 +135,80 @@
         "year": 2025,
         "is_paper": false,
         "doi": "10.23695/36v9-9017",
-        "source_confidence": "official_resource_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "The Scandinavian Embedding Benchmarks",
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Superlim: A Swedish Language Understanding Evaluation Benchmark",
         "url": "https://aclanthology.org/2023.emnlp-main.506/",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/SwednRetrieval",
         "url": "https://huggingface.co/datasets/mteb/SwednRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "540",
+        "document_id": "542",
+        "query": {
+          "text": "Gående är oskyddade i trafiken",
+          "full_chars": 30,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tror många cyklister glömmer att oavsett var en gående person befinner sig i trafiken så räknas de fortfarande som oskyddade gentemot all annan fordonstrafik och enligt lagen räknas cykel som ett fordon. Detta verkar helt glömmas bort i all debatter om cyklister. Vad detta innebär är att det alltid är du som förare av ett fordon som är ansvarig gentemot gående oavsett var den gående befinner sig i trafiksituationen.",
+          "full_chars": 419,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "177",
+        "document_id": "179",
+        "query": {
+          "text": "Det är inte gratis att plocka bär",
+          "full_chars": 33,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Skogens bär ingår i ett ekologiskt system och är knappast till för enbart människan. Det är inte gratis att plocka bär. Det kostar både tid och pengar. Det kräver utrustning och transporter. Väl på plats i bärskogen ger det en härlig naturupplevelse i bra väder, men för stadsbon är nog mest ekonomiskt att köpa skogens bär i butik eller på torgplats.",
+          "full_chars": 351,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "117",
+        "document_id": "119",
+        "query": {
+          "text": "”Skollagen ger barnen rätt till skolgång”",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "På DN-debatt (24/6) skriver regeringens nationelle samordnare för arbetet med utsatta EES-medborgare Martin Valfridsson tillsammans med Rickard Klerfors, om EU-migranters barns rätt till skolgång. De hävdar att ”det svenska samhället sänder ogenomtänkta signaler kring barn- och skolfrågan riskerar vi att bidra till att barn rycks ur en pågående skolgång”. Författarna frågar retoriskt ”Ska vi blint hävda barnens rätt till skolgång i Sverige samtidigt som vi accepterar att man bor och lever under totalt oacceptabla förhållanden? Skulle det inte i de flesta fall vara bättre för barnen att gå kvar i skolan i hemländerna?” Frågan om skolgång antingen i Sverige eller i hemlandet kan helt enkelt inte ställas. Vi måste utgå från den situation som faktiskt föreligger. De barn vi talar om finns här och nu. Deras skolgång i Sverige är naturligtvis inte oberoende av hur de lever här. Tvärtom är det så att de ofta oacceptabla förhållanden som EU-migranter lever under i Sverige innefattar just att d",
+          "full_chars": 4289,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

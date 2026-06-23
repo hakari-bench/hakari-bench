@@ -171,8 +171,59 @@
         "title": "SciDocs dataset page",
         "url": "https://allenai.org/data/scidocs",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "c0bbc89889691aca1f81f3727a0587eadfe4e8af",
+        "document_id": "1ba779d5a5c9553ee8ecee5cf6bafb4b494ea7bc",
+        "query": {
+          "text": "Phân tích hành vi của mã độc Android",
+          "full_chars": 36,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Về chứng nhận ứng dụng điện thoại di động nhẹ Người dùng đã bắt đầu tải về một số lượng ngày càng lớn các ứng dụng cho điện thoại di động để đáp ứng với sự tiến bộ trong các thiết bị cầm tay và mạng không dây. Số lượng ứng dụng tăng lên làm tăng thêm khả năng cài đặt các chương trình độc hại và virus máy tính tương tự. Trong bài báo này, chúng tôi đề xuất dịch vụ bảo mật Kirin cho Android, thực hiện chứng nhận nhẹ của các ứng dụng để giảm thiểu phần mềm độc hại tại thời điểm cài đặt. Chứng nhận Kirin sử dụng các quy tắc bảo mật, đó là các mẫu được thiết kế để khớp bảo thủ các thuộc tính không mong muốn trong cấu hình bảo mật được đóng gói với các ứng dụng. Chúng tôi sử dụng một biến thể của kỹ thuật kỹ thuật yêu cầu bảo mật để thực hiện phân tích bảo mật sâu rộng của Android để tạo ra một tập hợp các quy tắc phù hợp với đặc điểm của phần mềm độc hại. Trong một mẫu 311 các ứng dụng phổ biến nhất được tải xuống từ Chợ chính thức của Android, Kirin và các quy tắc của chúng tôi tìm thấy 5",
+          "full_chars": 1361,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1d1bc7c5ab704db04a72efb063fb1db6fc07f85c",
+        "document_id": "14423a62355ff3a1cff997f24534390921f854b5",
+        "query": {
+          "text": "Liên kết một từ điển ngữ nghĩa với Wordnet và chuyển đổi sang Wordnet-LMF",
+          "full_chars": 73,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Học cách bản đồ giữa các từ vựng trên Web ngữ nghĩa Các ngữ nghĩa học đóng một vai trò nổi bật trong Semantic Web. Chúng cho phép xuất bản dữ liệu có thể hiểu được bởi máy tính, mở ra nhiều cơ hội để xử lý thông tin tự động. Tuy nhiên, do tính phân tán của Semantic Web, dữ liệu trên nó sẽ xuất phát từ nhiều nguồn khác nhau. Xử lý thông tin giữa các ngữ nghĩa học không có khả năng mà không biết được các bản đồ ngữ nghĩa giữa các thành phần của chúng. Việc tìm kiếm thủ công các bản đồ này là mệt mỏi, dễ sai và rõ ràng không khả thi ở quy mô web. Do đó, việc phát triển các công cụ hỗ trợ quá trình bản đồ ngữ nghĩa là rất quan trọng đối với sự thành công của Semantic Web.Chúng tôi mô tả một hệ thống gọi là \"keo\", sử dụng các kỹ thuật học máy để tìm ra các bản đồ như vậy. Cho hai ngữ nghĩa học, đối với mỗi khái niệm trong một ngữ nghĩa học, keo tìm ra khái niệm tương tự nhất trong ngữ nghĩa học còn lại. Chúng tôi đưa ra các định nghĩa xác suất hợp lý cho nhiều phép đo độ tương tự thực tế, v",
+          "full_chars": 2024,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "045a50ec31973fee15ff967f18e016fae77fd1f3",
+        "document_id": "1886edb4e771c1c0aa7bae360d7f3de23ac4ac8e",
+        "query": {
+          "text": "Mô tả tính độ tin cậy của phần cứng điện toán đám mây",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Xu hướng thất bại trong một quần thể ổ đĩa lớn Được ước tính rằng trên 90% thông tin mới được sản xuất ra trên thế giới đang lưu trữ trên các phương tiện từ tính, hầu hết là trên ổ cứng. Mặc dù sự quan trọng của họ, có tương đối ít công trình đã được xuất bản về các mô hình hỏng hóc của ổ đĩa và các yếu tố chủ chốt ảnh hưởng đến tuổi thọ của chúng. Hầu hết dữ liệu có sẵn hoặc dựa trên việc suy diễn từ các thí nghiệm lão hóa tăng tốc hoặc từ các nghiên cứu thực địa quy mô tương đối khiêm tốn. Hơn nữa, các nghiên cứu quy mô lớn hiếm khi có cơ sở hạ tầng để thu thập các tín hiệu y tế từ các thành phần đang hoạt động, điều đó là thông tin quan trọng cho phân tích lỗi chi tiết. Chúng tôi trình bày dữ liệu thu thập được từ quan sát chi tiết một dân số ổ đĩa lớn trong triển khai dịch vụ Internet sản xuất. Dân số quan sát lớn nhiều lần so với các nghiên cứu trước đây. Ngoài việc trình bày thống kê hư hỏng, chúng tôi phân tích sự tương quan giữa các lỗi và một số tham số được tin tưởng nói chun",
+          "full_chars": 1462,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -132,11 +132,11 @@ hybrid designs need language-aware weighting.
 
 ## Example Data
 
-Representative queries ask what language interpretation is used for, what
-technologies are used for mobile internet access, what was introduced in the
-1990s, what kind of vehicle the TB-3 was, and what epidermal cells can do.
-Positive documents are Wikipedia-style passages containing the answer span,
-sometimes in a different language from the query.
+| Query | Positive document |
+| --- | --- |
+| Phiên dịch được sử dụng cho ngôn ngữ nào? [41 chars] | Nói chung, tất cả mọi người trong nước đều hiểu và nói tiếng Nga, ngoại trừ tại một số vùng xa xôi hẻo lánh. Tiếng Nga là tiếng mẹ đẻ của đa số dân cư Bishkek, và hầu hết các giao dịch thương mại cũng như chính trị đều được tiến hành bằng ngôn ngữ này. Cho tới gần đây, tiếng Kyrgyz vẫn là ngôn ngữ được sử dụng tại gia đình, và hiếm khi được dùng trong các cuộc gặp gỡ hay các sự kiện khác. Tuy nhiên, đa số các cuộc họp nghị viện hiện nay được tiến hành bằng tiếng Kyrgyz, với phiên dịch đồng thời cho những người không nói tiếng Kyrgyz. [539 chars] |
+| ما هي التقنيات الحديثة المستخدمة للوصول إلى الإنترنت عبر الهاتف المحمول؟ [72 chars] | Reichweite und Bandbreite: Mobiler Internetzugriff ist generell langsamer als direkte Kabelverbindungen. Verwendete Technologien sind hier GPRS, oder EDGE, aktuell auch HSDPA und HSUPA, 3G und 4G Netzwerke, sowie das neue 5G Netzwerk. Diese Netzwerke sind meist in Reichweite eines kommerziellen Mobilfunkturms zu erreichen. Kabellose Hochgeschwindigkeitsnetzwerke sind nicht teuer, haben allerdings nur eine sehr begrenzte Reichweite. [435 chars] |
+| Was wurde in den 1990er Jahren eingeführt? [42 chars] | أما القديس فالنتين الذي كان يعيش في تورني فقد أصبح أسقفًا لمدينة انترامنا (الاسم الحديث لمدينة تورني) تقريبًا في عام 197 بعد الميلاد، ويُقال إنه قد قُتل فترة الاضطهاد التي تعرض له المسيحيون أثناء عهد الإمبراطور أوريليان. وجرى دفنه أيضًا قرب "فيا فلامينا"، ولكن في مكان مختلف عن المكان الذي تم فيه دفن القديس فالنتين الذي كان يعيش في روما. أما رفاته، فقد تم دفنها في باسيليكا (كنيسة) القديس فالنتين في تورني. [407 chars] |
 
 ### Public Sources
 
@@ -151,9 +151,9 @@ sometimes in a different language from the query.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MLQA: Evaluating Cross-lingual Extractive Question Answering | 2019 | task paper | https://arxiv.org/abs/1910.07475 |
-| MLQA dataset | 2019 | dataset card | https://huggingface.co/datasets/mlqa |
-| mteb/MLQARetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/MLQARetrieval |
+| MLQA: Evaluating Cross-lingual Extractive Question Answering | 2019 | task paper | [https://arxiv.org/abs/1910.07475](https://arxiv.org/abs/1910.07475) |
+| MLQA dataset | 2019 | dataset card | [https://huggingface.co/datasets/mlqa](https://huggingface.co/datasets/mlqa) |
+| mteb/MLQARetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/MLQARetrieval](https://huggingface.co/datasets/mteb/MLQARetrieval) |
 
 ### Representative Snippets
 

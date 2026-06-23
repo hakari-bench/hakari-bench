@@ -142,7 +142,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -150,15 +150,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "Concesionario Fitzgerald en Chambersburg, PA",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fitzgerald Auto Malls es una concesionaria de automóviles propiedad y operada por una familia, fundada en 1966. Su primera ubicación se abrió en Bethesda, Maryland. A partir de 2014, Fitzgerald Auto Malls ocupó el puesto número 59 en la lista de los \"Top 125 Grupos de Concesionarios\" en EE. UU., que se publica anualmente por Automotive News. Las ubicaciones de los concesionarios de Fitzgerald aparecen cinco veces en el WardsAuto e-Dealer 100 de 2013, en los puestos No. 8, No. 25, No. 30, No. 43 y No. 98.",
+          "full_chars": 509,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "Colección de cuentos de 1994 de Alice Munro está disponible",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, de soltera Laidlaw /ˈleɪdlɔː/; nacida el 10 de julio de 1931) es una autora canadiense. La obra de Munro ha sido descrita como haber revolucionado la estructura de los cuentos, especialmente en su tendencia a avanzar y retroceder en el tiempo. Sus historias se dice que \"más que anunciar, revelan más que exhibir.\" La ficción de Munro se ambienta, en su mayoría, en su natal condado de Huron, en el suroeste de Ontario. Sus cuentos exploran las complejidades humanas con un estilo de prosa sencillo.",
+          "full_chars": 537,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "Arquitectura romana gala en París",
+          "full_chars": 33,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "El arte en París es un artículo sobre la cultura y la historia del arte en París, la capital de Francia. Desde hace siglos, París ha atraído a artistas de todo el mundo, quienes llegan a la ciudad en busca de formación y de inspiración en sus recursos artísticos y galerías. Por ello, París ha ganado la reputación de ser la 'Ciudad del Arte'.",
+          "full_chars": 343,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

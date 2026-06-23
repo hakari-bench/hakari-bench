@@ -108,11 +108,9 @@ focus on whether each entity satisfies the query relation.
 
 | Query | Positive document |
 | --- | --- |
-| 피츠제럴드 오토 몰 체임버스버그 펜실베이니아 | 피츠제럴드 오토몰은 1966년 메릴랜드주 베데스다에 첫 번째 지점을 오픈하며 설립된 가족 소유 및 운영 자동차 딜러십이다. |
-| 1994년 단편 소설집 앨리스 먼로는 열려 있다 | 앨리스 앤 먼로는 캐나다의 작가이다. 먼로의 작품은 시간의 전후를 오가며 단편소설의 구조를 혁신시켰다고 평가받는다. |
-| 파리의 갈로-로마 건축 | 파리의 예술은 프랑스의 수도인 파리의 예술 문화와 역사에 관한 글이다. |
-| 구 유고슬라비아의 공화국들 | 1974년 유고슬라비아 헌법은 사회주의 연방 공화국 유고슬라비아의 네 번째이자 마지막 헌법이다. |
-| 베니스에서 촬영된 영화들 | 《작은 로맨스》는 조지 로이 힐이 감독을 맡고 로렌스 올리비에와 다이안 레인이 출연한 1979년 미국 로맨틱 코미디 영화이다. |
+| 피츠제럴드 오토 몰 체임버스버그 펜실베이니아 [24 chars] | 피츠제럴드 오토몰은 1966년 메릴랜드주 베데스다에 첫 번째 지점을 오픈하며 설립된 가족 소유 및 운영 자동차 딜러십이다. 2014년 기준, 피츠제럴드 오토몰은 《오토모티브 뉴스》가 매년 발표하는 미국 '상위 125대 딜러십 그룹'에서 59위를 차지했다. 피츠제럴드 딜러 지점들은 2013년 워즈오토 이디일러 100에 8위, 25위, 30위, 43위, 98위로 다섯 차례 이름을 올렸다. [216 chars] |
+| 1994년 단편 소설집 앨리스 먼로는 열려 있다 [26 chars] | 앨리스 앤 먼로(/ˈælɨs ˌæn mʌnˈroʊ/, 본명 레이드로 /ˈleɪdlɔː/; 1931년 7월 10일 출생)는 캐나다의 작가이다. 먼로의 작품은 시간의 전후를 오가며 단편소설의 구조를 혁신시켰다고 평가받는다. 그녀의 작품은 "드러내기보다 숨기며, 과시하기보다 더 많이 드러낸다"고 표현되기도 한다. 먼로의 소설은 대개 그녀의 고향인 온타리오주 남서부 휴런 카운티를 배경으로 한다. 그녀의 이야기들은 간결한 문체로 인간의 복잡성을 탐구한다. [251 chars] |
+| 파리의 갈로-로마 건축 [12 chars] | 파리의 예술은 프랑스의 수도인 파리의 예술 문화와 역사에 관한 글이다. 수세기 동안 파리는 전 세계의 예술가들을 끌어들여, 이들이 도시에 도착해 예술 교육을 받고 예술 자원 및 갤러리에서 영감을 얻고자 했다. 그 결과, 파리는 '예술의 도시'라는 명성을 얻게 되었다. [149 chars] |
 
 ### Public Sources
 
@@ -126,7 +124,7 @@ focus on whether each entity satisfies the query relation.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DBpedia-Entity V2 | 2017 | task paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia-Entity V2 | 2017 | task paper | [https://doi.org/10.1145/3077136.3080751](https://doi.org/10.1145/3077136.3080751) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

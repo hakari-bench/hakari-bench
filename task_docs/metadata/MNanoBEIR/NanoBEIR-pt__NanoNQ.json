@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 5
       }
     },
-    "references": [
-      {
-        "title": "Natural Questions: a Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: a Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "Onde vai ser realizado o Final Four este ano?",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O Torneio de Basquetebol Masculino da Divisão I da NCAA de 2018 foi um torneio de eliminação simples com 68 equipes para determinar o campeão nacional de basquetebol universitário da NCAA para a temporada 2017-18. A 80ª edição do torneio começou em 13 de março de 2018 e terminou com o jogo do campeonato em 2 de abril no Alamodome, em San Antonio, Texas.",
+          "full_chars": 355,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "O \"O Estranho Mundo de Jack\" é um filme original da Disney?",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O Pesadelo Antes do Natal surgiu de um poema escrito por Tim Burton em 1982, enquanto ele trabalhava como animador na Walt Disney Feature Animation. Com o sucesso de Vincent no mesmo ano, os Estúdios Walt Disney começaram a considerar desenvolver O Pesadelo Antes do Natal como um curta-metragem ou especial de televisão de 30 minutos. Ao longo dos anos, os pensamentos de Burton frequentemente voltavam ao projeto, e em 1990, ele fez um acordo de desenvolvimento com a Disney. A produção começou em julho de 1991 em São Francisco; a Disney lançou o filme sob o selo Touchstone Pictures, pois acreditava que o filme seria \"muito sombrio e assustador para crianças\".[4]",
+          "full_chars": 668,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "Por que existe o Anjo do Norte?",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De acordo com Gormley, o significado de um anjo era tríplice: primeiro, para significar que, sob o local de sua construção, mineiros de carvão trabalharam por dois séculos; segundo, para compreender a transição de uma era industrial para uma era da informação; e terceiro, para servir de ponto de referência para nossas esperanças e medos em evolução.",
+          "full_chars": 351,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

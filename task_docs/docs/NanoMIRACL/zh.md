@@ -150,11 +150,11 @@ positive pool.
 
 ## Example Data
 
-Representative queries ask how large Xinjiang is, who belongs to the British
-royal family, which genres are part of American popular music, which continent
-Venezuela is in, or what the Yellow Emperor's wife was called. Positive
-documents are Chinese Wikipedia passages containing the requested area,
-membership, list, geographic, or biographical evidence.
+| Query | Positive document |
+| --- | --- |
+| 新疆面积有多大？ [8 chars] | 新疆维吾尔自治区 新疆维吾尔自治区（），通称新疆，简称新，是中華人民共和國的一个自治区，也是中國面积第一大的省级行政区。自治區由新疆省改置，成立于1955年，首府位於乌鲁木齐。新疆总面积为1,664,897平方公里，约占中国陆地面积六分之一；陆地边境线达5690.142公里，占中国边界总长度四分之一。 [152 chars] |
+| 英国王室有哪些成员？ [10 chars] | 英國王室 英国王室允许与皇室有血缘关系的女性继承王位，这造成了英国王室血缘相同而王朝名称不同的现象，诺曼底王朝建立者威廉一世与英国的盎格鲁-撒克逊王朝无直接的血缘关系，忏悔者爱德华死后无嗣，威廉通过自己的姨祖母艾玛（埃塞烈德的妻子和爱德华的母亲），主张英国王位应该由他继承，威廉的妻子弗兰德的玛蒂尔达是英国的盎格鲁-撒克逊王朝阿尔弗烈德大帝的第七代直系后裔，她和威廉的婚姻提高了威廉要求王位的权利，威廉一世死后，王位由威廉一世与弗兰德的玛蒂尔达所生的儿子威廉二世继承，威廉二世起所有的英格兰和联合王国的国王/女王都是弗兰德的玛蒂尔达（盎格鲁-撒克逊王朝）与威廉一世（诺曼底王朝）的后裔，目前英國王室世系有血親關係的高達幾百萬人。 [315 chars] |
+| 美国有哪些流行音乐派别？ [12 chars] | 美国流行音乐 19世纪早期，美国流行音乐开始分化出不同的风格。美国音樂產業在20世纪从布鲁斯和民间音乐中发展出了一系列新音乐类型，包括乡村、节奏布鲁斯、爵士和摇滚。20世纪60年代和70年代见证了美国流行音乐的几个重要变化，如重金属、朋克、灵魂乐和嘻哈乐这些新类型的诞生。这些音乐类型属于“流行音乐”是因为它们是商业性的（与民谣和古典音乐相对），并不是说它们是“主流的”。 [187 chars] |
 
 ### Public Sources
 
@@ -172,10 +172,10 @@ membership, list, geographic, or biographical evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

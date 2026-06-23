@@ -135,15 +135,66 @@
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/MintakaRetrieval",
         "url": "https://huggingface.co/datasets/mteb/MintakaRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q54",
+        "document_id": "D1213",
+        "query": {
+          "text": "En orden cronológico, ¿cuál es la segunda película de Crepúsculo?",
+          "full_chars": 65,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Twilight Saga: New Moon",
+          "full_chars": 27,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1288",
+        "document_id": "D1604",
+        "query": {
+          "text": "¿Qué película de Harry Potter es dirigida por Alfonso Cuarón?",
+          "full_chars": 61,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Harry Potter y el prisionero de Azkaban",
+          "full_chars": 39,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1081",
+        "document_id": "D802",
+        "query": {
+          "text": "¿Quién es más joven, Drew Barrymore o Reese Whiterspoon?",
+          "full_chars": 56,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Reese Witherspoon",
+          "full_chars": 17,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

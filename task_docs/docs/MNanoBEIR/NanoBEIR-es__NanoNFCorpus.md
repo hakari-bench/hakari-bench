@@ -48,13 +48,11 @@ Strong models should improve medical terminology bridging and evidence-set recal
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Batidos de chocolate saludables | Objetivo: Estudiar la relación entre el consumo de cerezas y el riesgo de ataques recurrentes de gota... |
-| ética médica | ANTECEDENTES: Uno de los principales problemas en el control del colesterol sérico mediante intervención dietética parece ser la necesidad de mejorar... |
-| habas | Durante los últimos 20 años, el creciente interés en la bioquímica, nutrición y farmacología de la L-arginina... |
-| ¿Qué contienen los nuggets de pollo? | OBJETIVO: Determinar los componentes de las croquetas de pollo de 2 cadenas de comida nacionales... |
-| grasa saturada | El interés por la posibilidad de que la ingesta materna de alimentos durante el embarazo pueda influir en el desarrollo de trastornos alérgicos... |
+| Query | Positive document |
+| --- | --- |
+| Batidos de chocolate saludables [31 chars] | Objetivo: Estudiar la relación entre el consumo de cerezas y el riesgo de ataques recurrentes de gota en individuos con gota. Métodos: Realizamos un estudio de caso-cruce para examinar las asociaciones de un conjunto de factores de riesgo putativos con ataques recurrentes de gota. Se reclutaron prospectivamente individuos con gota y se les siguió en línea durante un año. A los participantes se les preguntó la siguiente información al experimentar un ataque de gota: la fecha de inicio del ataque, síntomas y signos, medicamentos (incluyendo medicamentos anti-gota) y factores de riesgo potenciales (incluyendo el consumo diario de cerezas y extracto de cereza) durante el período de 2 días previo al ataque de gota. Evaluamos la misma información de exposición durante períodos de control de 2 días. Estimamos el riesgo de ataques recurrentes de gota relacionados con el consumo de cerezas utilizando regresión logística condicional. Resultados: Nuestro estudio incluyó a 633 individuos con gota.... [1,000 / 1,865 chars] |
+| ética médica [12 chars] | ANTECEDENTES: Uno de los principales problemas en el control del colesterol sérico mediante intervención dietética parece ser la necesidad de mejorar la adherencia del paciente. OBJETIVOS: Explorar las diversas preguntas sobre las barreras y los motivadores para la adherencia a una dieta que reduzca el colesterol. MÉTODOS: Encuestamos las prácticas dietéticas de médicos generales franceses para pacientes con hipercolesterolemia y examinamos las actitudes de sus pacientes hacia este enfoque. RESULTADOS: Analizamos 234 cuestionarios personales de médicos y 356 cuestionarios de autoevaluación de pacientes. Las razones de los pacientes para no cumplir con la dieta prescrita incluyeron: 'ya tener hábitos alimenticios satisfactorios' (34.7%), 'rechazo a sufrir privación nutricional' (33.3%), 'dificultades para conciliar la dieta con la vida familiar' (27.8%) y 'tomar medicamentos para reducir el colesterol' (22.2%). A pesar de una comprensión generalmente buena por parte de los pacientes de... [1,000 / 2,091 chars] |
+| habas [5 chars] | Durante los últimos 20 años, el creciente interés en la bioquímica, nutrición y farmacología de la L-arginina ha llevado a extensos estudios para explorar sus roles nutricionales y terapéuticos en el tratamiento y prevención de trastornos metabólicos humanos. Evidencias emergentes muestran que la suplementación dietética con L-arginina reduce la adiposidad en ratas genéticamente obesas, ratas obesas inducidas por dieta, cerdos de engorde y sujetos humanos obesos con diabetes tipo 2. Los mecanismos responsables de los efectos beneficiosos de la L-arginina son probablemente complejos, pero finalmente implican alterar el equilibrio entre la ingesta y el gasto energético a favor de la pérdida de grasa o la reducción del crecimiento del tejido adiposo blanco. Estudios recientes indican que la suplementación con L-arginina estimula la biogénesis mitocondrial y el desarrollo del tejido adiposo marrón, posiblemente a través de la síntesis mejorada de moléculas de señalización celular (por ejem... [1,000 / 1,398 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should improve medical terminology bridging and evidence-set recal
 
 | Label | URL |
 |---|---|
-| NFCorpus paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| NFCorpus project page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus paper (https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| NFCorpus project page (https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

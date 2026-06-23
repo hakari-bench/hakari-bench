@@ -86,28 +86,6 @@
         "rows_with_101_candidates": 5
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
-        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "An overview of the European Union's highly multilingual parallel corpora",
-        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
-        "year": 2014,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "DGT-Acquis",
-        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMuPLeR",
       "source_urls": [
@@ -116,6 +94,78 @@
           "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
+        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "An overview of the European Union's highly multilingual parallel corpora",
+        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
+        "year": 2014,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DGT-Acquis",
+        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d5607064-f0d7-4c09-82cf-00683a041ed6",
+        "document_id": "2764",
+        "query": {
+          "text": "Kateri regulativni okvir je organom omogočal opredeliti podjetja kot prevladujoča pri 25% tržnem deležu, upoštevajoč dostop končnih uporabnikov in finance?",
+          "full_chars": 155,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "V skladu z regulativnim okvirom iz leta 1998 so bila področja trga telekomunikacijskega sektorja, za katera je veljala ureditev ex ante, določena v ustreznih direktivah, vendar ti trgi niso bili opredeljeni v skladu z načeli konkurenčnega prava. Na teh področjih, opredeljenih v skladu z regulativnim okvirom iz leta 1998, so imeli nacionalni regulativni organi pooblastila, da podjetja, ki imajo 25 % tržni delež, opredelijo kot podjetja s pomembno tržno močjo, pri čemer je mogoče odstopanje od tega praga ob upoštevanju sposobnosti podjetja, da vpliva na trg, njegovega prometa glede na velikost trga, njegovega nadzora nad sredstvi dostopa do končnih uporabnikov, njegovega dostopa do finančnih virov in njegovih izkušenj pri zagotavljanju proizvodov in storitev na trgu.",
+          "full_chars": 775,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "22a61c08-88b0-4473-a576-501538ef6468",
+        "document_id": "6336",
+        "query": {
+          "text": "Katere države so v raziskavi zabeležile približno štiri petine podpore za omejitev manjših apoenov?",
+          "full_chars": 99,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bankovci in kovanci. Glede zadovoljstva s sedanjimi apoeni bankovcev in kovancev, je raziskava pokazala, da pri bankovcih spremembe niso potrebne, precejšen odstotek anketirancev (od 80 % na Finskem in v Nemčiji do 33–35 % na Irskem in v Italiji) pa zagovarja zmanjšanje števila eurokovancev, zlasti ukinitev kovancev za 1 in 2 centa, kar bi bilo udobneje in bi poenostavilo plačila. Po drugi strani se večina boji, da bi odstranitev majhnih apoenov eura lahko povzročila rast cen: ta bojazen je zelo razširjena tudi v državah, kjer bi večina želela ukinitev manjših kovancev.",
+          "full_chars": 576,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "0cdcd627-2c88-435b-90ec-16fb48138d33",
+        "document_id": "7554",
+        "query": {
+          "text": "Kateri segment embalaže za pijačo v razpravah v EU predstavlja približno petino skupne embalaže po teži?",
+          "full_chars": 104,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nacionalni sistemi za ponovno uporabo embalaže upoštevajo več vrst embalaže. Nekateri od teh sistemov delujejo zelo dobro, zlasti tisti za prevozno embalažo, kakršne so gajbe in palete, pa tudi za embalaže za pijačo v gostinstvu. Na drugih področjih pa je mogoče potreben poseg javnih organov za spodbuditev sistemov ponovne uporabe, ne glede na njihovo dejansko poslovno upravičenost. Pri tem se večji del razprave v Evropski uniji osredotoča na potrošniško embalažo za pijačo (ki znaša okoli 20 % skupne embalaže po teži).",
+          "full_chars": 524,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

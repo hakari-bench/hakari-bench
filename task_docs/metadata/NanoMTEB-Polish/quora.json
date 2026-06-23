@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "First Quora Dataset Release: Question Pairs",
-        "url": "https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs",
-        "year": 2017,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/Quora-PLHardNegatives",
-        "url": "https://huggingface.co/datasets/mteb/Quora-PLHardNegatives",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/Quora-PLHardNegatives"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "First Quora Dataset Release: Question Pairs",
+        "url": "https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs",
+        "year": 2017,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/Quora-PLHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/Quora-PLHardNegatives",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7676",
+        "document_id": "34131",
+        "query": {
+          "text": "Jak dostać się na Harvard?",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jak dostać się na Uniwersytet Harvarda?",
+          "full_chars": 39,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "22783",
+        "document_id": "22782",
+        "query": {
+          "text": "Czym jest 10-20 przypadkowych rzeczy o sobie?",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jakie są 10 przypadkowych faktów o Tobie?",
+          "full_chars": 41,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "13918",
+        "document_id": "13917",
+        "query": {
+          "text": "Co powinienem zrobić w swoim CV, aby uzyskać wywiady z zakresu analityki danych?",
+          "full_chars": 80,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Co powinienem poprawić w swoim CV, aby uzyskać wywiady z zakresu analityki danych?",
+          "full_chars": 82,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

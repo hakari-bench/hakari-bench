@@ -123,11 +123,11 @@ challenge is commonsense reranking among exact candidate strings.
 
 ## Example Data
 
-Representative queries ask whether "ear" or another candidate fits a sentence
-about a piercing, whether "apple" or "brownie" has fewer calories, whether
-Angela or Rebecca has an analytical mind, whether a bakery or bank had limited
-supply, and whether William or Kyle argued for getting a pool. Positive
-documents are the correct short referent strings.
+| Query | Positive document |
+| --- | --- |
+| Sentence: Mary wanted to get another piercing in her ear, but the _ was much too tiny.. [87 chars] | ear [3 chars] |
+| Sentence: She counted her calories for her diet and found she needed more so she ate a brownie instead of an apple since the _ has fewer.. [138 chars] | apple [5 chars] |
+| Sentence: The game of chess was easy to play for Angela but not Rebecca because _ had a analytical mind.. [105 chars] | Angela [6 chars] |
 
 ### Public Sources
 
@@ -142,9 +142,9 @@ documents are the correct short referent strings.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| WinoGrande: An Adversarial Winograd Schema Challenge at Scale | 2019 | task paper | https://arxiv.org/abs/1907.10641 |
-| WinoGrande project page | 2019 | project page | https://winogrande.allenai.org/ |
-| mteb/WinoGrande | 2024 | dataset card | https://huggingface.co/datasets/mteb/WinoGrande |
+| WinoGrande: An Adversarial Winograd Schema Challenge at Scale | 2019 | task paper | [https://arxiv.org/abs/1907.10641](https://arxiv.org/abs/1907.10641) |
+| WinoGrande project page | 2019 | project page | [https://winogrande.allenai.org/](https://winogrande.allenai.org/) |
+| mteb/WinoGrande | 2024 | dataset card | [https://huggingface.co/datasets/mteb/WinoGrande](https://huggingface.co/datasets/mteb/WinoGrande) |
 
 ### Representative Snippets
 

@@ -11,6 +11,8 @@ import yaml
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, ValidationError, field_validator
 from pydantic.types import StringConstraints
 
+from hakari_bench.datasets import VALID_REFERENCE_SOURCE_CONFIDENCE
+
 
 TASK_METADATA_RE = re.compile(
     r"<!-- benchmark-task-metadata:v1 -->\s*```yaml\n(.*?)\n```",
@@ -156,7 +158,28 @@ class ReferenceMetadata(TaskDocsModel):
     year: NonNegativeInt | None = None
     is_paper: bool
     doi: NonEmptyStr | None = None
-    source_confidence: NonEmptyStr | None = None
+    source_confidence: NonEmptyStr
+
+    @field_validator("source_confidence")
+    @classmethod
+    def validate_source_confidence(cls, value: str) -> str:
+        if value not in VALID_REFERENCE_SOURCE_CONFIDENCE:
+            raise ValueError(f"source_confidence has invalid label {value!r}.")
+        return value
+
+
+class ExampleTextMetadata(TaskDocsModel):
+    text: str
+    full_chars: NonNegativeInt
+    limit_chars: NonNegativeInt
+    truncated: bool
+
+
+class TaskExampleMetadata(TaskDocsModel):
+    query_id: NonEmptyStr
+    document_id: NonEmptyStr
+    query: ExampleTextMetadata
+    positive_document: ExampleTextMetadata
 
 
 class TaskMetadata(TaskDocsModel):
@@ -179,6 +202,7 @@ class TaskMetadata(TaskDocsModel):
     learning: LearningMetadata | None = None
     links: LinkMetadata | None = None
     references: list[ReferenceMetadata] | None = None
+    examples: list[TaskExampleMetadata] | None = None
     source_dataset_id: NonEmptyStr | None = None
     source_task: NonEmptyStr | None = None
     example_count: NonNegativeInt | None = None

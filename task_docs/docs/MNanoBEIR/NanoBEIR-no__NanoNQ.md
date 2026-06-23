@@ -126,11 +126,9 @@ candidate pools.
 
 | Query | Positive document |
 | --- | --- |
-| Hvor blir Final Four avholdt i år? | Turneringen om NCAA Division I menns college-basketball i 2018 var en 68-lags utslagningsturnering... |
-| Var Nattens Hær opprinnelig en Disney-film? | The Nightmare Before Christmas hadde sin opprinnelse i et dikt skrevet av Tim Burton i 1982, mens han jobbet som animator ved Walt Disney Feature Animation... |
-| Hvorfor står Engelen i Nord-England der? | Ifølge Gormley hadde en engel en trefoldig betydning, blant annet for å indikere at kullgruvearbeidere hadde jobbet under stedet... |
-| Hvor i den amerikanske grunnloven ble 3/5-kompromisset opprinnelig nevnt? | Tre-femtedelskompromisset finnes i Artikkel 1, Avsnitt 2, Punkt 3 i Den amerikanske grunnloven... |
-| Hvem synger "Somebody's Watching Me" sammen med Michael Jackson? | "Somebody's Watching Me" er en sang av den amerikanske sangeren Rockwell fra hans debutalbum med samme navn... |
+| Hvor blir Final Four avholdt i år? [34 chars] | Turneringen om NCAA Division I menns college-basketball i 2018 var en 68-lags utslagningsturnering som skulle kåre nasjonal mester i college-basketball for sesongen 2017–18. Den 80. utgaven av turneringen startet 13. mars 2018 og avsluttet med finalen 2. april på Alamodome i San Antonio, Texas. [295 chars] |
+| Var Nattens Hær opprinnelig en Disney-film? [43 chars] | The Nightmare Before Christmas hadde sin opprinnelse i et dikt skrevet av Tim Burton i 1982, mens han jobbet som animator ved Walt Disney Feature Animation. Med suksessen til Vincent samme år begynte Walt Disney Studios å vurdere å utvikle The Nightmare Before Christmas som enten en kortfilm eller en 30-minutters TV-spesial. Gjennom årene vendte Burtons tanker stadig tilbake til prosjektet, og i 1990 inngikk han en utviklingsavtale med Disney. Produksjonen startet i juli 1991 i San Francisco; Disney ga ut filmen under sitt Touchstone Pictures-banner fordi studioet mente filmen ville være 'for mørk og skremmende for barn'. [629 chars] |
+| Hvorfor står Engelen i Nord-England der? [40 chars] | Ifølge Gormley hadde en engel en trefoldig betydning: først for å indikere at kullgruvearbeidere hadde jobbet i to århundrer under stedet der den ble bygget, andre for å fange overgangen fra en industriell til en informasjonsalder, og tredje for å fungere som et fokus for våre utviklende håp og frykt. [302 chars] |
 
 ### Public Sources
 
@@ -144,7 +142,7 @@ candidate pools.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | https://aclanthology.org/Q19-1026/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

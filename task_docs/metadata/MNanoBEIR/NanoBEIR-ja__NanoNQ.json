@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Natural Questions: A Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: A Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "今年のファイナルフォーはどこで開催されますか",
+          "full_chars": 22,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "2018年のNCAAディビジョンI男子バスケットボール選手権は、2017–18年シーズンの全米大学体育協会（NCAA）ディビジョンI男子大学バスケットボールの全国王者を決定するための68チームによるシングルエリミネーション方式のトーナメントであった。第80回大会は2018年3月13日に始まり、4月2日にテキサス州サンアントニオのアラモドームで行われた決勝戦をもって終了した。",
+          "full_chars": 188,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "『ナイトメア・ビフォア・クリスマス』はもともとディズニーの映画だったのか？",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "『ナイトメア・ビフォア・クリスマス』は、1982年にティム・バートンがウォルト・ディズニー・フィーチャー・アニメーションでアニメーターとして働いていた際に書いた詩が起源である。同年に『ヴィンセント』が成功したことで、ウォルト・ディズニー・スタジオは『ナイトメア・ビフォア・クリスマス』を短編映画または30分のテレビ特別番組として制作することを検討し始めた。その後数年間、バートンは定期的にこのプロジェクトを思い返し、1990年にディズニーと開発契約を結んだ。制作は1991年7月にサンフランシスコで開始された。スタジオはこの作品が「子どもたちにとってあまりに暗く、怖い」と判断したため、ディズニーはトゥーンスタイン・ピクチャーズの名義で公開した。[4]",
+          "full_chars": 326,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "なぜ「北の天使」はそこに存在するのか",
+          "full_chars": 18,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ゴームリーによれば、天使の意義は三つある。第一に、その建造地の地下で炭鉱労働者が2世紀にわたり働いていたことを象徴すること。第二に、産業時代から情報時代への移行を捉えること。第三に、私たちの変化する希望と恐怖の焦点となることである。[2]",
+          "full_chars": 119,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

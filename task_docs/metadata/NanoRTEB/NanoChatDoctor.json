@@ -85,30 +85,6 @@
         "rows_with_101_candidates": 34
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge",
-        "url": "https://arxiv.org/abs/2303.14070",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "lavita/ChatDoctor-HealthCareMagic-100k",
-        "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k",
-        "year": 2023,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -117,6 +93,80 @@
           "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "ChatDoctor: A Medical Chat Model Fine-Tuned on a Large Language Model Meta-AI (LLaMA) Using Medical Domain Knowledge",
+        "url": "https://arxiv.org/abs/2303.14070",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "lavita/ChatDoctor-HealthCareMagic-100k",
+        "url": "https://huggingface.co/datasets/lavita/ChatDoctor-HealthCareMagic-100k",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00163",
+        "document_id": "000000163",
+        "query": {
+          "text": "My wife that is 31yrs old had a major operation 6mos ago. She had thymic cancer with 3 large malignant thymomas pressed against her right lung her heart and her liver ..they removed her right lung and removed then reconstructed part of her pericardium (lining of her heart) and the tumor on her liver was completely encapsulated so they didn t take a slice of her liver like he though he would have to . Dr. Calhoun of uc davis who is a straight up stud removed 100% of the tumors it looks like so fa",
+          "full_chars": 1183,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Thanks for the query from the history it is quite evident your wife had shad a very tough time but from the diagnosis of malignant Thomas I have to tell you that it means the liver has got metastasis from the Thomas that is what they mean by the dark spots in the liver, and mostly they want to resect it now I would suggest you talk to the oncologist who's in charge of the case for a clear-cut explanation take care.",
+          "full_chars": 418,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "Okay so the past two months I have missed my first birth control pill, I finally got back on track this month and I am 10 days into the packet. I had intercourse last tuesday and have been feeling more than off. Nausea, fatigue, headaches, slightly sore breasts, cramping, a bittle bit of being emotional, dehydrated. Just all out deeling horrible. Ive taken pregnancy tests but I feel it could be too soon. And would I be feeling these pregnancy symptoms so soon after? Also, could it just be that I",
+          "full_chars": 534,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Hello, Thanks for writing to us. Irregular intake of birth control pill & unprotected sex close to your fertile period or ovulation day (occurs 14 days prior to due date) are quite risky for being pregnant. In this case, I suggest you to undergo one home pregnancy test if you miss your next period. Above clinical features are quite relevant with possible pregnancy. Common symptoms of pregnancy",
+          "full_chars": 396,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "Hi iI have been diagnoed with thymic cancer, I do not like to take the drugs for pain that are prescribed,as they have side effects that are harsh.So instead i have been taking ibuprophen .for abot 4 months ,as dosage recommended, I have beenexperiencing respitory issues lately and wonder if this is the cause.I have been doing radiation and chemo treaments ,it has shown improvement in all aspects except for my breathing .I read an article on cleveland clinic facebook this mourning that said this",
+          "full_chars": 728,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Thy mic cancer causes respiratory distress. After a thy mic tumor is found and tests have been done to get a sense of its Factors important in choosing a treatment include the type and stage of the cancer, whether it is respectable (able to be completely removed with surgery), and whether you have any other serious medical problems. Because thy mic cancer is rare, it is often hard to accurately predict the effectiveness of treatment strategies, and in many cases the best way to treat this cancer is still not preselecting a treatment plan is an important decision, and you should take the time to think about all of your choices. The main treatments for thymus cancer are",
+          "full_chars": 676,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -62,17 +62,18 @@ Models should learn to represent temporal order explicitly and distinguish ancho
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models](https://arxiv.org/abs/2306.08952), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Question: Who was the chair of Technical University of Munich before Wolfgang A. Herrmann? Facts: Otto Meitinger is the chair of Technical University of Munich from Jan, 1987 to Jan, 1995. Herbert Kupfer is the chair of Technical University of Munich from Jan, 1986 to Jan, 1987. Thomas F. Hofmann is the chair of Technical University of Munich from Sep, 2019 to Dec, 2022. Wolfgang A. Herrmann is the chair of Technical University of Munich from Jan, 1995 to Sep, 2019. Context: Technical University... [500 / 13,613 chars] | Otto Meitinger [14 chars] |
+| Question: Who was the head of Romania before Alexandru G. Golescu? Facts: Gheorghe Tătărescu is the head of the government of Romania from Jan, 1934 to Dec, 1937. Adrian Năstase is the head of the government of Romania from Dec, 2000 to Dec, 2004. Manea Mănescu is the head of the government of Romania from Feb, 1974 to Mar, 1979. Petre S. Aurelian is the head of the government of Romania from Dec, 1896 to Apr, 1897. Ion Gheorghe Maurer is the head of the government of Romania from Mar, 1961 to F... [500 / 75,383 chars] | Dimitrie Ghica [14 chars] |
+| Question: Which position did Lord Douglas Gordon-Hallyburton hold before Member of the 13th Parliament of the United Kingdom? Facts: Lord Douglas Gordon-Hallyburton holds the position of Member of the 11th Parliament of the United Kingdom from Dec, 1832 to Dec, 1834. Lord Douglas Gordon-Hallyburton holds the position of Member of the 13th Parliament of the United Kingdom from Jul, 1837 to Jun, 1841. Lord Douglas Gordon-Hallyburton holds the position of Member of the 10th Parliament of the United... [500 / 3,024 chars] | Member of the 12th Parliament of the United Kingdom [51 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2306.08952 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2306.08952](https://arxiv.org/abs/2306.08952) |
 
 ### Representative Snippets
 

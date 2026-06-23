@@ -191,7 +191,7 @@ before using them for training or synthetic-data seeding.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR collection |  | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
-| MTEB benchmark |  | project | https://github.com/embeddings-benchmark/mteb |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR collection |  | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |
+| MTEB benchmark |  | project | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |

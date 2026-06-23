@@ -62,21 +62,20 @@ Models should encode claim-evidence entailment, climate terminology, numbers, ca
 
 ## Example Data
 
-### Public Sources
-
-- [CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims](https://arxiv.org/abs/2012.00614), task paper.
-- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/), VN-MTEB paper.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), benchmark paper.
-- [GreenNode/climate-fever-vn](https://huggingface.co/datasets/GreenNode/climate-fever-vn), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Ở Alaska, gấu nâu đang thay đổi thói quen ăn uống của chúng để ăn quả mâm xôi chín sớm hơn. [91 chars] | Gấu nâu Gấu nâu (Ursus arctos) là một loài gấu lớn với sự phân bố rộng nhất trong số các loài gấu còn sinh tồn. Loài này được tìm thấy ở hầu hết các vùng phía bắc của châu Âu và Bắc Mỹ. Đây là một trong hai loài ăn thịt lớn nhất trên mặt đất, chỉ có thể sánh ngang về kích thước với họ hàng gần gũi của nó, gấu Bắc Cực (Ursus maritimus), nhưng do có kích thước biến đổi ít hơn nên chúng trung bình lại lớn hơn. Có nhiều phân loại được công nhận nằm trong nhóm gấu nâu, khá nổi tiếng tại những nơi mà chúng sinh sống bản địa. Phạm vi chính của loài này bao gồm những phần thuộc Nga, Trung Á, Trung Quốc, Canada, Hoa Kỳ (chủ yếu Alaska), Scandinavia và vùng Carpathian (đặc biệt Romania), Anatolia và Kavkaz. Gấu nâu được công nhận là quốc thú ở vài nước châu Âu khác nhau . Mặc dù phạm vi sống bị thu hẹp lại và phải đối mặt với việc tuyệt chủng cục bộ nhưng theo Liên minh Bảo tồn Thiên nhiên Quốc tế IUCN thì vẫn xếp lớp nguy cấp thấp cho loài này với tổng số lượng cá thể khoảng 200 nghìn con vào n... [1,000 / 1,643 chars] |
+| Chúng ta sẽ phải đối mặt với nhiệt độ cực cao, nhưng ở mức độ dễ chịu hơn rất nhiều so với nếu chúng ta không làm gì để ngăn chặn biến đổi khí hậu. [147 chars] | Thay đổi khí hậu và giới tính Thay đổi khí hậu và giới tính liên quan đến sự khác biệt về giới trong bối cảnh thay đổi khí hậu và các mối quan hệ quyền lực phức tạp, đan xen phát sinh từ đó. Bằng cách thay đổi hệ sinh thái của hành tinh, biến đổi khí hậu, đặc biệt là hiện tượng ấm lên toàn cầu tác động trực tiếp đến loài người. Những ảnh hưởng này khác nhau đối với các phân đoạn dân cư khác nhau, cụ thể là đối với những người thuộc hai giới tính khác nhau. Trong nhiều trường hợp, phụ nữ dễ bị tổn thương hơn trước những tác động tiêu cực của biến đổi khí hậu do vị thế xã hội thấp ở hầu hết các nước trên thế giới . Nhiều phụ nữ nghèo khổ , đặc biệt là ở khu vực đang phát triển , làm nghề nông nghiệp và sống dựa vào môi trường tự nhiên để kiếm ăn và thu nhập . Do hạn chế thêm nữa khả năng tiếp cận vật chất , xã hội , chính trị và nguồn tài chính vốn đã bị thắt chặt trước đây của họ , biến đổi khí hậu thường gánh nặng lên vai phụ nữ hơn nam giới . Cả tại địa phương cũng như toàn cầu cả chí... [1,000 / 1,439 chars] |
+| Họ nói với chúng ta rằng chúng ta là những lực lượng chính điều khiển nhiệt độ trên Trái Đất bằng cách đốt cháy nhiên liệu hóa thạch và giải phóng khí carbon dioxide ra môi trường. [180 chars] | Khí cacbonic Khí cacbonic ( công thức hóa học: CO2) là một khí vô màu với mật độ cao hơn khoảng 60% so với không khí (1,225 g/L), ở nồng độ thông thường nó không có mùi. Khí cacbonic bao gồm một nguyên tử cacbon liên kết đôi với hai nguyên tử oxy. Nó xuất hiện tự nhiên trong bầu khí quyển của Trái Đất như một loại khí vi lượng ở nồng độ khoảng 0,04 phần trăm (400 ppm) về thể tích. Nguồn gốc tự nhiên bao gồm núi lửa, suối nước nóng và mạch nước phun hơi nước; nó được giải phóng từ đá vôi bằng cách hòa tan trong nước và axit. Bởi vì khí cacbonic tan trong nước nên nó xuất hiện tự nhiên trong tầng ngầm, sông ngòi và hồ ao, băng hà vĩnh cửu, sông băng và biển mặn. Nó còn tồn tại trong các trầm tích dầu mỏ và ga thiên nhiên . Là nguồn cung cấp carbon sẵn có trong chu trình Carbon , Khí cacbonic trên bầu trời là nguồn bổ sung Carbon chính cho sự sống trên Trái đất cũng như nồng độ của nó đã được điều tiết bởi sinh vật quang hợp cùng những hiện tượng địa chất kể từ thời kỳ tiền Cambri vào cuố... [1,000 / 1,882 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | arXiv paper | https://arxiv.org/abs/2012.00614 |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| GreenNode/climate-fever-vn |  | dataset card | https://huggingface.co/datasets/GreenNode/climate-fever-vn |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | arXiv paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| GreenNode/climate-fever-vn |  | dataset card | [https://huggingface.co/datasets/GreenNode/climate-fever-vn](https://huggingface.co/datasets/GreenNode/climate-fever-vn) |
 
 ### Representative Snippets
 

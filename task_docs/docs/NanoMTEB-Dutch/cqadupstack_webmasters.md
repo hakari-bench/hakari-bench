@@ -153,22 +153,20 @@ same user question.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| vind-nieuwe/berichten&recent=1 als homepage: wat met SEO? [57 chars] | Best practice URL-structuur voor paginering Is een van deze formaten voor paginering beter voor SEO? * www.example.com/list/1 * www.example.com/list?page=1 Welke overwegingen of factoren moeten worden meegenomen bij het kiezen van het ene of het andere formaat? Ik ben hier relatief nieuw in en wil geen verkeerde keuze maken. [332 chars] |
+| Het voorkomen dat robots een specifiek gedeelte van een pagina crawlen [70 chars] | Voorkom dat zoekmachines specifieke content op uw site indexeren **Mogelijk duplicaat:** > Voorkomen dat robots een specifiek gedeelte van een pagina crawlen Ik heb een nogal vreemd scenario waar ik me afvroeg of iemand me mee zou kunnen helpen. Ik heb onlangs een blogsite gemaakt en gemerkt dat zoekmachines de inhoud van mijn voettekst hebben opgenomen in de beschrijving. Dit levert een probleem op omdat mijn voettekst in wezen een korte juridische verklaring is waarin staat dat de meningen mijn eigen zijn en het bedrijf waar ik voor werk niet vertegenwoordigen (enzovoort). Dus ik heb eigenlijk een manier nodig om te voorkomen dat zoekmachines die inhoud in mijn voettekst of zelfs mijn voettekst helemaal indexeren. Ik heb in enkele van mijn SEO-boeken gekeken en door forums gezocht, maar dit lijkt niet mogelijk. 1. Is het mogelijk om te voorkomen dat zoekmachines alleen bepaalde content op een pagina indexeren? 2. Als het niet mogelijk is, welke alternatieven zijn er om ervoor te zorg... [1,000 / 1,067 chars] |
+| SEO-voorkeur voor WWW of HTTP:// protocolredirectie? Ranken www-websites beter dan niet-www? [92 chars] | Wat is de beste werkwijze voor het kiezen van een standaarddomein - www.example.com of example.com? **Mogelijk duplicaat:** > SEO-voorkeur voor WWW of HTTP:// protocolredirectie? Ranken www-websites > beter dan niet-www websites? Een domein moet naar een ander worden omgeleid, maar ik heb beide gevallen gezien - www.example.com wordt omgeleid naar example.com en vice versa. Wat is de beste werkwijze en heeft de ene of de andere manier invloed op SEO? [458 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

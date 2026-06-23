@@ -48,13 +48,11 @@ Strong models should preserve near-duplicate recognition while improving paraphr
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Est-ce que c'est permis de rire de ses propres blagues ? | Est-ce que c'est bizarre de rire de mes propres blagues ? |
-| Quel est le plus gros mensonge que tu aies jamais raconté ? | Quel est le plus beau mensonge que vous ayez jamais raconté ? |
-| Pourquoi Quora suggère-t-il fréquemment des réponses dans mon fil d'actualité qui critiquent Donald Trump ? | Pourquoi Quora ne propose-t-il que des réponses partisanes aux questions sur Donald Trump ? |
-| Comment renforcer ma condition physique ? | Comment puis-je améliorer ma condition physique ? |
-| Comment fonctionne un satellite quantique ? | Comment fonctionne un satellite quantique et quelles seraient ses principales utilisations ? |
+| Query | Positive document |
+| --- | --- |
+| Est-ce que c'est permis de rire de ses propres blagues ? [56 chars] | Est-ce que c'est bizarre de rire de mes propres blagues ? [57 chars] |
+| Quel est le plus gros mensonge que tu aies jamais raconté ? [59 chars] | Quel est le plus beau mensonge que vous ayez jamais raconté ? [61 chars] |
+| Pourquoi Quora suggère-t-il fréquemment des réponses dans mon fil d'actualité qui critiquent Donald Trump ? [107 chars] | Pourquoi Quora ne propose-t-il que des réponses partisanes aux questions sur Donald Trump ? [91 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should preserve near-duplicate recognition while improving paraphr
 
 | Label | URL |
 |---|---|
-| Quora Question Pairs | https://kaggle.com/competitions/quora-question-pairs |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Quora Question Pairs (https://kaggle.com/competitions/quora-question-pairs) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

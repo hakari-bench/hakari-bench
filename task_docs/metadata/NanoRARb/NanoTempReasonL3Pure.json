@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models",
         "url": "https://arxiv.org/abs/2306.08952",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "TR3-q-66",
+        "document_id": "TR3-d-88",
+        "query": {
+          "text": "Who was the chair of Technical University of Munich before Wolfgang A. Herrmann?",
+          "full_chars": 80,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Otto Meitinger",
+          "full_chars": 14,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR3-q-123",
+        "document_id": "TR3-d-169",
+        "query": {
+          "text": "Who was the head of Romania before Alexandru G. Golescu?",
+          "full_chars": 56,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dimitrie Ghica",
+          "full_chars": 14,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR3-q-103",
+        "document_id": "TR3-d-123",
+        "query": {
+          "text": "Which position did Lord Douglas Gordon-Hallyburton hold before Member of the 13th Parliament of the United Kingdom?",
+          "full_chars": 115,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Member of the 12th Parliament of the United Kingdom",
+          "full_chars": 51,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

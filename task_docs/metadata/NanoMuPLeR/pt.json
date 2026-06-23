@@ -86,28 +86,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
-        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "An overview of the European Union's highly multilingual parallel corpora",
-        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
-        "year": 2014,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "DGT-Acquis",
-        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMuPLeR",
       "source_urls": [
@@ -116,6 +94,78 @@
           "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
+        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "An overview of the European Union's highly multilingual parallel corpora",
+        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
+        "year": 2014,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DGT-Acquis",
+        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d766e28a-3188-4f70-9637-1a2a1ba6487c",
+        "document_id": "2342",
+        "query": {
+          "text": "Por que auxílio público escasso deve ser proporcional, dirigido a regiões desfavorecidas e justificado apesar de maior distorção da concorrência?",
+          "full_chars": 145,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Os auxílios regionais só podem ser eficazes se forem utilizados com parcimónia e de forma proporcional e se se concentrarem nas regiões mais desfavorecidas da União Europeia. Em especial, os limites máximos admissíveis devem reflectir a gravidade relativa dos problemas que afectam o desenvolvimento das regiões em causa. Além disso, as vantagens dos auxílios em termos de desenvolvimento de uma região desfavorecida devem ser superiores às distorções da concorrência provocadas. O peso atribuído às vantagens dos auxílios é susceptível de variar consoante a derrogação aplicada, podendo aceitar-se uma distorção mais significativa no caso das regiões mais desfavorecidas abrangidas pelo n.o 3, alínea a), do artigo 87.o do que no caso das regiões abrangidas pela alínea c) do mesmo número.",
+          "full_chars": 790,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "20287883-d16f-4805-9f0c-df799d38404a",
+        "document_id": "1654",
+        "query": {
+          "text": "Que intenção sinalizam comentários que estendem concessão a empresas com volume de negócios intracomunitário abaixo de seis dígitos em euros?",
+          "full_chars": 141,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cabe notar, por outro lado, que a Comissão refere as pequenas e médias empresas, quando os documentos oficiais e, em particular, os protocolos de adesão evocam apenas as pequenas empresas: trata-se de um indício evidente da vontade de minimizar a importância da autorização e de a estender, na prática, a empresas de dimensão muito diferente. A proposta de directiva evita aprofundar a questão da classificação, limitando-se a falar de sujeitos passivos com um volume de negócios intracomunitário que não exceda 100000 euros. A vontade de estender o benefício da isenção a todas as empresas, independentemente da sua dimensão, é, pois, evidente.",
+          "full_chars": 645,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "07d1f2e7-4737-4cde-9c90-fae41e2383c0",
+        "document_id": "8609",
+        "query": {
+          "text": "Qual modelo analítico de 1983 é criticado por presumir benefícios uniformes a comerciantes, compradores e vendedores não reativos nos pagamentos?",
+          "full_chars": 145,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O modelo específico subjacente às CIM da Master Card foi elaborado por William Baxter em 1983. Contudo, este modelo padece de limitações importantes por considerar que a procura dos consumidores e dos comerciantes é um dado adquirido e que nenhum deles reage estrategicamente às eventuais acções do outro. O modelo Baxter também se baseia no pressuposto irrealista de que não se verifica qualquer variação dos benefícios para os comerciantes que aceitam cartões, ou seja, pressupõe que os comerciantes são um universo homogéneo. Por último, os resultados do modelo Baxter baseiam-se no pressuposto irrealista de que a actividade bancária em questão é exercida em condições de concorrência perfeita.",
+          "full_chars": 698,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

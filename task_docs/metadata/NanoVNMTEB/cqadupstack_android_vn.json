@@ -162,6 +162,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "7003",
+        "document_id": "44600",
+        "query": {
+          "text": "Ghi chú Markdown với Dropbox đồng bộ",
+          "full_chars": 36,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "syncing markup/lời chú thích trên dropbox? Xin chào tôi muốn có chức năng sau: * Đặt một tập tin vào Dropbox (html, wordformat) - mà tôi chỉnh sửa từ máy tính của tôi * ứng dụng Android để truy cập tập tin đó (ngắn đường trên màn hình chính), hiển thị html/word-format + chỉnh sửa bất kỳ ý tưởng nào? Hiện tại tôi đang sử dụng một tập tin văn bản mà tôi có thể chỉnh sửa với trình soạn thảo mặc định của Android, nhưng đánh dấu sẽ tốt hơn :) Cảm ơn",
+          "full_chars": 449,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "16915",
+        "document_id": "57578",
+        "query": {
+          "text": "Tin nhắn SMS được lưu trữ ở đâu trên hệ thống file?",
+          "full_chars": 51,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Android đường dẫn tin nhắn SMS Tôi không thể tìm đường dẫn đến các tệp cơ sở dữ liệu tin nhắn SMS trên hệ điều hành android. Đường dẫn chính xác cho các tệp cơ sở dữ liệu tin nhắn SMS là gì? Tôi đã thử những giá trị này và chúng không đúng: /data/data/com.jb.gosms/databases/gommssms.db /data/data/com.android.providers.telephony/databases/mmssms.db",
+          "full_chars": 368,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "11885",
+        "document_id": "16870",
+        "query": {
+          "text": "Dòng video từ PC đến Android?",
+          "full_chars": 29,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cách phát trực tuyến các video do tôi sở hữu đến một thiết bị Android? > **Có thể trùng lặp:** > Có một ứng dụng truyền tải đa phương tiện DLNA cho Android không? > Truyền tải video từ PC đến Android? Tôi đã từng là người dùng iPhone/iPad. Tôi đang cân nhắc mua một chiếc Kindle Fire hoặc Nook Color. Tôi thực sự muốn có khả năng truyền tải video từ kho phim khổng lồ mà tôi đã lưu trữ sẵn. Tôi đã từng sử dụng Boxee và Airplayit cho PC/iPad/iPhone.... Có phần mềm nào tương tự như vậy dành cho Android hay tôi sẽ phải mã hóa và chuyển đổi chúng?",
+          "full_chars": 551,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -103,29 +103,81 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL",
         "url": "http://miracl.ai/",
         "year": 2022,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/MIRACLRetrievalHardNegatives",
         "url": "https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5704400#0",
+        "document_id": "143827#1",
+        "query": {
+          "text": "اسرائیل با چه کشورهایی روابط دوستانه دارد؟",
+          "full_chars": 42,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "وزارت امور خارجه اسرائیل پیش از پیروزی انقلاب ۱۳۵۷ و به قدرت رسیدن نظام جمهوری اسلامی، ایران با کشور اسرائیل روابط دوستانه و حسنه‌ای را داشت و ایران اولین کشور اسلامی در منطقه خاورمیانه بود که کشور اسرائیل را به رسمیت شناخت. در آن زمان دو کشور ایران و اسرائیل سفارتخانه‌هایی را در پایتخت دو کشور جهت تحکیم روابط برقرار کردند و روابط دوستانه ایران و اسرائیل تا به قدرت رسیدن روح الله خمینی در ایران ادامه داشت.",
+          "full_chars": 410,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1965275#0",
+        "document_id": "5768524#0",
+        "query": {
+          "text": "وزیر کنونی فرهنگ و ارشاد اسلامی ایران چه کسی است؟",
+          "full_chars": 49,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "محمدمهدی اسماعیلی محمدمهدی اسماعیلی (متولد ۱۳۵۴ در کبودرآهنگ) سیاستمدار ایرانی و وزیر فرهنگ و ارشاد اسلامی است. او دانش‌آموخته دکتری علوم سیاسی از پژوهشگاه علوم انسانی و مطالعات فرهنگی و عضو هیأت علمی دانشگاه تهران است. تحصیلات حوزوی را نیز تا پایان دوره سطح ادامه داده است. وی همچنین در ۲۰ مرداد ۱۴۰۰ به عنوان وزیر فرهنگ و ارشاد اسلامی پیشنهادی دولت سیزدهم توسط سید ابراهیم رئیسی به مجلس معرفی شد.",
+          "full_chars": 399,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1268458#0",
+        "document_id": "1265914#0",
+        "query": {
+          "text": "مثلث برمودا در کجا قرار دارد؟",
+          "full_chars": 29,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "مثلث برمودا مثلث برمودا ، همچنین به عنوان مثلث شیطان شناخته می‌شود. منطقه‌ای است در ناحیه غربی اقیانوس اطلس شمالی که گفته می‌شود تعدادی هواپیما و کشتی تحت شرایط مرموز در آن ناپدید شده‌اند.",
+          "full_chars": 189,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

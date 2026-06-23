@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 56
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-gis-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-gis-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Gis-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-gis-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-gis-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "78923",
+        "document_id": "77018",
+        "query": {
+          "text": "Jak zmienić proporcje mapy bez zmiany skali?",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jak zmienić rozmiar elementu mapy w edytorze wydruku QGIS bez zmiany skali? Czy można zablokować skalę w kompozytorze wydruku QGIS 2.0.1? Za każdym razem, gdy zmieniam rozmiar mapy, skala jest dostosowywana. To sprawia, że ​​wypróbowywanie różnych układów map jest naprawdę denerwujące.",
+          "full_chars": 286,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "14750",
+        "document_id": "40452",
+        "query": {
+          "text": "Jak używać SRTM Global DEM do obliczania nachylenia?",
+          "full_chars": 52,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "jaki jest odpowiedni układ współrzędnych rzutowanych do WGS84? > **Możliwe duplikowanie:** > Obliczanie globalnego DEM na nachylenie Chcę obliczyć nachylenie z mojego globalnego DEM? DEM ma odwzorowanie WGS84 (stopnie). Aby poprawnie obliczyć nachylenie z DEM, musi być rzutowana współrzędna system, a nie układ współrzędnych geograficznych.Naprawdę trudno powiedzieć, który z rzutów na liście: rzutowane układy współrzędnych odpowiada układowi WGS84(world) pod listą układów współrzędnych geograficznych.Jakieś pomysły?",
+          "full_chars": 520,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "102288",
+        "document_id": "102384",
+        "query": {
+          "text": "Skopiuj odpytywane atrybuty pliku kształtu do nowego pliku kształtu",
+          "full_chars": 67,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tworzenie rekordów w wyjściowym pliku kształtu za pomocą Pythona Mam listę (wyjście z poprzedniej pętli) zawierającą atrybuty z wejściowego pliku kształtu. To, z czym utknąłem, to wprowadzanie tych atrybutów do nowego pliku kształtu. Wykreśliłem dane punktowe za pomocą `w.point(x, y)`, a także stworzyłem odpowiednie pola `w.field()` z pól wejściowych pliku kształtu. Tam, gdzie utknąłem, jest kopia rekordów, która daje mi błąd związany z flagą usunięcia. > AttributeError: obiekt 'tuple' nie ma atrybutu 'startswith' Wklejam fragment kodu z moimi zapytaniami. from datetime import datetime import osgeo.ogr, osgeo.ogr z osgeo import ogr z osgeo import gdal import shapefile import os sf = shapefile.Reader(\"-- Lokalizacja pliku wejściowego --\") # Czytanie pól Shapefile = sf.fields # Odczytywanie pól atrybutów records = sf.records() # Odczytywanie rekordów funkcji shapRecs = sf.shapeRecords() # Odczytuj jednocześnie geometrię i rekordy w = shapefile.Writer(shapefile.POINT) w.autoBalance = 1 wy",
+          "full_chars": 1933,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

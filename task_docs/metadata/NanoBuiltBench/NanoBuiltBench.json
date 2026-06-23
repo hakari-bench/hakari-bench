@@ -154,15 +154,66 @@
         "url": "https://github.com/mehrzadshm/built-bench-paper",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB BuiltBenchRetrieval",
         "url": "https://huggingface.co/datasets/mteb/BuiltBenchRetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "ifc_569",
+        "document_id": "uniclass_3013",
+        "query": {
+          "text": "a short, thick post on the deck of a ship or a quay side, to which ship's rope may be secured. not to be confused with traffic bollards.",
+          "full_chars": 136,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Capstan Capstan: This product is associated with equipment used for mooring, docking, and flotation, categorized under 'equipment' in the broader context of signage, sanitary fittings, and furnishings and equipment (ff&e) products. Further, a capstan is essential for securely anchoring and handling boats at docks.",
+          "full_chars": 315,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "ifc_221",
+        "document_id": "uniclass_2108",
+        "query": {
+          "text": "The covering is used to represent a molding being a strip of material to cover the transition of surfaces (often between wall cladding and ceiling).",
+          "full_chars": 148,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fibrous plaster mouldings Fibrous plaster mouldings are trim products used for interior wall and ceiling detailing, categorized under coverings and finishes. These mouldings add both functional and aesthetic value to room interiors.",
+          "full_chars": 232,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "ifc_127",
+        "document_id": "uniclass_3182",
+        "query": {
+          "text": "Cooling coil using a refrigerant to cool the air stream directly.",
+          "full_chars": 65,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Refrigerant cooling coils Refrigerant cooling coils are components associated with heating and cooling coils, classified under air and fume source products, which are part of the larger group of services and process source products. These coils play a crucial role in the regulation of air temperature and quality.",
+          "full_chars": 314,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

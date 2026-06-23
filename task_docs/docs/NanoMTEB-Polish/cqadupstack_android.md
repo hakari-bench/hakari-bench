@@ -70,12 +70,11 @@ Researchers should pay attention to whether a model improves nDCG@10, recall@100
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-android-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Android-PL
+| Query | Positive document |
+| --- | --- |
+| Dlaczego urządzenie z Androidem ROM jest specyficzne? [53 chars] | Dlaczego nie ma ogólnych instalatorów systemu operacyjnego telefonu? Jestem przyzwyczajony do instalowania i usuwania różnych systemów operacyjnych na moich komputerach, nawet mając kilka naraz. Zazwyczaj instalacja nowego systemu operacyjnego oznacza: 1. Nagranie obrazu ISO na płytę CD/DVD/USB. 2. Włóż go. 3. Uruchom. (Może najpierw musisz trochę poprawić BIOS). Jedyną różnicą między komputerami jest architektura procesora: x86, x86_64, ramię itp. W zależności od tego musisz pobrać jedno lub drugie ISO. Ale nigdy nie muszę się martwić, jaką ma kartę graficzną, mysz, klawiaturę, ekran, kartę sieciową itp. Kreator instalacji automatycznie to wykryje i zainstaluje odpowiednie sterowniki. Czasami, jeśli nie są dołączone, instalator również je pobiera. W każdym razie kluczową kwestią jest to, że **ISO jest zawsze takie samo**. Teraz pojawia się wiele mobilnych systemów operacyjnych: Ubuntu, Tizen, Firefox OS, wszechobecny Android i dlaczego nie ma żadnej dystrybucji Linuksa ARM!. Niestety... [1,000 / 1,811 chars] |
+| Jak mogę zapisać plik, zamiast go otwierać? [43 chars] | Jak pobrać plik audio ze strony internetowej? Czy istnieje sposób na pobranie pliku audio, takiego jak plik mp3 z przeglądarki systemu Android na urządzenie, aby móc go później słuchać, gdy będę offline? Czy jest sposób na zaprogramowanie strony internetowej, aby było to możliwe? _Nie_ szukam dodatkowej aplikacji, która pomogłaby mi to osiągnąć. [347 chars] |
+| Jak przechwycić strumień wideo z ekranu telefonu z systemem Android i wyświetlić go na laptopie? [96 chars] | Jak wyświetlić ekran mojego telefonu z systemem Android do prezentacji? Jak wyświetlić ekran mojego Droid Incredible, aby móc zademonstrować smartfon w pokoju pełnym ludzi? Czy ktoś wie, jak mogę połączyć telefon z komputerem? Do telewizora? [241 chars] |
 
 ### Source Reference Table
 

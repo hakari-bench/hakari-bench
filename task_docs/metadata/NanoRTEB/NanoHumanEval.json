@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Evaluating Large Language Models Trained on Code",
-        "url": "https://arxiv.org/abs/2107.03374",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "openai/openai_humaneval",
-        "url": "https://huggingface.co/datasets/openai/openai_humaneval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
-        "url": "https://huggingface.co/blog/rteb",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoRTEB",
       "source_urls": [
@@ -116,6 +93,79 @@
           "url": "https://huggingface.co/datasets/openai/openai_humaneval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Evaluating Large Language Models Trained on Code",
+        "url": "https://arxiv.org/abs/2107.03374",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "openai/openai_humaneval",
+        "url": "https://huggingface.co/datasets/openai/openai_humaneval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Introducing RTEB: A New Standard for Retrieval Evaluation",
+        "url": "https://huggingface.co/blog/rteb",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "00028",
+        "document_id": "000000028",
+        "query": {
+          "text": "Filter an input list of strings only for ones that start with a given prefix.",
+          "full_chars": 77,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "return [x for x in strings if x.startswith(prefix)]",
+          "full_chars": 51,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00006",
+        "document_id": "000000006",
+        "query": {
+          "text": "Input to this function is a string represented multiple groups for nested parentheses separated by spaces. For each of the group, output the deepest level of nesting of parentheses. E.g. (()()) has maximum two levels of nesting while ((())) has three.",
+          "full_chars": 251,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def parse_paren_group(s): depth = 0 max_depth = 0 for c in s: if c == '(': depth += 1 max_depth = max(depth, max_depth) else: depth -= 1 return max_depth return [parse_paren_group(x) for x in paren_string.split(' ') if x]",
+          "full_chars": 331,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "00070",
+        "document_id": "000000070",
+        "query": {
+          "text": "Write a function that returns true if the given number is the multiplication of 3 prime numbers and false otherwise. Knowing that (a) is less then 100. Example: is_multiply_prime(30) == True",
+          "full_chars": 191,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def is_prime(n): for j in range(2,n): if n%j == 0: return False return True for i in range(2,101): if not is_prime(i): continue for j in range(2,101): if not is_prime(j): continue for k in range(2,101): if not is_prime(k): continue if i*j*k == a: return True return False",
+          "full_chars": 396,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

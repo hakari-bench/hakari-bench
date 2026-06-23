@@ -62,19 +62,19 @@ The most important improvements are exact evidence discrimination and relation-a
 
 ## Example Data
 
-### Public Sources
-
-- [FEVER: a Large-scale Dataset for Fact Extraction and VERification](https://arxiv.org/abs/1803.05355), 2018.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/FEVER_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| One Flew Over the Cuckoo's Nest only won one Academy Award. [59 chars] | One Flew Over the Cuckoo's Nest (film) One Flew Over the Cuckoo 's Nest is a 1975 American comedy-drama film directed by Miloš Forman , based on the 1962 novel One Flew Over the Cuckoo 's Nest by Ken Kesey . The film stars Jack Nicholson and features a supporting cast of Louise Fletcher , William Redfield , Will Sampson , and Brad Dourif . Considered to be one of the greatest films ever made , One Flew Over the Cuckoo 's Nest is No. 33 on the American Film Institute 's 100 Years ... 100 Movies list . The film was the second to win all five major Academy Awards ( Best Picture , Actor in Lead Role , Actress in Lead Role , Director , and Screenplay ) following It Happened One Night in 1934 , an accomplishment not repeated until 1991 by The Silence of the Lambs . It also won numerous Golden Globe and BAFTA Awards . In 1993 , the film was deemed `` culturally , historically , or aesthetically significant '' by the United States Library of Congress and selected for preservation in the Nation... [1,000 / 1,023 chars] |
+| Salt River Valley is on the Mississippi River. [46 chars] | Salt River Valley The Salt River Valley is an extensive valley on the Salt River in central Arizona , which contains the Phoenix Metropolitan Area . Although this geographic term still identifies the area , the name `` Valley of the Sun '' popularly replaced the usage starting in the early 1930s for purposes of boosterism . A common dust for testing air filter efficiency was derived from top soil dust from the Salt River Valley , referred to as Arizona Dust . The dust was found to include small abrasive particles . [525 chars] |
+| Sky UK is a British telecommunications company. [47 chars] | United Kingdom The United Kingdom of Great Britain and Northern Ireland , commonly known as the United Kingdom ( UK ) or Britain , is a sovereign country in western Europe . Lying off the north-western coast of the European mainland , the United Kingdom includes the island of Great Britain , the north-eastern part of the island of Ireland and many smaller islands . Northern Ireland is the only part of the United Kingdom that shares a land border with another sovereign statethe Republic of Ireland.Although Northern Ireland is the only part of the UK that shares a land border with another sovereign state , two of its Overseas Territories also share land borders with other sovereign countries . Gibraltar shares a border with Spain , while the Sovereign Base Areas of Akrotiri and Dhekelia share borders with the Republic of Cyprus , the Turkish Republic of Northern Cyprus and the UN buffer zone separating the two Cypriot polities . Apart from this land border , the United Kingdom is surroun... [1,000 / 5,000 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | source task paper | https://arxiv.org/abs/1803.05355 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/FEVER_test_top_250_only_w_correct-v2 |  | dataset card | https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2 |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | source task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/FEVER_test_top_250_only_w_correct-v2 |  | dataset card | [https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/FEVER_test_top_250_only_w_correct-v2) |
 
 ### Representative Snippets
 

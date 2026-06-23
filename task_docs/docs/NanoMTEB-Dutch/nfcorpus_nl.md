@@ -151,21 +151,20 @@ medical evidence.
 
 ## Example Data
 
-### Public Sources
-
-- [NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf), 2016.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-nfcorpus](https://huggingface.co/datasets/clips/beir-nl-nfcorpus), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| bagels [6 chars] | Papaverzaadproducten en opiaten drugstesten – waar staan we nu? Zaden van de opiumpapaverplant worden legaal verkocht en veel geconsumeerd als voedsel. Door contaminatie tijdens de oogst kunnen de zaden morfine en andere opiaatalkaloïden bevatten. Het doel van deze studie is de toxicologie van papaverzaadproducten te beoordelen met betrekking tot de invloed op opiaten drugstesten. Een computergestuurde literatuurstudie resulteerde in 95 geïdentificeerde referenties. Normale consumptie van papaverzaad wordt over het algemeen als veilig beschouwd. Tijdens de voedselverwerking wordt het morfinegehalte aanzienlijk verlaagd (tot 90%). De mogelijkheid van vals-positieve opiaten drugstesten na inname van papavervoedsel bestaat. Er zijn geen eenduidige markers beschikbaar om inname van papavervoedsel te onderscheiden van heroïne- of farmaceutische morfinegebruik. Dit is ook een probleem in heroïne-geassisteerde onderhoudsprogramma's. Een fundamentele eis in dergelijke substitutieprogramma's is... [1,000 / 1,902 chars] |
+| druiven [7 chars] | Een beslist prikkelend idee: de potentiële rol van plantaardige polyfenolen bij de behandeling van leeftijdsgebonden cognitieve stoornissen. Tegenwoordig lijden tientallen miljoenen ouderen wereldwijd aan dementie. Hoewel de pathogenese van dementie complex en onvolledig begrepen is, kan het, althans tot op zekere hoogte, een gevolg zijn van systemische vasculaire pathologie. Het metabool syndroom en de afzonderlijke componenten ervan induceren een pro-inflammatoire toestand die bloedvaten beschadigt. Deze toestand van chronische ontsteking kan de vasculatuur van de hersenen beschadigen of direct neurotoxisch zijn. Er zijn verbanden vastgesteld tussen het metabool syndroom, de bestanddelen ervan en dementie. Er is ook een verband waargenomen tussen bepaalde dieetfactoren, zoals bestanddelen van het 'mediterrane dieet', en het metabool syndroom; soortgelijke verbanden zijn opgemerkt tussen deze dieetfactoren en dementie. Fruchtsappen en -extracten worden onderzocht als behandelingen voo... [1,000 / 1,953 chars] |
+| Dr. Walter Willett [18 chars] | Cocountolie voorspelt een gunstig lipidenprofiel bij premenopauzale vrouwen in de Filipijnen Cocountolie is een veelgebruikte eetbare olie in veel landen, en er is gemengd bewijs voor de effecten ervan op lipidenprofielen en het risico op hart- en vaatziekten. Hier onderzoeken we het verband tussen consumptie van cocountolie en lipidenprofielen in een cohort van 1839 Filipijnse vrouwen (leeftijd 35–69 jaar) die deelnamen aan het Cebu Longitudinal Health and Nutrition Survey, een community-based studie in Metropolitan Cebu City. De inname van cocountolie werd gemeten als individuele inname van cocountolie, berekend met behulp van twee 24-uurs voedselinnames (9,54 ± 8,92 gram). Cholesterolprofielen werden gemeten in plasmamonsters die werden verzameld na een nachtelijk vasten. Gemiddelde lipidewaarden in dit monster waren totaal cholesterol (TC) (186,52 ± 38,86 mg/dL), high-density lipoprotein cholesterol (HDL-c) (40,85 ± 10,30 mg/dL), low-density lipoprotein cholesterol (LDL-c) (119,42... [1,000 / 1,491 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | paper PDF | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-nfcorpus |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-nfcorpus |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | paper PDF | [https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf](https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-nfcorpus |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-nfcorpus](https://huggingface.co/datasets/clips/beir-nl-nfcorpus) |
 
 ### Representative Snippets
 

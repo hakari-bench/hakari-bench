@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 5
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "Šta je sindrom ruminacije?",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ruminacioni sindrom. Ruminacioni sindrom, takođe poznat kao Mericizam, je vrsta poremećaja ishrane koji nije drugačije određen, a uzrokuje regurgitaciju hrane. Iako nije prepoznat kao specifični poremećaj ishrane u DSM-IV, određeni parametri su definisani za dijagnozu ovog poremećaja.",
+          "full_chars": 285,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "Ko je pevao pesmu \"Here I Go Again\"?",
+          "full_chars": 36,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Za druge upotrebe, pogledajte Here I Go Again (razvrstavanje). \"Here I Go Again\" je pesma britanskog rok benda Whitesnake. Prvobitno objavljena na njihovom albumu iz 1982. godine Saints & Sinners, pesma je ponovo snimljena za njihov istoimeni album iz 1987. godine Whitesnake. Iste godine pesma je ponovo snimljena u novoj radio-miks verziji.",
+          "full_chars": 342,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "Koga Kameron Bojs glumi u seriji \"Liv i Madi\"?",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Spremite se na prave hah-ahe, ljudi. U EKSKLUZIVNOM prethodnom prikazu epizode \"Liv i Madi\" od 19. aprila pod nazivom \"Maturska večer-A-Runi\". Naravno. U urnebesnom isečku vidimo Džesijevu zvezdu Kamerona Bojsa kako prelazi u drugi Diznijev šou kako bi upoznao Madi (Šelbi Vulfert). Njegov lik je, hm, ekscentričan!",
+          "full_chars": 315,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -62,9 +62,11 @@ A model targeting this task should optimize for complete support coverage, not j
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on HotpotQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Penny Rae Bridges starred in a television sitcom with what other actor? [71 chars] | Penny Rae Bridges (born July 29, 1990) is an American actress. Her television work has included roles in "For Your Love", "Family Law", "Boy Meets World" and "The Parent 'Hood". She is best known for her role in "Half & Half", as the young Mona. [245 chars] |
+| Who bestowed Kaganoi Shigemochi with a blade made by the person that founded the Muramasa school? [97 chars] | Kaganoi Shigemochi (加賀井 重望 , 1561 – August 27, 1600) was a Japanese samurai of the Azuchi-Momoyama period, who served the Oda clan. He ruled Kaganoi Castle. During the Battle of Komaki and Nagakute, Shigemochi fought under his father Shigemune, who was attached to the forces of Oda Nobukatsu. Soon after, Kaganoi Castle was surrounded by the forces of Toyotomi Hideyoshi; Shigemune surrendered, and Shigemochi was employed by Hideyoshi as a messenger, receiving a stipend of 10,000 "koku". He also possessed a blade made by Muramasa, which Hideyoshi bestowed on him in 1598. [575 chars] |
+| What film was written and directed by Joby Harold with music written by Samuel Sim? [83 chars] | Samuel Sim is a film and television composer. He first gained recognition with his award winning score for the BBC drama series "Dunkirk". Since then he has written the music for a wide variety of film and television productions, most recently scoring the film "Awake" for The Weinstein Company and the BBC/HBO drama series "House of Saddam". His most recent acclaimed music is the soundtrack for Home Fires. Home Fires (Music from the Television Series) released May 6, 2016 by Sony Classical Records. [502 chars] |
 
 ### Source Reference Table
 

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Overview of Touché 2020: Argument Retrieval",
-        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Är läxor bra?",
+          "full_chars": 13,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Först och främst finns det tre argument för varför läxor är utmärkta och bör fortsätta i moderna skolor. 1. Läxor hjälper gör-lärarna. Det är allmänt accepterat att det finns tre typer av lärande: de som lär sig genom att höra, de som lär sig genom att se och de som lär sig genom att göra. Medan många är nöjda med att höra eller se instruktioner om ett visst ämne, behöver vissa faktiskt göra det. Därför är läxor fördelaktiga för denna senare grupp eftersom instruktionerna lärs genom handling. 2. Läxor förstärker instruktioner. Även om många kanske skulle vara glada över att inte ha läxor, skulle kvaliteten på den utbildning som erhålls definitivt lida om den togs bort. Oavsett om läxorna är läst uppgifter, terminsarbeten etc., är allt detta utformat för att förstärka instruktionerna i studenternas minnen. Till slut är de som gör sina läxor mer framgångsrika akademiskt än de som inte gör det. Jag anser att detta är en självklar sanning, men jag lämnar det till Pro att övertyga dig om mo",
+          "full_chars": 3658,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Bör receptbelagda läkemedel annonseras direkt till konsumenter?",
+          "full_chars": 63,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Många annonser innehåller inte tillräckligt med information om hur väl läkemedel fungerar. Till exempel annonseras Lunesta av en fjäril som flyger in genom ett sovrumsfönster, över en person som sover lugnt. Faktum är att Lunesta hjälper patienter att somna 15 minuter snabbare efter sex månaders behandling och ger 37 minuter mer sömn per natt. De flesta annonserna baseras på emotionella appeller, men få beskriver orsaker till tillståndet, riskfaktorer eller viktiga livsstilsförändringar. I en studie av 38 läkemedelsannonser fann forskarna att 82 procent gjorde ett faktiskt påstående och 86 procent gjorde rationella argument för produktanvändning. Endast 26 procent beskrev orsaker till tillståndet, riskfaktorer eller förekomst. På så sätt ger de inte patienterna balanserad information som skulle göra dem medvetna om att att ta en av pillerna inte är en magisk lösning på deras problem. Faktum är att enligt en studie genomförd i USA och Nya Zeeland begärde patienter recept i 12 procent av",
+          "full_chars": 1768,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Skall barn behöva några vacciner?",
+          "full_chars": 33,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Det är inte ett fullständigt fall ännu... bara några små punkter jag samlat ihop... Regeringar bör inte ha rätt att ingripa i de hälsoval som föräldrar gör för sina barn. Enligt en undersökning från 2010 genomförd av University of Michigan tror 31% av föräldrarna att de bör ha rätt att vägra obligatoriska skolstartsvaccinationer för sina barn. Många föräldrar har religiösa övertygelser mot vaccination. Att tvinga sådana föräldrar att vaccinera sina barn skulle strida mot 1:a tilläggsartikeln som garanterar medborgarna rätt till fri utövning av sin religion. Vacciner är ofta onödiga i många fall där dödsrisken från sjukdomen är liten. Under tidigt 1800-tal sjönk dödligheten för barnsjukdomar som kikhosta, mässling och skarlaksfeber drastiskt innan immunisering blev tillgänglig. Denna minskade dödlighet har tillskrivits förbättrad personlig hygien, vattenrening, effektiv avloppshantering och bättre mat- och näringshygien. Vacciner stör naturlagarna och Guds plan för mänskligheten. Sjukdo",
+          "full_chars": 4244,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

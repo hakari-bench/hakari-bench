@@ -62,19 +62,19 @@ Models should improve Slovak legal semantic matching while retaining exact sensi
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Ktorá trojstupňová intervenčná schéma sa navrhuje spolu s podporou duševného zdravia, udržiavaním zdravého životného štýlu a prostrediami podporujúcimi sebarealizáciu? [167 chars] | Z tohto hľadiska je potrebné zdôrazniť tri zložky prevencie (primárnu, sekundárnu a terciárnu) a prispôsobiť ich danej oblasti. Je potrebné vypracovať iniciatívy pre viaceré oblasti, vrátane podpory duševného zdravia a informovania verejnosti, osvojenia si a udržania zdravého spôsobu života a vytvorenia prostredia, ktoré podporuje sebarealizáciu. To sa týka aj prevencie, zameranej na zníženie výskytu duševných porúch sústredením pozornosti na rizikové faktory a patogénne situácie, ako napríklad: [500 chars] |
+| Ktorý výbor vyzval na opatrenia podporované EÚ na nápravu nedostatkov kvalifikácie a etiky vedúcich po strate dôvery zamestnancov a spotrebiteľov? [146 chars] | Kríza spojená so stratou dôvery sa medzi zamestnancami a spotrebiteľmi v mnohých krajinách Európskeho spoločenstva zhoršila po odhalení chýb a nesprávneho počínania riadiacich pracovníkov a celých riadiacich štruktúr. Výbor považuje za dôležité, aby európske štáty za podpory Európskeho spoločenstva venovali zvýšenú pozornosť nedostatkom v oblasti kvalifikácie a integrity riadiacich pracovníkov a viac urobiť pre ich odstránenie. Okrem toho by bolo potrebné zvážiť, ako prostredníctvom väčšej transparentnosti, prípadne aj zvýšenej miery zodpovednosti trvať u zodpovedných pracovníkoch na tom, aby sa striktne zameriavali na plnenie svojich úloh a na svoju sociálnu zodpovednosť. [681 chars] |
+| Ktorý orgán vysvetľuje politiku pri neriešenej judikatúre bez prejudikácie výkladu ods. 1 a 3 zmluvy regionálnymi a súdmi Spoločenstva? [135 chars] | Vzhľadom na niekoľko otázok v týchto usmerneniach je načrtnutý súčasný stav judikatúry Súdneho dvora EZVO a Súdneho dvora Európskych spoločenstiev v súlade so zodpovedajúcimi ustanoveniami v Zmluve o ES. Dozorný úrad EZVO má však v úmysle vysvetliť svoju politiku aj v otázkach, ktorými sa judikatúra nezaoberá, resp. ktoré si vyžadujú interpretáciu. Postojom Dozorného úradu EZVO však nie je dotknutá judikatúra Súdneho dvora EZVO, Súdneho dvora a Súdu prvého stupňa Európskych spoločenstiev v súvislosti s interpretáciou článku 53 ods. 1 a 3 a interpretácia, ktorú týmto ustanoveniam môže dať Súdny dvor EZVO a súdy Spoločenstva v budúcnosti. [644 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

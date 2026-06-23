@@ -70,11 +70,11 @@ For evaluation, nDCG@10 is the primary signal for direct QA retrieval quality, w
 
 ## Example Data
 
-### Public Sources
-
-- Natural Questions paper: https://aclanthology.org/Q19-1026/
-- Natural Questions project page: https://ai.google.com/research/NaturalQuestions/
-- Source task dataset card: https://huggingface.co/datasets/mteb/NQ-PLHardNegatives
+| Query | Positive document |
+| --- | --- |
+| którzy byli sędziami tańca na lodzie 2014 [41 chars] | Taniec na lodzie Phillip Schofield i Christine Bleakley powrócili do współobecności. Dean, Torvill i Karen Barber powrócili, by mentorować celebrytów. Robin Cousins, Jason Gardiner, Barber i Ashley Roberts powrócili z odpowiednio dziewiątą, ósmą, siódmą i drugą serią na The Ice Panel. Kuzyni byli nieobecni przez 6 i 7 tygodni z powodu komentowania Zimowych Igrzysk Olimpijskich 2014, więc były sędzia Nicky Slater powrócił na jego miejsce, a Barber był tymczasowym sędzią głównym. [483 chars] |
+| kiedy wyjdzie sezon 5 rubinu? [29 chars] | Lista odcinków RWBY RWBY to trwająca amerykańska seria internetowa w stylu anime, stworzona przez Rooster Teeth Productions. Premiera odbyła się 18 lipca 2013 r. Na stronie internetowej Rooster Teeth, a odcinki zostały później przesłane na YouTube i strony strumieniowe, takie jak Crunchyroll. Wydano cztery sezony, określane jako „Tomy”, z których piąty trwa od premiery 14 października 2017 r.[1] Do października 2017 r. wydano 54 odcinki, które są określane jako „Rozdziały”. [479 chars] |
+| kiedy w alton towers zamknięto koryto z bali? [45 chars] | Korytarz (wieże Alton) The Flume był log Flume w Alton Towers w Staffordshire. Został otwarty w 1981 roku i został odnowiony w 2004 roku, co zbiegło się z jego sponsorowaniem przez Imperial Leather. Przejażdżka była rynną z bali o tematyce kąpielowej z trzema kroplami. W momencie otwarcia była to najdłuższa atrakcja z bali na świecie. Atrakcja została zamknięta w 2015 roku i została usunięta rok później w celu przekształcenia obszaru w kolejkę górską SW8. [460 chars] |
 
 ### Source Reference Table
 

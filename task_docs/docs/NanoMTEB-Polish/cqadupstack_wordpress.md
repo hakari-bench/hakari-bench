@@ -70,12 +70,11 @@ For reranking, the task rewards models that can compare a short query with a lon
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-wordpress-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Wordpress-PL
+| Query | Positive document |
+| --- | --- |
+| Programowe wstawianie terminów hierarchicznych i ustalanie terminów dla postów powoduje usterkę? [96 chars] | Wstawianie terminów w taksonomii hierarchicznej Naprawdę mam kilka problemów z wstawianiem terminów. Oto mój scenariusz: mam taksonomię o nazwie veda_release_type: //Release Type and Region $labels = array( 'name'=> _x('Release Types/Regions', 'Taxonomy general name' ), 'singular_name' => _x ('Typ/region wydania', 'taksonomia pojedyncza nazwa'), 'search_items' => __('Wyszukaj typy/regiony wydań'), 'popular_items' => __('Popularne typy/regiony wydań'), 'all_items' => __('Wszystkie typy/regiony wydania'), 'edit_item' => __('Edytuj typ/regiony wydania'), 'edit_item' => __('Edytuj typ/region wydania'), 'update_item' => __('Typ/region aktualizacji'), 'add_new_item' => __('Dodaj typ/region nowej wersji'), 'new_item_name' => __('Typ/nazwa nowego wydania'), 'separate_items_with_commas' => __('Oddziel typy wydań/regiony przecinkami'), 'add_or_remove_items' => __('Dodaj lub usuń R zwolnij typy/regiony'), 'choose_from_most_used' => __('Wybierz z najczęściej używanych typów/regionów wydań') ); $ar... [1,000 / 3,822 chars] |
+| Jak zwiększyć długość fragmentu w wordpressie? [46 chars] | fragment w postaciach Mam kod w functions.php: function string_limit_words($string, $word_limit) { $words = explode(' ', $string, ($word_limit + 1)); if(count($słowa) > $word_limit) array_pop($słowa); return implode(' ', $słowa); } ale muszę ograniczyć fragment w liczbie znaków, czy możesz mi w tym pomóc? [306 chars] |
+| Strona biblioteki multimediów bardzo wolno, ładuje obrazy w pełnej jakości [74 chars] | Wordpress 3.5 Media Manager - Zmień rozmiar załadowanego obrazu Nowy menedżer mediów ładuje obrazy w PEŁNYM rozmiarze, co jest NAPRAWDĘ nieefektywne dla miniatury. Chciałbym go zastąpić miniaturą o innym rozmiarze, która jest również przechowywana dla każdego obrazu źródłowego. Nie mogę też znaleźć na to sposobu. Czy ktoś ma jakieś wskazówki? [344 chars] |
 
 ### Source Reference Table
 

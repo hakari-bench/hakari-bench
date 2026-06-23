@@ -89,36 +89,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "references": [
-      {
-        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
-        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-no",
       "source_urls": [
@@ -127,6 +97,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Sunn sjokolademelk",
+          "full_chars": 18,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Mål: Å undersøke forholdet mellom inntak av kirsebær og risikoen for gjentatte giktangrep hos individer med gikt. Metoder: Vi gjennomførte en case-crossover-studie for å undersøke sammenhenger mellom en rekke påståtte risikofaktorer og gjentatte giktangrep. Individer med gikt ble rekruttert prospektivt og fulgt opp online i ett år. Deltakerne ble bedt om å gi følgende informasjon når de opplevde et giktangrep: datoen for angrepsstart, symptomer og tegn, medisiner (inkludert anti-giktmedisiner), og potensielle risikofaktorer (inkludert daglig inntak av kirsebær og kirsebær-ekstrakt) i løpet av de to dagene før giktangrepet. Vi vurderte samme eksponeringsinformasjon over to-dagers kontrollperioder. Vi estimerte risikoen for gjentatte giktangrep relatert til kirsebærinntak ved hjelp av betinget logistisk regresjon. Resultater: Vår studie inkluderte 633 individer med gikt. Kirsebærinntak over en to-dagers periode var assosiert med en 35% lavere risiko for giktangrep sammenlignet med ingen",
+          "full_chars": 1617,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "Medisinsk etikk",
+          "full_chars": 15,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "BAKGRUNN: En av de største utfordringene ved å kontrollere serumkolesterol gjennom diettintervensjoner ser ut til å være behovet for å forbedre pasientens overholdelse. MÅL: For å utforske de mange spørsmålene om hindringer og motivatorer for overholdelse av kolesterolsenkende diett. METODER: Vi undersøkte franske allmennlegeres diettiske praksiser for pasienter med høyt kolesterol, og så på pasientenes holdninger til en slik tilnærming. RESULTATER: Vi analyserte 234 legeres personlige spørreskjemaer og 356 pasienters selvrapporterte spørreskjemaer. Pasientenes grunner for ikke å følge den foreskrevne dietten inkluderte: 'har allerede tilfredsstillende matvaner' (34,7%), 'vil ikke oppleve næringsmangel' (33,3%), 'vanskeligheter med å kombinere dietten med familielivet' (27,8%) og 'tar kolesterolsenkende medisiner' (22,2%). Til tross for en generelt god forståelse av legerens anbefalinger blant pasientene, ble det sett noen uoverensstemmelser mellom deres respektive utsagn. Mens leger s",
+          "full_chars": 1855,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "bikubear",
+          "full_chars": 8,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De siste 20 årene har økt interesse for L-arginins biokjemi, ernæring og farmakologi ført til omfattende studier for å utforske dets ernæringsmessige og terapeutiske roller i behandling og forebygging av menneskelige metabolske lidelser. Nyere bevis viser at kosttilskudd av L-arginin reduserer fettmasse hos genetisk overvektige rotter, kosthold-indusert overvektige rotter, slaktegriser og overvektige mennesker med type-2 diabetes. Mekanismene bak de gunstige effektene av L-arginin er sannsynligvis komplekse, men involverer i siste instans å endre balansen mellom energiintak og energiforbruk til fordel for fettforbrenning eller redusert vekst av hvitt fettvev. Nylige studier tyder på at L-arginintilskudd stimulerer mitokondriebiogenese og utvikling av brunt fettvev, muligens gjennom økt syntese av celle-signalerende molekyler (for eksempel, nitrikoksid, karbonmonoksid, polyaminer, cGMP og cAMP) samt økt ekspresjon av gener som fremmer oksidasjon av energisubstrater i hele kroppen (for e",
+          "full_chars": 1210,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "references": [
-      {
-        "title": "FiQA: Financial Opinion Mining and Question Answering",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA: Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Que tipos de rentabilidade a Vanguard está oferecendo?",
+          "full_chars": 54,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Da página da Vanguard - Esta pareceu a mais fácil, pois os dados da S&P são simples de encontrar. Utilizo o MoneyChimp para confirmar - o que verifica que a página da Vanguard oferece a TIRC, e não a média aritmética. Nota: A Vanguard afirma: \"Para os retornos do mercado de ações dos EUA, utilizamos o Standard & Poor's 90 de 1926 até 3 de março de 1957\", enquanto o MoneyChimp utiliza dados do site do vencedor do Prêmio Nobel, Robert Shiller.",
+          "full_chars": 445,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Quais são as implicações fiscais do trabalho freelancer?",
+          "full_chars": 56,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Se você tiver rendimentos nos EUA, terá de pagar imposto de renda dos EUA sobre eles, a menos que haja um tratado com o seu país que o isente dessa obrigação.",
+          "full_chars": 158,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "O que é considerado alto ou baixo quando se fala de volume?",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "O volume diário é geralmente comparado ao volume médio diário dos últimos 50 dias para uma ação. Volume alto é considerado ser 2 ou mais vezes o volume médio diário dos últimos 50 dias para essa ação. No entanto, alguns traders podem definir o critério como 3x ou 4x o volume médio diário (ADV) para confirmar um padrão ou evento específico. O volume é comparado ao ADV da própria ação, pois compará-lo ao volume de outras ações seria como comparar maçãs com laranjas, já que diferentes empresas têm diferentes números de ações totais disponíveis, diferentes níveis de liquidez e diferentes níveis de volatilidade, que podem todos contribuir para os volumes negociados diariamente.",
+          "full_chars": 681,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -48,13 +48,11 @@ Strong models should improve answerability ranking without losing exact-term rec
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| ¿Qué es el síndrome de rumiación? | Síndrome de rumiación, también conocido como mericismo, es un tipo de trastorno de la alimentación... |
-| ¿Quién canta "Here I Go Again"? | Para otros usos, consulte Aquí Voy Otra Vez. Aquí Voy Otra Vez es una canción de la banda de rock británica Whitesnake... |
-| ¿Quién interpreta Cameron Boyce en Liv y Maddie? | Prepárense para reírse a carcajadas. En un adelanto del episodio de Liv & Maddie... |
-| ¿Dónde se encuentran la mayoría de los grandes desiertos del mundo? | Los demás desiertos del planeta se encuentran fuera de las regiones polares. El más extenso es el desierto del Sahara... |
-| ¿Qué significa "copper" en el contexto de la policía? | Según los hallazgos actuales parece que "copper" precede a "cop", tanto como verbo que significa detener como sustantivo... |
+| Query | Positive document |
+| --- | --- |
+| ¿Qué es el síndrome de rumiación? [33 chars] | Síndrome de rumiación. El síndrome de rumiación, también conocido como mericismo, es un tipo de trastorno de la alimentación no especificado de otra manera que provoca la regurgitación de alimentos. Aunque no se identifica como un trastorno de la alimentación específico en el DSM-IV, se han establecido ciertos parámetros para diagnosticar el trastorno. [354 chars] |
+| ¿Quién canta "Here I Go Again"? [31 chars] | Para otros usos, consulte Aquí Voy Otra Vez (desambiguación). Aquí Voy Otra Vez es una canción de la banda de rock británica Whitesnake. La canción fue lanzada originalmente en su álbum de 1982, Santos y Pecadores, y luego fue re-grabada para su álbum homónimo de 1987, Whitesnake. Ese mismo año, la canción fue re-grabada en una nueva versión para radio. [355 chars] |
+| ¿Quién interpreta Cameron Boyce en Liv y Maddie? [48 chars] | Prepárense para reírse a carcajadas, chicos. En un adelanto EXCLUSIVO del episodio del 19 de abril de 'Liv & Maddie' titulado 'Prom-A-Rooney.' ¡Obviamente! En el divertido clip, vemos a Cameron Boyce, la estrella de Jessie, aparecer en otro programa de Disney para encontrarse con Maddie (Shelby Wulfert). ¡Su personaje es, bueno, ¡muy excéntrico! [347 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should improve answerability ranking without losing exact-term rec
 
 | Label | URL |
 |---|---|
-| MS MARCO paper | https://arxiv.org/abs/1611.09268 |
-| MS MARCO dataset site | https://microsoft.github.io/msmarco/Datasets.html |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| MS MARCO paper (https://arxiv.org/abs/1611.09268) |
+| MS MARCO dataset site (https://microsoft.github.io/msmarco/Datasets.html) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

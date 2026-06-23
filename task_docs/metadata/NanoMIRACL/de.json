@@ -141,20 +141,71 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "831602#0",
+        "document_id": "5664#61",
+        "query": {
+          "text": "Welche Mechanismen helfen Computern, menschliche Sprache zu verstehen?",
+          "full_chars": 70,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wissen Ein anderes Anwendungsfeld sind Dialogsysteme, die in der Mensch-Computer-Interaktion eingesetzt werden und die Kommunikation eines Menschen mit einem Computer mittels natürlicher Sprache ermöglichen sollen. So simulierte etwa das bereits 1966 von Joseph Weizenbaum programmierte ELIZA das Gespräch mit einem Psychotherapeuten. Auf Aussagen der Art „Ich habe ein Problem mit meinem Vater.“ reagierte das Programm mit dem Satz „Erzählen Sie mir mehr von Ihrer Familie.“ Eine derartige Reaktion wurde möglich durch die semantische Verknüpfung von Begriffen wie „Vater“ und „Familie“. Mittlerweile werden auch Programme geschrieben, die das Ziel haben, eine allgemeine, kontextunabhängige Kommunikation zu ermöglichen. Die Idee eines solchen Programms geht auf den Turing-Test zurück, der 1950 von Alan Turing formuliert wurde. Nach Turing sollte man von „denkenden Maschinen“ genau dann reden, wenn Computer in der Kommunikation nicht von Menschen zu unterscheiden seien. Real existierende Dialo",
+          "full_chars": 1585,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11587141#0",
+        "document_id": "10477800#7",
+        "query": {
+          "text": "In welchem Jahr wurde TikTok gegründet?",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "TikTok \"Douyin\" wurde im September 2016 von Zhang Yiming, dem Gründer von ByteDance, ins Leben gerufen. Im Januar 2017 erhielt das Unternehmen mehrere Millionen Renminbi von der Toutiao-Gruppe, um die Plattform weiter auszubauen. Im September 2017 begann die Expansion auf den indonesischen Markt.",
+          "full_chars": 298,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10570817#0",
+        "document_id": "35201#3",
+        "query": {
+          "text": "Was macht Südostasien attraktiv für Touristen?",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Krabi (Stadt) Krabi ist eines der attraktivsten Reiseziele in Süd-Thailand. Die Andamanensee im Westen, an der zahllose natürliche Attraktionen liegen, ist beeindruckend. Dazu gehören die weißen Sandstrände, steil aufsteigende hohe Felsen, faszinierende Korallenriffe, zahlreiche größere und kleinere Inseln sowie Wälder mit Höhlen und Wasserfällen.",
+          "full_chars": 350,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

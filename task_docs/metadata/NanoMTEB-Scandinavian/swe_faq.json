@@ -135,15 +135,66 @@
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/SweFaqRetrieval",
         "url": "https://huggingface.co/datasets/mteb/SweFaqRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "398",
+        "document_id": "399",
+        "query": {
+          "text": "Kan Försäkringskassan utreda min arbetsskada så att jag kan få ersättning från AFA Försäkring?",
+          "full_chars": 94,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nej. Det beror på att vi bara får utreda om det är en arbetsskada om du uppfyller villkoren för att ha rätt till ersättning för din arbetsskada från Försäkringskassan. Det står i lagen.",
+          "full_chars": 185,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "146",
+        "document_id": "148",
+        "query": {
+          "text": "Varför behöver mitt vårdbidragsbeslut följas upp?",
+          "full_chars": 49,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ditt beslut om vårdbidrag ska följas upp minst vartannat år, om det inte finns skäl för uppföljning med längre mellanrum. Beslutet ska också följas upp om förhållanden som påverkar behovet av vårdbidrag ändras.",
+          "full_chars": 210,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "110",
+        "document_id": "101",
+        "query": {
+          "text": "Jag arbetar i Sverige men min familj bor i ett annat EU/EES-land. Kan jag få barnbidrag från Sverige?",
+          "full_chars": 101,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ja, om du arbetar i Sverige och har barn som bor i ett annat medlemsland kan du ha rätt till barnbidrag från Sverige. När föräldrarna bor eller arbetar i var sitt medlemsland behöver utbetalningen av barnbidrag samordnas mellan länderna. Kontakta oss på 010-115 10 20 för att få reda på vad som gäller i ditt fall.",
+          "full_chars": 314,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

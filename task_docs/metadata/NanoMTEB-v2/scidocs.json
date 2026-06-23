@@ -140,10 +140,61 @@
         "url": "https://huggingface.co/datasets/mteb/scidocs",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "c79b88a8d8ba491cead38b431703d84015153a8f",
+        "document_id": "13082af1fd6bb9bfe63e73cf007de1655b7f9ae0",
+        "query": {
+          "text": "An integrated framework on mining logs files for computing system management",
+          "full_chars": 76,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Machine learning in automated text categorization The automated categorization (or classification) of texts into predefined categories has witnessed a booming interest in the last 10 years, due to the increased availability of documents in digital form and the ensuing need to organize them. In the research community the dominant approach to this problem is based on machine learning techniques: a general inductive process automatically builds a classifier by learning, from a set of preclassified documents, the characteristics of the categories. The advantages of this approach over the knowledge engineering approach (consisting in the manual definition of a classifier by domain experts) are a very good effectiveness, considerable savings in terms of expert labor power, and straightforward portability to different domains. This survey discusses the main approaches to text categorization that fall within the machine learning paradigm. We will discuss in detail issues pertaining to three di",
+          "full_chars": 1103,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "23386571ed332e4a465c0a6fa899f310caa217c8",
+        "document_id": "44b05f00f032c0d59df4b712b83ff82a913e950a",
+        "query": {
+          "text": "Topic-Relevance Map: Visualization for Improving Search Result Comprehension",
+          "full_chars": 76,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Designing for Exploratory Search on Touch Devices Exploratory search confront users with challenges in expressing search intents as the current search interfaces require investigating result listings to identify search directions, iterative typing, and reformulating queries. We present the design of Exploration Wall, a touch-based search user interface that allows incremental exploration and sense-making of large information spaces by combining entity search, flexible use of result entities as query parameters, and spatial configuration of search streams that are visualized for interaction. Entities can be flexibly reused to modify and create new search streams, and manipulated to inspect their relationships with other entities. Data comprising of task-based experiments comparing Exploration Wall with conventional search user interface indicate that Exploration Wall achieves significantly improved recall for exploratory search tasks while preserving precision. Subjective feedback suppo",
+          "full_chars": 1194,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "0a40663fdcf7c5fb7cfc459693116c41309e7eca",
+        "document_id": "02bb762c3bd1b3d1ad788340d8e9cdc3d85f33e1",
+        "query": {
+          "text": "Algorithmic Nuggets in Content Delivery",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web We describe a family of caching protocols for distrib-uted networks that can be used to decrease or eliminate the occurrence of hot spots in the network. Our protocols are particularly designed for use with very large networks such as the Internet, where delays caused by hot spots can be severe, and where it is not feasible for every server to have complete information about the current state of the entire network. The protocols are easy to implement using existing network protocols such as TCP/fF’,and require very little overhead. The protocols work with local control, make efficient use of existing resources, and scale gracefully as the network grows. Our caching protocols are based on a special kind of hashing that we call consistent hashing. Roughly speaking, a consistent hash function is one which changes nr.inimaflyas the range of the function changes. Through the deve",
+          "full_chars": 1323,
+          "limit_chars": 1000,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/scidocs",
-    "source_task": "SCIDOCS"
+    "source_task": "SCIDOCS",
+    "example_count": 3
   }
 }

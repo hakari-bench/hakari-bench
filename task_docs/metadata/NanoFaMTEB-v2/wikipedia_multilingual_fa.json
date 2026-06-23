@@ -103,29 +103,81 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/WikipediaRetrievalMultilingual",
         "url": "https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "url": "https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q20231101.fa_6091897_9",
+        "document_id": "20231101.fa_6091897_9",
+        "query": {
+          "text": "واکنش‌های عاطفی چگونه بدون فرآیندهای شناختی رخ می‌دهند؟",
+          "full_chars": 55,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "«عاطفه» می‌تواند به معنای واکنش غریزی به تحریک باشد که قبل از فرآیندهای شناختی معمولی که برای شکل‌گیری یک احساس پیچیده‌تر ضروری تلقی می‌شوند، رخ می‌دهد. رابرت بی زایونک اظهار می‌دارد که این واکنش به محرک‌ها برای انسان‌ها اولیه است و این واکنش غالب برای موجودات غیرانسانی است. Zajonc پیشنهاد می‌کند که واکنش‌های عاطفی می‌تواند بدون رمزگذاری ادراکی و شناختی گسترده رخ دهد و زودتر و با اطمینان بیشتری نسبت به قضاوت‌های شناختی انجام شود (Zajonc, 1980).",
+          "full_chars": 448,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q20231101.fa_15272_48",
+        "document_id": "20231101.fa_15272_48",
+        "query": {
+          "text": "مدرسهٔ تقوی در گرگان چه ویژگی‌های معماری خاصی دارد؟",
+          "full_chars": 51,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "مدرسهٔ تقوی، یکی دیگر از مدارس تاریخی شهر گرگان، مربوط به دورهٔ قاجار و بخشی از مجموعهٔ تقوی است. عمارت تقوی متعلق به یکی از تجار بزرگ استرآباد به نام تقی‌اُف بوده. مدرسهٔ تقوی نیز از جمله نمونه‌های نفیس معماری شهر گرگان محسوب می‌شود. این مدرسه دارای دو حیاط شمالی و جنوبی بوده که درِ شمالی به محلهٔ سرچشمه و درِ جنوبی به محلهٔ نعلبندان باز می‌شد. بنای مدرسه در ابتدا به عنوان یک منزل مسکونی ساخته شده بود و تا اواخر دورهٔ قاجار نیز کاربری مسکونی داشت. اما در دورهٔ پهلوی که مدرسهٔ علمی نوین ایجاد شد این بنا تغییر کاربری داد و به عنوان مدرسه مورد استفاده قرار گرفت. از ویژگی‌های بارز معماری این بنا می‌توان به بالکن‌های چوبی آن اشاره کرد که با استفاده از چوب خراطی شده ساخته شده‌اند و چشم‌اندازی ویژه و زیبا به بنا بخشیده‌اند. همچنین تناسب و هماهنگی درها در طبقهٔ پایین بنا که تأثیر ویژه‌ای بر ایجاد تعادل دما در بخش داخلی ساختمان داشته نشان‌دهندهٔ هوش و تبحر سازندگان این مدرسه است.",
+          "full_chars": 884,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q20231101.fa_113008_22",
+        "document_id": "20231101.fa_113008_22",
+        "query": {
+          "text": "تکنیک‌های کشاورزی کم خاکورزی یا بی خاکورزی در نواحی میدوسترن ایالات متحده چگونه انجام می‌شوند؟",
+          "full_chars": 94,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "در نواحی میدوسترن ایالات متحده، معمولاً تکنیک‌های کشاورزی کم خاکورزی یا بی خاکورزی استفاده می‌شوند. در کم خاکورزی، مزارع یکبار یا دو بار با یک ابزار شخم زنی قبل از کشت محصول یا بعد از برداشت قبلی خاکورزی می‌شوند. مزارع کشت می‌شوند و کوددهی می‌شوند. علف‌های هرز با استفاده از علف کش‌ها کنترل می‌شوند و در فصل رشد کولتیوار زده نمی‌شود. این تکنیک تبخیر رطوبت از خاک را کاهش می‌دهد و به این ترتیب رطوبت بیشتری برای گیاه فراهم می‌کند. تکنولوژی‌هایی که در پاراگراف قبل اشاره شد، کشاورزی کم خاکورزی یا بی خاکورزی را توانمند می‌کند. علف‌های هرز بر سر مواد غذایی و رطوبت با محصول رقابت می‌کنند و این سبب می‌شود آن‌ها ناخوشایند باشند.",
+          "full_chars": 624,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

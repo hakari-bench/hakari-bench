@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
-        "url": "https://arxiv.org/abs/1809.09600",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ko",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "페니 레이 브리지스는 어떤 다른 배우와 함께 텔레비전 시트콤에 출연했는가?",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "페니 레이 브리지스(Penny Rae Bridges, 1990년 7월 29일 출생)는 미국의 여배우이다. 그녀는 드라마 『포 유어 러브』, 『패밀리 로』, 『보이 미츠 월드』, 『더 페어런트 후드』 등에 출연했으며, 특히 『할프 앤드 할프』에서 어린 모나 역할로 가장 잘 알려져 있다.",
+          "full_chars": 159,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "무라마사 학파를 창립한 인물이 만든 칼을 가가노이 시게모치에게 하사한 사람은 누구인가?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "가가노이 시게모치(加賀井 重望, 1561년 ~ 1600년 8월 27일)는 아즈치모모야마 시대의 일본 무사로, 오다 가문을 섬겼다. 그는 가가노이 성을 다스렸다. 고마키·나가쿠테 전투 당시, 그는 오다 노부카쓰 휘하에 소속된 아버지 시게무네를 따라 싸웠다. 그 후 곧 가가노이 성은 도요토미 히데요시의 군대에 포위되었고, 시게무네는 항복하였으며, 시게모치는 히데요시에게 사신으로 등용되어 1만 석의 녹봉을 받았다. 또한 1598년 히데요시로부터 무라마사가 제작한 칼을 하사받기도 하였다.",
+          "full_chars": 271,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "음악을 샘UEL 심이 작곡하고 조비 할로드가 각본을 쓰고 감독한 영화는 무엇인가요?",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "사무엘 심은 영화 및 텔레비전 음악 작곡가이다. 그는 BBC 드라마 시리즈 『덩커크』의 수상작 사운드트랙으로 처음 주목을 받았다. 이후 다양한 영화와 텔레비전 작품의 음악을 작곡해왔으며, 최근에는 더 와인스타인 컴퍼니를 위해 영화 『어웨이크』와 BBC/HBO 드라마 시리즈 『사다믹 하우스』의 음악을 담당했다. 그가 최근에 높은 평가를 받은 음악은 드라마 『홈 파이어스』의 사운드트랙이다. 『홈 파이어스(텔레비전 시리즈 음악)』는 소니 클래시컬 레코드에서 2016년 5월 6일 발매되었다.",
+          "full_chars": 273,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

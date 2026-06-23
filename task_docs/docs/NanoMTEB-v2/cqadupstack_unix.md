@@ -62,19 +62,19 @@ Models should preserve both semantic intent and exact technical constraints. Eff
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/cqadupstack-unix](https://huggingface.co/datasets/mteb/cqadupstack-unix), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| copy sas file from prior version directory to new version directory [67 chars] | How to copy datasets from prior version directory to latest version directory I've go a number of directories named like: /data/db/OX/8_10 /data/db/OX/9_1 /data/db/OX/9_2 And need to copy some files (all the `pt.*` files) from the second latest one (above `9_1`) to the latest one (above `9_2`). I have tried directly like this. cp -p /data/db/OX/9_1/pt.* /data/db/OX/9_2 However, Instead of typing /data/db/OX/9_1/ & /data/db/OX/9_2. I'd like to be able to write: cp -p /data/db/OS/"$prior_version"/pt.* /data/db/OS/"$latest_version"/ And derive `$prior_version` and `$latest_version` from the list of directories in `/data/db/OX/` in a shell script. [718 chars] |
+| Linux Mint Booting Installed Partition [38 chars] | How can I fix/install/reinstall grub? So I started out with a 250GB HDD, the stock drive from an EeePC 1015pem that I am trying to turn into a MintBook. The drive is physically operable, but all data has been nuked, including the old OS. Given this, I attached the HDD to my desktop and installed Linux Mint 16 Xfce from a live USB created through Unetbootin-585. Set aside 10GB for swap and 240GB for Ext4 and /. The drive now refuses to boot for either the desktop or netbook. Both motherboards are sounding the correct sequence of beeps, so they seem healthy, and I can successfully access the BIOS on both systems. However, the only thing that comes up after starting the computer is a nonresponsive command- line. There is no error message, no grub or grub-rescue, nothing. Is there anything I can try besides reformatting and starting over? How would I go about installing a boot loader that can boot my OS? [914 chars] |
+| Yanked USB Key During Move [26 chars] | Recovering accidentally deleted files I accidentally deleted a file from my laptop. I'm using Fedora. Is it possible to recover the file? [138 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | https://eltimster.github.io/www/pubs/adcs2015.pdf |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/cqadupstack-unix |  | dataset card | https://huggingface.co/datasets/mteb/cqadupstack-unix |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | source task paper | [https://eltimster.github.io/www/pubs/adcs2015.pdf](https://eltimster.github.io/www/pubs/adcs2015.pdf) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/cqadupstack-unix |  | dataset card | [https://huggingface.co/datasets/mteb/cqadupstack-unix](https://huggingface.co/datasets/mteb/cqadupstack-unix) |
 
 ### Representative Snippets
 

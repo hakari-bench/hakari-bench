@@ -135,15 +135,66 @@
         "url": "https://arxiv.org/abs/2503.04644",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "NFCorpus project page",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "year": 2016,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-44_v1",
+        "document_id": "MED-2810",
+        "query": {
+          "text": "Who Should be Careful About Curcumin?",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Curcumin as \"Curecumin\": from kitchen to clinic. Although turmeric (Curcuma longa; an Indian spice) has been described in Ayurveda, as a treatment for inflammatory diseases and is referred by different names in different cultures, the active principle called curcumin or diferuloylmethane, a yellow pigment present in turmeric (curry powder) has been shown to exhibit numerous activities. Extensive research over the last half century has revealed several important functions of curcumin. It binds to a variety of proteins and inhibits the activity of various kinases. By modulating the activation of various transcription factors, curcumin regulates the expression of inflammatory enzymes, cytokines, adhesion molecules, and cell survival proteins. Curcumin also downregulates cyclin D1, cyclin E and MDM2; and upregulates p21, p27, and p53. Various preclinical cell culture and animal studies suggest that curcumin has potential as an antiproliferative, anti-invasive, and antiangiogenic agent; as",
+          "full_chars": 1773,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-2480_v1",
+        "document_id": "MED-1419",
+        "query": {
+          "text": "Preventing Ulcerative Colitis with Diet",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A diet high in fat and meat but low in dietary fibre increases the genotoxic potential of 'faecal water'. To determine the effects of different diets on the genotoxicity of human faecal water, a diet rich in fat, meat and sugar but poor in vegetables and free of wholemeal products (diet 1) was consumed by seven healthy volunteers over a period of 12 days. One week after the end of this period, the volunteers started to consume a diet enriched with vegetables and wholemeal products but poor in fat and meat (diet 2) over a second period of 12 days. The genotoxic effect of faecal waters obtained after both diets was assessed with the single cell gel electrophoresis (Comet assay) using the human colon adenocarcinoma cell line HT29 clone 19a as a target. The fluorescence and length of the tails of the comet images reflects the degree of DNA damage in single cells. The mean DNA damage, expressed as the ratio of tail intensity (fluorescence in the tail) to total intensity of the comet after i",
+          "full_chars": 1604,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-12_v1",
+        "document_id": "MED-5237",
+        "query": {
+          "text": "Exploiting Autophagy to Live Longer",
+          "full_chars": 35,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "mTOR: from growth signal integration to cancer, diabetes and ageing Preface In all eukaryotes, the target of rapamycin (TOR) signaling pathway couples energy and nutrient abundance to the execution of cell growth and division, owing to the ability of TOR protein kinase to simultaneously sense energy, nutrients and stress, and, in metazoan, growth factors. Mammalian TOR complexes 1 and 2 (mTORC1 and mTORC2) exert their actions by regulating other important kinases, such as S6K and Akt. In the last few years, a significant advance in our understanding of the regulation and functions of mTOR has revealed its critical involvement in the onset and progression of diabetes, cancer and ageing.",
+          "full_chars": 694,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

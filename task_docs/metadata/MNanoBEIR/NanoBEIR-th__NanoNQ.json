@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "Natural Questions: a Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: a Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "ปีนี้รอบสุดท้ายจะจัดที่ไหน",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "การแข่งขันบาสเกตบอลชาย NCAA Division I ปี 2018 เป็นการแข่งขันแบบน็อกเอาต์ 68 ทีมเพื่อกำหนดแชมป์ระดับชาติของสมาคมกรีฑาวิทยาลัยแห่งชาติ (NCAA) Division I สำหรับฤดูกาล 2017–18 รุ่นที่ 80 ของการแข่งขันเริ่มขึ้นเมื่อวันที่ 13 มีนาคม 2018 และสิ้นสุดลงด้วยการแข่งขันชิงแชมป์ในวันที่ 2 เมษายนที่ Alamodome ในซานอันโตนิโอ รัฐเท็กซัส",
+          "full_chars": 323,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "หนัง Nightmare Before Christmas เป็นภาพยนตร์ของดิสนีย์ตั้งแต่แรกหรือไม่",
+          "full_chars": 71,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "นิทานก่อนวันคริสต์มาสเริ่มต้นจากบทกวีที่เขียนโดยทีม เบอร์ตันในปี 1982 ขณะที่เขาทำงานเป็นนักสร้างอนิเมชั่นที่วอลท์ ดิสนีย์ ฟีเจอร์ แอนิเมชั่น ด้วยความสำเร็จของวินเซนต์ในปีเดียวกัน สตูดิโอวอลท์ ดิสนีย์เริ่มพิจารณาพัฒนานิทานก่อนวันคริสต์มาสเป็นภาพยนตร์สั้นหรือรายการโทรทัศน์พิเศษ 30 นาที ตลอดหลายปีที่ผ่านมา ความคิดของเบอร์ตันกลับมาที่โครงการนี้เป็นประจำ และในปี 1990 เขาได้ทำข้อตกลงพัฒนากับดิสนีย์ การผลิตเริ่มขึ้นในเดือนกรกฎาคม 1991 ที่ซานฟรานซิสโก; ดิสนีย์ปล่อยภาพยนตร์ผ่านแบรนด์ทัชสโตนพิคเจอร์สเพราะสตูดิโอเชื่อว่าภาพยนตร์จะ \"มืดและน่ากลัวเกินไปสำหรับเด็ก\"",
+          "full_chars": 557,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "ทำไมเทวดาแห่งเหนือถึงอยู่ที่นั่น",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ตามที่กอร์มลีย์กล่าว ความสำคัญของเทวดามีสามประการ: ประการแรก เพื่อบ่งชี้ว่าภายใต้สถานที่ก่อสร้างนั้น คนงานเหมืองถ่านหินทำงานมาเป็นเวลาสองศตวรรษ; ประการที่สอง เพื่อเข้าใจการเปลี่ยนผ่านจากยุคอุตสาหกรรมสู่ยุคข้อมูล และประการที่สาม เพื่อทำหน้าที่เป็นจุดศูนย์กลางสำหรับความหวังและความกลัวที่กำลังพัฒนาอยู่ของเรา.",
+          "full_chars": 307,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "DBpedia-Entity V2",
-        "url": "https://doi.org/10.1145/3077136.3080751",
-        "year": 2017,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ko",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "DBpedia-Entity V2",
+        "url": "https://doi.org/10.1145/3077136.3080751",
+        "year": 2017,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "피츠제럴드 오토 몰 체임버스버그 펜실베이니아",
+          "full_chars": 24,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "피츠제럴드 오토몰은 1966년 메릴랜드주 베데스다에 첫 번째 지점을 오픈하며 설립된 가족 소유 및 운영 자동차 딜러십이다. 2014년 기준, 피츠제럴드 오토몰은 《오토모티브 뉴스》가 매년 발표하는 미국 '상위 125대 딜러십 그룹'에서 59위를 차지했다. 피츠제럴드 딜러 지점들은 2013년 워즈오토 이디일러 100에 8위, 25위, 30위, 43위, 98위로 다섯 차례 이름을 올렸다.",
+          "full_chars": 216,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "1994년 단편 소설집 앨리스 먼로는 열려 있다",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "앨리스 앤 먼로(/ˈælɨs ˌæn mʌnˈroʊ/, 본명 레이드로 /ˈleɪdlɔː/; 1931년 7월 10일 출생)는 캐나다의 작가이다. 먼로의 작품은 시간의 전후를 오가며 단편소설의 구조를 혁신시켰다고 평가받는다. 그녀의 작품은 \"드러내기보다 숨기며, 과시하기보다 더 많이 드러낸다\"고 표현되기도 한다. 먼로의 소설은 대개 그녀의 고향인 온타리오주 남서부 휴런 카운티를 배경으로 한다. 그녀의 이야기들은 간결한 문체로 인간의 복잡성을 탐구한다.",
+          "full_chars": 251,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "파리의 갈로-로마 건축",
+          "full_chars": 12,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "파리의 예술은 프랑스의 수도인 파리의 예술 문화와 역사에 관한 글이다. 수세기 동안 파리는 전 세계의 예술가들을 끌어들여, 이들이 도시에 도착해 예술 교육을 받고 예술 자원 및 갤러리에서 영감을 얻고자 했다. 그 결과, 파리는 '예술의 도시'라는 명성을 얻게 되었다.",
+          "full_chars": 149,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

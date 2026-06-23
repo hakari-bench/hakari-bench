@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval",
-        "url": "https://arxiv.org/abs/2108.08787",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "castorini/mr-tydi",
-        "url": "https://huggingface.co/datasets/castorini/mr-tydi",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/mrtidy",
-        "url": "https://huggingface.co/datasets/mteb/mrtidy",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -119,6 +97,78 @@
           "url": "https://huggingface.co/datasets/castorini/mr-tydi"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval",
+        "url": "https://arxiv.org/abs/2108.08787",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "castorini/mr-tydi",
+        "url": "https://huggingface.co/datasets/castorini/mr-tydi",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/mrtidy",
+        "url": "https://huggingface.co/datasets/mteb/mrtidy",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "4294",
+        "document_id": "124910#0",
+        "query": {
+          "text": "พรรคแผ่นดินไทยมีใครป็นหัวหน้าพรรค?",
+          "full_chars": 34,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "พรรคเพื่อแผ่นดิน พรรคเพื่อแผ่นดิน เป็นพรรคการเมืองไทยซึ่งก่อตั้งในกลางปี พ.ศ. 2550 มีนายสุวิทย์ คุณกิตติ เป็นหัวหน้าพรรคคนแรก",
+          "full_chars": 126,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "4159",
+        "document_id": "348526#4",
+        "query": {
+          "text": "โค้ชเชคยเป็นโค้ชให้กับเทควันโดทีมชาติใดก่อนที่จะโค้ชให้ทีมไทย?",
+          "full_chars": 62,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ชเว ย็อง-ซ็อก ชเวเริ่มเป็นโค้ชให้กับเทควันโดทีมชาติบาห์เรนในช่วงปี พ.ศ. 2543-2545 ต่อมาสมาคมเทควันโดแห่งประเทศไทยได้ติดต่อสหพันธ์เทควันโดสากล เพื่อจัดหาโค้ชมาทดแทนโค้ชเดิมที่ลาออกไป ชเวจึงได้รับคัดเลือกให้มาเป็นโค้ชให้นักกีฬาเทควันโดทีมชาติไทยจนถึงปัจจุบัน โดยเข้ามาทำหน้าที่เป็นโค้ชให้นักกีฬาเทควันโดทีมชาติไทยตั้งแต่วันที่ 1 กุมภาพันธ์ 2545 ด้วยความคุ้นเคยและอัธยาศัยอันดีต่อนักกีฬาและทีมผู้ฝึกสอน นักกีฬาทุกคนจึงต่างเรียกโค้ช ชเว ย็อง-ซ็อก ว่า \"โค้ชเช\" ทั้งนี้ยังสร้างผลงานยอดเยี่ยมด้วยการทำให้นักกีฬาเทควันโดทีมชาติไทยประสบความสำเร็จและเป็นแชมป์โลกได้ถึง 4 คน ได้แก่ รังสิญา นิสัยสม แชมป์เทควันโดโลก รุ่นไม่เกิน 62 กก.หญิง ชัชวาล ขาวละออ แชมป์เทควันโดโลก รุ่นไม่เกิน 54 กก.ชาย ในปี 2011 ที่ประเทศเกาหลีใต้ ชนาธิป ซ้อนขำ แชมป์เทควันโดโลก รุ่นไม่เกิน 49 กก.หญิง ในปี 2013 ที่ประเทศเม็กซิโก และพาณิภัค วงศ์พัฒนกิจ แชมป์เทควันโดโลก รุ่นไม่เกิน 46 กก.หญิง ในปี 2015 ที่ประเทศรัสเซีย",
+          "full_chars": 882,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "4137",
+        "document_id": "13089#0",
+        "query": {
+          "text": "ดร. ถวัลย์ ดัชนี เสียชีวิตเมื่อไหร่?",
+          "full_chars": 36,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ถวัลย์ ดัชนี ดร. ถวัลย์ ดัชนี (27 กันยายน พ.ศ. 2482 — 3 กันยายน พ.ศ. 2557) เป็นจิตรกร ช่างเขียนรูป แห่งดอยสูงเชียงราย ได้รับการยกย่องเชิดชูเกียรติให้เป็นศิลปินแห่งชาติ สาขาทัศนศิลป์ (จิตรกรรม) เมื่อพ.ศ. 2544 เกิดที่อำเภอเมือง จังหวัดเชียงราย เป็นบุตรของนายศรี และนางบัวคำ (พรหมสา) ดัชนี เป็นบุตรคนสุดท้องในจำนวนพี่น้อง 4 คน ได้แก่",
+          "full_chars": 331,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

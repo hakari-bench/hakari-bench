@@ -123,11 +123,11 @@ comes from cross-lingual dense similarity.
 
 ## Example Data
 
-Representative Dutch queries ask which statement about a shooting event is
-correct, what arrestees must receive to be held longer than 24 hours, which
-statement about Chandrayaan-1 is not true, who proposed reviewing the Clean Air
-Act, and what the NBA decided to suspend. Positive documents are English
-passages containing the answer.
+| Query | Positive document |
+| --- | --- |
+| Welke uitspraak over het evenement waar de schietpartij plaatsvond, is juist? [77 chars] | At least 100 people had attended the party, in order to celebrate the first anniversary of a couple whose wedding was held last year. A formal anniversary event was scheduled for a later date, officials said. The couple had married in Texas one year ago and came to Buffalo to celebrate with friends and relatives. The 30-year-old husband, who was born in Buffalo, was one of the four killed in the shooting, but his wife was not hurt. [435 chars] |
+| Wat moeten arrestanten volgens het tijdelijke contactverbod dat in de tekst wordt genoemd, krijgen om langer dan 24 uur te mogen worden vastgehouden? [149 chars] | In the last 3 months, over 80 arrestees were released from the Central Booking facility without being formally charged. In April this year, a temporary restaining order was issued by Judge Glynn against the facility to enforce the release of those held more than 24 hours after their intake who did not receive a hearing by a court commissioner. The commissioner sets bail, if granted, and formalizes the charges filed by the arresting officer. The charges are then entered into the state's computer system where the case is tracked. The hearing also marks the date for the suspect’s right to a speedy trial. [608 chars] |
+| Welke uitspraak over de maansonde van de Chandrayaan-1 is niet waar? [68 chars] | The unmanned lunar orbiter Chandrayaan-1 ejected its Moon Impact Probe (MIP), which hurtled across the surface of the Moon at 1.5 kilometres per second (3000 miles per hour), and successfully crash landed near the Moon's south pole. Besides carrying three important scientific instruments, the lunar probe also carried the image of the Indian national flag, painted on all sides. [379 chars] |
 
 ### Public Sources
 
@@ -142,10 +142,10 @@ passages containing the answer.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | https://arxiv.org/abs/2308.16884 |
-| facebookresearch/belebele | 2023 | repository | https://github.com/facebookresearch/belebele |
-| mteb/belebele |  | dataset card | https://huggingface.co/datasets/mteb/belebele |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| facebookresearch/belebele | 2023 | repository | [https://github.com/facebookresearch/belebele](https://github.com/facebookresearch/belebele) |
+| mteb/belebele |  | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
 
 ### Representative Snippets
 

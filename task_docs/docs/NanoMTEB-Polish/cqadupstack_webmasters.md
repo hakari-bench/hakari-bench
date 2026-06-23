@@ -70,12 +70,11 @@ For reranker research, this split rewards models that can read a short operation
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-webmasters-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Webmasters-PL
+| Query | Positive document |
+| --- | --- |
+| find-new/posts&recent=1 jako strona główna: co z SEO? [53 chars] | Czy adres URL z ciągiem zapytania jest lepszy lub gorszy dla SEO niż adres bez niego? Chcę wiedzieć, czy istnieje ogromna różnica pod względem SEO między tymi adresami URL: > mysite.com/ontario/toronto/listings > > lub > > mysite.com/listings.php?p=ontario&c=toronto wyższy niż inny? Czy jest tu duża różnica? [309 chars] |
+| Uniemożliwianie robotom indeksowania określonej części strony [61 chars] | Jak poprosić Google o nieindeksowanie niektórych części mojej strony? > **Możliwy duplikat:** > Uniemożliwianie robotom indeksowania określonej części strony Szukałem dzisiaj starej recenzji w mojej witrynie i zauważyłem, że Google indeksuje tekst nagłówka z mojej najnowszej listy artykułów na każdej stronie, która się pojawia , oczywiście tak sądzę. Problem polega na tym, że wyszukuję moją recenzję Dragon's Lair konkretnie w mojej witrynie, tak jak ta http://www.google.co.za/search?sugexp=chrome,mod=9&sourceid=chrome&ie=UTF-8&q=site%3Alazygamer.net +smoki+lair+recenzja Następnie zwraca mnóstwo stron, które są nieodpowiednie, ponieważ w ogóle nie są związane z recenzją. Powodem, dla którego mnie to obchodzi, jest to, że mam drugą recenzję Dragon's Lair, która została opublikowana lata temu, a teraz nie mogę jej znaleźć. Czy istnieje sposób, aby wskazać Google, że określony tekst nie ma związku z rzeczywistą zawartością strony? czy to okropny pomysł? [963 chars] |
+| Preferencje SEO dla przekierowania protokołu WWW lub HTTP://? Czy strony www mają wyższą pozycję niż strony bez www? [116 chars] | Z www czy bez www? Którego lepiej użyć Właśnie kupiłem nową domenę `www.reversehacking.com` .... Co jest lepsze dla SEO: `http://reversehacking.com` lub `http://www.reversehacking.com` Myślę, że ludzie zrobią więcej linków zaczynających się na www i będzie miało więcej linków zwrotnych do www. Proszę o sugestie, a muszę jak najszybciej uruchomić stronę. [355 chars] |
 
 ### Source Reference Table
 

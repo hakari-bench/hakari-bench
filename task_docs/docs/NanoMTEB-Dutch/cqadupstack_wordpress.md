@@ -151,22 +151,20 @@ depending on either alone.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Programmatisch hiërarchische termen invoegen & termen instellen voor berichten veroorzaakt een storing? [103 chars] | Het invoegen van termen in een hiërarchische taxonomie Ik ondervind een paar problemen met het invoegen van termen. Dit is mijn scenario: Ik heb een taxonomie genaamd veda_release_type: //Release Type en Regio $labels = array( 'name'=> _x('Release Types/Regio\'s', 'taxonomy general name' ), 'singular_name' => _x('Release Type/Regio', 'taxonomy singular name'), 'search_items' => __('Zoek Release Types/Regio\'s'), 'popular_items' => __('Populaire Release Types/Regio\'s'), 'all_items' => __('Alle Release Types/Regio\'s'), 'edit_item' => __('Release Type/Regio bewerken'), 'edit_item' => __('Release Type/Regio bewerken'), 'update_item' => __('Release Type/Regio bijwerken'), 'add_new_item' => __('Nieuwe Release Type/Regio toevoegen'), 'new_item_name' => __('Nieuwe Release Type/Regio naam'), 'separate_items_with_commas' => __('Scheid Release Types/Regio\'s met komma\'s'), 'add_or_remove_items' => __('Release Types/Regio\'s toevoegen of verwijderen'), 'choose_from_most_used' => __('Kies uit de... [1,000 / 4,702 chars] |
+| Hoe de lengte van een excerpt in WordPress te vergroten? [56 chars] | De korte inhoud per karakter **Mogelijk duplicaat:** > fragment in karakters Op sommige van onze sites tonen we fragmenten van berichten (de beheerders voeren geen fragmenten in). We _kunnen_ de functie `the_excerpt` gebruiken, maar voor zover ik kon zien, kan ik alleen het aantal woorden bepalen dat het extraheert, en dat is iets te algemeen voor ons (een woord kan 2 letters of 10 letters hebben...). Dus we hebben een functie nodig die het aantal karakters neemt en die hoeveelheid uit de inhoud extraheert. Maar we willen ook niet dat de woorden in het midden worden afgebroken. Een laatste vereiste is dat de functie werkt met de multi-byte versie van de stringfuncties van php (bijvoorbeeld: gebruik `mb_substr` in plaats van `substr`). Zijn er ingebouwde WP-functies die dit zouden doen? [800 chars] |
+| Media bibliotheek pagina supersnel, laad volle kwaliteit afbeeldingen [69 chars] | Wordpress 3.5 Media Manager - Afbeelding Formaat bij Laden Wijzigen De nieuwe media manager laadt afbeeldingen in VOLLE grootte, wat ECHT inefficiënt is voor een thumbnail. Ik wil dit graag vervangen door een ander formaat thumbnail dat ook voor elke bronafbeelding wordt opgeslagen. Ik kan echter geen manier vinden om dat te doen. Heeft iemand tips? [352 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

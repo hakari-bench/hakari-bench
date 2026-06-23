@@ -156,21 +156,20 @@ here, it may be losing obvious Dutch lexical or named-entity information.
 
 ## Example Data
 
-### Public Sources
-
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [Dutch News Articles](https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles), Kaggle source dataset.
-- [clips/mteb-nl-news-articles-ret](https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret), source dataset card.
-- [MTEB project repository](https://github.com/embeddings-benchmark/mteb).
+| Query | Positive document |
+| --- | --- |
+| Hoofdagent weg na drugsgebruik [30 chars] | Een 50-jarige hoofdagent van de regiopolitie Gelderland-Midden is ontslagen wegens "zeer ernstig plichtsverzuim". Dat heeft de politie bekendgemaakt. De politieman bleek al lange tijd harddrugs te gebruiken. Vanwege de privacy van de agent wil een woordvoerder niet zeggen hoe lang en wat voor drugs hij gebruikte. De hoofdagent werkte in het district Rivierenland. [365 chars] |
+| Basisschoolleerlingen onwel tijdens kookles [43 chars] | In een buurthuis in Linden in Noord-Brabant zijn basisschoolleerlingen onwel geworden tijdens het koken, schrijft Omroep Brabant. Elf kinderen werden uit voorzorg naar het ziekenhuis gebracht. Een van de kinderen had zich tijdens de les met een mes in een vinger gesneden. Andere kinderen voelden zich benauwd worden toen ze het bloed zagen. Ook klaagden er kinderen over een vreemde lucht in het gebouw. De brandweer vermoedde in eerste instantie dat de benauwdheid werd veroorzaakt door koolmonoxide, maar dat bleek niet geval. Waardoor het wel werd veroorzaakt is niet duidelijk. Een woordvoerder van de gemeente Cuijk zegt dat 'een opeenstapeling van emoties' de kinderen mogelijk te veel is geworden. BloedDe directeur van de basisschool zegt tegen Omroep Brabant dat hij zich niet voor kan stellen dat een bloedende vinger voor dit soort massale ademhalingsproblemen zorgt. 'Ik wacht de resultaten van het onderzoek af.' Uit voorzorg zal het ventilatiesysteem van het dorpshuis worden nagekeken... [1,000 / 1,001 chars] |
+| 'IS heeft vluchtelingenkamp bij Damascus in handen' [51 chars] | IS heeft het Palestijnse vluchtelingenkamp Yarmouk bij de Syrische hoofdstad Damascus in handen. De moslimterroristen bezitten nu ongeveer de helft van het kamp, zegt een hoge Palestijnse functionaris. In Yarmouk, waar ongeveer 20.000 Palestijnen verblijven, zouden de terroristen de belangrijkste doorgangswegen bezetten. Daardoor kan de hulp van de VN de vluchtelingen niet bereiken en zijn er in Yarmouk bijna geen voedsel, water en medicijnen meer. IS wordt bijgestaan door strijders van al-Nusra. Islamitische Staat en al-Nusra voeren in Syrië elk hun eigen strijd, maar in Yarmouk trekken ze samen op. De strijders van al-Nusra hebben ervoor gezorgd dat IS in het Palestijnse kamp kon infiltreren. De aanval van de terroristen op het kamp begon woensdag. IS komt nu steeds dichter bij Damascus. Het is niet duidelijk hoeveel mensen gewond zijn geraakt of zijn gedood bij de aanval. [888 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| Dutch News Articles |  | dataset card | https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles |
-| clips/mteb-nl-news-articles-ret |  | dataset card | https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| Dutch News Articles |  | dataset card | [https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles](https://www.kaggle.com/datasets/maxscheijen/dutch-news-articles) |
+| clips/mteb-nl-news-articles-ret |  | dataset card | [https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret](https://huggingface.co/datasets/clips/mteb-nl-news-articles-ret) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

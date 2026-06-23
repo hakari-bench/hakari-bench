@@ -138,17 +138,68 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "81",
+        "document_id": "illogical_things/strikethroughhowtrumpovertonwindowextremenormal_7.txt",
+        "query": {
+          "text": "Asking for illogical things to make extreme views normal? A couple of months back I was reading an article about how politicians were asking to make decisions that are way beyond possible (name it unreasonable, unacceptable, illogical) just as a medium of getting extreme views to become (to be seen as) normal and/or acceptable. What is the name of this effect?",
+          "full_chars": 363,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "**Share** All sharing options for: How Trump makes extreme things look normal * [ Reddit ](https://reddit.com/submit?title=How+Trump+makes+extreme+things+look+normal&url=https%3A%2F%2Fwww.vox.com%2F2017%2F12%2F21%2F16806676%2Fstrikethrough-how-trump-overton-window-extreme-normal) * [ Pocket ](https://getpocket.com/save?url=https%3A%2F%2Fwww.vox.com%2F2017%2F12%2F21%2F16806676%2Fstrikethrough-how-trump-overton-window-extreme-normal) * [ Flipboard ](https://share.flipboard.com/bookmarklet/popout?title=How+Trump+makes+extreme+things+look+normal&url=https%3A%2F%2Fwww.vox.com%2F2017%2F12%2F21%2F16806676%2Fstrikethrough-how-trump-overton-window-extreme-normal&v=2) * [ Email ](mailto:?subject=How%20Trump%20makes%20extreme%20things%20look%20normal&body=Why%20we%20should%20worry%20about%20the%20%22Overton%20Window%22%0A%0Ahttps%3A%2F%2Fwww.vox.com%2F2017%2F12%2F21%2F16806676%2Fstrikethrough-how-trump-overton-window-extreme-normal) “Don’t normalize this” has become a kind of rallying cry during",
+          "full_chars": 2714,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "20",
+        "document_id": "psycho_flow/Flowpsychology_15.txt",
+        "query": {
+          "text": "What term can describe the feeling that a job just does itself? Is there a term that can describe that a job, however exhausting it might be, just does itself? Meaning, for example, that all doubt concerning how you're doing a job, whether or not you should do the job instead of something else, or any doubt of the value you're creating is just not there? As an example, I saw an interview where an author was asked how much effort it took to write a particular book. The answer was \"No effort at al",
+          "full_chars": 943,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Challenges to maintaining flow [ [ edit ](/w/index.php?title=Flow_\\(psychology\\)&action=edit&section=10 \"Edit section: Challenges to maintaining flow\") ] Some of the challenges to staying in flow include states of [ apathy ](/wiki/Apathy \"Apathy\") , [ boredom ](/wiki/Boredom \"Boredom\") , and [ anxiety ](/wiki/Anxiety \"Anxiety\") . The state of apathy is characterized by easy challenges and low skill level requirements, resulting in a general lack of interest in the activity. Boredom is a slightly different state that occurs when challenges are few, but one's skill level exceeds those challenges causing one to seek higher challenges. A state of anxiety occurs when challenges are high enough to exceed perceived skill level, causing distress and uneasiness. These states in general prevent achieving the balance necessary for flow. [34] Csíkszentmihályi has said, \"If challenges are too low, one gets back to flow by increasing them. If challenges are too great, one can return to the flow stat",
+          "full_chars": 1037,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "mentalblock/Mentalblock_3.txt",
+        "query": {
+          "text": "What is the term for the \"knowing what you think but can't explain it\" phenomenon? I think we all experience this phenomenon once in a while, and I am experiencing it right now. It's the feeling that whatever word one tries to say it seems to be wrong (for them) or confusing (for the listeners), and would require a period of time to think out the right word that they have already known. If severed, it can lead to frustration, but it's not really about feeling insecurity. What is the word for tha",
+          "full_chars": 504,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "sitelinks- wikipedia \"Edit interlanguage links\") * [ Article ](/wiki/Mental_block \"View the content page \\[c\\]\") * [ Talk ](/wiki/Talk:Mental_block \"Discuss improvements to the content page \\[t\\]\") English * [ Read ](/wiki/Mental_block) * [ Edit ](/w/index.php?title=Mental_block&action=edit \"Edit this page \\[e\\]\") * [ View history ](/w/index.php?title=Mental_block&action=history \"Past revisions of this page \\[h\\]\") Tools Tools move to sidebar hide Actions * [ Read ](/wiki/Mental_block) * [ Edit ](/w/index.php?title=Mental_block&action=edit \"Edit this page \\[e\\]\") * [ View history ](/w/index.php?title=Mental_block&action=history) General * [ What links here ](/wiki/Special:WhatLinksHere/Mental_block \"List of all English Wikipedia pages containing links to this page \\[j\\]\") * [ Related changes ](/wiki/Special:RecentChangesLinked/Mental_block \"Recent changes in pages linked from this page \\[k\\]\") * [ Upload file ](/wiki/Wikipedia:File_Upload_Wizard \"Upload files \\[u\\]\") * [ Special pages",
+          "full_chars": 3508,
+          "limit_chars": 1000,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Psychology StackExchange"
+    "source_task": "Psychology StackExchange",
+    "example_count": 3
   }
 }

@@ -107,11 +107,9 @@ especially important.
 
 | Query | Positive document |
 | --- | --- |
-| 자신의 농담에 웃는 것이 괜찮을까? | 자기 자신이 한 농담에 웃는 건 이상한가요? |
-| 당신이 지어낸 최고의 거짓말은 무엇입니까? | 당신이 지금까지 지은 가장 잘 꾸며낸 거짓말은 무엇입니까? |
-| 왜 Quora는 자주 내 피드에 도널드 트럼프를 폄하하는 답변들을 추천할까요? | 왜 도널드 트럼프에 관한 질문에는 주관적이고 편향된 답변만 있는 것처럼 보이나요? |
-| 어떻게 하면 신체적으로 강해질 수 있을까요? | 어떻게 하면 신체적으로 강해질 수 있을까요? |
-| 양자 위성은 어떻게 작동할 것인가? | 양자 위성은 어떻게 작동하며, 주요 용도는 무엇인가요? |
+| 자신의 농담에 웃는 것이 괜찮을까? [19 chars] | 자기 자신이 한 농담에 웃는 건 이상한가요? [24 chars] |
+| 당신이 지어낸 최고의 거짓말은 무엇입니까? [23 chars] | 당신이 지금까지 지은 가장 잘 꾸며낸 거짓말은 무엇입니까? [32 chars] |
+| 왜 Quora는 자주 내 피드에 도널드 트럼프를貶하는 답변들을 추천할까요? [41 chars] | 왜 도널드 트럼프에 관한 질문에는 주관적이고 편향된 답변만 있는 것처럼 보이나요? [45 chars] |
 
 ### Public Sources
 
@@ -125,7 +123,7 @@ especially important.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Quora Question Pairs | 2017 | dataset page | https://kaggle.com/competitions/quora-question-pairs |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Quora Question Pairs | 2017 | dataset page | [https://kaggle.com/competitions/quora-question-pairs](https://kaggle.com/competitions/quora-question-pairs) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

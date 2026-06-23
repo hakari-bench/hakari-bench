@@ -169,11 +169,9 @@ or citation context.
 
 | Query | Positive document |
 | --- | --- |
-| محول رفع الجهد متعدد المستويات DC إلى DC جديد (45 chars) | محولات مصدر الجهد المتعددة المستويات تظهر كخيار جديد من محولات الطاقة لتطبيقات الطاقة العالية. تولد محولات مصدر الجهد المتعددة المستويات عادةً موجة جهد الدرجات من عدة مستويات من جهد مكثفات التيار المستمر. واحدة من أكبر القيود ... [truncated 225 chars](794 chars) |
-| تعلم الحقول العشوائية الغاوسية الماركوفية النادرة بسرعة بناءً على تحليل تشولسكي (79 chars) | Sure, please provide the English document that you need translated into Arabic. (79 chars) |
-| توليد النسيج باستخدام الشبكات العصبية التقويمية (47 chars) | في هذا العمل، ندرس تأثير عمق الشبكات التلافيفية على دقتها في التعرف على الصور على نطاق واسع. المساهمة الرئيسية لدينا هي تقييم شامل لشبكات ذات عمق متزايد، والذي يظهر أن تحسينًا كبيرًا على التكوينات السابقة يمكن تحقيقه من خلال ... [truncated 225 chars](644 chars) |
-| مستقبِل دائري دائري عريض النطاق مسطح بقطبية دائرية لنظام RFID (61 chars) | في هذا البحث، يتم اقتراح تقنية تغذية شريط متعرج أفقيًا (HMS) لتحقيق مطابقة مقاومة جيدة وأنماط إشعاع جانبي متماثل لمستقبلات رقمية دائرية الطور ذات طبقة مزدوجة، وهي مناسبة لتطبيقات التعرف على الراديو الترددي (RFID) في نطاق التر ... [truncated 225 chars](1081 chars) |
-| تطوير جهاز مراقبة نبضات القلب الرقمي المتقدم من خلال استخدام مكونات إلكترونية أساسية (84 chars) | في هذا الورقة، قدمنا تصميم وتطوير جهاز متكامل جديد لقياس معدل ضربات القلب باستخدام الإصبع لتحسين تقدير معدل ضربات القلب. مع زيادة الأمراض المتعلقة بالقلب يوميًا، أصبح هناك حاجة ملحة إلى جهاز قياس معدل ضربات القلب دقيق وميسور ... [truncated 225 chars](855 chars) |
+| محول رفع الجهد متعدد المستويات DC إلى DC جديد [45 chars] | محولات مصدر الجهد المتعددة المستويات تظهر كخيار جديد من محولات الطاقة لتطبيقات الطاقة العالية. تولد محولات مصدر الجهد المتعددة المستويات عادةً موجة جهد الدرجات من عدة مستويات من جهد مكثفات التيار المستمر. واحدة من أكبر القيود في محولات الجهد المتعددة المستويات هي عدم التوازن في الجهد بين المستويات المختلفة. تستخدم تقنيات توازن الجهد بين المستويات المختلفة عادةً تقنيات تثبيت الجهد أو التحكم في شحن المكثفات. هناك عدة طرق لتنفيذ توازن الجهد في محولات الجهد المتعددة المستويات. بدون النظر في محولات التوصيل المغناطيسي التقليدية، يقدم هذا البحث ثلاثة محولات مصدر جهد متعددة المستويات تم تطويرها مؤخرًا: 1) محولات تثبيت الجهد بالديود، 2) محولات المكثفات الطائر، و3) محولات العاكسات المتتالية بمصادر تيار مستمر منفصلة. سيتم مناقشة مبدأ التشغيل، المميزات، القيود، والتطبيقات المحتملة لهذه المحولات. [794 chars] |
+| تعلم الحقول العشوائية الغاوسية الماركوفية النادرة بسرعة بناءً على تحليل تشولسكي [79 chars] | Sure, please provide the English document that you need translated into Arabic. [79 chars] |
+| توليد النسيج باستخدام الشبكات العصبية التقويمية [47 chars] | في هذا العمل، ندرس تأثير عمق الشبكات التلافيفية على دقتها في التعرف على الصور على نطاق واسع. المساهمة الرئيسية لدينا هي تقييم شامل لشبكات ذات عمق متزايد، والذي يظهر أن تحسينًا كبيرًا على التكوينات السابقة يمكن تحقيقه من خلال زيادة العمق إلى 16–19 طبقة وزن. كانت هذه النتائج أساسًا لتقديمنا في تحدي ImageNet 2014، حيث حاز فريقنا على المركز الأول والثاني في مسارات تحديد الموقع وتصنيف الصور على التوالي. كما نظهر أن تمثيلاتنا تتعمم جيدًا إلى مجموعات بيانات أخرى، حيث تحقق نتائج متقدمة. من المهم أن نذكر أننا قد جعلنا نموذجين من أفضل شبكاتنا التلافيفية متاحين للجمهور لتسهيل المزيد من الأبحاث حول استخدام التمثيلات البصرية العميقة في رؤية الحاسوب. [644 chars] |
 
 ### Public Sources
 
@@ -192,8 +190,8 @@ or citation context.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| SCIDOCS GitHub repository |  | project repository | https://github.com/allenai/scidocs |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| SCIDOCS GitHub repository |  | project repository | [https://github.com/allenai/scidocs](https://github.com/allenai/scidocs) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

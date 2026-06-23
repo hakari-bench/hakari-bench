@@ -48,13 +48,11 @@ Strong models should combine exact biomedical term recall with claim-evidence se
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Ly49Q dirige l'organisation de la migration des neutrophiles vers les sites d'inflammation en régulant les fonctions des rafts membranaires. | Les neutrophiles subissent rapidement une polarisation et un mouvement directionnel pour infiltrer les sites d'infection et d'inflammation... |
-| La thérapie antirétrovirale réduit les taux de tuberculose chez les patients ayant différents niveaux de CD4. | CONTEXTE L'infection par le virus de l'immunodéficience humaine est le principal facteur de risque de développement de la tuberculose... |
-| La régulation rapide et l'expression basale plus élevée des gènes induits par les interférons diminuent la survie de neurones infectés par le virus du Nil occidental. | Bien que la sensibilité des neurones du cerveau aux infections microbiennes soit un facteur déterminant majeur des résultats cliniques... |
-| Le dépistage primaire du cancer du col de l'utérus avec détection du HPV présente une sensibilité supérieure à celle de la cytologie conventionnelle. | CONTEXTE Le dépistage du cancer du col de l'utérus basé sur le test du papillomavirus humain augmente la sensibilité... |
-| Empêcher l'interaction entre TDP-43 et les protéines du complexe respiratoire I ND3 et ND6 entraîne une augmentation de la perte neuronale. | Les mutations génétiques de la protéine TAR DNA-binding protein 43 provoquent la sclérose latérale amyotrophique... |
+| Query | Positive document |
+| --- | --- |
+| Ly49Q dirige l'organisation de la migration des neutrophiles vers les sites d'inflammation en régulant les fonctions des rafts membranaires. [140 chars] | Les neutrophiles subissent rapidement une polarisation et un mouvement directionnel pour infiltrer les sites d'infection et d'inflammation. Nous démontrons ici que le récepteur inhibiteur MHC I, Ly49Q, est crucial pour la polarisation rapide et l'infiltration tissulaire des neutrophiles. En état stable, Ly49Q inhibe l'adhésion des neutrophiles en empêchant la formation de complexes focaux, probablement en inhibant les kinases Src et PI3. Cependant, en présence de stimuli inflammatoires, Ly49Q médiatise la polarisation rapide et l'infiltration tissulaire des neutrophiles de manière dépendante du domaine ITIM. Ces fonctions opposées semblent être médiées par l'utilisation distincte des phosphatases effectrices SHP-1 et SHP-2. La polarisation et la migration dépendantes de Ly49Q sont influencées par la régulation des fonctions des radeaux membranaires par Ly49Q. Nous proposons que Ly49Q est pivotale pour permettre aux neutrophiles de passer à une morphologie polarisée et à une migration r... [1,000 / 1,134 chars] |
+| La thérapie antirétrovirale réduit les taux de tuberculose chez les patients ayant différents niveaux de CD4. [109 chars] | CONTEXTE L'infection par le virus de l'immunodéficience humaine (VIH) est le principal facteur de risque de développement de la tuberculose et a contribué à sa résurgence, notamment en Afrique subsaharienne. En 2010, on estimait à 1,1 million le nombre de nouveaux cas de tuberculose parmi les 34 millions de personnes vivant avec le VIH dans le monde. La thérapie antirétrovirale a un potentiel considérable pour prévenir la tuberculose associée au VIH. Nous avons réalisé une revue systématique des études analysant l'impact de la thérapie antirétrovirale sur l'incidence de la tuberculose chez les adultes infectés par le VIH. MÉTHODES ET RÉSULTATS Nous avons systématiquement recherché dans PubMed, Embase, African Index Medicus, LILACS et les registres d'essais cliniques. Les essais randomisés contrôlés, les études de cohortes prospectives et rétrospectives ont été inclus s'ils comparaient l'incidence de la tuberculose en fonction du statut de thérapie antirétrovirale chez les adultes infec... [1,000 / 2,452 chars] |
+| La régulation rapide et l'expression basale plus élevée des gènes induits par les interférons diminuent la survie des neurones des cellules granulaires infectés par le virus du Nil occidental. [192 chars] | Bien que la sensibilité des neurones du cerveau aux infections microbiennes soit un facteur déterminant majeur des résultats cliniques, peu de choses sont connues sur les facteurs moléculaires régissant cette vulnérabilité. Ici, nous montrons que deux types de neurones provenant de régions cérébrales distinctes présentent une permissivité différentielle à la réplication de plusieurs virus à ARN à brin positif. Les neurones granulaires du cervelet et les neurones corticaux du cortex cérébral possèdent des programmes immunitaires innés uniques qui confèrent une sensibilité différentielle à l'infection virale ex vivo et in vivo. En transduisant des neurones corticaux avec des gènes exprimés de manière plus élevée dans les neurones granulaires, nous avons identifié trois gènes stimulés par l'interféron (ISGs; Ifi27, Irg1 et Rsad2 (également connu sous le nom de Viperin)) qui médient les effets antiviraux contre différents virus neurotropes. De plus, nous avons constaté que l'état épigénéti... [1,000 / 1,344 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should combine exact biomedical term recall with claim-evidence se
 
 | Label | URL |
 |---|---|
-| SciFact paper | https://arxiv.org/abs/2004.14974 |
-| SciFact repository | https://github.com/allenai/scifact |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SciFact paper (https://arxiv.org/abs/2004.14974) |
+| SciFact repository (https://github.com/allenai/scifact) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

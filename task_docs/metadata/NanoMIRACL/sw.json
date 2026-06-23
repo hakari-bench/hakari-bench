@@ -144,20 +144,71 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL corpus dataset",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL source queries and qrels",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "828",
+        "document_id": "57315#0",
+        "query": {
+          "text": "Chelsea F.C. ilizinduliwa lini?",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chelsea F.C. Chelsea Football Club ni klabu ya mpira wa miguu ya nchini Uingereza iliyo na maskani yake Fulham, London. Klabu hii ilianzishwa mwaka 1905, na kwa miaka mingi sana imekuwa ikishiriki ligi kuu ya Uingereza. Uwanja wao wa nyumbani ni Stamford Bridge ambao una uwezo wa kuingiza watazamaji 41,837, wameutumia uwanja huu tangu klabu ilivyoanzishwa.",
+          "full_chars": 359,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "22",
+        "document_id": "9266#1",
+        "query": {
+          "text": "Rais wa kwanza wa Gabon aliitwa nani?",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Omar Bongo Kiongozi huyo amevunja rekodi ya kuwa Rais aliyekaa muda mrefu marakani kuliko Rais yeyote barani Afrika. Rais huyo amefariki dunia akiwa na umri wa miaka 73, ambapo ameiongoza Gabon kwa miaka 42. Bongo alijiunga na serikali ya Gabon mwaka 1965 na mwaka 1967 akawa makamu wa Rais ambapo mwaka huo huo akashika hatamu ya kuwa Rais wa nchi hiyo kufuatia cha kifo cha ghafla cha Rais Leon Mba. Bongo alipoingia madarakani alijenga utawala imara ambao ulinufaika zaidi baada ya kugunduliwa kwa mafuta nchini Gabon ingawa utajiri wake ulinufaisha idadi ndogo ya watu wanaokadiriwa kuwa milioni 1.5. kitu kilicholeta lawama kubwa kwa kiongozi huyo. Rais huyo amefariki dunia wakati akipata tiba ya saratani jijini Barcelona nchini Hispania. Rais Bongo ameaga dunia takribani miezi mitatu baada ya kifo cha mkewe, Edith Lucie Bongo Ondimba (45) aliyefariki dunia 14 Machi mwaka huu wakati akipata tiba mjini Rabat nchini Morocco. Bongo na Edith walifunga ndoa mwaka 1990. Edith aliuguzwa kwa miez",
+          "full_chars": 1263,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "119",
+        "document_id": "94278#2",
+        "query": {
+          "text": "Je,nani mwanzilishi wa mziki wa hIhop nchini Tanzania?",
+          "full_chars": 54,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Machozi Jasho na Damu Halkadhalika ame-enzi kazi ya mwanzilishi halisi wa rap ya Kiswahili nchini Tanzania bwana Edward Mtui (maarufu kama Fresh XE) kwa kuchukua kiitikio chake cha \"Piga Makofi\" ambacho kilimpelekea ashinde tuzo ya Yo Rap Bonanza katika miaka ya 1980, lakini hakutoa nyimbo. Jay anatungia wimbo kiitikio hicho na ndani yake anataja wale wote walioifikisha hip hop ya Tanzania hapa kwa kuwataja.",
+          "full_chars": 412,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

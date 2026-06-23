@@ -158,9 +158,59 @@
         "url": "https://arxiv.org/abs/2104.08663",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
     ],
-    "example_count": 5
+    "examples": [
+      {
+        "query_id": "69480",
+        "document_id": "37839",
+        "query": {
+          "text": "Waarom is een Android ROM apparaatspecifiek?",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pure Android Download **Mogelijk duplicaat:** Waarom kan Android nog steeds niet als regulier besturingssysteem worden geïnstalleerd? Ik heb rondgekeken en vroeg me af of het niet mogelijk is om Android 4.2 kant-en-klaar (niet telefoon-specifiek) te downloaden? Ik dacht dat ik gewoon de Google-versie van Android kon downloaden en op mijn telefoon kon installeren, maar er is geen Android ROM die ik kan downloaden (tenminste, niet dat ik kan vinden).",
+          "full_chars": 453,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "16236",
+        "document_id": "22541",
+        "query": {
+          "text": "Hoe kan ik een bestand opslaan in plaats van het te openen?",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe download ik een audiobestand van een website? Is er een manier om een audiobestand, zoals een mp3-bestand, van de Android-browser naar het apparaat te downloaden zodat ik er later offline naar kan luisteren? Is er een manier waarop ik de website moet programmeren om dit mogelijk te maken? Ik zoek _geen_ extra app om dit te bereiken.",
+          "full_chars": 339,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10811",
+        "document_id": "22435",
+        "query": {
+          "text": "Hoe kan ik een video stream van het scherm van mijn Android telefoon vastleggen en deze op mijn laptop weergeven?",
+          "full_chars": 113,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe stream ik mijn Android-scherm naar mijn Mac? **Mogelijk duplicaat:** > Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie? Ik wil mijn Android-telefoon livestreamen terwijl ik een game speel. Tot nu toe heb ik geprobeerd het scherm van mijn Android naar mijn Mac te streamen, **en dan** vanaf mijn Mac te livestreamen met Procaster. Wat heb ik nodig om dit te bereiken? **Ik heb geen** geroote telefoon. Ik heb hem net gekregen, dus ik wil mijn garantie niet snel ongeldig maken. Als mijn aanpak niet de beste manier is, wat zou u dan voorstellen? Ik heb al (Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie?) gelezen, maar de daarin gegeven oplossingen zijn voor geroote telefoons.",
+          "full_chars": 741,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

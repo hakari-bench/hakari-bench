@@ -70,11 +70,11 @@ For evaluation, this task is a clean cross-lingual retrieval probe. The expected
 
 ## Example Data
 
-### Public Sources
-
-- Belebele paper: https://arxiv.org/abs/2308.16884
-- Belebele repository: https://github.com/facebookresearch/belebele
-- MTEB task dataset card: https://huggingface.co/datasets/mteb/belebele
+| Query | Positive document |
+| --- | --- |
+| การเปลี่ยนแปลงใดที่เกิดจากการปฏิวัติฝรั่งเศสมีผลกระทบอย่างมากต่อพลเมืองชนชั้นแรงงาน [83 chars] | There are a lot of social and political effects such as the use of metric system, a shift from absolutism to republicanism, nationalism and the belief the country belongs to the people not to one sole ruler. Also after the Revolution occupations were open to all male applicants allowing the most ambitious and successful to succeed. Same goes for the military because instead of army rankings being based on class they were now based on cailaber. The French Revolution also inspired many other repressed working class people of other country's to began their own revolutions. [576 chars] |
+| จากบทความ ใครน่าจะเป็นผู้สร้างสังคมเกษตรกรรมขึ้น [48 chars] | For a long time during the nineteenth and twentieth centuries, it was believed the first inhabitants of New Zealand were the Maori people, who hunted giant birds called moas. The theory then established the idea that the Maori people migrated from Polynesia in a Great Fleet and took New Zealand from the Moriori, establishing an agricultural society. However, new evidence suggests that the Moriori were a group of mainland Maori who migrated from New Zealand to the Chatham Islands, developing their own distinctive, peaceful culture. There was also another tribe on the Chatham islands these were Maori who migrated away from New Zealand. They called themselves the Moriori there were a few skirmishes and in the end, the Moriori were wiped out [747 chars] |
+| ข้อใดต่อไปนี้กล่าวถึงเกษตรกรรมเพื่อยังชีพได้ถูกต้อง [51 chars] | Subsistence agriculture is agriculture carried out for the production of enough food to meet just the needs of the agriculturalist and his/her family. Subsistence agriculture is a simple, often organic, system using saved seed native to the ecoregion combined with crop rotation or other relatively simple techniques to maximize yield. Historically most farmers were engaged in subsistence agriculture and this is still the case in many developing nations. [456 chars] |
 
 ### Source Reference Table
 

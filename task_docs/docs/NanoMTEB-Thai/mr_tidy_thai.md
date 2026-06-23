@@ -62,19 +62,19 @@ The best systems for this task should combine Thai-aware lexical recall with den
 
 ## Example Data
 
-### Public Sources
-
-- [Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval](https://arxiv.org/abs/2108.08787), 2021.
-- [castorini/mr-tydi](https://huggingface.co/datasets/castorini/mr-tydi), source dataset card.
-- [mteb/mrtidy](https://huggingface.co/datasets/mteb/mrtidy), MTEB dataset card.
+| Query | Positive document |
+| --- | --- |
+| พรรคแผ่นดินไทยมีใครป็นหัวหน้าพรรค? [34 chars] | พรรคเพื่อแผ่นดิน พรรคเพื่อแผ่นดิน เป็นพรรคการเมืองไทยซึ่งก่อตั้งในกลางปี พ.ศ. 2550 มีนายสุวิทย์ คุณกิตติ เป็นหัวหน้าพรรคคนแรก [126 chars] |
+| โค้ชเชคยเป็นโค้ชให้กับเทควันโดทีมชาติใดก่อนที่จะโค้ชให้ทีมไทย? [62 chars] | ชเว ย็อง-ซ็อก ชเวเริ่มเป็นโค้ชให้กับเทควันโดทีมชาติบาห์เรนในช่วงปี พ.ศ. 2543-2545 ต่อมาสมาคมเทควันโดแห่งประเทศไทยได้ติดต่อสหพันธ์เทควันโดสากล เพื่อจัดหาโค้ชมาทดแทนโค้ชเดิมที่ลาออกไป ชเวจึงได้รับคัดเลือกให้มาเป็นโค้ชให้นักกีฬาเทควันโดทีมชาติไทยจนถึงปัจจุบัน โดยเข้ามาทำหน้าที่เป็นโค้ชให้นักกีฬาเทควันโดทีมชาติไทยตั้งแต่วันที่ 1 กุมภาพันธ์ 2545 ด้วยความคุ้นเคยและอัธยาศัยอันดีต่อนักกีฬาและทีมผู้ฝึกสอน นักกีฬาทุกคนจึงต่างเรียกโค้ช ชเว ย็อง-ซ็อก ว่า "โค้ชเช" ทั้งนี้ยังสร้างผลงานยอดเยี่ยมด้วยการทำให้นักกีฬาเทควันโดทีมชาติไทยประสบความสำเร็จและเป็นแชมป์โลกได้ถึง 4 คน ได้แก่ รังสิญา นิสัยสม แชมป์เทควันโดโลก รุ่นไม่เกิน 62 กก.หญิง ชัชวาล ขาวละออ แชมป์เทควันโดโลก รุ่นไม่เกิน 54 กก.ชาย ในปี 2011 ที่ประเทศเกาหลีใต้ ชนาธิป ซ้อนขำ แชมป์เทควันโดโลก รุ่นไม่เกิน 49 กก.หญิง ในปี 2013 ที่ประเทศเม็กซิโก และพาณิภัค วงศ์พัฒนกิจ แชมป์เทควันโดโลก รุ่นไม่เกิน 46 กก.หญิง ในปี 2015 ที่ประเทศรัสเซีย [882 chars] |
+| ดร. ถวัลย์ ดัชนี เสียชีวิตเมื่อไหร่? [36 chars] | ถวัลย์ ดัชนี ดร. ถวัลย์ ดัชนี (27 กันยายน พ.ศ. 2482 — 3 กันยายน พ.ศ. 2557) เป็นจิตรกร ช่างเขียนรูป แห่งดอยสูงเชียงราย ได้รับการยกย่องเชิดชูเกียรติให้เป็นศิลปินแห่งชาติ สาขาทัศนศิลป์ (จิตรกรรม) เมื่อพ.ศ. 2544 เกิดที่อำเภอเมือง จังหวัดเชียงราย เป็นบุตรของนายศรี และนางบัวคำ (พรหมสา) ดัชนี เป็นบุตรคนสุดท้องในจำนวนพี่น้อง 4 คน ได้แก่ [331 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval | 2021 | paper | https://arxiv.org/abs/2108.08787 |
-| castorini/mr-tydi |  | dataset card | https://huggingface.co/datasets/castorini/mr-tydi |
-| mteb/mrtidy |  | dataset card | https://huggingface.co/datasets/mteb/mrtidy |
+| Mr. TyDi: A Multi-lingual Benchmark for Dense Retrieval | 2021 | paper | [https://arxiv.org/abs/2108.08787](https://arxiv.org/abs/2108.08787) |
+| castorini/mr-tydi |  | dataset card | [https://huggingface.co/datasets/castorini/mr-tydi](https://huggingface.co/datasets/castorini/mr-tydi) |
+| mteb/mrtidy |  | dataset card | [https://huggingface.co/datasets/mteb/mrtidy](https://huggingface.co/datasets/mteb/mrtidy) |
 
 ### Representative Snippets
 

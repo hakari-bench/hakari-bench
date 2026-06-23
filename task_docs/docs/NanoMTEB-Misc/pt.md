@@ -119,20 +119,19 @@ answer, not only the domain match.
 
 ## Example Data
 
-### Public Sources
-
-- [EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Por que a Comissão acredita que o insucesso empresarial deve ser visto como uma oportunidade para um novo arranque? [115 chars] | O CESE subscreve a importância atribuída pela Comissão à necessidade de superar o estigma do insucesso empresarial. A Comissão está certa em afirmar que a criação de empresas e o êxito e o insucesso empresariais são inerentes à realidade da economia de mercado. Salienta ainda que, no quadro da ausência generalizada nas sociedades de apreço e de compreensão pelo espírito empresarial, os problemas nos negócios ou mesmo o insucesso empresarial não são ainda suficientemente entendidos como uma evolução económica normal e uma oportunidade para um novo arranque. [562 chars] |
+| Como o Conselho propõe aliviar a sobrecarga das PME em relação ao regulamento REACH? [84 chars] | Nesta base, a posição comum não integra algumas das alterações adoptadas pelo Parlamento Europeu em primeira leitura (alterações 169 e 726). No que se refere à alteração 169, que introduziria um procedimento menos pesado para as PME, o Conselho partilha da opinião que a sobrecarga deste grupo de empresas deve ser aliviada. Isto encontra-se claramente expresso nos considerandos 8 (deverá ser dada especial atenção ao potencial impacto do REACH nas PME) e 34 (Orientação) e nos artigos 73.o (taxas reduzidas para as PME) e 76.o (assistência da Agência). [554 chars] |
+| O que é necessário para o processo contínuo de construção e operação de um mercado integrado? [93 chars] | Finalmente, a construção de um mercado totalmente integrado não é uma tarefa definida e com um fim finito, mas antes um processo permanente que requer um esforço, vigilância e actualização constantes. Há sempre novos desafios e, à medida que forem sendo eliminados obstáculos ao funcionamento do mercado único, outras barreiras aparecerão e terão de ser abordadas. Assim, é da máxima importância que qualquer novo tratado contenha os poderes e competências jurídicos necessários para continuar a obra de construir e manter em funcionamento um mercado integrado. [561 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| EuroPIRQ-retrieval | 2025 | Dataset card | https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | https://arxiv.org/abs/2502.13595 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | https://arxiv.org/abs/2210.07316 |
+| EuroPIRQ-retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

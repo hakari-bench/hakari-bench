@@ -134,4 +134,4 @@ audit exact row overlap before evaluating.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Benchmarking pre-trained text embedding models in aligning built asset information | 2025 | paper | https://www.nature.com/articles/s41598-025-09052-5 |
+| Benchmarking pre-trained text embedding models in aligning built asset information | 2025 | paper | [https://www.nature.com/articles/s41598-025-09052-5](https://www.nature.com/articles/s41598-025-09052-5) |

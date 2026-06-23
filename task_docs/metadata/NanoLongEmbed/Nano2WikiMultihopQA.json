@@ -143,8 +143,59 @@
         "url": "https://huggingface.co/datasets/dwzhu/LongEmbed",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "query_66",
+        "document_id": "doc_232",
+        "query": {
+          "text": "Which film has the director who is older than the other, Women'S Weapons or She Wants Me?",
+          "full_chars": 89,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Scotty Fox Scott Fox is a pornographic film director who is a member of the AVN Hall of Fame. Awards 1992 AVN Award – Best Director, Video (The Cockateer) 1995 AVN Hall of Fame inductee Passage 2: Elliot Silverstein Elliot Silverstein (born August 3, 1927) is a retired American film and television director. He directed the Academy Award-winning western comedy Cat Ballou (1965), and other films including The Happening (1967), A Man Called Horse (1970), Nightmare Honeymoon (1974), and The Car (1977). His television work includes four episodes of The Twilight Zone (1961–1964). Career Elliot Silverstein was the director of six feature films in the mid-twentieth century. The most famous of these by far is Cat Ballou, a comedy-western starring Jane Fonda and Lee Marvin. The other Silverstein films, in chronological order, are The Happening, A Man Called Horse, Nightmare Honeymoon, The Car, and Flashfire. Other work included directing for the television shows The Twilight Zone, The",
+          "full_chars": 16726,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_123",
+        "document_id": "doc_196",
+        "query": {
+          "text": "Where did the director of film Crd (Film) study?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Peter Levin Peter Levin is an American director of film, television and theatre. Career Since 1967, Levin has amassed a large number of credits directing episodic television and television films. Some of his television series credits include Love Is a Many Splendored Thing, James at 15, The Paper Chase, Family, Starsky & Hutch, Lou Grant, Fame, Cagney & Lacey, Law & Order and Judging Amy.Some of his television film credits include Rape and Marriage: The Rideout Case (1980), A Reason to Live (1985), Popeye Doyle (1986), A Killer Among Us (1990), Queen Sized (2008) and among other films. He directed \"Heart in Hiding\", written by his wife Audrey Davis Levin, for which she received an Emmy for Best Day Time Special in the 1970s. Prior to becoming a director, Levin worked as an actor in several Broadway productions. He costarred with Susan Strasberg in \"[The Diary of Ann Frank]\" but had to leave the production when he was drafted into the Army. He trained at the Carnegie Mellon U",
+          "full_chars": 27463,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "query_103",
+        "document_id": "doc_235",
+        "query": {
+          "text": "Who is the mother-in-law of Queen Insun?",
+          "full_chars": 40,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Passage 1: Maria Thins Maria Thins (c. 1593 – 27 December 1680) was the mother-in-law of Johannes Vermeer and a member of the Gouda Thins family. She was raised in a devout Dutch Catholic family with two sisters and a brother. Outliving her parents and siblings, she received inheritances over the years, making her a wealthy woman. She married a prosperous brickmaker, Reynier Bolnes, in 1622. They had three children together, Catharina, Willem, and Cornelia. By 1635, Bolnes verbally and physically abused his wife and daughters. Thins moved to Delft with her daughters. Her son Willem stayed with his father. Thins was a wealthy woman due to the separation settlement of her husband in 1649 and the estates she inherited from her family. Her daughter Catharina married Johannes Vermeer, an artist, art dealer, and operator of the family's inn in Delft. Vermeer and Catharina lived at Thins house by 1660. The couple had fifteen children, four of whom died in infancy. Raising nearly a dozen child",
+          "full_chars": 43300,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge",
         "url": "https://arxiv.org/abs/1803.05457",
         "year": 2018,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "ARC-Challenge-q-66",
+        "document_id": "ARC-Challenge-d-264",
+        "query": {
+          "text": "Some students are performing hardness tests on several substances. X scratches Y. Y scratches Z. Z scratches W. Which of these statements best describes substance W's hardness?",
+          "full_chars": 176,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "W is the softest of the four substances tested.",
+          "full_chars": 47,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "ARC-Challenge-q-123",
+        "document_id": "ARC-Challenge-d-489",
+        "query": {
+          "text": "Hurricanes form over equatorial areas. This is because",
+          "full_chars": 54,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "solar heating is greatest near the equator.",
+          "full_chars": 43,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "ARC-Challenge-q-103",
+        "document_id": "ARC-Challenge-d-413",
+        "query": {
+          "text": "The best description of the troposphere is the layer of the atmosphere with the",
+          "full_chars": 79,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "greatest density.",
+          "full_chars": 17,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

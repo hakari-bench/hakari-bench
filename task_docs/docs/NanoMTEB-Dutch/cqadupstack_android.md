@@ -172,22 +172,20 @@ when the underlying issue is different.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Waarom is een Android ROM apparaatspecifiek? [44 chars] | Pure Android Download **Mogelijk duplicaat:** Waarom kan Android nog steeds niet als regulier besturingssysteem worden geïnstalleerd? Ik heb rondgekeken en vroeg me af of het niet mogelijk is om Android 4.2 kant-en-klaar (niet telefoon-specifiek) te downloaden? Ik dacht dat ik gewoon de Google-versie van Android kon downloaden en op mijn telefoon kon installeren, maar er is geen Android ROM die ik kan downloaden (tenminste, niet dat ik kan vinden). [453 chars] |
+| Hoe kan ik een bestand opslaan in plaats van het te openen? [59 chars] | Hoe download ik een audiobestand van een website? Is er een manier om een audiobestand, zoals een mp3-bestand, van de Android-browser naar het apparaat te downloaden zodat ik er later offline naar kan luisteren? Is er een manier waarop ik de website moet programmeren om dit mogelijk te maken? Ik zoek _geen_ extra app om dit te bereiken. [339 chars] |
+| Hoe kan ik een video stream van het scherm van mijn Android telefoon vastleggen en deze op mijn laptop weergeven? [113 chars] | Hoe stream ik mijn Android-scherm naar mijn Mac? **Mogelijk duplicaat:** > Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie? Ik wil mijn Android-telefoon livestreamen terwijl ik een game speel. Tot nu toe heb ik geprobeerd het scherm van mijn Android naar mijn Mac te streamen, **en dan** vanaf mijn Mac te livestreamen met Procaster. Wat heb ik nodig om dit te bereiken? **Ik heb geen** geroote telefoon. Ik heb hem net gekregen, dus ik wil mijn garantie niet snel ongeldig maken. Als mijn aanpak niet de beste manier is, wat zou u dan voorstellen? Ik heb al (Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie?) gelezen, maar de daarin gegeven oplossingen zijn voor geroote telefoons. [741 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

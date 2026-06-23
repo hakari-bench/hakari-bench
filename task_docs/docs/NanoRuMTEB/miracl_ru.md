@@ -62,21 +62,20 @@ Models should handle Russian morphology, entity aliases, title variants, and pas
 
 ## Example Data
 
-### Public Sources
-
-- [MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages](https://arxiv.org/abs/2210.09984), task paper.
-- [The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design](https://arxiv.org/abs/2408.12503), ruMTEB paper.
-- [MIRACL project page](http://miracl.ai/), project page.
-- [mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| «Агенты "Щ.И.Т."» - это драматический сериал? [45 chars] | Агенты «Щ.И.Т.» «Аге́нты „Щ.И.Т.“» () — американский супергеройский телесериал, созданный Джоссом Уидоном и основанный на одноимённом комиксе компании Marvel о вымышленной организации по борьбе с преступностью, является частью кинематографической вселенной Marvel. История начинается с того, что агент Фил Колсон (Кларк Грегг), который выжил после событий фильма «Мстители», работает в «Щ.И.Т.» вместе с новой командой. [420 chars] |
+| Китай социалистическое государство? [35 chars] | Китай Официально, Китайская Народная Республика — унитарная республика, социалистическое государство демократической диктатуры народа. Основным законом государства является конституция, принятая в 1982 году. Высший орган государственной власти — однопалатное Всекитайское собрание народных представителей (ВСНП), состоящее из 2979 депутатов, избираемых региональными собраниями народных представителей сроком на 5 лет. Сессии ВСНП созываются на ежегодной основе. Между сессиями полномочия ВСНП осуществляет Постоянный комитет Всекитайского собрания народных представителей. [574 chars] |
+| Занималось Бюро шифров взломом шифров немецкой Энигмы? [54 chars] | Бюро шифров Главным ведомством Бюро и отделением, ответственным за криптоанализ немецких систем шифрования, стало BS4, позже основной задачей отделения стал взлом немецкой шифровальной машины «Энигма». Начальником немецкого отделения (BS4) и заместителем начальника Бюро шифров стал капитан , который в 1946 году получил звание подполковника. Одними из ключевых специалистов, работавших над расшифровкой немецких систем, в частности над взломом «Энигмы», были Мариан Реевский, Ежи Ружицкий и Генрих Зыгальский — молодые выпускники курса в Познани, которых Максимильян Ценжкий нанял в Бюро в сентября 1932 года. Обработкой и чтением расшифрованных сообщений активно занимался . [677 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | arXiv paper | https://arxiv.org/abs/2210.09984 |
-| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | https://arxiv.org/abs/2408.12503 |
-| MIRACL project page | 2023 | project page | http://miracl.ai/ |
-| mteb/MIRACLRetrievalHardNegatives | 2025 | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | arXiv paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | [https://arxiv.org/abs/2408.12503](https://arxiv.org/abs/2408.12503) |
+| MIRACL project page | 2023 | project page | [http://miracl.ai/](http://miracl.ai/) |
+| mteb/MIRACLRetrievalHardNegatives | 2025 | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives) |
 
 ### Representative Snippets
 

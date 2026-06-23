@@ -85,30 +85,6 @@
         "rows_with_101_candidates": 86
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering",
-        "url": "https://aclanthology.org/2022.coling-1.138/",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "amazon-science/mintaka",
-        "url": "https://github.com/amazon-science/mintaka",
-        "year": 2022,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "sbintuitions/JMTEB",
-        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoJMTEB-v2",
       "source_urls": [
@@ -117,6 +93,80 @@
           "url": "https://huggingface.co/datasets/mteb/MintakaRetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering",
+        "url": "https://aclanthology.org/2022.coling-1.138/",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "amazon-science/mintaka",
+        "url": "https://github.com/amazon-science/mintaka",
+        "year": 2022,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "sbintuitions/JMTEB",
+        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Q632",
+        "document_id": "D1198",
+        "query": {
+          "text": "ジュラシック・パークの第2作目の映画の名前は何というですか？",
+          "full_chars": 30,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ジュラシック・ワールド/炎の王国",
+          "full_chars": 16,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1298",
+        "document_id": "D821",
+        "query": {
+          "text": "荒れ放題のホテルを本拠とし、U2が映画のサウンドトラックの作曲を手掛けた映画は何でしたか？",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ミリオンダラー・ホテル",
+          "full_chars": 11,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q1097",
+        "document_id": "D1502",
+        "query": {
+          "text": "どのアルバムはビートルズと一緒にレコードしたなかったでしょうか？",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "アビイ・ロード",
+          "full_chars": 7,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

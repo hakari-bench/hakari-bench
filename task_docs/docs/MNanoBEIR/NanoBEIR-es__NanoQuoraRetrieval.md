@@ -48,13 +48,11 @@ Strong models should preserve exact duplicate detection while improving paraphra
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| ¿Está bien reírse de tus propios chistes? | ¿Es raro reírse de mis propios chistes? |
-| ¿Cuál es la mejor mentira que has contado? | ¿Cuál es la mentira más ingeniosa que hayas contado? |
-| ¿Por qué Quora me sugiere con frecuencia respuestas en mi timeline que critican a Donald Trump? | ¿Por qué parece que en Quora solo hay respuestas subjetivas y parciales sobre Donald Trump? |
-| ¿Cómo puedo fortalecerme físicamente? | ¿Cómo puedo fortalecerme físicamente? |
-| ¿Cómo funcionará un satélite cuántico? | ¿Cómo funciona un satélite cuántico y cuáles serían sus principales usos? |
+| Query | Positive document |
+| --- | --- |
+| ¿Está bien reírse de tus propios chistes? [41 chars] | ¿Es raro reírse de mis propios chistes? [39 chars] |
+| ¿Cuál es la mejor mentira que has contado? [42 chars] | ¿Cuál es la mentira más ingeniosa que hayas contado? [52 chars] |
+| ¿Por qué Quora me sugiere con frecuencia respuestas en mi timeline que critican a Donald Trump? [95 chars] | ¿Por qué parece que en Quora solo hay respuestas subjetivas y parciales sobre Donald Trump? [91 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should preserve exact duplicate detection while improving paraphra
 
 | Label | URL |
 |---|---|
-| Quora Question Pairs | https://kaggle.com/competitions/quora-question-pairs |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Quora Question Pairs (https://kaggle.com/competitions/quora-question-pairs) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

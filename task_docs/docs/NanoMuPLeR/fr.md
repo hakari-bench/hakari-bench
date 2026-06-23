@@ -62,19 +62,19 @@ French legal retrieval models should retain sensitivity to exact legal tokens, d
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Quelles deux constatations de l'enquête réglementaire ont miné l'affirmation des opérateurs selon laquelle ils pouvaient internaliser le rapprochement des transactions ? [169 chars] | Pour les parties notifiantes, il existe une solution sérieuse pour les ORM, celle de l'auto-approvisionnement puisque les ORM possèdent à l'intérieur de leur entreprise les capacités et le savoir-faire nécessaires pour passer de l'externalisation de leurs services de compensation des données à une production en interne de ces services. L'enquête menée auprès des entreprises du secteur n'a toutefois pas confirmé cette façon de voir. Premièrement, elle a révélé qu'il n'existe aucun exemple récent connu d'un ORM passant de l'externalisation au travail en interne. Deuxièmement, les ORM qui ont répondu à l'enquête de la Commission ont aussi fait valoir que l'auto-approvisionnement n'était pas une option réaliste pour eux. [726 chars] |
+| Quelle chambre régionale est nommée avec les institutions de l'Union pour promouvoir la parité comme norme éthique de gouvernance politique ? [141 chars] | Pour être efficace et significative, la démocratie doit garantir la possibilité de pleine participation des citoyens aux décisions finales contraignantes qui concernent leur vie quotidienne. Tant que le principe d'inégalité entre les sexes au niveau de la prise de décision persistera, la démocratie au sein de l'UE ne pourra être pleinement réalisée. Le Cd R et les institutions européennes doivent s'engager conjointement à accélérer la réforme des processus démocratiques dans les États membres, et proposer les normes éthiques de la gouvernance politique dans un univers de plus en plus mondialisé. L'égalité entre les sexes fait partie de ces normes éthiques. [664 chars] |
+| Quelles deux clauses la Commission, dans l'évaluation préliminaire, a‑t‑elle jugées potentiellement incompatibles avec les règles de concurrence CE et EEE ? [156 chars] | Il ressort de l'évaluation préliminaire de la Commission que deux des clauses de la convention soulèvent des doutes sérieux quant à leur compatibilité avec l'article 81 du traité CE et l'article 53 de l'accord EEE. La première est la clause 9(a), qui concerne l'octroi de remises par les sociétés de gestion collective aux sociétés d'enregistrement dans le cadre d'accords de licence centralisée (licences multi-répertoire uniques pour l'ensemble du territoire de l'EEE). La seconde est la clause 7(a)(i), qui porte sur la capacité des sociétés de gestion collective à s'engager dans des activités commerciales d'édition ou de production d'enregistrements. [656 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

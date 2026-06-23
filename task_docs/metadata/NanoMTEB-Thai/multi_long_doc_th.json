@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 71
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
-        "url": "https://arxiv.org/abs/2402.03216",
-        "year": 2024,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/MultiLongDocRetrieval",
-        "url": "https://huggingface.co/datasets/mteb/MultiLongDocRetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -116,6 +93,79 @@
           "url": "https://huggingface.co/datasets/mteb/MultiLongDocRetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
+        "url": "https://arxiv.org/abs/2402.03216",
+        "year": 2024,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/MultiLongDocRetrieval",
+        "url": "https://huggingface.co/datasets/mteb/MultiLongDocRetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "q-th-807",
+        "document_id": "doc-th-6452",
+        "query": {
+          "text": "คำถาม: สารละลายที่มีความเข้มข้นเท่ากันทุกสารละลายจะมีค่า pH สูงสุดเมื่อใด?",
+          "full_chars": 74,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ข้อเอ็นทรานซ์ เคมี 2537 | วิชาการ.คอม ข้อเอ็นทรานซ์ เคมี 2537 วิชา : เคมี จำนวน : 88 ข้อ ผู้เข้าชม : 2,262 การประลองฝีมือ : 67 view stats 1 ) กำหนดให้ อุณหภูมิ () น้ำแข็ง 0 น้ำ 0 ไอน้ำ 100 ถ้าน้ำแข็งที่ 0 เปลี่ยนสถานะเป็นไอน้ำที่ 100 ที่ความดัน 1 บรรยากาศ จะต้องใช้พลังงานกี่กิโลจูล a + b + c + d d - c + b - a c + d - a + d คำชี้แจง ใช้ข้อมูลต่อไปนี้ตอบคำถามข้อ 2 และ 3 ระยะทางที่สารเคลื่อนที่ (cm) 2 ) การศึกษาสารต้วอย่าง X , Y และ Z ได้ผลดังนี้ 7.5 , 12.2 7.5 , 9.0 4.0 , 2.2 7.4 , 6.0 4.0 , 6.0 , 2.0 9 , 10.8 , 7.2 ข้อสรุปใดถูกเกี่ยวกับองค์ประกอบของ X , Y , Z 3 ) พิจารณาข้อความต่อไปนี้ ก. Rf ของ A ใน III > Rf ของ A ใน I ข. Rf ของ B ใน I = Rf ของ A ใน III ค. Rf ของ A ใน II > Rf ของ D ใน I ง. Rf ของ B ใน II = Rf ของ D ใน III ข้อใดถูก (ก) และ (ข) (ก) และ (ค) (ข) และ (ง) (ค) และ (ง) 4 ) นำสารละลายชุดหนึ่งซึ่งมีร้อยละของสารองค์ประกอบ A และ B ต่าง ๆ กัน มาทำการทดลองกลั่น เพื่อหาจุดเดือดของสารละลาย ผลการทดลองเป็นดังนี้ ร้อยละของสารองค์ประกอบในสารละลาย A ร้อยละของสารองค์ประกอบในสารละลาย B อุณหภ",
+          "full_chars": 19534,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-1140",
+        "document_id": "doc-th-9107",
+        "query": {
+          "text": "คำถาม: วิธีเลือกเบอร์โทรศัพท์มงคลเบอร์สวยคืออะไรและทำไมเบอร์ 05-6071-0290 ถือเป็นเบอร์สวย?",
+          "full_chars": 90,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "0815529736 ผลรวม 46 ซิมเบอร์สวย เบอร์รายเดือน สี่จี 08-1552-9736 เช็คดวงจากเบอร์มือถือ ศูนย์แปดหนึ่งห้าห้าสองเก้าเจ็ดสามหก 081-5529736, 081-552-9736, 081-5529-736, Zero Eight One Five Five Two Nine Seven Three Six 0531206356 ผลรวม 31 ซิมเบอร์สวย เบอร์สวย ทีโอที ทรีจี 05-3120-6356 เลือกเบอร์ ศูนย์ห้าสามหนึ่งสองศูนย์หกสามห้าหก 053-1206356, 053-120-6356, 053-1206-356, Zero Five Three One Two Zero Six Three Five Six 0604467802 ผลรวม 37 ซิมเบอร์สวย เบอร์เติมเงิน i-mobile 06-0446-7802 ราคาเบอร์สวย ศูนย์หกศูนย์สี่สี่หกเจ็ดแปดศูนย์สอง 060-4467802, 060-446-7802, 060-4467-802, Zero Six Zero Four Four Six Seven Eight Zero Two 0804181885 ผลรวม 43 ซิมเบอร์สวย เบอร์ ทีโอที 08-0418-1885 ซื้อเบอร์สวย ศูนย์แปดศูนย์สี่หนึ่งแปดหนึ่งแปดแปดห้า 080-4181885, 080-418-1885, 080-4181-885, Zero Eight Zero Four One Eight One Eight Eight Five 0726699901 ผลรวม 49 ซิมเบอร์สวย เบอร์สวย imobile 3GX 07-2669-9901 ทำนายเบอร์สวย ศูนย์เจ็ดสองหกหกเก้าเก้าเก้าศูนย์หนึ่ง 072-6699901, 072-669-9901, 072-6699-901, Zero Seven Two",
+          "full_chars": 20760,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-th-1024",
+        "document_id": "doc-th-8182",
+        "query": {
+          "text": "s question: How does the code above select all list items on the page and bind a handler function to the click event of each list item using jQuery's?",
+          "full_chars": 150,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "กันยายน 18, 2019 มกราคม 4, 2020 - by admin My post on worldventures is just a tiny fraction of what this website is about. Archived from the original on 15 july seyedolshohada hospital. Compatible with most leg profiles the versatile and telescopic mini tool bar will rotate independently on a single seat box leg and includes 2 quick release accessory blocks, which can be fitted horizontally or vertically, for securely and quickly attaching keepnets, pole socks and other accessories. It was sunny and warm, but a strong wind had risen and it was blowing clouds over us — they seemed to float like big, ethereal germany american senior singles online dating website tall ships on the top of hour heads. These include: the united states canadian seniors online dating site in sideshow bob he added a category called “revenge manster”. Module 1: the company includes: the role of the company secretary types of companies incorporation stakeholders of a company the board of directors. In fact, your",
+          "full_chars": 27254,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

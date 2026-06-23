@@ -116,11 +116,9 @@ than only topic similarity.
 
 | Query | Positive document |
 | --- | --- |
-| Conversor Elevador Multinível DC-DC Novo | Os conversores de fonte de tensão multinível estão surgindo como uma nova geração de opções de conversores de energia para aplicações de alta potência... |
-| Aprendizado Rápido de Campos Aleatórios de Markov Esparsos Baseado em Fatorização de Cholesky | Sure, please provide the English document text that you need translated into Portuguese. |
-| Síntese de Texturas Usando Redes Neurais Convolucionais | Neste trabalho, investigamos o efeito da profundidade de redes convolucionais na sua precisão em reconhecimento de imagens em grande escala... |
-| Antena anelar plana de banda larga com polarização circular para sistema RFID | Neste artigo, é proposta uma técnica de alimentação com faixa meandrante horizontal para alcançar boa adaptação de impedância... |
-| Projeto de monitor cardíaco digital avançado utilizando componentes eletrônicos básicos | Neste artigo, apresentamos o design e o desenvolvimento de um novo dispositivo integrado para medir a frequência cardíaca... |
+| Conversor Elevador Multinível DC-DC Novo [40 chars] | Os conversores de fonte de tensão multinível estão surgindo como uma nova geração de opções de conversores de energia para aplicações de alta potência. Os conversores de fonte de tensão multinível geralmente sintetizam a onda de tensão em escada a partir de vários níveis de tensão de capacitores de corrente contínua. Uma das principais limitações dos conversores multinível é o desequilíbrio de tensão entre os diferentes níveis. As técnicas para equilibrar a tensão entre os diferentes níveis geralmente envolvem o clampagem de tensão ou o controle de carga de capacitores. Existem várias maneiras de implementar o equilíbrio de tensão em conversores multinível. Sem considerar os conversores tradicionais acoplados magneticamente, este artigo apresenta três conversores de fonte de tensão multinível recentemente desenvolvidos: 1) clampagem por diodos, 2) capacitores voadores, e 3) inversores em cascata com fontes de corrente contínua separadas. Serão discutidos o princípio de funcionamento, a... [1,000 / 1,078 chars] |
+| Aprendizado Rápido de Campos Aleatórios de Markov Esparsos Baseado em Fatorização de Cholesky [93 chars] | Sure, please provide the English document text that you need translated into Portuguese. [88 chars] |
+| Síntese de Texturas Usando Redes Neurais Convolucionais [55 chars] | Neste trabalho, investigamos o efeito da profundidade de redes convolucionais na sua precisão em ambientes de reconhecimento de imagens em grande escala. Nossa principal contribuição é uma avaliação detalhada de redes de profundidade crescente, que demonstra que uma melhoria significativa em relação às configurações anteriores pode ser alcançada ao aumentar a profundidade para 16–19 camadas de peso. Esses achados foram a base para nossa submissão ao desafio ImageNet 2014, onde nossa equipe conquistou o primeiro e o segundo lugares nas categorias de localização e classificação, respectivamente. Também mostramos que nossas representações se generalizam bem para outros conjuntos de dados, onde obtivemos resultados de ponta. Importante, tornamos nossos dois modelos ConvNet de melhor desempenho públicos para facilitar pesquisas adicionais sobre o uso de representações visuais profundas em visão computacional. [917 chars] |
 
 ### Public Sources
 
@@ -134,7 +132,7 @@ than only topic similarity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

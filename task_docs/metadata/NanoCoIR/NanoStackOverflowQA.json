@@ -142,8 +142,59 @@
         "url": "https://www.kaggle.com/datasets/stackoverflow/stacksample/data",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q18101",
+        "document_id": "d18101",
+        "query": {
+          "text": "How to block mouse click events from another form I have a winforms single form application that uses a \"Thickbox\" I've created whenever the loads a new view into the application form. The \"Thickbox\" shows another form in front of the application's form that is semi-transparent and has a user control that is the box itself. This thickbox can be shown a modal dialog and in that case I have no problems at all, but it can also be shown as a non modal, for instance, when the user switches views in t",
+          "full_chars": 1644,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "I'm glad to announce that the problem is finally solved. After spending a few days attempting to recreate this bug in a new application, re-constructing the main form in the application, comment out parts of the code in the main application, and generally just shooting all over to try and find a lead, It finally hit me. The application behaved as if the clicks on the thickbox was queued somehow and only activated when the thickbox was closed. This morning, after fixing some other bugs, The penny finally dropped - all I was missing was a single line of code right before closing the thickbox's form: Application.DoEvents(); The annoying thing is that it's not something that's new to me, I've used it many times before including in the main application and in the thickbox code itself... I guess I just had to let if go for a while to enable my mind to understand what was so painfully obvious in hindsight...",
+          "full_chars": 916,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q17966",
+        "document_id": "d17966",
+        "query": {
+          "text": "Passing a parameter to a $resource? I have a controller that that looks like this: (function() { angular .module(\"main\") .controller(\"HomeCtrl\", [\"branchResource\", \"adalAuthenticationService\", HomeCtrl]); function HomeCtrl(branchResource, adalService){ var vm = this; vm.copyrightDate = new Date(); vm.user = adalService.userInfo.userName; // right here, can I insert the vm.user from above // as a parameter to the resource's query? branchResource.query(function (data) { vm.branches = data; }); }}(",
+          "full_chars": 1406,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Create the $resource object with: function branchResource($resource){ ̶r̶e̶t̶u̶r̶n̶ ̶$̶r̶e̶s̶o̶u̶r̶c̶e̶(̶\"̶/̶a̶p̶i̶/̶u̶s̶e̶r̶/̶G̶e̶t̶A̶l̶l̶U̶s̶e̶r̶B̶r̶a̶n̶c̶h̶e̶s̶?̶f̶e̶d̶e̶r̶a̶t̶e̶d̶U̶s̶e̶r̶N̶a̶m̶e̶=̶:̶u̶s̶e̶r̶\"̶)̶ ̶ return $resource(\"/api/user/GetAllUserBranches\") }} Call the $resource object with: branchResource.query({\"federatedUserName\": vm.user}, function (data) { vm.branches = data; }); //OR vm.branches = branchResource.query({\"federatedUserName\": vm.user}); It is important to realize that invoking a $resource object method immediately returns an empty reference (object or array depending on isArray). Once the data is returned from the server the existing reference is populated with the actual data. Each key value in the parameter object is first bound to url template if present and then any excess keys are appended to the url search query after the ?. For more information, see AngularJS ngResource $resource API Reference.",
+          "full_chars": 991,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q17944",
+        "document_id": "d17944",
+        "query": {
+          "text": "Chrome doesn’t show un-minified code in spite of source map present I’m using Grunt and UglifyJS to generate source maps for my AngularJS app. It produces a file customDomain.js and customDomain.js.map. JS file Last line of customDomain.js looks like this: //# sourceMappingURL=customDomain.js.map Map file I find two references to customDomain.js inside of customDomain.js.map, one at the beginning: \"sources\":[\"../../../.tmp/concat/scripts/customDomain.js\"] I think this looks weird so I trim it to",
+          "full_chars": 910,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "\"sources\":[\"customDomain.js\"] should be relative to the customDomain.map.js file. Make sure they are in the same directory on your server if this is the case for you. \"file\":\"customDomain.js\" should be changed to the name of the map file, in your case this would be \"file\":\"customDomain.map.js\". Here's a map file example taken from treehouse (sourceRoot may be unnecessary in your case): { version: 3, file: \"script.js.map\", sources: [ \"app.js\", \"content.js\", \"widget.js\" ], sourceRoot: \"/\", names: [\"slideUp\", \"slideDown\", \"save\"], mappings: \"AAA0B,kBAAhBA,QAAOC,SACjBD,OAAOC,OAAO...\" }",
+          "full_chars": 641,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

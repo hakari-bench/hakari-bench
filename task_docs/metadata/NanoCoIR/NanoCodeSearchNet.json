@@ -143,6 +143,57 @@
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "CodeSearchNet-python::q265763",
+        "document_id": "CodeSearchNet-python::c265636",
+        "query": {
+          "text": "def _get_field(self, field_name, default=None): \"\"\" Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, credential pem files, etc. They get formatted as shown below. \"\"\" full_field_name = 'extra__grpc__{}'.format(field_name) if full_field_name in self.extras: return self.extras[full_field_name] else: return default",
+          "full_chars": 532,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, credential pem files, etc. They get formatted as shown below.",
+          "full_chars": 257,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "CodeSearchNet-go::q174641",
+        "document_id": "CodeSearchNet-go::c174471",
+        "query": {
+          "text": "func (in *inflights) freeTo(to uint64) { if in.count == 0 || to < in.buffer[in.start] { // out of the left side of the window return } idx := in.start var i int for i = 0; i < in.count; i++ { if to < in.buffer[idx] { // found the first large inflight break } // increase index and maybe rotate size := in.size if idx++; idx >= size { idx -= size } } // free i inflights and set new start index in.count -= i in.start = idx if in.count == 0 { // inflights is empty, reset the start index so that we do",
+          "full_chars": 595,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "// freeTo frees the inflights smaller or equal to the given `to` flight.",
+          "full_chars": 72,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "CodeSearchNet-go::q174619",
+        "document_id": "CodeSearchNet-go::c174449",
+        "query": {
+          "text": "func NewCertPool(CAFiles []string) (*x509.CertPool, error) { certPool := x509.NewCertPool() for _, CAFile := range CAFiles { pemByte, err := ioutil.ReadFile(CAFile) if err != nil { return nil, err } for { var block *pem.Block block, pemByte = pem.Decode(pemByte) if block == nil { break } cert, err := x509.ParseCertificate(block.Bytes) if err != nil { return nil, err } certPool.AddCert(cert) } } return certPool, nil }",
+          "full_chars": 473,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "// NewCertPool creates x509 certPool with provided CA files.",
+          "full_chars": 60,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

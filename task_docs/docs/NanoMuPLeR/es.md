@@ -62,19 +62,19 @@ Models should preserve Spanish legal terminology, article-style conditions, date
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| ¿Por qué la autoridad estadística propone instrumento jurídico para consolidar datos de salud poblacional y seguridad laboral y apoyar metodologías? [148 chars] | Ésta es la razón por la que la Comisión (Eurostat) considera que es hora de establecer una base sólida mediante un acto jurídico fundamental sobre estadísticas de salud pública y salud y seguridad en el trabajo. Los ámbitos regulados por la propuesta de Reglamento del Parlamento Europeo y del Consejo se refieren a actividades y cambios en curso que se llevan a cabo junto con los Estados miembros en los grupos correspondientes de Eurostat o, en el ámbito de la salud pública, en el marco de la asociación en materia de estadísticas de salud pública. El principal objetivo es sentar una buena base consolidada para las recopilaciones ya aplicadas o cuya metodología se está desarrollando o preparando para su aplicación. [722 chars] |
+| Cómo quiso el ejecutivo supranacional que corrieran las ayudas: dos años y hasta tres más al convertir el contrato? [115 chars] | Dado que el régimen de ayudas (identificado con el no NN 91/A/95) adoptado por la Región de Sicilia mediante el artículo 10 de la Ley regional no 27, de 15 de mayo de 1991, preveía un mecanismo de aportaciones para un número de anualidades mínimo de dos y máximo de cinco (dos años para la contratación mediante contrato de formación y de trabajo, más un máximo de tres años en caso de transformación del contrato de formación y de trabajo en un contrato de duración indefinida), ¿pretendió la Comisión de las Comunidades Europeas, mediante la Decisión no 95/C 343/11 de 14 de noviembre de 1995, por la que se autorizó la aplicación de dicho régimen: [650 chars] |
+| Cómo relaciona la prevención la explotación insostenible y las intervenciones humanas intencionadas con catástrofes naturales anómalas y de gran magnitud? [154 chars] | La prevención es un principio fundamental para la protección y conservación del medio ambiente así como los daños que pudieran causarse a la población civil, y su finalidad es una utilización sostenible de los recursos naturales. Las predicciones de deterioro y la pérdida de la biodiversidad, en su más amplio espectro, se han hecho realidad, con una crudeza que supera las peores de estas predicciones; si a esto le añadimos las intervenciones humanas, a veces intencionadas, el resultado es el que ahora constatamos, una reiteración de las catástrofes, que no por el hecho de ser naturales resultan anómalas, por la corta periodicidad con que se producen, y sobre todo por la gran magnitud de sus efectos. [708 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

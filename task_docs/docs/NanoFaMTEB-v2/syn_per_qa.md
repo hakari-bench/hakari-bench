@@ -70,9 +70,11 @@ For reranking, the main opportunity is rejecting related answer-like passages an
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the FaMTEB paper and the `MCINext/synthetic-persian-qa-retrieval` dataset card. MTEB provides the broader retrieval evaluation framework.
+| Query | Positive document |
+| --- | --- |
+| آیا بینگ راسل در فیلم‌های معروفی مانند 'دود اسلحه' نقش داشته است؟ [65 chars] | بله، بینگ راسل در مجموعه تلویزیونی 'دود اسلحه' که از سال ۱۹۵۶ تا ۱۹۷۴ پخش می‌شد، نقش Ed Shelby را ایفا کرد. این مجموعه یکی از محبوب‌ترین و شناخته‌شده‌ترین سریال‌های وسترن در تاریخ تلویزیون است. [193 chars] |
+| کتاب تحقیق در عملیات پیشرفته در چه انتشاراتی منتشر شده است؟ [59 chars] | این کتاب توسط انتشارات دانشگاه شهید بهشتی منتشر شده است. این انتشارات به عنوان یکی از مراکز معتبر در نشر آثار علمی و پژوهشی در ایران شناخته می‌شود. [147 chars] |
+| آیا این آیه در مکه نازل شده است؟ [32 chars] | نه، این آیه در مدینه بر پیامبر اسلام صلی الله علیه و آله نازل گردیده است. [73 chars] |
 
 ### Source Reference Table
 

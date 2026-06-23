@@ -70,12 +70,11 @@ Error analysis should group false positives by same-entity drift, same-topic dri
 
 ## Example Data
 
-### Public Sources
-
-- [Quora Question Pairs release](https://quoradata.quora.com/First-Quora-Dataset-Release-Question-Pairs)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [GreenNode/quora-vn](https://huggingface.co/datasets/GreenNode/quora-vn)
+| Query | Positive document |
+| --- | --- |
+| Xiaomi Redmi note 4 ra mắt ở Ấn Độ vào ngày nào? [48 chars] | Hãy chuyển câu này sang tiếng Việt: Khi nào Xiaomi Redmi note 4 sẽ ra mắt ở Ấn Độ? [83 chars] |
+| Có khả năng Trump sẽ thắng cuộc bầu cử không? [45 chars] | Nếu bạn muốn dịch câu này sang tiếng Việt, hãy viết câu đó ở dưới này. Trump có cơ hội thắng cử không? [103 chars] |
+| Có nên thực hiện một phim truyền hình dựa trên bộ phim Shiva Trilogy? [69 chars] | Chào các bạn, Nếu bộ ba Shiva được chuyển thể thành một series phim truyền hình thì nó sẽ như thế nào? [103 chars] |
 
 ### Source Reference Table
 

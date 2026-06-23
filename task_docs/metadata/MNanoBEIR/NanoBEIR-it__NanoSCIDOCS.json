@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Convertitore Elevatore CC-CC a Più Livelli Innovativo",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "I convertitori di tensione a sorgente multlivello stanno emergendo come una nuova categoria di opzioni di convertitori di potenza per applicazioni ad alta potenza. I convertitori di tensione a sorgente multlivello solitamente sintetizzano l'onda di tensione a gradini da diversi livelli di tensione dei condensatori in corrente continua. Una delle principali limitazioni dei convertitori multlivello è lo squilibrio di tensione tra i diversi livelli. Le tecniche per bilanciare la tensione tra i diversi livelli coinvolgono solitamente il clampaggio della tensione o il controllo della carica dei condensatori. Ci sono diversi modi per implementare il bilanciamento della tensione nei convertitori multlivello. Escludendo i convertitori tradizionali accoppiati magneticamente, questo articolo presenta tre convertitori di tensione a sorgente multlivello recentemente sviluppati: 1) a clamp diodi, 2) a condensatori volanti, e 3) inverter a cascata con sorgenti di corrente continua separate. Il princ",
+          "full_chars": 1122,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Apprendimento di Campi Markoviani Gaussiani Sparsi Veloci Basato sulla Fattorizzazione di Cholesky",
+          "full_chars": 98,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sure, please provide the English document text that you need translated into Italian.",
+          "full_chars": 85,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Sintesi delle Texture Utilizzando Reti Neurali Convoluzionali",
+          "full_chars": 61,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In questo lavoro indaghiamo l'effetto della profondità della rete convoluzionale sulla sua accuratezza nel contesto del riconoscimento delle immagini su larga scala. Il nostro principale contributo è una valutazione approfondita di reti di profondità crescente, che dimostra che un miglioramento significativo rispetto alle configurazioni dello stato dell'arte può essere ottenuto aumentando la profondità a 16–19 strati di peso. Questi risultati sono stati la base della nostra partecipazione all'ImageNet Challenge 2014, dove il nostro team ha conquistato il primo e il secondo posto nelle categorie di localizzazione e classificazione rispettivamente. Abbiamo anche dimostrato che le nostre rappresentazioni si generalizzano bene ad altri dataset, dove ottengono risultati all'avanguardia. Importante, abbiamo reso disponibili al pubblico i nostri due modelli ConvNet migliori per facilitare ulteriori ricerche sull'uso delle rappresentazioni visive profonde nella visione artificiale.",
+          "full_chars": 988,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

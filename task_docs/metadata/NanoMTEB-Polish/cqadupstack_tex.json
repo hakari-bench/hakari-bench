@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 50
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-tex-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-tex-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Tex-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-tex-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-tex-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "69170",
+        "document_id": "10427",
+        "query": {
+          "text": "BibLaTeX: bibliografia główna i drugorzędna",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "biblatex: drukowanie oddzielnych bibliografii Używam `biblatex` i mam to ustawione tak: W moim pliku bib mam 3 rodzaje wpisów, online, broszura i książka. A w mojej pracy dyplomowej chcę je wydrukować osobno w następujący sposób: \\printbibliography[heading=subbibliography,title={Książki},type=book, nottype=url, nottype=booklet, nottype=online] \\printbibliography[heading=subbibliography,title= {Strony internetowe},type=online, nottype=book, nottype=booklet, nottype=url] \\printbibliography[heading=subbibliography,title={Różne},type=booklet] Z jakiegoś powodu to nie zadziała, nadal umieszcza strony internetowe, na których powinny być książki. I wzajemnie. Broszura jednak działa, pokazuje tam tylko moje wpisy do broszury. Niedawno zacząłem używać `biblatex`, więc to może być głupie pytanie.",
+          "full_chars": 797,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "121540",
+        "document_id": "21924",
+        "query": {
+          "text": "Jak mogę przyspieszyć kompilację dokumentu z wieloma obrazami?",
+          "full_chars": 62,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pomiń przetwarzanie wszystkich obrazów Próbuję zrobić szkic, zmuszając LaTeX do ignorowania wszystkich obrazów. Jak mam powiedzieć LaTeX, aby pominął wszystkie nazwy plików obrazów (w poleceniu `\\includegraphics`) i po prostu wstawił puste pole? Problem z opcjami `[draft]` polega na tym, że nadal wymaga to, abym wszystkie obrazy znajdowały się w folderze, w którym znajdują się moje pliki `.tex`.",
+          "full_chars": 398,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10355",
+        "document_id": "30012",
+        "query": {
+          "text": "Puste linie w wyrównanym środowisku",
+          "full_chars": 35,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Błąd w wyrównaniu środowiska - niekontrolowany argument? > **Possible Duplicate:** > Puste linie w środowisku wyrównania \\documentclass[12pt,a4paper]{article} \\usepackage[wersja=3]{mhchem} \\usepackage{siunitx} \\begin{document} \\begin{align*} \\ce{K_a} & = \\frac{\\ce{[H3O+][A^-]}}{\\ce{[HA]}} \\\\ \\end{align*} \\end{document} podaje argument Runaway? \\ce {K_a} & = \\frac {\\ce {[H3O+][A^-]}}{\\ce {[HA]}} \\\\ ! Akapit zakończył się przed ukończeniem \\align*. <do przeczytania ponownie> \\par l.8 ?",
+          "full_chars": 488,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

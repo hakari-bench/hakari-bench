@@ -138,17 +138,68 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "8",
+        "document_id": "gdp_wellbeing/wellbeingandgdphtm.txt",
+        "query": {
+          "text": "Would a GDP measure be improved by excluding foreign interest paid? The income method of calculating GDP is as follows: GDP = wages + profits + rents + interest + depreciation + taxes + NFFI. If an economy has high external debt, for instance, because it used external financing to buy machinery and equipment, then foreign interest payments will be high. In that case, wouldn't GDP (per capita) be a poor measure of economic well-being since a significant portion of the generated income is leaving",
+          "full_chars": 684,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[ OECD Better Life Index ](/) ![](/media/bli/theme/img/logo-bli@2x.png) * [ Index ](/) * [ Responses ](/responses/) * Countries __ * [ Australia ](/countries/australia/) * [ Austria ](/countries/austria/) * [ Belgium ](/countries/belgium/) * [ Brazil ](/countries/brazil/) * [ Chile ](/countries/chile/) * [ Denmark ](/countries/denmark/) * [ Germany ](/countries/germany/) * [ Estonia ](/countries/estonia/) * [ Finland ](/countries/finland/) * [ France ](/countries/france/) * [ Greece ](/countries/greece/) * [ Ireland ](/countries/ireland/) * [ Iceland ](/countries/iceland/) * [ Israel ](/countries/israel/) * [ Italy ](/countries/italy/) * [ Japan ](/countries/japan/) * [ Canada ](/countries/canada/) * [ Korea ](/countries/korea/) * [ Luxembourg ](/countries/luxembourg/) * [ Mexico ](/countries/mexico/) * [ Netherlands ](/countries/netherlands/) * [ New Zealand ](/countries/new-zealand/) * [ Norway ](/countries/norway/) * [ Poland ](/countries/poland/) * [ Portugal ](/countries/portugal/",
+          "full_chars": 13187,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "19",
+        "document_id": "elastic_substitution/Elasticityofsubstitution.txt",
+        "query": {
+          "text": "Derivative to ln(K(t)) in the RBC model In the calculation of the equation of motion for capital in the RBC model, I came across this equation: d ln K_(t+1) / d ln K_t = (d K_(t+1) / d K_t) * (K_t / K_(t+1)) Can someone explain what are the mathematical steps in between? I don't see how exactly the derivative to ln(K(t)) gets us an almost elasticity-like equation. Would be thankful for any leads. :)",
+          "full_chars": 406,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jump to content Main menu Main menu move to sidebar hide Navigation * [ Main page ](/wiki/Main_Page \"Visit the main page \\[z\\]\") * [ Contents ](/wiki/Wikipedia:Contents \"Guides to browsing Wikipedia\") * [ Current events ](/wiki/Portal:Current_events \"Articles related to current events\") * [ Random article ](/wiki/Special:Random \"Visit a randomly selected article \\[x\\]\") * [ About Wikipedia ](/wiki/Wikipedia:About \"Learn about Wikipedia and how it works\") * [ Contact us ](//en.wikipedia.org/wiki/Wikipedia:Contact_us \"How to contact Wikipedia\") * [ Donate ](https://donate.wikimedia.org/wiki/Special:FundraiserRedirector?utm_source=donate&utm_medium=sidebar&utm_campaign=C13_en.wikipedia.org&uselang=en \"Support us by donating to the Wikimedia Foundation\") Contribute * [ Help ](/wiki/Help:Contents \"Guidance on how to use and edit Wikipedia\") * [ Learn to edit ](/wiki/Help:Introduction \"Learn how to edit Wikipedia\") * [ Community portal ](/wiki/Wikipedia:Community_portal \"The hub for editors\"",
+          "full_chars": 34111,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "printmoney_inflation/vol.txt",
+        "query": {
+          "text": "What is the purpose of taxes if central banks can fund deficit spending? Somewhat straight forward. If the federal reserve can print money to buy treasuries to fund deficit spending, what is the purpose of taxes? Sure, taxes reduce the amount of deficit that needs to be picked up by the Fed, but if, as ive seen argued, money “printing” doesn’t necessarily lead to inflation whats the point of levying taxes? Why doesn’t the fed just procure all of the money itself if it could theoretically do so w",
+          "full_chars": 524,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The Economic and Social Review, Vol. 35, No. 3, Winter, 2004, pp. 251-266 Inflation and Money Growth: Evidence from a Multi-Country Data-Set JOHN C. FRAIN* Central Bank and Financial Services Regulatory Authority of Ireland and Trinity College Dublin Abstract: Using a multi-country data set strong correlation are found between average growth rates of monetary aggregates and average inflation. The correlation remains strong when countries with higher average inflation rates are removed from the sample. These results confirm the strong correlation found in the traditional literature but contradict those in De Grauwe and Polan (2001) who, in a recent analysis, find that the strong link vanishes when higher inflation countries are excluded. Further analysis confirms the unit response and bears out the value of monetary aggregates as an input to the making of monetary policy. I INTRODUCTION Monetary theory predicts a strong long-run correlation between money growth and inflation. One strand",
+          "full_chars": 29854,
+          "limit_chars": 1000,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Economics StackExchange long-document"
+    "source_task": "Economics StackExchange long-document",
+    "example_count": 3
   }
 }

@@ -158,7 +158,7 @@ procedural rule.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| mteb/MuPLeR-retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| DGT-Acquis |  | source corpus page | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source reference paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| Massive Text Embedding Benchmark |  | benchmark repository | https://github.com/embeddings-benchmark/mteb |
+| mteb/MuPLeR-retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| DGT-Acquis |  | source corpus page | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source reference paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| Massive Text Embedding Benchmark |  | benchmark repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |

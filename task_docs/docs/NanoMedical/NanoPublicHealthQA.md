@@ -62,19 +62,19 @@ Models should focus on Arabic public-health intent and action matching. Hard neg
 
 ## Example Data
 
-### Public Sources
-
-- [publichealth-qa](https://huggingface.co/datasets/xhluca/publichealth-qa), dataset card.
-- [publichealth-qa repository](https://github.com/xhluca/publichealth-qa).
-- [COVID-QA dataset](https://www.kaggle.com/datasets/xhlulu/covidqa), source dataset referenced by the dataset card.
+| Query | Positive document |
+| --- | --- |
+| أنا مصابة بمرض كوفيد-19 وأشعر بتوعك شديد لا يسمح لي بإرضاع طفلي مباشرة. ماذا أفعل؟ [82 chars] | إذا كنت تشعرين بتوعك شديد يمنعك من إرضاع طفلك مباشرة سواء بسبب مرض كوفيد-19 أو غيره من المضاعفات، فينبغي أن تلتمسي الدعم لتوفير حليبك لطفلك على نحو مأمون وبطريقة مناسبة ومتاحة ومقبولة لك. ويمكن أن يشمل ذلك ما يلي:استخراج الحليب من الثدي؛استدرار الحليب بعد انقطاعه؛الحصول على حليب أم متبرعة. [291 chars] |
+| هل هناك أمور ينبغي أن أتجنبها؟ [30 chars] | التدابير التالية غير فعّالة في مواجهة مرض كوفيد-19 بل قد تكون ضارة: التدخيناستخدام كمامات متعددة تعاطي المضادات الحيوية (أنظر هل توجد أي أدوية أو علاجات يمكنها الوقاية من مرض كوفيد-19 أو علاجه؟) في جميع الأحوال، إذا كنت مصاباً بالحمى والسعال وصعوبة التنفس، التمس الرعاية الطبية مبكراً من أجل الحد من مخاطر الإصابة بعدوى أشد وطأة، وتأكد من إطلاع مقدم الرعاية الصحية على أي أماكن سافرت إليها في الآونة الأخيرة. [408 chars] |
+| هل المضادات الحيوية فعّالة في الوقاية من مرض كوفيد-2019 أو علاجه؟ [65 chars] | لا. لا تقضي المضادات الحيوية على الفيروسات، فهي لا تقضي إلا على العدوى الجرثومية. وبما أن مرض كوفيد-19 سببه فيروس، فإن المضادات الحيوية لا تقضي عليه. فلا ينبغي استعمال المضادات الحيوية كوسيلة للوقاية من مرض كوفيد-19 أو علاجه. ولا ينبغي استعمالها إلا وفقاًلتعليمات الطبيب لعلاج حالات العدوى الجرثومية. [300 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| publichealth-qa | 2024 | dataset card | https://huggingface.co/datasets/xhluca/publichealth-qa |
-| publichealth-qa repository |  | source repository | https://github.com/xhluca/publichealth-qa |
-| COVID-QA dataset |  | source dataset | https://www.kaggle.com/datasets/xhlulu/covidqa |
+| publichealth-qa | 2024 | dataset card | [https://huggingface.co/datasets/xhluca/publichealth-qa](https://huggingface.co/datasets/xhluca/publichealth-qa) |
+| publichealth-qa repository |  | source repository | [https://github.com/xhluca/publichealth-qa](https://github.com/xhluca/publichealth-qa) |
+| COVID-QA dataset |  | source dataset | [https://www.kaggle.com/datasets/xhlulu/covidqa](https://www.kaggle.com/datasets/xhlulu/covidqa) |
 
 ### Representative Snippets
 

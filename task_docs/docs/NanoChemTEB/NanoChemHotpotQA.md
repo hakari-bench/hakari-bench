@@ -66,9 +66,11 @@ Strong systems should represent both bridge entities and the requested final pro
 
 ## Example Data
 
-### Public Sources
-
-The task is based on ChemTEB's chemistry-filtered HotpotQA retrieval setting.
+| Query | Positive document |
+| --- | --- |
+| In what field did a Swiss physicist who had a geometrical representation named after him work in? [97 chars] | Felix Bloch Felix Bloch (23 October 1905 – 10 September 1983) was a Swiss physicist, working mainly in the U.S. He and Edward Mills Purcell were awarded the 1952 Nobel Prize for Physics for "their development of new ways and methods for nuclear magnetic precision measurements." In 1954–1955, he served for one year as the first Director-General of CERN. [354 chars] |
+| What company claims to manufacture one out of every three objects that provide a shelf life typically ranging from one to five years? [133 chars] | Canning Canning is a method of preserving food in which the food contents are processed and sealed in an airtight container. Canning provides a shelf life typically ranging from one to five years, although under specific circumstances it can be much longer. A freeze-dried canned product, such as canned dried lentils, could last as long as 30 years in an edible state. In 1974, samples of canned food from the wreck of the "Bertrand", a steamboat that sank in the Missouri River in 1865, were tested by the National Food Processors Association. Although appearance, smell and vitamin content had deteriorated, there was no trace of microbial growth and the 109-year-old food was determined to be still safe to eat. [715 chars] |
+| WHat dish is Dacryopinax spathularia included in that is also sometimes called Luóhàn cài? [91 chars] | Dacryopinax spathularia Dacryopinax spathularia (syn. Guepinia spathularia) is an edible jelly fungus. It is orange in color. In Chinese culture, it is called "guìhuā'ěr" (桂花耳; literally "sweet osmanthus ear," referring to its similarity in appearance to that flower). It is sometimes included in a vegetarian dish called Buddha's delight. [339 chars] |
 
 ### Source Reference Table
 

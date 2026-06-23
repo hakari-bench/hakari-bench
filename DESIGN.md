@@ -366,6 +366,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
   CSP forbids them.
 - Keep both themes intentional here too. Docs colors come from the same tokens as
   the leaderboard; never let docs fall back to a fixed light palette.
+- Documentation body copy, list items, and table data use the primary text token
+  in each theme. Reserve muted text for card summaries, captions, and secondary
+  notes so long-form docs keep strong contrast in both light and dark themes.
 - Render documentation tables with a distinct header row, light row striping, and
   a rounded border so dense metadata stays scannable. Inline code should read as a
   subtle bordered chip, and code blocks use the faint code background.

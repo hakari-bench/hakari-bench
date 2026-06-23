@@ -62,23 +62,21 @@ Models should preserve biomedical entity names while supporting Polish morpholog
 
 ## Example Data
 
-### Public Sources
-
-- [BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language](https://arxiv.org/abs/2305.19840), 2024.
-- [BEIR-PL ACL Anthology record](https://aclanthology.org/2024.lrec-main.194/).
-- [Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID](https://arxiv.org/abs/2104.09632), 2021.
-- [TREC-COVID data archive](https://ir.nist.gov/trec-covid/).
-- [clarin-knext Hugging Face](https://huggingface.co/clarin-knext).
+| Query | Positive document |
+| --- | --- |
+| jakie są dowody na to, że deksametazon może być stosowany w leczeniu COVID-19? [78 chars] | Połączenie tocilizumabu i metyloprednizolonu wraz ze wstępną strategią rekrutacji płuc w chorobie koronawirusowej 2019 Pacjenci wymagający wentylacji mechanicznej: seria 21 kolejnych przypadków CEL: Opisanie wyników leczenia skojarzonego tocilizumabem i metyloprednizolonem podawanym około czasu intubacji dotchawiczej u pacjentów z potwierdzoną hipoksemiczną niewydolnością oddechową związaną z koronawirusem 2019, wymagającą wentylacji mechanicznej. ŹRÓDŁA DANYCH: Retrospektywny przegląd wykresów. WYBÓR BADANIA/EKSTRAKCJA DANYCH: Dwudziestu jeden kolejnych pacjentów z potwierdzoną hipoksemiczną niewydolnością oddechową związaną z koronawirusem 2019 wymagającą wentylacji mechanicznej. Początkowymi parametrami respiratora były dodatnie ciśnienie końcowo-wydechowe 14 cm H(2)o i docelowe ciśnienie plateau 29 cm H(2)o, aby zmaksymalizować rekrutację płuc. Metyloprednizolon (125 mg co 6 godz. przez 24 godz. ze zmniejszaniem do 60 mg co 12 godz.) podawano wkrótce po zaintubowaniu pacjentów (med... [1,000 / 1,767 chars] |
+| jak długo koronawirus pozostaje stabilny na powierzchniach? [59 chars] | Płyny ustrojowe mogą przyczyniać się do przenoszenia z człowieka na człowieka koronawirusa zespołu ostrej ostrej niewydolności oddechowej 2: dowody i doświadczenia praktyczne TŁO: W grudniu 2019 r. w mieście Wuhan w prowincji Hubei zgłoszono niewiarygodną epidemię zapalenia płuc związanego z koronawirusem. Wirus ten nazwano koronawirusem zespołu ostrej ostrej niewydolności oddechowej 2 (SARS-CoV-2). Chociaż włożono wiele wysiłku w wyjaśnienie drogi przenoszenia SARS-CoV-2, ale dostępnych jest bardzo niewiele dowodów dotyczących związku między płynami ustrojowymi człowieka a przenoszeniem wirusa SARS-CoV-2. Znaczące dowody ze szpitala w Wuhan wskazują, że surowe zasady unikania zawodowego narażenia na płyny ustrojowe pacjentów w placówkach opieki zdrowotnej, szczególnie wśród każdego personelu medycznego, ograniczają przenoszenie zakażeń szpitalnych z osoby na osobę przez bezpośredni lub pośredni kontakt. WNIOSEK: Staraliśmy się dostarczyć ważnych informacji dla zrozumienia możliwych dr... [1,000 / 1,201 chars] |
+| czy dystans społeczny miał wpływ na spowolnienie rozprzestrzeniania się COVID-19? [81 chars] | Zwiększona wykrywalność w połączeniu z planowaniem dystansu społecznego i zdrowia Zmniejsz obciążenie przypadkami i ofiarami śmiertelnymi związanymi z COVID-19: badanie weryfikujące koncepcję przy użyciu stochastycznego modelu symulacji obliczeniowej Cel: W przypadku braku jakiejkolwiek szczepionki, pandemia wirusa Corona Virus 2019 (COVID-19) jest ograniczana za pomocą niefarmaceutycznego środka zwanego dystansem społecznym (SD). Jednak to, czy samo SD wystarczy do spłaszczenia krzywej epidemii, jest dyskusyjne. Korzystając ze stochastycznego modelu symulacji obliczeniowej, zbadaliśmy wpływ wzrastających wskaźników wykrywalności SD, łóżek szpitalnych i COVID-19 na zapobieganie przypadkom i zgonom związanym z COVID-19. Projekt i metody badawcze: Stochastyczny model symulacyjny został zbudowany przy użyciu pakietu EpiModel w języku R. Jako dowód słuszności koncepcji, przeprowadziliśmy symulację na Kasaragod, najbardziej dotkniętej dzielnicy Kerali. Do modelu SEIR dodaliśmy 3 przedziały,... [1,000 / 1,773 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | https://arxiv.org/abs/2305.19840 |
-| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | https://aclanthology.org/2024.lrec-main.194/ |
-| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | https://arxiv.org/abs/2104.09632 |
-| TREC-COVID data archive | 2020 | benchmark archive | https://ir.nist.gov/trec-covid/ |
-| clarin-knext |  | Hugging Face publisher | https://huggingface.co/clarin-knext |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | arXiv paper | [https://arxiv.org/abs/2305.19840](https://arxiv.org/abs/2305.19840) |
+| BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language | 2024 | ACL Anthology paper | [https://aclanthology.org/2024.lrec-main.194/](https://aclanthology.org/2024.lrec-main.194/) |
+| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | [https://arxiv.org/abs/2104.09632](https://arxiv.org/abs/2104.09632) |
+| TREC-COVID data archive | 2020 | benchmark archive | [https://ir.nist.gov/trec-covid/](https://ir.nist.gov/trec-covid/) |
+| clarin-knext |  | Hugging Face publisher | [https://huggingface.co/clarin-knext](https://huggingface.co/clarin-knext) |
 
 ### Representative Snippets
 

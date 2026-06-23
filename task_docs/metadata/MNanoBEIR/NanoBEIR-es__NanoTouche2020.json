@@ -138,7 +138,7 @@
         "year": 2020,
         "is_paper": true,
         "doi": "10.1007/978-3-030-58219-7_26",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
@@ -146,7 +146,7 @@
         "year": 2022,
         "is_paper": false,
         "doi": "10.5281/zenodo.6862281",
-        "source_confidence": "dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -154,7 +154,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -162,15 +162,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "¿Son útiles las tareas?",
+          "full_chars": 23,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Primero, hay tres argumentos sobre por qué los deberes son excelentes y deberían continuar en las escuelas modernas. 1. Los deberes ayudan a los aprendices prácticos. Generalmente se acepta que hay tres tipos de aprendices: los que aprenden oyendo, los que aprenden viendo y los que aprenden haciendo. Mientras muchos están contentos con escuchar o ver la instrucción de un tema, algunos necesitan hacerlo realmente. Por lo tanto, los deberes son beneficiosos para este último grupo porque la instrucción se aprende a través de la acción. 2. Los deberes refuerzan la instrucción. Aunque muchos probablemente estarían encantados de no tener deberes, la calidad de la educación recibida ciertamente sufriría si se eliminaran. Ya sea que los deberes sean lecturas asignadas, trabajos de investigación, etc., todo está diseñado para reforzar la instrucción en la mente de los estudiantes. Después de todo, aquellos que hacen sus deberes son más exitosos académicamente que aquellos que no. Creo que esto",
+          "full_chars": 4011,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "¿Deberían anunciarse los medicamentos con receta directamente a los consumidores?",
+          "full_chars": 81,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Muchos anuncios no incluyen suficiente información sobre la eficacia de los medicamentos. Por ejemplo, Lunesta se promociona con una polilla que entra volando por una ventana de un dormitorio, sobre una persona que duerme plácidamente. En realidad, Lunesta ayuda a los pacientes a dormir 15 minutos más rápido después de seis meses de tratamiento y les proporciona 37 minutos más de sueño por noche. La mayoría de los anuncios se basan en apelaciones emocionales, pero pocos incluyen las causas de la condición, los factores de riesgo o los cambios importantes en el estilo de vida. En un estudio de 38 anuncios farmacéuticos, los investigadores encontraron que el 82 por ciento hacía una afirmación factual y el 86 por ciento presentaba argumentos racionales para el uso del producto. Solo el 26 por ciento describía las causas de la condición, los factores de riesgo o la prevalencia. Así, no se proporciona a los pacientes una información equilibrada que los haga conscientes de que tomar una de e",
+          "full_chars": 2009,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "¿Es necesario vacunar a los niños?",
+          "full_chars": 34,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Aún no es un caso completo... Solo algunos puntos que he reunido... Los gobiernos no deberían tener el derecho de intervenir en las decisiones de salud que los padres toman para sus hijos. Según una encuesta de 2010 realizada por la Universidad de Michigan, el 31% de los padres cree que deberían tener el derecho a rechazar las vacunas obligatorias para la entrada escolar de sus hijos. Muchos padres tienen creencias religiosas en contra de la vacunación. Obligar a estos padres a vacunar a sus hijos violaría la Primera Enmienda, que garantiza a los ciudadanos el derecho a la libre práctica de su religión. Las vacunas a menudo son innecesarias en muchos casos donde la amenaza de muerte por enfermedad es pequeña. A principios del siglo XIX, la mortalidad por enfermedades infantiles como la tos ferina, el sarampión y el escarlatina disminuyó drásticamente antes de que las inmunizaciones estuvieran disponibles. Esta disminución de la mortalidad se ha atribuido a la mejora de la higiene perso",
+          "full_chars": 5062,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

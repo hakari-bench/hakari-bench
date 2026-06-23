@@ -122,18 +122,18 @@ overlap.
 
 ## Example Data
 
-### Public Sources
-
-- [Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings](https://arxiv.org/abs/2502.08638)
-- [Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| L'article 20 du traité de l'UE dispose clairement que les citoyens de l'UE peuvent exercer leur droit de vote et d'éligibilité aux élections au Parlement européen "dans l'Etat membre" dans lequel ils ont leur lieu de résidence. [227 chars] | Artikel 20 des EU-Vertrages besagt klipp und klar, dass EU-Bürger „in dem Mitgliedstaat, in dem sie ihren Wohnsitz haben, das aktive und passive Wahlrecht bei den Wahlen zum Europäischen Parlament“ wahrnehmen können. [216 chars] |
+| Il a de nombreux éléments pour étayer le credo qu'il ranime pour s'opposer aux sirènes des populistes et selon lequel c'est se fourvoyer que de vouloir quitter l'Europe: le changement climatique, l'imposition des entreprises du web, la migration - autant de défis pour lesquels le cadre de référence national est devenu trop petit. [331 chars] | Für sein nun wiederbelebtes Credo, dass entgegen den Sirenengesängen der Populisten der Rückzug aus Europa ein Holzweg ist, gibt es zahlreiche Belege: Klimawandel, Besteuerung der Internetkonzerne, Migration – für all diese Herausforderungen ist der nationale Bezugsrahmen zu klein geworden. [291 chars] |
+| De fait, Soros est venu en soutien, dans les décennies passées, à de nombreuses associations et initiatives humanitaires, sociales, scientifiques et artistiques à hauteur de plusieurs millards. Cela concerne notamment des initiatives qui s'engagent en faveur des demandeurs d'asile. [282 chars] | Tatsächlich hat Soros in den vergangenen Jahrzehnten mit Milliardensummen zahlreiche humanitäre, soziale, wissenschaftliche und künstlerische Vereine und Initiativen unterstützt. Darunter sind auch solche, die sich für Asylsuchende einsetzen. [242 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | https://arxiv.org/abs/2502.08638 |
-| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | https://huggingface.co/datasets/Andrianos/clsd_wmt19_21 |
+| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | [https://arxiv.org/abs/2502.08638](https://arxiv.org/abs/2502.08638) |
+| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | [https://huggingface.co/datasets/Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21) |
 
 ### Representative Snippets
 

@@ -62,21 +62,20 @@ Models should learn to infer the test target from clinical clues and retrieve pa
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/MedXpertQA-Exam dataset card](https://huggingface.co/datasets/R2MED/MedXpertQA-Exam).
+| Query | Positive document |
+| --- | --- |
+| A 27-year-old male presents with anxiety and ongoing moodiness, citing stress at home and work. His medical history includes chronic gastritis previously treated for *Helicobacter pylori*, chronic pyelonephritis with kidney stones, and stage 1 chronic kidney disease. He also has an 8-year smoking history and has unsuccessfully attempted to quit using nicotine patches, experiencing recurrent anxiety during those attempts. His grandfather, a heavy smoker, recently passed away from metastatic lung... [500 / 703 chars] | Applications The National Institute for Health and Clinical Excellence endorsed the PHQ-9 for measuring depression severity and responsiveness to treatment in adults in a primary care setting. The Behavioral Risk Factor Surveillance Survey (BRFSS), the National Health and Nutrition Examination Survey, the Medical Expenditure Panel Survey, the National Epidemiologic Survey on Alcohol and Related Conditions, the Medicare Health Support program, and the Millennium Cohort Study use the full PHQ-9 or a shortened form of it. The Veterans Administration, Department of Defense, and Kaiser Permanente adopted the PHQ-9 as a standard measure for depression screening. The PHQ-9 is also the most commonly used depression measure in the United Kingdom's National Health Service, which requires providers to use a depression screening instrument when treating depression. [865 chars] |
+| A 65-year-old woman presents with an 8-month history of progressive difficulty swallowing food and retrosternal chest discomfort. She describes a sensation of “food getting stuck” in her throat and occasionally hears a “gurgling sound” while eating. She has also experienced episodes of coughing up undigested food, along with a bad taste in her mouth and bad breath. She denies fever or weight loss. Her medical history includes Raynaud disease treated with nifedipine, and she has traveled to Mexic... [500 / 954 chars] | Procedure Clinical status and relevant medical history are reviewed prior to the studies. Patient consent is required. Barium swallow A barium swallow study is also known as a barium esophagram and needs little if any preparations for the study of the larynx, pharynx, and esophagus when studied alone. A thick barium mixture is swallowed in supine position and fluoroscopic images of the swallowing process are made. Then several swallows of a thin barium mixture are taken and the passage is recorded by fluoroscopy and standard radiographs. The procedure is repeated several times with the examination table tilted at various angles. A total of 350-450 mL of barium is swallowed during the process. Normally, 90% of ingested fluid should have passed into the stomach after 15 seconds. [787 chars] |
+| A 27-year-old primigravida at 33 weeks gestation visits her primary care physician with concerns about generalized swelling in her ankles and legs. Her medical history is significant for diabetes and obesity. Her vital signs show: temperature 98.5°F (36.9°C), blood pressure 147/92 mmHg, heart rate 80/min, respiratory rate 15/min, and oxygen saturation 97% on room air. Physical examination reveals bilateral lower extremity edema. What is the most appropriate initial step in management? [489 chars] | Immune factors may also play a role. Diagnosis Testing for pre-eclampsia is recommended throughout pregnancy via measuring a woman's blood pressure. Diagnostic criteria Pre-eclampsia is diagnosed when a pregnant woman develops: Blood pressure ≥140 mmHg systolic or ≥90 mmHg diastolic on two separate readings taken at least four to six hours apart after 20 weeks' gestation in an individual with previously normal blood pressure. In a woman with essential hypertension beginning before 20 weeks' gestational age, the diagnostic criteria are an increase in systolic blood pressure (SBP) of ≥30 mmHg or an increase in diastolic blood pressure (DBP) of ≥15 mmHg. Proteinuria ≥ or more of protein in a 24-hour urine sample or a SPOT urinary protein to creatinine ratio ≥0.3 or a urine dipstick reading of 1+ or greater (dipstick reading should only be used if other quantitative methods are not available). [902 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/MedXpertQA-Exam | 2025 | dataset card | https://huggingface.co/datasets/R2MED/MedXpertQA-Exam |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/MedXpertQA-Exam | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/MedXpertQA-Exam](https://huggingface.co/datasets/R2MED/MedXpertQA-Exam) |
 
 ### Representative Snippets
 

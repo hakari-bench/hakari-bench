@@ -173,14 +173,11 @@ and learn a final ordering rule that respects exact source-page cues.
 
 ## Example Data
 
-Representative examples include questions about why adult men in the United
-States leave the labor market, why manga fans care about TPP, what matters in
-the essence of UX, what Bitcoin mining does, and why seals are legally
-unnecessary for electronic contracts. Their positives are web-page
-title-description snippets rather than long answer passages. The examples show
-why title words and topical page identity are both important: a query may look
-like a question-answering item, but the target is the source page that motivated
-the question.
+| Query | Positive document |
+| --- | --- |
+| 米国で成人男性が労働市場にとどまれない理由は何ですか？ [27 chars] | 米国で成人男性が労働市場にとどまれない理由とは: 米連邦司法統計局の最新のまとめによると、収監中もしくは保護観察中、仮釈放中の男性は2013年、560万人に上った。米紙ニューヨーク・タイムズなどが今年初めに行った調査によれば、25~54歳で無職の男性の約34%が犯罪歴を持っている。 障害を持つ人々にも厳しい雇用環境が迫る。金融危機の間には、 [171 chars] |
+| マンガ好きがTPPに注目する理由は何ですか？ [22 chars] | マンガ好きもTPPに注目...「創作活動を萎縮」 : 経済 : 読売新聞(YOMIURI ONLINE): 環太平洋経済連携協定(TPP)交渉で、著作権を巡る議論がアニメやマンガの同人誌を作る愛好家の注目を集めている。 参加12か国は著作権の侵害について、警察が独自の判断で取り締まることができるようにする方向で検討している。愛好家にとってはこのことが「自由な創作活動を萎縮させる」というのだ。 [197 chars] |
+| UXの本質について何が重要だと考えられますか？ [23 chars] | UXの本質について: ※本コラムは、長谷川のブログ「underconcept」からの転載です。 ユーザー体験(ユーザーエクスペリエンス/User Experience: UX)という言葉が広く聞かれるようになってきた。半ばバズワードのように、特にウェブデザインやマーケティングの記事などの中では、この言葉を見ない日はない。しかしながら、多くの場合、 [174 chars] |
 
 ### Public Sources
 
@@ -199,9 +196,9 @@ the question.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| hotchpotch/JaCWIR |  | dataset card | https://huggingface.co/datasets/hotchpotch/JaCWIR |
-| sbintuitions/JMTEB | 2024 | dataset card | https://huggingface.co/datasets/sbintuitions/JMTEB |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| hotchpotch/JaCWIR |  | dataset card | [https://huggingface.co/datasets/hotchpotch/JaCWIR](https://huggingface.co/datasets/hotchpotch/JaCWIR) |
+| sbintuitions/JMTEB | 2024 | dataset card | [https://huggingface.co/datasets/sbintuitions/JMTEB](https://huggingface.co/datasets/sbintuitions/JMTEB) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

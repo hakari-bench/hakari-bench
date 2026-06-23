@@ -150,11 +150,11 @@ while hybrid retrieval supplies broader positive coverage for reranking.
 
 ## Example Data
 
-Representative queries ask when Chelsea F.C. was founded, who Gabon's first
-president was, who founded Tanzanian hip-hop, in what year Nigeria gained
-independence, or who the first president of Russia was. Positive documents are
-Swahili Wikipedia passages containing the requested founding, leadership,
-music-history, independence, or presidency evidence.
+| Query | Positive document |
+| --- | --- |
+| Chelsea F.C. ilizinduliwa lini? [31 chars] | Chelsea F.C. Chelsea Football Club ni klabu ya mpira wa miguu ya nchini Uingereza iliyo na maskani yake Fulham, London. Klabu hii ilianzishwa mwaka 1905, na kwa miaka mingi sana imekuwa ikishiriki ligi kuu ya Uingereza. Uwanja wao wa nyumbani ni Stamford Bridge ambao una uwezo wa kuingiza watazamaji 41,837, wameutumia uwanja huu tangu klabu ilivyoanzishwa. [359 chars] |
+| Rais wa kwanza wa Gabon aliitwa nani? [37 chars] | Omar Bongo Kiongozi huyo amevunja rekodi ya kuwa Rais aliyekaa muda mrefu marakani kuliko Rais yeyote barani Afrika. Rais huyo amefariki dunia akiwa na umri wa miaka 73, ambapo ameiongoza Gabon kwa miaka 42. Bongo alijiunga na serikali ya Gabon mwaka 1965 na mwaka 1967 akawa makamu wa Rais ambapo mwaka huo huo akashika hatamu ya kuwa Rais wa nchi hiyo kufuatia cha kifo cha ghafla cha Rais Leon Mba. Bongo alipoingia madarakani alijenga utawala imara ambao ulinufaika zaidi baada ya kugunduliwa kwa mafuta nchini Gabon ingawa utajiri wake ulinufaisha idadi ndogo ya watu wanaokadiriwa kuwa milioni 1.5. kitu kilicholeta lawama kubwa kwa kiongozi huyo. Rais huyo amefariki dunia wakati akipata tiba ya saratani jijini Barcelona nchini Hispania. Rais Bongo ameaga dunia takribani miezi mitatu baada ya kifo cha mkewe, Edith Lucie Bongo Ondimba (45) aliyefariki dunia 14 Machi mwaka huu wakati akipata tiba mjini Rabat nchini Morocco. Bongo na Edith walifunga ndoa mwaka 1990. Edith aliuguzwa kwa miez... [1,000 / 1,263 chars] |
+| Je,nani mwanzilishi wa mziki wa hIhop nchini Tanzania? [54 chars] | Machozi Jasho na Damu Halkadhalika ame-enzi kazi ya mwanzilishi halisi wa rap ya Kiswahili nchini Tanzania bwana Edward Mtui (maarufu kama Fresh XE) kwa kuchukua kiitikio chake cha "Piga Makofi" ambacho kilimpelekea ashinde tuzo ya Yo Rap Bonanza katika miaka ya 1980, lakini hakutoa nyimbo. Jay anatungia wimbo kiitikio hicho na ndani yake anataja wale wote walioifikisha hip hop ya Tanzania hapa kwa kuwataja. [412 chars] |
 
 ### Public Sources
 
@@ -172,10 +172,10 @@ music-history, independence, or presidency evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

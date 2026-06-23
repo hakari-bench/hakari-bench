@@ -120,11 +120,9 @@ results rather than broad climate-topic results.
 
 | Query | Positive document |
 | --- | --- |
-| 1970年から1998年まで、約0.7°Fの温度上昇をもたらした温暖化期間があり、これが地球温暖化懸念派の運動の発展を後押しした。 | ペレオセーンまたはパレオセーンは、約から続いた地質時代の区分である。これは、新生代の現代的な古第三紀における最初の世である... |
-| 実際、統計的に有意ではないが、傾向は下方に向かっている。 | 太陽周期または太陽磁気活動周期とは、太陽の活動および外観におけるほぼ周期的な11年周期の変動を指す... |
-| 局所的および地域的な海面レベルは、引き続き典型的な自然変動を示しており、ある場所では上昇し、他の場所では下降している。 | 平均海面とは、地球の海洋の表面の平均的なレベルであり、標高などの高さを測定する基準となるものである... |
-| [気候科学者ら]は、ハービー台風の事例のいくつかの側面が、地球温暖化が悪い状況をさらに悪化させていることを示唆していると述べている。 | 地球温暖化の影響とは、温室効果ガスの人為的排出によって引き起こされる環境的および社会的変化を指す... |
-| CERNのCLOUD実験は、宇宙線が地球温暖化の原因であるとするために必要な4つの条件のうち、4つのうち1つだけの3分の1しか検証しておらず、残りの条件のうち2つはすでに否定されている。 | 最近の気候変動の原因究明とは、地球上で見られる最近の気候変動、いわゆる「地球温暖化」の背後にある仕組みを科学的に明らかにしようとする試みである... |
+| 1970年から1998年まで、約0.7°Fの温度上昇をもたらした温暖化期間があり、これが地球温暖化懸念派の運動の発展を後押しした。 [65 chars] | ペレオセーン（-LSB- 発音：ˈpæliəˌsiːn、_ ˈpæ -、_ -lɪoʊ - -RSB-）またはパレオセーン（「古き新生」）は、約から続いた地質時代の区分である。これは、新生代の現代的な古第三紀における最初の世である。多くの地質時代と同様に、この世の始まりと終わりを定義する地層は明確に特定されているが、正確な年代は依然として不確実である。 ペレオセーン世は地球の歴史における2つの主要な出来事を挟んでいる。その始まりは白亜紀末の大量絶滅事件、いわゆる白亜紀－古第三紀（K-Pg）境界である。この時期は、非鳥類恐竜や巨大な海洋爬虫類、その他多くの動植物の絶滅が特徴であった。恐竜の絶滅により、世界中の生態的ニッチが空いた状態となった。一方、ペレオセーンの終わりは、古第三紀－始新世熱極大期（PETM）であり、これは地質学的に非常に短い（約0.2百万年）期間で、極端な気候変動と炭素循環の変化が見られた。 「ペレオセーン」という名称は古代ギリシャ語に由来し、この時代に出現した「古い（より初期の）」（παλαιός, palaios）「新しい」（καινός, kainos）動物相を指している。 [508 chars] |
+| 実際、統計的に有意ではないが、傾向は下方に向かっている。 [28 chars] | 太陽周期または太陽磁気活動周期とは、太陽の活動（太陽放射量や太陽物質の放出レベルの変化）および外観（太陽黒点の数や大きさ、太陽フレア、その他の現象の変化）におけるほぼ周期的な11年周期の変動を指す。これらの変動は、太陽の外観の変化や地球上で観測されるオーロラなどの現象を通じて、何世紀にもわたって観測されてきた。太陽の変化は、宇宙空間、大気、および地球表面にさまざまな影響を及ぼす。太陽活動における主要な変動要因ではあるが、非周期的な変動も同時に存在する。 [228 chars] |
+| 局所的および地域的な海面レベルは、引き続き典型的な自然変動を示しており、ある場所では上昇し、他の場所では下降している。 [59 chars] | 平均海面（MSL）（単に「海面」と略されることもある）とは、地球の海洋の表面の平均的なレベルであり、標高などの高さを測定する基準となるものである。MSLは、垂直方向のデatum（垂直デatum）の一種であり、地図作成や海洋航法における図法基準面（チャートデatum）や、航空分野において大気圧を測定して高度を較正し、結果として航空機の飛行高度を決定するための標準海面として用いられる。ある特定の地点における平均低潮位と平均満潮位の中間点を、比較的単純で一般的な平均海面の基準として採用することがある。 海面レベルは多くの要因の影響を受けることが知られており、地質学的時間スケールにおいて大きく変動してきた。MSLの変動を注意深く測定することは、現在進行中の気候変動に関する知見を提供することができ、海面上昇は地球温暖化の進行を示す証拠として広く引用されている。 「海抜以上」という用語は、通常「平均海面（AMSL）以上」を意味する。 [418 chars] |
 
 ### Public Sources
 
@@ -138,7 +136,7 @@ results rather than broad climate-topic results.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER | 2020 | task paper | https://arxiv.org/abs/2012.00614 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| CLIMATE-FEVER | 2020 | task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

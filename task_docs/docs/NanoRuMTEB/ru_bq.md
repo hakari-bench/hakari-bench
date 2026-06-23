@@ -62,23 +62,21 @@ Models should encode entity relation semantics and Russian morphology. Hard nega
 
 ## Example Data
 
-### Public Sources
-
-- [RuBQ 2.0: An Innovated Russian Question Answering Dataset](https://openreview.net/forum?id=P5UQFFoQ4PJ), task paper.
-- [The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design](https://arxiv.org/abs/2408.12503), ruMTEB paper.
-- [RuBQ project repository](https://github.com/vladislavneon/RuBQ), source repository.
-- [RuBQ Zenodo record](https://doi.org/10.5281/zenodo.4345696), dataset record.
-- [ai-forever/rubq-retrieval](https://huggingface.co/datasets/ai-forever/rubq-retrieval), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Как иначе называется канун Рождества Христова? [46 chars] | В списке представлены страны, в которых выходными днями (государственными праздниками), являются Рождественский сочельник (день перед Рождеством), Рождество Христово, Второй день Рождества и День подарков (26 декабря). [218 chars] |
+| На какой реке стоит город Багдад? [33 chars] | Багдад расположен почти в центре Ирака, на берегу реки Тигр, неподалёку от устья реки Дияла. Погодные условия в черте города и его окрестностях складываются под влиянием субтропического и средиземноморского климата. В январе средняя температура воздуха составляет около +10 °C, в июле — около +34 °C. Среднегодовой уровень осадков — от 160 до 180 мм. Наибольшее количество осадков выпадает в декабре — январе. Лето длится с мая по октябрь: в это время в Багдаде отмечается очень жаркая, знойная погода (в июле днём температура воздуха в среднем составляет около +43 градусов), дожди крайне редки. Зима длится с декабря по март; максимальная температура воздуха зимой не превышает +18 градусов. Бывали случаи выпадения снега (последний раз такое было в январе 2008 года). 21 января 2011 года зафиксированы заморозки: от −1 до −3 °C, что близко к абсолютным минимальным значениям. [878 chars] |
+| В каком театре выступал Владимир Высоцкий? [42 chars] | После окончания Школы-студии МХАТ в жизни Высоцкого наступил четырёхлетний период, связанный с поиском «своего театра». Молодой актёр успел поработать — с перерывами — в Театре имени Пушкина и других коллективах. Весной 1964 года он пришёл на показ в Театр на Таганке. Как вспоминал позже Юрий Любимов, перед ним предстал молодой человек в кепке и сером пиджаке, «сигареточку, конечно, погасил». Прочитанные им стихи Маяковского не произвели на режиссёра большого впечатления («что-то маловразумительное, бравадное»), зато пение под гитару заставило отложить все дела и слушать артиста в течение сорока пяти минут. Перед принятием решения Любимову довелось услышать разного рода предостережения: «Мне говорят: „Знаете, лучше не брать. Он пьющий человек“. Ну подумаешь, говорю, ещё один в России пьющий, тоже невидаль». [818 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RuBQ 2.0: An Innovated Russian Question Answering Dataset | 2021 | OpenReview paper | https://openreview.net/forum?id=P5UQFFoQ4PJ |
-| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | https://arxiv.org/abs/2408.12503 |
-| RuBQ project repository | 2021 | source repository | https://github.com/vladislavneon/RuBQ |
-| RuBQ Zenodo record | 2020 | dataset record | https://doi.org/10.5281/zenodo.4345696 |
-| ai-forever/rubq-retrieval | 2025 | dataset card | https://huggingface.co/datasets/ai-forever/rubq-retrieval |
+| RuBQ 2.0: An Innovated Russian Question Answering Dataset | 2021 | OpenReview paper | [https://openreview.net/forum?id=P5UQFFoQ4PJ](https://openreview.net/forum?id=P5UQFFoQ4PJ) |
+| The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design | 2025 | arXiv paper | [https://arxiv.org/abs/2408.12503](https://arxiv.org/abs/2408.12503) |
+| RuBQ project repository | 2021 | source repository | [https://github.com/vladislavneon/RuBQ](https://github.com/vladislavneon/RuBQ) |
+| RuBQ Zenodo record | 2020 | dataset record | [https://doi.org/10.5281/zenodo.4345696](https://doi.org/10.5281/zenodo.4345696) |
+| ai-forever/rubq-retrieval | 2025 | dataset card | [https://huggingface.co/datasets/ai-forever/rubq-retrieval](https://huggingface.co/datasets/ai-forever/rubq-retrieval) |
 
 ### Representative Snippets
 

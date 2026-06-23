@@ -70,12 +70,11 @@ Error analysis should check whether false positives are same-brand, same-policy,
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-webmasters-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-webmasters-vn)
+| Query | Positive document |
+| --- | --- |
+| find-new/posts&recent=1 làm trang chủ: còn SEO thì sao? [55 chars] | Một URL với chuỗi truy vấn tốt hơn hay xấu hơn cho SEO so với một URL không có chuỗi truy vấn? Tôi muốn biết, có sự khác biệt đáng kể về SEO giữa hai URL này không: > mysite.com/ontario/toronto/listings > hoặc > mysite.com/listings.php?p=ontario&c=toronto URL nào sẽ được xếp hạng cao hơn? Có sự khác biệt đáng kể ở đây không? [327 chars] |
+| Đặt các từ khóa liên quan trong một phần tử div ẩn có phải là một thói quen tốt để thực hiện SEO không? [103 chars] | Văn bản ẩn và xếp hạng của công cụ tìm kiếm Tôi đang sử dụng các văn bản ẩn trong một trang web của mình để xếp hạng công cụ tìm kiếm tốt hơn. Sau khi duyệt web, tôi thấy tốt nhất không nên sử dụng văn bản ẩn. Việc sử dụng văn bản ẩn trên trang web có ảnh hưởng đến thứ hạng không? Google có chặn các loại trang web sử dụng văn bản ẩn như cùng màu phông nền không. [365 chars] |
+| Tôi có thể giúp Google xây dựng SiteLinks như thế nào? [54 chars] | Những điều quan trọng nhất tôi cần làm để khuyến khích Google Sitelinks là gì? Trang web của tôi đã từng có sitelinks và bây giờ không còn nữa. Rất có thể là do thay đổi trang web sang một thiết kế thanh bên thay vì có một trang đích "interstitial" giới hạn số lượng lựa chọn, nhưng tôi không chắc chắn. Đây là cách mà sitelinks có thể trông đối với một trang web: ![Google Sitelinks](http://i.stack.imgur.com/sBaDc.jpg) Tôi có thể làm những gì để tăng cơ hội có được sitelinks? [479 chars] |
 
 ### Source Reference Table
 

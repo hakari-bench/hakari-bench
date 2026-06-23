@@ -143,11 +143,11 @@ candidate generation and dense retrieval for abstractive summary phrasing.
 
 ## Example Data
 
-Representative queries summarize a remote-control battery design discussion,
-parliamentary responses to COVID-19 support programs, product evaluation
-findings about unused buttons, a graduate student's qualification-exam proposal,
-and a design-team decision about remote-control buttons. Positive documents are
-the complete meeting transcripts containing those discussions.
+| Query | Positive document |
+| --- | --- |
+| They felt that the battery design should be long-lived, original, and conventional to ensure the battery's innovation, versatility, and durability. It should also not be far from the usual performance, or it may cause problems for new users. [241 chars] | User Interface: .. . Project Manager: Okay . So , this is uh first meeting of this design project . Um and I um like to show you the agenda for the meeting , I don't know if it was sent round to all of you . User Interface: Mm , yeah . Project Manager: Maybe not . Anyway , User Interface: I didn't receive it yet {vocalsound} . Project Manager: this is the the plan for today's meeting is um firstly just to introduce the project briefly , um although I'm sure you've actually got some of the information already . Then the main purpose is to {disfmarker} so that we get to know each other a little bit more . Industrial Designer: Mm-hmm . Project Manager: Um then we want to practice using some of the tools that we'll be using during the the course of the design project and the meetings , um specifically the whiteboard over there . Um then we need to go through the specifics of our project plan um and discuss {disfmarker} come up with some preliminary ideas about it . And then that's it . So... [1,000 / 22,629 chars] |
+| The Prime Minister explained that the government recognized that several organizations and companies were facing difficulties because of COVID-19 and they were supporting people all over the country through that program. Although the opposition party was getting rigorous about the intensity of the question, the Prime Minister kept emphasizing that the government's priority had always been workers in difficulty so that they do not lose their jobs. This applied to all organizations and companies i... [500 / 537 chars] | The Chair (Hon. Anthony Rota (NipissingTimiskaming, Lib.)): I call this meeting to order. Welcome to the 12th meeting of the House of Commons Special Committee on the COVID-19 Pandemic. This will be the first hybrid meeting of the committee. Some members will be participating via videoconference and some will be participating in person. This follows the order made by the House on May26,2020. Members who have already participated in a virtual meeting of the special committee may actually not notice any change, except for the fact that some members are also participating from the floor of the House. An additional rubric, that of statements by members, was also added to the proceedings of the committee. In order to ensure that those joining the meeting via video conference can be seen and heard by those in the chamber, two screens have been set up in the chamber on either side of the Speakers chair. Sound amplification for virtual interventions will be available, and members in the chambe... [1,000 / 120,229 chars] |
+| In the product evaluation, the team was satisfied with its success in reducing the number of unused buttons. The user interface was considered to be user-friendly enough. However, the team also admitted that there was still room for improvement on the location function, technological innovation, the material, as well as the fashion style of the remote control. [362 chars] | Project Manager: That should hopefully do the trick , um . 'Kay . Sorry about the small delay . Falling a little bit behind schedule . And that's uh fifteen twenty five . Okay . So just to try and roughly go over what we agreed in the last one , um we're gonna go for something uh uh how was it ? Uh The new black , I believe . Marketing: {gap} . Project Manager: Um something that looks good 'cause that seems to be in preference to actual functionality in the end , though we should never avoid functionality , of course . Uh many of our components are gonna be standard , off the shelf , but it seemed like we were gonna require at least an advanced chip and we were still very much for the idea of using an L_C_D_ display . Um other things were we were hoping to use rubber , most likely gonna be double curved , etcetera . Okay . So um due to your hard work , we might as well let the uh two designers go first , and uh show us the prototype . User Interface: Okay , it's a {disfmarker} Project... [1,000 / 43,300 chars] |
 
 ### Public Sources
 
@@ -164,9 +164,9 @@ the complete meeting transcripts containing those discussions.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization | 2021 | arXiv paper | https://arxiv.org/abs/2104.05938 |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization | 2021 | arXiv paper | [https://arxiv.org/abs/2104.05938](https://arxiv.org/abs/2104.05938) |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

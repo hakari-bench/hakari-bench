@@ -157,4 +157,4 @@ can contain passages related to many questions.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval | 2024 | paper | https://arxiv.org/abs/2407.12883 |
+| BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval | 2024 | paper | [https://arxiv.org/abs/2407.12883](https://arxiv.org/abs/2407.12883) |

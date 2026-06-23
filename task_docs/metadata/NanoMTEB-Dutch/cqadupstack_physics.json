@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,86 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "75363",
+        "document_id": "91269",
+        "query": {
+          "text": "Hoe is de Schrödingervergelijking een golffvergelijking?",
+          "full_chars": 56,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Relatie tussen de Schrödingervergelijking en de golfvergelijking Ik ben altijd in de war geweest over de relatie tussen de Schrödingervergelijking en de golfvergelijking. $$ i\\hbar \\frac{\\partial \\psi}{\\partial t} = - \\frac{\\hbar^2}{2m} \\nabla^2+ U \\psi \\hspace{0.25in}\\text{-vs-}\\hspace{0.25in}\\nabla^2 E = \\frac{1}{c^2}\\frac{\\partial^2 E}{\\partial^2 t} $$ Vanwege de eerste afgeleide lijkt de Schrödingervergelijking meer op de warmtevergelijking. Sommige afleidingen van de Schrödingervergelijking beginnen met golf-deeltjes dualiteit voor licht en betogen dat materie dit fenomeen ook zou moeten vertonen. In sommige aantekeningen van Fermi werd deze afgeleid door het Fermat principe van de kortste tijd $\\delta \\int n \\;ds = 0 $ en het Maupertuis principe van de kleinste actie $\\delta \\int 2T(t) \\; dt = 0 $ te vergelijken. Is dit ooit verduidelijkt? Hoe kunnen we het idee van een materiegolf kwantitatiever bekijken? * * * Samengevat, ik probeer te begrijpen waarom de elektromagnetische gol",
+          "full_chars": 1081,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "113548",
+        "document_id": "60614",
+        "query": {
+          "text": "Metingen van actieve ruisonderdrukkingstechnologie",
+          "full_chars": 50,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Maximale vertraging voor effectieve actieve ruisonderdrukking? Actieve ruisonderdrukking vermindert ongewenste geluiden door de omgekeerde fase van de originele fase te verzenden: ![Actieve ruisonderdrukking](http://i.stack.imgur.com/0jSp8.png) (Bron: Wikipedia) Theoretisch lijkt dit logisch. In de praktijk moet het antigeluid echter worden gegenereerd door een hardware- of softwaresysteem (zoals actieve ruisonderdrukkende hoofdtelefoons), wat tijd kost. Ik neem daarom aan dat het antigeluid altijd vertraagd is ten opzichte van het originele geluid: ![Actieve ruisonderdrukking met vertraging](http://i.stack.imgur.com/XBMyk.png) Mijn vragen: * Hoeveel (in milliseconden of wat dan ook) is de _maximale_ vertraging die \"toegestaan\" is voor actieve ruisonderdrukking zodat de luisteraar van het geluid+antigeluid het effect nog steeds merkt? * Hangt de \"toegestane\" vertraging af van welk geluid er moet worden onderdrukt (bijv. een rijdende auto, mensen die praten, muziek)?",
+          "full_chars": 985,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "102517",
+        "document_id": "100498",
+        "query": {
+          "text": "Zijn continue wiskundige modellen van discrete fysische verschijnselen rommelig vanwege een discrepantie tussen \"continu\" en \"discontinu\"?",
+          "full_chars": 138,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wat is het \"discrete\" analogon van de \"continuüm\" mechanica? Als ik een discrete wiskundige benadering van de continuümmechanica wil verkennen, welke leerboeken moet ik dan raadplegen? Een kant-en-klaar antwoord op de vraag zou kunnen zijn: \"computationele continuümmechanica\", maar leerboeken die dit onderwerp behandelen, zijn meestal gericht op het toepassen van numerieke analyse op continue theorieën (d.w.z. de basis is continu), terwijl ik wil weten of er een behandeling van het onderwerp bestaat die opgebouwd is vanuit een discrete basis.",
+          "full_chars": 549,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Od 1970. do 1998. godine postojao je period zagrevanja koji je podigao temperature za oko 0,7 stepeni Farenhajta, što je pomoglo da se pokrene pokret alarmista za globalno zagrevanje.",
+          "full_chars": 183,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Paleocen (izgovor: /ˈpæliəˌsiːn/, /ˈpæ-/, /-lioʊ-/) ili Paleocen, što znači \"stari novi\", je geološka epoha koja je trajala od oko 66 do 56 miliona godina. To je prva epoka paleogenog perioda u savremenoj kenozojskoj eri. Kao i kod mnogih geoloških perioda, slojevi koji definišu početak i kraj epohe su jasno utvrđeni, ali tačna vremenska doba ostaju neizvesna. Paleocenska epoha obuhvata dva velika događaja u Zemljinoj istoriji. Započela je masovnim izumiranjem na kraju krede, poznatim kao granica Kreda–Paleogen (K–Pg). Ovo je bilo vreme obeleženo nestankom neptičjih dinosaura, džinovskih morskih gmizavaca i mnogih drugih vrsta faune i flore. Nestanak dinosaura ostavio je nepopunjene ekološke niše širom sveta. Paleocen se završio sa Paleocensko–eocenskim toplotnim maksimumom, geološki kratkim intervalom (oko 0,2 miliona godina) karakterističnim po ekstremnim promenama u klimi i ciklusu ugljenika. Naziv \"Paleocen\" potiče iz starogrčkog jezika i odnosi se na \"staru (stariju)\" (παλαιός, pa",
+          "full_chars": 1072,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "Zapravo, trend je, iako nije statistički značajan, opadajući.",
+          "full_chars": 61,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Solarni ciklus ili ciklus solarne magnetne aktivnosti predstavlja gotovo periodičnu 11-godišnju promenu u aktivnosti Sunca (uključujući promene u nivou solarne radijacije i izbacivanju sunčevog materijala) i izgledu (promene u broju i veličini sunčevih pega, baklji i drugih pojava). Ove promene su posmatrane (kroz promene u izgledu Sunca i kroz promene primećene na Zemlji, poput aurora) vekovima. Promene na Suncu izazivaju efekte u svemiru, u atmosferi i na površini Zemlje. Iako je to dominantna promenljiva u sunčevoj aktivnosti, javljaju se i aperiodične fluktuacije.",
+          "full_chars": 574,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Lokalni i regionalni nivoi mora i dalje pokazuju tipičnu prirodnu varijabilnost — na nekim mestima se podižu, a na drugim spuštaju.",
+          "full_chars": 131,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Srednji nivo mora (MSL) (skraćeno samo kao nivo mora) je prosečan nivo površine jednog ili više Zemljinih okeana od koga se mogu meriti visine kao što su nadmorske visine. MSL je vrsta vertikalne datume – standardizovane geodetske referentne tačke – koja se koristi, na primer, kao kartografska datuma u kartografiji i pomorskoj navigaciji, ili u avijaciji kao standardni nivo mora na kome se meri atmosferski pritisak kako bi se kalibrisala visina i, posledično, nivoi leta vazduhoplova. Zajednički i relativno jednostavan standard srednjeg nivoa mora je srednja tačka između srednje niske i srednje visoke plime na određenoj lokaciji. Nivoi mora mogu biti pod uticajem mnogih faktora i poznato je da su varirali tokom geoloških vremenskih razmera. Pažljivo merenje varijacija u MSL-u može pružiti uvid u tekuće klimatske promene, a porast nivoa mora se široko navodi kao dokaz tekućeg globalnog zagrevanja. Izraz iznad nivoa mora obično se odnosi na iznad srednjeg nivoa mora (AMSL).",
+          "full_chars": 991,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

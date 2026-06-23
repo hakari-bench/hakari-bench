@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models",
         "url": "https://arxiv.org/abs/2306.08952",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "TR3-q-66",
+        "document_id": "TR3-d-88",
+        "query": {
+          "text": "Question: Who was the chair of Technical University of Munich before Wolfgang A. Herrmann? Facts: Otto Meitinger is the chair of Technical University of Munich from Jan, 1987 to Jan, 1995. Herbert Kupfer is the chair of Technical University of Munich from Jan, 1986 to Jan, 1987. Thomas F. Hofmann is the chair of Technical University of Munich from Sep, 2019 to Dec, 2022. Wolfgang A. Herrmann is the chair of Technical University of Munich from Jan, 1995 to Sep, 2019. Context: Technical University",
+          "full_chars": 13613,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Otto Meitinger",
+          "full_chars": 14,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR3-q-123",
+        "document_id": "TR3-d-169",
+        "query": {
+          "text": "Question: Who was the head of Romania before Alexandru G. Golescu? Facts: Gheorghe Tătărescu is the head of the government of Romania from Jan, 1934 to Dec, 1937. Adrian Năstase is the head of the government of Romania from Dec, 2000 to Dec, 2004. Manea Mănescu is the head of the government of Romania from Feb, 1974 to Mar, 1979. Petre S. Aurelian is the head of the government of Romania from Dec, 1896 to Apr, 1897. Ion Gheorghe Maurer is the head of the government of Romania from Mar, 1961 to F",
+          "full_chars": 75383,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Dimitrie Ghica",
+          "full_chars": 14,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR3-q-103",
+        "document_id": "TR3-d-123",
+        "query": {
+          "text": "Question: Which position did Lord Douglas Gordon-Hallyburton hold before Member of the 13th Parliament of the United Kingdom? Facts: Lord Douglas Gordon-Hallyburton holds the position of Member of the 11th Parliament of the United Kingdom from Dec, 1832 to Dec, 1834. Lord Douglas Gordon-Hallyburton holds the position of Member of the 13th Parliament of the United Kingdom from Jul, 1837 to Jun, 1841. Lord Douglas Gordon-Hallyburton holds the position of Member of the 10th Parliament of the United",
+          "full_chars": 3024,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Member of the 12th Parliament of the United Kingdom",
+          "full_chars": 51,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

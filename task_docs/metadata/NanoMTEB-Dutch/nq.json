@@ -161,6 +161,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test66",
+        "document_id": "doc1824",
+        "query": {
+          "text": "Wanneer is Chinees Nieuwjaar en welk jaar is het",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chinees Nieuwjaar Chinees Nieuwjaar,[a][2] ook wel bekend als het Lentefeest in modern China,[b] is een belangrijk Chinees festival dat wordt gevierd bij de overgang van de traditionele lunisolaire Chinese kalender. Het is een van de verschillende Lunar New Years in Azië. Vieringen lopen traditioneel van de avond voorafgaand aan de eerste dag tot het Lantaarnfestival op de 15e dag van de eerste kalendermaand. De eerste dag van het nieuwe jaar valt op de nieuwe maan tussen 21 januari en 20 februari.[3] In 2018 viel de eerste dag van het Chinees Nieuwjaar op vrijdag 16 februari, waarmee het jaar van de Hond begon.",
+          "full_chars": 620,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test123",
+        "document_id": "doc4611",
+        "query": {
+          "text": "wat is het verschil tussen ron en mon",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Octaangetal Een ander type octaangetal, Motor Octaangetal (MON) genaamd, wordt bepaald bij een motorsnelheid van 900 tpm in plaats van de 600 tpm voor RON.[1] Bij MON-tests wordt een vergelijkbare testmotor gebruikt als bij RON-tests, maar met een voorverwarmd brandstofmengsel, een hogere motorsnelheid en variabele ontstekingstiming om de klopvastheid van de brandstof verder te belasten. Afhankelijk van de samenstelling van de brandstof, zal de MON van een moderne tankbenzine ongeveer 8 tot 12 octaan lager zijn dan de RON, maar er is geen directe relatie tussen RON en MON. Specificaties voor tankbenzine vereisen doorgaans zowel een minimale RON als een minimale MON.[bron?]",
+          "full_chars": 682,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test103",
+        "document_id": "doc3528",
+        "query": {
+          "text": "aan wie behoorde puerto rico voordat het tot de VS behoorde",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Puerto Rico Oorspronkelijk bewoond door de inheemse Taíno-bevolking, werd het eiland in 1493 tijdens zijn tweede reis door Christoffel Columbus voor Spanje geclaimd. Later onderging het invasiepogingen van de Fransen, Nederlanders en Britten. Vier eeuwen Spaans koloniaal bestuur beïnvloedden het culturele landschap van het eiland met golven van Afrikaanse slaven, Canarische en Andalusische kolonisten. In het Spaanse Rijk speelde Puerto Rico een secundaire, maar strategische rol in vergelijking met rijkere koloniën zoals Peru en de vastelandgedeelten van Nieuw-Spanje.[22][23] Spanjes verre administratieve controle duurde voort tot het einde van de 19e eeuw, wat bijdroeg aan het ontstaan van een onderscheidende creoolse Hispanische cultuur en taal die elementen combineerde van de Native Americans, Afrikanen en Iberianen.[24] In 1898, na de Spaans-Amerikaanse Oorlog, verwierf de Verenigde Staten Puerto Rico volgens de bepalingen van het Verdrag van Parijs. Het verdrag trad op 11 april 189",
+          "full_chars": 1017,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

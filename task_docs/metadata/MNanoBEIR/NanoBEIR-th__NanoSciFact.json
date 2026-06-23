@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "การควบคุมฟังก์ชันของเมมเบรนราฟต์ของ Ly49Q ในการเคลื่อนที่ของนิวโทรฟิลไปยังจุดอักเสบ",
+          "full_chars": 83,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "นิวโทรฟิลจะเกิดการพอระเบียบและเคลื่อนที่ในทิศทางอย่างรวดเร็วเพื่อแทรกซึมเข้าสู่จุดติดเชื้อและการอักเสบ ที่นี่เราจะแสดงให้เห็นว่า ตัวรับ MHC I ที่มีฤทธิ์ยับยั้ง Ly49Q มีความสำคัญต่อการพอระเบียบอย่างรวดเร็วและการแทรกซึมของนิวโทรฟิลในเนื้อเยื่อ ในสภาวะปกติ Ly49Q จะยับยั้งการยึดเกาะของนิวโทรฟิลโดยการป้องกันการ形成ของโฟกัลคอมเพล็กซ์ ซึ่งน่าจะเกิดจากการยับยั้ง Src และ PI3 kinase อย่างไรก็ตาม ในการมีอยู่ของสิ่งกระตุ้นการอักเสบ Ly49Q จะทำหน้าที่ในการพอระเบียบและการแทรกซึมของนิวโทรฟิลอย่างรวดเร็วในลักษณะที่ขึ้นอยู่กับโดเมน ITIM ฟังก์ชันที่ตรงกันข้ามเหล่านี้ดูเหมือนจะถูกควบคุมโดยการใช้ฟอสฟาเทส SHP-1 และ SHP-2 ที่แตกต่างกัน การพอระเบียบและการเคลื่อนที่ที่ขึ้นอยู่กับ Ly49Q ได้รับผลกระทบจากการควบคุมฟังก์ชันของเมมเบรนแรฟท์โดย Ly49Q เราขอเสนอว่า Ly49Q มีบทบาทสำคัญในการเปลี่ยนแปลงนิวโทรฟิลให้มีรูปร่างที่พอระเบียบและการเคลื่อนที่อย่างรวดเร็วเมื่อเกิดการอักเสบ ผ่านการควบคุมเชิงพื้นที่และเวลาเกี่ยวกับเมมเบรนแรฟท์และโมเลกุลสัญญาณที่เกี่ยวข้องกับแรฟท์",
+          "full_chars": 942,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "การบำบัดด้วยยาต้านไวรัสและผลกระทบต่อการลดอัตราการติดเชื้อวัณโรคในกลุ่ม CD4 ที่หลากหลาย",
+          "full_chars": 86,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "พื้นหลัง การติดเชื้อไวรัสภูมิคุ้มกันบกพร่องของมนุษย์ (HIV) เป็นปัจจัยเสี่ยงที่สำคัญที่สุดในการพัฒนาวัณโรคและได้กระตุ้นให้เกิดการกลับมาของโรคนี้ โดยเฉพาะในแอฟริกาตอนใต้ของซาฮารา ในปี 2010 มีการประมาณว่ามีผู้ป่วยวัณโรคใหม่ประมาณ 1.1 ล้านรายในกลุ่มคน 34 ล้านคนที่มีชีวิตอยู่กับ HIV ทั่วโลก การบำบัดด้วยยาต้านไวรัสมีศักยภาพอย่างมากในการป้องกันวัณโรคที่เกี่ยวข้องกับ HIV เราได้ทำการทบทวนอย่างเป็นระบบเกี่ยวกับการศึกษาที่วิเคราะห์ผลกระทบของการบำบัดด้วยยาต้านไวรัสต่ออุบัติการณ์ของวัณโรคในผู้ใหญ่ที่ติดเชื้อ HIV วิธีการและผลการศึกษา ได้มีการค้นหาอย่างเป็นระบบใน PubMed, Embase, African Index Medicus, LILACS และทะเบียนการทดลองทางคลินิก การทดลองแบบสุ่มควบคุม, การศึกษาแบบกลุ่มตาม prospective และการศึกษาแบบกลุ่มตาม retrospective ถูกนำมารวมไว้หากเปรียบเทียบอุบัติการณ์ของวัณโรคตามสถานะการบำบัดด้วยยาต้านไวรัสในผู้ใหญ่ที่ติดเชื้อ HIV เป็นระยะเวลามากกว่า 6 เดือนในประเทศที่กำลังพัฒนา สำหรับการวิเคราะห์เมตา มีการจัดกลุ่มเป็นสี่ประเภทตามจำนวน CD4 ณ จุดเริ่มต้นการบำบัดด้วยยาต้านไวรัส: (1) น้อยกว่า 200 เซลล์/µl,",
+          "full_chars": 1895,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "การเพิ่มการแสดงออกอย่างรวดเร็วและการแสดงออกพื้นฐานที่สูงขึ้นของยีนที่กระตุ้นโดยอินเตอร์เฟอรอนลดการอยู่รอดของเซลล์ประสาทเกรนูลที่ติดเชื้อไวรัสเวสต์ไนล์หรือไม่?",
+          "full_chars": 158,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "แม้ว่าความไวของเซลล์ประสาทในสมองต่อการติดเชื้อจุลินทรีย์จะเป็นปัจจัยหลักที่กำหนดผลลัพธ์ทางคลินิก แต่ข้อมูลเกี่ยวกับปัจจัยโมเลกุลที่ควบคุมความเปราะบางนี้ยังมีน้อย ที่นี่เราจะแสดงให้เห็นว่าเซลล์ประสาทสองประเภทจากภูมิภาคสมองที่แตกต่างกันมีความสามารถในการอนุญาตต่อการจำลองของไวรัส RNA เชิงบวกหลายชนิดแตกต่างกัน เซลล์ประสาทเกรนูลในสมองน้อยและเซลล์ประสาทในเปลือกสมองมีโปรแกรมภูมิคุ้มกันที่เป็นเอกลักษณ์ซึ่งทำให้เกิดความไวที่แตกต่างต่อการติดเชื้อไวรัสทั้งในสภาพ ex vivo และ in vivo โดยการถ่ายทอดเซลล์ประสาทในเปลือกสมองด้วยยีนที่แสดงออกสูงกว่าในเซลล์ประสาทเกรนูล เราได้ระบุยีนที่กระตุ้นโดยอินเตอร์เฟอรอนสามตัว (ISGs; Ifi27, Irg1 และ Rsad2 (ที่รู้จักกันในชื่อ Viperin)) ที่ช่วยในการต่อต้านไวรัสต่อไวรัสที่มีผลต่อระบบประสาทที่แตกต่างกัน นอกจากนี้ เรายังพบว่าสถานะเอพิเจเนติกและการควบคุมของ ISGs โดยไมโครRNA (miRNA) มีความสัมพันธ์กับการตอบสนองต่อไวรัสที่เพิ่มขึ้นในเซลล์ประสาทเกรนูล ดังนั้น เซลล์ประสาทจากภูมิภาคสมองที่มีวิวัฒนาการแตกต่างกันจึงมีลายเซ็นภูมิคุ้มกันที่เป็นเอกลักษณ์ ซึ่งอาจมีส่วนช่วยในการอนุญาตต่",
+          "full_chars": 1021,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

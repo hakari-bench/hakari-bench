@@ -158,11 +158,9 @@ types while failing the full constraint.
 
 | Query | Positive document |
 | --- | --- |
-| Fitzgerald Autohaus in Chambersburg, PA (39 chars) | Fitzgerald Auto Malls ist ein familiengeführtes und -betriebenes Autohaus, das 1966 gegründet wurde und seine erste Filiale in Bethesda, Maryland, eröffnete. Stand 2014 belegte Fitzgerald Auto Malls Platz 59 auf der Liste der ... [truncated 225 chars](445 chars) |
-| Ist die Kurzgeschichtensammlung von Alice Munro aus dem Jahr 1994 verfügbar? (76 chars) | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, geb. Laidlaw /ˈleɪdlɔː/; geboren 10. Juli 1931) ist eine kanadische Autorin. Munros Werk wird beschrieben, die Struktur von Kurzgeschichten neu definiert zu haben, insbesondere durch ihre ... [truncated 225 chars](575 chars) |
-| Gallorömische Architektur in Paris (34 chars) | Kunst in Paris ist ein Artikel über die Kunstkultur und -geschichte in Paris, der Hauptstadt Frankreichs. Seit Jahrhunderten hat Paris Künstler aus aller Welt angezogen, die in die Stadt kommen, um sich weiterzubilden und Ins ... [truncated 225 chars](354 chars) |
-| Republiken des ehemaligen Jugoslawiens (38 chars) | Die Verfassung von 1974 Jugoslawiens war die vierte und letzte Verfassung der Sozialistischen Föderativen Republik Jugoslawien. Sie trat am 21. Februar in Kraft. Mit 406 ursprünglichen Artikeln war die Verfassung von 1974 ein ... [truncated 225 chars](454 chars) |
-| Filme, die in Venedig gedreht wurden (36 chars) | A Little Romance ist ein 1979er amerikanischer Technicolor- und Panavision-Romantikkomödie unter der Regie von George Roy Hill mit Laurence Olivier, Thelonious Bernard und Diane Lane in ihrer ersten Filmrolle. Das Drehbuch sc ... [truncated 225 chars](366 chars) |
+| Fitzgerald Autohaus in Chambersburg, PA [39 chars] | Fitzgerald Auto Malls ist ein familiengeführtes und -betriebenes Autohaus, das 1966 gegründet wurde und seine erste Filiale in Bethesda, Maryland, eröffnete. Stand 2014 belegte Fitzgerald Auto Malls Platz 59 auf der Liste der "Top 125 Autohändlergruppen" in den USA, die jährlich von Automotive News veröffentlicht wird. Fitzgerald-Händlerfilialen tauchen fünfmal in der WardsAuto e-Dealer 100 von 2013 auf, auf den Plätzen 8, 25, 30, 43 und 98. [445 chars] |
+| Ist die Kurzgeschichtensammlung von Alice Munro aus dem Jahr 1994 verfügbar? [76 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, geb. Laidlaw /ˈleɪdlɔː/; geboren 10. Juli 1931) ist eine kanadische Autorin. Munros Werk wird beschrieben, die Struktur von Kurzgeschichten neu definiert zu haben, insbesondere durch ihre Tendenz, vorwärts und rückwärts in der Zeit zu springen. Ihre Geschichten werden als "mehr zu enthüllen als zu präsentieren, mehr zu zeigen als zu verkünden" beschrieben. Munros Fiktion spielt meist in ihrem Heimatbezirk Huron County in Südwest-Ontario. Ihre Geschichten erforschen menschliche Komplexitäten in einem klaren und direkten Schreibstil. [575 chars] |
+| Gallorömische Architektur in Paris [34 chars] | Kunst in Paris ist ein Artikel über die Kunstkultur und -geschichte in Paris, der Hauptstadt Frankreichs. Seit Jahrhunderten hat Paris Künstler aus aller Welt angezogen, die in die Stadt kommen, um sich weiterzubilden und Inspiration in seinen künstlerischen Ressourcen und Galerien zu finden. Daher hat sich Paris den Ruf als 'Stadt der Kunst' erworben. [354 chars] |
 
 ### Public Sources
 
@@ -180,7 +178,7 @@ types while failing the full constraint.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DBpedia-Entity V2: A Test Collection for Entity Search | 2017 | task paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia-Entity V2: A Test Collection for Entity Search | 2017 | task paper | [https://doi.org/10.1145/3077136.3080751](https://doi.org/10.1145/3077136.3080751) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

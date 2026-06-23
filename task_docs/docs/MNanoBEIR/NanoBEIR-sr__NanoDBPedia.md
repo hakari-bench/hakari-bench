@@ -116,11 +116,9 @@ with a constraint-aware reranker.
 
 | Query | Positive document |
 | --- | --- |
-| Fitzgerald auto salon Chambersburg Pennsylvania | Fitzgerald Auto Malls je porodična auto-kompanija koja je osnovana 1966. godine, a prva lokacija otvorena je u Bethesdi... |
-| Zbirka kratkih priča iz 1994. godine "Alice Munro je Otvorena" | Aliсe En Manro je kanadska spisateljica. Manrin rad je opisan kao revolucionaran u arhitekturi kratkih priča... |
-| galsko-rimska arhitektura u Parizu | Umetnost u Parizu je članak o umetničkoj kulturi i istoriji u Parizu, glavnom gradu Francuske... |
-| Republike bivše Jugoslavije | Ustav Jugoslavije iz 1974. bio je četvrti i poslednji ustav Socijalističke Federativne Republike Jugoslavije... |
-| filmovi snimljeni u Veneciji | "Mala Romansa" je američki romantični komad iz 1979. godine, snimljen u tehnikoloru i panavizionu... |
+| Fitzgerald auto salon Chambersburg Pennsylvania [47 chars] | Fitzgerald Auto Malls je porodična auto-kompanija koja je osnovana 1966. godine, a prva lokacija otvorena je u Bethesdi, Maryland. Od 2014. godine, Fitzgerald Auto Malls se nalazio na 59. mestu liste "Top 125 prodajnih grupa" u SAD, koju svake godine objavljuje Automotive News. Prodajna mesta Fitzgerald se pojavljuju pet puta na WardsAuto e-Dealer 100 listi za 2013. godinu, na pozicijama 8, 25, 30, 43 i 98. [410 chars] |
+| Zbirka kratkih priča iz 1994. godine "Alice Munro je Otvorena" [62 chars] | Aliсe En Manro (/ˈælɨs ˌæn mʌnˈroʊ/, devojački Lejdlo /ˈleɪdlɔː/; rođena 10. jula 1931) je kanadska spisateljica. Manrin rad je opisan kao revolucionaran u arhitekturi kratkih priča, posebno u svojoj sklonosti da se kreće napred-nazad u vremenu. Za njenе priče se kaže da "više nagoveštavaju nego najavljuju, više otkrivaju nego paradiraju." Manrina proza je najčešće smeštena u njen rodni Okrug Huron u jugozapadnom Ontariju. Njene priče istražuju ljudske složenosti jednostavnim stilom proze. [494 chars] |
+| galsko-rimska arhitektura u Parizu [34 chars] | Umetnost u Parizu je članak o umetničkoj kulturi i istoriji u Parizu, glavnom gradu Francuske. Vekovima je Pariz privlačio umetnike iz celog sveta, koji su dolazili u grad kako bi se obrazovali i tražili inspiraciju iz njegovih umetničkih resursa i galerija. Kao rezultat toga, Pariz je stekao reputaciju "Grada umetnosti". [323 chars] |
 
 ### Public Sources
 
@@ -134,7 +132,7 @@ with a constraint-aware reranker.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DBpedia Entity Retrieval | 2017 | task paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia Entity Retrieval | 2017 | task paper | [https://doi.org/10.1145/3077136.3080751](https://doi.org/10.1145/3077136.3080751) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

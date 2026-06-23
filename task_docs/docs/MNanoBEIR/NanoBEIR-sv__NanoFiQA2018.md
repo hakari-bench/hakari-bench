@@ -62,9 +62,11 @@ A model targeting this task should improve domain-specific answer matching. Dens
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FiQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Vilken typ av avkastning anger Vanguard? [40 chars] | På Vanguard-sidan - Detta verkade vara det enklaste eftersom S&P-data är lätt att hitta. Jag använder MoneyChimp för att bekräfta att Vanguards sida erbjuder CAGR, inte aritmetiskt medelvärde. Vanguard anger att 'för amerikanska aktiemarknadens avkastning använder vi Standard & Poor's 90 från 1926 till och med 3 mars 1957,' medan MoneyChimp använder data från Nobelpristagaren Robert Shillers webbplats. [405 chars] |
+| Skattekonsekvenser vid frilansarbete [36 chars] | Om du har inkomst i USA, måste du betala amerikansk inkomstskatt på den, om det inte finns ett avtal mellan ditt land och USA som säger annat. [142 chars] |
+| Vad betraktas som hög eller låg volym? [38 chars] | Den dagliga volymen jämförs vanligtvis med den genomsnittliga dagliga volymen över de senaste 50 dagarna för en aktie. Hög volym anses vanligtvis vara 2 eller fler gånger den genomsnittliga dagliga volymen över de senaste 50 dagarna för den aktien. Vissa handelsmän kan dock sätta kriteriet till 3x eller 4x den genomsnittliga dagliga volymen (ADV) för att bekräfta ett visst mönster eller en händelse. Volymen jämförs med ADV för aktien själv, eftersom att jämföra den med volymen för andra aktier skulle vara som att jämföra äpplen med päron. Olika företag har olika antal totala aktier tillgängliga, olika nivåer av likviditet och olika nivåer av volatilitet, vilket alla kan påverka de volymer som handlas varje dag. [720 chars] |
 
 ### Source Reference Table
 

@@ -62,19 +62,19 @@ Models should represent obligations, permissions, rights, and restrictions rathe
 
 ## Example Data
 
-### Public Sources
-
-- [Plain English Summarization of Contracts](https://aclanthology.org/W19-2201/), task paper.
-- [mteb/legal_summarization](https://huggingface.co/datasets/mteb/legal_summarization), source retrieval dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| this service may collect use and share location data. [53 chars] | apple and our partners and licensees may collect use and share precise location data including the real time geographic location of your apple computer or device. where available location based services may use gps bluetooth and your ip address along with crowd sourced wi fi hotspot and cell tower locations and other technologies to determine your devices approximate location. unless you provide consent this location data is collected anonymously in a form that does not personally identify you and is used by apple and our partners and licensees to provide and improve location based products and services. for example your device may share its geographic location with application providers when you opt in to their location services. [740 chars] |
+| you may mod the game but don t distribute hacked clients. [57 chars] | if you ve bought the game you may play around with it and modify it. we d appreciate it if you didn t use this for griefing though and remember not to distribute the changed versions of our software. basically mods or plugins or tools are cool you can distribute those hacked versions of the game client or server are not you can t distribute those. [349 chars] |
+| if you haven t played for a year you mess up or we mess up we can delete all of your virtual goods. we don t have to give them back. we might even discontinue some virtual goods entirely but we ll give you 60 days advance notice if that happens. [245 chars] | we may cancel suspend or terminate your account and your access to your trading items virtual money virtual goods the content or the services in our sole discretion and without prior notice including if a your account is inactive i e not used or logged into for one year b you fail to comply with these terms c we suspect fraud or misuse by you of trading items virtual money virtual goods or other content d we suspect any other unlawful activity associated with your account or e we are acting to protect the services our systems the app any of our users or the reputation of niantic tpc or tpci. we have no obligation or responsibility to and will not reimburse or refund you for any trading items virtual money or virtual goods lost due to such cancellation suspension or termination. you acknowledge that niantic is not required to provide a refund for any reason and that you will not receive money or other compensation for unused virtual money and virtual goods when your account is closed wh... [1,000 / 1,441 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Plain English Summarization of Contracts | 2019 | task paper | https://aclanthology.org/W19-2201/ |
-| mteb/legal_summarization |  | dataset card | https://huggingface.co/datasets/mteb/legal_summarization |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| Plain English Summarization of Contracts | 2019 | task paper | [https://aclanthology.org/W19-2201/](https://aclanthology.org/W19-2201/) |
+| mteb/legal_summarization |  | dataset card | [https://huggingface.co/datasets/mteb/legal_summarization](https://huggingface.co/datasets/mteb/legal_summarization) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

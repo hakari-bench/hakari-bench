@@ -118,18 +118,18 @@ not dominate final ranking.
 
 ## Example Data
 
-### Public Sources
-
-- [Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings](https://arxiv.org/abs/2502.08638)
-- [Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Am selben Tag kündigte das Büro des Premierministers an, dass Justin Trudeau, wie von der Opposition gefordert, zu einem noch zu bestimmenden Termin ebenfalls vor diesem Ausschuss aussagen wird. [194 chars] | Le même jour, le bureau du premier ministre a fait savoir que Justin Trudeau témoignerait lui aussi devant cette commission, comme l'exige l'opposition, à une date restant à déterminer. [185 chars] |
+| Präsident Sebastian Piñera verkündete am 24. Juli eine historische Reform, die es den Chilenen erlaubt, 10 % ihrer privaten Rentenfonds vorzeitig zu entnehmen, um die durch die Covid-19-Pandemie verursachte Wirtschaftskrise zu bewältigen. [238 chars] | Le président Sebastian Piñera a promulgué le 24 juillet une réforme historique qui permet aux Chiliens le retrait anticipé de 10% de leurs fonds de retraite privés pour faire face à la crise économique entraînée par la pandémie de Covid-19. [240 chars] |
+| Geringfügige Anpassungen sollen mehr Kapital für Investoren freisetzen und es so „den Unternehmen leichter machen, die benötigte Finanzierung zu erhalten und in unsere Wirtschaft zu investieren“, versichert der Vizepräsident der Europäischen Kommission Valdis Dombrovskis. [272 chars] | Des ajustements mineurs qui doivent libérer plus de capital pour les investisseurs et donc permettre aux "entreprises d'obtenir plus facilement les financements dont elles ont besoin et d'investir dans notre économie", assure le vice-président de la Commission européenne, Valdis Dombrovskis. [292 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | https://arxiv.org/abs/2502.08638 |
-| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | https://huggingface.co/datasets/Andrianos/clsd_wmt19_21 |
+| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | Task paper | [https://arxiv.org/abs/2502.08638](https://arxiv.org/abs/2502.08638) |
+| Andrianos/clsd_wmt19_21 | 2025 | Dataset card | [https://huggingface.co/datasets/Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21) |
 
 ### Representative Snippets
 

@@ -89,36 +89,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
-        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -127,6 +97,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Frullati di cioccolato salutari",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Obiettivo: Studiare la relazione tra il consumo di ciliegie e il rischio di attacchi di gotta ricorrenti tra individui affetti da gotta. Metodi: Abbiamo condotto uno studio caso-crossover per esaminare le associazioni di un insieme di fattori di rischio putativi con attacchi di gotta ricorrenti. Gli individui con gotta sono stati reclutati prospetticamente e seguiti online per un anno. Ai partecipanti è stato chiesto di fornire le seguenti informazioni in caso di attacco di gotta: la data di insorgenza dell'attacco, i sintomi e i segni, i farmaci (inclusi i farmaci anti-gotta) e i potenziali fattori di rischio (incluso il consumo quotidiano di ciliegie e estratto di ciliegia) nel periodo di 2 giorni precedente all'attacco di gotta. Abbiamo valutato le stesse informazioni di esposizione in periodi di controllo di 2 giorni. Abbiamo stimato il rischio di attacchi di gotta ricorrenti correlati al consumo di ciliegie utilizzando la regressione logistica condizionale. Risultati: Il nostro st",
+          "full_chars": 1901,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "etica medica",
+          "full_chars": 12,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "SFONDO: Uno dei principali problemi nel controllare il colesterolo sierico attraverso l'intervento dietetico sembra essere la necessità di migliorare l'aderenza del paziente. OBIETTIVI: Esplorare le molte domande riguardanti le barriere e i motivatori per l'aderenza a una dieta ipocolesterolemizzante. METODI: Abbiamo indagato le pratiche dietetiche dei medici di base francesi per i pazienti con ipercolesterolemia e abbiamo esaminato l'atteggiamento dei loro pazienti verso tale approccio. RISULTATI: Abbiamo analizzato 234 questionari personali dei medici e 356 questionari di autovalutazione dei pazienti. Le ragioni dei pazienti per non seguire la dieta prescritta includono: 'avere già abitudini alimentari soddisfacenti' (34,7%), 'non voler soffrire di privazioni nutrizionali' (33,3%), 'difficoltà a conciliare la dieta con la vita familiare' (27,8%) e 'assumere farmaci per abbassare il colesterolo' (22,2%). Nonostante una comprensione generalmente buona delle raccomandazioni dei medici d",
+          "full_chars": 2032,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "fave",
+          "full_chars": 4,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Negli ultimi 20 anni, l'interesse crescente per la biochimica, la nutrizione e la farmacologia della L-arginina ha portato a studi estesi per esplorare i suoi ruoli nutrizionali e terapeutici nel trattamento e nella prevenzione dei disturbi metabolici umani. Le evidenze emergenti mostrano che l'integrazione dietetica di L-arginina riduce l'adiposità nei ratti geneticamente obesi, nei ratti obesi per dieta, nei maiali da ingrasso e nei soggetti umani obesi con diabete di tipo 2. I meccanismi responsabili degli effetti benefici della L-arginina sono probabilmente complessi, ma coinvolgono infine la modifica dell'equilibrio tra l'assunzione e il dispendio energetico a favore della perdita di grasso o della riduzione della crescita del tessuto adiposo bianco. Studi recenti indicano che l'integrazione di L-arginina stimola la biogenesi mitocondriale e lo sviluppo del tessuto adiposo bruno, possibilmente attraverso la sintesi aumentata di molecole di segnalazione cellulare (ad esempio, ossid",
+          "full_chars": 1443,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

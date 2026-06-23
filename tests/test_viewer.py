@@ -4529,6 +4529,9 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "Language" in viewer_js_response.text
     assert "model_url" in viewer_js_response.text
+    assert viewer_js_response.text.index('["Dimensions", "embedding_dim"]') < viewer_js_response.text.index(
+        '["Truncate dims", "truncate_dims"]'
+    )
     assert 'return key === "active_parameters" || key === "total_parameters";' in viewer_js_response.text
     assert 'const value = shouldShowUnknownModelDetailValue(key, rawValue) ? "Unknown"' in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text

@@ -139,12 +139,11 @@ signals used to broaden candidate coverage.
 
 ## Example Data
 
-Representative queries ask how legal hearing under Article 103(1) of the Basic
-Law is defined, what value a complaint procedure has, whether an agent must
-return objects received for the commission, with whom construction start was
-coordinated, and whether shareholders can be obligated to increase
-contributions. Positive documents are long German decisions containing the
-corresponding legal discussion.
+| Query | Positive document |
+| --- | --- |
+| Wie ist das rechtliche Gehör nach Art. 103 Abs. 1 GG definiert? [64 chars] | TenorDer Antrag auf Zulassung der Berufung wird abgelehnt.Der Kläger trägt die Kosten des Zulassungsverfahrens; Gerichtskosten werden nicht erhoben.1G r ü n d e2Der Antrag auf Zulassung der Berufung hat keinen Erfolg. Die Berufung ist weder wegen des geltend gemachten Zulassungsgrundes eines Verfahrensmangels (dazu I.) noch der grundsätzlichen Bedeutung (dazu II.) zuzulassen.3I. Die Berufung ist zunächst nicht aufgrund des von dem Kläger gerügten Verfahrensmangels der Versagung rechtlichen Gehörs nach § 78 Abs. 3 Nr. 3 AsylG i. V. m. § 138 Nr. 3 VwGO zuzulassen.4Das rechtliche Gehör als prozessuales Grundrecht (Art. 103 Abs. 1 GG) sichert den Beteiligten ein Recht auf Information, Äußerung und Berücksichtigung mit der Folge, dass sie ihr Verhalten eigenbestimmt und situationsspezifisch gestalten können und mit ihren Ausführungen und Anträgen durch das Gericht gehört werden. Das Gericht ist jedoch nicht verpflichtet, den Ausführungen eines Beteiligten in der Sache zu fol... [1,000 / 13,780 chars] |
+| Welchen Wert hat das Beschwerdeverfahren? [41 chars] | TenorDie Beschwerde des Beschwerdeführers vom 27.04.2018 gegen den Beschluss des Amtsgerichts – Familiengericht – Bochum vom 21.03.2018 (57 F 17/18) in Verbindung mit dem Beschluss vom 03.04.2018 wird zurückgewiesen.Die Kosten des Beschwerdeverfahrens werden dem Beschwerdeführer auferlegt.Der Wert des Beschwerdeverfahrens wird auf 3.000,00 € festgesetzt.Die Rechtsbeschwerde wird zugelassen.1Gründe:2I.3Der am ##.##.2000 geborene Beschwerdeführer ist Staatsangehöriger der Republik Guinea. Durch Beschluss des Amtsgerichts – Familiengericht – Bochum vom 25.11.2016 wurde für ihn das Ruhen der elterlichen Sorge festgestellt und Vormundschaft angeordnet. Zum Vormund wurde die jetzige Verfahrensbevollmächtigte des Beschwerdeführers bestellt.4Durch den angefochtenen Beschluss vom 21.03.2018, hinsichtlich der Beschlussformel berichtigt durch Beschluss vom 03.04.2018, hat das Familiengericht deklaratorisch festgestellt, dass die Vormundschaft beendet ist, weil der Beschwerdeführer mit V... [1,000 / 11,601 chars] |
+| Muss der Beauftragte dem Auftraggeber erhaltene Gegenstände zur Ausführung des Auftrages zurückgeben? [101 chars] | Tenor1E n t s c h e i d u n g s g r ü n d e :2##blob##nbsp;3##blob##nbsp;4Die in förmlicher Hinsicht unbedenkliche Berufung hat nach demErgebnis der zweitinstanzlichen Beweisaufnahme keinen Erfolg.5Das Landgericht hat die Beklagte im rechtlichen Ausgangspunkt zuRecht aus §§ 667, 665, 669, 398 BGB zur Zahlung verurteilt. DieKreissparkasse K. hat ihren Anspruch auf Rückerstattung desBetrages, der aus dem hier streitigen Überweisungsvorgang derBeklagten gutgeschrieben wurde, an den Kläger abgetreten.6Da die Beklagte den ihr von der Kreissparkasse K. erteiltenAuftrag nicht ordnungsgemäß ausgeführt hat, ist sie diesergegenüber zur Rückerstattung verpflichtet.7Nach § 667 BGB ist der Beauftragte verpflichtet, demAuftraggeber alles, was er zur Ausführung des Auftrags erhält,herauszugeben. Die Anweisung der Kreissparkasse K. an die Beklagte,auf dem Konto des Herrn "U.H." einen Betrag gutzuschreiben, stellteinen Auftrag im Sinne der §§ 667 ff. BGB zwischen denKreditinstituten dar. Dur... [1,000 / 13,258 chars] |
 
 ### Public Sources
 
@@ -159,8 +158,8 @@ corresponding legal discussion.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents | 2021 | IEEE DOI record | https://doi.org/10.1109/AIKE52691.2021.00011 |
-| LegalQuAD | 2025 | Hugging Face dataset card | https://huggingface.co/datasets/mteb/LegalQuAD |
+| Towards Intelligent Legal Advisors for Document Retrieval and Question-Answering in German Legal Documents | 2021 | IEEE DOI record | [https://doi.org/10.1109/AIKE52691.2021.00011](https://doi.org/10.1109/AIKE52691.2021.00011) |
+| LegalQuAD | 2025 | Hugging Face dataset card | [https://huggingface.co/datasets/mteb/LegalQuAD](https://huggingface.co/datasets/mteb/LegalQuAD) |
 
 ### Representative Snippets
 

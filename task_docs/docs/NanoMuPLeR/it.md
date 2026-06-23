@@ -62,19 +62,19 @@ Models should learn both Italian legal paraphrase and exact handling of names, r
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Quale opposizione UE in spagnolo riguardò diniego per somiglianza tra segno figurativo di due lettere e marchi per abbigliamento? [129 chars] | «Marchio comunitario Procedura di opposizione Marchio comunitario figurativo anteriore contenente la combinazione di lettere “NL”Domande di marchi comunitari figurativi contenenti i termini “NLSPORT”, “NLJEANS”, “NLACTIVE” e “NLCollection”Impedimento relativo alla registrazione Rischio di confusione Somiglianza tra i segni Art. 8, n. 1, lett. b), del regolamento (CE) n. 40/94»Lingua processuale: lo spagnolo Nelle cause riunite da T 117/03 a T 119/03 e T 171/03, New Look Ltd, con sede in Weymouth, Dorset (Regno Unito), rappresentata dagli avv.ti R. [553 chars] |
+| Quale salume il cui nome etimologicamente deriva da termini per cacciatori e indica razioni portatili a lunga conservazione? [124 chars] | Il nome kiełbasa myśliwska indica la natura specifica del prodotto. Il carattere specifico del prodotto è testimoniato dall'etimologia del nome che deriva da myśliwy (cacciatore), myślistwo (caccia) ed indica la destinazione originaria del prodotto che inizialmente era utilizzato dai cacciatori come cibo asciutto durante le battute. La sua durata di conservazione e la praticità hanno fatto sì che il prodotto fosse utilizzato nei viaggi, nelle gite e nei soggiorni in località in cui era difficile procacciarsi del cibo. Con il tempo, la destinazione commerciale di tale prodotto si è ampliata, ma il nome non ha subito cambiamenti. [635 chars] |
+| Quale schema d'intervento a tre livelli è proposto insieme a promuovere benessere psicologico, mantenimento stili di vita e contesti favorevoli? [144 chars] | Da questo punto di vista va posto l'accento sulla prevenzione, o sulla sua componente primaria, secondaria e terziaria più adatta al settore interessato. Devono essere sviluppati gli interventi di promozione della salute mentale e quelli di informazione del pubblico sull'acquisizione e sul mantenimento di sane abitudini di vita e sulla creazione di un contesto propizio alla realizzazione del potenziale individuale. Lo stesso vale per l'attività di prevenzione che punta a ridurre l'incidenza dei disturbi mentali concentrandosi sui fattori di rischio e sulle situazioni patogene. Qualche esempio: [600 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

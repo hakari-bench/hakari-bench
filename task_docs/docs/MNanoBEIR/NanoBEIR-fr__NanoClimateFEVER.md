@@ -48,13 +48,11 @@ Strong models should improve climate evidence recall without losing claim specif
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| De 1970 à 1998, il y a eu une période de réchauffement qui a fait augmenter les températures d'environ 0,7 degré Fahrenheit... | Le Paléocène, qui signifie « ancien récent », est une époque géologique qui a duré d'environ 66 à 56 millions d'années... |
-| En réalité, la tendance, bien qu'elle ne soit pas statistiquement significative, baisse. | Le cycle solaire ou cycle d'activité magnétique solaire est le cycle quasi périodique d'environ 11 ans des variations de l'activité du Soleil... |
-| Les niveaux de la mer locaux et régionaux continuent de varier naturellement, montant dans certaines régions et baissant dans d'autres. | Le niveau moyen de la mer est un niveau moyen de la surface d'un ou plusieurs des océans de la Terre... |
-| Les scientifiques du climat disent que certains aspects de l'ouragan Harvey suggèrent que le réchauffement climatique rend une situation déjà mauvaise encore plus difficile. | Les effets du réchauffement climatique sont les changements environnementaux et sociaux causés par les émissions humaines de gaz à effet de serre... |
-| L'expérience CLOUD du CERN n'a testé qu'un tiers d'une des quatre exigences nécessaires pour attribuer le réchauffement climatique aux rayons cosmiques... | L'attribution des changements climatiques récents consiste à déterminer scientifiquement les mécanismes responsables des changements climatiques observés sur Terre... |
+| Query | Positive document |
+| --- | --- |
+| De 1970 à 1998, il y a eu une période de réchauffement qui a fait augmenter les températures d'environ 0,7 degré Fahrenheit, contribuant ainsi à l'émergence du mouvement alarmiste du réchauffement climatique. [208 chars] | Le Paléocène (prononcé /paleosɛn/), ou Paléocène, qui signifie « ancien récent », est une époque géologique qui a duré d'environ 66 à 56 millions d'années. C'est la première époque de la période Paléogène dans l'ère Cénozoïque moderne. Comme pour de nombreuses périodes géologiques, les strates qui définissent le début et la fin de cette époque sont bien identifiées, mais les âges exacts restent incertains. L'époque du Paléocène encadre deux événements majeurs dans l'histoire de la Terre. Elle a commencé avec l'événement d'extinction massive à la fin du Crétacé, connu sous le nom de limite Crétacé-Paléogène (K-Pg). Cette période a été marquée par la disparition des dinosaures non aviens, des grands reptiles marins et de nombreuses autres faunes et flores. La disparition des dinosaures a laissé des niches écologiques vacantes à travers le monde. Le Paléocène s'est terminé avec le Maximum Thermique du Paléocène-Éocène, un intervalle géologiquement bref (environ 0,2 million d'années) carac... [1,000 / 1,248 chars] |
+| En réalité, la tendance, bien qu'elle ne soit pas statistiquement significative, baisse. [88 chars] | Le cycle solaire ou cycle d'activité magnétique solaire est le cycle quasi périodique d'environ 11 ans des variations de l'activité du Soleil (y compris les changements dans les niveaux de rayonnement solaire et l'éjection de matière solaire) et de son apparence (changements dans le nombre et la taille des taches solaires, des éruptions, et d'autres phénomènes). On les a observés (par les changements dans l'apparence du Soleil et par les changements observés sur Terre, comme les aurores) depuis des siècles. Les changements sur le Soleil provoquent des effets dans l'espace, dans l'atmosphère, et à la surface de la Terre. Bien qu'il soit la principale variable de l'activité solaire, des fluctuations irrégulières se produisent également. [744 chars] |
+| Les niveaux de la mer locaux et régionaux continuent de varier naturellement, montant dans certaines régions et baissant dans d'autres. [135 chars] | Le niveau moyen de la mer (NMM) (abréviation simplement niveau de la mer) est un niveau moyen de la surface d'un ou plusieurs des océans de la Terre à partir duquel des hauteurs telles que les altitudes peuvent être mesurées. Le NMM est un type de référence géodésique verticale standardisée utilisée, par exemple, comme référence de carte en cartographie et en navigation maritime, ou, en aviation, comme niveau moyen de la mer auquel la pression atmosphérique est mesurée afin de calibrer l'altitude et, par conséquent, les niveaux de vol des avions. Un standard de niveau moyen de la mer courant et relativement simple est le point médian entre une marée basse moyenne et une marée haute moyenne à un endroit particulier. Les niveaux de la mer peuvent être affectés par de nombreux facteurs et sont connus pour avoir beaucoup varié sur des échelles de temps géologiques. La mesure précise des variations du NMM peut offrir des perspectives sur le changement climatique en cours, et l'élévation du... [1,000 / 1,206 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should improve climate evidence recall without losing claim specif
 
 | Label | URL |
 |---|---|
-| Climate-FEVER paper | https://arxiv.org/abs/2012.00614 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Climate-FEVER paper (https://arxiv.org/abs/2012.00614) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

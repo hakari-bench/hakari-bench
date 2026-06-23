@@ -62,17 +62,18 @@ Models should learn to map questions to concise answer phrases through science r
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge](https://arxiv.org/abs/1803.05457), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Some students are performing hardness tests on several substances. X scratches Y. Y scratches Z. Z scratches W. Which of these statements best describes substance W's hardness? [176 chars] | W is the softest of the four substances tested. [47 chars] |
+| Hurricanes form over equatorial areas. This is because [54 chars] | solar heating is greatest near the equator. [43 chars] |
+| The best description of the troposphere is the layer of the atmosphere with the [79 chars] | greatest density. [17 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge | 2018 | arXiv paper | https://arxiv.org/abs/1803.05457 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Think you have solved question answering? Try ARC, the AI2 Reasoning Challenge | 2018 | arXiv paper | [https://arxiv.org/abs/1803.05457](https://arxiv.org/abs/1803.05457) |
 
 ### Representative Snippets
 

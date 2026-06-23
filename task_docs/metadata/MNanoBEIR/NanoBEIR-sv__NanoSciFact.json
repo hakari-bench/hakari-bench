@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q styr organiseringen av neutrofilmigration till inflammationsställen genom att reglera membranraftsfunktioner.",
+          "full_chars": 115,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Neutrofilerna genomgår snabbt polarisering och riktad rörelse för att tränga in i infektions- och inflammationsställen. Vi visar här att en inhiberande MHC I-receptor, Ly49Q, var avgörande för den snabba polariseringen och vävnadsinfiltrationen av neutrofilerna. Under viloläget hämmar Ly49Q neutrofilernas vidhäftning genom att förhindra bildning av fokalkomplex, troligen genom att inhibera Src- och PI3-kinaser. Däremot, vid närvaro av inflammatoriska stimuli, medierade Ly49Q snabb polarisering och vävnadsinfiltration av neutrofilerna på ett ITIM-domänberoende sätt. Dessa motsatta funktioner verkar vara medierade av skilda användningar av effektorfosfataserna SHP-1 och SHP-2. Ly49Q-beroende polarisering och migration påverkades av Ly49Q:s reglering av membranraftsfunktioner. Vi föreslår att Ly49Q är avgörande för övergången av neutrofilerna till deras polariserade morfologi och snabba migration vid inflammation, genom dess rumsliga och tidsmässiga reglering av membranraftar och raft-ass",
+          "full_chars": 1025,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Antiretroviral behandling minskar förekomsten av tuberkulos över ett brett spektrum av CD4-strata.",
+          "full_chars": 98,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "BAKGRUND Infektion med humant immunbristvirus (HIV) är den starkaste riskfaktorn för att utveckla tuberkulos och har drivit på dess återkomst, särskilt i subsahariska Afrika. År 2010 uppskattades det finnas 1,1 miljoner nya fall av tuberkulos bland de 34 miljoner människor som levde med HIV världen över. Antiretroviral terapi har betydande potential att förebygga HIV-relaterad tuberkulos. Vi genomförde en systematisk översikt av studier som analyserade effekten av antiretroviral terapi på tuberkulosincidensen hos vuxna med HIV-infektion. METOD OCH RESULTAT PubMed, Embase, African Index Medicus, LILACS och kliniska prövningsregister systematiskt sökts igenom. Randomiserade kontrollerade studier, prospektiva kohortstudier och retrospektiva kohortstudier inkluderades om de jämförde tuberkulosincidensen baserat på antiretroviral terapi-status hos HIV-infekterade vuxna i utvecklingsländer under en median på över 6 månader. För meta-analyserna fanns fyra kategorier baserade på CD4-tal vid in",
+          "full_chars": 2152,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Snabb uppreglering och högre basala uttryck av interferoninducerade gener minskar överlevnaden hos granulära cellneuroner som är infekterade av West Nile-virus.",
+          "full_chars": 160,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Neuronernas känslighet i hjärnan för mikrobiella infektioner är en avgörande faktor för klinisk utfall. Det finns lite kunskap om de molekylära faktorer som styr denna sårbarhet. Vi visar här att två typer av neuroner från olika hjärnregioner visade olika grad av tillåtlighet för replikation av flera positiva enkelsträngade RNA-virus. Granulära cellneuroner i lillhjärnan och kortikala neuroner från storhjärnan har unika medfödda immunprogram som ger olika känslighet för viral infektion både in vitro och in vivo. Genom att överföra kortikala neuroner med gener som uttrycktes mer i granulära cellneuroner, identifierade vi tre interferonstimulerade gener (ISG; Ifi27, Irg1 och Rsad2 (även känt som Viperin)) som medierade antivirala effekter mot olika neurotropa virus. Vi fann också att den epigenetiska tillståndet och miRNA-medierad reglering av ISG korrelerar med en förbättrad antiviral respons i granulära cellneuroner. Således har neuroner från evolutionärt olika hjärnregioner unika medf",
+          "full_chars": 1092,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

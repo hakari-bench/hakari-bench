@@ -62,19 +62,19 @@ Models should represent user intent, topic, risk framing, and answer specificity
 
 ## Example Data
 
-### Public Sources
-
-- [How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection](https://arxiv.org/abs/2301.07597), HC3 paper.
-- [Hello-SimpleAI/HC3](https://huggingface.co/datasets/Hello-SimpleAI/HC3), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| Is socialtrend.com or/and feelthetrend.com legitimate? [54 chars] | It's called a "Pyramid scheme". Its illegal in almost every country of the Western world. You're not going to earn lifetime income, of course, and these things collapse pretty quickly. Most of the "common folks" don't return the investment, its the organizers who take the money. Sometimes they run, most times they end up in jail. The way these schemes work is that they pay the early "investors" from the fees paid by new "investors". As long as a steady stream of new people keep signing up and paying into it those who got in very early make money. The idea is based on the geometric procession of each new person signing up two or more people, and those people doing the same. Pretty quickly at that rate you need to sign up every human being on the planet to keep the new money flowing in to make it work, which obviously is not realistic. Ultimately a small % of the people (if they can stay out of jail) will make a big amount of money the vast majority of "investors" get stiffed. [989 chars] |
+| How to read Google Finance data on dividends [44 chars] | However, you have to remember that not all dividends are paid quarterly. For example one stock I recently purchased has a price of $8.03 and the Div/yield = 0.08/11.9 . $.08 * 4 = $0.32 which is only 3.9% (But this stock pays monthly dividends). $.08 * 12 = $0.96 which is 11.9 %. So over the course of a year assuming the stock price and the dividends didn't change you would make 11.9% [392 chars] |
+| What is a good way to keep track of your credit card transactions, to reduce likelihood of fraud? [97 chars] | Read your bill, question things that don't look familiar. People who steal credit card numbers don't bother to conceal themselves well. So if you live in Florida, and all of the sudden charges appear in Idaho, you should investigate. Keeping charge slips seems counter-productive to me. I already know that I bought gasoline from the station down the street, a slip of paper whose date may or may not align with the credit card bill is not very useful. The half-life for a stolen card is hours. So you tend to see a bunch of charges appearing quickly. If someone is stealing $20 a week from you over an extended period of time, the theif is probably someone you live or work with, and paper slips won't help you there either. [725 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection | 2023 | task paper | https://arxiv.org/abs/2301.07597 |
-| Hello-SimpleAI/HC3 |  | dataset card | https://huggingface.co/datasets/Hello-SimpleAI/HC3 |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| How Close is ChatGPT to Human Experts? Comparison Corpus, Evaluation, and Detection | 2023 | task paper | [https://arxiv.org/abs/2301.07597](https://arxiv.org/abs/2301.07597) |
+| Hello-SimpleAI/HC3 |  | dataset card | [https://huggingface.co/datasets/Hello-SimpleAI/HC3](https://huggingface.co/datasets/Hello-SimpleAI/HC3) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

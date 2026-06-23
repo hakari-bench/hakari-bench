@@ -70,12 +70,11 @@ Error analysis should group failures by problem type: drawing and layout, biblio
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack paper](https://doi.org/10.1145/2838931.2838934)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/cqadupstack-tex-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-tex-vn)
+| Query | Positive document |
+| --- | --- |
+| Vẽ cung tròn trong Tikz khi trung tâm của đường tròn được chỉ định [66 chars] | vị trí cung so với vòng tròn > **Có thể là trùng lặp:** > Vẽ cung trong Tikz khi tâm của vòng tròn được chỉ định một câu hỏi rất đơn giản nhưng tôi không thể làm được! Xin lỗi nhưng tôi thấy tọa độ gây nhầm lẫn. Tôi muốn vẽ một cung xung quanh một vòng tròn; cả hai nên có cùng tâm quay. Và tôi muốn đặt vị trí của cung tương đối với vòng tròn. Đây là MWE để sửa chữa: \documentclass{article} \usepackage{tikz} \usepackage{graphicx} \tikzset{state/.style={circle,draw=black, very thick,minimum size=4em}} \begin{document} \begin{tikzpicture} \node[state, fill=black!20] (sh1) at (1,3) {Circle}; \draw[thick] (sh1) arc (0:300:2cm); \end{tikzpicture} \end{document} Làm thế nào tôi có thể có cùng tâm cho cả hai hình dạng, với vị trí tương đối của cung? Bạn có ý tưởng đơn giản và tuyệt vời nào không? [868 chars] |
+| Cách trích dẫn tài liệu pháp lý đúng cách là gì? [48 chars] | Làm thế nào để trích dẫn các vụ kiện pháp lý trong BibTeX > **Có thể trùng lặp:** > Cách trích dẫn văn bản pháp lý đúng cách là gì? Ai biết cách định dạng trích dẫn một vụ án pháp lý trong BibTeX không? Giả sử tôi muốn trích dẫn Brown v. Hội đồng Giáo dục, 1954. Nó sẽ như thế nào trong BibTeX? [297 chars] |
+| Sử dụng ERT trong LyX [21 chars] | Bảng TeX của LyX quá lớn Tôi đang chèn một tập tin TeX vào tài liệu LyX bằng cách sử dụng Chèn -> Tài liệu con. Bảng trông ổn trên màn hình của LyX nhưng khi tôi xem trước PDF thì nó lớn gấp 10 lần. Không biết làm thế nào để điều chỉnh độ phóng to để nó hiển thị đúng. Hoặc việc sử dụng đường dẫn tài liệu con có sai không? Đây là ví dụ: \begin{table} \caption{Bảng hồi quy}\label{tab1} \centering \smallskip \begin{tabular}{@{}l cccccc @{}} \toprule & \multicolumn{2}{c}{Mô hình 1} & \multicolumn{2}{c}{Mô hình 2} & \multicolumn{2}{c@{}}{Mô hình 3}\\ \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(l){6-7} & Hệ số & SE & Hệ số & SE & Hệ số & SE\\ \midrule biến 1 & 12,758 & * & 13,822 & *** & 2,123 & *\\ \midrule[\heavyrulewidth] \multicolumn{7}{@{}l}{* $p < 0,05$, ** $p < 0,01$, *** $p < 0,001$.}\\ \end{tabular} \end{table} Khi tôi thêm điều này như một đầu vào cho bài thuyết trình Beamer của tôi trong LyX, slide phóng to bảng 5-10 lần khiến nó không thể đọc được. [1,052 chars] |
 
 ### Source Reference Table
 

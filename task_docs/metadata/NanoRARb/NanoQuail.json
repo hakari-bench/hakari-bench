@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Getting Closer to AI Complete Question Answering: A Set of Prerequisite Real Tasks",
         "url": "https://ojs.aaai.org/index.php/AAAI/article/view/6398",
         "year": 2020,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "quail-q-66",
+        "document_id": "quail-d-192",
+        "query": {
+          "text": "Context: It took Erin an hour and forty-five minutes to drive from their half-million dollar home in Plano to the small rented cabin at Lake Texoma, near the Oklahoma state line. It was Thursday night, and she could have been in their backyard, sitting by the pool in an ultra-skimpy bikini, drinking and laughing with her friends. Like every other night. She walked in and slammed the door. \"Okay, I'm here. Now, will you please tell me why it was so important for me to drive all the way up here to",
+          "full_chars": 1562,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "will have an argument with Erin",
+          "full_chars": 31,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "quail-q-123",
+        "document_id": "quail-d-357",
+        "query": {
+          "text": "Context: I actually managed a kind of sleep there, kneeling with the circulation cut off to my legs, my head in canvas twilight. My body had squirted a year's supply of adrenalin into my bloodstream in the space of 30 minutes, and while that stuff can give you the strength to lift cars off your loved ones and leap over tall buildings, the payback's always a bitch. I woke up to someone pulling the hood off my head. They were neither rough nor careful -- just...impersonal. Like someone at McDonald",
+          "full_chars": 1943,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "After someone pulled the hood off their head.",
+          "full_chars": 45,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "quail-q-103",
+        "document_id": "quail-d-296",
+        "query": {
+          "text": "Context: I'm a senior at Cesar Chavez high in San Francisco's sunny Mission district, and that makes me one of the most surveilled people in the world. My name is Marcus Yallow, but back when this story starts, I was going by w1n5t0n. Pronounced \"Winston.\" Not pronounced \"Double-you-one-enn-five-tee-zero-enn\" -- unless you're a clueless disciplinary officer who's far enough behind the curve that you still call the Internet \"the information superhighway.\" I know just such a clueless person, and h",
+          "full_chars": 1746,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "After I was told to report to the administration office immediately.",
+          "full_chars": 68,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

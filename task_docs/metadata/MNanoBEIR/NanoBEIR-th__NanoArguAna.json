@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "Argument Mining for Understanding Peer Reviews",
-        "url": "https://aclanthology.org/P18-1023/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Argument Mining for Understanding Peer Reviews",
+        "url": "https://aclanthology.org/P18-1023/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "สาธารณชนไม่สนใจการปฏิรูป ไม่ว่าจะเป็นการปฏิรูปสภาขุนนางควรเป็นลำดับความสำคัญสูงสุดในสภาพเศรษฐกิจปัจจุบันหรือไม่เป็นเรื่องที่ถกเถียงกันได้ ยิ่งไปกว่านั้นรัฐบาลผสมจะสามารถเริ่มต้นและผลักดันมาตรการดังกล่าวได้หรือไม่ ความพยายามในการปฏิรูปสภาขุนนางถูกเลื่อนออกไปซ้ำแล้วซ้ำเล่า แสดงให้เห็นถึงความกังวลของสภาสามัญเกี่ยวกับการเปลี่ยนแปลง ความรู้สึกนี้ไม่มีข้อสงสัยสะท้อนอยู่ในความคิดเห็นของประชาชนชาวอังกฤษ – ดังที่แสดงให้เห็นจากผลการลงคะแนนเสียงทางเลือกเมื่อเร็ว ๆ นี้ – สาธารณชนมีความรู้สึกต่อต้านแนวคิดการ",
+          "full_chars": 528,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "แคมเปญ AV ไม่สามารถเปรียบเทียบกับการปฏิรูปสภาขุนนางได้ นอกจากนี้ ไม่ควรเข้าใจผิดว่าประชาชนที่มีข้อมูลผิดพลาดจากการเมืองเป็นความเฉยเมย บ่อยครั้งที่ผู้มีสิทธิเลือกตั้งแสดงออกว่าพวกเขาเฉยเมยเพราะรู้สึกว่าพวกเขาไม่สามารถเปลี่ยนแปลงอะไรได้ และเสียงของพวกเขาจะไม่มีความหมาย: การปฏิรูปที่ทำให้ผู้ที่บริหารประเทศได้รับการเลือกตั้งโดยตรงจากประชาชนจะช่วยแก้ไขความรู้สึกเหล่านี้ได้",
+          "full_chars": 370,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "การขยายสนามบินฮีทโธรว์มีความสำคัญต่อเศรษฐกิจ การขยายสนามบินฮีทโธรว์จะทำให้มั่นใจได้ว่ามีงานปัจจุบันจำนวนมากและสร้างงานใหม่ด้วย ขณะนี้สนามบินฮีทโธรว์สนับสนุนงานประมาณ 250,000 ตำแหน่ง [1] นอกจากนี้ยังมีคนอีกหลายแสนคนที่พึ่งพาการค้าท่องเที่ยวในลอนดอนซึ่งขึ้นอยู่กับการเชื่อมต่อการขนส่งที่ดีเช่นสนามบินฮีทโธรว์ การสูญเสียความสามารถในการแข่งขันเมื่อเปรียบเทียบกับสนามบินอื่นในยุโรปไม่เพียงแต่จะหมายถึงการสูญเสียโอกาสในการสร้างงานใหม่ แต่ยังสูญเสียงานบางส่วนที่มีอยู่แล้ว การขยายสนามบินฮีทโธรว์ยังจะเป็นการ",
+          "full_chars": 911,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ชุมชนธุรกิจยังห่างไกลจากการเป็นเอกภาพในความสนับสนุนที่กล่าวอ้างต่อการสร้างรันเวย์ที่สาม การสำรวจแสดงให้เห็นว่าหลายธุรกิจที่มีอิทธิพลจริง ๆ แล้วไม่สนับสนุนการขยายตัว จดหมายที่แสดงความกังวลได้รับการลงนามโดยจัสติน คิง ประธานเจ้าหน้าที่บริหารของ J Sainsbury และเจมส์ เมอร์ด็อก จาก BskyB ดังนั้นการรวมชุมชนธุรกิจเป็นเสียงเดียวที่เรียกร้องให้มีการขยายตัวจึงเป็นการเข้าใจผิด เราควรจำไว้ด้วยว่าเมื่อพิจารณาทางเลือกอื่น ๆ ต่อรันเวย์ใหม่ของฮีทโธรว์ เช่น รันเวย์ใหม่ที่สนามบินลอนดอนอื่นหรือสนามบินใหม่ทั้งหมด สิ่งเหล่านี้อาจมีผลกระทบทางเศรษฐกิจที่คล้ายคลึงกับการขยายตัวของฮีทโธรว์ หากการเชื่อมต่อเป็นสิ่งสำคัญในการดึงดูดธุรกิจและนักท่องเที่ยว ตราบใดที่การเชื่อมต่อนั้นอยู่กับลอนดอนก็ไม่สำคัญว่าการเชื่อมต่อนั้นมาจากสนามบินไหน อาจจะไม่มีความจำเป็นที่สนามบินจะต้องเป็นสนามบินศูนย์กลางหากเรามุ่งเน้นไปที่ผลประโยชน์ต่อกรุงลอนดอน ตามที่บ็อบ เออิง อดีตประธานเจ้าหน้าที่บริหารของบริติชแอร์เวย์สกล่าวว่า ฮีทโธรว์ควรมุ่งเน้นไปที่ผู้โดยสารที่ต้องการมาที่ลอนดอน ไม่ใช่เพียงแค่เป็นจุดเปลี่ยน เขากล่าวว่ารันเวย์ที่สามอาจเป็น",
+          "full_chars": 1032,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "ผู้คนได้รับทางเลือกมากเกินไป ซึ่งทำให้พวกเขาน้อยใจมากขึ้น การโฆษณานำไปสู่หลายคนที่รู้สึกท่วมท้นจากความต้องการที่ไม่มีที่สิ้นสุดในการตัดสินใจระหว่างความต้องการที่แข่งขันกันสำหรับความสนใจของพวกเขา – สิ่งนี้เรียกว่าการปกครองของทางเลือกหรือความท่วมท้นของทางเลือก งานวิจัยล่าสุดแนะนำว่าผู้คนโดยเฉลี่ยมีความสุขน้อยกว่าที่เคยเป็นเมื่อ 30 ปีก่อน - แม้ว่าจะอยู่ในสภาพที่ดีขึ้นและมีทางเลือกมากขึ้นในการใช้จ่ายเงินของพวกเขา การอ้างสิทธิ์ของโฆษณาเข้ามารบกวนผู้คน ทำให้คาดหวังเกี่ยวกับผลิตภัณฑ์และนำไปสู่ความผิดหว",
+          "full_chars": 797,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "ผู้คนไม่พอใจเพราะพวกเขาไม่สามารถมีทุกอย่างได้ ไม่ใช่เพราะพวกเขาได้รับทางเลือกมากเกินไปและรู้สึกเครียด ในความเป็นจริง โฆษณามีบทบาทสำคัญในการทำให้แน่ใจว่าผู้คนใช้เงินที่มีอยู่ไปกับผลิตภัณฑ์ที่เหมาะสมที่สุดสำหรับตัวเอง หากไม่มีการอนุญาตให้โฆษณา ผู้คนจะใช้เงินไปกับผลิตภัณฑ์แรกเมื่อเมื่อมีทางเลือก พวกเขาจะเลือกผลิตภัณฑ์อื่นอย่างชัดเจน การวิเคราะห์เมตาที่รวมการวิจัยจากการศึกษาอิสระ 50 ชิ้นพบว่าไม่มีความเชื่อมโยงที่มีความหมายระหว่างทางเลือกและความวิตกกังวล แต่คาดการณ์ว่าความแปรผันในงานวิจัยทำให้มีความเป็นไปได้ว่าการมีทางเลือกมากเกินไปอาจเกี่ยวข้องกับเงื่อนไขเบื้องต้นที่เฉพาะเจาะจงและยังเข้าใจไม่ดี1. 1 ^ Scheibehenne, Benjamin; Greifeneder, R. & Todd, P. M. (2010). \"Can There Ever be Too Many Options? A Meta-Analytic Review of Choice Overload\". Journal of Consumer Research 37: 409-425.",
+          "full_chars": 788,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -70,9 +70,11 @@ For reranking, the most useful capability is to compare whether a SQL statement 
 
 ## Example Data
 
-### Public Sources
-
-NanoSyntheticText2SQL is documented through CoIR and the Gretel synthetic Text-to-SQL dataset card. The source dataset card is the public reference for the synthetic prompt-SQL data.
+| Query | Positive document |
+| --- | --- |
+| What is the difference in average permit cost between high-rise and low-rise buildings in British Columbia in 2021? [115 chars] | SELECT AVG(permit_cost) - LAG(AVG(permit_cost)) OVER (PARTITION BY province ORDER BY EXTRACT(YEAR FROM issue_date)) FROM permit_cost_comparison WHERE province = 'British Columbia' AND building_type IN ('High-rise', 'Low-rise') AND issue_date BETWEEN '2021-01-01' AND '2021-12-31'; [280 chars] |
+| What is the total amount of aid provided by each government, for community development projects in Southeast Asia, in the last 10 years, and the average duration of the projects? [178 chars] | SELECT government.name as government, SUM(aid) as total_aid, AVG(DATEDIFF(end_date, start_date) / 365) as avg_project_duration FROM community_development_projects JOIN government ON community_development_projects.government_id = government.government_id WHERE government.region = 'Southeast Asia' AND community_development_projects.start_date >= DATE_SUB(CURRENT_DATE, INTERVAL 10 YEAR) GROUP BY government.name; [412 chars] |
+| Find the difference in the number of trees between the tree species with the highest and lowest carbon sequestration rates in the private_lands schema. [151 chars] | SELECT species_high.species AS high_species, species_low.species AS low_species, species_high.sequestration_rate - species_low.sequestration_rate AS difference FROM (SELECT species, MAX(sequestration_rate) AS sequestration_rate FROM private_lands.carbon_sequestration GROUP BY species) AS species_high FULL OUTER JOIN (SELECT species, MIN(sequestration_rate) AS sequestration_rate FROM private_lands.carbon_sequestration GROUP BY species) AS species_low ON species_high.sequestration_rate = species_low.sequestration_rate; [522 chars] |
 
 ### Source Reference Table
 

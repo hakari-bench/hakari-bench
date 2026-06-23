@@ -116,11 +116,9 @@ and highly ranked.
 
 | Query | Positive document |
 | --- | --- |
-| Em qual sitcom de televisão Penny Rae Bridges participou com qual outro ator? | Penny Rae Bridges é uma atriz americana. Seu trabalho na televisão inclui papéis em "For Your Love", "Family Law"... |
-| Quem entregou a Kaganoi Shigemochi uma espada feita pelo fundador da escola Muramasa? | Kaganoi Shigemochi foi um samurai japonês do período Azuchi-Momoyama, que serviu ao clã Oda... |
-| Qual é o filme escrito e dirigido por Joby Harold com música de Samuel Sim? | Samuel Sim é um compositor de cinema e televisão. Ganhou reconhecimento com a trilha sonora premiada da série "Dunkirk"... |
-| Qual é a data deste jogo de futebol universitário no Sun Life Stadium em Miami Gardens, Flórida, onde a Clemson derrotou os Oklahoma Sooners por 37-17? | A equipe de futebol americano dos Clemson Tigers de 2015 representou a Universidade de Clemson na temporada de 2015... |
-| Comida do Diabo é uma coletânea de singles de uma banda de rock and roll americana que também é conhecida por tocar shows de country sob qual nome? | Devil's Food é uma coletânea de singles da banda americana de rock and roll Supersuckers, lançada em abril de 2005... |
+| Em qual sitcom de televisão Penny Rae Bridges participou com qual outro ator? [77 chars] | Penny Rae Bridges (nascida em 29 de julho de 1990) é uma atriz americana. Seu trabalho na televisão inclui papéis em "For Your Love", "Family Law", "Boy Meets World" e "The Parent 'Hood". Ela é mais conhecida por seu papel em "Half & Half", como a jovem Mona. [259 chars] |
+| Quem entregou a Kaganoi Shigemochi uma espada feita pelo fundador da escola Muramasa? [85 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 de agosto de 1600) foi um samurai japonês do período Azuchi-Momoyama, que serviu ao clã Oda. Ele governou o Castelo Kaganoi. Durante a Batalha de Komaki e Nagakute, Shigemochi lutou sob o comando de seu pai, Shigemune, que estava alinhado com as forças de Oda Nobukatsu. Pouco depois, o Castelo Kaganoi foi cercado pelas forças de Toyotomi Hideyoshi; Shigemune se rendeu, e Shigemochi foi empregado por Hideyoshi como mensageiro, recebendo um estipêndio de 10.000 "koku". Ele também possuía uma lâmina feita por Muramasa, que Hideyoshi lhe concedeu em 1598. [595 chars] |
+| Qual é o filme escrito e dirigido por Joby Harold com música de Samuel Sim? [75 chars] | Samuel Sim é um compositor de cinema e televisão. Ganhou reconhecimento com a trilha sonora premiada da série de drama da BBC "Dunkirk". Desde então, compôs música para uma ampla variedade de produções cinematográficas e televisivas, tendo mais recentemente trabalhado na trilha sonora do filme "Awake" para a The Weinstein Company e na série de drama da BBC/HBO "House of Saddam". Sua música mais recente e aclamada é a trilha sonora de "Home Fires". "Home Fires (Música da Série de Televisão)" foi lançada em 6 de maio de 2016 pela Sony Classical Records. [557 chars] |
 
 ### Public Sources
 
@@ -134,7 +132,7 @@ and highly ranked.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | https://arxiv.org/abs/1809.09600 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

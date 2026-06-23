@@ -168,22 +168,20 @@ explanation should benefit most from the high-recall hybrid pool.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Het algemene 'het [17 chars] | Waar verwijst 'het' naar in dit voorbeeld? **Mogelijk duplicaat:** > Het regent. Wat dan? 'Het regent.' Waar verwijst 'het' naar? Ik weet dat sommige mensen 'het weer' zouden zeggen, maar je zou niet zeggen: 'Het weer regent.' Maar je zou wel zeggen: Hoe is het weer? Het regent.' Beetje verwarrend. [301 chars] |
+| Hoe moet je een bereik van getallen met een koppelteken interpunctiëren? [72 chars] | Wat is het verschil tussen - en -- in een zin? **Mogelijke dubbel:** > Wanneer moet ik een em-dash, een en-dash en een koppelteken gebruiken? Wanneer plaats ik een - in een zin? Is het een sterkere komma? Met een langere pauze? [229 chars] |
+| Kiezen tussen "experimenteren met" en "waarmee te experimenteren [64 chars] | Waar moet het voorzetsel van "goedkeuren" staan? **Mogelijke dubbel:** > Wanneer is het gepast om een zin met een voorzetsel te eindigen? In dit antwoord schreef ik > [Je kunt het gebruiken] om foto's te maken van een film in een bioscoop, waarvan > de bioscoopmedewerkers waarschijnlijk geen goedkeuring zouden geven. maar ik weet niet zeker of het beter zou zijn > [Je kunt het gebruiken] om foto's te maken van een film in een bioscoop, waaraan de bioscoopmedewerkers waarschijnlijk geen goedkeuring zouden geven. Ik vond deze pagina, maar ik kan nog steeds niet vinden op welk voorbeeld het betrekking heeft. (... op welk voorbeeld het betrekking heeft?) [660 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

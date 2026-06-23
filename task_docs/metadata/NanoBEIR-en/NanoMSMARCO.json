@@ -130,7 +130,7 @@
         "title": "MS MARCO dataset site",
         "url": "https://microsoft.github.io/msmarco/Datasets.html",
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -138,8 +138,59 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "what is rumination syndrome",
+          "full_chars": 27,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Rumination Syndrome. Rumination syndrome, also called Merycism, is a type of eating disorder not otherwise specified that causes the regurgitation of food. Even though it is not identified as a specific eating disorder in the DSM-IV, certain parameters have been outlined for diagnosing the disorder.",
+          "full_chars": 300,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "who sang here i go again",
+          "full_chars": 24,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "For other uses, see Here I Go Again (disambiguation). Here I Go Again is a song by British rock band Whitesnake. Originally released on their 1982 album, Saints & Sinners, the song was re-recorded for their eponymous 1987 album Whitesnake. The song was re-recorded again that year in a new radio-mix version.",
+          "full_chars": 308,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "who does cameron boyce play in liv and maddie",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Get ready for some serious LOLs, you guys. In an EXCLUSIVE sneak peek at the Apr. 19 episode of Liv & Maddie called “Prom-A-Rooney.” Obviously. In the hilarious clip, we see Jessie star Cameron Boyce hop over to a different Disney show to meet Maddie (Shelby Wulfert). His character is, um, eccentric!",
+          "full_chars": 301,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

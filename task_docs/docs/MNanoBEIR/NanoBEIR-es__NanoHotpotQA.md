@@ -48,13 +48,11 @@ Strong models should preserve exact entity matching while improving retrieval of
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| ¿Con qué otro actor participó Penny Rae Bridges en una sitcom de televisión? | Penny Rae Bridges es una actriz estadounidense. Su trabajo en televisión incluye papeles en "For Your Love"... |
-| ¿Quién otorgó a Kaganoi Shigemochi una espada fabricada por el fundador de la escuela Muramasa? | Kaganoi Shigemochi fue un samurái japonés del período Azuchi-Momoyama que sirvió al clan Oda... |
-| ¿Qué película fue escrita y dirigida por Joby Harold y tiene música de Samuel Sim? | Samuel Sim es un compositor de cine y televisión. Alcanzó reconocimiento con su premiada banda sonora para la serie dramática de la BBC... |
-| ¿Cuál es la fecha en que se jugó este partido de fútbol americano universitario en el Sun Life Stadium en Miami Gardens, Florida? | El equipo de fútbol americano de los Clemson Tigers de 2015 representó a la Universidad de Clemson... |
-| ¿Bajo qué nombre se conoce a una banda de rock and roll americana que también ha tocado en shows de country? | Devil's Food es un recopilatorio de sencillos por la banda estadounidense de rock and roll Supersuckers... |
+| Query | Positive document |
+| --- | --- |
+| ¿Con qué otro actor participó Penny Rae Bridges en una sitcom de televisión? [76 chars] | Penny Rae Bridges (nacida el 29 de julio de 1990) es una actriz estadounidense. Su trabajo en televisión incluye papeles en "For Your Love", "Family Law", "Boy Meets World" y "The Parent 'Hood". Es más conocida por su papel en "Half & Half", interpretando a la joven Mona. [272 chars] |
+| ¿Quién otorgó a Kaganoi Shigemochi una espada fabricada por el fundador de la escuela Muramasa? [95 chars] | Kaganoi Shigemochi (加賀井 重望, 1561 – 27 de agosto de 1600) fue un samurái japonés del período Azuchi-Momoyama que sirvió al clan Oda. Gobernó el Castillo Kaganoi. Durante la Batalla de Komaki y Nagakute, Shigemochi luchó bajo las órdenes de su padre, Shigemune, quien estaba adscrito a las fuerzas de Oda Nobukatsu. Poco después, el Castillo Kaganoi fue rodeado por las tropas de Toyotomi Hideyoshi; Shigemune se rindió, y Shigemochi fue empleado por Hideyoshi como mensajero, recibiendo un estipendio de 10,000 'koku'. También poseía una espada forjada por Muramasa, que Hideyoshi le otorgó en 1598. [598 chars] |
+| ¿Qué película fue escrita y dirigida por Joby Harold y tiene música de Samuel Sim? [82 chars] | Samuel Sim es un compositor de cine y televisión. Alcanzó reconocimiento con su premiada banda sonora para la serie dramática de la BBC "Dunkirk". Desde entonces, ha compuesto la música para una amplia variedad de producciones cinematográficas y televisivas, más recientemente la película "Awake" para The Weinstein Company y la serie dramática de la BBC/HBO "House of Saddam". Su música más reciente y reconocida es la banda sonora de "Home Fires". "Home Fires (Música de la Serie de Televisión)" fue lanzado el 6 de mayo de 2016 por Sony Classical Records. [558 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should preserve exact entity matching while improving retrieval of
 
 | Label | URL |
 |---|---|
-| HotpotQA paper | https://arxiv.org/abs/1809.09600 |
-| HotpotQA official site | https://hotpotqa.github.io/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| HotpotQA paper (https://arxiv.org/abs/1809.09600) |
+| HotpotQA official site (https://hotpotqa.github.io/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

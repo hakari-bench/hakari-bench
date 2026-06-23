@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated MAchine Reading COmprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "โรคการคิดซ้ำคืออะไร",
+          "full_chars": 19,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "โรคการย้อนกลับอาหาร โรคการย้อนกลับอาหาร ซึ่งเรียกว่า Merycism เป็นประเภทของความผิดปกติในการกินที่ไม่ได้ระบุไว้ในประเภทอื่น ซึ่งทำให้เกิดการย้อนกลับของอาหาร แม้ว่าจะไม่ได้ถูกระบุว่าเป็นความผิดปกติในการกินเฉพาะใน DSM-IV แต่มีพารามิเตอร์บางประการที่ได้ถูกกำหนดไว้สำหรับการวินิจฉัยโรคนี้",
+          "full_chars": 283,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "ใครร้องเพลง Here I Go Again",
+          "full_chars": 27,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "สำหรับการใช้งานอื่น ๆ ดูที่ Here I Go Again (การชี้แจงความหมาย) Here I Go Again เป็นเพลงของวงร็อคอังกฤษ Whitesnake เปิดตัวครั้งแรกในอัลบั้ม Saints & Sinners ปี 1982 เพลงนี้ถูกบันทึกเสียงใหม่สำหรับอัลบั้ม Whitesnake ปี 1987 ของพวกเขา เพลงนี้ถูกบันทึกเสียงใหม่อีกครั้งในปีนั้นในเวอร์ชันมิกซ์วิทยุใหม่",
+          "full_chars": 298,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "คาเมรอน บอยซ์ แสดงเป็นใครในลิฟและแมดดี้",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "เตรียมตัวให้พร้อมสำหรับเสียงหัวเราะที่จริงจังนะทุกคน ในการชมพิเศษก่อนออกอากาศตอนวันที่ 19 เม.ย. ของ Liv & Maddie ที่ชื่อว่า “Prom-A-Rooney” แน่นอน ในคลิปที่ตลกขบขันนี้ เราเห็นเจสซี่ที่แสดงโดยแคเมอรอน บอยซ์ กระโดดไปยังรายการดิสนีย์อื่นเพื่อพบกับแมดดี้ (เชลบี วูลเฟิร์ต) ตัวละครของเขานั้น, เอ่อ, แปลกประหลาด!",
+          "full_chars": 306,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

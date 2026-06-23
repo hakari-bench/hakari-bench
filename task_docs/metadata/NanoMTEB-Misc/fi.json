@@ -86,30 +86,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "EuroPIRQ-retrieval",
-        "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval",
-        "year": 2025,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -118,6 +94,80 @@
           "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "EuroPIRQ-retrieval",
+        "url": "https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval",
+        "year": 2025,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "c425bc82-d34c-45ec-bba6-38053686615c",
+        "document_id": "7525",
+        "query": {
+          "text": "Mikä on tietosuojavaltuutetun perustelu sille, että tietojen tallentamistoimenpiteiden tarkempi tutkiminen on perusteltua?",
+          "full_chars": 122,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tietosuojavaltuutettu myöntää, että käytettävissä on vähemmän tietoja, jos käytössä on tietojen tallentamisen kaltainen järjestelmä laajemman tietojen säilyttämisjärjestelmän sijasta. Tietojen tallentaminen on kuitenkin vähemmän yksityisyyteen puuttuva väline juuri siksi, että se on kohdennetumpi laajuutensa ja niiden ihmisten määrän osalta, joihin sen vaikutus kohdistuu. Arvioinnissa ei tulisi keskittyä pelkästään saatavilla oleviin tietoihin vaan myös molempien järjestelmien avulla saatuihin erilaisiin tuloksiin. Tietosuojavaltuutettu pitää tämän toimenpiteen tarkempaa tutkimista perusteltuna ja välttämättömänä. Se voitaisiin toteuttaa tulevina kuukausina tehtävän vaikutusten arvioinnin aikana.",
+          "full_chars": 705,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "21328a72-2d15-4da7-896e-f73056868de2",
+        "document_id": "6074",
+        "query": {
+          "text": "Mikä rooli Eurooppalaisella viljelykasvien rinnakkaiselon toimistolla (ECo B) on kansallisten toimenpiteiden kehittämisessä muuntogeenisten organismien tahattoman esiintymisen estämiseksi tavanomaisen ja luonnonmukaisen tuotannon viljelykasvien seassa?",
+          "full_chars": 252,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "COEX-NET-työryhmän kautta tapahtuvaa koordinointia ja Eurooppalaisen viljelykasvien rinnakkaiselon toimiston (ECo B) kautta annettavaa teknistä neuvontaa on tarkoitus jatkaa. ECo B pitää ajan tasalla olevaa luetteloa toimenpiteistä sekä luetteloa viljelyteknisistä, luontaisista sekä eri viljelykasveille ominaisista tekijöistä, jotka olisi otettava huomioon kehiteltäessä kansallisia toimenpiteitä muuntogeenisten organismien tahattoman esiintymisen välttämiseksi tavanomaisen ja luonnonmukaisen tuotannon viljelykasvien seassa. Jäsenvaltioiden olisi edelleen annettava panoksensa ECo Bin tekniseen työhön.",
+          "full_chars": 607,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "0bb77031-bb41-4962-a719-c0867c52baec",
+        "document_id": "5218",
+        "query": {
+          "text": "Miten ehdotus direktiiviksi yhdistää raskaana olevien ja imettävien äitien terveyden ja turvallisuuden työllisyyteen ja uramahdollisuuksiin?",
+          "full_chars": 140,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Käsillä olevan ehdotuksen pääasiallinen oikeusperusta on raskaana olevien ja imettävien äitien terveys ja turvallisuus. Terveys- ja turvallisuuskysymyksillä on kuitenkin looginen yhteys i) lasten oikeuteen asianmukaiseen hoitoon, ii) perhe- ja työelämän yhteensovittamiseen sekä iii) työllisyyteen ja uramahdollisuuksiin. Lisäksi Euroopan demografinen tilanne edellyttää syntyvyyden kasvua kannustavaa ja tukevaa politiikkaa. Ehdotetussa direktiivissä käsitellyt kysymykset eivät ole erillisiä. Ne on nähtävä osana monitahoista kokonaisuutta, kuten suosituksissa todetaan.",
+          "full_chars": 572,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -70,12 +70,11 @@ Researchers should track whether improvements come from better top-10 ordering o
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-stats-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Stats-PL
+| Query | Positive document |
+| --- | --- |
+| Szacunki wariancji z próbki iid [31 chars] | Intuicyjne wyjaśnienie dzielenia przez (n-1) przy obliczaniu sd? Zapytano mnie dzisiaj na zajęciach, dlaczego przy obliczaniu sd dzieli się sumę błędu kwadratowego przez $(n-1)$ zamiast przez $n$. Powiedziałem, że nie będę odpowiadał na to w klasie (ponieważ nie chciałem wchodzić w bezstronne estymatory), ale później zacząłem się zastanawiać - **czy istnieje** intuicyjne wytłumaczenie tego?! [394 chars] |
+| Jak najlepiej wyświetlić graficznie błąd typu II (beta), moc i wielkość próbki? [79 chars] | Rzeczywiste w oparciu o funkcję zasilania! Problem: Jaki jest rzeczywisty przykład funkcji potęgowej? Próbowałem o tym myśleć, ale mi się nie udało. Czy ktoś wie? [162 chars] |
+| Reprezentowanie macierzy odległości w płaszczyźnie [50 chars] | Jaka jest różnica między analizą głównych składowych a skalowaniem wielowymiarowym? Czym różnią się PCA i klasyczne MDS? Co powiesz na MDS w porównaniu z niemetrycznym MDS? Czy jest czas, kiedy wolisz jedno od drugiego? Czym różnią się interpretacje? [250 chars] |
 
 ### Source Reference Table
 

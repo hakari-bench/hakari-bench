@@ -138,7 +138,7 @@
         "title": "NFCorpus project page",
         "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,14 +152,65 @@
         "title": "mteb/nfcorpus",
         "url": "https://huggingface.co/datasets/mteb/nfcorpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BeIR/nfcorpus",
         "url": "https://huggingface.co/datasets/BeIR/nfcorpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Healthy Chocolate Milkshakes",
+          "full_chars": 28,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Objective To study the relation between cherry intake and the risk of recurrent gout attacks among individuals with gout. Methods We conducted a case-crossover study to examine associations of a set of putative risk factors with recurrent gout attacks. Individuals with gout were prospectively recruited and followed online for one year. Participants were asked about the following information when experiencing a gout attack: the onset date of the gout attack, symptoms and signs, medications (including anti-gout medications), and potential risk factors (including daily intake of cherries and cherry extract) during the 2-day period prior to the gout attack. We assessed the same exposure information over 2-day control periods. We estimated the risk of recurrent gout attacks related to cherry intake using conditional logistic regression. Results Our study included 633 individuals with gout. Cherry intake over a 2-day period was associated with a 35% lower risk of gout attacks compared with n",
+          "full_chars": 1586,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "medical ethics",
+          "full_chars": 14,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "BACKGROUND: One of the major issues in controlling serum cholesterol through dietetic intervention appears to be the need to improve patient adherence. AIMS: To explore the many questions regarding barriers to, and motivators for, cholesterol-lowering diet adherence. METHODS: We surveyed French general practitioners' dietetic practices for patients with hypercholesterolaemia, and looked at their patients' attitudes towards such an approach. RESULTS: We analysed 234 doctors' personal questionnaires and 356 patient self-survey questionnaires. Patients' reasons for not complying with the prescribed diet included: 'already having satisfactory food habits' (34.7%), 'unwillingness to suffer nutritional deprivation' (33.3%), 'difficulties to conciliate a diet with family life' (27.8%) and 'taking cholesterol-lowering drugs' (22.2%). Despite a generally good understanding by patients of doctors' recommendations, some discrepancies were seen between their respective declarations. While doctors",
+          "full_chars": 1831,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "fava beans",
+          "full_chars": 10,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Over the past 20 years, growing interest in the biochemistry, nutrition, and pharmacology of L-arginine has led to extensive studies to explore its nutritional and therapeutic roles in treating and preventing human metabolic disorders. Emerging evidence shows that dietary L-arginine supplementation reduces adiposity in genetically obese rats, diet-induced obese rats, finishing pigs, and obese human subjects with Type-2 diabetes mellitus. The mechanisms responsible for the beneficial effects of L-arginine are likely complex, but ultimately involve altering the balance of energy intake and expenditure in favor of fat loss or reduced growth of white adipose tissue. Recent studies indicate that L-arginine supplementation stimulates mitochondrial biogenesis and brown adipose tissue development possibly through the enhanced synthesis of cell-signaling molecules (e.g., nitric oxide, carbon monoxide, polyamines, cGMP, and cAMP) as well as the increased expression of genes that promote whole-bo",
+          "full_chars": 1240,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

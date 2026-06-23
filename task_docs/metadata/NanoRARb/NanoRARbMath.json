@@ -111,26 +111,81 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Training Verifiers to Solve Math Word Problems",
         "url": "https://arxiv.org/abs/2110.14168",
         "year": 2021,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Measuring Mathematical Problem Solving With the MATH Dataset",
         "url": "https://arxiv.org/abs/2103.03874",
         "year": 2021,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MetaMath: Bootstrap Your Own Mathematical Questions for Large Language Models",
         "url": "https://arxiv.org/abs/2309.12284",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "MATH-q-66",
+        "document_id": "MATH-d-66",
+        "query": {
+          "text": "Problem: Let $ABC$ be a triangle with $\\angle A = 45^\\circ$. Let $P$ be a point on side $\\overline{BC}$ with $PB = 3$ and $PC = 5$. Let $O$ be the circumcenter of triangle $ABC$. Determine the length $OP$.",
+          "full_chars": 205,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Using the extended Sine law, we find the circumradius of $ABC$ to be $R = \\frac{BC}{2\\sin A} = 4\\sqrt 2$. [asy] unitsize(0.8 cm); pair A, B, C, O, P; A = (0,0); B = (2,2); C = (5,0); P = interp(B,C,3/8); O = circumcenter(A,B,C); draw(A--B--C--cycle); draw(circumcircle(A,B,C)); draw(O--P); label(\"$A$\", A, W); label(\"$B$\", B, N); label(\"$C$\", C, E); dot(\"$O$\", O, S); dot(\"$P$\", P, NE); [/asy] By considering the power of point $P$, we find that $R^2 - OP^2 = PB \\cdot PC = 15$. So $OP = \\sqrt{R^2 - 15} = \\sqrt{ 16 \\cdot 2 - 15} = \\boxed{\\sqrt{17}}$.",
+          "full_chars": 557,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "MATH-q-123",
+        "document_id": "MATH-d-123",
+        "query": {
+          "text": "Problem: Find the matrix that corresponds to rotating about the origin by an angle of $45^\\circ$ clockwise.",
+          "full_chars": 107,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The transformation that rotates about the origin by an angle of $45^\\circ$ clockwise takes $\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$ to $\\begin{pmatrix} 1/\\sqrt{2} \\\\ -1/\\sqrt{2} \\end{pmatrix}$ and $\\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}$ to $\\begin{pmatrix} 1/\\sqrt{2} \\\\ 1/\\sqrt{2} \\end{pmatrix},$ so the matrix is \\[\\boxed{\\begin{pmatrix} 1/\\sqrt{2} & 1/\\sqrt{2} \\\\ -1/\\sqrt{2} & 1/\\sqrt{2} \\end{pmatrix}}.\\]",
+          "full_chars": 406,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "MATH-q-103",
+        "document_id": "MATH-d-103",
+        "query": {
+          "text": "Problem: Compute $\\sin^{-1} (\\sin 3) + \\sin^{-1} (\\sin 4) + \\sin^{-1} (\\sin 5).$ All functions are in radians.",
+          "full_chars": 111,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Since $\\sin (\\pi - 3) = \\sin 3$ and $-\\frac{\\pi}{2} \\le \\pi - 3 \\le \\frac{\\pi}{2},$ \\[\\sin^{-1} (\\sin 3) = \\pi - 3.\\]Since $\\sin (\\pi - 4) = \\sin 4$ and $-\\frac{\\pi}{2} \\le \\pi - 4 \\le \\frac{\\pi}{2},$ \\[\\sin^{-1} (\\sin 4) = \\pi - 4.\\]Since $\\sin (5 - 2 \\pi) = \\sin 5$ and $-\\frac{\\pi}{2} \\le 5 - 2 \\pi \\le \\frac{\\pi}{2},$ \\[\\sin^{-1} (\\sin 5) = 5 - 2 \\pi.\\]Therefore, \\[\\sin^{-1} (\\sin 3) + \\sin^{-1} (\\sin 4) + \\sin^{-1} (\\sin 5) = (\\pi - 3) + (\\pi - 4) + (5 - 2 \\pi) = \\boxed{-2}.\\]",
+          "full_chars": 484,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

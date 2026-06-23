@@ -48,13 +48,11 @@ Strong models should improve evidence recall while maintaining claim-specific ra
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Desde 1970 hasta 1998 hubo un período de calentamiento que elevó las temperaturas aproximadamente 0.4 grados Celsius... | El Paleoceno o Paleoceno, el "reciente antiguo", es una época geológica que duró aproximadamente desde hace 66 a 56 millones... |
-| De hecho, la tendencia, aunque no es estadísticamente significativa, está a la baja. | El ciclo solar, o ciclo de actividad magnética solar, es el cambio casi periódico de 11 años en la actividad del Sol... |
-| Los niveles del mar locales y regionales siguen mostrando su variabilidad natural, subiendo en algunas áreas y bajando en otras. | El nivel medio del mar es el nivel promedio de la superficie de uno o más de los océanos de la Tierra... |
-| Los expertos en clima afirman que ciertos elementos del caso del huracán Harvey sugieren que el calentamiento global está agravando una situación ya complicada. | Los efectos del calentamiento global son los cambios ambientales y sociales causados por las emisiones humanas de gases de efecto invernadero... |
-| El experimento CLOUD del CERN solo probó una tercera parte de uno de los cuatro requisitos necesarios para culpar al calentamiento global a los rayos cósmicos... | La atribución del cambio climático reciente se refiere al esfuerzo por determinar científicamente los mecanismos responsables de los cambios climáticos recientes... |
+| Query | Positive document |
+| --- | --- |
+| Desde 1970 hasta 1998 hubo un período de calentamiento que elevó las temperaturas aproximadamente 0.4 grados Celsius, lo que dio origen al movimiento alarmista sobre el calentamiento global. [190 chars] | El Paleoceno (pronunciado /ˈpæliəˌsiːn/ o /ˈpæ - , - lioʊ - /) o Paleoceno, el "reciente antiguo", es una época geológica que duró aproximadamente desde hace 66 a 56 millones de años. Es la primera época del Período Paleógeno en la Era Cenozoica moderna. Al igual que muchos períodos geológicos, las capas que definen el inicio y el fin de la época están bien identificadas, pero las edades exactas siguen siendo inciertas. La Época del Paleoceno abarca dos eventos importantes en la historia de la Tierra. Comenzó con el evento de extinción masiva al final del Cretácico, conocido como la frontera Cretácico-Paleógeno (K-Pg). Este fue un tiempo marcado por la desaparición de los dinosaurios no aviares, los grandes reptiles marinos y gran parte de la fauna y flora. La extinción de los dinosaurios dejó nichos ecológicos vacíos en todo el mundo. El Paleoceno terminó con el Máximo Térmico del Paleoceno-Eoceno, un intervalo geológicamente breve (aproximadamente 0.2 millones de años) caracterizado... [1,000 / 1,219 chars] |
+| De hecho, la tendencia, aunque no es estadísticamente significativa, está a la baja. [84 chars] | El ciclo solar, o ciclo de actividad magnética solar, es el cambio casi periódico de 11 años en la actividad del Sol (incluyendo variaciones en los niveles de radiación solar y la expulsión de material solar) y en su apariencia (cambios en el número y tamaño de las manchas solares, las llamaradas y otras manifestaciones). Estos cambios han sido observados (por variaciones en la apariencia del Sol y por fenómenos observados en la Tierra, como las auroras boreales) durante siglos. Los cambios en el Sol provocan efectos en el espacio, en la atmósfera y en la superficie terrestre. Aunque es la variable dominante en la actividad solar, también ocurren fluctuaciones no periódicas. [683 chars] |
+| Los niveles del mar locales y regionales siguen mostrando su variabilidad natural, subiendo en algunas áreas y bajando en otras. [128 chars] | El nivel medio del mar (NMM) (abreviado simplemente como nivel del mar) es el nivel promedio de la superficie de uno o más de los océanos de la Tierra, a partir del cual se pueden medir alturas como las elevaciones. El NMM es un tipo de dato vertical estándar geodésico que se utiliza, por ejemplo, como dato de referencia en cartografía y navegación marítima, o, en aviación, como el nivel del mar estándar en el que se mide la presión atmosférica para calibrar la altitud y, en consecuencia, los niveles de vuelo de las aeronaves. Un estándar común y relativamente sencillo del nivel medio del mar es el punto medio entre la marea baja media y la marea alta media en una ubicación particular. Los niveles del mar pueden verse afectados por muchos factores y se sabe que han variado considerablemente a lo largo de escalas de tiempo geológicas. La medición cuidadosa de las variaciones en el NMM puede ofrecer información sobre el cambio climático en curso, y el aumento del nivel del mar ha sido am... [1,000 / 1,181 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should improve evidence recall while maintaining claim-specific ra
 
 | Label | URL |
 |---|---|
-| Climate-FEVER paper | https://arxiv.org/abs/2012.00614 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Climate-FEVER paper (https://arxiv.org/abs/2012.00614) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

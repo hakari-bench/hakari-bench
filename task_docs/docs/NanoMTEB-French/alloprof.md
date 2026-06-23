@@ -135,19 +135,19 @@ school terms while adding semantic concept matching.
 
 ## Example Data
 
-### Public Sources
-
-- [MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis](https://arxiv.org/abs/2405.20468), 2024.
-- [mteb/AlloprofRetrieval](https://huggingface.co/datasets/mteb/AlloprofRetrieval), source dataset card.
-- [antoinelb7/alloprof](https://huggingface.co/datasets/antoinelb7/alloprof), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Bonjour, j'ai de la difficulté à comprendre les différences entre le simple past et le past progressive. Avez-vous des trucs pour savoir quand les utiliser svp? MERCI!!! [169 chars] | Was he playing soccer when his mom arrived? They were watching a movie while their parents were preparing dinner. The past continuous is used to describe two types of actions happening in the past. One action that was happening in the past and was interrupted by another action in the past. Use when: The second verb is in the simple past. Two actions that were happening at the same time in the past. Use while: Both verbs are in the past continuous. I was studying when you called me. We were having dinner when Joanna fell off her chair. Vincent was working in the basement when Lise came over. I was studying while you were sleeping. We were having dinner while the neighbours were playing in their pool. Vincent was working in the basement while Lise was reading. [768 chars] |
+| Bonjour! Je suis en 5e année du primaire et je voudrais des trucs pour mémoriser les fractions irréductible et équivalente. ps: Y a t'il des jeux ou des exercises dans alloprof pour m'aider?? Merci Chevalmagnifique2012 [218 chars] | Les fractions équivalentes sont des fractions qui représentent le même nombre, la même proportion. Pour passer d'une fraction à une autre fraction équivalente, on peut multiplier ou diviser cette fraction par une fraction-unité \|\left(\dfrac { 2 }{ 2 } ,\dfrac { 3 }{ 3 } ,\dfrac { 6 }{ 6 }\right)\| On cherche des fractions équivalentes à \|\dfrac { 3 }{ 4 }.\| A) On peut décider de multiplier par la fraction-unité : \|\dfrac { 2 }{ 2 }\| \|\dfrac { 3 }{ 4 } \times \dfrac { 2 }{ 2 } =\dfrac { 3\times 2 }{ 4\times 2 } =\dfrac { 6 }{ 8 }\| (fraction équivalente) B) On peut aussi décider de multiplier par \|\dfrac { 5 }{ 5 }\| \|\dfrac { 3 }{ 4 } \times \dfrac { 5 }{ 5 } =\dfrac { 3\times 5 }{ 4\times 5 } =\dfrac { 15 }{ 20 }\| (fraction équivalente) On peut utiliser un rectangle pour représenter une fraction. On peut comparer ce rectangle à une tablette de chocolat à partager. On remarque que peu importe le nombre de divisions, la surface de toutes les portions reste la même. Les parties colorées en... [1,000 / 3,529 chars] |
+| bonjour, on comence a voir les cirquit électrique en science. ma question sais a quoi serve les Résisteur. [106 chars] | La résistance électrique est une propriété physique d'un matériau qui limite le passage du courant électrique dans un circuit. Les composantes qui possèdent cette propriété servent à limiter le passage des électrons dans un circuit. Elles remplissent donc la fonction de conduction, mais de façon moins efficace que les conducteurs puisqu'elles s'opposent partiellement au passage du courant. Dans les circuits électriques, deux types de composantes possèdent cette propriété: les éléments chauffants et les résistors. Les éléments chauffants, lorsqu'ils s'opposent au passage du courant, produisent de la chaleur. Cette chaleur est transmise au milieu environnant, que ce soit à l'air, à l'eau ou à un matériau situé à proximité. On utilise les éléments chauffants dans des objets tels que les grilles-pains, les séchoirs à cheveux, les cuisinières ou les bouilloires électriques. Les résistances (parfois nommées résistors) remplissent la fonction de résistance dans les circuits imprimés. On les u... [1,000 / 2,507 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | https://arxiv.org/abs/2405.20468 |
-| mteb/AlloprofRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/AlloprofRetrieval |
-| antoinelb7/alloprof |  | dataset card | https://huggingface.co/datasets/antoinelb7/alloprof |
+| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | [https://arxiv.org/abs/2405.20468](https://arxiv.org/abs/2405.20468) |
+| mteb/AlloprofRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/AlloprofRetrieval](https://huggingface.co/datasets/mteb/AlloprofRetrieval) |
+| antoinelb7/alloprof |  | dataset card | [https://huggingface.co/datasets/antoinelb7/alloprof](https://huggingface.co/datasets/antoinelb7/alloprof) |
 
 ### Representative Snippets
 

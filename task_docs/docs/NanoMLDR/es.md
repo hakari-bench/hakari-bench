@@ -139,12 +139,11 @@ quality.
 
 ## Example Data
 
-Representative queries ask which catalyst converts carbon monoxide into a less
-harmful product in ethanol hydrogen production, how financial activity in a
-ghetto perpetuates a stereotype in Schindler's List, the height of Cerro
-Calzoncillo, the main changes made during Centro Cultural Recoleta remodeling,
-or why Square developers chose an RPG instead of a Tetris-like Game Boy title.
-Positive documents are long Spanish articles containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| ¿Cuál es el catalizador utilizado para convertir el monóxido de carbono en un producto menos perjudicial en el dispositivo de producción de hidrógeno a partir de etanol? [169 chars] | Etanol (combustible) El etanol es un compuesto químico obtenido a partir de la fermentación de los azúcares que puede utilizarse como combustible, solo, o bien, mezclado en cantidades variadas con gasolina, y su uso se ha extendido principalmente para reemplazar el consumo de derivados del petróleo. El combustible resultante de la mezcla de etanol y gasolina se conoce como gasohol o alconafta. Dos mezclas comunes son E10 y E85, con contenidos de etanol del 10% y 85%, respectivamente. El etanol también se utiliza cada vez más como añadido para oxigenar la gasolina normal, reemplazando al éter metil tert-butílico (MTBE). Este último es responsable de una considerable contaminación del suelo y del agua subterránea. También puede utilizarse como combustible en las celdas de combustible. Como fuente para la producción de etanol en el mundo se utiliza fundamentalmente biomasa. Este etanol es denominado, por su origen, bioetanol. Fuentes y proceso de fabricación El etanol (Alcohol Etílico) pu... [1,000 / 31,421 chars] |
+| ¿Cómo perpetúa la actividad financiera en el gueto el estereotipo de la vida judía según Sara Horowitz? [103 chars] | La lista de Schindler Argumento En Cracovia, durante la Segunda Guerra Mundial, las tropas alemanas de ocupación han forzado a los judíos polacos a vivir recluidos en un gueto. El empresario Oskar Schindler (Liam Neeson), de etnia alemana y miembro del Partido Nazi, llega a la ciudad decidido a hacer fortuna y comienza por sobornar a diversos oficiales de las fuerzas armadas alemanas y de las SS. Asimismo, adquiere una fábrica para producir menaje esmaltado. Para ayudarlo en la gestión del negocio, contrata a Itzhak Stern (Ben Kingsley), un contable judío que tiene contactos en el mercado negro y en la comunidad local de empresarios hebreos y que le ayuda a financiar la factoría. Schindler mantiene relaciones amistosas con los nazis y disfruta de cierta riqueza y estatus social como «Herr Direktor», mientras Stern se ocupa de la administración. Ambos contratan empleados judíos porque sus sueldos son inferiores por imposición alemana y porque Stern busca salvar a su pueblo de la deporta... [1,000 / 29,815 chars] |
+| ¿Cuál es la altura del cerro Calzoncillo en la isla mencionada en el texto? [75 chars] | Golfo de Ancud Geología y orografía Tanto los golfos de Ancud y Corcovado como el seno de Reloncaví, son las cuencas de grandes lagos que, en época remota, formaron parte del valle central que luego se hundió por trastornos geológicos siendo invadidos por las aguas del océano dando origen a gran cantidad de islas, fiordos y canales. La cordillera de los Andes se muestra como un relieve deprimido cuyas mayores altitudes corresponden a volcanes de alrededor de 2000 msnm; como el Puntiagudo 2493 m, Osorno 2652 m, Calbuco 2015 m, Michinmahuida 2440 m y Corcovado 2290 m ​ Climatología La región, en general, posee un clima templado lluvioso. La parte costera, salvo el sur de la isla de Chiloé, goza de un clima templado frío con lluvias invernales. Por otra parte, hacia el sur, el clima se caracteriza por no poseer estaciones secas, además de constantes lluvias. Además de las frecuentes neblinas que se producen en diferentes épocas del año, debe tenerse en cuenta las grandes columnas de humo... [1,000 / 25,915 chars] |
 
 ### Public Sources
 
@@ -160,9 +159,9 @@ Positive documents are long Spanish articles containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

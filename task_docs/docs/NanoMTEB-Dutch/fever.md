@@ -154,21 +154,20 @@ does not penalize alternative valid evidence passages.
 
 ## Example Data
 
-### Public Sources
-
-- [FEVER: a Large-scale Dataset for Fact Extraction and Verification](https://aclanthology.org/N18-1074/), 2018.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-fever](https://huggingface.co/datasets/clips/beir-nl-fever), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| De huidige Hertog van York is een persoon. [42 chars] | Hertog van York De Hertog van York is een adellijke titel in de Peerage van het Verenigd Koninkrijk. Sinds de 15e eeuw is deze titel, wanneer verleend, meestal gegeven aan de tweede zoon van Engelse (later Britse) monarchen. De equivalente titel in de Schotse peerage was Hertog van Albany. Aanvankelijk verleend in de 14e eeuw in de Peerage van Engeland, is de titel Hertog van York acht keer gecreëerd. Daarnaast is de titel Hertog van York en Albany drie keer gecreëerd. Dit gebeurde in de 18e eeuw, na de unificatie van het Koninkrijk Engeland en het Koninkrijk Schotland in 1707 tot één verenigd rijk. De dubbele naamgeving werd gedaan zodat een territoriale aanduiding uit elk van de voorheen afzonderlijke rijken kon worden opgenomen. De huidige Hertog van York is Prins Andrew, de tweede zoon van Koningin Elizabeth II. Prins Andrew heeft momenteel geen mannelijke erfgenamen en is sinds zijn scheiding in 1996 ongehuwd. [931 chars] |
+| Burbank, Californië is altijd volledig verstoken geweest van industrie. [71 chars] | Burbank, Californië Burbank is een stad in Los Angeles County in Zuid-Californië, Verenigde Staten, 19 km ten noordwesten van het centrum van Los Angeles. De bevolking bedroeg bij de volkstelling van 2010 103.340 inwoners. Bekend als de "Mediahoofdstad van de Wereld" en slechts een paar kilometer ten noordoosten van Hollywood, hebben talloze media- en entertainmentbedrijven hun hoofdkantoor of belangrijke productiefaciliteiten in Burbank, waaronder The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios met de West Coast-tak van Cartoon Network, en Insomniac Games. De stad herbergt ook Bob Hope Airport. Het was de locatie van Lockheed's Skunk Works, dat enkele van de meest geheime en technologisch geavanceerde vliegtuigen produceerde, waaronder de U-2 spionagevliegtuigen die in oktober 1962 de raketonderdelen van de Sovjet-Unie op Cuba ontdekten. Burbank bestaat uit twee verschillende gebieden: een centrum/voetheuvelgedeelte, in... [1,000 / 1,459 chars] |
+| Er is software, genaamd Adobe Photoshop, waarvan de versies met een nummer worden aangeduid. [92 chars] | Adobe Photoshop Adobe Photoshop is een rastergrafische editor ontwikkeld en uitgegeven door Adobe Systems voor macOS en Windows. Photoshop werd in 1988 gecreëerd door Thomas en John Knoll. Sindsdien is het de facto industriestandaard geworden in rastergrafische bewerking, zodanig dat het woord "photoshoppen" een werkwoord is geworden, zoals in "een afbeelding photoshoppen", "photoshoppen" en "photoshop-wedstrijd", hoewel Adobe dit gebruik afraadt. Het kan rasterafbeeldingen in meerdere lagen bewerken en samenstellen en ondersteunt maskers, alfakanaalcompositing en verschillende kleurmodellen, waaronder RGB, CMYK, CIELAB, spotkleur en duotonen. Photoshop heeft brede ondersteuning voor grafische bestandsformaten, maar gebruikt ook zijn eigen PSD- en PSB-bestandsformaten die alle bovengenoemde functies ondersteunen. Naast rastergraphics heeft het beperkte mogelijkheden om tekst, vectorgraphics (vooral via clipping paths), 3D-graphics en video te bewerken of te renderen. De functieset van... [1,000 / 2,249 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and Verification | 2018 | ACL paper | https://aclanthology.org/N18-1074/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-fever |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-fever |
+| FEVER: a Large-scale Dataset for Fact Extraction and Verification | 2018 | ACL paper | [https://aclanthology.org/N18-1074/](https://aclanthology.org/N18-1074/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-fever |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-fever](https://huggingface.co/datasets/clips/beir-nl-fever) |
 
 ### Representative Snippets
 

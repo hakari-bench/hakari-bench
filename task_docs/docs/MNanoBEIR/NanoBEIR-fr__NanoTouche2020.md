@@ -48,13 +48,11 @@ Strong models should preserve exact issue matching while learning argumentative 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Les devoirs sont-ils utiles ? | Premièrement, voici trois arguments en faveur du maintien des devoirs dans les écoles modernes... |
-| Les médicaments sur ordonnance doivent-ils être publicisés directement auprès des consommateurs ? | De nombreuses publicités ne fournissent pas suffisamment d'informations sur l'efficacité des médicaments... |
-| Quels vaccins les enfants doivent-ils recevoir ? | Ce n'est pas encore un dossier complet... Les gouvernements ne devraient pas avoir le droit d'intervenir... |
-| L'avortement devrait-il être légal ? | Les avortements devraient être légaux, car la personnalité juridique commence après que le fœtus devient viable... |
-| Les tests standardisés améliorent-ils l'éducation ? | Le SAT, l'ACT et autres tests standardisés fournissent plus d'informations sur la préparation d'un élève... |
+| Query | Positive document |
+| --- | --- |
+| Les devoirs sont-ils utiles ? [29 chars] | Premièrement, voici trois arguments en faveur du maintien des devoirs dans les écoles modernes. 1. Les devoirs aident les apprenants actifs. Il est généralement admis qu'il existe trois types d'apprenants : ceux qui apprennent en écoutant, ceux qui apprennent en voyant et ceux qui apprennent en faisant. Alors que beaucoup se contentent d'entendre ou de voir les instructions sur un sujet donné, certains ont besoin de le faire réellement. Ainsi, les devoirs sont bénéfiques pour ce dernier groupe car l'instruction se fait par l'action. 2. Les devoirs renforcent l'instruction. Bien que beaucoup seraient probablement ravis de ne pas avoir de devoirs, la qualité de l'éducation reçue en souffrirait certainement s'ils étaient supprimés. Que les devoirs soient des lectures imposées, des dissertations, etc., tout est conçu pour renforcer l'instruction dans l'esprit des élèves. Après tout, ceux qui font leurs devoirs sont plus académiquement performants que ceux qui ne le font pas. Je pense que c... [1,000 / 4,176 chars] |
+| Les médicaments sur ordonnance doivent-ils être publicisés directement auprès des consommateurs ? [97 chars] | De nombreuses publicités ne fournissent pas suffisamment d'informations sur l'efficacité des médicaments. Par exemple, Lunesta est promu par une chenille volante entrant par la fenêtre d'une chambre, au-dessus d'une personne dormant paisiblement. En réalité, Lunesta aide les patients à s'endormir 15 minutes plus vite après six mois de traitement et leur offre 37 minutes de sommeil supplémentaire par nuit. La majorité des publicités reposent sur des appels émotionnels, mais peu mentionnent les causes de la condition, les facteurs de risque ou les changements de mode de vie importants. Dans une étude de 38 publicités pharmaceutiques, les chercheurs ont constaté que 82 % faisaient une affirmation factuelle et 86 % présentaient des arguments rationnels pour l'utilisation du produit. Seulement 26 % décrivaient les causes de la condition, les facteurs de risque ou la prévalence. Ainsi, les patients ne reçoivent pas une information équilibrée qui les rendrait conscients que prendre un de ces... [1,000 / 1,987 chars] |
+| Quels vaccins les enfants doivent-ils recevoir ? [48 chars] | Ce n'est pas encore un dossier complet... Juste quelques points que j'ai rassemblés... Les gouvernements ne devraient pas avoir le droit d'intervenir dans les décisions de santé que les parents prennent pour leurs enfants. Selon un sondage de 2010 réalisé par l'Université du Michigan, 31 % des parents estiment qu'ils devraient avoir le droit de refuser les vaccinations obligatoires à l'entrée à l'école pour leurs enfants. De nombreux parents ont des croyances religieuses contre la vaccination. Forcer de tels parents à vacciner leurs enfants violerait le 1er Amendement, qui garantit aux citoyens le droit à la libre pratique de leur religion. Les vaccins sont souvent inutiles dans de nombreux cas où le risque de décès par maladie est faible. Au début du XIXe siècle, la mortalité due aux maladies infantiles comme la coqueluche, la rougeole et la scarlatine a chuté drastiquement avant que l'immunisation ne soit disponible. Cette diminution de la mortalité a été attribuée à une meilleure hy... [1,000 / 5,341 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should preserve exact issue matching while learning argumentative 
 
 | Label | URL |
 |---|---|
-| Touché 2020 overview | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touché 2020 dataset | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Touché 2020 overview (https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touché 2020 dataset (https://doi.org/10.5281/zenodo.6862281) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -70,9 +70,11 @@ For reranking, the candidate pool is already complete under dense and hybrid ret
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeSearchNet is documented through CoIR and the CodeSearchNet Challenge paper. The public CodeSearchNet dataset card provides the source data context for code-docstring pairs.
+| Query | Positive document |
+| --- | --- |
+| def _get_field(self, field_name, default=None): """ Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, credential pem files, etc. They get formatted as shown below. """ full_field_name = 'extra__grpc__{}'.format(field_name) if full_field_name in self.extras: return self.extras[full_field_name] else: return default [532 chars] | Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, credential pem files, etc. They get formatted as shown below. [257 chars] |
+| func (in *inflights) freeTo(to uint64) { if in.count == 0 \|\| to < in.buffer[in.start] { // out of the left side of the window return } idx := in.start var i int for i = 0; i < in.count; i++ { if to < in.buffer[idx] { // found the first large inflight break } // increase index and maybe rotate size := in.size if idx++; idx >= size { idx -= size } } // free i inflights and set new start index in.count -= i in.start = idx if in.count == 0 { // inflights is empty, reset the start index so that we do... [500 / 595 chars] | // freeTo frees the inflights smaller or equal to the given `to` flight. [72 chars] |
+| func NewCertPool(CAFiles []string) (*x509.CertPool, error) { certPool := x509.NewCertPool() for _, CAFile := range CAFiles { pemByte, err := ioutil.ReadFile(CAFile) if err != nil { return nil, err } for { var block *pem.Block block, pemByte = pem.Decode(pemByte) if block == nil { break } cert, err := x509.ParseCertificate(block.Bytes) if err != nil { return nil, err } certPool.AddCert(cert) } } return certPool, nil } [473 chars] | // NewCertPool creates x509 certPool with provided CA files. [60 chars] |
 
 ### Source Reference Table
 

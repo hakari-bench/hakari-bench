@@ -156,20 +156,19 @@ improve top-10 ordering beyond candidate recall.
 
 ## Example Data
 
-### Public Sources
-
-- [FQuAD: French Question Answering Dataset](https://arxiv.org/abs/2002.06071)
-- [FQuAD2.0](https://arxiv.org/abs/2109.13209)
-- [manu/fquad2_test](https://huggingface.co/datasets/manu/fquad2_test)
-- [hakari-bench/NanoMTEB-French](https://huggingface.co/datasets/hakari-bench/NanoMTEB-French)
+| Query | Positive document |
+| --- | --- |
+| Quand est-ce que Pierre Lambert est proche des Jésuites ? [57 chars] | pierre-lambert-de-la-motte_2_36 La spiritualité de Pierre Lambert de La Motte évolue tout au long de sa vie. Il est marqué par son époque et principalement par le centralisme issue de l'Église post tridentine, qui conduit à la codification de bon nombre d'actes de piété, mais aussi par le rigorisme naissant du XVIIe siècle, avec une recherche de l'austérité. Les deux écoles de spiritualité qui le marquent sont celle des Jésuites dont il est très proche quand il travaille à Rouen, mais aussi ce qui deviendra l'École française de spiritualité, qui recherche l'imitation du Christ, et le rôle important donné à la sanctification des prêtres. Ces sources de la formation spirituelle de Pierre Lambert le marquent profondément, même si des évolutions sont visibles au cours de sa vie. [786 chars] |
+| Comment se nomme le frère de Carnot ? [37 chars] | sadi-carnot-(physicien)_12_8 Parmi ses écrits posthumes, un manuscrit intitulé Recherche d’une formule propre à représenter la puissance motrice de la vapeur d’eau, rédigé entre novembre 1819 et mars 1827 mais probablement après les Réflexions, fut conservé. Dans celui-ci il ébauchait la première loi de la thermodynamique, en tentant de préciser le lien entre travail et chaleur. Cette note fut finalement publiée en 1878, c’est-à-dire trop tardivement pour pouvoir influer sur le développement de la science, par Hippolyte Carnot, dans un volume édité en hommage à son frère dans lequel il inséra une « Notice biographique sur Sadi Carnot ». C’est sans doute au printemps 1832 que Sadi découvre le principe de l’équivalence et qu’il reprend, dans de brèves notes, les conclusions d’un long mémoire, qui fut finalement détruit par Hippolyte. Ces notes, publiées également en 1878, indiquent qu’il avait alors renoncé à la théorie du calorique qui imprégnait encore son essai de 1824, et au sujet de... [1,000 / 1,382 chars] |
+| Pour quoi sont réputés les deux frères engagés par Wallis ? [59 chars] | casablanca-(film)_7_9 Ce sont Julius J. et Philip G. Epstein qui sont engagés par Wallis pour adapter la pièce au grand écran. Réputés pour leur esprit ironique, les deux frères introduisent plusieurs personnages secondaires hauts en couleurs ainsi que des dialogues donnant un ton fascinant aux conversations entre les protagonistes du film. Malgré leur empreinte sur le film, les Epstein quittent rapidement le projet pour se consacrer à la série de films de propagande commandés par le Gouvernement américain et réalisés pour la plupart par Frank Capra, Why We Fight. À ce moment de la production, le scénario en est arrêté au flashback, ce qui représente à peu près la moitié du film, et ne possède pas de fil narratif évident. [732 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FQuAD: French Question Answering Dataset | 2020 | Paper | https://arxiv.org/abs/2002.06071 |
-| FQuAD2.0: French Question Answering and knowing that you know nothing | 2021 | Paper | https://arxiv.org/abs/2109.13209 |
-| manu/fquad2_test | 2024 | Dataset card | https://huggingface.co/datasets/manu/fquad2_test |
+| FQuAD: French Question Answering Dataset | 2020 | Paper | [https://arxiv.org/abs/2002.06071](https://arxiv.org/abs/2002.06071) |
+| FQuAD2.0: French Question Answering and knowing that you know nothing | 2021 | Paper | [https://arxiv.org/abs/2109.13209](https://arxiv.org/abs/2109.13209) |
+| manu/fquad2_test | 2024 | Dataset card | [https://huggingface.co/datasets/manu/fquad2_test](https://huggingface.co/datasets/manu/fquad2_test) |
 
 ### Representative Snippets
 

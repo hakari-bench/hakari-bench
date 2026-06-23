@@ -200,6 +200,7 @@
     ["Active params", "active_parameters"],
     ["Total params", "total_parameters"],
     ["Max Tokens", "max_seq_length"],
+    ["Dimensions", "embedding_dim"],
     ["Truncate dims", "truncate_dims"],
   ];
 
@@ -213,7 +214,6 @@
     ["Prompt", "prompt"],
     ["HF trust", "trust_remote_code"],
     ["Variant", "embedding_variant_name"],
-    ["Dimensions", "embedding_dim"],
     ["Quantization", "quantization"],
     ["Base delta", "base_score_delta_percent"],
     ["Query len", "late_interaction_query_length"],

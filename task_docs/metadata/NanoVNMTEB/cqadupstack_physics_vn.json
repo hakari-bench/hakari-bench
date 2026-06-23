@@ -162,6 +162,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "69726",
+        "document_id": "56245",
+        "query": {
+          "text": "Thương mại có ảnh hưởng đến sự quay của Trái Đất không?",
+          "full_chars": 55,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nhân loại và các hoạt động/cấu trúc do con người tạo ra có ảnh hưởng đến chuyển động quay của Trái Đất? Chúng ta đi bộ hay lái phương tiện đến đích hàng ngày. Hành động của chúng ta có ảnh hưởng đến sự quay của trái đất theo định luật Newton không? Nếu tất cả mọi người cùng với phương tiện di chuyển ở vận tốc tối đa trong một đường thẳng theo hướng xích đạo thì sẽ có tác động gì? Mức độ tác động sẽ ra sao?",
+          "full_chars": 410,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "112820",
+        "document_id": "107061",
+        "query": {
+          "text": "Nguyên lý của Archimedes: thuật ngữ không chính xác?",
+          "full_chars": 52,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tại sao một cốc có 100 g nước nổi khi đặt trên một cốc khác có 50 g nước? Hãy tưởng tượng chúng ta có cốc A với 50 g nước và cốc B (nhỏ hơn so với cốc A) với 100 g nước. Bây giờ cho cốc B vào trong cốc A. Nếu chiều rộng của cả hai cốc là tương đương nhau thì cốc với 100 g nước sẽ nổi. Nó không chạm đáy của cốc B. Bây giờ hãy suy nghĩ về định luật nổi của Archimedes. Nó nói rằng khối lượng chất lỏng bị dịch chuyển = khối lượng vật nổi. Tuy nhiên trong trường hợp này cốc dưới chỉ có 50 g nước. Làm sao một vật nổi mà không làm dịch chuyển nước bằng trọng lượng của chính nó? Tôi không áp dụng đúng nguyên lý của Archimedes hay vì cả hai vật đều có cùng kích thước nên nguyên lý của Archimedes không được áp dụng?",
+          "full_chars": 716,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10496",
+        "document_id": "66099",
+        "query": {
+          "text": "Máy tính lượng tử D-Wave có thể làm gì?",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Máy tính lượng tử do D-Wave Systems, Inc. sản xuất có hoạt động không? D-wave tuyên bố đã chế tạo được 128 máy tính lượng tử qbit thương mại? Điều tôi không hiểu là họ có thực sự làm được điều này hay không trong khi cộng đồng khoa học vẫn đang vật lộn để thực hiện được một máy tính lượng tử (theo những gì tôi thu thập được) **Nếu đúng** , thì nó có nghĩa là họ đã giải quyết được _nhiều_ vấn đề và thực sự đã đạt được một cột mốc. Điều đó không phải là một sự kiện lớn sao? **Nếu không** , nếu thế Google và NASA đã đặt hàng một máy tính 512 qbit từ D-Wave như thế nào? Các tập đoàn như Google sẽ không đầu tư 10 triệu đô la nếu họ không thấy điều gì ở đó. Lokheed Martin đã mua máy 128 qbit với giá gần như tương tự. Làm sao mà không ai mở ra và cho thấy nó không phải là một máy tính lượng tử (có lẽ đây là câu hỏi ngây thơ, nhưng bất kể)? Ngoài ra hãy xem: http://spectrum.ieee.org/tech-talk/computing/hardware/google-and- nasa-buy-a_cách mạng_máy tính của D-Wave Câu hỏi liên quan Những gì máy",
+          "full_chars": 1857,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

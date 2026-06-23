@@ -143,6 +143,57 @@
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q383",
+        "document_id": "c309",
+        "query": {
+          "text": "import mpmath as mp with mp.workdps(72): def integer_term(n): p = 532 * n * n + 126 * n + 9 return (p * 2**5 * mp.factorial(6 * n)) / (3 * mp.factorial(n)**6) def exponent_term(n): return -(mp.mpf(\"6.0\") * n + 3) def nthterm(n): return integer_term(n) * mp.mpf(\"10.0\")**exponent_term(n) for n in range(10): print(\"Term \", n, ' ', int(integer_term(n))) def almkvist_guillera(floatprecision): summed, nextadd = mp.mpf('0.0'), mp.mpf('0.0') for n in range(100000000): nextadd = summed + nthterm(n) if ab",
+          "full_chars": 904,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Almkvist-Giullera formula for pi #include <boost/multiprecision/cpp_dec_float.hpp> #include <boost/multiprecision/gmp.hpp> #include <iomanip> #include <iostream> namespace mp = boost::multiprecision; using big_int = mp::mpz_int; using big_float = mp::cpp_dec_float_100; using rational = mp::mpq_rational; big_int factorial(int n) { big_int result = 1; for (int i = 2; i <= n; ++i) result *= i; return result; } big_int almkvist_giullera(int n) { return factorial(6 * n) * 32 * (532 * n * n + 126 * n + 9) / (pow(factorial(n), 6) * 3); } int main() { std::cout << \"n | Integer portion of nth term\\n\" << \"------------------------------------------------\\n\"; for (int n = 0; n < 10; ++n) std::cout << n << \" | \" << std::setw(44) << almkvist_giullera(n) << '\\n'; big_float epsilon(pow(big_float(10), -70)); big_float prev = 0, pi = 0; rational sum = 0; for (int n = 0;; ++n) { rational term(almkvist_giullera(n), pow(big_int(10), 6 * n + 3)); sum += term; pi = sqrt(big_float(1 / sum)); if (abs(pi - prev",
+          "full_chars": 1331,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q128",
+        "document_id": "c161",
+        "query": {
+          "text": "a1 = [0, 1403580, -810728] m1 = 2**32 - 209 a2 = [527612, 0, -1370589] m2 = 2**32 - 22853 d = m1 + 1 class MRG32k3a(): def __init__(self, seed_state=123): self.seed(seed_state) def seed(self, seed_state): assert 0 <seed_state < d, f\"Out of Range 0 x < {d}\" self.x1 = [seed_state, 0, 0] self.x2 = [seed_state, 0, 0] def next_int(self): \"return random int in range 0..d\" x1i = sum(aa * xx for aa, xx in zip(a1, self.x1)) % m1 x2i = sum(aa * xx for aa, xx in zip(a2, self.x2)) % m2 self.x1 = [x1i] + sel",
+          "full_chars": 1166,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Pseudo-random numbers_Combined recursive generator MRG32k3a #include <array> #include <iostream> int64_t mod(int64_t x, int64_t y) { int64_t m = x % y; if (m < 0) { if (y < 0) { return m - y; } else { return m + y; } } return m; } class RNG { private: const std::array<int64_t, 3> a1{ 0, 1403580, -810728 }; const int64_t m1 = (1LL << 32) - 209; std::array<int64_t, 3> x1; const std::array<int64_t, 3> a2{ 527612, 0, -1370589 }; const int64_t m2 = (1LL << 32) - 22853; std::array<int64_t, 3> x2; const int64_t d = (1LL << 32) - 209 + 1; public: void seed(int64_t state) { x1 = { state, 0, 0 }; x2 = { state, 0, 0 }; } int64_t next_int() { int64_t x1i = mod((a1[0] * x1[0] + a1[1] * x1[1] + a1[2] * x1[2]), m1); int64_t x2i = mod((a2[0] * x2[0] + a2[1] * x2[1] + a2[2] * x2[2]), m2); int64_t z = mod(x1i - x2i, m1); x1 = { x1i, x1[0], x1[1] }; x2 = { x2i, x2[0], x2[1] }; return z + 1; } double next_float() { return static_cast<double>(next_int()) / d; } }; int main() { RNG rng; rng.seed(1234567); s",
+          "full_chars": 1793,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q106",
+        "document_id": "c138",
+        "query": {
+          "text": "def water_collected(tower): N = len(tower) highest_left = [0] + [max(tower[:n]) for n in range(1,N)] highest_right = [max(tower[n:N]) for n in range(1,N)] + [0] water_level = [max(min(highest_left[n], highest_right[n]) - tower[n], 0) for n in range(N)] print(\"highest_left: \", highest_left) print(\"highest_right: \", highest_right) print(\"water_level: \", water_level) print(\"tower_level: \", tower) print(\"total_water: \", sum(water_level)) print(\"\") return sum(water_level) towers = [[1, 5, 3, 7, 2], [",
+          "full_chars": 770,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Water collected between towers #include <iostream> #include <vector> #include <algorithm> enum { EMPTY, WALL, WATER }; auto fill(const std::vector<int> b) { auto water = 0; const auto rows = *std::max_element(std::begin(b), std::end(b)); const auto cols = std::size(b); std::vector<std::vector<int>> g(rows); for (auto& r : g) { for (auto i = 0; i < cols; ++i) { r.push_back(EMPTY); } } for (auto c = 0; c < cols; ++c) { for (auto r = rows - 1u, i = 0u; i < b[c]; ++i, --r) { g[r][c] = WALL; } } for (auto c = 0; c < cols - 1; ++c) { auto start_row = rows - b[c]; while (start_row < rows) { if (g[start_row][c] == EMPTY) break; auto c2 = c + 1; bool hitWall = false; while (c2 < cols) { if (g[start_row][c2] == WALL) { hitWall = true; break; } ++c2; } if (hitWall) { for (auto i = c + 1; i < c2; ++i) { g[start_row][i] = WATER; ++water; } } ++start_row; } } return water; } int main() { std::vector<std::vector<int>> b = { { 1, 5, 3, 7, 2 }, { 5, 3, 7, 2, 6, 4, 5, 9, 1, 2 }, { 2, 6, 3, 5, 2, 8, 1, 4",
+          "full_chars": 1488,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "CLIMATE-FEVER",
-        "url": "https://arxiv.org/abs/2012.00614",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-no",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "Fra 1970 til 1998 var det en oppvarmingsperiode som økte temperaturen med omtrent 0,7 grader Fahrenheit, noe som bidro til å skape bevegelsen for klimaendringer.",
+          "full_chars": 161,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Paleocen (uttales pronˈpæliəˌsiːn, _ ˈpæ - , _ - lioʊ - ) eller Paleocen, «den gamle nylige», er en geologisk epoke som varte fra omtrent 66 til 56 millioner år siden. Det er den første epoken i Paleogen-perioden i den moderne Kenozoiske æra. Som med mange geologiske perioder, er lagene som definerer epokens begynnelse og slutt godt identifisert, men de eksakte alderene forblir usikre. Paleocen-epoken omfatter to store hendelser i Jordens historie. Den begynte med massedødsutbruddet ved slutten av Kritt, kjent som Kritt-Paleogen (K-Pg) grensen. Dette var en tid preget av utryddelsen av ikke-fugledinosaurer, store marine reptiler og mye annen fauna og flora. Utryddelsen av dinosaurene etterlot tomme økologiske nisjer over hele verden. Paleocen endte med Paleocen-Eocen Termisk Maksimum, en geologisk kort (ca. 0,2 millioner år) periode preget av ekstreme endringer i klima og karbonkretsløp. Navnet «Paleocen» kommer fra gammelgresk og refererer til den «gamle (e)» (παλαιός, palaios) «nye»",
+          "full_chars": 1051,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "Faktisk går trenden nedover, selv om den ikke er signifikant.",
+          "full_chars": 61,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Solens syklus eller solmagnetisk aktivitetssyklus er en omtrent 11-årige syklus i solens aktivitet (inkludert endringer i nivåene av solstråling og utkast av solmateriale) og utseende (endringer i antall og størrelse på solflekker, flarer og andre fenomener). Disse endringene har blitt observert (gjennom endringer i solens utseende og endringer på jorden, som nordlys) i århundrer. Endringene på solen forårsaker effekter i rommet, i atmosfæren og på jordens overflate. Selv om det er den dominerende variabelen i solaktivitet, oppstår det også uforutsigbare svingninger.",
+          "full_chars": 573,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Lokale og regionale havnivåer fortsetter å vise den vanlige naturlige variasjonen, stiger på noen steder og synker på andre.",
+          "full_chars": 124,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Middelhøyde over havet (MSL) (forkortet bare havnivå) er et gjennomsnittsnivå av overflaten på ett eller flere av Jordens hav, hvorfra høyder som høyder kan måles. MSL er en type vertikal datumsstandardisert geodetisk referansepunkt som brukes, for eksempel, som et kartdato i kartografi og sjønavigasjon, eller i luftfart, som standardhavnivå der atmosfærisk trykk måles for å kalibrere høyde og, følgelig, flynivåer for fly. En vanlig og relativt enkel middelhøyde over havet-standard er midtpunktet mellom middelhøy og middellavvann ved en bestemt sted. Havnivåer kan påvirkes av mange faktorer og er kjent for å ha variert sterkt over geologiske tidsrom. Nøyaktig måling av variasjoner i MSL kan gi innsikt i pågående klimaendringer, og havnivåstigning har blitt mye sitert som bevis på pågående global oppvarming. Begrepet over havnivå henviser vanligvis til over middelhøyde over havet (AMSL).",
+          "full_chars": 899,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

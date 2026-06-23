@@ -48,13 +48,11 @@ Strong models should improve answer relation matching without losing exact entit
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Où se déroule le Final Four cette année ? | Le tournoi de basket-ball universitaire de la Division I de la NCAA 2018 était un tournoi à élimination directe... |
-| Le film "L'Étrange Noël de Monsieur Jack" était-il à l'origine un film de Disney ? | L'idée de L'Étrange Noël de Monsieur Jack est née d'un poème écrit par Tim Burton en 1982... |
-| Pourquoi l'Ange du Nord se trouve-t-il à cet endroit ? | Selon Gormley, la signification de cet ange est triple : d'abord, pour indiquer que sous le site de sa construction... |
-| Où le compromis des trois cinquièmes était-il initialement mentionné dans la Constitution ? | Le Compromis des trois cinquièmes se trouve à l'Article 1, Section 2, Clause 3 de la Constitution des États-Unis... |
-| Qui chante "Someone's Watching Me" en duo avec Michael Jackson ? | "Somebody's Watching Me" est une chanson du chanteur américain Rockwell issue de son premier album studio... |
+| Query | Positive document |
+| --- | --- |
+| Où se déroule le Final Four cette année ? [41 chars] | Le tournoi de basket-ball universitaire de la Division I de la NCAA 2018 était un tournoi à élimination directe de 68 équipes visant à désigner le champion national de basket-ball universitaire de la Division I de la NCAA pour la saison 2017-2018. La 80e édition du tournoi a commencé le 13 mars 2018 et s'est terminée par la finale le 2 avril à l'Alamodome de San Antonio, au Texas. [383 chars] |
+| Le film "L'Étrange Noël de Monsieur Jack" était-il à l'origine un film de Disney ? [82 chars] | L'idée de L'Étrange Noël de Monsieur Jack est née d'un poème écrit par Tim Burton en 1982, alors qu'il travaillait comme animateur chez Walt Disney Feature Animation. Grâce au succès de Vincent la même année, les studios Walt Disney ont commencé à envisager de développer L'Étrange Noël de Monsieur Jack en tant que court-métrage ou spécial télévisé de 30 minutes. Au fil des années, Burton est régulièrement revenu sur ce projet, et en 1990, il a conclu un accord de développement avec Disney. La production a débuté en juillet 1991 à San Francisco; Disney a sorti le film sous le label Touchstone Pictures, estimant qu'il serait "trop sombre et effrayant pour les enfants".[4] [678 chars] |
+| Pourquoi l'Ange du Nord se trouve-t-il à cet endroit ? [54 chars] | Selon Gormley, la signification de cet ange est triple : d'abord, pour indiquer que sous le site de sa construction, des mineurs de charbon ont travaillé pendant deux siècles ; ensuite, pour marquer la transition d'une ère industrielle à une ère de l'information, et enfin, pour servir de point de mire à nos espoirs et à nos peurs en évolution. [345 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should improve answer relation matching without losing exact entit
 
 | Label | URL |
 |---|---|
-| Natural Questions paper | https://aclanthology.org/Q19-1026/ |
-| Natural Questions dataset page | https://ai.google.com/research/NaturalQuestions |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions paper (https://aclanthology.org/Q19-1026/) |
+| Natural Questions dataset page (https://ai.google.com/research/NaturalQuestions) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
-        "url": "https://arxiv.org/abs/1803.05355",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sv",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "Keith Godchaux kände till Grateful Dead",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Grateful Dead var ett amerikanskt rockband som bildades 1965 i Palo Alto, Kalifornien. Bandet, som bestod av fem till sju medlemmar, är känt för sin unika och eklektiska stil, som blandade element från rock, psychedelia, experimentell musik, modal jazz, country, folk, bluegrass, blues, reggae och space rock. De var också kända för sina långa instrumentala jam-sessioner och sin lojala fanskara, som kallades \"Deadheads\". Som Lenny Kaye skriver, \"Deras musik berör områden som de flesta andra band inte ens vet att de finns.\" Dessa olika influenser smälte samman till en mångsidig och psykedelisk helhet som gjorde The Grateful Dead till \"pionjärerna och gudfäderna inom jam-band-världen\". Bandet rankades som nummer 57 av Rolling Stone Magazine i deras lista över \"The Greatest Artists of All Time\". The Grateful Dead blev invalda i Rock and Roll Hall of Fame 1994, och en inspelning av deras konsert den 8 maj 1977 på Cornell Universitys Barton Hall lades till i National Recording Registry på",
+          "full_chars": 2895,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah är en sitcom.",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah (Engelska: Taarak Mehtas olika perspektiv) är Indiens längsta löpande sitcom, producerad av Neela Tele Films Private Limited. Serien sändes för första gången den 28 juli 2008. Den sänds från måndag till fredag klockan 20:30, med upprepad sändning klockan 23:00 och dagen därpå klockan 15:00 på SAB TV. Serien började sin omgång på Sony Pal den 2 november 2015 klockan 16:30 och 20:00 varje dag. Serien är baserad på kolumnen Duniya Ne Oondha Chashma, skriven av kolumnisten och journalisten Taarak Mehta för den gujaratiska veckotidningen Chitralekha.",
+          "full_chars": 583,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Hemliga och tekniskt avancerade flygplan tillverkades i Burbank, Kalifornien.",
+          "full_chars": 77,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank är en stad i Los Angeles County i södra Kalifornien, USA, cirka 19 kilometer nordväst om centrala Los Angeles. Vid folkräkningen 2010 hade staden 103 340 invånare. Staden marknadsförs som \"Världens Mediehuvudstad\" och ligger bara några mil nordost om Hollywood. Många medie- och underhållningsföretag har sitt huvudkontor eller betydande produktionsanläggningar i Burbank, bland annat The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios med Cartoon Networks västkustkontor, och Insomniac Games. Staden är också hem för Bob Hope Airport. Här fanns tidigare Lockheed's Skunk Works, som producerade några av de mest hemliga och tekniskt avancerade flygplanen, inklusive U-2-spionplanen som avslöjade sovjetiska missilkomponenter på Kuba i oktober 1962. Burbank består av två distinkta områden: en central/bergsdel i Verdugo Mountains fot och en slättlandsdel. Burbank är den östligaste staden i San Fernando Valley. Grannstaden Glenda",
+          "full_chars": 1280,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

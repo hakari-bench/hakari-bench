@@ -139,7 +139,7 @@
         "url": "https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -153,8 +153,59 @@
         "title": "BeIR/nq",
         "url": "https://huggingface.co/datasets/BeIR/nq",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test495",
+        "document_id": "doc18264",
+        "query": {
+          "text": "where is final four being held this year",
+          "full_chars": 40,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The 2018 NCAA Division I Men's Basketball Tournament was a 68-team single-elimination tournament to determine the men's National Collegiate Athletic Association (NCAA) Division I college basketball national champion for the 2017–18 season. The 80th edition of the tournament began on March 13, 2018, and concluded with the championship game on April 2 at the Alamodome in San Antonio, Texas.",
+          "full_chars": 391,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1618",
+        "document_id": "doc57226",
+        "query": {
+          "text": "was nightmare before christmas originally a disney movie",
+          "full_chars": 56,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Nightmare Before Christmas originated in a poem written by Tim Burton in 1982, while he was working as an animator at Walt Disney Feature Animation. With the success of Vincent in the same year, Walt Disney Studios began to consider developing The Nightmare Before Christmas as either a short film or 30-minute television special. Over the years, Burton's thoughts regularly returned to the project, and in 1990, he made a development deal with Disney. Production started in July 1991 in San Francisco; Disney released the film through its Touchstone Pictures banner because the studio believed the film would be \"too dark and scary for kids\".[4]",
+          "full_chars": 650,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test1037",
+        "document_id": "doc36393",
+        "query": {
+          "text": "why is the angel of the north there",
+          "full_chars": 35,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "According to Gormley, the significance of an angel was three-fold: first, to signify that beneath the site of its construction, coal miners worked for two centuries; second, to grasp the transition from an industrial to an information age, and third, to serve as a focus for our evolving hopes and fears .[2]",
+          "full_chars": 308,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

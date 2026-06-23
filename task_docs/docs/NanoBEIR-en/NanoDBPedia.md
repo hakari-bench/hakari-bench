@@ -62,9 +62,11 @@ A model targeting this task should preserve exact entity and alias recall while 
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on DBpedia-Entity, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| fitzgerald auto mall chambersburg pa [36 chars] | Fitzgerald Auto Malls is a family owned and operated auto dealership that was founded in 1966, with its first location opening in Bethesda, Maryland. As of 2014, Fitzgerald Auto Malls ranked number 59 on the list of the "Top 125 Dealership Groups" in the U.S., which is published annually by Automotive News Fitzgerald dealer locations appear five times on the 2013 WardsAuto e-Dealer 100, at No.8, No.25, No.30, No.43 and No.98. [429 chars] |
+| 1994 short story collection Alice Munro is Open [47 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, née Laidlaw /ˈleɪdlɔː/; born 10 July 1931) is a Canadian author. Munro's work has been described as having revolutionized the architecture of short stories, especially in its tendency to move forward and backward in time. Her stories have been said to "embed more than announce, reveal more than parade."Munro's fiction is most often set in her native Huron County in southwestern Ontario. Her stories explore human complexities in an uncomplicated prose style. [499 chars] |
+| gallo roman architecture in paris [33 chars] | Art in Paris is an article on the art culture and history in Paris, the capital of France. For centuries, Paris has attracted artists from around the world, arriving in the city to educate themselves and to seek inspiration from its artistic resources and galleries. As a result, Paris has acquired a reputation as the "City of Art". [333 chars] |
 
 ### Source Reference Table
 

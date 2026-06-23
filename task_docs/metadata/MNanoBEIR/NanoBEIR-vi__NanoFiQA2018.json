@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "FiQA: Financial Opinion Mining and Question Answering",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA: Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Loại lợi suất nào mà Vanguard đang báo giá?",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Từ trang Vanguard - Đây có vẻ là cái dễ nhất vì dữ liệu S&P dễ tìm. Tôi sử dụng MoneyChimp để lấy - điều này xác nhận rằng trang của Vanguard đang cung cấp CAGR, không phải Trung bình số học. Lưu ý: Vanguard tuyên bố \"\"Đối với lợi nhuận thị trường chứng khoán Mỹ, chúng tôi sử dụng Standard & Poor's 90 từ năm 1926 đến ngày 3 tháng 3 năm 1957,\"\" trong khi Chimp sử dụng dữ liệu từ trang của người đoạt giải Nobel, Robert Shiller.\"",
+          "full_chars": 431,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Các tác động thuế của việc làm tự do ở Hoa Kỳ",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nếu bạn có thu nhập ở Mỹ, bạn sẽ phải nộp thuế thu nhập Mỹ trên số thu nhập đó, trừ khi có hiệp định với quốc gia của bạn quy định khác.",
+          "full_chars": 136,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "Cái gì được coi là cao hoặc thấp khi nói về âm lượng?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Khối lượng giao dịch hàng ngày thường được so sánh với khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của một cổ phiếu. Khối lượng cao thường được coi là gấp 2 lần hoặc hơn khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của cổ phiếu đó, tuy nhiên một số nhà giao dịch có thể đặt tiêu chí là gấp 3 hoặc 4 lần khối lượng giao dịch trung bình để xác nhận một mẫu hình hoặc sự kiện cụ thể. Khối lượng được so sánh với khối lượng giao dịch trung bình của chính cổ phiếu đó, vì việc so sánh với khối lượng của các cổ phiếu khác sẽ giống như so sánh táo với cam, vì các công ty khác nhau sẽ có số lượng cổ phiếu tổng cộng khác nhau, các mức độ thanh khoản khác nhau và các mức độ biến động khác nhau, tất cả đều có thể góp phần vào khối lượng giao dịch hàng ngày.",
+          "full_chars": 782,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

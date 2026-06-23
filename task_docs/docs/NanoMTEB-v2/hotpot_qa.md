@@ -62,19 +62,19 @@ Models should optimize for evidence-set retrieval, not just first-hit retrieval.
 
 ## Example Data
 
-### Public Sources
-
-- [HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering](https://arxiv.org/abs/1809.09600), 2018.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/HotpotQA_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| The Soul of Buddha is a 1918 American silent romance film shot in a borough that is the western terminus of what? [114 chars] | The Soul of Buddha The Soul of Buddha is a 1918 American silent romance film directed by J. Gordon Edwards and starring Theda Bara, who also wrote the film's story. The film was produced by Fox Film Corporation and shot at the Fox Studio in Fort Lee, New Jersey. [263 chars] |
+| The lamp used in many lighthouses is similiar to this type of lamp patented in 1780 by Aimé Argand? [99 chars] | Lewis lamp The Lewis lamp is a type of light fixture used in lighthouses. It was invented by Winslow Lewis who patented the design in 1810. The primary marketing point of the Lewis lamp was that it used less than half the oil of the prior oil lamps which they replaced. The lamp used a similar design to an Argand lamp, adding a parabolic reflector behind the lamp and a magnifying lens made from 4 in green bottle glass in front of the lamp. A similar variant using a parabolic reflector was created by the inventor of the Argand lamp, Aimé Argand. While the Argand variant became widely used by European lighthouses, the Lewis lamp design was selected by the United States for use in American lighthouses. [708 chars] |
+| What is the shared country of ancestry between Art Laboe and Scout Tufankjian? [78 chars] | Art Laboe Art Laboe (born Arthur Egnoian on August 7, 1925) is an Armenian American disc jockey, songwriter, record producer, and radio station owner, generally credited with coining the term "Oldies But Goodies". [214 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | source task paper | https://arxiv.org/abs/1809.09600 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/HotpotQA_test_top_250_only_w_correct-v2 |  | dataset card | https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2 |
+| HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering | 2018 | source task paper | [https://arxiv.org/abs/1809.09600](https://arxiv.org/abs/1809.09600) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/HotpotQA_test_top_250_only_w_correct-v2 |  | dataset card | [https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2) |
 
 ### Representative Snippets
 

@@ -70,13 +70,11 @@ Error analysis should separate failures by product mismatch, jurisdiction mismat
 
 ## Example Data
 
-### Public Sources
-
-- [FiQA 2018 paper](https://doi.org/10.1145/3184558.3192301)
-- [FiQA project page](https://sites.google.com/view/fiqa/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/fiqa-vn](https://huggingface.co/datasets/GreenNode/fiqa-vn)
+| Query | Positive document |
+| --- | --- |
+| "Sell on ask", "sell on bid" trong chứng khoán là gì? [53 chars] | Giá mua (bid) và giá bán (ask) là mức giá cao nhất để mua và thấp nhất để bán trên thị trường, điều đó không có nghĩa là bạn chỉ nên mua/bán ở mức giá này. Tuy nhiên bạn có thể mua/bán theo mức giá mà bạn muốn mặc dù việc thực hiện ở một mức giá khác với giá mua/bán thường khó khăn hơn vì các nhà đầu tư khác sẽ hướng tới mức giá mua/bán đang được áp dụng. Về lý thuyết, bạn có thể mua ở mức giá ask và bán ở mức giá bid, tuy nhiên việc có thực hiện được hay không lại là một vấn đề khác. [489 chars] |
+| Giải thích chi phí sinh viên - Để khai thuế cho năm tiếp theo [61 chars] | Giả sử ở đây bạn đang nói về việc khấu trừ học phí của bạn như một khoản khấu trừ dưới mức cơ bản như một chi phí kinh doanh hoặc tương tự, sau đó nó phụ thuộc. Theo 1.162-5, nếu giáo dục: Sau đó nó được coi là một chi phí kinh doanh hợp pháp và có thể khấu trừ. Nếu không - nếu bạn đi học để theo đuổi một nghề nghiệp khác, chẳng hạn như người làm việc như một người bồi bàn nhưng đi học để lấy bằng y tá, hoặc người làm việc như một giáo viên lấy bằng luật - sau đó không phải; bạn sẽ phải đủ điều kiện theo một trong các khoản tín dụng khác (nhưng ít phức tạp hơn). Đọc thêm về chủ đề này tại Chủ đề thuế 513. Lưu ý rằng khoản khấu trừ phổ biến nhất khác - Khoản khấu trừ học phí và lệ phí trên mức cơ bản - hết hạn vào năm 2016 và không áp dụng (vẫn chưa?) năm 2017, và hơn nữa sẽ không yêu cầu hầu hết những gì bạn mô tả vì nó chỉ tính học phí và lệ phí trả trực tiếp cho cơ sở giáo dục và yêu cầu như một điều kiện tham dự, vì vậy sách, đỗ xe, v.v. không tính. [966 chars] |
+| Điều gì xảy ra với "người mua dài" của một cổ phiếu khi người bán ngắn khác thất bại (đó là, thua lỗ không giới hạn phá sản người bán ngắn) [139 chars] | Nếu không có gì tinh tế mà tôi bỏ lỡ, chẳng có gì xảy ra với người mua. Giả sử Alice muốn bán khống 1000 cổ phiếu XYZ ở mức $5. Cô ta vay cổ phiếu từ Bob và bán chúng cho Charlie. Bây giờ Charlie thực sự sở hữu cổ phiếu; chúng nằm trong tài khoản của anh ta. Nếu sau này cổ phiếu tăng lên đến $10, Charlie sẽ vui mừng; anh ta có thể bán những cổ phiếu mà anh ta hiện đang sở hữu, và thu được lợi nhuận $5000. Alice vẫn còn số tiền $5000 mà cô ta nhận được từ việc bán khống, nhưng cô ta nợ 1000 cổ phiếu cho Bob. Như vậy cô ta đã nợ $5000. Nếu Bob đòi lại khoản vay, cô ta sẽ phải tìm cách để có thêm $5000 để mua 1000 cổ phiếu ở mức giá $10 trên thị trường mở. Nếu cô ta không làm được, thì đó là chuyện giữa cô ta và Bob. Có thể cô ta sẽ phá sản và Bob sẽ phải ghi nhận khoản lỗ. Nhưng tất cả những điều này đều không ảnh hưởng đến Charlie! Anh ta đã có được số cổ phiếu mà anh ta đã trả tiền, và không ai có thể lấy chúng đi khỏi anh ta. Anh ta không có lý do gì để quan tâm đến nguồn gốc của chún... [1,000 / 1,159 chars] |
 
 ### Source Reference Table
 

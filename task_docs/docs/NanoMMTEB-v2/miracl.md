@@ -132,10 +132,11 @@ reranking that preserves dense top-rank quality while using hybrid recall.
 
 ## Example Data
 
-Representative queries ask about the area of a Telugu village, the sect led by
-Jim Jones, when the Parliamentary Assembly of the Council of Europe first met,
-India's population, and the meaning of voivode. Positive documents are
-same-language Wikipedia passages that answer the question.
+| Query | Positive document |
+| --- | --- |
+| కిమ్మూరు గ్రామ విస్తీర్ణం ఎంత? [30 chars] | కిమ్మూరు ఇది మండల కేంద్రమైన అడ్డతీగల నుండి 25 కి. మీ. దూరం లోను, సమీప పట్టణమైన పెద్దాపురం నుండి 33 కి. మీ. దూరంలోనూ ఉంది. 2011 భారత జనగణన గణాంకాల ప్రకారం ఈ గ్రామం 249 ఇళ్లతో, 887 జనాభాతో 283 హెక్టార్లలో విస్తరించి ఉంది. గ్రామంలో మగవారి సంఖ్య 455, ఆడవారి సంఖ్య 432. షెడ్యూల్డ్ కులాల సంఖ్య 138 కాగా షెడ్యూల్డ్ తెగల సంఖ్య 2. గ్రామం యొక్క జనగణన లొకేషన్ కోడ్ 586876.పిన్ కోడ్: 533429. [380 chars] |
+| Welche Sekte hat Jim Jones geführt? [35 chars] | William Branham In den Jahren 1956 und 1957 unterstützte William Branham den jungen Prediger des Latter-Rain Movements und späteren Sektenführer Jim Jones und trat beispielsweise als Gastprediger in einer von ihm geleiteten Predigtreihe im "Cadle Tabernacle" in Indianapolis (Indiana) auf. Branham verhieß Jim Jones und seiner Gemeinde den Segen Gottes. Nach dieser Zeit überwarfen sich Branham und Jim Jones, u. a. da letzterer eine Rassentrennung ablehnte, während Branham eine klare Trennung befürwortete und Mischehen sogar verurteilte. [541 chars] |
+| متى عقدت الجمعية البرلمانية لمجلس أوروبا دورتها الأولى؟ [55 chars] | الجمعية البرلمانية لمجلس أوروبا عقدت الجمعية دورتها الأولى في ستراسبورغ في 10 أغسطس 1949. [90 chars] |
 
 ### Public Sources
 
@@ -150,9 +151,9 @@ same-language Wikipedia passages that answer the question.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2023 | task paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL project page | 2023 | project page | https://project-miracl.github.io/ |
-| mteb/MIRACLRetrievalHardNegatives | 2024 | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2023 | task paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL project page | 2023 | project page | [https://project-miracl.github.io/](https://project-miracl.github.io/) |
+| mteb/MIRACLRetrievalHardNegatives | 2024 | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives) |
 
 ### Representative Snippets
 

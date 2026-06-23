@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 2
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ko",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "회상 증후군이란 무엇인가",
+          "full_chars": 13,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "회상 증후군. 회상 증후군은 메리시즘(Merycism)이라고도 하며, 음식물의 역류를 유발하는 특정되지 않은 유형의 섭식장애이다. 비록 DSM-IV에서 특정한 섭식장애로 명시되지는 않았지만, 이 장애를 진단하기 위한 특정 기준들이 제시되어 있다.",
+          "full_chars": 137,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "'Here I Go Again'을 부른 사람은 누구인가요?",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "다른 뜻에 대해서는 'Here I Go Again' (동음이의어)를 참조하십시오. \"Here I Go Again\"은 영국의 록 밴드 화이트스네이크(Whitesnake)의 노래이다. 이 곡은 원래 1982년 앨범 『Saints & Sinners』에 수록되었으며, 이후 1987년 발매된 동명의 앨범 『Whitesnake』를 위해 다시 녹음되었다. 같은 해에 이 곡은 새로운 라디오 믹스 버전으로 다시 한번 리마스터링되었다.",
+          "full_chars": 235,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "캠런 보이스는 《리브 앤 매디》에서 루크 콘웨이 역을 맡았다.",
+          "full_chars": 34,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "여러분, 진지한 웃음 준비하세요. 4월 19일 방영 예정인 'Liv & Maddie'의 에피소드 \"Prom-A-Rooney\"에 대한 독점 미리보기입니다. 당연히 그렇죠. 이 웃긴 클립에서 우리는 '제시'의 캐머런 보이스가 다른 디즈니 쇼로 건너와 매디(셸비 울퍼트)를 만나는 장면을 볼 수 있습니다. 그의 캐릭터는 다소 기묘하답니다!",
+          "full_chars": 186,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 75
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-mathematica-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-mathematica-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Mathematica-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-mathematica-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-mathematica-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "55294",
+        "document_id": "56341",
+        "query": {
+          "text": "DeleteDuplicatesBy nie działa tak, jak się spodziewałem. Czy czegoś mi brakuje?",
+          "full_chars": 79,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Szybsza alternatywa dla DeleteDuplicates do usuwania elementów z listy Mam listę w tym stylu data={{a1,b1,c1,d1,e1,f1}, {a2,b2,c2,d2,e2,f2}} Muszę usunąć wszystkie elementy, w których znajduje się `b1` równa się „b2” i tak dalej. Muszę tylko przetestować b. Lista, której używam, zawiera ponad 15000 elementów. Użyłem `DeleteDuplicates`: DeleteDuplicates[data, {_, #1, _, _, _, _} == {_, #2, _, _, _, _} &] Wiem, że ta metoda daje poprawny wynik ponieważ przetestowałem to na niewielkiej ilości danych. Ale na liście zawierającej ponad 15 000 elementów po 20 minutach bez powodzenia. Czy istnieje bardziej wydajna metoda?",
+          "full_chars": 621,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "17250",
+        "document_id": "38971",
+        "query": {
+          "text": "Czy można zmienić kolor fabuły w programie Show?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Edytuj wykres/grafikę po narysowaniu. Czasami wpadam w sytuację, gdy istnieją obiekty graficzne (głównie wykresy), których rysowanie zajmuje trochę czasu. Dobra praktyka sugerowałaby, że całą ocenę przeprowadzasz poza „Plotką” lub jakąkolwiek inną funkcją kreślenia, ale czasami zapomina się lub jest to proces rysowania, który zajmuje dużo czasu. Więc **pytanie** brzmi, czy można zmienić takie rzeczy jak czcionka `PlotLabel`, `PlotStyle` lub inne ściśle estetyczne właściwości fabuły bez pytania Mathematica o przeliczenie wszystkich punktów.",
+          "full_chars": 545,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "11794",
+        "document_id": "50550",
+        "query": {
+          "text": "Uzyskaj wzór na interpolację wielomianową",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Określ funkcje na podstawie punktów danych Czy Mathematica może rozwiązać dla f(x,y) = 0 takie, że {x,y} zawiera `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}} `? Czy musimy najpierw określić f(x,y) ? Dziękuję Ci",
+          "full_chars": 207,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

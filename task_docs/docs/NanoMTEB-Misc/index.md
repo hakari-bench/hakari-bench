@@ -174,14 +174,14 @@ translation equivalence with close cross-lingual negatives.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| Overview of the TREC 2022 NeuCLIR Track | 2023 | source task paper | https://arxiv.org/abs/2304.12367 |
-| NeuCLIR official site |  | project page | https://neuclir.github.io/ |
-| RuSciBench: Open Benchmark for Russian and English Scientific Document Representations | 2024 | source task paper | https://doi.org/10.1134/S1064562424602191 |
-| EuroPIRQ-retrieval | 2025 | dataset card | https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | source task paper | https://arxiv.org/abs/2502.08638 |
-| Andrianos/clsd_wmt19_21 |  | dataset card | https://huggingface.co/datasets/Andrianos/clsd_wmt19_21 |
-| mteb/NeuCLIR2022RetrievalHardNegatives |  | dataset card | https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives |
-| mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval |  | dataset card | https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval |
-| mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval |  | dataset card | https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| Overview of the TREC 2022 NeuCLIR Track | 2023 | source task paper | [https://arxiv.org/abs/2304.12367](https://arxiv.org/abs/2304.12367) |
+| NeuCLIR official site |  | project page | [https://neuclir.github.io/](https://neuclir.github.io/) |
+| RuSciBench: Open Benchmark for Russian and English Scientific Document Representations | 2024 | source task paper | [https://doi.org/10.1134/S1064562424602191](https://doi.org/10.1134/S1064562424602191) |
+| EuroPIRQ-retrieval | 2025 | dataset card | [https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings | 2025 | source task paper | [https://arxiv.org/abs/2502.08638](https://arxiv.org/abs/2502.08638) |
+| Andrianos/clsd_wmt19_21 |  | dataset card | [https://huggingface.co/datasets/Andrianos/clsd_wmt19_21](https://huggingface.co/datasets/Andrianos/clsd_wmt19_21) |
+| mteb/NeuCLIR2022RetrievalHardNegatives |  | dataset card | [https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives](https://huggingface.co/datasets/mteb/NeuCLIR2022RetrievalHardNegatives) |
+| mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval |  | dataset card | [https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval](https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cite_retrieval) |
+| mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval |  | dataset card | [https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval](https://huggingface.co/datasets/mlsa-iai-msu-lab/ru_sci_bench_cocite_retrieval) |

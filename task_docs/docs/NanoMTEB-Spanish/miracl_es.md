@@ -70,11 +70,11 @@ For evaluation, nDCG@10 should be used to judge direct ranking, while recall@100
 
 ## Example Data
 
-### Public Sources
-
-- MIRACL paper: https://arxiv.org/abs/2210.09984
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- Source task dataset card: https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives
+| Query | Positive document |
+| --- | --- |
+| ¿Cómo es la arquitectura del caravasar de Orbelián? [51 chars] | Caravasar de Orbelian El caravasar está construido con bloques de basalto. [75 chars] |
+| ¿Cómo llaman los judíos al Pentateuco? [38 chars] | Pentateuco Se corresponde con los que en la tradición hebrea forman la "Torá" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el "Tanaj", el cual es considerado sagrado por todas las religiones abrahámicas (judaísmo, cristianismo e islam). No obstante lo anterior y que es uno de sus tres textos sagrados, los musulmanes creen que el texto sufrió corrupción ("tahrif") por los escribas judíos y cristianos por lo que no confían del todo en él. Mientras que los hebreos los nombran por la primera palabra significativa de cada uno, los cristianos han seguido tradicionalmente la nomenclatura de la versión griega de los LXX. [679 chars] |
+| ¿Cuándo recibió Daniel Harold Rolling la inyección letal de su condenación? [75 chars] | Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación. Fue declarado fallecido a las 18:13 EDT. [241 chars] |
 
 ### Source Reference Table
 

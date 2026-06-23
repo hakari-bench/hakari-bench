@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "PIQA: Reasoning about Physical Commonsense in Natural Language",
         "url": "https://arxiv.org/abs/1911.11641",
         "year": 2020,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "piqa-q-66",
+        "document_id": "piqa-d-133",
+        "query": {
+          "text": "How to light a candle with a deep seated wick?",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "invert the candle upside down and use the lighter to reach into the wick to light it",
+          "full_chars": 84,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "piqa-q-123",
+        "document_id": "piqa-d-247",
+        "query": {
+          "text": "How to grow a plant.",
+          "full_chars": 20,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bury seed in soil and add 1 cup of water daily.",
+          "full_chars": 47,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "piqa-q-103",
+        "document_id": "piqa-d-206",
+        "query": {
+          "text": "How can I get free gym memberships?",
+          "full_chars": 35,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Check with your health insurance co., many times they'll reimburse your gym costs.",
+          "full_chars": 82,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

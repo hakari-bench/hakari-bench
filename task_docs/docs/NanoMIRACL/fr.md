@@ -151,10 +151,11 @@ the top of the list.
 
 ## Example Data
 
-Representative queries ask what a cardinal does, what Pablo Picasso's wife was
-called, what a referendum is, who the last Polish king was, or what branches of
-chemistry are. Positive documents are French Wikipedia passages containing the
-requested role, relationship, definition, historical fact, or classification.
+| Query | Positive document |
+| --- | --- |
+| Qu’est-ce qu’un cardinal fait? [30 chars] | Cardinal (religion) En fait, la nomination de cardinaux est une indication politique sur le pontificat en cours et la future élection, les cardinaux étant chargés d'élire le pape. Dans l'histoire, elle a aussi été une manière d'honorer les cadets de grandes familles royales ou nobles et de récompenser des proches. Cet état de fait était désigné sous le nom de népotisme, du latin "nepos", le neveu. Le pape choisissait un de ses neveux qu'il créait cardinal afin de faire entrer sa parenté dans la « carrière » ecclésiastique. [529 chars] |
+| Comment s’appelle la femme de Pablo Picasso? [44 chars] | Pablo Picasso Son fils Paulo naît le . Durant l'été, il s'installe avec Olga et Paulo à Fontainebleau. Il y peint les "Femmes à la fontaine" (Paris, musée Picasso et New York, ) et "Les Trois Musiciens" (New York, et Philadelphie ). Cette même année, le musée de Grenoble obtient du peintre le premier tableau pour exposition dans une collection publique française ("Femme lisant"), représentant sa femme Olga Khokhlova. En , lors d'un séjour à Dinard sur la côte nord de la Bretagne, il peint "Deux femmes courant sur la plage" ("La Course", Paris, Musée Picasso). Puis, en décembre, il réalise le décor pour L'"Antigone" de Cocteau, créée par Charles Dullin au théâtre de l'Atelier. En 1923, il fait un nouveau séjour estival sur la Côte d'Azur, au cap d'Antibes, et peint "La Flûte de Pan" (Paris, Musée Picasso). Pendant l'été 1924, il séjourne à la villa La Vigie à Juan-les-Pins (Côte d'Azur), il fait son "Carnet de dessins abstraits" et peint "Paul en arlequin" (Paris, musée Picasso). [994 chars] |
+| Qu’est-ce que c’est un référendum? [34 chars] | Référendum Le référendum appartient au domaine du droit : on ne peut décider par référendum que des lois. Dans les régimes de démocratie représentative, des parlementaires discutent et amendent les lois. Le référendum, selon les conceptions du juriste Raymond Carré de Malberg, a pour objet de limiter et de contrôler ce pouvoir. Si , il est sain que le compromis que les parlementaires ont trouvé entre les divers intérêts et opinions soit soumis au corps électoral. La place du référendum dans la hiérarchie des pouvoirs pose un problème pratique. Les lois sont soumises à un contrôle de conformité à la Constitution, qui notamment protège les minorités. Comment le référendum se place-t-il par rapport à cette norme ? [721 chars] |
 
 ### Public Sources
 
@@ -172,10 +173,10 @@ requested role, relationship, definition, historical fact, or classification.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 
