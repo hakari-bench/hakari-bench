@@ -12,6 +12,13 @@ from pydantic import ValidationError
 from hakari_bench.task_docs import TaskMetadata, load_task_metadata
 
 
+HAKARI_BENCH_PAPER_TITLE = (
+    "HAKARI-Bench: A Lightweight Benchmark for Comparing Retrieval Architectures "
+    "and Efficiency Settings under Unified Conditions"
+)
+HAKARI_BENCH_PAPER_URL = "http://arxiv.org/abs/2606.22778"
+
+
 @dataclass(frozen=True)
 class BenchmarkDoc:
     title: str
@@ -199,6 +206,12 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) 
         <li><span aria-current="page">Benchmark documentation</span></li>
       </ol>
     </nav>
+    <section class="mb-4">
+      <h2 class="text-lg font-semibold text-zinc-950">Paper</h2>
+      <p class="mt-1 text-sm text-zinc-600">
+        <a class="underline underline-offset-2" href="{escape(HAKARI_BENCH_PAPER_URL, quote=True)}">{escape(HAKARI_BENCH_PAPER_TITLE)}</a>
+      </p>
+    </section>
     <header class="mb-4">
       <h1 class="text-lg font-semibold text-zinc-950">Benchmark documentation</h1>
       <p class="mt-1 text-sm text-zinc-600">Dataset and benchmark task group descriptions used by the leaderboard viewer.</p>
