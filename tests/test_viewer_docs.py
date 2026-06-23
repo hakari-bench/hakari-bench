@@ -385,6 +385,92 @@ def test_benchmark_docs_lists_group_docs_with_descriptions(tmp_path: Path) -> No
     assert docs.group_doc("NanoBEIR-en") is not None
 
 
+def test_render_markdown_keeps_indented_list_continuations_inside_items() -> None:
+    html = render_markdown_to_html(
+        "\n".join(
+            [
+                "## Task Families",
+                "",
+                "- **Legal retrieval:** `NanoIFIRAila` and `NanoIFIRFire` use long fact patterns",
+                "  or case summaries and retrieve relevant judgments or precedents.",
+                "- **Finance retrieval:** `NanoIFIRFiQA` retrieves personal-finance advice or",
+                "  answer passages.",
+                "",
+            ]
+        )
+    )
+
+    assert "<ul>\n<li>" in html
+    assert "<p>or case summaries" not in html
+    assert "<p>answer passages" not in html
+    assert "long fact patterns or case summaries" in html
+    assert "advice or answer passages" in html
+
+
+def test_benchmark_docs_prefers_example_data_over_representative_snippets(tmp_path: Path) -> None:
+    docs_dir = tmp_path / "task_docs" / "docs"
+    group_dir = docs_dir / "NanoTiny"
+    group_dir.mkdir(parents=True)
+    (group_dir / "alpha.md").write_text(
+        "\n".join(
+            [
+                "# NanoTiny / alpha",
+                "",
+                "## Overview",
+                "",
+                "Tiny overview.",
+                "",
+                "## Example Data",
+                "",
+                "| Query | Positive document |",
+                "| --- | --- |",
+                "| exact query | exact positive |",
+                "",
+                "### Source Reference Table",
+                "",
+                "| Title | Year | Type | URL |",
+                "| --- | ---: | --- | --- |",
+                "| Tiny source | 2026 | dataset | [https://example.com](https://example.com) |",
+                "",
+                "### Representative Snippets",
+                "",
+                "| Query | Positive document excerpt |",
+                "| --- | --- |",
+                "| summarized query | summarized positive |",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    docs = BenchmarkDocs(docs_dir)
+
+    doc = docs.task_doc(view_name="NanoTiny", metric_column="alpha")
+
+    assert doc is not None
+    assert "## Example Data" in doc.markdown
+    assert "### Source Reference Table" in doc.markdown
+    assert "### Representative Snippets" not in doc.markdown
+    assert "summarized query" not in doc.markdown
+
+
+def test_render_markdown_marks_example_tables() -> None:
+    html = render_markdown_to_html(
+        "\n".join(
+            [
+                "## Example Data",
+                "",
+                "| Query | Positive document |",
+                "| --- | --- |",
+                "| exact query | exact positive |",
+                "",
+            ]
+        )
+    )
+
+    assert '<table class="benchmark-doc-example-table">' in html
+
+
 def test_benchmark_docs_resolves_mnanobeir_task_key_documents(tmp_path: Path) -> None:
     docs_dir = tmp_path / "task_docs" / "docs"
     group_dir = docs_dir / "MNanoBEIR"

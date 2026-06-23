@@ -488,7 +488,7 @@
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.75rem;
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
     padding-top: 1rem;
   }
 
@@ -496,7 +496,7 @@
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.5rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   .benchmark-doc p,
@@ -504,7 +504,20 @@
   .benchmark-doc table,
   .benchmark-doc blockquote,
   .benchmark-doc pre {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .benchmark-doc h2 + p,
+  .benchmark-doc h2 + ul,
+  .benchmark-doc h2 + table,
+  .benchmark-doc h2 + blockquote,
+  .benchmark-doc h2 + pre,
+  .benchmark-doc h3 + p,
+  .benchmark-doc h3 + ul,
+  .benchmark-doc h3 + table,
+  .benchmark-doc h3 + blockquote,
+  .benchmark-doc h3 + pre {
+    margin-top: 0.5rem;
   }
 
   .benchmark-doc p,
@@ -1178,6 +1191,11 @@
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
+}
+
+.benchmark-doc table.benchmark-doc-example-table td {
+  font-size: 0.8125rem;
+  line-height: 1.45;
 }
 
 .benchmark-doc tbody tr:first-child td {

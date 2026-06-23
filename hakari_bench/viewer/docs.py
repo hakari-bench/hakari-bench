@@ -145,7 +145,7 @@ class BenchmarkDocs:
 
     def _markdown_with_metadata(self, *, path: Path, markdown: str) -> str:
         source_markdown = markdown
-        display_markdown = _compact_source_reference_sections(markdown)
+        display_markdown = _prefer_example_data_sections(_compact_source_reference_sections(markdown))
         if self.metadata_dir is None:
             return display_markdown
         if path.name == "index.md":
@@ -160,6 +160,7 @@ class BenchmarkDocs:
         examples = _examples_markdown(metadata)
         if examples and "## Example Data" not in source_markdown:
             rendered = f"{rendered}\n\n{examples}"
+        rendered = _prefer_example_data_sections(rendered).rstrip()
         return (
             f"{rendered}\n\n"
             f"{_render_task_metadata_markdown(
@@ -531,6 +532,7 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
     code_lines: list[str] = []
     in_table = False
     details_level: int | None = None
+    current_heading = ""
 
     def flush_paragraph() -> None:
         nonlocal paragraph
@@ -595,6 +597,7 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
                 )
                 details_level = level
                 continue
+            current_heading = heading_text.lower()
             html.append(f"<h{level}>{_inline_markdown(heading_text, base_url=base_url)}</h{level}>")
             continue
         if line.startswith(">"):
@@ -611,6 +614,9 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
                 in_list = True
             html.append(f"<li>{_inline_markdown(line[2:].strip(), base_url=base_url)}</li>")
             continue
+        if in_list and raw_line[:1].isspace() and html and html[-1].startswith("<li>"):
+            html[-1] = f"{html[-1][:-5]} {_inline_markdown(line.strip(), base_url=base_url)}</li>"
+            continue
         if _is_table_row(line):
             flush_paragraph()
             close_list()
@@ -619,7 +625,12 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
             cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
             row_html = "".join(f"<td>{_inline_markdown(cell, base_url=base_url)}</td>" for cell in cells)
             if not in_table:
-                html.append('<div class="overflow-x-auto"><table><tbody>')
+                table_class = (
+                    ' class="benchmark-doc-example-table"'
+                    if current_heading in {"example data", "representative snippets"}
+                    else ""
+                )
+                html.append(f'<div class="overflow-x-auto"><table{table_class}><tbody>')
                 in_table = True
             html.append(f"<tr>{row_html}</tr>")
             continue
@@ -712,6 +723,37 @@ def _compact_source_reference_sections(markdown: str) -> str:
         compacted.append(markdown[cursor:start].rstrip())
         if replacement:
             compacted.append(replacement)
+        cursor = end
+    compacted.append(markdown[cursor:].lstrip("\n"))
+    return re.sub(r"\n{3,}", "\n\n", "\n\n".join(part for part in compacted if part)).strip() + "\n"
+
+
+def _prefer_example_data_sections(markdown: str) -> str:
+    if not _has_markdown_heading(markdown, "Example Data"):
+        return markdown
+    return _remove_markdown_sections(markdown, {"representative snippets"})
+
+
+def _remove_markdown_sections(markdown: str, titles: set[str]) -> str:
+    headings = _markdown_heading_spans(markdown)
+    replacements: list[tuple[int, int]] = []
+    for index, (level, title, start, _) in enumerate(headings):
+        if title.lower() not in titles:
+            continue
+        end = len(markdown)
+        for next_level, _, next_start, _ in headings[index + 1 :]:
+            if next_level <= level:
+                end = next_start
+                break
+        replacements.append((start, end))
+    if not replacements:
+        return markdown
+    compacted = []
+    cursor = 0
+    for start, end in replacements:
+        if start < cursor:
+            continue
+        compacted.append(markdown[cursor:start].rstrip())
         cursor = end
     compacted.append(markdown[cursor:].lstrip("\n"))
     return re.sub(r"\n{3,}", "\n\n", "\n\n".join(part for part in compacted if part)).strip() + "\n"
