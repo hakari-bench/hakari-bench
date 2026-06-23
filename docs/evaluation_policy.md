@@ -328,6 +328,10 @@ matching CLI options unless the current model card says otherwise.
 
 Use `evaluate reranker` for CrossEncoder-style rerankers. They score only the
 candidate subset and require a candidate ranking such as BM25.
+Before scoring, reranker candidates are deterministically shuffled per query
+with the benchmark seed recorded in result metadata. This keeps runs
+reproducible while preventing constant-score or tied-score rerankers from
+inheriting the candidate generator's original ranking as their tie-break.
 
 Use `evaluate bm25` for BM25:
 

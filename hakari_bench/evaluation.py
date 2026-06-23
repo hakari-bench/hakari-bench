@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import inspect
 import os
 import re
@@ -32,6 +33,7 @@ QUANTIZED_RESCORE_SCORE_REPRESENTATIONS = {
 }
 TOP_RANKING_ARTIFACT_DEPTH = 100
 RERANKING_HYBRID_RRF_TOP_K = 100
+RERANKER_CANDIDATE_ORDER_SEED = "hakari-reranker-candidate-order-v1"
 
 
 @dataclass(frozen=True)
@@ -441,6 +443,7 @@ def evaluate_reranker_task(
             candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
             if rerank_top_n is not None:
                 candidate_ids = candidate_ids[:rerank_top_n]
+            candidate_ids = _shuffle_reranker_candidate_ids(query_id=query_id, candidate_ids=candidate_ids)
             rankings[query_id] = _rank_with_reranker_model(
                 model,
                 query=query_text,
@@ -489,6 +492,7 @@ def evaluate_reranker_task(
                 "best_score_name": "reranker",
                 "metrics": metrics,
                 "candidate_coverage": candidate_coverage,
+                "candidate_order": _reranker_candidate_order_metadata(),
                 **({"safeguard": safeguard_metadata} if safeguard_metadata is not None else {}),
             }
         ],
@@ -1183,6 +1187,7 @@ def _rank_all_with_reranker_model(
         candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
         if rerank_top_n is not None:
             candidate_ids = candidate_ids[:rerank_top_n]
+        candidate_ids = _shuffle_reranker_candidate_ids(query_id=query_id, candidate_ids=candidate_ids)
         query_scores: list[float] = []
         pair_chunk_size = min(max(batch_size, 1), 32)
         for offset in range(0, len(candidate_ids), pair_chunk_size):
@@ -1201,6 +1206,28 @@ def _rank_all_with_reranker_model(
         ranked = sorted(zip(candidate_ids, query_scores, strict=True), key=lambda item: -float(item[1]))
         rankings[query_id] = [doc_id for doc_id, _score in ranked]
     return rankings
+
+
+def _shuffle_reranker_candidate_ids(*, query_id: str, candidate_ids: list[str]) -> list[str]:
+    return [
+        candidate_id
+        for index, candidate_id in sorted(
+            enumerate(candidate_ids),
+            key=lambda item: (
+                hashlib.sha256(
+                    f"{RERANKER_CANDIDATE_ORDER_SEED}\0{query_id}\0{item[1]}".encode("utf-8")
+                ).digest(),
+                item[0],
+            ),
+        )
+    ]
+
+
+def _reranker_candidate_order_metadata() -> dict[str, str]:
+    return {
+        "policy": "deterministic_hash_shuffle_before_scoring",
+        "seed": RERANKER_CANDIDATE_ORDER_SEED,
+    }
 
 
 def _rank_with_reranker_model(

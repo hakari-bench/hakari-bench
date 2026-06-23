@@ -122,6 +122,23 @@ def _toy_dataset_without_candidates() -> LoadedIrDataset:
     )
 
 
+def _candidate_order_sensitive_dataset() -> LoadedIrDataset:
+    return LoadedIrDataset(
+        queries={"q1": "query one", "q2": "query two", "q3": "query three"},
+        corpus={
+            "d1": "relevant one",
+            "d2": "relevant two",
+            "d3": "relevant three",
+            "d4": "distractor one",
+            "d5": "distractor two",
+            "d6": "distractor three",
+        },
+        qrels={"q1": {"d1"}, "q2": {"d2"}, "q3": {"d3"}},
+        candidates={"q1": ["d1", "d4"], "q2": ["d2", "d5"], "q3": ["d3", "d6"]},
+        evaluator_name="OrderSensitive_test",
+    )
+
+
 def test_candidate_safeguard_metadata_identifies_rank101_positive() -> None:
     candidates = {
         "q1": [f"d{i:03d}" for i in range(100)] + ["d120"],
@@ -513,6 +530,12 @@ class FakeTiePredictReranker:
     def predict(self, pairs: list[list[str]], **kwargs: object) -> list[float]:
         del kwargs
         return [0.0 for _pair in pairs]
+
+
+class FakeOneScoreReranker:
+    def predict(self, pairs: list[list[str]], **kwargs: object) -> list[float]:
+        del kwargs
+        return [1.0 for _pair in pairs]
 
 
 class FakePredictAndRankReranker:
@@ -1763,16 +1786,41 @@ def test_evaluate_reranker_task_scores_predict_pairs_per_query_before_rank_api()
     assert model.rank_calls == []
 
 
-def test_evaluate_reranker_task_preserves_candidate_order_for_predict_ties() -> None:
+def test_evaluate_reranker_task_randomizes_candidate_order_for_predict_ties() -> None:
     result = evaluate_reranker_task(
         model=FakeTiePredictReranker(),
-        dataset=_toy_dataset(),
+        dataset=_candidate_order_sensitive_dataset(),
         batch_size=2,
         show_progress=False,
         rerank_top_n=2,
     )
 
-    assert result.top_rankings[0]["rankings"] == {"q1": ["d3", "d1"], "q2": ["d2", "d1"]}
+    assert result.top_rankings[0]["rankings"] == {
+        "q1": ["d4", "d1"],
+        "q2": ["d2", "d5"],
+        "q3": ["d6", "d3"],
+    }
+    assert result.reranking_evaluations[0]["candidate_order"] == {
+        "policy": "deterministic_hash_shuffle_before_scoring",
+        "seed": "hakari-reranker-candidate-order-v1",
+    }
+
+
+def test_evaluate_reranker_task_constant_one_scores_do_not_inherit_candidate_order() -> None:
+    result = evaluate_reranker_task(
+        model=FakeOneScoreReranker(),
+        dataset=_candidate_order_sensitive_dataset(),
+        batch_size=2,
+        show_progress=False,
+        rerank_top_n=2,
+    )
+
+    assert result.metrics["OrderSensitive_test_reranker_ndcg@10"] < 1.0
+    assert result.top_rankings[0]["rankings"] == {
+        "q1": ["d4", "d1"],
+        "q2": ["d2", "d5"],
+        "q3": ["d6", "d3"],
+    }
 
 
 def test_evaluate_reranker_task_supports_callable_api() -> None:
@@ -2509,6 +2557,42 @@ def test_run_or_load_task_defaults_to_all_available_rerank_candidates(tmp_path: 
     assert reranking["rerank_top_n"] == 2
     assert reranking["candidate_coverage"]["top_k"] == 2
     assert reranking["best_score_name"] == "dot_bm25_top2_rerank"
+
+
+def test_run_or_load_task_preserves_reranker_candidate_order_metadata(tmp_path: Path) -> None:
+    task = _toy_task()
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model="hotchpotch/reranker",
+        model_type="reranker",
+        batch_size=2,
+        show_progress=False,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        truncate_dim=None,
+        candidate_subset_name="bm25",
+        rerank_top_n=2,
+        aggregate_metric="ndcg@10",
+        reranker_score_kwargs={},
+        cross_encoder_kwargs={},
+        override=False,
+    )
+
+    result = run_or_load_task(
+        task=task,
+        model=FakeOneScoreReranker(),
+        args=args,
+        environment={"package_versions": {}},
+        model_metadata={"id": "hotchpotch/reranker", "method": "reranker"},
+        dataset_loader=lambda _: _candidate_order_sensitive_dataset(),
+    )
+
+    assert result.payload["evaluation"]["reranking_evaluations"][0]["candidate_order"] == {
+        "policy": "deterministic_hash_shuffle_before_scoring",
+        "seed": "hakari-reranker-candidate-order-v1",
+    }
 
 
 def test_run_or_load_task_embeds_top100_rankings_in_task_json(tmp_path: Path) -> None:
