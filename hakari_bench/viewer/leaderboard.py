@@ -182,6 +182,14 @@ class LanguageOption(BaseModel):
     task_count: int
 
 
+class TaskBreakdown(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    key: str
+    label: str
+    doc_key: str
+
+
 class LeaderboardResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -211,6 +219,7 @@ class LeaderboardResult(BaseModel):
     metric_columns: list[str]
     metric_column_labels: dict[str, str] = Field(default_factory=dict)
     metric_column_doc_keys: dict[str, str] = Field(default_factory=dict)
+    task_breakdowns: list[TaskBreakdown] = Field(default_factory=list)
     available_languages: list[LanguageOption] = Field(default_factory=list)
     selected_languages: tuple[str, ...] = ()
     selected_benchmarks: tuple[str, ...] = ()
@@ -615,6 +624,7 @@ class LeaderboardService:
                 metric_score_group = ScoreGroupConfig(
                     name="task_scores", label="Task Scores", group_by="task_key"
                 )
+            task_breakdowns = _task_breakdowns(rows)
             with timed_operation(
                 "viewer.leaderboard.phase", operation="metric_columns", view=view_name
             ) as phase_timing:
@@ -705,6 +715,7 @@ class LeaderboardService:
                 metric_columns=metric_columns,
                 metric_column_labels=metric_column_labels,
                 metric_column_doc_keys=metric_column_doc_keys,
+                task_breakdowns=task_breakdowns,
                 available_languages=available_languages,
                 selected_languages=selected_languages,
                 selected_benchmarks=selected_benchmark_names,
@@ -2661,6 +2672,25 @@ def _metric_columns(
     if score_group is None:
         return []
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
+
+
+def _task_breakdowns(rows: list[TaskScore]) -> list[TaskBreakdown]:
+    by_key: dict[str, TaskBreakdown] = {}
+    for row in rows:
+        if row.task_key in by_key:
+            continue
+        doc_key = f"{row.benchmark}::{row.dataset_name}::{row.task_name}"
+        label_parts = [row.benchmark]
+        if row.dataset_name and row.dataset_name != row.benchmark:
+            label_parts.append(row.dataset_name)
+        if row.task_name and row.task_name not in {row.dataset_name, row.benchmark}:
+            label_parts.append(row.task_name)
+        by_key[row.task_key] = TaskBreakdown(
+            key=row.task_key,
+            label=" / ".join(label_parts) if label_parts else row.task_key,
+            doc_key=doc_key,
+        )
+    return sorted(by_key.values(), key=lambda task: task.label.casefold())
 
 
 def _metric_column_doc_keys(

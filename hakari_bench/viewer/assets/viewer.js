@@ -343,6 +343,21 @@
     });
 
     document.addEventListener("click", (event) => {
+      const trigger = closestElement(event.target, ".leaderboard-status-count-trigger");
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const modal = document.getElementById("count-breakdown-modal");
+      if (!modal) return;
+      if (typeof modal.showModal === "function") modal.showModal();
+      const sectionId = `count-breakdown-${trigger.dataset.countBreakdownTrigger || ""}`;
+      const section = document.getElementById(sectionId);
+      if (section && typeof section.scrollIntoView === "function") {
+        section.scrollIntoView({ block: "nearest" });
+      }
+    });
+
+    document.addEventListener("click", (event) => {
       const trigger = closestElement(event.target, ".model-detail-trigger");
       if (!trigger) return;
       const modal = document.getElementById("model-detail-modal");
@@ -391,6 +406,11 @@
 
     document.addEventListener("click", (event) => {
       const modal = event.target && event.target.id === "model-detail-modal" ? event.target : null;
+      if (modal) modal.close();
+    });
+
+    document.addEventListener("click", (event) => {
+      const modal = event.target && event.target.id === "count-breakdown-modal" ? event.target : null;
       if (modal) modal.close();
     });
 

@@ -1033,6 +1033,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
+    assert ".leaderboard-status-count-trigger" in viewer_js_response.text
+    assert 'document.getElementById("count-breakdown-modal")' in viewer_js_response.text
+    assert 'event.target.id === "count-breakdown-modal"' in viewer_js_response.text
     assert "setTimeout(() =>" in viewer_js_response.text
     assert "const delay = trigger.dataset.tooltipDelay" in viewer_js_response.text
     assert ", delay);" in viewer_js_response.text
@@ -1725,6 +1728,67 @@ def test_chart_controls_render_inside_plot_shell_and_view_switch_precedes_status
     plot_shell = html.split('class="leaderboard-plot-shell', 1)[1].split("</svg>", 1)[0]
     assert 'id="plot-controls"' in plot_shell
     assert plot_shell.index('id="plot-controls"') < plot_shell.index("<svg")
+
+
+def test_leaderboard_status_counts_are_clickable_and_open_breakdown_modal() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/a",
+                model_type="dense",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=2,
+                license={"commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/b",
+                model_type="reranker",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                license={"commercial_use": "not_allowed"},
+            ),
+        ],
+        available_views=["Overall", "BenchA"],
+        available_view_labels={"Overall": "Overall", "BenchA": "BenchA"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+    )
+
+    status_html = html.split('data-shown-count="2"', 1)[1].split("</div>", 1)[0]
+    assert 'class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700"' in status_html
+    assert 'data-count-breakdown-trigger="shown"' in status_html
+    assert 'data-count-breakdown-trigger="complete"' in status_html
+    assert 'data-count-breakdown-trigger="tasks"' in status_html
+    assert ">2 shown</button>" in status_html
+    assert ">2 complete models</button>" in status_html
+    assert ">2 tasks</button>" in status_html
+    assert 'id="count-breakdown-modal"' in html
+    assert 'id="count-breakdown-shown"' in html
+    assert 'id="count-breakdown-complete"' in html
+    assert 'id="count-breakdown-tasks"' in html
+    assert "Visible rows" in html
+    assert "Complete models" in html
+    assert "Task docs" in html
+    assert ">Dense</span>" in html
+    assert ">Reranker</span>" in html
+    assert ">Commercial</span>" in html
+    assert ">Non-commercial</span>" in html
 
 
 def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
@@ -3634,7 +3698,9 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert 'data-shown-count="2"' in response.text
     assert 'data-icon="search"' in response.text
     assert "Retrieval" in response.text
-    assert "2 shown / 2 complete models / 1 tasks" in response.text
+    assert 'data-count-breakdown-trigger="shown">2 shown</button>' in response.text
+    assert 'data-count-breakdown-trigger="complete">2 complete models</button>' in response.text
+    assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in response.text
 
 
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
