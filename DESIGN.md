@@ -97,7 +97,11 @@ components:
     treatment: One integrated workspace above the table; no marketing panels.
       Model family filters expose BM25 separately from Sparse so lexical
       baselines can be compared or hidden independently from learned sparse
-      retrievers.
+      retrievers. License filters include commercial-use buckets derived from
+      model-card license metadata; BM25 rows follow the bm25s MIT license and
+      appear in the commercial bucket. Commercial-use license filters are shown
+      as inline checkboxes, matching Model family rather than hidden inside a
+      secondary disclosure.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.
@@ -119,7 +123,21 @@ components:
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
-      they improve scanning.
+      they improve scanning. Table display includes an optional Others toggle
+      for low-frequency metadata columns such as License and Model Type,
+      appended at the far right so the core score columns remain stable. These
+      cells must stay one line using short labels such as Apache, CC BY-NC,
+      OpenAI, and Late int.; expose the full label through hover tooltip and
+      Model Details.
+  model-details:
+    purpose: Modal metadata for a single result row.
+    treatment: Prefer model-card metadata when present. Order fields as Language,
+      Model type, Ranking label, parameter counts, max tokens, truncate dims,
+      license, Hugging Face, GitHub, papers, then runtime and variant details.
+      GitHub links should show the `owner/repo` label instead of generic copy.
+      Prompt metadata should use Query Prompt and Doc Prompt labels. Optional
+      model-card notices are short user-facing caveats and render as the final
+      Model Details row.
   leaderboard-plot:
     purpose: Optional visual comparison surface for score, scale, dimension, and
       compression trade-offs using the same scoped and filtered rows as the table.

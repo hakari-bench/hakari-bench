@@ -33,6 +33,7 @@ Model cards are YAML mappings. The common top-level fields are:
 | `late_interaction` | late-interaction only | ColBERT/PyLate architecture and query/document token settings. |
 | `language_support` | recommended | Static display classification for intended language coverage. |
 | `target` | optional | Datasets, collections, splits, and scope the card was prepared for. |
+| `notice` | optional | Short user-facing caveat shown at the end of the Model Details dialog. |
 | `notes` | optional | Reviewed operational notes that do not fit structured fields. |
 
 `parameters.active` is the count used for size-aware leaderboard display when
@@ -43,7 +44,9 @@ metadata collection cannot recover the correct value.
 Dense `embedding` fields may include:
 
 - `truncate_dims`: every reviewed truncation dimension that should be evaluated,
-  or `null` when truncation is not supported.
+  or `null` when truncation is not supported. Do not include the model's native
+  output dimension; it duplicates the base result rather than creating a true
+  truncation variant.
 - `output_dimension`: the native embedding dimension.
 - `user_defined_output_dimensions`: the supported dynamic output-dimension
   range, when the model officially exposes one.
@@ -75,15 +78,16 @@ model. Use override arguments such as `--active-parameters`,
 `--input-embedding-parameters`, `--source-revision`, or `--max-seq-length` when
 automatic detection is wrong.
 
-For Matryoshka models, include every model-supported truncation dimension that
-should be evaluated. For example, `hotchpotch/bekko-embedding-v1-a8m` supports
-`384, 256, 128, 64` and should be generated with:
+For Matryoshka models, include every model-supported truncation dimension below
+the native output dimension. For example,
+`hotchpotch/bekko-embedding-v1-a8m` has 384-dimensional base embeddings and
+should be generated with:
 
 ```bash
 uv run --group tf4-fa2 python scripts/generate_model_cards.py \
   --model hotchpotch/bekko-embedding-v1-a8m \
   --model-type dense \
-  --truncate-dims 64 128 256 384 \
+  --truncate-dims 64 128 256 \
   --flash-attn2 \
   --output-dir config/model_cards
 ```
@@ -101,6 +105,14 @@ The `from-model-card` evaluator reads `method`, `source`, `runtime`, `prompts`,
 runs the normal `dense`, `sparse`, `reranker`, or `late-interaction` evaluation
 path. Runtime options such as batch size, device, candidate ranking, rerank
 depth, and output directory can still be supplied on the command line.
+
+Use `from-model-card` for repeated evaluations once a card has been reviewed.
+The card should hold the model-specific choices that otherwise have to be typed
+on every run: Sentence Transformers prompt names, explicit query/document
+prompt text, encode tasks, supported truncate dimensions, dtype, attention
+implementation, max sequence length, trust-remote-code approval, and
+late-interaction prefixes or token lengths. Command-line values still take
+precedence for one-off experiments.
 
 Only model-specific optimization options belong in a model card. For example,
 prompt names, retrieval prefixes, model sequence length, dtype, attention
@@ -127,9 +139,10 @@ Use clear labels such as `MIT`, `Apache 2.0`, `CC BY-NC 4.0`, or `Gemma Terms
 of Use`. Set `commercial_use` to `allowed` for permissive licenses,
 `not_allowed` for non-commercial Creative Commons licenses, and
 `permitted_with_terms` for proprietary terms that permit commercial use only
-under model-specific conditions. BM25 is an algorithmic baseline rather than a
-licensed model, so its card uses `id: not_applicable`, `type: algorithm`, and
-the label `Not applicable - Okapi BM25 algorithmic baseline`.
+under model-specific conditions. BM25 is an algorithmic baseline, but HAKARI's
+computed baseline uses the `bm25s` package, so the static BM25 card records the
+`bm25s` library license as MIT and `commercial_use: allowed` for viewer
+commercial-use filtering.
 
 Model cards may include an optional `links` section that records canonical
 reference URLs for the model. All fields are optional, but including them is
@@ -156,6 +169,12 @@ prompts:
   query_prompt_name: query
   document_prompt_name: document
 ```
+
+Prefer Sentence Transformers prompt names when the model stores reviewed
+retrieval prompts in its config. Use explicit `query_prompt` and
+`document_prompt` only when the prompt registry is absent, incomplete, or would
+not be loaded by the selected backend. Do not set both prompt names and explicit
+prompt text for the same side unless a backend-specific experiment requires it.
 
 Late-interaction model cards may also include a `late_interaction` section for
 ColBERT-style model settings that should be used by `from-model-card` evaluation
@@ -298,10 +317,16 @@ uv run python scripts/generate_model_cards.py \
   --overwrite
 ```
 
+Use `notice` for one short caveat that should be visible in the leaderboard
+viewer, such as a known difference between provider limits and benchmark
+evaluation settings. Keep longer operational review notes under `notes`.
+
 The result-based mode is intended for bootstrapping the current leaderboard
 models. It skips `bm25` and model ids containing `bekko` by default, infers
-truncate dimensions from recorded embedding variants, and preserves manual
-top-level fields such as `notes` from existing cards.
+truncate dimensions from recorded embedding variants, infers stable prompt and
+late-interaction settings from result `config` payloads, and preserves reviewed
+fields such as `prompts`, `late_interaction`, `language_support`, and `notes`
+from existing cards.
 
 `--infer-language-support` reads finished result JSON and proposes
 `language_support` only when the existing card does not already define it. It

@@ -1227,6 +1227,16 @@
   box-shadow: 0 1.5rem 3.5rem rgb(15 23 42 / 0.22);
 }
 
+.hakari-count-modal {
+  width: min(92vw, 48rem);
+  max-height: 92vh;
+}
+
+.hakari-count-modal .hakari-modal-body {
+  max-height: calc(92vh - 4rem);
+  overflow: auto;
+}
+
 :root.dark .hakari-modal {
   box-shadow: 0 1.5rem 3.5rem rgb(0 0 0 / 0.55);
 }

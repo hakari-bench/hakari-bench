@@ -48,6 +48,7 @@ language_support:
     evaluated_language_count: 20
 target:
   evaluation_scope: standard
+notice: "Max tokens is 8,192, but HAKARI evaluates this model with max tokens set to 8,100 for calibration."
 notes:
 - "Use `--model-loader openai` and run with `uv run --group openai`."
 - "`--truncate-dim` and `embedding.truncate_dims` use full OpenAI embeddings followed by `full[:DIM]` and L2 normalization."

@@ -6,7 +6,7 @@ from functools import lru_cache
 import math
 from pathlib import Path
 import re
-from typing import Any, Iterable, Literal
+from typing import Any, Iterable, Literal, Sequence
 
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
@@ -20,6 +20,7 @@ from hakari_bench.viewer.config import (
     ScoreAggregation,
     ScoreGroupConfig,
     ViewerConfig,
+    benchmark_name_from_selection_key,
     normalize_benchmark_selection_values,
 )
 from hakari_bench.viewer.data import (
@@ -63,6 +64,13 @@ class ModelCardParameters:
     language_support_marker: str | None = None
     links: dict[str, Any] | None = None
     license: dict[str, Any] | None = None
+    license_commercial_use: str | None = None
+    truncate_dims: tuple[int, ...] = ()
+    query_prompt: str | None = None
+    document_prompt: str | None = None
+    query_prompt_name: str | None = None
+    document_prompt_name: str | None = None
+    notice: str | None = None
 
 
 @dataclass(frozen=True)
@@ -106,6 +114,7 @@ class TaskScore:
     late_interaction_document_prefix: str | None = None
     late_interaction_query_expansion: bool | None = None
     late_interaction_attend_to_expansion_tokens: bool | None = None
+    license_commercial_use: str | None = None
 
 
 class LeaderboardRow(BaseModel):
@@ -147,6 +156,12 @@ class LeaderboardRow(BaseModel):
     language_support_marker: str | None = None
     links: dict[str, Any] | None = None
     license: dict[str, Any] | None = None
+    truncate_dims: tuple[int, ...] = ()
+    query_prompt: str | None = None
+    document_prompt: str | None = None
+    query_prompt_name: str | None = None
+    document_prompt_name: str | None = None
+    notice: str | None = None
     metric_values: dict[str, float] = Field(default_factory=dict)
     metric_z_values: dict[str, float] = Field(default_factory=dict)
     metric_rank_values: dict[str, float] = Field(default_factory=dict)
@@ -166,6 +181,14 @@ class LanguageOption(BaseModel):
     code: str
     label: str
     task_count: int
+
+
+class TaskBreakdown(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    key: str
+    label: str
+    doc_key: str
 
 
 class LeaderboardResult(BaseModel):
@@ -189,6 +212,7 @@ class LeaderboardResult(BaseModel):
     show_task_scores: bool = False
     show_task_z_scores: bool = False
     show_task_ranks: bool = False
+    show_other_columns: bool = False
     rank_filtered: bool = False
     task_filter: str = ""
     score_groups: list[ScoreGroup]
@@ -196,6 +220,7 @@ class LeaderboardResult(BaseModel):
     metric_columns: list[str]
     metric_column_labels: dict[str, str] = Field(default_factory=dict)
     metric_column_doc_keys: dict[str, str] = Field(default_factory=dict)
+    task_breakdowns: list[TaskBreakdown] = Field(default_factory=list)
     available_languages: list[LanguageOption] = Field(default_factory=list)
     selected_languages: tuple[str, ...] = ()
     selected_benchmarks: tuple[str, ...] = ()
@@ -252,11 +277,13 @@ class LeaderboardService:
         show_task_scores: bool = False,
         show_task_z_scores: bool = False,
         show_task_ranks: bool = False,
+        show_other_columns: bool = False,
         rank_filtered: bool = False,
         model_filter: str = "",
         task_filter: str = "",
         dim_filters: tuple[str, ...] = (),
         quant_filters: tuple[str, ...] = (),
+        commercial_filters: tuple[str, ...] = (),
         model_type_filters: tuple[str, ...] = (),
         dtype_filters: tuple[str, ...] = (),
         attn_filters: tuple[str, ...] = (),
@@ -285,6 +312,7 @@ class LeaderboardService:
             ranking_task_filter_terms = task_filter_terms if rank_filtered else ()
             ranking_dim_filters = dim_filters if rank_filtered else ()
             ranking_quant_filters = quant_filters if rank_filtered else ()
+            ranking_commercial_filters = commercial_filters if rank_filtered else ()
             ranking_model_type_filters = model_type_filters if rank_filtered else ()
             ranking_dtype_filters = dtype_filters if rank_filtered else ()
             ranking_attn_filters = attn_filters if rank_filtered else ()
@@ -292,6 +320,16 @@ class LeaderboardService:
             has_rank_facet_filters = _has_facet_filters(
                 dim_filters=ranking_dim_filters,
                 quant_filters=ranking_quant_filters,
+                commercial_filters=ranking_commercial_filters,
+                model_type_filters=ranking_model_type_filters,
+                dtype_filters=ranking_dtype_filters,
+                attn_filters=ranking_attn_filters,
+                prompt_filters=ranking_prompt_filters,
+            )
+            has_rank_duckdb_facet_filters = _has_facet_filters(
+                dim_filters=ranking_dim_filters,
+                quant_filters=ranking_quant_filters,
+                commercial_filters=(),
                 model_type_filters=ranking_model_type_filters,
                 dtype_filters=ranking_dtype_filters,
                 attn_filters=ranking_attn_filters,
@@ -306,7 +344,7 @@ class LeaderboardService:
                     attn_filters=ranking_attn_filters,
                     prompt_filters=ranking_prompt_filters,
                 )
-                if has_rank_facet_filters
+                if has_rank_duckdb_facet_filters
                 else None
             )
             view_name, overall, benchmarks = self._resolve_scope(
@@ -365,6 +403,7 @@ class LeaderboardService:
                     show_task_scores=False,
                     show_task_z_scores=False,
                     show_task_ranks=False,
+                    show_other_columns=show_other_columns,
                     rank_filtered=rank_filtered,
                     task_filter="",
                     score_groups=[],
@@ -412,6 +451,11 @@ class LeaderboardService:
                     rows = _with_model_card_parameters_for_leaderboard_rows(
                         rows, self.model_card_parameters
                     )
+                    task_breakdowns = _load_task_breakdowns_for_benchmarks(
+                        duckdb_path=self.duckdb_path,
+                        benchmarks=benchmarks,
+                        config=self.config,
+                    )
                     sorted_rows = sort_rows(rows, sort=sort, direction=direction)
                     request_timing["task_score_count"] = None
                     request_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -435,6 +479,7 @@ class LeaderboardService:
                         show_task_scores=False,
                         show_task_z_scores=False,
                         show_task_ranks=False,
+                        show_other_columns=show_other_columns,
                         task_filter="",
                         score_groups=[
                             ScoreGroup(name=group.name, label=group.display_label)
@@ -449,6 +494,7 @@ class LeaderboardService:
                             else None
                         ),
                         metric_columns=[],
+                        task_breakdowns=task_breakdowns,
                         available_languages=available_languages,
                         selected_languages=(),
                         selected_benchmarks=selected_benchmark_names,
@@ -517,6 +563,7 @@ class LeaderboardService:
                         rows,
                         dim_filters=ranking_dim_filters,
                         quant_filters=ranking_quant_filters,
+                        commercial_filters=ranking_commercial_filters,
                         model_type_filters=ranking_model_type_filters,
                         dtype_filters=ranking_dtype_filters,
                         attn_filters=ranking_attn_filters,
@@ -584,6 +631,7 @@ class LeaderboardService:
                 metric_score_group = ScoreGroupConfig(
                     name="task_scores", label="Task Scores", group_by="task_key"
                 )
+            task_breakdowns = _task_breakdowns(rows)
             with timed_operation(
                 "viewer.leaderboard.phase", operation="metric_columns", view=view_name
             ) as phase_timing:
@@ -656,6 +704,7 @@ class LeaderboardService:
                 show_task_scores=should_show_task_scores,
                 show_task_z_scores=show_task_z_scores,
                 show_task_ranks=show_task_ranks,
+                show_other_columns=show_other_columns,
                 rank_filtered=rank_filtered,
                 task_filter=task_filter.strip(),
                 score_groups=[
@@ -673,6 +722,7 @@ class LeaderboardService:
                 metric_columns=metric_columns,
                 metric_column_labels=metric_column_labels,
                 metric_column_doc_keys=metric_column_doc_keys,
+                task_breakdowns=task_breakdowns,
                 available_languages=available_languages,
                 selected_languages=selected_languages,
                 selected_benchmarks=selected_benchmark_names,
@@ -797,6 +847,8 @@ def _cached_model_card_parameters(
             runtime = {}
         late_interaction = _late_interaction_card_section(card)
         language_support = _language_support_card_section(card)
+        embedding = _embedding_card_section(card)
+        prompts = _prompts_card_section(card)
         parameters_by_model[model_id] = ModelCardParameters(
             model_type=_str_or_none(card.get("method")),
             active_parameters=_int_or_none(parameters.get("active")),
@@ -827,6 +879,13 @@ def _cached_model_card_parameters(
             language_support_marker=_str_or_none(language_support.get("marker")),
             links=_links_card_section(card),
             license=_license_card_section(card),
+            license_commercial_use=_license_commercial_use(card),
+            truncate_dims=_int_tuple(embedding.get("truncate_dims")),
+            query_prompt=_str_or_none(prompts.get("query_prompt")),
+            document_prompt=_str_or_none(prompts.get("document_prompt")),
+            query_prompt_name=_str_or_none(prompts.get("query_prompt_name")),
+            document_prompt_name=_str_or_none(prompts.get("document_prompt_name")),
+            notice=_str_or_none(card.get("notice")),
         )
     return parameters_by_model
 
@@ -875,6 +934,16 @@ def _language_support_card_section(card: dict[str, Any]) -> dict[str, Any]:
     return section if isinstance(section, dict) else {}
 
 
+def _embedding_card_section(card: dict[str, Any]) -> dict[str, Any]:
+    section = card.get("embedding")
+    return section if isinstance(section, dict) else {}
+
+
+def _prompts_card_section(card: dict[str, Any]) -> dict[str, Any]:
+    section = card.get("prompts")
+    return section if isinstance(section, dict) else {}
+
+
 def _links_card_section(card: dict[str, Any]) -> dict[str, Any] | None:
     section = card.get("links")
     if not isinstance(section, dict):
@@ -910,6 +979,13 @@ def _license_card_section(card: dict[str, Any]) -> dict[str, Any] | None:
     return normalized or None
 
 
+def _license_commercial_use(card: dict[str, Any]) -> str | None:
+    section = card.get("license")
+    if not isinstance(section, dict):
+        return None
+    return _str_or_none(section.get("commercial_use"))
+
+
 def _with_model_card_parameters_for_task_scores(
     rows: list[TaskScore],
     parameters_by_model: dict[str, ModelCardParameters],
@@ -931,6 +1007,9 @@ def _with_model_card_parameters_for_task_scores(
             max_seq_length=row.max_seq_length
             if row.max_seq_length is not None
             else _model_card_parameters(row, parameters_by_model).max_seq_length,
+            license_commercial_use=row.license_commercial_use
+            if row.license_commercial_use is not None
+            else _model_card_parameters(row, parameters_by_model).license_commercial_use,
             late_interaction_query_length=row.late_interaction_query_length
             if row.late_interaction_query_length is not None
             else _model_card_parameters(
@@ -1018,6 +1097,20 @@ def _with_model_card_parameters_for_leaderboard_rows(
                     else parameters.language_support_marker,
                     "links": row.links if row.links is not None else parameters.links,
                     "license": row.license if row.license is not None else parameters.license,
+                    "truncate_dims": row.truncate_dims or parameters.truncate_dims,
+                    "query_prompt": row.query_prompt
+                    if row.query_prompt is not None
+                    else parameters.query_prompt,
+                    "document_prompt": row.document_prompt
+                    if row.document_prompt is not None
+                    else parameters.document_prompt,
+                    "query_prompt_name": row.query_prompt_name
+                    if row.query_prompt_name is not None
+                    else parameters.query_prompt_name,
+                    "document_prompt_name": row.document_prompt_name
+                    if row.document_prompt_name is not None
+                    else parameters.document_prompt_name,
+                    "notice": row.notice if row.notice is not None else parameters.notice,
                 }
             )
         )
@@ -1041,6 +1134,17 @@ def _int_or_none(value: Any) -> int | None:
         return int(value)
     except (TypeError, ValueError):
         return None
+
+
+def _int_tuple(value: Any) -> tuple[int, ...]:
+    if not isinstance(value, list):
+        return ()
+    values = []
+    for item in value:
+        normalized = _int_or_none(item)
+        if normalized is not None:
+            values.append(normalized)
+    return tuple(values)
 
 
 def _str_or_none(value: Any) -> str | None:
@@ -2120,6 +2224,7 @@ def _has_facet_filters(
     *,
     dim_filters: tuple[str, ...],
     quant_filters: tuple[str, ...],
+    commercial_filters: tuple[str, ...],
     model_type_filters: tuple[str, ...],
     dtype_filters: tuple[str, ...],
     attn_filters: tuple[str, ...],
@@ -2129,6 +2234,7 @@ def _has_facet_filters(
         (
             dim_filters,
             quant_filters,
+            commercial_filters,
             model_type_filters,
             dtype_filters,
             attn_filters,
@@ -2142,6 +2248,7 @@ def _filter_rows_by_facets(
     *,
     dim_filters: tuple[str, ...],
     quant_filters: tuple[str, ...],
+    commercial_filters: tuple[str, ...],
     model_type_filters: tuple[str, ...],
     dtype_filters: tuple[str, ...],
     attn_filters: tuple[str, ...],
@@ -2149,6 +2256,7 @@ def _filter_rows_by_facets(
 ) -> list[TaskScore]:
     selected_dims = set(dim_filters)
     selected_quants = set(quant_filters)
+    selected_commercial = set(commercial_filters)
     selected_model_types = set(model_type_filters)
     selected_dtypes = set(dtype_filters)
     selected_attn = set(attn_filters)
@@ -2158,6 +2266,10 @@ def _filter_rows_by_facets(
         for row in rows
         if (not selected_dims or _dim_bucket(row.embedding_dim) in selected_dims)
         and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
+        and (
+            not selected_commercial
+            or _commercial_bucket(row.license_commercial_use) in selected_commercial
+        )
         and (
             not selected_model_types
             or model_type_filter_key(
@@ -2187,6 +2299,16 @@ def _dim_bucket(value: int | None) -> str:
 
 def _quant_bucket(value: str | None) -> str:
     return value or "__none__"
+
+
+def _commercial_bucket(value: str | None) -> str:
+    if value in {"allowed", "permitted_with_terms"}:
+        return "commercial"
+    if value == "not_allowed":
+        return "non_commercial"
+    if value == "not_applicable":
+        return "not_applicable"
+    return "unknown"
 
 
 def _dtype_bucket(value: str | None) -> str:
@@ -2557,6 +2679,94 @@ def _metric_columns(
     if score_group is None:
         return []
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
+
+
+def _task_breakdowns(rows: list[TaskScore]) -> list[TaskBreakdown]:
+    by_key: dict[str, TaskBreakdown] = {}
+    for row in rows:
+        _add_task_breakdown(
+            by_key,
+            benchmark=row.benchmark,
+            dataset_name=row.dataset_name,
+            task_name=row.task_name,
+            task_key=row.task_key,
+        )
+    return sorted(by_key.values(), key=lambda task: task.label.casefold())
+
+
+def _load_task_breakdowns_for_benchmarks(
+    *, duckdb_path: Path, benchmarks: Sequence[str], config: ViewerConfig
+) -> list[TaskBreakdown]:
+    if not duckdb_path.exists() or not benchmarks:
+        return []
+    benchmark_names = sorted({benchmark_name_from_selection_key(benchmark) for benchmark in benchmarks})
+    if not benchmark_names:
+        return []
+    con = duckdb.connect(str(duckdb_path), read_only=True)
+    try:
+        if not _table_exists(con, "viewer_task_results"):
+            return []
+        columns = _table_columns(con, "viewer_task_results")
+        required_columns = {"benchmark", "dataset_name", "task_name", "task_key"}
+        if not required_columns.issubset(columns):
+            return []
+        placeholders = ", ".join("?" for _ in benchmark_names)
+        rows = con.execute(
+            f"""
+            SELECT DISTINCT benchmark, dataset_name, task_name, task_key
+            FROM viewer_task_results
+            WHERE benchmark IN ({placeholders})
+            ORDER BY lower(benchmark), lower(dataset_name), lower(task_name), lower(task_key)
+            """,
+            benchmark_names,
+        ).fetchall()
+    finally:
+        con.close()
+    by_key: dict[str, TaskBreakdown] = {}
+    excluded_by_benchmark = {
+        benchmark.name: set(benchmark.excluded_tasks)
+        for benchmark in config.benchmarks
+        if benchmark.excluded_tasks
+    }
+    for benchmark, dataset_name, task_name, task_key in rows:
+        benchmark_value = str(benchmark)
+        task_name_value = str(task_name)
+        task_key_value = str(task_key)
+        if task_name_value in excluded_by_benchmark.get(
+            benchmark_value, set()
+        ) or task_key_value in excluded_by_benchmark.get(benchmark_value, set()):
+            continue
+        _add_task_breakdown(
+            by_key,
+            benchmark=benchmark_value,
+            dataset_name=str(dataset_name),
+            task_name=task_name_value,
+            task_key=task_key_value,
+        )
+    return sorted(by_key.values(), key=lambda task: task.label.casefold())
+
+
+def _add_task_breakdown(
+    by_key: dict[str, TaskBreakdown],
+    *,
+    benchmark: str,
+    dataset_name: str,
+    task_name: str,
+    task_key: str,
+) -> None:
+    if task_key in by_key:
+        return
+    doc_key = f"{benchmark}::{dataset_name}::{task_name}"
+    label_parts = [benchmark]
+    if dataset_name and dataset_name != benchmark:
+        label_parts.append(dataset_name)
+    if task_name and task_name not in {dataset_name, benchmark}:
+        label_parts.append(task_name)
+    by_key[task_key] = TaskBreakdown(
+        key=task_key,
+        label=" / ".join(label_parts) if label_parts else task_key,
+        doc_key=doc_key,
+    )
 
 
 def _metric_column_doc_keys(

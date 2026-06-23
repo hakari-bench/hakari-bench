@@ -30,6 +30,7 @@ from hakari_bench.viewer.app import (
     render_leaderboard_plot,
     render_page,
     render_result_view_tabs,
+    render_controls,
     render_table_body,
     render_table_head,
 )
@@ -445,11 +446,30 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 ["Overall", "all", True, False, False, False, "ja", "Japanese", 3],
             ],
         )
+        con.execute(
+            """
+            CREATE TABLE viewer_task_results (
+                benchmark VARCHAR,
+                dataset_name VARCHAR,
+                task_name VARCHAR,
+                task_key VARCHAR
+            )
+            """
+        )
+        con.executemany(
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?)",
+            [
+                ("BenchA", "BenchA", "TaskA", "BenchA::TaskA"),
+                ("BenchA", "BenchA", "TaskB", "BenchA::TaskB"),
+                ("BenchA", "BenchA", "IgnoredTask", "BenchA::IgnoredTask"),
+                ("BenchPrimary", "BenchPrimary-ja", "TaskC", "BenchPrimary::TaskC"),
+            ],
+        )
     finally:
         con.close()
     config = ViewerConfig(
         benchmarks=[
-            BenchmarkConfig(name="BenchA"),
+            BenchmarkConfig(name="BenchA", excluded_tasks=["IgnoredTask"]),
             BenchmarkConfig(name="BenchPrimary", language_filter_mode="primary_language"),
         ],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA", "BenchPrimary"])],
@@ -483,6 +503,15 @@ runtime:
     )
 
     assert result.expected_tasks == 3
+    assert [(task.key, task.label, task.doc_key) for task in result.task_breakdowns] == [
+        ("BenchA::TaskA", "BenchA / TaskA", "BenchA::BenchA::TaskA"),
+        ("BenchA::TaskB", "BenchA / TaskB", "BenchA::BenchA::TaskB"),
+        (
+            "BenchPrimary::TaskC",
+            "BenchPrimary / BenchPrimary-ja / TaskC",
+            "BenchPrimary::BenchPrimary-ja::TaskC",
+        ),
+    ]
     assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)", "bm25"]
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
@@ -574,6 +603,70 @@ parameters: {}
 
     assert result.rows[0].model_type == "reranker"
     assert model_cell_views(result.rows)[result.rows[0].model_name].metadata["model_type"] == "Cross-encoder reranker"
+
+
+def test_leaderboard_service_backfills_model_detail_metadata_from_model_cards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "jinaai/jina-embeddings-v3",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "BenchA::a1",
+                0.90,
+                None,
+                None,
+                None,
+            ),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "jinaai__jina-embeddings-v3.yaml").write_text(
+        """
+id: jinaai/jina-embeddings-v3
+method: dense
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+links:
+  huggingface: https://huggingface.co/jinaai/jina-embeddings-v3
+  github: https://github.com/jina-ai/embeddings
+embedding:
+  truncate_dims:
+    - 32
+    - 64
+prompts:
+  query_prompt_name: retrieval.query
+  document_prompt_name: retrieval.passage
+notice: "Use the provider tokenizer limit for deployment, but HAKARI evaluated this model with a smaller max-token setting."
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+    metadata = model_cell_views(result.rows)[result.rows[0].model_name].metadata
+
+    assert result.rows[0].license == {"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"}
+    assert result.rows[0].truncate_dims == (32, 64)
+    assert metadata["links"]["github"] == "https://github.com/jina-ai/embeddings"
+    assert metadata["truncate_dims"] == [32, 64]
+    assert metadata["query_prompt_name"] == "retrieval.query"
+    assert metadata["document_prompt_name"] == "retrieval.passage"
+    assert (
+        metadata["notice"]
+        == "Use the provider tokenizer limit for deployment, but HAKARI evaluated this model with a smaller max-token setting."
+    )
 
 
 def test_leaderboard_service_backfills_language_support_from_model_cards(tmp_path: Path) -> None:
@@ -946,6 +1039,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
+    assert ".hakari-count-modal{width:min(92vw,48rem);max-height:92vh}" in css_response.text
+    assert ".hakari-count-modal .hakari-modal-body{max-height:calc(92vh - 4rem);overflow:auto}" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200
@@ -968,6 +1063,14 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
+    assert ".leaderboard-status-count-trigger" in viewer_js_response.text
+    assert 'document.getElementById("count-breakdown-modal")' in viewer_js_response.text
+    assert 'document.getElementById("count-breakdown-title")' in viewer_js_response.text
+    assert "[data-count-breakdown-section]" in viewer_js_response.text
+    assert "section.hidden = !isActive;" in viewer_js_response.text
+    assert ".count-breakdown-task-link" in viewer_js_response.text
+    assert 'window.open(link.href, "_blank", "noopener,noreferrer");' in viewer_js_response.text
+    assert 'event.target.id === "count-breakdown-modal"' in viewer_js_response.text
     assert "setTimeout(() =>" in viewer_js_response.text
     assert "const delay = trigger.dataset.tooltipDelay" in viewer_js_response.text
     assert ", delay);" in viewer_js_response.text
@@ -1660,6 +1763,82 @@ def test_chart_controls_render_inside_plot_shell_and_view_switch_precedes_status
     plot_shell = html.split('class="leaderboard-plot-shell', 1)[1].split("</svg>", 1)[0]
     assert 'id="plot-controls"' in plot_shell
     assert plot_shell.index('id="plot-controls"') < plot_shell.index("<svg")
+
+
+def test_leaderboard_status_counts_are_clickable_and_open_breakdown_modal() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/a",
+                model_type="dense",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=2,
+                license={"commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/b",
+                model_type="reranker",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                license={"commercial_use": "not_allowed"},
+            ),
+        ],
+        available_views=["Overall", "BenchA"],
+        available_view_labels={"Overall": "Overall", "BenchA": "BenchA"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+    )
+
+    status_html = html.split('data-shown-count="2"', 1)[1].split("</div>", 1)[0]
+    assert 'class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700"' in status_html
+    assert 'data-count-breakdown-trigger="shown"' in status_html
+    assert 'data-count-breakdown-trigger="complete"' in status_html
+    assert 'data-count-breakdown-trigger="tasks"' in status_html
+    assert ">2 shown</button>" in status_html
+    assert ">2 complete models</button>" in status_html
+    assert ">2 tasks</button>" in status_html
+    assert 'id="count-breakdown-modal" class="hakari-modal hakari-count-modal"' in html
+    assert 'id="count-breakdown-shown"' in html
+    assert 'id="count-breakdown-complete"' in html
+    assert 'id="count-breakdown-tasks"' in html
+    assert 'id="count-breakdown-title"' in html
+    assert 'data-count-breakdown-section="shown" data-count-breakdown-title="Visible rows" hidden' in html
+    assert 'data-count-breakdown-section="complete" data-count-breakdown-title="Complete models" hidden' in html
+    assert 'data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden' in html
+    assert "Visible rows" in html
+    assert "Complete models" in html
+    assert "Tasks: 2" in html
+    modal_html = html.split('id="count-breakdown-modal"', 1)[1].split("</dialog>", 1)[0]
+    shown_section = html.split('id="count-breakdown-shown"', 1)[1].split('id="count-breakdown-complete"', 1)[0]
+    complete_section = html.split('id="count-breakdown-complete"', 1)[1].split('id="count-breakdown-tasks"', 1)[0]
+    tasks_section = html.split('id="count-breakdown-tasks"', 1)[1].split("</dialog>", 1)[0]
+    assert shown_section.count("model-detail-trigger") == 2
+    assert complete_section.count("model-detail-trigger") == 2
+    assert 'data-model-metadata="' in shown_section
+    assert ">model/a</button>" in shown_section
+    assert ">model/b</button>" in complete_section
+    assert "Model family" not in modal_html
+    assert "Commercial use" not in modal_html
+    assert "Dense</span>" not in shown_section
+    assert "Reranker</span>" not in complete_section
+    assert "model-detail-trigger" not in tasks_section
+    assert "count-breakdown-task-link" in modal_html or "Task-level breakdown is unavailable" in modal_html
 
 
 def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
@@ -2766,6 +2945,192 @@ def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> No
     assert body.count(">None</td>") >= 2
 
 
+def test_table_display_others_adds_license_and_model_type_columns() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/sparse-encoder",
+                model_type="sparse",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "mit", "label": "MIT"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        show_other_columns=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    controls = render_display_controls(result=result, sort="borda_score", direction="desc")
+    head = render_table_head(result=result, sort="borda_score", direction="desc")
+    body = render_table_body(result=result)
+
+    assert 'name="other_columns" value="1" checked' in controls
+    assert ">Others</span>" in controls
+    assert 'data-column-key="license"' in head
+    assert 'data-column-key="model_type"' in head
+    assert ">Max Tokens</span>" in head
+    assert ">Max Len</span>" not in head
+    assert ">License</span>" in head
+    assert ">Model Type</span>" in head
+    assert ">MIT</td>" in body
+    assert ">Sparse</td>" in body
+
+
+def test_table_display_others_uses_short_labels_with_tooltips() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/apache-model",
+                model_type="dense",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "apache-2.0", "label": "Apache 2.0"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="org/cc-model",
+                model_type="reranker",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                license={"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"},
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="openai/text-embedding-3-small",
+                model_type="late-interaction",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                license={"id": "openai-service-terms", "label": "OpenAI Service Terms"},
+            ),
+            LeaderboardRow(
+                borda_rank=4,
+                mean_rank=4,
+                model_name="naver/splade-v3",
+                model_type="sparse",
+                borda_score=70,
+                mean_score=70,
+                task_count=1,
+                license={"id": "cc-by-nc-sa-4.0", "label": "CC BY-NC-SA 4.0"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        show_other_columns=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    body = render_table_body(result=result)
+
+    assert "max-w-[7rem] truncate whitespace-nowrap" in body
+    assert ">Apache</td>" in body
+    assert 'data-tooltip="Apache 2.0"' in body
+    assert ">CC BY-NC</td>" in body
+    assert 'data-tooltip="CC BY-NC 4.0"' in body
+    assert 'data-tooltip="CC BY-NC-SA 4.0"' in body
+    assert ">OpenAI</td>" in body
+    assert 'data-tooltip="OpenAI Service Terms"' in body
+    assert ">Late int.</td>" in body
+    assert 'data-tooltip="Late interaction"' in body
+
+
+def test_filter_results_includes_commercial_license_filter() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/apache-model",
+                model_type="dense",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "apache-2.0", "label": "Apache 2.0", "commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="org/cc-model",
+                model_type="dense",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                license={"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0", "commercial_use": "not_allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="bm25",
+                model_type="bm25",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                license={"id": "mit", "label": "MIT", "commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=4,
+                mean_rank=4,
+                model_name="org/not-applicable-baseline",
+                model_type="dense",
+                borda_score=70,
+                mean_score=70,
+                task_count=1,
+                license={"id": "n/a", "label": "N/A", "commercial_use": "not_applicable"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+    filter_state = FilterState(filters_active=True, commercial_filters=("commercial",))
+    filter_context = row_filter_context(result.rows, filter_state)
+
+    controls = render_controls(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=filter_state,
+        filter_context=filter_context,
+    )
+
+    assert 'name="commercial_filter" value="commercial"' in controls
+    assert 'name="commercial_filter" value="non_commercial"' in controls
+    assert 'name="commercial_filter" value="not_applicable"' in controls
+    assert 'id="commercial-use-controls"' in controls
+    assert 'data-filter-detail="commercial_filter"' not in controls
+    assert "Commercial use" in controls
+    assert [row.model_name for row in result.rows if filter_context.is_visible(row)] == [
+        "org/apache-model",
+        "bm25",
+    ]
+
+
 def test_chart_quantization_axis_normalization_enables_quantization_variants() -> None:
     config = ViewerConfig(
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
@@ -3383,7 +3748,9 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert 'data-shown-count="2"' in response.text
     assert 'data-icon="search"' in response.text
     assert "Retrieval" in response.text
-    assert "2 shown / 2 complete models / 1 tasks" in response.text
+    assert 'data-count-breakdown-trigger="shown">2 shown</button>' in response.text
+    assert 'data-count-breakdown-trigger="complete">2 complete models</button>' in response.text
+    assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in response.text
 
 
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
@@ -3670,6 +4037,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-icon="ruler"' in response.text
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
+    assert 'id="commercial-use-controls"' in response.text
+    assert 'data-filter-detail="commercial_filter"' not in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
     assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
@@ -5958,6 +6327,102 @@ def test_leaderboard_service_recalculates_ranking_with_model_type_filter(tmp_pat
     assert [row.model_name for row in bm25_result.rows] == ["bm25"]
 
 
+def test_leaderboard_service_recalculates_ranking_with_commercial_filter(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("org/apache-model", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 10, 12, 8192),
+            ("org/cc-model", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.80, 0, 0, 0),
+            ("org/not-applicable-baseline", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.70, 0, 0, 0),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "org__apache-model.yaml").write_text(
+        """
+id: org/apache-model
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "org__cc-model.yaml").write_text(
+        """
+id: org/cc-model
+method: dense
+license:
+  id: cc-by-nc-sa-4.0
+  label: CC BY-NC-SA 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "bm25.yaml").write_text(
+        """
+id: bm25
+method: bm25
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "org__not-applicable-baseline.yaml").write_text(
+        """
+id: org/not-applicable-baseline
+method: dense
+license:
+  id: n/a
+  label: N/A
+  type: not_applicable
+  commercial_use: not_applicable
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(
+        duckdb_path=db_path,
+        config=load_viewer_config(config_dir),
+        model_cards_path=model_cards_dir,
+    )
+
+    commercial_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("commercial",),
+    )
+    non_commercial_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("non_commercial",),
+    )
+    not_applicable_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("not_applicable",),
+    )
+
+    assert [row.model_name for row in commercial_result.rows] == ["org/apache-model", "bm25"]
+    assert [row.model_name for row in non_commercial_result.rows] == ["org/cc-model"]
+    assert [row.model_name for row in not_applicable_result.rows] == ["org/not-applicable-baseline"]
+
+
 def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
@@ -6882,6 +7347,8 @@ def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Pat
     assert rows[0]["Model Name"] == "model-a"
     assert rows[0]["Full Model Name"] == "org/model-a"
     assert rows[0]["Ranking Model Name"] == "org/model-a (1024 dims)"
+    assert rows[0]["Max Tokens"] == "1024"
+    assert "Max Sequence Length" not in rows[0]
     assert rows[0]["Embedding Dims"] == "1024"
     assert rows[0]["Original Embedding Dims"] == "1024"
     assert rows[0]["Truncated Embedding Dims"] == ""

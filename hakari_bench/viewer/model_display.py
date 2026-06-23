@@ -262,6 +262,7 @@ def _model_metadata(
         "embedding_dim": row.embedding_dim,
         "original_embedding_dim": original_embedding_dim,
         "truncated_embedding_dim": truncated_embedding_dim,
+        "truncate_dims": list(row.truncate_dims),
         "quantization": row.quantization,
         "base_score_delta_percent": row.base_score_delta_percent,
         "active_parameters": None if openai_metadata is not None else row.active_parameters,
@@ -270,6 +271,10 @@ def _model_metadata(
         "dtype": row.dtype,
         "attention": row.attn_implementation,
         "prompt": row.prompt_summary,
+        "query_prompt": row.query_prompt,
+        "document_prompt": row.document_prompt,
+        "query_prompt_name": row.query_prompt_name,
+        "document_prompt_name": row.document_prompt_name,
         "trust_remote_code": row.trust_remote_code,
         "late_interaction_query_length": row.late_interaction_query_length,
         "late_interaction_document_length": row.late_interaction_document_length,
@@ -282,6 +287,7 @@ def _model_metadata(
         "language_support_label": _language_support_label(row),
         "links": row.links or None,
         "license": row.license or None,
+        "notice": row.notice,
     }
 
 

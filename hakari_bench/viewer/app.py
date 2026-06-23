@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
 import csv
 from datetime import datetime, timezone
@@ -192,6 +192,7 @@ _ICON_PATHS = {
     "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
     "rotate-ccw": '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
     "scan-eye": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="1"/><path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0"/>',
+    "shield-check": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
     "search": '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
     "shapes": '<path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>',
     "sun": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
@@ -324,9 +325,11 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -368,9 +371,11 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -437,11 +442,13 @@ def create_app(
             show_task_scores=state_query.get("task_scores") == "1",
             show_task_z_scores=state_query.get("task_z_scores") == "1",
             show_task_ranks=state_query.get("task_ranks") == "1",
+            show_other_columns=state_query.get("other_columns") == "1",
             rank_filtered=filter_state.rank_filtered,
             model_filter=filter_state.model_filter,
             task_filter=filter_state.task_filter,
             dim_filters=filter_state.dim_filters if filter_state.filters_active else (),
             quant_filters=filter_state.quant_filters if filter_state.filters_active else (),
+            commercial_filters=filter_state.commercial_filters if filter_state.filters_active else (),
             model_type_filters=filter_state.model_type_filters if filter_state.filters_active else (),
             dtype_filters=filter_state.dtype_filters if filter_state.filters_active else (),
             attn_filters=filter_state.attn_filters if filter_state.filters_active else (),
@@ -475,9 +482,11 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -518,9 +527,11 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -587,9 +598,11 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -627,9 +640,11 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -1224,7 +1239,7 @@ def render_leaderboard(
         <span>{escape(mode_label)}</span>
       </span>
       <span class="text-zinc-400">/</span>
-      <span>{shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks</span>
+      {_render_status_count_buttons(result=result, shown_count=shown_count)}
     </div>
     <a class="inline-flex items-center gap-1 border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-800 underline-offset-2 hover:border-cyan-600 hover:text-cyan-700"
        href="{_csv_url(csv_query)}" aria-label="Download visible leaderboard as CSV">
@@ -1233,11 +1248,137 @@ def render_leaderboard(
     </a>
   </div>
   {data_surface}
+  {_render_count_breakdown_modal(result=result, filter_context=filter_context, benchmark_docs=benchmark_docs)}
   {render_model_detail_modal()}
   {render_doc_summary_modal()}
   {render_help_summary_modal()}
 </div>
 """
+
+
+def _render_status_count_buttons(*, result: LeaderboardResult, shown_count: int) -> str:
+    return f"""
+      <span class="inline-flex items-center gap-1">
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="shown">{shown_count} shown</button>
+        <span class="text-zinc-400">/</span>
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="complete">{len(result.rows)} complete models</button>
+        <span class="text-zinc-400">/</span>
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="tasks">{result.expected_tasks} tasks</button>
+      </span>
+    """
+
+
+def _render_count_breakdown_modal(
+    *,
+    result: LeaderboardResult,
+    filter_context: FilterContext,
+    benchmark_docs: BenchmarkDocs | None,
+) -> str:
+    visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
+    model_views = model_cell_views(result.rows)
+    return f"""
+<dialog id="count-breakdown-modal" class="hakari-modal hakari-count-modal">
+  <form method="dialog">
+    <div class="hakari-modal-header">
+      <h3 class="hakari-modal-title">
+        {_icon_svg("activity", class_name="hakari-icon")}
+        <span id="count-breakdown-title">Result breakdown</span>
+      </h3>
+      <button type="submit" class="hakari-modal-close">Close</button>
+    </div>
+  </form>
+  <div class="hakari-modal-body">
+    <div class="grid gap-3">
+      {_render_count_breakdown_section(
+          section_id="count-breakdown-shown",
+          title="Visible rows",
+          count=len(visible_rows),
+          description="Rows currently visible after text, facet, and range filters.",
+          rows=visible_rows,
+          model_views=model_views,
+      )}
+      {_render_count_breakdown_section(
+          section_id="count-breakdown-complete",
+          title="Complete models",
+          count=len(result.rows),
+          description="Complete rows in the selected benchmark scope before row visibility filters.",
+          rows=result.rows,
+          model_views=model_views,
+      )}
+      {_render_task_breakdown_section(result=result, benchmark_docs=benchmark_docs)}
+    </div>
+  </div>
+</dialog>
+"""
+
+
+def _render_count_breakdown_section(
+    *,
+    section_id: str,
+    title: str,
+    count: int,
+    description: str,
+    rows: list[LeaderboardRow],
+    model_views: dict[str, ModelCellView],
+) -> str:
+    section_key = section_id.removeprefix("count-breakdown-")
+    return f"""
+      <section id="{section_id}" data-count-breakdown-section="{escape(section_key, quote=True)}" data-count-breakdown-title="{escape(title, quote=True)}" hidden class="pt-2">
+        <h4 class="font-semibold text-zinc-900">{escape(title)}: {count}</h4>
+        <p class="mt-1 text-sm text-zinc-600">{escape(description)}</p>
+        {_render_status_model_list(rows=rows, model_views=model_views)}
+      </section>
+    """
+
+
+def _render_status_model_list(*, rows: list[LeaderboardRow], model_views: dict[str, ModelCellView]) -> str:
+    if not rows:
+        return '<p class="mt-2 text-sm text-zinc-500">No models.</p>'
+    items = []
+    for row in rows:
+        model_view = model_views.get(row.model_name)
+        metadata = model_view.metadata if model_view is not None else {"model_name": row.model_name}
+        metadata_json = escape(json.dumps(metadata, ensure_ascii=False, separators=(",", ":")), quote=True)
+        items.append(
+            f"""<li class="border-t border-zinc-200 py-1">
+              <button type="button" class="model-detail-trigger break-all text-left font-mono text-sm underline underline-offset-2 hover:text-cyan-700"
+                      data-model-metadata="{metadata_json}">{escape(row.model_name)}</button>
+            </li>"""
+        )
+    return f"""<ul class="mt-2 max-h-72 overflow-auto">{''.join(items)}</ul>"""
+
+
+def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs: BenchmarkDocs | None) -> str:
+    task_items = []
+    for task in result.task_breakdowns:
+        doc = (
+            benchmark_docs.task_doc(view_name=result.view_name, metric_column=task.doc_key)
+            if benchmark_docs is not None
+            else None
+        )
+        label = doc.title if doc is not None else task.label
+        if doc is not None:
+            task_items.append(
+                f"""<li class="border-t border-zinc-200 py-1">
+                  <a class="count-breakdown-task-link underline underline-offset-2 hover:text-cyan-700" href="{escape(doc.url, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(label)}</a>
+                </li>"""
+            )
+        else:
+            task_items.append(
+                f"""<li class="border-t border-zinc-200 py-1 text-zinc-600">{escape(label)}</li>"""
+            )
+    task_body = (
+        f"""<ul class="mt-2 max-h-72 overflow-auto text-sm">{''.join(task_items)}</ul>"""
+        if task_items
+        else '<p class="mt-2 text-sm text-zinc-500">Task-level breakdown is unavailable for this precomputed summary.</p>'
+    )
+    return f"""
+      <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden class="pt-2">
+        <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
+        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected benchmark scope. Linked tasks have verified local documentation and open in a new tab.</p>
+        {task_body}
+      </section>
+    """
 
 
 PLOT_SCORE_OPTIONS = {
@@ -2989,6 +3130,7 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
         filters_active=filter_state.filters_active,
         dim_filters=filter_state.dim_filters,
         quant_filters=filter_state.quant_filters,
+        commercial_filters=filter_state.commercial_filters,
         model_type_filters=filter_state.model_type_filters,
         dtype_filters=filter_state.dtype_filters,
         attn_filters=filter_state.attn_filters,
@@ -3027,6 +3169,7 @@ def render_display_controls(
     task_scores_checked = " checked" if result.show_task_scores else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     task_ranks_checked = " checked" if result.show_task_ranks else ""
+    other_columns_checked = " checked" if result.show_other_columns else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -3052,6 +3195,8 @@ def render_display_controls(
         task_score_hidden_fields.append(("task_z_scores", "0"))
     if result.show_task_ranks:
         task_score_hidden_fields.append(("task_ranks", "1"))
+    if result.show_other_columns:
+        task_score_hidden_fields.append(("other_columns", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
     variant_hidden_html = _hidden_inputs(state_fields + variant_filter_fields + task_score_hidden_fields)
     return f"""
@@ -3083,6 +3228,10 @@ def render_display_controls(
             <input type="hidden" name="task_ranks" value="0">
             <input type="checkbox" name="task_ranks" value="1"{task_ranks_checked}>
             <span>Task ranks</span>
+          </label>
+          <label class="toggle-chip">
+            <input type="checkbox" name="other_columns" value="1"{other_columns_checked}>
+            <span>Others</span>
           </label>
         </div>
       </form>
@@ -3166,12 +3315,14 @@ def render_controls(
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
+    commercial_options = filter_context.commercial_options
     dtype_options = filter_context.dtype_options
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
     model_type_options = filter_context.model_type_options
     selected_dims = filter_context.selected_dims
     selected_quants = filter_context.selected_quants
+    selected_commercial = filter_context.selected_commercial
     selected_dtypes = filter_context.selected_dtypes
     selected_attn = filter_context.selected_attn
     selected_prompts = filter_context.selected_prompts
@@ -3187,6 +3338,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3205,6 +3357,7 @@ def render_controls(
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3223,6 +3376,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(value for value, _ in quant_options),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3241,6 +3395,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3259,6 +3414,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(value for value, _ in dtype_options),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3277,6 +3433,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=(FILTER_NONE_VALUE,),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3295,6 +3452,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(value for value, _ in attn_options),
@@ -3313,6 +3471,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=(FILTER_NONE_VALUE,),
@@ -3331,6 +3490,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3349,6 +3509,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -3445,6 +3606,15 @@ def render_controls(
               </div>
               {_render_parameter_filter_inputs(filter_state)}
               {_render_task_length_filter_inputs(filter_state)}
+              <div class="flex flex-wrap items-center gap-2">
+                {_control_label(icon="shield-check", text="License filters")}
+                {_render_help_tooltip(
+                    "License filters",
+                    "Filters rows by whether model-card license metadata permits commercial use.",
+                    "Commercial use groups license metadata from model cards. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where commercial-use classification does not apply. Unknown keeps rows without reviewed commercial-use metadata.",
+                )}
+                {_render_commercial_filter_controls(options=commercial_options, selected_values=selected_commercial)}
+              </div>
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="cpu", text="Run metadata")}
                 {_render_help_tooltip(
@@ -3545,6 +3715,31 @@ def _render_model_type_controls(
               "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
           )}
         </span>
+        {''.join(checkboxes)}
+      </fieldset>
+    """
+
+
+def _render_commercial_filter_controls(
+    *,
+    options: list[tuple[str, str]],
+    selected_values: set[str],
+) -> str:
+    if not options:
+        return ""
+    checkboxes = []
+    for value, label in options:
+        checked = " checked" if value in selected_values else ""
+        checkboxes.append(
+            f"""<label class="inline-flex items-center gap-1.5">
+              <input type="checkbox" name="commercial_filter" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
+              <span>{escape(label)}</span>
+            </label>"""
+        )
+    return f"""
+      <fieldset id="commercial-use-controls" class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <input type="hidden" name="commercial_filter" value="{FILTER_NONE_VALUE}">
+        <span class="inline-flex items-center gap-1 font-medium text-zinc-800">Commercial use</span>
         {''.join(checkboxes)}
       </fieldset>
     """
@@ -3699,7 +3894,7 @@ def render_table_head(
         [
             ("active_parameters", "Active Params", "asc", "right", False, ""),
             ("total_parameters", "Total Params", "asc", "right", False, ""),
-            ("max_seq_length", "Max Len", "desc", "right", False, ""),
+            ("max_seq_length", "Max Tokens", "desc", "right", False, ""),
             ("embedding_dim", "Dims", "desc", "right", False, ""),
         ]
     )
@@ -3707,13 +3902,29 @@ def render_table_head(
         columns.append(("quantization", "Quant", "asc", "left", False, ""))
     if _show_base_delta_column(result):
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
+    if result.show_other_columns:
+        columns.extend(
+            [
+                ("license", "License", "", "left", False, ""),
+                ("model_type", "Model Type", "", "left", False, ""),
+            ]
+        )
     heads = []
     for key, label, default_direction, align, is_metric, full_metric_name in columns:
         align = "left"
-        next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
-        indicator = _render_sort_indicator(active=sort == key, direction=direction)
-        query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
-        query = urlencode(query_payload, doseq=True)
+        sortable = bool(default_direction)
+        next_direction = (
+            _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
+            if sortable
+            else ""
+        )
+        indicator = _render_sort_indicator(active=sort == key, direction=direction) if sortable else ""
+        query_payload = (
+            state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
+            if sortable
+            else {}
+        )
+        query = urlencode(query_payload, doseq=True) if sortable else ""
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = f"{_metric_column_width_class(result)} px-1 normal-case" if is_metric else "px-2 uppercase"
@@ -3762,12 +3973,18 @@ def render_table_head(
                  </span>"""
         else:
             label_markup = escape(label)
-            header_content = f"""
+            if sortable:
+                header_content = f"""
                  <button type="button" class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          {_leaderboard_control_hx_attrs()}>
                    <span class="{label_class}"{label_attrs}>{label_markup}</span>{indicator}
                  </button>"""
+            else:
+                header_content = f"""
+                 <span class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left">
+                   <span class="{label_class}"{label_attrs}>{label_markup}</span>
+                 </span>"""
         heads.append(
             f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 {text_align} {th_spacing} {sticky}">
                  {header_content}
@@ -3820,6 +4037,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_row_embedding_dim(row)}</td>
               {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
+              {_render_other_columns(result=result, model_view=model_views[row.model_name])}
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
@@ -3834,6 +4052,8 @@ def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
         column_count += 1
     if _show_base_delta_column(result):
         column_count += 1
+    if result.show_other_columns:
+        column_count += 2
     return column_count
 
 
@@ -3900,7 +4120,7 @@ def _csv_headers(*, result: LeaderboardResult, metric_headers: dict[str, str]) -
             "Model Type Key",
             "Active Params",
             "Total Params",
-            "Max Sequence Length",
+            "Max Tokens",
             "Embedding Dims",
             "Original Embedding Dims",
             "Truncated Embedding Dims",
@@ -3935,7 +4155,7 @@ def _csv_metric_headers(*, result: LeaderboardResult, metric_labels: dict[str, s
         "Model Type Key",
         "Active Params",
         "Total Params",
-        "Max Sequence Length",
+        "Max Tokens",
         "Embedding Dims",
         "Original Embedding Dims",
         "Truncated Embedding Dims",
@@ -3991,7 +4211,7 @@ def _csv_record_for_row(
         "Model Type Key": metadata.get("model_type_key"),
         "Active Params": metadata.get("active_parameters"),
         "Total Params": metadata.get("total_parameters"),
-        "Max Sequence Length": metadata.get("max_seq_length"),
+        "Max Tokens": metadata.get("max_seq_length"),
         "Embedding Dims": metadata.get("embedding_dim"),
         "Original Embedding Dims": metadata.get("original_embedding_dim"),
         "Truncated Embedding Dims": metadata.get("truncated_embedding_dim"),
@@ -4186,6 +4406,31 @@ def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow)
     return f"""<td class="px-2 py-1 text-left">{escape(row.quantization or "")}</td>"""
 
 
+def _render_other_columns(*, result: LeaderboardResult, model_view: ModelCellView) -> str:
+    if not result.show_other_columns:
+        return ""
+    metadata = model_view.metadata
+    license_label, license_tooltip = _license_table_labels(metadata.get("license"))
+    model_type_label, model_type_tooltip = _model_type_table_labels(metadata)
+    return _render_short_metadata_cell(license_label, license_tooltip) + _render_short_metadata_cell(
+        model_type_label,
+        model_type_tooltip,
+    )
+
+
+def _render_short_metadata_cell(label: str, tooltip: str) -> str:
+    tooltip_class = " tooltip-trigger tooltip-delay cursor-pointer" if tooltip and tooltip != label else ""
+    tooltip_attrs = (
+        f' data-tooltip="{escape(tooltip, quote=True)}" aria-label="{escape(tooltip, quote=True)}"'
+        if tooltip
+        else ""
+    )
+    return (
+        f'<td class="max-w-[7rem] truncate whitespace-nowrap px-2 py-1 text-left{tooltip_class}"{tooltip_attrs}>'
+        f"{escape(label)}</td>"
+    )
+
+
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
     return (
         result.include_quantization_variants
@@ -4369,6 +4614,57 @@ def _fmt_row_embedding_dim(row: LeaderboardRow) -> str:
     if _is_sparse_or_bm25_row(row):
         return "sparse"
     return _fmt_embedding_dim(row.embedding_dim)
+
+
+def _fmt_license(value: object) -> str:
+    return _license_table_labels(value)[1]
+
+
+def _license_table_labels(value: object) -> tuple[str, str]:
+    if not isinstance(value, Mapping):
+        return "", ""
+    license_metadata = cast(Mapping[str, object], value)
+    label = license_metadata.get("label") or license_metadata.get("id")
+    full_label = str(label) if label else ""
+    license_id = str(license_metadata.get("id") or "").strip().casefold()
+    normalized_label = full_label.strip().casefold()
+    short_labels = {
+        "apache-2.0": "Apache",
+        "mit": "MIT",
+        "cc-by-nc-4.0": "CC BY-NC",
+        "cc-by-nc-sa-4.0": "CC BY-NC",
+        "openai-service-terms": "OpenAI",
+        "gemma": "Gemma",
+        "lfm1.0": "LFM",
+    }
+    label_prefixes = {
+        "apache 2.0": "Apache",
+        "cc by-nc 4.0": "CC BY-NC",
+        "cc by-nc-sa 4.0": "CC BY-NC",
+        "openai service terms": "OpenAI",
+        "gemma terms": "Gemma",
+        "lfm open license": "LFM",
+    }
+    short_label = short_labels.get(license_id)
+    if short_label is None:
+        short_label = next(
+            (short for prefix, short in label_prefixes.items() if normalized_label.startswith(prefix)),
+            full_label,
+        )
+    return short_label, full_label
+
+
+def _model_type_table_labels(metadata: Mapping[str, object]) -> tuple[str, str]:
+    full_label = str(metadata.get("model_type") or "")
+    key = str(metadata.get("model_type_key") or "").casefold()
+    short_labels = {
+        "dense": "Dense",
+        "sparse": "Sparse",
+        "bm25": "BM25",
+        "reranker": "Reranker",
+        "late-interaction": "Late int.",
+    }
+    return short_labels.get(key, full_label), full_label
 
 
 def _fmt_percent_delta(value: float | None) -> str:

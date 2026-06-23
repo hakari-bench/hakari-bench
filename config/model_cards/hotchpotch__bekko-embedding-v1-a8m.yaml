@@ -23,7 +23,6 @@ embedding:
   - 64
   - 128
   - 256
-  - 384
 runtime:
   max_seq_length: 8192
   dtype: bf16

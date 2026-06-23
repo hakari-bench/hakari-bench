@@ -482,8 +482,14 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Benchmark documentation" in response.text
+    assert ">Paper</h2>" in response.text
+    assert (
+        '<a class="underline underline-offset-2" href="http://arxiv.org/abs/2606.22778">'
+        "HAKARI-Bench: A Lightweight Benchmark for Comparing Retrieval Architectures and Efficiency Settings under Unified Conditions</a>"
+    ) in response.text
     assert '<a class="underline underline-offset-2" href="/">Top</a>' in response.text
     assert response.text.index(">Top</a>") < response.text.index(">Benchmark documentation</span>")
+    assert response.text.index(">Paper</h2>") < response.text.index(">Benchmark documentation</h1>")
     assert 'class="doc-card-link doc-card-title font-semibold underline-offset-2 hover:underline" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
     assert "MIRACL overview." in response.text
 
@@ -684,6 +690,65 @@ def test_leaderboard_renders_nanobeir_task_doc_triggers_for_short_task_keys(tmp_
     assert response.status_code == 200
     assert 'data-doc-title="MNanoBEIR / NanoBEIR-ja / NanoArguAna"' in response.text
     assert 'data-doc-url="/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna"' in response.text
+
+
+def test_leaderboard_status_modal_links_existing_task_docs_in_blank_tabs(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "NanoArguAna",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
+                0.90,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "NanoMissing",
+                "missing",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::missing",
+                0.80,
+                10,
+                12,
+                8192,
+            ),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: MNanoBEIR\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n", encoding="utf-8")
+    docs_dir = tmp_path / "task_docs" / "docs"
+    group_dir = docs_dir / "MNanoBEIR"
+    group_dir.mkdir(parents=True)
+    (group_dir / "NanoBEIR-ja__NanoArguAna.md").write_text(
+        "# MNanoBEIR / NanoBEIR-ja / NanoArguAna\n\n## Overview\n\nArguAna overview.\n",
+        encoding="utf-8",
+    )
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
+
+    response = TestClient(app).get("/leaderboard?view=MNanoBEIR")
+
+    assert response.status_code == 200
+    assert 'id="count-breakdown-modal"' in response.text
+    assert (
+        '<a class="count-breakdown-task-link underline underline-offset-2 hover:text-cyan-700" '
+        'href="/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna" '
+        'target="_blank" rel="noopener noreferrer">'
+    ) in response.text
+    assert "MNanoBEIR / NanoBEIR-ja / NanoArguAna" in response.text
+    assert "/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoMissing" not in response.text
 
 
 def test_leaderboard_custom_task_doc_trigger_links_resolve_to_existing_docs(tmp_path: Path) -> None:
