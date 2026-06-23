@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from html import escape
@@ -44,14 +45,27 @@ class DocsPageChrome:
 
 
 class BenchmarkDocs:
-    def __init__(self, docs_dir: Path, *, metadata_dir: Path | None = None) -> None:
+    def __init__(
+        self,
+        docs_dir: Path,
+        *,
+        metadata_dir: Path | None = None,
+        group_names: Sequence[str] | None = None,
+    ) -> None:
         self.docs_dir = docs_dir
         self.metadata_dir = metadata_dir
+        self.group_names = tuple(group_names) if group_names is not None else None
 
     def group_docs(self) -> list[BenchmarkDoc]:
         if not self.docs_dir.is_dir():
             return []
         docs: list[BenchmarkDoc] = []
+        if self.group_names is not None:
+            for group_name in self.group_names:
+                doc = self.group_doc(group_name)
+                if doc is not None:
+                    docs.append(doc)
+            return docs
         for path in sorted(self.docs_dir.glob("*/index.md")):
             if not _is_relative_to(path, self.docs_dir):
                 continue
@@ -130,21 +144,33 @@ class BenchmarkDocs:
         )
 
     def _markdown_with_metadata(self, *, path: Path, markdown: str) -> str:
+        source_markdown = markdown
+        display_markdown = _compact_source_reference_sections(markdown)
         if self.metadata_dir is None:
-            return markdown
+            return display_markdown
         if path.name == "index.md":
             task_metadata = self._group_task_metadata(path.parent)
-            if not task_metadata or "## Metadata Summary" in markdown:
-                return markdown
-            return f"{markdown.rstrip()}\n\n{_render_group_metadata_markdown(group_dir=path.parent, task_metadata=task_metadata)}\n"
+            if not task_metadata or "## Metadata Summary" in source_markdown:
+                return display_markdown
+            return f"{display_markdown.rstrip()}\n\n{_render_group_metadata_markdown(group_dir=path.parent, task_metadata=task_metadata)}\n"
         metadata = self._load_metadata(path)
-        if metadata is None or "## Dataset Information" in markdown:
-            return markdown
-        rendered = markdown.rstrip()
+        if metadata is None or "## Dataset Information" in source_markdown:
+            return display_markdown
+        rendered = display_markdown.rstrip()
         examples = _examples_markdown(metadata)
-        if examples and "## Example Data" not in markdown:
+        if examples and "## Example Data" not in source_markdown:
             rendered = f"{rendered}\n\n{examples}"
-        return f"{rendered}\n\n{_render_task_metadata_markdown(metadata)}\n"
+        return (
+            f"{rendered}\n\n"
+            f"{_render_task_metadata_markdown(
+                metadata,
+                include_links=not (
+                    _has_markdown_heading(source_markdown, 'Hugging Face Links')
+                    or _has_markdown_heading(source_markdown, 'Source Reference Table')
+                ),
+                include_references=not _has_markdown_heading(source_markdown, 'Source Reference Table'),
+            )}\n"
+        )
 
     def _group_task_metadata(self, group_dir: Path) -> list[tuple[Path, TaskMetadata]]:
         items: list[tuple[Path, TaskMetadata]] = []
@@ -226,7 +252,12 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) 
     return _render_docs_document(chrome=chrome, title="Benchmark documentation - HAKARI-Bench docs", body_html=body)
 
 
-def _render_task_metadata_markdown(metadata: TaskMetadata) -> str:
+def _render_task_metadata_markdown(
+    metadata: TaskMetadata,
+    *,
+    include_links: bool = True,
+    include_references: bool = True,
+) -> str:
     rows = [
         ("Nano set", metadata.nano_set),
         ("Backing dataset", metadata.backing_dataset),
@@ -257,10 +288,10 @@ def _render_task_metadata_markdown(metadata: TaskMetadata) -> str:
     learning = _learning_markdown(metadata)
     if learning:
         sections.extend(["", "### Training and Leakage Metadata", "", learning])
-    links = _links_markdown(metadata)
+    links = _links_markdown(metadata) if include_links else ""
     if links:
         sections.extend(["", "### Hugging Face Links", "", links])
-    references = _references_table(metadata)
+    references = _references_table(metadata) if include_references else ""
     if references:
         sections.extend(["", "### Source Reference Table", "", references])
     return "\n".join(sections)
@@ -634,6 +665,63 @@ def _doc_url_parts(url: str) -> list[str]:
 
 def _read_markdown(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def _has_markdown_heading(markdown: str, heading: str) -> bool:
+    pattern = rf"^\s*#{{1,6}}\s+{re.escape(heading)}\s*#*\s*$"
+    return re.search(pattern, markdown, flags=re.IGNORECASE | re.MULTILINE) is not None
+
+
+def _compact_source_reference_sections(markdown: str) -> str:
+    headings = _markdown_heading_spans(markdown)
+    source_table_levels = [level for level, title, _, _ in headings if title.lower() == "source reference table"]
+    if not source_table_levels:
+        return markdown
+    min_source_table_level = min(source_table_levels)
+    removable_titles = {"public sources", "hugging face links"}
+    replacements: list[tuple[int, int, str]] = []
+    for index, (level, title, start, _) in enumerate(headings):
+        if title.lower() not in removable_titles:
+            continue
+        end = len(markdown)
+        for next_level, _, next_start, _ in headings[index + 1 :]:
+            if next_level <= level:
+                end = next_start
+                break
+        section = markdown[start:end]
+        nested_source_table = [
+            (nested_level, nested_start, nested_end)
+            for nested_level, nested_title, nested_start, nested_end in _markdown_heading_spans(section)
+            if nested_title.lower() == "source reference table"
+        ]
+        if nested_source_table:
+            nested_level, nested_start, nested_end = nested_source_table[0]
+            if nested_level > level:
+                replacements.append((start, start + nested_end, f"{'#' * level} Source Reference Table"))
+            continue
+        if level < min_source_table_level:
+            continue
+        replacements.append((start, end, ""))
+    if not replacements:
+        return markdown
+    compacted = []
+    cursor = 0
+    for start, end, replacement in replacements:
+        if start < cursor:
+            continue
+        compacted.append(markdown[cursor:start].rstrip())
+        if replacement:
+            compacted.append(replacement)
+        cursor = end
+    compacted.append(markdown[cursor:].lstrip("\n"))
+    return re.sub(r"\n{3,}", "\n\n", "\n\n".join(part for part in compacted if part)).strip() + "\n"
+
+
+def _markdown_heading_spans(markdown: str) -> list[tuple[int, str, int, int]]:
+    headings: list[tuple[int, str, int, int]] = []
+    for match in re.finditer(r"^(#{1,6})\s+(.+?)\s*#*\s*$", markdown, flags=re.MULTILINE):
+        headings.append((len(match.group(1)), match.group(2).strip(), match.start(), match.end()))
+    return headings
 
 
 @lru_cache(maxsize=1024)

@@ -236,7 +236,11 @@ def create_app(
     resolved_docs_metadata_dir = docs_metadata_dir
     if resolved_docs_metadata_dir is None and docs_dir == Path("task_docs/docs"):
         resolved_docs_metadata_dir = Path("task_docs/metadata")
-    benchmark_docs = BenchmarkDocs(docs_dir, metadata_dir=resolved_docs_metadata_dir)
+    benchmark_docs = BenchmarkDocs(
+        docs_dir,
+        metadata_dir=resolved_docs_metadata_dir,
+        group_names=viewer_config.benchmark_names,
+    )
 
     @asynccontextmanager
     async def lifespan(_app: object) -> AsyncIterator[None]:
