@@ -131,14 +131,14 @@
         "query": {
           "text": "Peni Rej Bridžes je glumila u televizijskoj sitkom seriji uz kojeg drugog glumca?",
           "full_chars": 81,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Penny Rae Bridges (rođena 29. jula 1990) je američka glumica. Njen televizijski rad obuhvata uloge u serijama \"For Your Love\", \"Family Law\", \"Boy Meets World\" i \"The Parent 'Hood\". Najpoznatija je po",
+          "text": "Penny Rae Bridges (rođena 29. jula 1990) je američka glumica. Njen televizijski rad obuhvata uloge u serijama \"For Your Love\", \"Family Law\", \"Boy Meets World\" i \"The Parent 'Hood\". Najpoznatija je po ulozi mlade Mone u seriji \"Half & Half\".",
           "full_chars": 240,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Ko je dao Kaganoiju Šigemočiju oštricu koju je napravila osoba koja je osnovala Muramasa školu?",
           "full_chars": 95,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. avgust 1600) bio je japanski samuraj iz perioda Azuči-Momojama, koji je služio klanu Oda. Vladao je dvorcem Kaganoi. Tokom Bitke kod Komakija i Nagakutea, Shigem",
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. avgust 1600) bio je japanski samuraj iz perioda Azuči-Momojama, koji je služio klanu Oda. Vladao je dvorcem Kaganoi. Tokom Bitke kod Komakija i Nagakutea, Shigemochi se borio pod komandom svog oca Shigemunea, koji je bio pridodat snagama Oda Nobukatsua. Ubrzo nakon toga, dvorac Kaganoi je opkoljen od strane snaga Tojotomi Hidejošija; Shigemune se predao, a Shigemochi je zaposlen od strane Hidejošija kao glasnik, primajući platu od 10.000 \"koku-a\". Takođe je posedovao mač koji je načinio Muramasa, koji mu je Hidejošii poklonio 1598. godine.",
           "full_chars": 584,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Koji film je napisao i režirao Joby Harold, a muziku komponovao Samuel Sim?",
           "full_chars": 75,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Samuel Sim je kompozitor za film i televiziju. Prvi put je stekao priznanje sa svojom nagrađivanom muzikom za dramsku seriju BBC-ja \"Dunkirk\". Od tada je napisao muziku za širok spektar filmskih i tel",
+          "text": "Samuel Sim je kompozitor za film i televiziju. Prvi put je stekao priznanje sa svojom nagrađivanom muzikom za dramsku seriju BBC-ja \"Dunkirk\". Od tada je napisao muziku za širok spektar filmskih i televizijskih produkcija, a nedavno je komponovao muziku za film \"Awake\" za kompaniju The Weinstein i dramsku seriju BBC/HBO \"House of Saddam\". Njegova najnovija hvaljena muzika je soundtrack za seriju \"Home Fires\". \"Home Fires (Music from the Television Series)\" objavljen je 6. maja 2016. od strane Sony Classical Records.",
           "full_chars": 521,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae63b2255429908198fa526",
-        "document_id": "46395880",
-        "query": {
-          "text": "Koji je datum odigravanja ove koledž fudbalske utakmice na Sun Life Stadium u Miami Gardens, Florida",
-          "full_chars": 182,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Fudbalska ekipa Clemson Tigers iz 2015. godine predstavljala je Univerzitet Clemson u sezoni 2015. NCAA Division I FBS. Tigrove je vodio glavni trener Dabo Swinney u svojoj sedmoj punoj godini i osmoj",
-          "full_chars": 1070,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5a84fd085542994c784ddaba",
-        "document_id": "1854777",
-        "query": {
-          "text": "\"Devil's Food\" je kompilacija singlova američke rok and rol grupe koja je takođe poznata po sviranju",
-          "full_chars": 133,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "\"Devil's Food\" je kompilacija singlova američke rok and rol grupe Supersuckers, objavljena u aprilu 2005. godine za izdavačku kuću Mid-Fi.",
-          "full_chars": 138,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -139,8 +139,6 @@ share product vocabulary but fail to answer the specific question.
 | bonjour, quels sont les avantages de cette box android, comparée aux autres ? merci [83 chars] | Un client dit qu'en comparison aux autres box Android qu'il a eu, celle-là est une des meilleurs parce qu'elle est facile à installer et a une grande capacité de stockage. [171 chars] |
 | sur quel produit fitbit avez vous essayé cette extension ? [58 chars] | Un client dit que ce produit fonctionnait très bien sur un Fitbit Charge. [73 chars] |
 | bonjour, la vitre est-elle en verre ou en plastique? [52 chars] | Un client dit que la vitre est en plastique transparent et qu'elle protège bien les photos. [91 chars] |
-| cet article est-il "compatible" avec un smartphone de 5.5 pouces ? [66 chars] | Oui. Un client dit que c'est compatible avec n'importe quelle guidon et n'importe quel appareil. [96 chars] |
-| bonjour est ce anti lumière bleue? [34 chars] | Non, ce produit n'est pas anti-lumière bleue. [45 chars] |
 
 ### Source Reference Table
 

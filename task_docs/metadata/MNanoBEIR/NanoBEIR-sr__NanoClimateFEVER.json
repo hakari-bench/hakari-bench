@@ -129,15 +129,15 @@
         "query_id": "412",
         "document_id": "Paleocene",
         "query": {
-          "text": "Od 1970. do 1998. godine postojao je period zagrevanja koji je podigao temperature za oko 0,7 stepen",
+          "text": "Od 1970. do 1998. godine postojao je period zagrevanja koji je podigao temperature za oko 0,7 stepeni Farenhajta, što je pomoglo da se pokrene pokret alarmista za globalno zagrevanje.",
           "full_chars": 183,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Paleocen (izgovor: /ˈpæliəˌsiːn/, /ˈpæ-/, /-lioʊ-/) ili Paleocen, što znači \"stari novi\", je geološka epoha koja je trajala od oko 66 do 56 miliona godina. To je prva epoka paleogenog perioda u savrem",
+          "text": "Paleocen (izgovor: /ˈpæliəˌsiːn/, /ˈpæ-/, /-lioʊ-/) ili Paleocen, što znači \"stari novi\", je geološka epoha koja je trajala od oko 66 do 56 miliona godina. To je prva epoka paleogenog perioda u savremenoj kenozojskoj eri. Kao i kod mnogih geoloških perioda, slojevi koji definišu početak i kraj epohe su jasno utvrđeni, ali tačna vremenska doba ostaju neizvesna. Paleocenska epoha obuhvata dva velika događaja u Zemljinoj istoriji. Započela je masovnim izumiranjem na kraju krede, poznatim kao granica Kreda–Paleogen (K–Pg). Ovo je bilo vreme obeleženo nestankom neptičjih dinosaura, džinovskih morskih gmizavaca i mnogih drugih vrsta faune i flore. Nestanak dinosaura ostavio je nepopunjene ekološke niše širom sveta. Paleocen se završio sa Paleocensko–eocenskim toplotnim maksimumom, geološki kratkim intervalom (oko 0,2 miliona godina) karakterističnim po ekstremnim promenama u klimi i ciklusu ugljenika. Naziv \"Paleocen\" potiče iz starogrčkog jezika i odnosi se na \"staru (stariju)\" (παλαιός, pa",
           "full_chars": 1072,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -147,65 +147,33 @@
         "query": {
           "text": "Zapravo, trend je, iako nije statistički značajan, opadajući.",
           "full_chars": 61,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Solarni ciklus ili ciklus solarne magnetne aktivnosti predstavlja gotovo periodičnu 11-godišnju promenu u aktivnosti Sunca (uključujući promene u nivou solarne radijacije i izbacivanju sunčevog materi",
+          "text": "Solarni ciklus ili ciklus solarne magnetne aktivnosti predstavlja gotovo periodičnu 11-godišnju promenu u aktivnosti Sunca (uključujući promene u nivou solarne radijacije i izbacivanju sunčevog materijala) i izgledu (promene u broju i veličini sunčevih pega, baklji i drugih pojava). Ove promene su posmatrane (kroz promene u izgledu Sunca i kroz promene primećene na Zemlji, poput aurora) vekovima. Promene na Suncu izazivaju efekte u svemiru, u atmosferi i na površini Zemlje. Iako je to dominantna promenljiva u sunčevoj aktivnosti, javljaju se i aperiodične fluktuacije.",
           "full_chars": 574,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "109",
         "document_id": "Sea_level",
         "query": {
-          "text": "Lokalni i regionalni nivoi mora i dalje pokazuju tipičnu prirodnu varijabilnost — na nekim mestima s",
+          "text": "Lokalni i regionalni nivoi mora i dalje pokazuju tipičnu prirodnu varijabilnost — na nekim mestima se podižu, a na drugim spuštaju.",
           "full_chars": 131,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Srednji nivo mora (MSL) (skraćeno samo kao nivo mora) je prosečan nivo površine jednog ili više Zemljinih okeana od koga se mogu meriti visine kao što su nadmorske visine. MSL je vrsta vertikalne datu",
+          "text": "Srednji nivo mora (MSL) (skraćeno samo kao nivo mora) je prosečan nivo površine jednog ili više Zemljinih okeana od koga se mogu meriti visine kao što su nadmorske visine. MSL je vrsta vertikalne datume – standardizovane geodetske referentne tačke – koja se koristi, na primer, kao kartografska datuma u kartografiji i pomorskoj navigaciji, ili u avijaciji kao standardni nivo mora na kome se meri atmosferski pritisak kako bi se kalibrisala visina i, posledično, nivoi leta vazduhoplova. Zajednički i relativno jednostavan standard srednjeg nivoa mora je srednja tačka između srednje niske i srednje visoke plime na određenoj lokaciji. Nivoi mora mogu biti pod uticajem mnogih faktora i poznato je da su varirali tokom geoloških vremenskih razmera. Pažljivo merenje varijacija u MSL-u može pružiti uvid u tekuće klimatske promene, a porast nivoa mora se široko navodi kao dokaz tekućeg globalnog zagrevanja. Izraz iznad nivoa mora obično se odnosi na iznad srednjeg nivoa mora (AMSL).",
           "full_chars": 991,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "95",
-        "document_id": "Effects_of_global_warming",
-        "query": {
-          "text": "[Klimatolozi] kažu da pojedini aspekti slučaja uragana Harvey ukazuju da globalno zagrevanje pogorša",
-          "full_chars": 122,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Posledice globalnog zagrevanja su ekološke i društvene promene uzrokovane (direktno ili indirektno) ljudskim emisijama gasova staklene bašte. Postoji naučni konsenzus da se klimatske promene dešavaju",
-          "full_chars": 1310,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "1774",
-        "document_id": "Attribution_of_recent_climate_change",
-        "query": {
-          "text": "Eksperiment CERN CLOUD testirao je samo jednu trećinu jednog od četiri uslova potrebnih da se global",
-          "full_chars": 174,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Pripisivanje nedavnih klimatskih promena predstavlja naučni pokušaj da se utvrde mehanizmi odgovorni za nedavne klimatske promene na Zemlji, poznate kao 'globalno zagrevanje'. Ovaj napor se fokusira n",
-          "full_chars": 1922,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

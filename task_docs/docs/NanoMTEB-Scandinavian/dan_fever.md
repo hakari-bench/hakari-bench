@@ -72,11 +72,9 @@ For evaluation, nDCG@10 mainly measures how close the system is to lexical ceili
 
 | Query | Positive document |
 | --- | --- |
-| Albummet Blood Mountain har en sammenhængde historie og et gennemgående tema. [77 chars] | Blood Mountain er et konceptalbum af heavy metal-gruppen Mastodon. Det er Mastodons tredje studiealbum og blev udgivet i september 2006. Som det foregående album Leviathan er Blood Mountain et koncept... [200 / 261 chars] |
-| Den almindelige perlebusk får perleformede knopper og derefter hvide blomster på dens busk. [91 chars] | Almindelig perlebusk ("Exochorda racemosa") er en mellemstor, løvfældende busk med en opret vækst og iøjnefaldende klaser af hvide, perleformede knopper og senere hvide blomster. Busken er fuldt hårdf... [200 / 236 chars] |
+| Albummet Blood Mountain har en sammenhængde historie og et gennemgående tema. [77 chars] | Blood Mountain er et konceptalbum af heavy metal-gruppen Mastodon. Det er Mastodons tredje studiealbum og blev udgivet i september 2006. Som det foregående album Leviathan er Blood Mountain et konceptalbum med en sammenhængende historie og et gennemgående tema. [261 chars] |
+| Den almindelige perlebusk får perleformede knopper og derefter hvide blomster på dens busk. [91 chars] | Almindelig perlebusk ("Exochorda racemosa") er en mellemstor, løvfældende busk med en opret vækst og iøjnefaldende klaser af hvide, perleformede knopper og senere hvide blomster. Busken er fuldt hårdfør og bruges som prydbusk i haverne. [236 chars] |
 | .my er det malaysiske topdomæne. [32 chars] | .my er et nationalt topdomæne der er reserveret til Malaysia. [61 chars] |
-| Adelen i Storbritannien er den øverste klasse i Storbritannien. [63 chars] | Adelen i Storbritannien (egentlig: Det Forenede Kongerige Storbritannien og Nordirland) er den øverste samfundsklasse i det britiske samfund og har historisk været bærer af nogle særlige titler, retti... [200 / 317 chars] |
-| Den 31. oktober 1920 opdagede en astronom småplaneten (944) Hidalgo i det ydre solsystem. [89 chars] | (944) Hidalgo (oprindeligt midlertidigt navn: 1920 HZ) er en mørk småplanet med en diameter på ca. 50 km, der befinder sig i det ydre solsystem. Objektet blev opdaget den 31. oktober 1920 af Walter Ba... [200 / 635 chars] |
 
 ### Source Reference Table
 

@@ -168,14 +168,14 @@
         "query": {
           "text": "Waarom is een Android ROM apparaatspecifiek?",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Pure Android Download **Mogelijk duplicaat:** Waarom kan Android nog steeds niet als regulier besturingssysteem worden geïnstalleerd? Ik heb rondgekeken en vroeg me af of het niet mogelijk is om Andro",
+          "text": "Pure Android Download **Mogelijk duplicaat:** Waarom kan Android nog steeds niet als regulier besturingssysteem worden geïnstalleerd? Ik heb rondgekeken en vroeg me af of het niet mogelijk is om Android 4.2 kant-en-klaar (niet telefoon-specifiek) te downloaden? Ik dacht dat ik gewoon de Google-versie van Android kon downloaden en op mijn telefoon kon installeren, maar er is geen Android ROM die ik kan downloaden (tenminste, niet dat ik kan vinden).",
           "full_chars": 453,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -184,65 +184,33 @@
         "query": {
           "text": "Hoe kan ik een bestand opslaan in plaats van het te openen?",
           "full_chars": 59,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Hoe download ik een audiobestand van een website? Is er een manier om een audiobestand, zoals een mp3-bestand, van de Android-browser naar het apparaat te downloaden zodat ik er later offline naar kan",
+          "text": "Hoe download ik een audiobestand van een website? Is er een manier om een audiobestand, zoals een mp3-bestand, van de Android-browser naar het apparaat te downloaden zodat ik er later offline naar kan luisteren? Is er een manier waarop ik de website moet programmeren om dit mogelijk te maken? Ik zoek _geen_ extra app om dit te bereiken.",
           "full_chars": 339,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "10811",
         "document_id": "22435",
         "query": {
-          "text": "Hoe kan ik een video stream van het scherm van mijn Android telefoon vastleggen en deze op mijn lapt",
+          "text": "Hoe kan ik een video stream van het scherm van mijn Android telefoon vastleggen en deze op mijn laptop weergeven?",
           "full_chars": 113,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Hoe stream ik mijn Android-scherm naar mijn Mac? **Mogelijk duplicaat:** > Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie? Ik wil mijn Android-telefoon livestreamen terwij",
+          "text": "Hoe stream ik mijn Android-scherm naar mijn Mac? **Mogelijk duplicaat:** > Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie? Ik wil mijn Android-telefoon livestreamen terwijl ik een game speel. Tot nu toe heb ik geprobeerd het scherm van mijn Android naar mijn Mac te streamen, **en dan** vanaf mijn Mac te livestreamen met Procaster. Wat heb ik nodig om dit te bereiken? **Ik heb geen** geroote telefoon. Ik heb hem net gekregen, dus ik wil mijn garantie niet snel ongeldig maken. Als mijn aanpak niet de beste manier is, wat zou u dan voorstellen? Ik heb al (Hoe projecteer ik het scherm van mijn Android-telefoon voor een presentatie?) gelezen, maar de daarin gegeven oplossingen zijn voor geroote telefoons.",
           "full_chars": 741,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "82323",
-        "document_id": "69513",
-        "query": {
-          "text": "“Niet compatibel met andere applicatie(s) die dezelfde gedeelde gebruikers-ID gebruiken” bij het ins",
-          "full_chars": 134,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Kan Google Play-services niet installeren: Niet compatibel met andere applicatie(s) die dezelfde gedeelde gebruikers-ID gebruiken Ik kan Google Play-services niet installeren. Er staat: \"Niet compatib",
-          "full_chars": 304,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "30674",
-        "document_id": "37580",
-        "query": {
-          "text": "Hoe kan ik zowel het volume als het overslaan van nummers op mijn Android-apparaat bedienen met mijn",
-          "full_chars": 115,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Koptelefoonbediening op SGS-III **Mogelijk duplicaat:** > Hoe kan ik zowel het volume als het wisselen van tracks op mijn Android-apparaat bedienen met mijn > koptelefoon? Ik heb onlangs de SIII gekre",
-          "full_chars": 712,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

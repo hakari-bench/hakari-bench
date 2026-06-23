@@ -152,13 +152,13 @@
         "query": {
           "text": "Who Should be Careful About Curcumin?",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Curcumin as \"Curecumin\": from kitchen to clinic. Although turmeric (Curcuma longa; an Indian spice) has been described in Ayurveda, as a treatment for inflammatory diseases and is referred by differen",
+          "text": "Curcumin as \"Curecumin\": from kitchen to clinic. Although turmeric (Curcuma longa; an Indian spice) has been described in Ayurveda, as a treatment for inflammatory diseases and is referred by different names in different cultures, the active principle called curcumin or diferuloylmethane, a yellow pigment present in turmeric (curry powder) has been shown to exhibit numerous activities. Extensive research over the last half century has revealed several important functions of curcumin. It binds to a variety of proteins and inhibits the activity of various kinases. By modulating the activation of various transcription factors, curcumin regulates the expression of inflammatory enzymes, cytokines, adhesion molecules, and cell survival proteins. Curcumin also downregulates cyclin D1, cyclin E and MDM2; and upregulates p21, p27, and p53. Various preclinical cell culture and animal studies suggest that curcumin has potential as an antiproliferative, anti-invasive, and antiangiogenic agent; as",
           "full_chars": 1773,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -168,13 +168,13 @@
         "query": {
           "text": "Preventing Ulcerative Colitis with Diet",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "A diet high in fat and meat but low in dietary fibre increases the genotoxic potential of 'faecal water'. To determine the effects of different diets on the genotoxicity of human faecal water, a diet",
+          "text": "A diet high in fat and meat but low in dietary fibre increases the genotoxic potential of 'faecal water'. To determine the effects of different diets on the genotoxicity of human faecal water, a diet rich in fat, meat and sugar but poor in vegetables and free of wholemeal products (diet 1) was consumed by seven healthy volunteers over a period of 12 days. One week after the end of this period, the volunteers started to consume a diet enriched with vegetables and wholemeal products but poor in fat and meat (diet 2) over a second period of 12 days. The genotoxic effect of faecal waters obtained after both diets was assessed with the single cell gel electrophoresis (Comet assay) using the human colon adenocarcinoma cell line HT29 clone 19a as a target. The fluorescence and length of the tails of the comet images reflects the degree of DNA damage in single cells. The mean DNA damage, expressed as the ratio of tail intensity (fluorescence in the tail) to total intensity of the comet after i",
           "full_chars": 1604,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -184,49 +184,17 @@
         "query": {
           "text": "Exploiting Autophagy to Live Longer",
           "full_chars": 35,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "mTOR: from growth signal integration to cancer, diabetes and ageing Preface In all eukaryotes, the target of rapamycin (TOR) signaling pathway couples energy and nutrient abundance to the execution of",
+          "text": "mTOR: from growth signal integration to cancer, diabetes and ageing Preface In all eukaryotes, the target of rapamycin (TOR) signaling pathway couples energy and nutrient abundance to the execution of cell growth and division, owing to the ability of TOR protein kinase to simultaneously sense energy, nutrients and stress, and, in metazoan, growth factors. Mammalian TOR complexes 1 and 2 (mTORC1 and mTORC2) exert their actions by regulating other important kinases, such as S6K and Akt. In the last few years, a significant advance in our understanding of the regulation and functions of mTOR has revealed its critical involvement in the onset and progression of diabetes, cancer and ageing.",
           "full_chars": 694,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-2699_v1",
-        "document_id": "MED-3249",
-        "query": {
-          "text": "Treating Multiple Sclerosis With the Swank MS Diet",
-          "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Effect of low saturated fat diet in early and late cases of multiple sclerosis. 144 multiple sclerosis patients took a low-fat diet for 34 years. For each of three categories of neurological disabilit",
-          "full_chars": 683,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-2649_v1",
-        "document_id": "MED-2791",
-        "query": {
-          "text": "Boosting the Bioavailability of Curcumin",
-          "full_chars": 40,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Bioavailability of curcumin: problems and promises. Curcumin, a polyphenolic compound derived from dietary spice turmeric, possesses diverse pharmacologic effects including anti-inflammatory, antioxid",
-          "full_chars": 1418,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

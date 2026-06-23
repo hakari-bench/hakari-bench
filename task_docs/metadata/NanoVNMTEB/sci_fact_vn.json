@@ -179,15 +179,15 @@
         "query_id": "1271",
         "document_id": "13768432",
         "query": {
-          "text": "Mức độ nghiêm trọng của bệnh tim liên quan đến amyloidosis có thể được mô tả bằng mức độ xuyên thành",
+          "text": "Mức độ nghiêm trọng của bệnh tim liên quan đến amyloidosis có thể được mô tả bằng mức độ xuyên thành của sự tăng cường gadolinium muộn trong MRI.",
           "full_chars": 145,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Giá trị tiên lượng của quá trình tăng cường muộn gadolinium của cộng hưởng từ tim mạch trong bệnh tim amyloidosis BỐN MẠT LÝ NHIỆM: Dự đoán và điều trị 2 loại bệnh Amyloidosis tim chính, chuỗi nhẹ của",
+          "text": "Giá trị tiên lượng của quá trình tăng cường muộn gadolinium của cộng hưởng từ tim mạch trong bệnh tim amyloidosis BỐN MẠT LÝ NHIỆM: Dự đoán và điều trị 2 loại bệnh Amyloidosis tim chính, chuỗi nhẹ của immunoglobulin (AL) và Amyloidosis transthyretin (ATTR), chịu ảnh hưởng đáng kể bởi sự liên quan đến tim. Chụp cộng hưởng từ tim với tăng cường Gadolinium muộn (LGE) là tiêu chuẩn tham chiếu cho chẩn đoán bệnh amyloidosis tim, nhưng khả năng phân tầng rủi ro của nó chưa được biết đến. PHƯƠNG PHÁP VÀ KẾT QUẢ: Hai trăm năm mươi đối tượng được tuyển chọn, gồm 122 bệnh nhân với bệnh amyloid ATTR, 9 người mang đột biến không triệu chứng, và 119 bệnh nhân với bệnh AL amyloidosis, đã trải qua LGE chụp cộng hưởng từ tim mạch máu. Các đối tượng được theo dõi trong thời gian trung bình 24±13 tháng. LGE được thực hiện với phục hồi nghịch đảo nhạy cảm pha (PSIR) và không có (chỉ độ lớn). Chúng được so sánh với thể tích ngoài tế bào đo bằng bản đồ T1. PSIR vượt trội hơn so với LGE phục hồi nghịch đảo",
           "full_chars": 2127,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -195,15 +195,15 @@
         "query_id": "1086",
         "document_id": "39281140",
         "query": {
-          "text": "Sildenafil cải thiện chức năng cương dương ở những người đàn ông bị rối loạn cương dương do sử dụng",
+          "text": "Sildenafil cải thiện chức năng cương dương ở những người đàn ông bị rối loạn cương dương do sử dụng thuốc chống trầm cảm SSRI.",
           "full_chars": 126,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Điều trị rối loạn chức năng tình dục liên quan đến thuốc chống trầm cảm với sildenafil: một thử nghiệm có đối chứng. Bất lực là tác dụng phụ phổ biến của thuốc chống trầm cảm thường gây nên tình trạng",
+          "text": "Điều trị rối loạn chức năng tình dục liên quan đến thuốc chống trầm cảm với sildenafil: một thử nghiệm có đối chứng. Bất lực là tác dụng phụ phổ biến của thuốc chống trầm cảm thường gây nên tình trạng không tuân thủ điều trị. MỤC ĐÍCH: Đánh giá hiệu quả của sildenafil citrate trong điều trị rối loạn chức năng sinh dục ở nam giới sử dụng thuốc ức chế tái hấp thu chọn lọc và không chọn lọc serotonin (SSRI). MÔ TẢ PHƯƠNG PHÁP, ĐỊA ĐIỂM VÀ BỆNH NHÂN: Thử nghiệm song song ngẫu nhiên, có nhóm đối chứng giả dược, được tiến hành tại 3 trung tâm y khoa đại học tại Mỹ từ ngày 1/11/2000 đến ngày 1/1/2001 trên 90 bệnh nhân ngoại trú nam giới (tuổi trung bình 45±8 tuổi) mắc chứng trầm cảm nặng đang giảm triệu chứng và rối loạn chức năng sinh dục do dùng SSRI. CÔNG VIỆC: Bệnh nhân được chỉ định ngẫu nhiên dùng sildenafil (n=45) hoặc giả dược (n=45) với liều linh hoạt bắt đầu từ 50 mg tăng lên 100 mg trước khi quan hệ tình dục trong 6 tuần. ĐỐI TƯỢNG ĐÁNH GIÁ CHỦ YẾU: Điểm đánh giá toàn diện lâm sàng",
           "full_chars": 2203,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -213,49 +213,17 @@
         "query": {
           "text": "Căng thẳng ethanol làm giảm biểu hiện của IBP trong vi khuẩn.",
           "full_chars": 61,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Sự điều chỉnh và chuyển mạch trao hóa trong quá trình tiến hóa trong phòng thí nghiệm của độ dung nạp cồn ở E. coli Hiểu được cơ sở di truyền của sự thích nghi là một vấn đề trung tâm trong sinh học.",
+          "text": "Sự điều chỉnh và chuyển mạch trao hóa trong quá trình tiến hóa trong phòng thí nghiệm của độ dung nạp cồn ở E. coli Hiểu được cơ sở di truyền của sự thích nghi là một vấn đề trung tâm trong sinh học. Tuy nhiên, việc chỉ ra các cơ chế phân tử cơ bản đã gây khó khăn vì những biến đổi về thể chất có thể dẫn đến nhiều đường dẫn, trong đó bất kỳ con đường nào cũng có thể đóng góp tương đối ít. Chúng tôi đã phát triển một khung thực nghiệm/tính toán kết hợp để giải quyết vấn đề này và sử dụng nó để hiểu được cơ sở di truyền của sự dung nạp cồn ở vi khuẩn Escherichia coli. Chúng tôi sử dụng định nghĩa thể chất để đo lường hậu quả của sự rối loạn tại một vị trí duy nhất trong bối cảnh tiếp xúc với cồn. Sau đó, phân tích tính toán ở cấp độ mô-đun được sử dụng để chỉ ra tổ chức của các vị trí góp phần thành các quá trình tế bào và đường dẫn điều hòa (ví dụ như điều hòa nồng độ muối và sinh tổng hợp thành tế bào) mà những biến đổi có tác động đáng kể đến sự dung nạp cồn. Đáng chú ý, chúng tôi phá",
           "full_chars": 1545,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "295",
-        "document_id": "20310709",
-        "query": {
-          "text": "Sự giao tiếp giữa tế bào dendritic (DCs) và tế bào bạch cầu lympho bản chất (ILCs) đóng vai trò quan",
-          "full_chars": 150,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Yếu tố phiên mã T-bet điều tiết viêm ruột được trung gian bởi tế bào lympho bẩm sinh thụ thể interleukin-7+ Chuột thiếu yếu tố phiên mã T-bet trong hệ miễn dịch bẩm sinh phát triển viêm đại tràng phụ",
-          "full_chars": 1347,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "238",
-        "document_id": "2251426",
-        "query": {
-          "text": "Các tế bào đang trải qua hạn chế methionine có thể kích hoạt miRNAs.",
-          "full_chars": 68,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "microRNAs: Một biện pháp bảo vệ chống lại sự hỗn loạn? Dữ liệu gần đây cho thấy rằng microRNAs (miRNAs) đóng vai trò quan trọng trong các phản ứng căng thẳng ngoài vai trò được công nhận hơn của chúng",
-          "full_chars": 554,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -135,8 +135,8 @@ The metadata JSON should include at least:
   `reranking_hybrid` candidate subset. This subset is top-100 plus an optional
   rank-101 safeguard positive when the top-100 contains no qrels positive.
 - Average query length and document length in characters.
-- Five deterministic query-positive examples from the actual Nano split when
-  five eligible pairs exist. Store the sampled query ID, positive document ID,
+- Three deterministic query-positive examples from the actual Nano split when
+  three eligible pairs exist. Store the sampled query ID, positive document ID,
   truncated visible text, original character count, visible limit, and
   truncation flag for both the query and the positive document.
 
@@ -186,7 +186,7 @@ in the task prose; keep structured values in the matching JSON metadata.
 
 ## Example Policy
 
-Show five query-positive examples when possible. Select five queries by
+Show three query-positive examples when possible. Select three queries by
 deterministic random sampling, not by taking the head of the query table. For
 each sampled query, use a positive qrel with matching query and corpus records.
 Use the repository script so regenerated pages stay stable:
@@ -207,15 +207,15 @@ Use a Markdown table with exactly two columns by default: `Query` and
 positive document text. Omit query/doc IDs, BM25 ranks, and extra count columns
 unless a task specifically needs them. The table should be rendered from
 metadata JSON, not maintained by hand. Append full character counts inline.
-Truncate queries to 100 visible characters and positive documents to 200 visible
+Truncate queries to 500 visible characters and positive documents to 1,000 visible
 characters by default. Use a compact count marker: untruncated text ends with
 `[29 chars]`; truncated text ends with an ellipsis plus
-`[200 / 2,444 chars]`.
+`[1,000 / 2,444 chars]`.
 
 ```markdown
 | Query | Positive document |
 | --- | --- |
-| What is ...? [12 chars] | The answer-bearing passage... [200 / 1,800 chars] |
+| What is ...? [12 chars] | The answer-bearing passage... [1,000 / 1,800 chars] |
 ```
 
 For extremely long-context, legal, patent, medical, code, or documentation tasks,
@@ -552,13 +552,13 @@ Minimal shape:
         "query": {
           "text": "visible query text",
           "full_chars": 18,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "visible positive document text",
           "full_chars": 1258,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
@@ -737,7 +737,7 @@ visible enough to affect interpretation.}
 
 ## Example Data
 
-{Five deterministic random query-positive examples. Generate with
+{Three deterministic random query-positive examples. Generate with
 `scripts/extract_benchmark_task_examples.py`. Use a two-column Markdown table,
 append `[N chars]` for untruncated text, and visibly truncate long content with
 `... [limit / full chars]`.}
@@ -849,8 +849,8 @@ Before publishing a batch:
    `reranking_hybrid` top-100 plus optional rank-101 safeguard. Do not replace
    dataset-provided BM25 with a fresh local BM25 run.
 7. Confirm positives-per-query statistics were computed from qrels.
-8. Confirm exactly five random examples come from the selected Nano split when
-   at least five qrel pairs are available.
+8. Confirm exactly three random examples come from the selected Nano split when
+   at least three qrel pairs are available.
 9. Confirm sample data shows actual query and positive document text, not a
    summary, and that long samples are visibly truncated with original character
    count.

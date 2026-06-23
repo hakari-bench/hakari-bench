@@ -177,30 +177,30 @@
         "query": {
           "text": "Mit welchem anderen Schauspieler spielte Penny Rae Bridges in einer Fernseh-Sitcom?",
           "full_chars": 83,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Penny Rae Bridges (geboren am 29. Juli 1990) ist eine amerikanische Schauspielerin. Sie hat in folgenden Serien mitgespielt: \"For Your Love\", \"Family Law\", \"Boy Meets World\" und \"The Parent 'Hood\". Be",
+          "text": "Penny Rae Bridges (geboren am 29. Juli 1990) ist eine amerikanische Schauspielerin. Sie hat in folgenden Serien mitgespielt: \"For Your Love\", \"Family Law\", \"Boy Meets World\" und \"The Parent 'Hood\". Bekannt wurde sie durch ihre Rolle in \"Half & Half\" als die junge Mona.",
           "full_chars": 269,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "5a7ccb3655429909bec7680b",
         "document_id": "16494827",
         "query": {
-          "text": "Wer hat Kaganoi Shigemochi ein Schwert überreicht, das vom Gründer der Muramasa-Schule hergestellt w",
+          "text": "Wer hat Kaganoi Shigemochi ein Schwert überreicht, das vom Gründer der Muramasa-Schule hergestellt wurde?",
           "full_chars": 105,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. August 1600) war ein japanischer Samurai der Azuchi-Momoyama-Zeit, der dem Oda-Clan diente. Er herrschte über die Burg Kaganoi. Während der Schlacht von Komaki u",
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. August 1600) war ein japanischer Samurai der Azuchi-Momoyama-Zeit, der dem Oda-Clan diente. Er herrschte über die Burg Kaganoi. Während der Schlacht von Komaki und Nagakute kämpfte Shigemochi unter seinem Vater Shigemune, der den Truppen von Oda Nobukatsu angehörte. Bald darauf wurde die Burg Kaganoi von den Truppen von Toyotomi Hideyoshi umzingelt; Shigemune ergab sich, und Shigemochi wurde von Hideyoshi als Bote angestellt und erhielt eine Pension von 10.000 'Koku'. Er besaß auch ein Schwert, das von Muramasa gefertigt wurde und das Hideyoshi ihm 1598 überreichte.",
           "full_chars": 611,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -209,49 +209,17 @@
         "query": {
           "text": "Welcher Film wurde von Joby Harold geschrieben und inszeniert und hat Musik von Samuel Sim?",
           "full_chars": 91,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Samuel Sim ist ein Film- und Fernsehkomponist. Er erlangte erstmals Anerkennung durch seine preisgekrönte Filmmusik zur BBC-Dramaserie \"Dunkirk\". Seitdem hat er die Musik für eine Vielzahl von Film- u",
+          "text": "Samuel Sim ist ein Film- und Fernsehkomponist. Er erlangte erstmals Anerkennung durch seine preisgekrönte Filmmusik zur BBC-Dramaserie \"Dunkirk\". Seitdem hat er die Musik für eine Vielzahl von Film- und Fernsehproduktionen komponiert, zuletzt den Film \"Awake\" für The Weinstein Company und die BBC/HBO-Dramaserie \"House of Saddam\". Seine jüngste gefeierte Musik ist der Soundtrack zu \"Home Fires\". \"Home Fires (Music from the Television Series)\" wurde am 6. Mai 2016 von Sony Classical Records veröffentlicht.",
           "full_chars": 509,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae63b2255429908198fa526",
-        "document_id": "46395880",
-        "query": {
-          "text": "Wann fand dieses College-Football-Spiel im Sun Life Stadium in Miami Gardens, Florida statt, bei dem",
-          "full_chars": 185,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Das Football-Team der Clemson Tigers aus dem Jahr 2015 vertrat die Clemson University in der Saison 2015 der NCAA Division I FBS. Die Tigers wurden von Head Coach Dabo Swinney angeführt, der in seinem",
-          "full_chars": 1192,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5a84fd085542994c784ddaba",
-        "document_id": "1854777",
-        "query": {
-          "text": "Wie heißt die Sammlung von Singles der amerikanischen Rock-’n’-Roll-Band, die auch unter welchem Nam",
-          "full_chars": 124,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Devil's Food ist ein Sampler der amerikanischen Rock 'n' Roll-Band Supersuckers, erschienen im April 2005 bei Mid-Fi Records.",
-          "full_chars": 125,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

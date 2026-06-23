@@ -169,13 +169,13 @@
         "query": {
           "text": "Wat zijn de beste drama tv-series?",
           "full_chars": 34,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Wat zijn de beste drama-tv-series?",
           "full_chars": 34,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -185,13 +185,13 @@
         "query": {
           "text": "Beschouw je wiskunde als kunst of als wetenschap?",
           "full_chars": 49,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Is wiskunde een kunst of een wetenschap?",
           "full_chars": 40,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -201,49 +201,17 @@
         "query": {
           "text": "Wat is volgens jou het beste klassieke muziekstuk aller tijden?",
           "full_chars": 63,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Wat is het beste klassieke muziekstuk aller tijden?",
           "full_chars": 51,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "9163",
-        "document_id": "74652",
-        "query": {
-          "text": "Wat zijn enkele van de beste GMAT-instituten in Delhi/NCR?",
-          "full_chars": 58,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Wat is het beste coachingsinstituut voor de GMAT in de regio Delhi NCR?",
-          "full_chars": 71,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "4293",
-        "document_id": "4292",
-        "query": {
-          "text": "Wat zijn de grootste sterktes van het Indiase leger?",
-          "full_chars": 52,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Wat zijn de grootste sterke punten van het Indiase leger?",
-          "full_chars": 57,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

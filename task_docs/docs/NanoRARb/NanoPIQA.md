@@ -67,8 +67,6 @@ Models should learn goal-to-action compatibility and object affordances. Hard ne
 | How to light a candle with a deep seated wick? [46 chars] | invert the candle upside down and use the lighter to reach into the wick to light it [84 chars] |
 | How to grow a plant. [20 chars] | Bury seed in soil and add 1 cup of water daily. [47 chars] |
 | How can I get free gym memberships? [35 chars] | Check with your health insurance co., many times they'll reimburse your gym costs. [82 chars] |
-| Neatly wrap up an extension cord. [33 chars] | Wrap the cord around your hand and elbow. [41 chars] |
-| napkin [6 chars] | hold ice cream scoop to keep hands warm [39 chars] |
 
 ### Source Reference Table
 

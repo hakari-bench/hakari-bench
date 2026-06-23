@@ -121,83 +121,51 @@
         "query_id": "d2e451fd-842f-4230-844c-14e6969a98b7",
         "document_id": "5408",
         "query": {
-          "text": "Quelles deux constatations de l'enquête réglementaire ont miné l'affirmation des opérateurs selon la",
+          "text": "Quelles deux constatations de l'enquête réglementaire ont miné l'affirmation des opérateurs selon laquelle ils pouvaient internaliser le rapprochement des transactions ?",
           "full_chars": 169,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Pour les parties notifiantes, il existe une solution sérieuse pour les ORM, celle de l'auto-approvisionnement puisque les ORM possèdent à l'intérieur de leur entreprise les capacités et le savoir-fair",
+          "text": "Pour les parties notifiantes, il existe une solution sérieuse pour les ORM, celle de l'auto-approvisionnement puisque les ORM possèdent à l'intérieur de leur entreprise les capacités et le savoir-faire nécessaires pour passer de l'externalisation de leurs services de compensation des données à une production en interne de ces services. L'enquête menée auprès des entreprises du secteur n'a toutefois pas confirmé cette façon de voir. Premièrement, elle a révélé qu'il n'existe aucun exemple récent connu d'un ORM passant de l'externalisation au travail en interne. Deuxièmement, les ORM qui ont répondu à l'enquête de la Commission ont aussi fait valoir que l'auto-approvisionnement n'était pas une option réaliste pour eux.",
           "full_chars": 726,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "1d984da4-7668-415a-b36e-e15688097efe",
         "document_id": "3496",
         "query": {
-          "text": "Quelle chambre régionale est nommée avec les institutions de l'Union pour promouvoir la parité comme",
+          "text": "Quelle chambre régionale est nommée avec les institutions de l'Union pour promouvoir la parité comme norme éthique de gouvernance politique ?",
           "full_chars": 141,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Pour être efficace et significative, la démocratie doit garantir la possibilité de pleine participation des citoyens aux décisions finales contraignantes qui concernent leur vie quotidienne. Tant que",
+          "text": "Pour être efficace et significative, la démocratie doit garantir la possibilité de pleine participation des citoyens aux décisions finales contraignantes qui concernent leur vie quotidienne. Tant que le principe d'inégalité entre les sexes au niveau de la prise de décision persistera, la démocratie au sein de l'UE ne pourra être pleinement réalisée. Le Cd R et les institutions européennes doivent s'engager conjointement à accélérer la réforme des processus démocratiques dans les États membres, et proposer les normes éthiques de la gouvernance politique dans un univers de plus en plus mondialisé. L'égalité entre les sexes fait partie de ces normes éthiques.",
           "full_chars": 664,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "02de25e5-fb65-43e7-8488-6eb2b1de2692",
         "document_id": "2934",
         "query": {
-          "text": "Quelles deux clauses la Commission, dans l'évaluation préliminaire, a‑t‑elle jugées potentiellement",
+          "text": "Quelles deux clauses la Commission, dans l'évaluation préliminaire, a‑t‑elle jugées potentiellement incompatibles avec les règles de concurrence CE et EEE ?",
           "full_chars": 156,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Il ressort de l'évaluation préliminaire de la Commission que deux des clauses de la convention soulèvent des doutes sérieux quant à leur compatibilité avec l'article 81 du traité CE et l'article 53 de",
+          "text": "Il ressort de l'évaluation préliminaire de la Commission que deux des clauses de la convention soulèvent des doutes sérieux quant à leur compatibilité avec l'article 81 du traité CE et l'article 53 de l'accord EEE. La première est la clause 9(a), qui concerne l'octroi de remises par les sociétés de gestion collective aux sociétés d'enregistrement dans le cadre d'accords de licence centralisée (licences multi-répertoire uniques pour l'ensemble du territoire de l'EEE). La seconde est la clause 7(a)(i), qui porte sur la capacité des sociétés de gestion collective à s'engager dans des activités commerciales d'édition ou de production d'enregistrements.",
           "full_chars": 656,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f06ac4c5-5a27-4cbc-930b-7b70f67a3e4f",
-        "document_id": "1317",
-        "query": {
-          "text": "Quel pays a omis d'appliquer les règles de reconnaissance de l'UE aux professions sanitaires régleme",
-          "full_chars": 122,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "juger, qu'en n'omettant de prendre les mesures législatives et réglementaires nécessaires, ou de les communiquer à la Commission, la République fédérale d'Allemagne a méconnu ses obligations de transp",
-          "full_chars": 795,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4a247f4b-e6e3-469d-83d1-4b09a9eede99",
-        "document_id": "7818",
-        "query": {
-          "text": "Quelle pièce de charcuterie dont l'étymologie remonte à des termes désignant des chasseurs est une r",
-          "full_chars": 138,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Le nom kiełbasa myśliwska reflète les caractéristiques spécifiques du produit. Les caractéristiques spécifiques exprimées par ce nom transparaissent dans l’origine étymologique de ce dernier, qui vien",
-          "full_chars": 730,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

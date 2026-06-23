@@ -165,15 +165,15 @@
         "query_id": "412",
         "document_id": "Paleocene",
         "query": {
-          "text": "Desde 1970 hasta 1998 hubo un período de calentamiento que elevó las temperaturas aproximadamente 0.",
+          "text": "Desde 1970 hasta 1998 hubo un período de calentamiento que elevó las temperaturas aproximadamente 0.4 grados Celsius, lo que dio origen al movimiento alarmista sobre el calentamiento global.",
           "full_chars": 190,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "El Paleoceno (pronunciado /ˈpæliəˌsiːn/ o /ˈpæ - , - lioʊ - /) o Paleoceno, el \"reciente antiguo\", es una época geológica que duró aproximadamente desde hace 66 a 56 millones de años. Es la primera ép",
+          "text": "El Paleoceno (pronunciado /ˈpæliəˌsiːn/ o /ˈpæ - , - lioʊ - /) o Paleoceno, el \"reciente antiguo\", es una época geológica que duró aproximadamente desde hace 66 a 56 millones de años. Es la primera época del Período Paleógeno en la Era Cenozoica moderna. Al igual que muchos períodos geológicos, las capas que definen el inicio y el fin de la época están bien identificadas, pero las edades exactas siguen siendo inciertas. La Época del Paleoceno abarca dos eventos importantes en la historia de la Tierra. Comenzó con el evento de extinción masiva al final del Cretácico, conocido como la frontera Cretácico-Paleógeno (K-Pg). Este fue un tiempo marcado por la desaparición de los dinosaurios no aviares, los grandes reptiles marinos y gran parte de la fauna y flora. La extinción de los dinosaurios dejó nichos ecológicos vacíos en todo el mundo. El Paleoceno terminó con el Máximo Térmico del Paleoceno-Eoceno, un intervalo geológicamente breve (aproximadamente 0.2 millones de años) caracterizado",
           "full_chars": 1219,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -183,65 +183,33 @@
         "query": {
           "text": "De hecho, la tendencia, aunque no es estadísticamente significativa, está a la baja.",
           "full_chars": 84,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "El ciclo solar, o ciclo de actividad magnética solar, es el cambio casi periódico de 11 años en la actividad del Sol (incluyendo variaciones en los niveles de radiación solar y la expulsión de materia",
+          "text": "El ciclo solar, o ciclo de actividad magnética solar, es el cambio casi periódico de 11 años en la actividad del Sol (incluyendo variaciones en los niveles de radiación solar y la expulsión de material solar) y en su apariencia (cambios en el número y tamaño de las manchas solares, las llamaradas y otras manifestaciones). Estos cambios han sido observados (por variaciones en la apariencia del Sol y por fenómenos observados en la Tierra, como las auroras boreales) durante siglos. Los cambios en el Sol provocan efectos en el espacio, en la atmósfera y en la superficie terrestre. Aunque es la variable dominante en la actividad solar, también ocurren fluctuaciones no periódicas.",
           "full_chars": 683,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "109",
         "document_id": "Sea_level",
         "query": {
-          "text": "Los niveles del mar locales y regionales siguen mostrando su variabilidad natural, subiendo en algun",
+          "text": "Los niveles del mar locales y regionales siguen mostrando su variabilidad natural, subiendo en algunas áreas y bajando en otras.",
           "full_chars": 128,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "El nivel medio del mar (NMM) (abreviado simplemente como nivel del mar) es el nivel promedio de la superficie de uno o más de los océanos de la Tierra, a partir del cual se pueden medir alturas como l",
+          "text": "El nivel medio del mar (NMM) (abreviado simplemente como nivel del mar) es el nivel promedio de la superficie de uno o más de los océanos de la Tierra, a partir del cual se pueden medir alturas como las elevaciones. El NMM es un tipo de dato vertical estándar geodésico que se utiliza, por ejemplo, como dato de referencia en cartografía y navegación marítima, o, en aviación, como el nivel del mar estándar en el que se mide la presión atmosférica para calibrar la altitud y, en consecuencia, los niveles de vuelo de las aeronaves. Un estándar común y relativamente sencillo del nivel medio del mar es el punto medio entre la marea baja media y la marea alta media en una ubicación particular. Los niveles del mar pueden verse afectados por muchos factores y se sabe que han variado considerablemente a lo largo de escalas de tiempo geológicas. La medición cuidadosa de las variaciones en el NMM puede ofrecer información sobre el cambio climático en curso, y el aumento del nivel del mar ha sido am",
           "full_chars": 1181,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "95",
-        "document_id": "Effects_of_global_warming",
-        "query": {
-          "text": "Los expertos en clima afirman que ciertos elementos del caso del huracán Harvey sugieren que el cale",
-          "full_chars": 160,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Los efectos del calentamiento global son los cambios ambientales y sociales causados (directa o indirectamente) por las emisiones humanas de gases de efecto invernadero. Existe un consenso científico",
-          "full_chars": 1501,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "1774",
-        "document_id": "Attribution_of_recent_climate_change",
-        "query": {
-          "text": "El experimento CLOUD del CERN solo probó una tercera parte de uno de los cuatro requisitos necesario",
-          "full_chars": 205,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "La atribución del cambio climático reciente se refiere al esfuerzo por determinar científicamente los mecanismos responsables de los cambios climáticos recientes en la Tierra, comúnmente conocidos com",
-          "full_chars": 2352,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

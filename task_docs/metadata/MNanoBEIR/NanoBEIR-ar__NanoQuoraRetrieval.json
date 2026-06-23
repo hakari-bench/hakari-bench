@@ -167,13 +167,13 @@
         "query": {
           "text": "هل من الجيد أن يضحك الشخص على نكاته الخاصة؟",
           "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "هل من الغريب أن أضحك على نكتي الخاصة؟",
           "full_chars": 37,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -183,13 +183,13 @@
         "query": {
           "text": "ما هو أفضل كذبة اخترعتها في حياتك؟",
           "full_chars": 34,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "ما هي أكبر كذبة اخترعتها في حياتك؟",
           "full_chars": 34,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -199,49 +199,17 @@
         "query": {
           "text": "لماذا يقترح موقع كورا باستمرار إجابات تهاجم دونالد ترامب في محتوى صفحتي؟",
           "full_chars": 72,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "لماذا تبدو إجابات موقع كورا حول أسئلة عن دونالد ترامب موضوعية ومتحيزة؟",
           "full_chars": 70,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "كيف يمكنني أن أصبح قويًا جسديًا؟",
-          "full_chars": 32,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "كيف أصبح قويًا جسديًا؟",
-          "full_chars": 22,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "كيف يعمل قمر صناعي كمي؟",
-          "full_chars": 23,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "كيف يعمل قمر صناعي كمي؟ وما هي بعض الأغراض الرئيسية له؟",
-          "full_chars": 55,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

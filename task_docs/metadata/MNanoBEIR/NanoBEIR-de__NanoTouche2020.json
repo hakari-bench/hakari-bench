@@ -179,13 +179,13 @@
         "query": {
           "text": "Ist Hausaufgaben sinnvoll?",
           "full_chars": 26,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten. 1. Hausaufgaben unterstützen Lernende, die durch Handeln lernen. Es ist allgem",
+          "text": "Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten. 1. Hausaufgaben unterstützen Lernende, die durch Handeln lernen. Es ist allgemein anerkannt, dass es drei Arten von Lernenden gibt: solche, die durch Hören lernen, solche, die durch Sehen lernen, und solche, die durch Tun lernen. Während viele zufrieden sind, Anweisungen zu hören oder zu sehen, benötigen einige tatsächlich selbst aktiv zu werden. Daher sind Hausaufgaben für diese Gruppe von Vorteil, da das Lernen durch Handeln erfolgt. 2. Hausaufgaben festigen den Unterricht. Obwohl viele wahrscheinlich froh wären, keine Hausaufgaben zu haben, würde die Qualität der erhaltenen Bildung sicherlich leiden, wenn sie abgeschafft würden. Ob es sich um Hausaufgaben zum Lesen, Facharbeiten oder Ähnliches handelt, all das ist darauf ausgelegt, den Unterricht im Gedächtnis der Schüler zu verankern. Schließlich sind diejenigen, die ihre Hausaufgaben machen, akademisch erfolgre",
           "full_chars": 4185,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -195,13 +195,13 @@
         "query": {
           "text": "Sollten verschreibungspflichtige Medikamente direkt an Verbraucher beworben werden dürfen?",
           "full_chars": 90,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken. Zum Beispiel wird Lunesta durch einen Schmetterling beworben, der durch ein Schlafzimmerfenster fliegt,",
+          "text": "Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken. Zum Beispiel wird Lunesta durch einen Schmetterling beworben, der durch ein Schlafzimmerfenster fliegt, über einer friedlich schlafenden Person. Tatsächlich hilft Lunesta Patienten, 15 Minuten schneller einzuschlafen nach sechs Monaten der Behandlung und verschafft ihnen 37 Minuten mehr Schlaf pro Nacht. Die Mehrheit der Werbeanzeigen basiert auf emotionalen Appellen, aber nur wenige enthalten Informationen über die Ursachen der Erkrankung, Risikofaktoren oder wichtige Lebensstiländerungen. In einer Studie von 38 pharmazeutischen Werbeanzeigen fanden Forscher heraus, dass 82 Prozent eine faktische Aussage machten und 86 Prozent rationale Argumente für die Produktnutzung lieferten. Nur 26 Prozent beschrieben die Ursachen der Erkrankung, Risikofaktoren oder die Häufigkeit. [1] Somit geben sie den Patienten keine ausgewogene Information, die sie darauf aufmerksam machen würde, dass die Einnahme",
           "full_chars": 2016,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -211,49 +211,17 @@
         "query": {
           "text": "Welche Impfungen sind für Kinder notwendig?",
           "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... Regierungen sollten kein Recht haben, in die gesundheitlichen Entscheidungen einzug",
+          "text": "Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... Regierungen sollten kein Recht haben, in die gesundheitlichen Entscheidungen einzugreifen, die Eltern für ihre Kinder treffen. Laut einer Umfrage der University of Michigan aus dem Jahr 2010 glauben 31% der Eltern, dass sie das Recht haben sollten, vorgeschriebene Schulimpfungen für ihre Kinder abzulehnen. Viele Eltern haben religiöse Bedenken gegen Impfungen. Eltern, die aus religiösen Gründen gegen Impfungen sind, zu zwingen, ihre Kinder zu impfen, würde das 1. Verfassungszusatz verletzen, der den Bürgern das Recht auf freie Religionsausübung garantiert. Impfungen sind in vielen Fällen, in denen die Gefahr eines tödlichen Krankheitsverlaufs gering ist, oft überflüssig. Im frühen 19. Jahrhundert sank die Sterblichkeitsrate bei Kinderkrankheiten wie Keuchhusten, Masern und Scharlach drastisch, bevor Impfungen verfügbar wurden. Diese sinkende Sterblichkeitsrate wird verbe",
           "full_chars": 4993,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8",
-        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
-        "query": {
-          "text": "Sollte Abtreibung legal sein?",
-          "full_chars": 29,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Abtreibungen sollten legal sein, da die Persönlichkeit erst beginnt, wenn ein Fötus lebensfähig ist oder nach der Geburt. Laut dem Obersten Gerichtshof der USA erhält eine Person ihr Alter, wenn sie a",
-          "full_chars": 318,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "26",
-        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
-        "query": {
-          "text": "Verbessern standardisierte Tests die Qualität der Bildung?",
-          "full_chars": 58,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Die SAT, ACT und andere standardisierte Tests bieten mehr Einblicke in die Vorbereitung eines Schülers auf das Studium an Elite-Universitäten als der Notendurchschnitt in der High School. Daher sollte",
-          "full_chars": 4955,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

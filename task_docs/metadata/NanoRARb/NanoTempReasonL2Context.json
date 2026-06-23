@@ -119,15 +119,15 @@
         "query_id": "TR2-q-66",
         "document_id": "TR2-d-65",
         "query": {
-          "text": "Question: Which position did Patricia de Lille hold in Sep, 2015? Facts: Patricia de Lille holds the",
+          "text": "Question: Which position did Patricia de Lille hold in Sep, 2015? Facts: Patricia de Lille holds the position of Member of Provincial Parliament of Western Cape from Sep, 2010 to May, 2011. Patricia de Lille holds the position of mayor of Cape Town from Jun, 2011 to Oct, 2018. Patricia de Lille holds the position of member of the National Assembly of South Africa from May, 2019 to Dec, 2022. Context: Patricia de LillePatricia de Lille (née Lindt; born 17 February 1951) is a South African politic",
           "full_chars": 11244,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
           "text": "mayor of Cape Town",
           "full_chars": 18,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -135,15 +135,15 @@
         "query_id": "TR2-q-123",
         "document_id": "TR2-d-123",
         "query": {
-          "text": "Question: Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? Facts: Lord Douglas",
+          "text": "Question: Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? Facts: Lord Douglas Gordon-Hallyburton holds the position of Member of the 13th Parliament of the United Kingdom from Jul, 1837 to Jun, 1841. Lord Douglas Gordon-Hallyburton holds the position of Member of the 11th Parliament of the United Kingdom from Dec, 1832 to Dec, 1834. Lord Douglas Gordon-Hallyburton holds the position of Member of the 10th Parliament of the United Kingdom from Jan, 1832 to Dec, 1832. Lord Dou",
           "full_chars": 2981,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
           "text": "Member of the 11th Parliament of the United Kingdom",
           "full_chars": 51,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -151,51 +151,19 @@
         "query_id": "TR2-q-103",
         "document_id": "TR2-d-103",
         "query": {
-          "text": "Question: Who was the head of Russia in Jul, 1999? Facts: Mikhail Kasyanov is the head of the govern",
+          "text": "Question: Who was the head of Russia in Jul, 1999? Facts: Mikhail Kasyanov is the head of the government of Russia from May, 2000 to Feb, 2004. Viktor Khristenko is the head of the government of Russia from Feb, 2004 to Mar, 2004. Sergey Kiriyenko is the head of the government of Russia from Mar, 1998 to Aug, 1998. Yegor Gaidar is the head of the government of Russia from Jun, 1992 to Dec, 1992. Dmitry Medvedev is the head of the government of Russia from May, 2012 to Jan, 2020. Viktor Zubkov is",
           "full_chars": 71906,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
           "text": "Sergei Stepashin",
           "full_chars": 16,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "TR2-q-9",
-        "document_id": "TR2-d-5",
-        "query": {
-          "text": "Question: Which team did Glynn Snodin play for in Jan, 1992? Facts: Glynn Snodin plays for Heart of",
-          "full_chars": 5484,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Leeds United F.C.",
-          "full_chars": 17,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "TR2-q-161",
-        "document_id": "TR2-d-182",
-        "query": {
-          "text": "Question: Who was the head of Romania in May, 1935? Facts: Take Ionescu is the head of the governmen",
-          "full_chars": 75421,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Gheorghe Tătărescu",
-          "full_chars": 18,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

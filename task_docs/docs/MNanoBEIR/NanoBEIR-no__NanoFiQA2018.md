@@ -128,11 +128,9 @@ financial QA relevance rather than generic passage similarity.
 
 | Query | Positive document |
 | --- | --- |
-| Hvilken type avkastning gir Vanguard? [37 chars] | Fra Vanguards side - Dette virket som den enkleste siden S&P-data er lett å finne. Jeg bruker MoneyChimp for å bekrefte at Vanguards side tilbyr CAGR, ikke aritmetisk gjennomsnitt. Merk: Vanguard oppg... [200 / 381 chars] |
+| Hvilken type avkastning gir Vanguard? [37 chars] | Fra Vanguards side - Dette virket som den enkleste siden S&P-data er lett å finne. Jeg bruker MoneyChimp for å bekrefte at Vanguards side tilbyr CAGR, ikke aritmetisk gjennomsnitt. Merk: Vanguard oppgir 'For amerikanske aksjemarkedets avkastning, bruker vi Standard & Poor's 90 fra 1926 til 3. mars 1957,' mens MoneyChimp bruker data fra Nobelprisvinneren Robert Shillers nettsted. [381 chars] |
 | Hva er skattekonsekvensene av å frilanse? [41 chars] | Hvis du har inntekt i USA, må du betale amerikansk inntektsskatt på det, med mindre det finnes en avtale mellom ditt land og USA som sier noe annet. [148 chars] |
-| Hva betyr høy eller lav volum? [30 chars] | Den daglige volumet sammenlignes vanligvis med gjennomsnittlig daglig volum over de siste 50 dagene for en aksje. Høyt volum regnes vanligvis som 2 eller flere ganger gjennomsnittlig daglig volum over... [200 / 730 chars] |
-| Hvordan bruke kredittkortpoeng til å dekke skattefradragsberettigede bedriftsutgifter? [86 chars] | For enkelhets skyld, la oss starte med å se på kontanttilbakebetaling. Generelt sett er kontanttilbakebetaling fra kredittkort for personlig bruk ikke skattepliktig, men for bedriftsbruk er det skatte... [200 / 3,648 chars] |
-| Hvordan skal jeg skatteføre meg når jeg er frilanser? [53 chars] | For skatteformål må du registrere deg både som ansatt (med T4-skjemaer og automatisk trekk i skatt) og som selvstendig næringsdrivende. Jeg var i samme situasjon selv i fjor. Ansatt og selvstendig nær... [200 / 715 chars] |
+| Hva betyr høy eller lav volum? [30 chars] | Den daglige volumet sammenlignes vanligvis med gjennomsnittlig daglig volum over de siste 50 dagene for en aksje. Høyt volum regnes vanligvis som 2 eller flere ganger gjennomsnittlig daglig volum over de siste 50 dagene for den aktuelle aksjen. Noen håndlere kan imidlertid sette kriteriet til 3x eller 4x gjennomsnittlig daglig volum (ADV) for å bekrefte et bestemt mønster eller hendelse. Volumet sammenlignes med ADV for den aktuelle aksjen, da sammenligning med volumet til andre aksjer ville være som å sammenligne epler med pærer. Forskjellige selskaper vil ha forskjellige antall aksjer i omløp, forskjellige nivåer av likviditet og forskjellige nivåer av volatilitet, noe som alle kan påvirke volumet som handles hver dag. [730 chars] |
 
 ### Public Sources
 

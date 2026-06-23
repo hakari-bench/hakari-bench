@@ -147,13 +147,13 @@
         "query": {
           "text": "Keith Godchaux knew the Grateful Dead.",
           "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "The Grateful Dead was an American rock band formed in 1965 in Palo Alto , California . Ranging from quintet to septet , the band is known for its unique and eclectic style , which fused elements of ro",
+          "text": "The Grateful Dead was an American rock band formed in 1965 in Palo Alto , California . Ranging from quintet to septet , the band is known for its unique and eclectic style , which fused elements of rock , psychedelia , experimental music , modal jazz , country , folk , bluegrass , blues , reggae , and space rock , for live performances of lengthy instrumental jams , and for their devoted fan base , known as `` Deadheads '' . `` Their music , '' writes Lenny Kaye , `` touches on ground that most other groups do n't even know exists . '' These various influences were distilled into a diverse and psychedelic whole that made the Grateful Dead `` the pioneering Godfathers of the jam band world '' . The band was ranked 57th by Rolling Stone magazine in its The Greatest Artists of All Time issue . The band was inducted into the Rock and Roll Hall of Fame in 1994 and a recording of their May 8 , 1977 performance at Cornell University 's Barton Hall was added to the National Recording Registry",
           "full_chars": 3024,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -163,14 +163,14 @@
         "query": {
           "text": "Taarak Mehta Ka Ooltah Chashmah is a sitcom.",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Taarak Mehta Ka Ooltah Chashmah ( English : Taarak Mehta 's Different Perspective ) is India 's longest running sitcom serial produced by Neela Tele Films Private Limited . The show went on-air on Jul",
+          "text": "Taarak Mehta Ka Ooltah Chashmah ( English : Taarak Mehta 's Different Perspective ) is India 's longest running sitcom serial produced by Neela Tele Films Private Limited . The show went on-air on July 28 , 2008 . It airs from Monday to Friday at 8:30 pm , with its repeat telecast at 11:00 pm and the next day at 3:00 pm on SAB TV . The show started its re-run on Sony Pal from November 2 , 2015 at 4:30 pm and 8:00 pm everyday . The show is based on the column Duniya Ne Oondha Chashma written by columnist and journalist Taarak Mehta for Gujarati weekly magazine Chitralekha .",
           "full_chars": 581,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -179,49 +179,17 @@
         "query": {
           "text": "Secret and technologically advanced airplanes were produced in Burbank, California.",
           "full_chars": 83,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Burbank is a city in Los Angeles County in Southern California , United States , 12 mi northwest of downtown Los Angeles . The population at the 2010 census was 103,340 . Billed as the `` Media Capita",
+          "text": "Burbank is a city in Los Angeles County in Southern California , United States , 12 mi northwest of downtown Los Angeles . The population at the 2010 census was 103,340 . Billed as the `` Media Capital of the World '' and only a few miles northeast of Hollywood , numerous media and entertainment companies are headquartered or have significant production facilities in Burbank , including The Walt Disney Company , Warner Bros. . Entertainment , Nickelodeon Animation Studios , NBC , Cartoon Network Studios with the West Coast branch of Cartoon Network , and Insomniac Games . The city is also home to Bob Hope Airport . It was the location of Lockheed 's Skunk Works , which produced some of the most secret and technologically advanced airplanes , including the U-2 spy planes that uncovered the Soviet Union missile components in Cuba in October 1962 . Burbank consists of two distinct areas : a downtown/foothill section , in the foothills of the Verdugo Mountains , and the flatland section .",
           "full_chars": 1401,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "85454",
-        "document_id": "Julio-Claudian_dynasty",
-        "query": {
-          "text": "Nero is a person.",
-          "full_chars": 17,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "The term Julio-Claudian dynasty refers to the first five Roman emperors -- Augustus , Tiberius , Caligula , Claudius , and Nero -- or the family to which they belonged . They ruled the Roman Empire fr",
-          "full_chars": 2069,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "172320",
-        "document_id": "Scream_2",
-        "query": {
-          "text": "Scream 2 is exclusively a German film.",
-          "full_chars": 38,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Scream 2 is a 1997 American slasher film directed by Wes Craven and written by Kevin Williamson . It stars David Arquette , Neve Campbell , Courteney Cox , Sarah Michelle Gellar , Jamie Kennedy , Laur",
-          "full_chars": 2542,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

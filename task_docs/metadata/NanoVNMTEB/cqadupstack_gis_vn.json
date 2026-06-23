@@ -170,30 +170,30 @@
         "query": {
           "text": "Tải nhiều tập tin shapefile vào PostGIS",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "lô hàng tải shp vào postgis > **Có thể trùng lặp:** > Tải khối nhiều tập tin hình dạng vào PostGIS Liệu có khả năng tải khối tập tin shp vào postgis. Hiện tại tôi đang thử nghiệm với postgis, qgis và",
+          "text": "lô hàng tải shp vào postgis > **Có thể trùng lặp:** > Tải khối nhiều tập tin hình dạng vào PostGIS Liệu có khả năng tải khối tập tin shp vào postgis. Hiện tại tôi đang thử nghiệm với postgis, qgis và geoserver (như một máy chủ arcgis tiềm năng, thay thế arcmap và arcsde) và muốn tôi có thể chạy một tập tin lô (tôi đoán) sẽ tải lên một số tập tin shp (xuất khẩu từ arcsde) ghi đè các tập tin shapfile / bảng hiện có trong postgis. Về hiệu ứng postgis sẽ là một cơ sở dữ liệu nô lệ (cho thời gian hiện tại). Med",
           "full_chars": 515,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "14142",
         "document_id": "7839",
         "query": {
-          "text": "Có công cụ nào có thể lấy lại hệ tọa độ được dùng để tạo ra một shapefile khi file prj bị thiếu khôn",
+          "text": "Có công cụ nào có thể lấy lại hệ tọa độ được dùng để tạo ra một shapefile khi file prj bị thiếu không?",
           "full_chars": 102,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Xác định hệ tọa độ của Shapefile khi chưa biết? Tôi có một Shapefile nhưng hệ tọa độ của nó là Unknown, và không có tệp *.prj. Làm thế nào tôi có thể xác định được bây giờ? Có công cụ nào có thể giúp",
+          "text": "Xác định hệ tọa độ của Shapefile khi chưa biết? Tôi có một Shapefile nhưng hệ tọa độ của nó là Unknown, và không có tệp *.prj. Làm thế nào tôi có thể xác định được bây giờ? Có công cụ nào có thể giúp đỡ không?",
           "full_chars": 210,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -202,49 +202,17 @@
         "query": {
           "text": ".tif và .tfw sang GeoTIFF",
           "full_chars": 25,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "tfw tif to GeoTiff Làm thế nào để kết hợp một tệp .tif với một tệp .tfw để tạo GeoTiff? Có rất nhiều câu trả lời cho tôi sử dụng gdal, nhưng tôi không có ý tưởng. Vì vậy có ai có thể cung cấp một ví d",
+          "text": "tfw tif to GeoTiff Làm thế nào để kết hợp một tệp .tif với một tệp .tfw để tạo GeoTiff? Có rất nhiều câu trả lời cho tôi sử dụng gdal, nhưng tôi không có ý tưởng. Vì vậy có ai có thể cung cấp một ví dụ từng bước về cách thực hiện điều này không?",
           "full_chars": 246,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "92312",
-        "document_id": "24947",
-        "query": {
-          "text": "Chuyển đổi tệp CSV sang shapefile",
-          "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Làm thế nào để tôi chuyển đổi một tệp csv của dữ liệu WKT sang một tệp hình dạng sử dụng ogr2ogr? Câu hỏi này liên quan đến Shapefiles to Text. Tôi có một tệp csv, với một cột, tất cả các hàng tương ứ",
-          "full_chars": 619,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "34204",
-        "document_id": "68610",
-        "query": {
-          "text": "Làm thế nào để tạo các điểm tính năng với tọa độ chính xác?",
-          "full_chars": 59,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "QGIS thêm điểm sử dụng độ thập phân Khi giấy phép được bán, chúng tôi cần thêm vị trí sử dụng lat/long. Chúng tôi đang làm việc trong ArcView nhưng muốn chuyển sang QGIS- Mọi thứ tôi có thể tìm thấy d",
-          "full_chars": 539,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

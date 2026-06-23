@@ -121,13 +121,13 @@
         "query": {
           "text": "How to light a candle with a deep seated wick?",
           "full_chars": 46,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "invert the candle upside down and use the lighter to reach into the wick to light it",
           "full_chars": 84,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -137,13 +137,13 @@
         "query": {
           "text": "How to grow a plant.",
           "full_chars": 20,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Bury seed in soil and add 1 cup of water daily.",
           "full_chars": 47,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -153,49 +153,17 @@
         "query": {
           "text": "How can I get free gym memberships?",
           "full_chars": 35,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Check with your health insurance co., many times they'll reimburse your gym costs.",
           "full_chars": 82,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "piqa-q-9",
-        "document_id": "piqa-d-18",
-        "query": {
-          "text": "Neatly wrap up an extension cord.",
-          "full_chars": 33,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Wrap the cord around your hand and elbow.",
-          "full_chars": 41,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "piqa-q-161",
-        "document_id": "piqa-d-323",
-        "query": {
-          "text": "napkin",
-          "full_chars": 6,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "hold ice cream scoop to keep hands warm",
-          "full_chars": 39,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -168,14 +168,14 @@
         "query": {
           "text": "Wat is belangrijk bij adviseren?",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Zorg ervoor dat je weet hoe degene aan wie je advies geeft in elkaar steekt, zodat je je advies op de persoon of situatie kunt aanpassen. Ook is het belangrijk om je eigen mening op de achtergrond te",
+          "text": "Zorg ervoor dat je weet hoe degene aan wie je advies geeft in elkaar steekt, zodat je je advies op de persoon of situatie kunt aanpassen. Ook is het belangrijk om je eigen mening op de achtergrond te houden.",
           "full_chars": 207,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -184,14 +184,14 @@
         "query": {
           "text": "Wat is verschil tussen 2D-tekening en 3D-tekening van keukenontwerp?",
           "full_chars": 68,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Een 2D-tekening is in feite een plattegrond. Met deze 2D tekening kan je goed kijken of je alle ruimte optimaal benut. Ook krijg je een duidelijk beeld van de indeling. Als je tevreden bent met het 2D",
+          "text": "Een 2D-tekening is in feite een plattegrond. Met deze 2D tekening kan je goed kijken of je alle ruimte optimaal benut. Ook krijg je een duidelijk beeld van de indeling. Als je tevreden bent met het 2D keukenontwerp wordt er een 3D tekening gemaakt met behulp van ontwerpsoftware. Een 3D keukenontwerp is ontzettend realistisch en geeft echt een kijkje in de keuken.",
           "full_chars": 365,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -200,49 +200,17 @@
         "query": {
           "text": "Hoe programmeer ik NFC-tags?",
           "full_chars": 28,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Dit doe je gemakkelijk met software op je NFC ondersteunende telefoon. Hier vind je meer informatie.",
           "full_chars": 100,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
-        }
-      },
-      {
-        "query_id": "78465",
-        "document_id": "89931",
-        "query": {
-          "text": "Heb je voor Japan een visum nodig?",
-          "full_chars": 34,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Nee, je hebt voor Japan geen visum nodig. Je mag zonder visum 90 dagen in Japan verblijven. Je betaalt ook geen kosten om Japan in te komen. Wil je langer dan 90 dagen naar Japan, dan moet je wel een",
-          "full_chars": 249,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "205971",
-        "document_id": "159381",
-        "query": {
-          "text": "Met welk type foto's kan ik MijnKaart maken?",
-          "full_chars": 44,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Je kan MijnKaart maken met foto's van alle recente digitale toestellen. Als je je foto uploadt, vertelt een icoon je of de resolutie van je afbeelding hoog genoeg is.Rood icoon: Je afbeelding is echt",
-          "full_chars": 568,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

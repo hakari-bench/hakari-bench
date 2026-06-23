@@ -127,13 +127,13 @@
         "query": {
           "text": "ユースホステルに泊まるのに年齢制限はある？",
           "full_chars": 21,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "ユースホステル 元来、青少年の旅行者向けに開設された宿泊施設のため、ドイツ南部のバイエルン州では2004年まで原則満26歳までの利用とする年齢制限があった。2005年からは世界中の全ての地域・国で、利用できる年齢に上限を設けていない。",
           "full_chars": 118,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -143,14 +143,14 @@
         "query": {
           "text": "アニー・ウッド・ベサントはいつ生まれた？",
           "full_chars": 20,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "アニー・ベサント アニー・ウッド・ベサント（Annie Wood Besant, ベザント</b>とも表記されるが発音は「bɛsənt」, 1847年10月1日 ロンドン、クラパム - 1933年9月20日 インド、アディヤール）は、イギリスの神智学徒、女性の権利（Women's rights）積極行動主義者、作家、演説家、アイルランドおよびインドの自治支援者、神智学協会第二代会長、英国フリーメー",
+          "text": "アニー・ベサント アニー・ウッド・ベサント（Annie Wood Besant, ベザント</b>とも表記されるが発音は「bɛsənt」, 1847年10月1日 ロンドン、クラパム - 1933年9月20日 インド、アディヤール）は、イギリスの神智学徒、女性の権利（Women's rights）積極行動主義者、作家、演説家、アイルランドおよびインドの自治支援者、神智学協会第二代会長、英国フリーメーソンの国際組織レ・ドロワ・ユメー創設者[1]、インド国民会議派議長（1917年）。",
           "full_chars": 242,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -159,49 +159,17 @@
         "query": {
           "text": "サーミ人の土着信仰は何？",
           "full_chars": 12,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "ノアイデ ノアイデ</b><!-- ({{lang-sme|noaidi}}, {{lang-smj|noajdde}}, {{lang-sma|nåejttie}}, {{lang-sms|nōjjd}}, {{lang-sjt|niojte}}, {{lang-sjd|noojd/nuojd}}) -->とは、スカンジナビア北部からコラ半島にかけて居住するサーミ人の土着宗教におけるシャーマンで",
+          "text": "ノアイデ ノアイデ</b><!-- ({{lang-sme|noaidi}}, {{lang-smj|noajdde}}, {{lang-sma|nåejttie}}, {{lang-sms|nōjjd}}, {{lang-sjt|niojte}}, {{lang-sjd|noojd/nuojd}}) -->とは、スカンジナビア北部からコラ半島にかけて居住するサーミ人の土着宗教におけるシャーマンである。当時の行政、司法からは、ノアイデの行う儀式などはたとえばウィッチクラフトのように神秘的なもの（非科学的）であり反権力的であるとされたため、17世紀までにほとんどが衰退した。かつて行われていた儀式などはシベリアに見られるものと共通している[1]。",
           "full_chars": 326,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4820",
-        "document_id": "19886#21",
-        "query": {
-          "text": "市民オンブズマンは何を対象に監視していますか？",
-          "full_chars": 23,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "公安調査庁 また、一部の労働組合や労働争議支援団体、反戦運動・反基地運動、原子力撤廃・反核運動、市民オンブズマンなど行政監視グループ、部落解放・女性解放など人権擁護運動（アムネスティ・インターナショナル、自由法曹団、日本国民救援会、青年法律家協会等）、消費者団体（生活協同組合や産地直送運動・環境保護団体）、言論団体（日本ペンクラブ、日本ジャーナリスト会議等）などについても情報収集を行っているとされ",
-          "full_chars": 236,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4701",
-        "document_id": "6071#0",
-        "query": {
-          "text": "マルティン・ルーサー・キング・ジュニアはいつ死んだ？",
-          "full_chars": 26,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "マーティン・ルーサー・キング・ジュニア マーティン・ルーサー・キング・ジュニア（English: Martin Luther King, Jr.、1929年1月15日 - 1968年4月4日）は、アメリカ合衆国のプロテスタントバプテスト派の牧師である。",
-          "full_chars": 127,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

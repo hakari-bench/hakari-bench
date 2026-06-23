@@ -152,13 +152,13 @@
         "query": {
           "text": "¿Cómo es la arquitectura del caravasar de Orbelián?",
           "full_chars": 51,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Caravasar de Orbelian El caravasar está construido con bloques de basalto.",
           "full_chars": 75,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -168,14 +168,14 @@
         "query": {
           "text": "¿Cómo llaman los judíos al Pentateuco?",
           "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Pentateuco Se corresponde con los que en la tradición hebrea forman la \"Torá\" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el \"Tanaj\", el cual",
+          "text": "Pentateuco Se corresponde con los que en la tradición hebrea forman la \"Torá\" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el \"Tanaj\", el cual es considerado sagrado por todas las religiones abrahámicas (judaísmo, cristianismo e islam). No obstante lo anterior y que es uno de sus tres textos sagrados, los musulmanes creen que el texto sufrió corrupción (\"tahrif\") por los escribas judíos y cristianos por lo que no confían del todo en él. Mientras que los hebreos los nombran por la primera palabra significativa de cada uno, los cristianos han seguido tradicionalmente la nomenclatura de la versión griega de los LXX.",
           "full_chars": 679,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -184,49 +184,17 @@
         "query": {
           "text": "¿Cuándo recibió Daniel Harold Rolling la inyección letal de su condenación?",
           "full_chars": 75,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación.",
+          "text": "Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación. Fue declarado fallecido a las 18:13 EDT.",
           "full_chars": 241,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "9508035#0",
-        "document_id": "369987#0",
-        "query": {
-          "text": "¿Cómo definir el parlamentarismo?",
-          "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Parlamentarismo El parlamentarismo, también conocido como sistema parlamentario o «régimen parlamentario» es en política, un sistema de gobierno en el que la elección del gobierno (poder ejecutivo) em",
-          "full_chars": 500,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "3774249#0",
-        "document_id": "601723#0",
-        "query": {
-          "text": "¿Cuál era la misión de la Guardia Pretoriana?",
-          "full_chars": 45,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Guardia Pretoriana La Guardia Pretoriana era un cuerpo militar que servía de escolta y protección a los emperadores romanos. Antes de los emperadores, esta escolta ya era usada por los líderes militar",
-          "full_chars": 387,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

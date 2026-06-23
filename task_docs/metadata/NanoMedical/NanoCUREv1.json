@@ -154,16 +154,16 @@
         "query_id": "d281eb92-b58c-4025-a038-69e503b8bcfe",
         "document_id": "d4267179-7499-d7b6-dda7-60513bd748f2",
         "query": {
-          "text": "Which are the factors that should be taken in consideration when deciding the location of IMF screws",
+          "text": "Which are the factors that should be taken in consideration when deciding the location of IMF screws placement?",
           "full_chars": 111,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "The Use of MMF Screws: Surgical Technique, Indications, Contraindications, and Common Problems in Review of the Literature The anatomical site for the placement of MMF screws is chosen with respect to",
+          "text": "The Use of MMF Screws: Surgical Technique, Indications, Contraindications, and Common Problems in Review of the Literature The anatomical site for the placement of MMF screws is chosen with respect to a given fracture location, the dentition, the extent of surgical exposure, the availability and the quality of bone in the direct proximity of the fracture line.",
           "full_chars": 362,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -172,14 +172,14 @@
         "query": {
           "text": "Which are the disadvantages of 3D printed splints in orthognathic surgery?",
           "full_chars": 74,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Comparison between Additive and Subtractive CAD-CAM Technique to Produce Orthognathic Surgical Splints: A Personalized Approach The findings of the present investigation would suggest that surgical sp",
+          "text": "Comparison between Additive and Subtractive CAD-CAM Technique to Produce Orthognathic Surgical Splints: A Personalized Approach The findings of the present investigation would suggest that surgical splints are more accurate when produced by milling technology, according to the greater percentage of matching found in relation to the original digital project. Clinicians should be aware of this when referring to the lab technician for the construction of the appliance.",
           "full_chars": 470,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -188,49 +188,17 @@
         "query": {
           "text": "Which are the advantages of endoscopic approach to treat massive arterial epistaxis?",
           "full_chars": 84,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Success Rate of Endoscopic Sphenopalatine Artery Ligation for the Management of Refractory Posterior Epistaxis Patients in a Tertiary Care Hospital: A Descriptive Cross-sectional Study The findings of",
+          "text": "Success Rate of Endoscopic Sphenopalatine Artery Ligation for the Management of Refractory Posterior Epistaxis Patients in a Tertiary Care Hospital: A Descriptive Cross-sectional Study The findings of the study conclude that ESPAL has a high success rate in patients with intractile posterior epistaxis. From our study, we would like to recommend that endoscopic sphenopalatine artery ligation or cauterization should be preferred as first-line treatment for posterior epistaxis. This study will be beneficial for the development of knowledge by healthcare professionals for the management of posterior epistaxis.",
           "full_chars": 613,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f056bcd1-5b38-4ab2-910c-8280f3114e1e",
-        "document_id": "b1b9ad6a-71c1-4466-e657-c008ff97aa55",
-        "query": {
-          "text": "What are the typical temporomandibular joint symptoms that can appear in a patient undergoing maxill",
-          "full_chars": 124,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Temporomandibular chronic dislocation: The long-standing condition Clinically the condition is characterised by the inability to close the mouth after wide opening, and change in occlusion with open b",
-          "full_chars": 356,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "656c6b4a-9af7-4833-b993-ab894f3e34d0",
-        "document_id": "e2153894-5890-1c2f-0407-8ebf72aa9dd8",
-        "query": {
-          "text": "What are the primary compounds used in tooth whitening products?",
-          "full_chars": 64,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Effectiveness of sodium bicarbonate combined with hydrogen peroxide and CPP-ACPF in whitening and microhardness of enamel Most patients undergoing fixed orthodontic therapy suffer from color alteratio",
-          "full_chars": 1439,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

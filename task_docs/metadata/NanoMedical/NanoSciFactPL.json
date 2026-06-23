@@ -171,15 +171,15 @@
         "query_id": "770",
         "document_id": "15476777",
         "query": {
-          "text": "Rak jelita grubego z przerzutami leczony pojedynczym lekiem fluoropirymidynami skutkował zmniejszoną",
+          "text": "Rak jelita grubego z przerzutami leczony pojedynczym lekiem fluoropirymidynami skutkował zmniejszoną skutecznością i niższą jakością życia w porównaniu z chemioterapią opartą na oksaliplatynie u pacjentów w podeszłym wieku.",
           "full_chars": 223,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Opcje chemioterapii u starszych i słabych pacjentów z przerzutowym rakiem jelita grubego (MRC FOCUS2): otwarte, randomizowane badanie czynnikowe TŁO Pacjenci w podeszłym wieku i słabi z rakiem, chocia",
+          "text": "Opcje chemioterapii u starszych i słabych pacjentów z przerzutowym rakiem jelita grubego (MRC FOCUS2): otwarte, randomizowane badanie czynnikowe TŁO Pacjenci w podeszłym wieku i słabi z rakiem, chociaż często leczeni chemioterapią, są niedostatecznie reprezentowani w badaniach klinicznych. Opracowaliśmy FOCUS2 w celu zbadania opcji chemioterapii ze zmniejszoną dawką i poszukiwania obiektywnych czynników predykcyjnych wyników leczenia u słabych pacjentów z zaawansowanym rakiem jelita grubego. METODY Przeprowadziliśmy otwarte badanie czynnikowe 2 × 2 w 61 ośrodkach w Wielkiej Brytanii dla pacjentów z wcześniej nieleczonym zaawansowanym rakiem jelita grubego, których uznano za niezdolnych do chemioterapii pełną dawką. Po kompleksowej ocenie stanu zdrowia (CHA), pacjenci zostali losowo przydzieleni przez minimalizację do: 48-godzinnego dożylnego fluorouracylu z lewofolinianem (grupa A); oksaliplatyna i fluorouracyl (grupa B); kapecytabina (grupa C); lub oksaliplatyna i kapecytabina (grupa",
           "full_chars": 3343,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -187,15 +187,15 @@
         "query_id": "213",
         "document_id": "13625993",
         "query": {
-          "text": "CRP nie pozwala przewidzieć śmiertelności pooperacyjnej po operacji pomostowania aortalno-wieńcowego",
+          "text": "CRP nie pozwala przewidzieć śmiertelności pooperacyjnej po operacji pomostowania aortalno-wieńcowego (CABG).",
           "full_chars": 108,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Ocena opłacalności stosowania prognostycznych biomarkerów z modelami decyzyjnymi: studium przypadku w ustalaniu priorytetów pacjentów oczekujących na operację tętnicy wieńcowej CEL Określenie skuteczn",
+          "text": "Ocena opłacalności stosowania prognostycznych biomarkerów z modelami decyzyjnymi: studium przypadku w ustalaniu priorytetów pacjentów oczekujących na operację tętnicy wieńcowej CEL Określenie skuteczności i opłacalności wykorzystania informacji z krążących biomarkerów w procesie ustalania priorytetów pacjentów ze stabilną dusznicą bolesną oczekujących na operację pomostowania aortalno-wieńcowego. Model analityczny decyzji porównujący cztery strategie ustalania priorytetów bez biomarkerów (brak formalnego ustalania priorytetów, dwie oceny pilności i ocena ryzyka) oraz trzy strategie oparte na ocenie ryzyka z wykorzystaniem biomarkerów: rutynowo oceniany biomarker (szacowany współczynnik filtracji kłębuszkowej), nowy biomarker ( białko C reaktywne) lub jedno i drugie. Kolejność wykonywania pomostów aortalno-wieńcowych w kohorcie pacjentów została określona na podstawie każdej strategii ustalania priorytetów i porównano średnie koszty życia i lata życia skorygowane o jakość (QALY). ŹRÓDŁA",
           "full_chars": 3169,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -205,49 +205,17 @@
         "query": {
           "text": "Arginina 90 w p150n jest ważna dla interakcji z EB1.",
           "full_chars": 52,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Strukturalne podstawy do aktywacji składania mikrotubul przez kompleks EB1 i p150Glued. Białka śledzące plus, takie jak EB1 i kompleks dyneina/dynaktyna, regulują dynamikę mikrotubul. Uważa się, że bi",
+          "text": "Strukturalne podstawy do aktywacji składania mikrotubul przez kompleks EB1 i p150Glued. Białka śledzące plus, takie jak EB1 i kompleks dyneina/dynaktyna, regulują dynamikę mikrotubul. Uważa się, że białka te stabilizują mikrotubule poprzez tworzenie kompleksu końca dodatniego na końcach wzrostu mikrotubul o słabo zdefiniowanych mechanizmach. W tym miejscu opisujemy strukturę krystaliczną dwóch składników kompleksu końca dodatniego, domeny dimeryzacji końca karboksylowego EB1 i domeny wiążącej mikrotubule (CAP-Gly) podjednostki dynaktyny p150Glued. Każda cząsteczka dimeru EB1 zawiera dwie helisy tworzące konserwatywną wiązkę czterech helis, zapewniając jednocześnie miejsca wiązania p150Glued w jej elastycznym regionie ogona. Łącząc krystalografię, NMR i analizy mutacyjne, nasze badania ujawniają krytyczne elementy oddziałujące zarówno EB1, jak i p150Glued, których mutacja zmienia aktywność polimeryzacji mikrotubul. Co więcej, usunięcie kluczowego elastycznego ogona z EB1 aktywuje tworze",
           "full_chars": 1210,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "873",
-        "document_id": "1180972",
-        "query": {
-          "text": "O otyłości decydują wyłącznie czynniki środowiskowe.",
-          "full_chars": 52,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Genetyka otyłości u dorosłych adopcyjnych i ich biologicznego rodzeństwa. Przeprowadzono badanie adopcyjne wpływu genetycznego na otyłość w wieku dorosłym, w którym osoby adoptowane oddzielone od swoi",
-          "full_chars": 1465,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "410",
-        "document_id": "14924526",
-        "query": {
-          "text": "Napady gorączkowe zwiększają próg rozwoju padaczki.",
-          "full_chars": 51,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Napady gorączkowe w rozwijającym się mózgu powodują uporczywą modyfikację pobudliwości neuronalnej w obwodach limbicznych Napady gorączkowe (wywołane gorączką) dotykają 3–5% niemowląt i małych dzieci.",
-          "full_chars": 812,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -67,8 +67,6 @@ A model targeting this task should optimize for intent equivalence between short
 | Có được cười vào những câu chuyện cười của chính mình không? [60 chars] | Có kỳ lạ không khi cười với những câu đùa của chính mình? [57 chars] |
 | Điều dối trá tốt nhất mà bạn từng tạo ra là gì? [47 chars] | Lời nói dối được chế tác tốt nhất mà bạn từng nói là gì? [56 chars] |
 | Tại sao Quora thường gợi ý những câu trả lời trong nguồn cấp dữ liệu của tôi chê bai Donald Trump? [98 chars] | Tại sao Quora dường như chỉ có những câu trả lời chủ quan, thiên lệch cho các câu hỏi về Donald Trump? [102 chars] |
-| Làm thế nào tôi có thể làm cho cơ thể mình mạnh mẽ? [51 chars] | Làm thế nào để tôi trở nên mạnh mẽ về thể chất? [47 chars] |
-| Một vệ tinh lượng tử sẽ hoạt động như thế nào? [46 chars] | Một vệ tinh lượng tử hoạt động như thế nào và một số ứng dụng chính của nó sẽ là gì? [84 chars] |
 
 ### Source Reference Table
 

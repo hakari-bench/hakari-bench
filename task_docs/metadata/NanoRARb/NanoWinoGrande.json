@@ -121,13 +121,13 @@
         "query": {
           "text": "Sentence: Mary wanted to get another piercing in her ear, but the _ was much too tiny..",
           "full_chars": 87,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "ear",
           "full_chars": 3,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -135,15 +135,15 @@
         "query_id": "wino-q-123",
         "document_id": "wino-d-129",
         "query": {
-          "text": "Sentence: She counted her calories for her diet and found she needed more so she ate a brownie inste",
+          "text": "Sentence: She counted her calories for her diet and found she needed more so she ate a brownie instead of an apple since the _ has fewer..",
           "full_chars": 138,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "apple",
           "full_chars": 5,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -151,51 +151,19 @@
         "query_id": "wino-q-103",
         "document_id": "wino-d-49",
         "query": {
-          "text": "Sentence: The game of chess was easy to play for Angela but not Rebecca because _ had a analytical m",
+          "text": "Sentence: The game of chess was easy to play for Angela but not Rebecca because _ had a analytical mind..",
           "full_chars": 105,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Angela",
           "full_chars": 6,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "wino-q-9",
-        "document_id": "wino-d-12",
-        "query": {
-          "text": "Sentence: Joe immediately went to bakery before the bank because the _ had a limited supply of what",
-          "full_chars": 111,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "bakery",
-          "full_chars": 6,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "wino-q-161",
-        "document_id": "wino-d-59",
-        "query": {
-          "text": "Sentence: William liked to be outside more than Kyle so _ spent time arguing for getting a pool..",
-          "full_chars": 97,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "William",
-          "full_chars": 7,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

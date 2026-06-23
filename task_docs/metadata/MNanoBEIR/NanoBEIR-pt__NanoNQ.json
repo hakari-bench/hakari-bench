@@ -131,14 +131,14 @@
         "query": {
           "text": "Onde vai ser realizado o Final Four este ano?",
           "full_chars": 45,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "O Torneio de Basquetebol Masculino da Divisão I da NCAA de 2018 foi um torneio de eliminação simples com 68 equipes para determinar o campeão nacional de basquetebol universitário da NCAA para a tempo",
+          "text": "O Torneio de Basquetebol Masculino da Divisão I da NCAA de 2018 foi um torneio de eliminação simples com 68 equipes para determinar o campeão nacional de basquetebol universitário da NCAA para a temporada 2017-18. A 80ª edição do torneio começou em 13 de março de 2018 e terminou com o jogo do campeonato em 2 de abril no Alamodome, em San Antonio, Texas.",
           "full_chars": 355,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "O \"O Estranho Mundo de Jack\" é um filme original da Disney?",
           "full_chars": 59,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "O Pesadelo Antes do Natal surgiu de um poema escrito por Tim Burton em 1982, enquanto ele trabalhava como animador na Walt Disney Feature Animation. Com o sucesso de Vincent no mesmo ano, os Estúdios",
+          "text": "O Pesadelo Antes do Natal surgiu de um poema escrito por Tim Burton em 1982, enquanto ele trabalhava como animador na Walt Disney Feature Animation. Com o sucesso de Vincent no mesmo ano, os Estúdios Walt Disney começaram a considerar desenvolver O Pesadelo Antes do Natal como um curta-metragem ou especial de televisão de 30 minutos. Ao longo dos anos, os pensamentos de Burton frequentemente voltavam ao projeto, e em 1990, ele fez um acordo de desenvolvimento com a Disney. A produção começou em julho de 1991 em São Francisco; a Disney lançou o filme sob o selo Touchstone Pictures, pois acreditava que o filme seria \"muito sombrio e assustador para crianças\".[4]",
           "full_chars": 668,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Por que existe o Anjo do Norte?",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "De acordo com Gormley, o significado de um anjo era tríplice: primeiro, para significar que, sob o local de sua construção, mineiros de carvão trabalharam por dois séculos; segundo, para compreender a",
+          "text": "De acordo com Gormley, o significado de um anjo era tríplice: primeiro, para significar que, sob o local de sua construção, mineiros de carvão trabalharam por dois séculos; segundo, para compreender a transição de uma era industrial para uma era da informação; e terceiro, para servir de ponto de referência para nossas esperanças e medos em evolução.",
           "full_chars": 351,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test826",
-        "document_id": "doc29757",
-        "query": {
-          "text": "Onde foi originalmente mencionado o Compromisso dos Três Quintos na Constituição?",
-          "full_chars": 81,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "O Compromisso dos Três Quintos está no Artigo 1, Seção 2, Cláusula 3 da Constituição dos Estados Unidos, que diz:",
-          "full_chars": 113,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "test2079",
-        "document_id": "doc72413",
-        "query": {
-          "text": "Quem canta \"Someone's Watching Me\" com Michael Jackson?",
-          "full_chars": 55,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "\"Somebody's Watching Me\" é uma música do cantor americano Rockwell de seu álbum de estreia Somebody's Watching Me (1984). Foi lançada como o primeiro single e single principal do álbum em 14 de janeir",
-          "full_chars": 362,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

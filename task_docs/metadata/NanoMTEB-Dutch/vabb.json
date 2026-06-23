@@ -169,13 +169,13 @@
         "query": {
           "text": "De polsstokwerking van de beginselen van behoorlijk bestuur: export en reflexwerking?",
           "full_chars": 85,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Deze bijdrage omvat een analyse van de toepassing van de beginselen van behoorlijk bestuur op het privaatrechtelijk handelen van de overheid, bekeken vanuit het perspectief van publicisten.",
           "full_chars": 189,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -183,15 +183,15 @@
         "query_id": "2343",
         "document_id": "c:vabb:326367",
         "query": {
-          "text": "Het leedprincipe, het strafbegrip en de schuld zonder straf. De fixatie op leedtoevoegende straffen",
+          "text": "Het leedprincipe, het strafbegrip en de schuld zonder straf. De fixatie op leedtoevoegende straffen in het strafrecht",
           "full_chars": 117,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Volgens velen kenmerkt het strafrecht zich door het feit dat het leidt tot het opleggen van een straf. Vanuit dit oogpunt wordt het strafrecht te snel en te gemakkelijk gereduceerd tot straffen, en du",
+          "text": "Volgens velen kenmerkt het strafrecht zich door het feit dat het leidt tot het opleggen van een straf. Vanuit dit oogpunt wordt het strafrecht te snel en te gemakkelijk gereduceerd tot straffen, en dus tot wat het Hof van Cassatie omschrijft als 'leedtoevoeging'. Dan wordt het: strafrecht = leedtoevoeging. Ons inziens is dit echter niet de kern van de zaak. Hoewel we een strafbegrip hanteren waarin de leedreferentie behouden blijft en hoewel we wijzen op de alomtegenwoordigheid van leed bij elk contact met het strafsysteem, geloven we dat er twee redenen zijn om het leedprincipe gedeeltelijk te verlaten. Enerzijds verdoezelt de omschrijving van het strafrecht als een systeem van leedtoevoeging het bestaan van leed veroorzaakt en toegevoegd buiten het strafrecht. Anderzijds verdoezelt deze omschrijving de eerste rang rol van de schuldigverklaring als kenmerkend gebaar van het strafrecht. Straffen is niet hetzelfde als strafrecht en strafrecht is meer dan alleen van straffen. We durven z",
           "full_chars": 1499,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -201,49 +201,17 @@
         "query": {
           "text": "Bamacodex 4 Sociaalrecht 2009-10",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "De Bamacodex 4 \"Sociaalrecht\" biedt een selectie aan, met zorg uitgevoerd, van de belangrijkste en geupdated wetten en besluiten in de domeinen van het arbeidsrecht en het socialezekerheidsrecht. Onde",
+          "text": "De Bamacodex 4 \"Sociaalrecht\" biedt een selectie aan, met zorg uitgevoerd, van de belangrijkste en geupdated wetten en besluiten in de domeinen van het arbeidsrecht en het socialezekerheidsrecht. Onder elk gewijzigd wetsvoorschrift staat de wetsgeschiedenis weergegeven.",
           "full_chars": 270,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8993",
-        "document_id": "c:vabb:81664",
-        "query": {
-          "text": "Raoul Servais. De Tovenaar van Oostende",
-          "full_chars": 39,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Context Raoul Servais, revolutionaire animatiecineast. Engagement, contestatie en erkenning Schrijven over de filmkunst van Raoul Servais is geen gemakkelijke taak. In het hierna volgende interview wo",
-          "full_chars": 7551,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4138",
-        "document_id": "c:vabb:376728",
-        "query": {
-          "text": "Museumstrijd. Reacties van de conservatoren",
-          "full_chars": 43,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Naar aanleiding van onderzoek naar het beleid van erfgoedmusea in Vlaanderen aan de UGent, werden in dit artikel reacties van de conservatoren verzameld.",
-          "full_chars": 153,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -131,14 +131,14 @@
         "query": {
           "text": "Vad är ruminationssyndrom?",
           "full_chars": 26,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Ruminationssyndrom. Ruminationssyndrom, även kallat merycism, är en ätstörning som inte passar in i andra kategorier och leder till att mat kastas upp. Även om det inte identifieras som en specifik ät",
+          "text": "Ruminationssyndrom. Ruminationssyndrom, även kallat merycism, är en ätstörning som inte passar in i andra kategorier och leder till att mat kastas upp. Även om det inte identifieras som en specifik ätstörning i DSM-IV, har vissa parametrar utarbetats för att diagnostisera störningen.",
           "full_chars": 284,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Vem sjöng här kommer vi igen",
           "full_chars": 28,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "För andra användningar, se Here I Go Again (upplösning). Here I Go Again är en låt av det brittiska rockbandet Whitesnake. Låten släpptes ursprungligen på albumet Saints & Sinners från 1982 och spelad",
+          "text": "För andra användningar, se Here I Go Again (upplösning). Here I Go Again är en låt av det brittiska rockbandet Whitesnake. Låten släpptes ursprungligen på albumet Saints & Sinners från 1982 och spelades in på nytt för deras självbetitlade album Whitesnake från 1987. Låten spelades in på nytt samma år i en ny radiomix-version.",
           "full_chars": 327,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Vem spelar Cameron Boyce i Liv och Maddie?",
           "full_chars": 42,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Förbered er för några riktigt roligare skratt, ni. I en EXKLUSIV förhandsvisning av avsnittet den 19 april av Liv & Maddie som heter “Prom-A-Rooney.” Självklart. I den roligaste klippet ser vi Jessie-",
+          "text": "Förbered er för några riktigt roligare skratt, ni. I en EXKLUSIV förhandsvisning av avsnittet den 19 april av Liv & Maddie som heter “Prom-A-Rooney.” Självklart. I den roligaste klippet ser vi Jessie-stjärnan Cameron Boyce dyka upp i en annan Disney-serie för att träffa Maddie (Shelby Wulfert). Hans rollfigur är, eh, lite excentrisk!",
           "full_chars": 335,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971233",
-        "document_id": "4589415",
-        "query": {
-          "text": "Var förekommer jordens största öknar?",
-          "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "De flesta av jordens öknar ligger utanför de polära områdena. Den största är Saharaöknen, som är en subtropisk öken i norra Afrika.",
-          "full_chars": 131,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "1093082",
-        "document_id": "7778956",
-        "query": {
-          "text": "Vad betyder snutte?",
-          "full_chars": 19,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Enligt nuvarande fynd verkar det som att ordet \"copper\" (en polis, bokstavligt 'en som griper') föregår \"cop\" (antingen används verbalt och betyder att gripa någon eller som substantiv och betyder en",
-          "full_chars": 369,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

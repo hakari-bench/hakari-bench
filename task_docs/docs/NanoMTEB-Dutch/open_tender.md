@@ -150,8 +150,6 @@ procurement item?
 | Warmtebeeldcamera's [19 chars] | Warmtebeeldcamera TSWarmtebeeldcamera OvDten behoeve van de veiligheidsregio's Noord- en Oost Gelderland, IJsselland en Twente. [127 chars] |
 | Nieuwbouw van een vrijstaand gebouw voor dienstverlenende en adminstratieve functies. [85 chars] | Lot 4: Liften voor bouwen van een nieuwbouw voor dienstverlening van geestelijke gezondheid en bijhorende administratie. [120 chars] |
 | Toegangscontrolesysteem [23 chars] | Het leveren en installeren van online draadloos toegangscontrolesystemen. [73 chars] |
-| 57/52/3/18/032 - Area North-West - Omvorming van spoorinfrastructuur - Raamovereenkomst [87 chars] | De opdracht bestaat hoofdzakelijk uit:Hoofdzaak:— De opbraak en aanleg (vernieuwen) van spoortoestellen in hoofd- en bijspoor,— De opbraak en aanleg (vernieuwen) van spoorstaven, dwarsliggers en balla... [200 / 225 chars] |
-| Europese aanbesteding brandverzekering Veiligheidsregio Zeeland [63 chars] | Het doel van deze openbare Europese aanbesteding is het op transparante wijze sluiten van een of meer brandverzekeringsovereenkomsten tussen Aanbestedende dienst, in hoedanigheid van Veiligheidsregio... [200 / 884 chars] |
 
 ### Source Reference Table
 

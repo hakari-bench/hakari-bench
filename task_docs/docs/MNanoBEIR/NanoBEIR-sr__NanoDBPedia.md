@@ -116,11 +116,9 @@ with a constraint-aware reranker.
 
 | Query | Positive document |
 | --- | --- |
-| Fitzgerald auto salon Chambersburg Pennsylvania [47 chars] | Fitzgerald Auto Malls je porodična auto-kompanija koja je osnovana 1966. godine, a prva lokacija otvorena je u Bethesdi, Maryland. Od 2014. godine, Fitzgerald Auto Malls se nalazio na 59. mestu liste... [200 / 410 chars] |
-| Zbirka kratkih priča iz 1994. godine "Alice Munro je Otvorena" [62 chars] | Aliсe En Manro (/ˈælɨs ˌæn mʌnˈroʊ/, devojački Lejdlo /ˈleɪdlɔː/; rođena 10. jula 1931) je kanadska spisateljica. Manrin rad je opisan kao revolucionaran u arhitekturi kratkih priča, posebno u svojoj... [200 / 494 chars] |
-| galsko-rimska arhitektura u Parizu [34 chars] | Umetnost u Parizu je članak o umetničkoj kulturi i istoriji u Parizu, glavnom gradu Francuske. Vekovima je Pariz privlačio umetnike iz celog sveta, koji su dolazili u grad kako bi se obrazovali i traž... [200 / 323 chars] |
-| Republike bivše Jugoslavije [27 chars] | Ustav Jugoslavije iz 1974. bio je četvrti i poslednji ustav Socijalističke Federativne Republike Jugoslavije. Stupio je na snagu 21. februara. Sa 406 originalnih članova, ustav iz 1974. bio je jedan o... [200 / 409 chars] |
-| filmovi snimljeni u Veneciji [28 chars] | "Mala Romansa" je američki romantični komad iz 1979. godine, snimljen u tehnikoloru i panavizionu, u režiji Džordža Roj Hila. U filmu glume Lorens Olivije, Telonijus Bernard i Dajen Lejn u njenom film... [200 / 365 chars] |
+| Fitzgerald auto salon Chambersburg Pennsylvania [47 chars] | Fitzgerald Auto Malls je porodična auto-kompanija koja je osnovana 1966. godine, a prva lokacija otvorena je u Bethesdi, Maryland. Od 2014. godine, Fitzgerald Auto Malls se nalazio na 59. mestu liste "Top 125 prodajnih grupa" u SAD, koju svake godine objavljuje Automotive News. Prodajna mesta Fitzgerald se pojavljuju pet puta na WardsAuto e-Dealer 100 listi za 2013. godinu, na pozicijama 8, 25, 30, 43 i 98. [410 chars] |
+| Zbirka kratkih priča iz 1994. godine "Alice Munro je Otvorena" [62 chars] | Aliсe En Manro (/ˈælɨs ˌæn mʌnˈroʊ/, devojački Lejdlo /ˈleɪdlɔː/; rođena 10. jula 1931) je kanadska spisateljica. Manrin rad je opisan kao revolucionaran u arhitekturi kratkih priča, posebno u svojoj sklonosti da se kreće napred-nazad u vremenu. Za njenе priče se kaže da "više nagoveštavaju nego najavljuju, više otkrivaju nego paradiraju." Manrina proza je najčešće smeštena u njen rodni Okrug Huron u jugozapadnom Ontariju. Njene priče istražuju ljudske složenosti jednostavnim stilom proze. [494 chars] |
+| galsko-rimska arhitektura u Parizu [34 chars] | Umetnost u Parizu je članak o umetničkoj kulturi i istoriji u Parizu, glavnom gradu Francuske. Vekovima je Pariz privlačio umetnike iz celog sveta, koji su dolazili u grad kako bi se obrazovali i tražili inspiraciju iz njegovih umetničkih resursa i galerija. Kao rezultat toga, Pariz je stekao reputaciju "Grada umetnosti". [323 chars] |
 
 ### Public Sources
 

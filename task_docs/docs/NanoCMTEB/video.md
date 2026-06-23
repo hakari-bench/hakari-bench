@@ -73,8 +73,6 @@ The task is useful for evaluating entertainment search systems where the user in
 | 游泳和悦悦 [5 chars] | 悦悦游泳20170817 21m [16 chars] |
 | 甲状腺的检查 [6 chars] | 科普时间 专业仪器如何检查甲状腺 [16 chars] |
 | BAMBINo [7 chars] | bambino2016 恩率 oppa [19 chars] |
-| 明天依然爱你泰国电视剧普通话版 [15 chars] | 明天依然爱你 15 [9 chars] |
-| 秃鹰档案国语 [6 chars] | 秃鹰档案 杀手行动失败 黑老大凶残霸道 立马派人杀人灭口 [28 chars] |
 
 ### Source Reference Table
 

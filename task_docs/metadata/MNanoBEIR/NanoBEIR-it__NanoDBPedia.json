@@ -131,14 +131,14 @@
         "query": {
           "text": "Fitzgerald Auto Mall a Chambersburg, Pennsylvania",
           "full_chars": 49,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Fitzgerald Auto Malls è un'azienda a conduzione familiare che opera nel settore dell'auto e che è stata fondata nel 1966, con la sua prima sede aperta a Bethesda, nel Maryland. Nel 2014, Fitzgerald Au",
+          "text": "Fitzgerald Auto Malls è un'azienda a conduzione familiare che opera nel settore dell'auto e che è stata fondata nel 1966, con la sua prima sede aperta a Bethesda, nel Maryland. Nel 2014, Fitzgerald Auto Malls si è classificata al 59° posto nella lista delle \"Top 125 Dealership Groups\" negli Stati Uniti, pubblicata annualmente da Automotive News. Le sedi di Fitzgerald Auto Malls sono presenti cinque volte nella classifica WardsAuto e-Dealer 100 del 2013, rispettivamente al 8°, 25°, 30°, 43° e 98° posto.",
           "full_chars": 507,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "La raccolta di racconti del 1994 di Alice Munro è disponibile",
           "full_chars": 61,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Alice Ann Munro (nata Laidlaw; 10 luglio 1931) è una scrittrice canadese. Il lavoro di Munro è stato descritto come avere rivoluzionato la struttura del racconto breve, soprattutto per la sua tendenza",
+          "text": "Alice Ann Munro (nata Laidlaw; 10 luglio 1931) è una scrittrice canadese. Il lavoro di Munro è stato descritto come avere rivoluzionato la struttura del racconto breve, soprattutto per la sua tendenza a muoversi avanti e indietro nel tempo. Le sue storie sono state definite come \"suggerire più che esporre, rivelare più che ostentare.\" La narrativa di Munro è ambientata più spesso nella sua natia contea di Huron, nel sud-ovest dell'Ontario. Le sue storie esplorano le complessità umane con uno stile di scrittura semplice e diretto.",
           "full_chars": 535,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Architettura gallo-romana a Parigi",
           "full_chars": 34,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "L'arte a Parigi è un articolo sulla cultura e la storia dell'arte nella capitale francese. Da secoli, Parigi attira artisti da tutto il mondo, che giungono in città per formarsi e trovare ispirazione",
+          "text": "L'arte a Parigi è un articolo sulla cultura e la storia dell'arte nella capitale francese. Da secoli, Parigi attira artisti da tutto il mondo, che giungono in città per formarsi e trovare ispirazione nelle sue risorse artistiche e gallerie. Così, Parigi è diventata famosa come la \"Città dell'Arte\".",
           "full_chars": 299,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "SemSearch_LS-35",
-        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
-        "query": {
-          "text": "Repubbliche della ex Jugoslavia",
-          "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "La Costituzione jugoslava del 1974 fu la quarta e ultima costituzione della Repubblica Socialista Federale di Jugoslavia. È entrata in vigore il 21 febbraio. Con i suoi 406 articoli originali, la Cost",
-          "full_chars": 488,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "INEX_XER-72",
-        "document_id": "<dbpedia:A_Little_Romance>",
-        "query": {
-          "text": "Film girati a Venezia",
-          "full_chars": 21,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Un po' d'amore è un film romantico-comico in Technicolor e Panavision del 1979, diretto da George Roy Hill e con Laurence Olivier, Thelonious Bernard e Diane Lane al suo esordio cinematografico. La sc",
-          "full_chars": 380,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

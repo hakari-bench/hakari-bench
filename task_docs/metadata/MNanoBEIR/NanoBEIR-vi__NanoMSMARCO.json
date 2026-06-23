@@ -131,14 +131,14 @@
         "query": {
           "text": "hội chứng suy nghĩ lặp lại là gì",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Hội chứng nhai lại. Hội chứng nhai lại, còn được gọi là Merycism, là một loại rối loạn ăn uống không được xác định cụ thể nào khác, gây ra việc trào ngược thức ăn. Mặc dù nó không được xác định là một",
+          "text": "Hội chứng nhai lại. Hội chứng nhai lại, còn được gọi là Merycism, là một loại rối loạn ăn uống không được xác định cụ thể nào khác, gây ra việc trào ngược thức ăn. Mặc dù nó không được xác định là một rối loạn ăn uống cụ thể trong DSM-IV, một số tiêu chí đã được nêu ra để chẩn đoán rối loạn này.",
           "full_chars": 296,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "ai đã hát bài here i go again",
           "full_chars": 29,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Đối với các mục đích khác, xem Here I Go Again (phân định). Here I Go Again là một bài hát của ban nhạc rock người Anh Whitesnake. Ban đầu được phát hành trong album năm 1982 của họ, Saints & Sinners,",
+          "text": "Đối với các mục đích khác, xem Here I Go Again (phân định). Here I Go Again là một bài hát của ban nhạc rock người Anh Whitesnake. Ban đầu được phát hành trong album năm 1982 của họ, Saints & Sinners, bài hát đã được thu âm lại cho album tựa đề của họ năm 1987, Whitesnake. Bài hát đã được thu âm lại một lần nữa trong năm đó với phiên bản trộn radio mới.",
           "full_chars": 355,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "ai là người mà cameron boyce đóng trong liv và maddie",
           "full_chars": 53,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Chuẩn bị cho những tiếng cười nghiêng ngả, các bạn ơi. Trong một đoạn clip độc quyền của tập phim ngày 19 tháng 4 của Liv & Maddie có tên “Prom-A-Rooney.” Rõ ràng rồi. Trong đoạn clip hài hước này, ch",
+          "text": "Chuẩn bị cho những tiếng cười nghiêng ngả, các bạn ơi. Trong một đoạn clip độc quyền của tập phim ngày 19 tháng 4 của Liv & Maddie có tên “Prom-A-Rooney.” Rõ ràng rồi. Trong đoạn clip hài hước này, chúng ta thấy ngôi sao Jessie Cameron Boyce nhảy sang một chương trình Disney khác để gặp Maddie (Shelby Wulfert). Nhân vật của anh ấy thì, ừm, lập dị!",
           "full_chars": 349,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971233",
-        "document_id": "4589415",
-        "query": {
-          "text": "các sa mạc lớn của trái đất chủ yếu xảy ra ở đâu",
-          "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Phần còn lại của các sa mạc trên Trái Đất nằm ngoài các khu vực cực. Sa mạc lớn nhất là Sa mạc Sahara, một sa mạc cận nhiệt đới ở Bắc Phi.",
-          "full_chars": 138,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "1093082",
-        "document_id": "7778956",
-        "query": {
-          "text": "nghĩa của từ \"copper\" trong tiếng lóng chỉ cảnh sát",
-          "full_chars": 51,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Dựa trên những phát hiện hiện tại, có vẻ như từ \"copper\" (một cảnh sát, nghĩa đen là 'người bắt giữ') có trước từ \"cop\" (có thể được sử dụng bằng lời và có nghĩa là bắt giữ hoặc khi là danh từ có nghĩ",
-          "full_chars": 408,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

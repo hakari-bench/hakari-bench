@@ -153,15 +153,15 @@
         "query_id": "68",
         "document_id": "continental_drift/Paleomagnetism.txt",
         "query": {
-          "text": "How is/was continental drift monitored? I am curious about current technology but I am particularly",
+          "text": "How is/was continental drift monitored? I am curious about current technology but I am particularly interested in what techniques were employed prior to the advent of satellite technology.",
           "full_chars": 189,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Paleomagnetism - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main pageContentsCurrent eventsRandom articleAbout WikipediaContact usDonate Contribute HelpLearn to edit",
+          "text": "Paleomagnetism - Wikipedia Jump to content Main menu Main menu move to sidebar hide Navigation Main pageContentsCurrent eventsRandom articleAbout WikipediaContact usDonate Contribute HelpLearn to editCommunity portalRecent changesUpload file Search Search Create account Log in Personal tools Create account Log in Pages for logged out editors learn more ContributionsTalk Contents move to sidebar hide (Top) 1History 2Fields 3Principles Toggle Principles subsection 3.1Thermoremanent magnetization 3.2Detrital remanent magnetization 3.3Chemical remanent magnetization 3.4Isothermal remanent magnetization 3.5Viscous remanent magnetization 4Sampling 5Applications 6See also 7Notes 8References 9Further reading 10External links Toggle the table of contents Paleomagnetism 42 languages AfrikaansالعربيةAzərbaycancaBosanskiCatalàČeštinaDeutschEspañolEuskaraفارسیFrançaisGaeilgeGalego한국어Հայերենहिन्दीHrvatskiBahasa IndonesiaItalianoעבריתҚазақшаMagyarमराठीBahasa MelayuNederlands日本語Norsk bokmålNorsk nynor",
           "full_chars": 21493,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -169,15 +169,15 @@
         "query_id": "110",
         "document_id": "forcasting_rainbow/formatn_htm.txt",
         "query": {
-          "text": "I am a lay person in meteorology, maybe this is not the right place for my question, but I would lik",
+          "text": "I am a lay person in meteorology, maybe this is not the right place for my question, but I would like to ask then. My question is simple: is there a website or institute that has integrated statistics on forecasting the occurrence of rainbows in different countries around the world?",
           "full_chars": 284,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "How Rainbows Form - Overview How Rainbows Form Overview Steps Involved Overview Copyright 1999 Rebecca McDowell. Figure 1: Basic diagram showing formation of rainbow. Note: Angles not to scale. The fo",
+          "text": "How Rainbows Form - Overview How Rainbows Form Overview Steps Involved Overview Copyright 1999 Rebecca McDowell. Figure 1: Basic diagram showing formation of rainbow. Note: Angles not to scale. The formation of a rainbow involves a series of physical phenomena - reflection, refraction, dispersion and total internal reflection. The occurence of each of these is due to the interaction of light with air and water and the boundaries between them. Enlarged view of diagram. The Steps Involed in the Process Figure 2: Ray digram - light through raindrop Copyright 1999 Rebecca McDowell. 1. Light from Sun strikes raindrop 2. Some of the light is reflected 3. The rest of the light is refracted 4. Light splits into component colours 5. Reflected at rear of raindrop (TIR) 6. Refracted again as it leaves raindrop 7. Colours are further dispersed Click on the links above for more detail on ech step. 1. Light from sun strikes raindrop. White light from the Sun has to hit the raindrops at a certain ang",
           "full_chars": 3583,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -185,53 +185,21 @@
         "query_id": "100",
         "document_id": "plant_produce_oxygen/algae_htm.txt",
         "query": {
-          "text": "Which plant is the most efficient in making oxygen for it's weight? I want to think it is the greene",
+          "text": "Which plant is the most efficient in making oxygen for it's weight? I want to think it is the greenest plant with more leaves and least trunk in full sun?",
           "full_chars": 154,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Algae - Rocky Mountain National Park (U.S. National Park Service) Skip to global NPS navigation Skip to this park navigation Skip to the main content Skip to this park information section Skip to the",
+          "text": "Algae - Rocky Mountain National Park (U.S. National Park Service) Skip to global NPS navigation Skip to this park navigation Skip to the main content Skip to this park information section Skip to the footer section National Park Service Search Search This Site All NPS Open Menu Close Menu Explore This Park Explore the National Park Service Exiting nps.gov Cancel Rocky Mountain National Park Colorado Info Alerts Maps Calendar Fees Loading alerts Alerts In Effect Dismiss more information on current conditions... Dismiss View all alerts Contact Us Algae While some plants decorate the landscape and are very visible at Rocky Mountain National Park, others are seldom seen. Tiny floating plants, called algae, live in lakes, wetlands, and ponds. Individual algae are virtually invisible, but when they congregate, they turn into the green 'slime' on stream rocks. Algae are important because they produce oxygen, provide food for themselves (photosynthesis) as well as food for larger aquatic (wate",
           "full_chars": 6419,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8",
-        "document_id": "make_martian_dirt/How_to_make_simulant_Martian_dirt.txt",
-        "query": {
-          "text": "My son wants to replicate some experiments and try to grow plants in Martian soil for his A-level sc",
-          "full_chars": 408,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "In a recent project, I simulated Mars to see if I could get a fern to grow. A bit like a terrarium but with Mars instead of ‘Terra’ inside, a ‘marsarium’ if you will. Yeah Pauly Shore, you better be p",
-          "full_chars": 3866,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "26",
-        "document_id": "ozone_layer/Chlorofluorocarbon.txt",
-        "query": {
-          "text": "It is said about ozone: a layer in the earth's stratosphere at an altitude of about 10 km (6.2 miles",
-          "full_chars": 350,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Chlorofluorocarbons (CFCs) and hydrochlorofluorocarbons (HCFCs) are fully or partly halogenated hydrocarbons that contain carbon (C), hydrogen (H), chlorine (Cl), and fluorine (F), produced as volatil",
-          "full_chars": 31262,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
     "source_task": "Earth Science StackExchange long-document",
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -151,13 +151,13 @@
         "query": {
           "text": "What is the time 9 year and 10 month after Nov, 1170",
           "full_chars": 52,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Sep, 1180",
           "full_chars": 9,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -167,13 +167,13 @@
         "query": {
           "text": "What is the time 5 year and 12 month after Jun, 1243",
           "full_chars": 52,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Jun, 1249",
           "full_chars": 9,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -183,49 +183,17 @@
         "query": {
           "text": "What is the time 6 year and 4 month after Jun, 1905",
           "full_chars": 51,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Oct, 1911",
           "full_chars": 9,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "TR1-q-9",
-        "document_id": "TR1-d-9",
-        "query": {
-          "text": "What is the time 10 year and 1 month after Oct, 1093",
-          "full_chars": 52,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Nov, 1103",
-          "full_chars": 9,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "TR1-q-161",
-        "document_id": "TR1-d-161",
-        "query": {
-          "text": "What is the time 12 month after May, 2007",
-          "full_chars": 41,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "May, 2008",
-          "full_chars": 9,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

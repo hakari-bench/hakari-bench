@@ -115,11 +115,9 @@ candidate generation and an answer-aware reranker trained on financial QA.
 
 | Query | Positive document |
 | --- | --- |
-| Koje vrste prinosa Vanguard navodi? [35 chars] | "Sa stranice Vanguard - Ovo se činilo najlakšim jer je S&P podatke lako pronaći. Koristim MoneyChimp da dobijem - što potvrđuje da Vanguardova stranica nudi CAGR, a ne aritmetički prosek. Napomena: Va... [200 / 392 chars] |
+| Koje vrste prinosa Vanguard navodi? [35 chars] | "Sa stranice Vanguard - Ovo se činilo najlakšim jer je S&P podatke lako pronaći. Koristim MoneyChimp da dobijem - što potvrđuje da Vanguardova stranica nudi CAGR, a ne aritmetički prosek. Napomena: Vanguard navodi 'Za prinose američkog tržišta akcija, koristimo Standard & Poor's 90 od 1926. do 3. marta 1957.', dok Chimp koristi podatke sa sajta dobitnika Nobelove nagrade, Robert Shillera." [392 chars] |
 | Poreske implikacije freelancinga [32 chars] | Ako imate prihode u SAD-u, dugovaćete porez na prihod SAD-u, osim ako postoji sporazum sa vašom zemljom koji kaže drugačije. [124 chars] |
-| Šta se smatra visokim ili niskim kada je reč o jačini zvuka? [60 chars] | Dnevni volumen se obično upoređuje sa prosečnim dnevnim volumenom u poslednjih 50 dana za određenu akciju. Visok volumen se obično smatra kada je dva ili više puta veći od prosečnog dnevnog volumena t... [200 / 661 chars] |
-| Korišćenje kreditnih kartica poena za plaćanje poreski odbitnih poslovnih troškova [82 chars] | Radi jednostavnosti, počnimo samo od keš bek-a. Generalno, keš bek sa kreditnih kartica za ličnu upotrebu nije oporeziv, ali za poslovnu upotrebu jeste (na neki način, objasniću kasnije). Razlog je št... [200 / 3,696 chars] |
-| Kako da prijavim svoje poreze kao preduzetnik? [46 chars] | Za poreske svrhe, biće vam potrebno da se prijavite kao zaposleni (T4 obrasci i automatski zadržani porez), ali i kao preduzetnik. I sam sam imao istu situaciju prošle godine. "Zaposleni i samostalni... [200 / 738 chars] |
+| Šta se smatra visokim ili niskim kada je reč o jačini zvuka? [60 chars] | Dnevni volumen se obično upoređuje sa prosečnim dnevnim volumenom u poslednjih 50 dana za određenu akciju. Visok volumen se obično smatra kada je dva ili više puta veći od prosečnog dnevnog volumena te akcije u poslednjih 50 dana, međutim neki trgovci mogu postaviti kriterijum na 3x ili 4x ADV-a kao potvrdu određenog obrasca ili događaja. Volumen se upoređuje sa ADV-om same akcije, jer bi upoređivanje sa volumenom drugih akcija bilo kao da upoređujete jabuke i narandže, budući da različite kompanije imaju različit ukupan broj dostupnih akcija, različite nivoe likvidnosti i različite nivoe volatilnosti, što sve može uticati na dnevno trgovanje volumenom. [661 chars] |
 
 ### Public Sources
 

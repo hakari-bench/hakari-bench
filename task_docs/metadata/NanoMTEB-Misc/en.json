@@ -125,14 +125,14 @@
         "query": {
           "text": "What is required for the ongoing process of building and operating an integrated market?",
           "full_chars": 88,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Finally, building a fully integrated market is not a definite task with a finite end, but rather an ongoing process requiring constant effort, vigilance and updating. There are always new challenges a",
+          "text": "Finally, building a fully integrated market is not a definite task with a finite end, but rather an ongoing process requiring constant effort, vigilance and updating. There are always new challenges and, as obstacles to making the Internal Market work are removed, other barriers come to light and have to be dealt with. It is therefore of the greatest importance that any new Treaty contains the necessary legal powers and competences to continue the work of building and operating an integrated market.",
           "full_chars": 504,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -141,65 +141,33 @@
         "query": {
           "text": "How do high-speed train connections contribute to social and economic cohesion in the EU?",
           "full_chars": 89,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "However, the Commission notes that air transport is not the only driver of development in terms of regional accessibility. High-speed train connections also make a significant contribution to social a",
+          "text": "However, the Commission notes that air transport is not the only driver of development in terms of regional accessibility. High-speed train connections also make a significant contribution to social and economic cohesion in the EU, particularly between large regional cities. As emphasised in the 2001 White Paper, rail/air intermodality, with rail and air travel complementing rather than competing with each other and high-speed trains connecting cities, is bound to boost capacity significantly.",
           "full_chars": 498,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "0383eed1-3967-49df-9279-d086b6d0e533",
         "document_id": "6362",
         "query": {
-          "text": "What are the challenges faced by Member States in implementing national lifelong learning strategies",
+          "text": "What are the challenges faced by Member States in implementing national lifelong learning strategies and instruments?",
           "full_chars": 117,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "The implementation of national lifelong learning strategies and instruments, which are key to enabling not only young people, but also adults, to acquire, maintain and develop knowledge, skills and co",
-          "full_chars": 581,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f90f8fe8-df3a-45c5-a844-c72ad626da0a",
-        "document_id": "3738",
-        "query": {
-          "text": "How does Article 56 EC affect the taxation of dividends received by a resident company from a non-re",
-          "full_chars": 168,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Article 56 EC is, furthermore, to be interpreted as meaning that it precludes legislation of a Member State which exempts from corporation tax dividends which a resident company receives from another",
-          "full_chars": 564,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "50efd59d-5e0f-460a-9e7c-f86dffb635bb",
-        "document_id": "664",
-        "query": {
-          "text": "What is the purpose of requiring undertakings to provide sufficient information in Form RS?",
-          "full_chars": 91,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Given the above mechanism, it is crucial to the smooth operation of Article 4(5) that all Member States where the case is reviewable under national competition law, and which are hence competent to ex",
-          "full_chars": 515,
-          "limit_chars": 200,
-          "truncated": true
+          "text": "The implementation of national lifelong learning strategies and instruments, which are key to enabling not only young people, but also adults, to acquire, maintain and develop knowledge, skills and competences throughout their careers, remains a challenge for many Member States. In particular, more flexible learning pathways are required which will allow men and women at different stages in life to move between different education and training systems, as well as between formal and non-formal and informal learning environments, and which can attract non-traditional learners.",
+          "full_chars": 581,
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

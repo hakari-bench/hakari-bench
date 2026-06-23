@@ -66,9 +66,7 @@ Models need stronger temporal knowledge and direction-sensitive retrieval. Hard 
 | --- | --- |
 | Who was the chair of Technical University of Munich before Wolfgang A. Herrmann? [80 chars] | Otto Meitinger [14 chars] |
 | Who was the head of Romania before Alexandru G. Golescu? [56 chars] | Dimitrie Ghica [14 chars] |
-| Which position did Lord Douglas Gordon-Hallyburton hold before Member of the 13th Parliament of the... [100 / 115 chars] | Member of the 12th Parliament of the United Kingdom [51 chars] |
-| Which employer did Eduard Winkelmann work for after Imperial University of Dorpat? [82 chars] | University of Bern [18 chars] |
-| Who was the head of Romania after Adrian Năstase? [49 chars] | Călin Popescu-Tăriceanu [23 chars] |
+| Which position did Lord Douglas Gordon-Hallyburton hold before Member of the 13th Parliament of the United Kingdom? [115 chars] | Member of the 12th Parliament of the United Kingdom [51 chars] |
 
 ### Source Reference Table
 

@@ -131,14 +131,14 @@
         "query": {
           "text": "Hvilken type avkastning gir Vanguard?",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Fra Vanguards side - Dette virket som den enkleste siden S&P-data er lett å finne. Jeg bruker MoneyChimp for å bekrefte at Vanguards side tilbyr CAGR, ikke aritmetisk gjennomsnitt. Merk: Vanguard oppg",
+          "text": "Fra Vanguards side - Dette virket som den enkleste siden S&P-data er lett å finne. Jeg bruker MoneyChimp for å bekrefte at Vanguards side tilbyr CAGR, ikke aritmetisk gjennomsnitt. Merk: Vanguard oppgir 'For amerikanske aksjemarkedets avkastning, bruker vi Standard & Poor's 90 fra 1926 til 3. mars 1957,' mens MoneyChimp bruker data fra Nobelprisvinneren Robert Shillers nettsted.",
           "full_chars": 381,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,13 +147,13 @@
         "query": {
           "text": "Hva er skattekonsekvensene av å frilanse?",
           "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Hvis du har inntekt i USA, må du betale amerikansk inntektsskatt på det, med mindre det finnes en avtale mellom ditt land og USA som sier noe annet.",
           "full_chars": 148,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Hva betyr høy eller lav volum?",
           "full_chars": 30,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Den daglige volumet sammenlignes vanligvis med gjennomsnittlig daglig volum over de siste 50 dagene for en aksje. Høyt volum regnes vanligvis som 2 eller flere ganger gjennomsnittlig daglig volum over",
+          "text": "Den daglige volumet sammenlignes vanligvis med gjennomsnittlig daglig volum over de siste 50 dagene for en aksje. Høyt volum regnes vanligvis som 2 eller flere ganger gjennomsnittlig daglig volum over de siste 50 dagene for den aktuelle aksjen. Noen håndlere kan imidlertid sette kriteriet til 3x eller 4x gjennomsnittlig daglig volum (ADV) for å bekrefte et bestemt mønster eller hendelse. Volumet sammenlignes med ADV for den aktuelle aksjen, da sammenligning med volumet til andre aksjer ville være som å sammenligne epler med pærer. Forskjellige selskaper vil ha forskjellige antall aksjer i omløp, forskjellige nivåer av likviditet og forskjellige nivåer av volatilitet, noe som alle kan påvirke volumet som handles hver dag.",
           "full_chars": 730,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "94",
-        "document_id": "245447",
-        "query": {
-          "text": "Hvordan bruke kredittkortpoeng til å dekke skattefradragsberettigede bedriftsutgifter?",
-          "full_chars": 86,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "For enkelhets skyld, la oss starte med å se på kontanttilbakebetaling. Generelt sett er kontanttilbakebetaling fra kredittkort for personlig bruk ikke skattepliktig, men for bedriftsbruk er det skatte",
-          "full_chars": 3648,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2903",
-        "document_id": "527776",
-        "query": {
-          "text": "Hvordan skal jeg skatteføre meg når jeg er frilanser?",
-          "full_chars": 53,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "For skatteformål må du registrere deg både som ansatt (med T4-skjemaer og automatisk trekk i skatt) og som selvstendig næringsdrivende. Jeg var i samme situasjon selv i fjor. Ansatt og selvstendig nær",
-          "full_chars": 715,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

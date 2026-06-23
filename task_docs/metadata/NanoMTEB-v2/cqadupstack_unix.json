@@ -150,14 +150,14 @@
         "query": {
           "text": "copy sas file from prior version directory to new version directory",
           "full_chars": 67,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "How to copy datasets from prior version directory to latest version directory I've go a number of directories named like: /data/db/OX/8_10 /data/db/OX/9_1 /data/db/OX/9_2 And need to copy some files (",
+          "text": "How to copy datasets from prior version directory to latest version directory I've go a number of directories named like: /data/db/OX/8_10 /data/db/OX/9_1 /data/db/OX/9_2 And need to copy some files (all the `pt.*` files) from the second latest one (above `9_1`) to the latest one (above `9_2`). I have tried directly like this. cp -p /data/db/OX/9_1/pt.* /data/db/OX/9_2 However, Instead of typing /data/db/OX/9_1/ & /data/db/OX/9_2. I'd like to be able to write: cp -p /data/db/OS/\"$prior_version\"/pt.* /data/db/OS/\"$latest_version\"/ And derive `$prior_version` and `$latest_version` from the list of directories in `/data/db/OX/` in a shell script.",
           "full_chars": 718,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -166,14 +166,14 @@
         "query": {
           "text": "Linux Mint Booting Installed Partition",
           "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "How can I fix/install/reinstall grub? So I started out with a 250GB HDD, the stock drive from an EeePC 1015pem that I am trying to turn into a MintBook. The drive is physically operable, but all data",
+          "text": "How can I fix/install/reinstall grub? So I started out with a 250GB HDD, the stock drive from an EeePC 1015pem that I am trying to turn into a MintBook. The drive is physically operable, but all data has been nuked, including the old OS. Given this, I attached the HDD to my desktop and installed Linux Mint 16 Xfce from a live USB created through Unetbootin-585. Set aside 10GB for swap and 240GB for Ext4 and /. The drive now refuses to boot for either the desktop or netbook. Both motherboards are sounding the correct sequence of beeps, so they seem healthy, and I can successfully access the BIOS on both systems. However, the only thing that comes up after starting the computer is a nonresponsive command- line. There is no error message, no grub or grub-rescue, nothing. Is there anything I can try besides reformatting and starting over? How would I go about installing a boot loader that can boot my OS?",
           "full_chars": 914,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -182,51 +182,19 @@
         "query": {
           "text": "Yanked USB Key During Move",
           "full_chars": 26,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Recovering accidentally deleted files I accidentally deleted a file from my laptop. I'm using Fedora. Is it possible to recover the file?",
           "full_chars": 138,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "89941",
-        "document_id": "74713",
-        "query": {
-          "text": "How proc gets updated about the devices",
-          "full_chars": 39,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "How frequently is the proc file system updated on Linux? How frequently is the `proc` file system updated on Linux? Is it 20 milliseconds (time quantum)?",
-          "full_chars": 154,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "152733",
-        "document_id": "98084",
-        "query": {
-          "text": "bashrc in custom folder",
-          "full_chars": 23,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Change the location of .bashrc Is it possible to change the location of `.bashrc` from `/home/orhanc/.bashrc` to some other directory?",
-          "full_chars": 135,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
     "source_dataset_id": "mteb/cqadupstack-unix",
     "source_task": "CQADupstackUnixRetrieval",
-    "example_count": 5
+    "example_count": 3
   }
 }

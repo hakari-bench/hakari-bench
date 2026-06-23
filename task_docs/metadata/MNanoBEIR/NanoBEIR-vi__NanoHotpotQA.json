@@ -131,14 +131,14 @@
         "query": {
           "text": "Penny Rae Bridges đã đóng vai trong một bộ phim hài truyền hình cùng với diễn viên nào khác?",
           "full_chars": 92,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Penny Rae Bridges (sinh ngày 29 tháng 7 năm 1990) là một nữ diễn viên người Mỹ. Công việc truyền hình của cô đã bao gồm các vai diễn trong \"For Your Love\", \"Family Law\", \"Boy Meets World\" và \"The Pare",
+          "text": "Penny Rae Bridges (sinh ngày 29 tháng 7 năm 1990) là một nữ diễn viên người Mỹ. Công việc truyền hình của cô đã bao gồm các vai diễn trong \"For Your Love\", \"Family Law\", \"Boy Meets World\" và \"The Parent 'Hood\". Cô được biết đến nhiều nhất với vai diễn trong \"Half & Half\", trong vai Mona trẻ.",
           "full_chars": 292,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Ai đã tặng Kaganoi Shigemochi một thanh kiếm được làm bởi người sáng lập trường Muramasa?",
           "full_chars": 89,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 tháng 8, 1600) là một samurai Nhật Bản của thời kỳ Azuchi-Momoyama, phục vụ cho gia tộc Oda. Ông cai trị lâu đài Kaganoi. Trong trận chiến Komaki và Nagakute, Shi",
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 tháng 8, 1600) là một samurai Nhật Bản của thời kỳ Azuchi-Momoyama, phục vụ cho gia tộc Oda. Ông cai trị lâu đài Kaganoi. Trong trận chiến Komaki và Nagakute, Shigemochi chiến đấu dưới sự chỉ huy của cha mình là Shigemune, người đã tham gia vào lực lượng của Oda Nobukatsu. Ngay sau đó, lâu đài Kaganoi bị bao vây bởi lực lượng của Toyotomi Hideyoshi; Shigemune đã đầu hàng, và Shigemochi được Hideyoshi tuyển dụng làm sứ giả, nhận một khoản trợ cấp 10.000 \"koku\". Ông cũng sở hữu một thanh kiếm được chế tác bởi Muramasa, mà Hideyoshi đã ban tặng cho ông vào năm 1598.",
           "full_chars": 607,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Bộ phim nào được viết và đạo diễn bởi Joby Harold với nhạc được viết bởi Samuel Sim?",
           "full_chars": 84,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Samuel Sim là một nhạc sĩ phim và truyền hình. Ông lần đầu tiên được công nhận với bản nhạc đoạt giải cho loạt phim truyền hình của BBC \"Dunkirk\". Kể từ đó, ông đã sáng tác nhạc cho nhiều sản phẩm phi",
+          "text": "Samuel Sim là một nhạc sĩ phim và truyền hình. Ông lần đầu tiên được công nhận với bản nhạc đoạt giải cho loạt phim truyền hình của BBC \"Dunkirk\". Kể từ đó, ông đã sáng tác nhạc cho nhiều sản phẩm phim và truyền hình khác nhau, gần đây nhất là nhạc cho bộ phim \"Awake\" của The Weinstein Company và loạt phim truyền hình BBC/HBO \"House of Saddam\". Bản nhạc được đánh giá cao gần đây nhất của ông là nhạc phim cho Home Fires. Home Fires (Nhạc từ loạt phim truyền hình) được phát hành vào ngày 6 tháng 5 năm 2016 bởi Sony Classical Records.",
           "full_chars": 537,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae63b2255429908198fa526",
-        "document_id": "46395880",
-        "query": {
-          "text": "Ngày diễn ra trận đấu bóng đá đại học này tại Sân vận động Sun Life ở Miami Gardens, Florida, nơi Cl",
-          "full_chars": 159,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Đội bóng đá Clemson Tigers năm 2015 đại diện cho Đại học Clemson trong mùa bóng đá NCAA Division I FBS năm 2015. Đội Tigers được dẫn dắt bởi huấn luyện viên trưởng Dabo Swinney trong năm thứ bảy đầy đ",
-          "full_chars": 1183,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5a84fd085542994c784ddaba",
-        "document_id": "1854777",
-        "query": {
-          "text": "Devil's Food là một album tổng hợp các bài hát đơn của một ban nhạc rock and roll người Mỹ, cũng đượ",
-          "full_chars": 173,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Devil's Food là một album tổng hợp các bài hát đơn của ban nhạc rock and roll Mỹ Supersuckers, phát hành vào tháng 4 năm 2005 trên hãng đĩa Mid-Fi.",
-          "full_chars": 147,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

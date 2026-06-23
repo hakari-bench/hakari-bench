@@ -120,15 +120,15 @@
         "query_id": "Q66",
         "document_id": "D326",
         "query": {
-          "text": "Le même jour, le bureau du premier ministre a fait savoir que Justin Trudeau témoignerait lui aussi",
+          "text": "Le même jour, le bureau du premier ministre a fait savoir que Justin Trudeau témoignerait lui aussi devant cette commission, comme l'exige l'opposition, à une date restant à déterminer.",
           "full_chars": 185,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Am selben Tag kündigte das Büro des Premierministers an, dass Justin Trudeau, wie von der Opposition gefordert, zu einem noch zu bestimmenden Termin ebenfalls vor diesem Ausschuss aussagen wird.",
           "full_chars": 194,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -136,67 +136,35 @@
         "query_id": "Q124",
         "document_id": "D616",
         "query": {
-          "text": "Le président Sebastian Piñera a promulgué le 24 juillet une réforme historique qui permet aux Chilie",
+          "text": "Le président Sebastian Piñera a promulgué le 24 juillet une réforme historique qui permet aux Chiliens le retrait anticipé de 10% de leurs fonds de retraite privés pour faire face à la crise économique entraînée par la pandémie de Covid-19.",
           "full_chars": 240,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Präsident Sebastian Piñera verkündete am 24. Juli eine historische Reform, die es den Chilenen erlaubt, 10 % ihrer privaten Rentenfonds vorzeitig zu entnehmen, um die durch die Covid-19-Pandemie verur",
+          "text": "Präsident Sebastian Piñera verkündete am 24. Juli eine historische Reform, die es den Chilenen erlaubt, 10 % ihrer privaten Rentenfonds vorzeitig zu entnehmen, um die durch die Covid-19-Pandemie verursachte Wirtschaftskrise zu bewältigen.",
           "full_chars": 238,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "Q104",
         "document_id": "D516",
         "query": {
-          "text": "Des ajustements mineurs qui doivent libérer plus de capital pour les investisseurs et donc permettre",
+          "text": "Des ajustements mineurs qui doivent libérer plus de capital pour les investisseurs et donc permettre aux \"entreprises d'obtenir plus facilement les financements dont elles ont besoin et d'investir dans notre économie\", assure le vice-président de la Commission européenne, Valdis Dombrovskis.",
           "full_chars": 292,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Geringfügige Anpassungen sollen mehr Kapital für Investoren freisetzen und es so „den Unternehmen leichter machen, die benötigte Finanzierung zu erhalten und in unsere Wirtschaft zu investieren“, vers",
+          "text": "Geringfügige Anpassungen sollen mehr Kapital für Investoren freisetzen und es so „den Unternehmen leichter machen, die benötigte Finanzierung zu erhalten und in unsere Wirtschaft zu investieren“, versichert der Vizepräsident der Europäischen Kommission Valdis Dombrovskis.",
           "full_chars": 272,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q9",
-        "document_id": "D41",
-        "query": {
-          "text": "Les géants Apple, Alphabet Inc et Amazon.com doivent publier leurs résultats le 30 juillet, le jour",
-          "full_chars": 239,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Die Giganten Apple, Alphabet Inc und Amazon.com werden ihre Ergebnisse am 30. Juli vorlegen, dem gleichen Tag, an dem das Handelsministerium seine erste Schätzung für das BIP aus dem zweiten Quartal b",
-          "full_chars": 270,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q162",
-        "document_id": "D806",
-        "query": {
-          "text": "Justin Trudeau avait admis avoir commis une erreur en ne se retirant pas des discussions lors des né",
-          "full_chars": 142,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Justin Trudeau hatte zugegeben, dass er einen Fehler gemacht hat, als er sich während der Verhandlungen zwischen seiner Regierung und UNIS nicht von den Gesprächen fernhielt.",
-          "full_chars": 174,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

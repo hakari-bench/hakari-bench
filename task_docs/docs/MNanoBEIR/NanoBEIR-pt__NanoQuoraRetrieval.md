@@ -114,8 +114,6 @@ retrieval for recall and a duplicate-specific reranker for final ordering.
 | É normal rir das próprias piadas? [33 chars] | É estranho rir das minhas próprias piadas? [42 chars] |
 | Qual é a maior mentira que você já contou? [42 chars] | Qual é a maior mentira que você já contou? [42 chars] |
 | Por que o Quora frequentemente sugere respostas no meu feed que criticam Donald Trump? [86 chars] | Por que o Quora parece ter apenas respostas tendenciosas e subjetivas sobre perguntas relacionadas a Donald Trump? [114 chars] |
-| Como posso ficar mais forte fisicamente? [40 chars] | Como posso ficar mais forte fisicamente? [40 chars] |
-| Como funciona um satélite quântico? [35 chars] | Como funciona um satélite quântico e quais seriam suas principais aplicações? [77 chars] |
 
 ### Public Sources
 

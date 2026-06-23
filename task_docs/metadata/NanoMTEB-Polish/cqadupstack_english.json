@@ -124,14 +124,14 @@
         "query": {
           "text": "Ogólne „to”",
           "full_chars": 11,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Do czego odnosi się „to” w „pada deszcz”? Chciałem pozostawić tytuł pytania bez zmian, aby nie odrywać się od zabawy `:)`. W każdym razie > pada deszcz. Co pada? Czy to niebo? Chmury? Pogoda? Deszcz?",
+          "text": "Do czego odnosi się „to” w „pada deszcz”? Chciałem pozostawić tytuł pytania bez zmian, aby nie odrywać się od zabawy `:)`. W każdym razie > pada deszcz. Co pada? Czy to niebo? Chmury? Pogoda? Deszcz? Co to jest\"? Jakieś spostrzeżenia historyczne dotyczące oświadczenia?",
           "full_chars": 269,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -140,13 +140,13 @@
         "query": {
           "text": "Jak przebić zakres dzielonych liczb?",
           "full_chars": 36,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Kiedy powinienem używać pauzy, pauzy i łącznika? Generalnie wiem, jak używać myślnika, ale kiedy powinienem użyć en-dash zamiast em-myślnika, a kiedy powinienem użyć myślnika zamiast em-myślnika?",
           "full_chars": 195,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -156,49 +156,17 @@
         "query": {
           "text": "Wybieranie między „z czym eksperymentować” a „z czym eksperymentować”",
           "full_chars": 69,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kiedy należy kończyć zdanie przyimkiem? Jak wielu innych, często kończę zdanie przyimkiem. Tak, wzdrygam się. Zwykle przepisuję zdanie, ale czasami (w e-mailach) po prostu z tym żyję. _Do_ _z_... wies",
+          "text": "Kiedy należy kończyć zdanie przyimkiem? Jak wielu innych, często kończę zdanie przyimkiem. Tak, wzdrygam się. Zwykle przepisuję zdanie, ale czasami (w e-mailach) po prostu z tym żyję. _Do_ _z_... wiesz kim jesteś. Czy powinienem dalej walczyć na tym, czy jest to w porządku w niektórych okolicznościach?",
           "full_chars": 303,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "90874",
-        "document_id": "84288",
-        "query": {
-          "text": "Zasady dotyczące wielkich liter dla „the”",
-          "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Zapisywanie przedimka określonego wielkimi literami w nazwach Kiedy byłem młody kilkadziesiąt lat temu, uczono mnie, że w przypadku nazw osób, miejsc i rzeczy, które zawierały przedimek określony, prz",
-          "full_chars": 752,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "178255",
-        "document_id": "158232",
-        "query": {
-          "text": "Jaka jest różnica między „częścią” a „częścią” ？",
-          "full_chars": 48,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Różnica między „częścią” a „częścią”? To pytanie może wydawać się bardzo proste, ale coś mi się myli, kiedy chcę mówić. Przeczytałem książkę zatytułowaną „re-start your English” i zobaczyłem zdanie. >",
-          "full_chars": 471,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

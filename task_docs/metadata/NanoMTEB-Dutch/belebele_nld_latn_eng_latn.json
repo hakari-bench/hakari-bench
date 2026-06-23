@@ -166,16 +166,16 @@
         "query_id": "Q66",
         "document_id": "C346",
         "query": {
-          "text": "Which of the changes prompted by The French Revolution had a significant impact on working class cit",
+          "text": "Which of the changes prompted by The French Revolution had a significant impact on working class citizens?",
           "full_chars": 106,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "De Revolutie heeft grote sociale en politieke gevolgen gehad, zoals het gebruik van het metrieke stelsel, een verschuiving van de absolute monarchie naar republicanisme, nationalisme en de opvatting d",
+          "text": "De Revolutie heeft grote sociale en politieke gevolgen gehad, zoals het gebruik van het metrieke stelsel, een verschuiving van de absolute monarchie naar republicanisme, nationalisme en de opvatting dat het land aan zijn inwoners toebehoort in plaats van een enkele leider. Voor alle mannelijke sollicitanten waren na de revolutie functies te verkrijgen, zodat de meest ambitieuze en geschikte kandidaten konden slagen. Hetzelfde geldt voor het leger. De legerrangen worden niet meer gebaseerd op iemands klasse maar op het kaliber van de persoon. De Franse Revolutie inspireerde ook in andere landen de onderdrukte arbeidersklasse tot een revolutie.",
           "full_chars": 650,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -184,14 +184,14 @@
         "query": {
           "text": "According to the passage, who may have started an agriculture society?",
           "full_chars": 70,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Voor een groot deel van de negentiende en twintigste eeuw geloofde men dat de vroegste inwoners van Nieuw-Zeeland de Maori waren, die jacht maakten die op enorme vogels genaamd moa's. De theorie leidd",
+          "text": "Voor een groot deel van de negentiende en twintigste eeuw geloofde men dat de vroegste inwoners van Nieuw-Zeeland de Maori waren, die jacht maakten die op enorme vogels genaamd moa's. De theorie leidde tot het idee dat het Maori-volk in een grote vloot uit Polynesië kwam en Nieuw-Zeeland veroverde op de Moriori, waarna er een agrarische samenleving werd gevormd. Er zijn echter nieuwe aanwijzingen dat de Moriori een groep Maori's waren op het vasteland die van Nieuw-Zeeland naar de eilanden van Chatham trokken en daar een persoonlijke, vredevolle gemeenschap opbouwden. Een andere stam op de Cathameilanden waren Maori die vanuit Nieuw-Zeeland zijn geëmigreerd. Ze noemden zichzelf de Moriori en na een paar schermutselingen en werden de Moriori uiteindelijk weggevaagd",
           "full_chars": 774,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -200,49 +200,17 @@
         "query": {
           "text": "Which of the following accurately describes the practice of subsistence agriculture?",
           "full_chars": 84,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Zelfvoorzienende landbouw is landbouw waarbij voldoende voedsel wordt geproduceerd om aan de behoeften van de boer en zijn gezin te voldoen. Landbouw met als doel levensonderhoud is een simpel systeem",
+          "text": "Zelfvoorzienende landbouw is landbouw waarbij voldoende voedsel wordt geproduceerd om aan de behoeften van de boer en zijn gezin te voldoen. Landbouw met als doel levensonderhoud is een simpel systeem dat meestal biologisch is. Hierbij wordt opgeslagen zaad gebruikt dat afkomstig is uit de ecoregio, en dat wordt gecombineerd met wisselende gewassen of andere relatief eenvoudige technieken om de opbrengst te optimaal te maken. Vroeger werkten de meeste boeren in de zelfvoorzienende landbouw. In veel ontwikkelingslanden is dit nog steeds het geval.",
           "full_chars": 552,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q9",
-        "document_id": "C313",
-        "query": {
-          "text": "According to the passage, which of the following was one of China’s most violent eras?",
-          "full_chars": 86,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Het oude China had een unieke manier om verschillende tijdsperiodes weer te geven; iedere fase van China of iedere regerende familie had een onderscheidende dynastie. Ook tussen de verschillende dynas",
-          "full_chars": 710,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q161",
-        "document_id": "C400",
-        "query": {
-          "text": "When did King Tutankhamun gain notoriety?",
-          "full_chars": 41,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Ja! Koning Toetanchamon is vandaag de dag een van de bekendste koningen van het oude Egypte. In de oudheid werd hij echter niet als belangrijk beschouwd en hij is niet opgenomen in de meeste lijsten m",
-          "full_chars": 525,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

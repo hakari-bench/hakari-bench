@@ -131,13 +131,13 @@
         "query": {
           "text": "Convertitore Elevatore CC-CC a Più Livelli Innovativo",
           "full_chars": 53,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "I convertitori di tensione a sorgente multlivello stanno emergendo come una nuova categoria di opzioni di convertitori di potenza per applicazioni ad alta potenza. I convertitori di tensione a sorgent",
+          "text": "I convertitori di tensione a sorgente multlivello stanno emergendo come una nuova categoria di opzioni di convertitori di potenza per applicazioni ad alta potenza. I convertitori di tensione a sorgente multlivello solitamente sintetizzano l'onda di tensione a gradini da diversi livelli di tensione dei condensatori in corrente continua. Una delle principali limitazioni dei convertitori multlivello è lo squilibrio di tensione tra i diversi livelli. Le tecniche per bilanciare la tensione tra i diversi livelli coinvolgono solitamente il clampaggio della tensione o il controllo della carica dei condensatori. Ci sono diversi modi per implementare il bilanciamento della tensione nei convertitori multlivello. Escludendo i convertitori tradizionali accoppiati magneticamente, questo articolo presenta tre convertitori di tensione a sorgente multlivello recentemente sviluppati: 1) a clamp diodi, 2) a condensatori volanti, e 3) inverter a cascata con sorgenti di corrente continua separate. Il princ",
           "full_chars": 1122,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -147,13 +147,13 @@
         "query": {
           "text": "Apprendimento di Campi Markoviani Gaussiani Sparsi Veloci Basato sulla Fattorizzazione di Cholesky",
           "full_chars": 98,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Sure, please provide the English document text that you need translated into Italian.",
           "full_chars": 85,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Sintesi delle Texture Utilizzando Reti Neurali Convoluzionali",
           "full_chars": 61,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "In questo lavoro indaghiamo l'effetto della profondità della rete convoluzionale sulla sua accuratezza nel contesto del riconoscimento delle immagini su larga scala. Il nostro principale contributo è",
+          "text": "In questo lavoro indaghiamo l'effetto della profondità della rete convoluzionale sulla sua accuratezza nel contesto del riconoscimento delle immagini su larga scala. Il nostro principale contributo è una valutazione approfondita di reti di profondità crescente, che dimostra che un miglioramento significativo rispetto alle configurazioni dello stato dell'arte può essere ottenuto aumentando la profondità a 16–19 strati di peso. Questi risultati sono stati la base della nostra partecipazione all'ImageNet Challenge 2014, dove il nostro team ha conquistato il primo e il secondo posto nelle categorie di localizzazione e classificazione rispettivamente. Abbiamo anche dimostrato che le nostre rappresentazioni si generalizzano bene ad altri dataset, dove ottengono risultati all'avanguardia. Importante, abbiamo reso disponibili al pubblico i nostri due modelli ConvNet migliori per facilitare ulteriori ricerche sull'uso delle rappresentazioni visive profonde nella visione artificiale.",
           "full_chars": 988,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
-        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
-        "query": {
-          "text": "Antenna ad anello anulare planare a banda larga con polarizzazione circolare per sistema RFID",
-          "full_chars": 93,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "In questo articolo, viene proposta una tecnica di alimentazione a striscia meandrante orizzontale (HMS) per ottenere un buon adattamento di impedenza e schemi di radiazione simmetrici frontali per un'",
-          "full_chars": 1481,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
-        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
-        "query": {
-          "text": "Progettazione di un monitor digitale avanzato del battito cardiaco utilizzando componenti elettronic",
-          "full_chars": 109,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "In questo articolo, abbiamo presentato il design e lo sviluppo di un nuovo dispositivo integrato per misurare la frequenza cardiaca utilizzando la punta del dito, al fine di migliorare la stima della",
-          "full_chars": 1397,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -124,13 +124,13 @@
         "query": {
           "text": "Podatek od akcji lub ETF",
           "full_chars": 24,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "„Jeśli sprzedajesz akcje bez wypłat, Twój zysk podlega opodatkowaniu zgodnie z § 1001. Ale nie wszystkie zrealizowane zyski zostaną uznane za podlegające opodatkowaniu. A niektóre zyski, które prawdop",
+          "text": "„Jeśli sprzedajesz akcje bez wypłat, Twój zysk podlega opodatkowaniu zgodnie z § 1001. Ale nie wszystkie zrealizowane zyski zostaną uznane za podlegające opodatkowaniu. A niektóre zyski, które prawdopodobnie nie zostaną zrealizowane, zostaną uznane za podlegające opodatkowaniu. aktywa kapitałowe dla inwestorów, którzy będą generować zyski kapitałowe zgodnie z §1(h), ale dealerzy, handlowcy i hedgingowcy będą traktowani inaczej.Jeśli jesteś inwestorem i posiadałeś akcje przez rok lub dłużej, możesz uzyskaj korzystne stawki zysku kapitałowego (np. 20% zamiast 39,6%). Jeśli składnik aktywów był przechowywany krótkoterminowo, krócej niż rok, wówczas Twój podatek będzie generalnie obliczany według wyższych zwykłych stawek dochodu. Pojawia się również problem podatek od inwestycji netto zgodnie z §1411. Unikam wielu wyjątków, kwalifikacji i permutacji tych zasad. Jeśli otrzymujesz dywidendę §316 z akcji, to jest to dochód §61. Dywidendy kwalifikowane są zwykłym dochodem, ale generalnie będą",
           "full_chars": 2122,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -140,14 +140,14 @@
         "query": {
           "text": "Jaki kurs wymiany stosuje El Al przy przeliczaniu kwoty płatności końcowej na szekle?",
           "full_chars": 85,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "„Stawka za „czeki i przelewy” jest ustalana przez każdy bank wielokrotnie w ciągu dnia w oparciu o rynek. Jest to przeciwieństwo stawki za „gotówkę/banknoty”, również ustalaną przez każdy bank, a „„st",
+          "text": "„Stawka za „czeki i przelewy” jest ustalana przez każdy bank wielokrotnie w ciągu dnia w oparciu o rynek. Jest to przeciwieństwo stawki za „gotówkę/banknoty”, również ustalaną przez każdy bank, a „„stawka reprezentatywna”” (שער היציג) ustalona przez Bank Izraela. Stawki te można znaleźć na stronach internetowych większości banków. Oto Bank Hapoalim i Bank Leumi. Pytanie brzmi, który kurs banku zostanie zastosowany. Może to być bank, który wydał Twoją kartę, bank El Ala lub firmę obsługującą karty kredytowe (np. Poalim w przypadku Isracard lub Leumi w przypadku CAL). Będziesz musiał zadzwonić do El Al w celu weryfikacji, ale ponieważ są to stawki rynkowe, nie powinny być zbyt różne.\"",
           "full_chars": 691,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -156,49 +156,17 @@
         "query": {
           "text": "Ile brokerzy płacą za wymianę za transakcję?",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Nie ma jednej odpowiedzi na to pytanie, ale są pewne ogólniki. Większość giełd rozróżnia pasywną i agresywną stronę handlu. Uczestnik pasywny to zlecenie, które znajdowało się na rynku w momencie tran",
+          "text": "Nie ma jednej odpowiedzi na to pytanie, ale są pewne ogólniki. Większość giełd rozróżnia pasywną i agresywną stronę handlu. Uczestnik pasywny to zlecenie, które znajdowało się na rynku w momencie transakcji. Jest to zlecenie, które na podstawie jego ceny nie było wówczas możliwe do wykonania i dlatego trafia do księgi zleceń. Na przykład, jestem gotów sprzedać 100 akcji po 9,98 USD, ale nikt nie chce ich teraz kupić, więc pozostaje to otwarte zlecenie na giełdzie. Wtedy ktoś się zjawia i jest gotów zapłacić moją cenę (tutaj pomijam wiele szczegółów). Więc agresywnie wycofują moje zamówienie, albo publikując ofertę rynkową, albo konkretnie, że chcą kupić 100 akcji po 9,98 USD lub po wyższej cenie. Większość giełd faktycznie daje mi, jako pasywnemu (tj. zapewniającemu płynność) inwestorowi, niewielki rabat, podczas gdy druga osoba jest obciążana kilkoma ułamkami centa. Google znalazł szczegóły dotyczące NYSEArca, a większość innych giełd również podaje swoje opłaty do wiadomości publiczn",
           "full_chars": 1211,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "932",
-        "document_id": "48722",
-        "query": {
-          "text": "Czy dochód freelancera uzyskany przez obywatela USA mieszkającego za granicą podlega stanowemu podat",
-          "full_chars": 117,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Brak podatków stanowych, ale Włochy mają również korzystny traktat z rządem federalnym Stanów Zjednoczonych. Zastanów się nad obniżeniem podatków federalnych do 5% ;) to gruba lektura, http://www.irs.",
-          "full_chars": 629,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4415",
-        "document_id": "238234",
-        "query": {
-          "text": "Ile wynosi inflacja?",
-          "full_chars": 20,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Istnieje coś takiego jak indeks cen konsumpcyjnych (CPI). Istnieje koszyk towarów, po który ludzie, którzy prowadzą indeks, w zasadzie robią zakupy. Jest o wiele bardziej szczegółowy ze względu na dok",
-          "full_chars": 614,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

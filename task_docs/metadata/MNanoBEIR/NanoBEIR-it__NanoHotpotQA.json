@@ -131,14 +131,14 @@
         "query": {
           "text": "In quale sitcom televisiva Penny Rae Bridges ha recitato insieme a quale altro attore?",
           "full_chars": 86,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Penny Rae Bridges (nata il 29 luglio 1990) è un'attrice americana. Ha recitato in \"For Your Love\", \"Family Law\", \"Boy Meets World\" e \"The Parent 'Hood\". È famosa per il suo ruolo in \"Half & Half\", nel",
+          "text": "Penny Rae Bridges (nata il 29 luglio 1990) è un'attrice americana. Ha recitato in \"For Your Love\", \"Family Law\", \"Boy Meets World\" e \"The Parent 'Hood\". È famosa per il suo ruolo in \"Half & Half\", nel ruolo della giovane Mona.",
           "full_chars": 226,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Chi ha donato a Kaganoi Shigemochi una spada forgiata dal fondatore della scuola Muramasa?",
           "full_chars": 90,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 agosto 1600) fu un samurai giapponese durante il periodo Azuchi-Momoyama, al servizio del clan Oda. Governava il castello di Kaganoi. Durante la battaglia di Koma",
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 agosto 1600) fu un samurai giapponese durante il periodo Azuchi-Momoyama, al servizio del clan Oda. Governava il castello di Kaganoi. Durante la battaglia di Komaki e Nagakute, Shigemochi combatté sotto il padre Shigemune, che era al servizio delle forze di Oda Nobukatsu. Poco dopo, il castello di Kaganoi fu circondato dalle forze di Toyotomi Hideyoshi; Shigemune si arrese, e Shigemochi fu assunto da Hideyoshi come messaggero, ricevendo uno stipendio di 10.000 \"koku\". Possedeva inoltre una spada forgiata da Muramasa, che Hideyoshi gli conferì nel 1598.",
           "full_chars": 596,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Quale film è stato scritto e diretto da Joby Harold con la musica di Samuel Sim?",
           "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Samuel Sim è un compositore di film e televisione. Ha ottenuto il primo riconoscimento con la colonna sonora premiata della serie drammatica della BBC \"Dunkirk\". Da allora ha composto la musica per un",
+          "text": "Samuel Sim è un compositore di film e televisione. Ha ottenuto il primo riconoscimento con la colonna sonora premiata della serie drammatica della BBC \"Dunkirk\". Da allora ha composto la musica per una vasta gamma di produzioni cinematografiche e televisive, tra cui più recentemente la colonna sonora del film \"Awake\" per The Weinstein Company e la serie drammatica BBC/HBO \"House of Saddam\". La sua musica più recente e acclamata è la colonna sonora di Home Fires. Home Fires (Musiche della Serie Televisiva) è stato pubblicato il 6 maggio 2016 da Sony Classical Records.",
           "full_chars": 573,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae63b2255429908198fa526",
-        "document_id": "46395880",
-        "query": {
-          "text": "Qual è la data di questa partita di football universitario al Sun Life Stadium a Miami Gardens, Flor",
-          "full_chars": 187,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "La squadra di football dei Clemson Tigers del 2015 ha rappresentato l'Università di Clemson nella stagione 2015 della NCAA Division I FBS. I Tigers erano guidati dall'allenatore capo Dabo Swinney nel",
-          "full_chars": 1178,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5a84fd085542994c784ddaba",
-        "document_id": "1854777",
-        "query": {
-          "text": "Devil's Food è una raccolta di singoli di una band rock and roll americana che è nota anche per esib",
-          "full_chars": 140,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Devil's Food è una raccolta di singoli del gruppo rock and roll americano Supersuckers, pubblicata ad aprile 2005 per Mid-Fi Records.",
-          "full_chars": 133,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -75,8 +75,6 @@ For evaluation, this split is a clear test of multilingual e-commerce retrieval.
 | el pack de 3 cintas, ¿es una de cada tamaño o las 3 del mismo tamaño? [69 chars] | gm climbing pack of 3 16mm nylon sling runner 120cm / 48inch (gray) [67 chars] |
 | que son tallas grandes o justas? [32 chars] | The waist-tightening and slim-fitting design hides your proud flesh at your waist and instead forms a curve there. [114 chars] |
 | és el modelo acústico o electro acústico? [41 chars] | martin drs2 dreadnought acoustic-electric guitar [48 chars] |
-| como se que tamaño pedir,? [26 chars] | i encourage people to measure your wrist before purchasing; for reference my wrist is 5.5 inches around. [104 chars] |
-| si compro un pack vendran 12 unidades? [38 chars] | "unit_count": [{"type": {"value": "count"}, "value": 12}] [57 chars] |
 
 ### Source Reference Table
 

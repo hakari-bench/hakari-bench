@@ -167,14 +167,14 @@
         "query": {
           "text": "¿Qué tipo de rentabilidad está ofreciendo Vanguard?",
           "full_chars": 51,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "De la página de Vanguard - Pareció la opción más sencilla, ya que los datos de S&P son fáciles de encontrar. Utilizo MoneyChimp para verificar, lo que confirma que la página de Vanguard ofrece la Tasa",
+          "text": "De la página de Vanguard - Pareció la opción más sencilla, ya que los datos de S&P son fáciles de encontrar. Utilizo MoneyChimp para verificar, lo que confirma que la página de Vanguard ofrece la Tasa de Crecimiento Anual Compuesta (CAGR), no el promedio aritmético. Tenga en cuenta: Vanguard indica 'Para los rendimientos del mercado de valores de EE. UU., utilizamos el Standard & Poor's 90 desde 1926 hasta el 3 de marzo de 1957,' mientras que el Chimp utiliza datos del sitio del ganador del Premio Nobel, Robert Shiller.",
           "full_chars": 525,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -183,13 +183,13 @@
         "query": {
           "text": "Implicaciones fiscales del trabajo freelance",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Si tienes ingresos en EE.UU., deberás pagar impuestos sobre la renta en EE.UU. a menos que exista un tratado con tu país que lo indique.",
           "full_chars": 136,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -199,49 +199,17 @@
         "query": {
           "text": "¿Qué se entiende por volumen alto o bajo?",
           "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "El volumen diario generalmente se compara con el volumen promedio diario de los últimos 50 días para una acción. Un volumen alto generalmente se considera que es 2 o más veces el volumen promedio diar",
+          "text": "El volumen diario generalmente se compara con el volumen promedio diario de los últimos 50 días para una acción. Un volumen alto generalmente se considera que es 2 o más veces el volumen promedio diario de los últimos 50 días para esa acción. Sin embargo, algunos operadores pueden establecer el criterio en 3x o 4x el VPD para confirmar un patrón o evento específico. El volumen se compara con el VPD de la propia acción, ya que compararlo con el volumen de otras acciones sería como comparar peras con manzanas. Diferentes empresas tendrían un número diferente de acciones totales disponibles, diferentes niveles de liquidez y diferentes niveles de volatilidad, lo cual puede influir en los volúmenes negociados cada día.",
           "full_chars": 723,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "94",
-        "document_id": "245447",
-        "query": {
-          "text": "Canjear puntos de tarjeta de crédito para cubrir gastos empresariales deducibles",
-          "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Para simplificar, empecemos considerando solo el reembolso en efectivo. En general, el reembolso en efectivo de las tarjetas de crédito para uso personal no es gravable, pero para uso empresarial sí l",
-          "full_chars": 4025,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2903",
-        "document_id": "527776",
-        "query": {
-          "text": "¿Cómo debo declarar mis impuestos como autónomo?",
-          "full_chars": 48,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Para efectos fiscales, deberás presentar tus impuestos como empleado (usando tus talones T4 y con retenciones automáticas) y también como emprendedor. Yo tuve la misma situación el año pasado. \"Emplea",
-          "full_chars": 780,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -117,11 +117,9 @@ reranker.
 
 | Query | Positive document |
 | --- | --- |
-| Fitzgerald Auto Mall em Chambersburg, PA [40 chars] | Fitzgerald Auto Malls é uma concessionária de automóveis de propriedade e operação familiar fundada em 1966, com sua primeira localização abrindo em Bethesda, Maryland. Em 2014, a Fitzgerald Auto Mall... [200 / 436 chars] |
-| Coleção de contos de 1994 de Alice Munro está disponível [56 chars] | Alice Ann Munro (nascida Laidlaw; 10 de julho de 1931) é uma autora canadense. O trabalho de Munro é frequentemente descrito como tendo revolucionado a arquitetura dos contos, especialmente por sua te... [200 / 528 chars] |
-| Arquitetura galo-romana em Paris [32 chars] | A Arte em Paris é um artigo sobre a cultura e a história da arte em Paris, a capital da França. Há séculos, Paris atrai artistas de todo o mundo, que chegam à cidade para se educarem e buscar inspiraç... [200 / 306 chars] |
-| Repúblicas da antiga Iugoslávia [31 chars] | A Constituição de 1974 da Iugoslávia foi a quarta e última constituição da República Federal Socialista da Iugoslávia. Ela entrou em vigor em 21 de fevereiro. Com 406 artigos originais, a constituição... [200 / 440 chars] |
-| Filmes filmados em Veneza [25 chars] | A Pequena Romântica é um filme de comédia romântica americano de 1979, em Technicolor e Panavision, dirigido por George Roy Hill e estrelado por Laurence Olivier, Thelonious Bernard e Diane Lane, em s... [200 / 391 chars] |
+| Fitzgerald Auto Mall em Chambersburg, PA [40 chars] | Fitzgerald Auto Malls é uma concessionária de automóveis de propriedade e operação familiar fundada em 1966, com sua primeira localização abrindo em Bethesda, Maryland. Em 2014, a Fitzgerald Auto Malls ficou em 59º lugar na lista das "Top 125 Concessionárias" dos EUA, publicada anualmente pela Automotive News. As localizações da Fitzgerald aparecem cinco vezes na lista WardsAuto e-Dealer 100 de 2013, nas posições 8, 25, 30, 43 e 98. [436 chars] |
+| Coleção de contos de 1994 de Alice Munro está disponível [56 chars] | Alice Ann Munro (nascida Laidlaw; 10 de julho de 1931) é uma autora canadense. O trabalho de Munro é frequentemente descrito como tendo revolucionado a arquitetura dos contos, especialmente por sua tendência de avançar e retroceder no tempo. Suas histórias são conhecidas por "embutir mais do que anunciar, revelar mais do que exibir." A ficção de Munro é, na maioria das vezes, ambientada em seu condado natal, Huron, no sudoeste de Ontário. Seus contos exploram as complexidades humanas em um estilo de prosa simples e direto. [528 chars] |
+| Arquitetura galo-romana em Paris [32 chars] | A Arte em Paris é um artigo sobre a cultura e a história da arte em Paris, a capital da França. Há séculos, Paris atrai artistas de todo o mundo, que chegam à cidade para se educarem e buscar inspiração em seus recursos artísticos e galerias. Como resultado, Paris adquiriu a reputação de "Cidade da Arte". [306 chars] |
 
 ### Public Sources
 

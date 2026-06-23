@@ -123,13 +123,13 @@
         "query": {
           "text": "อายุจำกัดสำหรับลูกเสือหญิงคือเท่าไหร่",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "5.0 18.0 ปี",
           "full_chars": 11,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -139,13 +139,13 @@
         "query": {
           "text": "ใครเป็นผู้เล่นเบสหนึ่งของแยงกีส์",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Edwin Encarnación",
           "full_chars": 17,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -155,49 +155,17 @@
         "query": {
           "text": "เมืองแอลบูเคอร์คีในรัฐนิวเม็กซิโกมีประชากรเท่าไหร่",
           "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "558545.0",
           "full_chars": 8,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q9375",
-        "document_id": "C4796",
-        "query": {
-          "text": "ใครแสดงบทแม่ในเรื่อง That '70s Show",
-          "full_chars": 35,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "เดบร้า โจ รัปป์",
-          "full_chars": 15,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q4237",
-        "document_id": "C2622",
-        "query": {
-          "text": "แต่ละทีมเล่นในเอ็นบีเอกี่เกมส์",
-          "full_chars": 30,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "82.0",
-          "full_chars": 4,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

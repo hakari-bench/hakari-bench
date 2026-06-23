@@ -153,15 +153,15 @@
         "query_id": "75",
         "document_id": "bacon_grease/axzz2yzIEoMf9_37.txt",
         "query": {
-          "text": "More uses for bacon grease We (my family) consume good amounts of bacon which produce a lot of bacon",
+          "text": "More uses for bacon grease We (my family) consume good amounts of bacon which produce a lot of bacon grease. I don't like wasting anything that I could reuse or repurpose, including this. I use this byproduct in many different ways, including: cooking. Filtered it can be used in cooking other foods or greasing the pans. pet food. Mixed with other foods, it is a good addition to the animals' diet. lubricant. Good for certain tools, or snow sleds. candles. Good source of light while camping or in",
           "full_chars": 604,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Tallow, or rendered beef fat, can be used to make soap. It went against my grain to throw out the tallow from a side of beef we bought, so I called our County Agent to see if he had any directions for",
+          "text": "Tallow, or rendered beef fat, can be used to make soap. It went against my grain to throw out the tallow from a side of beef we bought, so I called our County Agent to see if he had any directions for making soap. To my surprise, he did; to my further surprise, they were easy. I rendered the first batch of tallow by cutting it into chunks, filling the pan about one-third full of water and occasionally stirring the fat while it cooked at moderate heat. The stirring was a bit sloppy and the fat took quite a while to melt, so I ground subsequent batches of tallow in the meat grinder. This sped up the process considerably because I could then get more in the pan, it was easier to stir and the fat melted more rapidly. The melted tallow and water was sieved and cooled. When the fat had solidified, I lifted it off the top of the water — and it was ready for soap. While I was heating 6 pounds of the rendered fat (13-1/2 cups) to 120-130 degrees, I stirred together a 13 oz. can of lye and 5 cup",
           "full_chars": 2693,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -169,15 +169,15 @@
         "query_id": "14",
         "document_id": "carbon_household/beopthtml_1.txt",
         "query": {
-          "text": "Determining carbon reduction vs cost of various home upgrades I've done some amount of upgrades to m",
+          "text": "Determining carbon reduction vs cost of various home upgrades I've done some amount of upgrades to my house to reduce my overall carbon emissions, and reading online there are all kinds of suggestions for doing even more: Replace my natural gas water heater with electric Put solar panels on the roof Buy wind energy credits Other kinds of carbon offsets Geothermal Don't replace my electric oven with gas (which I had been thinking about, since I hear how great they are for cooking) And of course I",
           "full_chars": 2158,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "BEopt: Building Energy Optimization Tool The BEopt™ (Building Energy Optimization Tool) software provides capabilities to evaluate residential building designs and identify cost-optimal efficiency pac",
+          "text": "BEopt: Building Energy Optimization Tool The BEopt™ (Building Energy Optimization Tool) software provides capabilities to evaluate residential building designs and identify cost-optimal efficiency packages at various levels of whole-house energy savings along the path to zero net energy. BEopt can be used to analyze both new construction and existing home retrofits, as well as single-family detached and multi-family buildings, through evaluation of single building designs, parametric sweeps, and cost- based optimizations. BEopt provides detailed simulation-based analysis based on specific house characteristics, such as size, architecture, occupancy, vintage, location, and utility rates. Discrete envelope and equipment options, reflecting realistic construction materials and practices, are evaluated. BEopt uses [ EnergyPlus ](https://energyplus.net/) , the Department of Energy's flagship simulation engine. Simulation assumptions are based on [ ANSI/RESNET/ICC Standards ](https://www.res",
           "full_chars": 1457,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -185,53 +185,21 @@
         "query_id": "100",
         "document_id": "water_circulate/detailsofplumbing_36.txt",
         "query": {
-          "text": "Forcing water circulation in solar hot water installation I'm planning an installation for heating w",
+          "text": "Forcing water circulation in solar hot water installation I'm planning an installation for heating water using solar \"exchanger\" panels (solar used to heat water directly, not through electricity). I don't want to bind the reservoir, panel and tap locations to the natural circulation cycle though (hot water traveling up etc). So, in order for this to work, I'd have to force some very slow water circulation between the reservoir and the panels; a pump that takes very little power and provides ver",
           "full_chars": 1071,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Here you can see the array of pipe going between the coil, the tank, and the domestic hot water plumbing. Alan transitioned to a flexible, pre-insulated stainless steel pipe to complete the thermosiph",
+          "text": "Here you can see the array of pipe going between the coil, the tank, and the domestic hot water plumbing. Alan transitioned to a flexible, pre-insulated stainless steel pipe to complete the thermosiphon loop (black-covered pipes in the background). In the foreground, you see the cold water “in” and the hot water “out” as well as the pvc drain which services the pressure/temperature valve and the pan beneath the hot water tank. Note: all pipes excluding cold water “in” should be insulated.",
           "full_chars": 493,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "87",
-        "document_id": "pesticide/NeonicotinoidAvailableneonicotinoidinsecticides_7.txt",
-        "query": {
-          "text": "How to recognize products with neonicotinoid pesticides in them? Recently, the EU has temporarily ba",
-          "full_chars": 561,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Market [ [ edit ](/w/index.php?title=Neonicotinoid&action=edit&section=2 \"Edit section: Market\") ] ![](//upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ambox_current_red.svg/42px- Ambox_current_red",
-          "full_chars": 1911,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "33",
-        "document_id": "mineral_deposit/faq_16.txt",
-        "query": {
-          "text": "Why don't mineral water cans carry a deposit label? I've been putting in the recycling bin all our \"",
-          "full_chars": 443,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "What beverages are covered by NY's Bottle Bill? Carbonated Soft Drinks Including Sparkling Water Carbonated Energy Drinks Carbonated Juice (anything less than 100% juice, containing added sugar or wat",
-          "full_chars": 444,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
     "source_task": "Sustainable Living StackExchange",
-    "example_count": 5
+    "example_count": 3
   }
 }

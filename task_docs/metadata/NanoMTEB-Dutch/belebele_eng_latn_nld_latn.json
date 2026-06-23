@@ -168,30 +168,30 @@
         "query": {
           "text": "Welke uitspraak over het evenement waar de schietpartij plaatsvond, is juist?",
           "full_chars": 77,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "At least 100 people had attended the party, in order to celebrate the first anniversary of a couple whose wedding was held last year. A formal anniversary event was scheduled for a later date, officia",
+          "text": "At least 100 people had attended the party, in order to celebrate the first anniversary of a couple whose wedding was held last year. A formal anniversary event was scheduled for a later date, officials said. The couple had married in Texas one year ago and came to Buffalo to celebrate with friends and relatives. The 30-year-old husband, who was born in Buffalo, was one of the four killed in the shooting, but his wife was not hurt.",
           "full_chars": 435,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "Q123",
         "document_id": "C244",
         "query": {
-          "text": "Wat moeten arrestanten volgens het tijdelijke contactverbod dat in de tekst wordt genoemd, krijgen o",
+          "text": "Wat moeten arrestanten volgens het tijdelijke contactverbod dat in de tekst wordt genoemd, krijgen om langer dan 24 uur te mogen worden vastgehouden?",
           "full_chars": 149,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "In the last 3 months, over 80 arrestees were released from the Central Booking facility without being formally charged. In April this year, a temporary restaining order was issued by Judge Glynn again",
+          "text": "In the last 3 months, over 80 arrestees were released from the Central Booking facility without being formally charged. In April this year, a temporary restaining order was issued by Judge Glynn against the facility to enforce the release of those held more than 24 hours after their intake who did not receive a hearing by a court commissioner. The commissioner sets bail, if granted, and formalizes the charges filed by the arresting officer. The charges are then entered into the state's computer system where the case is tracked. The hearing also marks the date for the suspect’s right to a speedy trial.",
           "full_chars": 608,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -200,49 +200,17 @@
         "query": {
           "text": "Welke uitspraak over de maansonde van de Chandrayaan-1 is niet waar?",
           "full_chars": 68,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "The unmanned lunar orbiter Chandrayaan-1 ejected its Moon Impact Probe (MIP), which hurtled across the surface of the Moon at 1.5 kilometres per second (3000 miles per hour), and successfully crash la",
+          "text": "The unmanned lunar orbiter Chandrayaan-1 ejected its Moon Impact Probe (MIP), which hurtled across the surface of the Moon at 1.5 kilometres per second (3000 miles per hour), and successfully crash landed near the Moon's south pole. Besides carrying three important scientific instruments, the lunar probe also carried the image of the Indian national flag, painted on all sides.",
           "full_chars": 379,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q9",
-        "document_id": "C185",
-        "query": {
-          "text": "Wie stelde voor om de 'Clean Air Act' te herschrijven?",
-          "full_chars": 54,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "\"Prime Minister Stephen Harper has agreed to send the government's 'Clean Air Act' to an all-party committee for review, before its second reading, after Tuesday's 25 minute meeting with NDP leader Ja",
-          "full_chars": 864,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q161",
-        "document_id": "C264",
-        "query": {
-          "text": "Welke van de volgende heeft de NBA besloten op te schorten?",
-          "full_chars": 59,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "On Wednesday, the United States' National Basketball Association (NBA) suspended its professional basketball season due to concerns regarding COVID-19. The NBA's decision followed a Utah Jazz player t",
-          "full_chars": 239,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

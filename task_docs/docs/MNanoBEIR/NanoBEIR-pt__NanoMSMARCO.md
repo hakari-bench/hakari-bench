@@ -114,11 +114,9 @@ recall and an answer-aware reranker for final ordering.
 
 | Query | Positive document |
 | --- | --- |
-| O que é a síndrome da ruminação? [32 chars] | Síndrome de Ruminação. A síndrome de ruminação, também conhecida como mericismo, é um tipo de transtorno alimentar não especificado de outra forma que causa a regurgitação de alimentos. Embora não sej... [200 / 335 chars] |
-| Quem cantou "Aqui vou eu de novo"? [34 chars] | Para outros usos, veja Here I Go Again (desambiguação). "Here I Go Again" é uma música da banda britânica de rock Whitesnake. Originalmente lançada no álbum de 1982, Saints & Sinners, a canção foi reg... [200 / 323 chars] |
-| Quem Cameron Boyce interpreta em Liv e Maddie? [46 chars] | Prepare-se para muitas risadas, pessoal. Em uma prévia exclusiva do episódio de 19 de abril de "Liv & Maddie" chamado "Prom-A-Rooney." Obviamente. No clipe hilariante, vemos o astro de "Jessie," Camer... [200 / 324 chars] |
-| Onde a maioria dos grandes desertos da Terra ocorre? [52 chars] | Os outros desertos da Terra estão fora das regiões polares. O maior é o Deserto do Saara, um deserto subtropical no norte da África. [132 chars] |
-| Qual é o significado de "tira" para um policial? [48 chars] | De acordo com os achados atuais, parece que 'copper' (um policial, literalmente 'aquele que prende') precede 'cop' (usado verbalmente para significar prender ou como substantivo para policial). Pode s... [200 / 370 chars] |
+| O que é a síndrome da ruminação? [32 chars] | Síndrome de Ruminação. A síndrome de ruminação, também conhecida como mericismo, é um tipo de transtorno alimentar não especificado de outra forma que causa a regurgitação de alimentos. Embora não seja identificada como um transtorno alimentar específico no DSM-IV, certos parâmetros foram estabelecidos para diagnosticar o transtorno. [335 chars] |
+| Quem cantou "Aqui vou eu de novo"? [34 chars] | Para outros usos, veja Here I Go Again (desambiguação). "Here I Go Again" é uma música da banda britânica de rock Whitesnake. Originalmente lançada no álbum de 1982, Saints & Sinners, a canção foi regravada para o álbum homônimo de 1987, Whitesnake. A música foi regravada novamente naquele ano em uma nova versão de rádio. [323 chars] |
+| Quem Cameron Boyce interpreta em Liv e Maddie? [46 chars] | Prepare-se para muitas risadas, pessoal. Em uma prévia exclusiva do episódio de 19 de abril de "Liv & Maddie" chamado "Prom-A-Rooney." Obviamente. No clipe hilariante, vemos o astro de "Jessie," Cameron Boyce, aparecer em outro programa da Disney para encontrar Maddie (Shelby Wulfert). O personagem dele é, hum, excêntrico! [324 chars] |
 
 ### Public Sources
 

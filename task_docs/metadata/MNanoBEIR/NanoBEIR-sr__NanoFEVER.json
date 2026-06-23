@@ -131,13 +131,13 @@
         "query": {
           "text": "Kith Godčo je poznavao Grateful Dead.",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Grateful Dead je bila američka rok grupa osnovana 1965. godine u Palo Altu u Kaliforniji. Sa sastavom koji je varirao od kvinteta do septeta, bend je poznat po svom jedinstvenom i eklektičnom stilu, k",
+          "text": "Grateful Dead je bila američka rok grupa osnovana 1965. godine u Palo Altu u Kaliforniji. Sa sastavom koji je varirao od kvinteta do septeta, bend je poznat po svom jedinstvenom i eklektičnom stilu, koji je spajao elemente roka, psihedelije, eksperimentalne muzike, modalnog džeza, kantrija, folka, blugrejsa, bluza, regija i spejs roka, po živim nastupima sa dugim instrumentalnim džemovima i po svojoj posvećenoj bazi obožavatelja poznatih kao \"Deadheads\". \"Njihova muzika\", piše Lenny Kaye, \"dodiruje temelje koje većina drugih grupa ni ne zna da postoje.\" Ovi različiti uticaji su destilisani u raznoliku i psihedeličnu celinu koja je učinila Grateful Dead \"pionirskim kumovima sveta džem bendova\". Časopis Rolling Stone svrstao je bend na 57. mesto u svojoj tematskoj svesci \"Najveći umetnici svih vremena\". Bend je primljen u Kuću slavnih rokenrola 1994. godine, a snimak njihovog nastupa od 8. maja 1977. na Barton Holu Univerziteta Cornell dodan je u Nacionalni registar snimaka Kongresne bib",
           "full_chars": 2888,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -147,14 +147,14 @@
         "query": {
           "text": "\"Taarak Mehta Ka Ooltah Chashmah\" je sitkom.",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "\"Taarak Mehta Ka Ooltah Chashmah\" (na engleskom: \"Taarak Mehta's Different Perspective\") je najduže trajuća indijska sitkom serija koju proizvodi Neela Tele Films Private Limited. Serija je počela sa",
+          "text": "\"Taarak Mehta Ka Ooltah Chashmah\" (na engleskom: \"Taarak Mehta's Different Perspective\") je najduže trajuća indijska sitkom serija koju proizvodi Neela Tele Films Private Limited. Serija je počela sa emitovanjem 28. jula 2008. godine. Emituje se od ponedeljka do petka u 20:30, sa ponovnim prikazivanjem u 23:00 i sledećeg dana u 15:00 na SAB TV. Serija je počela sa reprizama na Sony Pal-u od 2. novembra 2015. svakodnevno u 16:30 i 20:00. Serija je bazirana na kolumni \"Duniya Ne Oondha Chashma\" koju je pisao kolumnista i novinar Taarak Mehta za gudžaratski nedeljni časopis Chitralekha.",
           "full_chars": 590,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Tajni i tehnološki napredni avioni proizvođeni su u Burbanku u Kaliforniji.",
           "full_chars": 75,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Burbank je grad u okrugu Los Anđeles u južnoj Kaliforniji, Sjedinjene Države, 19 km severozapadno od centra Los Anđelesa. Prema popisu iz 2010. godine, stanovništvo je iznosilo 103.340. Poznat kao \"Me",
+          "text": "Burbank je grad u okrugu Los Anđeles u južnoj Kaliforniji, Sjedinjene Države, 19 km severozapadno od centra Los Anđelesa. Prema popisu iz 2010. godine, stanovništvo je iznosilo 103.340. Poznat kao \"Medijska prestonica sveta\" i udaljen samo nekoliko milja severoistočno od Holivuda, brojne medijske i zabavne kompanije imaju sedište ili značajne proizvodne objekte u Burbanku, uključujući The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios sa zapadnjačkom podružnicom Cartoon Network-a i Insomniac Games. Grad je takođe dom aerodroma Bob Hope. Bio je lokacija Lokidovog Skunk Works-a, koji je proizvodio neke od najtajnijih i tehnološki najnaprednijih aviona, uključujući špijunske avione U-2 koji su otkrili komponente sovjetskih raketa na Kubi u oktobru 1962. godine. Burbank se sastoji od dva različita područja: gradskog/predgorskog dela, u podnožju planina Verdugo, i ravničarskog dela. Burbank je najistočniji grad u dolini San Ferna",
           "full_chars": 1321,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "85454",
-        "document_id": "Julio-Claudian_dynasty",
-        "query": {
-          "text": "Nero je osoba.",
-          "full_chars": 14,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Termin Julijevsko-Klaudijevska dinastija odnosi se na prvih pet rimskih careva — Avgusta, Tiberija, Kaligulu, Klaudija i Nerona — ili na porodicu kojoj su pripadali. Oni su vladali Rimskim Carstvom od",
-          "full_chars": 2025,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "172320",
-        "document_id": "Scream_2",
-        "query": {
-          "text": "\"Scream 2\" je isključivo nemački film.",
-          "full_chars": 38,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Scream 2 je američki slasher film iz 1997. godine koji je režirao Wes Craven, a scenario napisao Kevin Williamson. U filmu glume David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar, Ja",
-          "full_chars": 2427,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

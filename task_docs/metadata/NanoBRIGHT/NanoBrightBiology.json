@@ -153,15 +153,15 @@
         "query_id": "8",
         "document_id": "longest-lasting_protein/Elastin_4.txt",
         "query": {
-          "text": "What is the longest-lasting protein in a human body? Protein life times are, on average, not particu",
+          "text": "What is the longest-lasting protein in a human body? Protein life times are, on average, not particularly long, on a human life timescale. I was wondering, how old is the oldest protein in a human body? Just to clarify, I mean in terms of seconds/minutes/days passed from the moment that given protein was translated. I am not sure is the same thing as asking which human protein has the longest half-life, as I think there might be \"tricks\" the cell uses to elongate a given protein's half-life unde",
           "full_chars": 1199,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
           "text": "Characteristics[edit] Elastin is a very long-lived protein, with a half-life of over 78 years in humans.",
           "full_chars": 104,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -169,15 +169,15 @@
         "query_id": "19",
         "document_id": "kissing_natural_human_activity/Kiss_8.txt",
         "query": {
-          "text": "Is kissing a natural human activity? The word natural here is meant in contrast to it being a sociol",
+          "text": "Is kissing a natural human activity? The word natural here is meant in contrast to it being a sociological construct. Is kissing in all its forms something natural for humans? Is it instinctively erotic? Or is it just a conventional form to show trust and intimicy, i.e. the association besically just comes via a social means? Because the only other advantage of this mouth to mouth contact I could see is maybe for the immune system.",
           "full_chars": 435,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Biology and evolution[edit] Black-tailed prairie dogs \"kissing.\" Prairie dogs use a nuzzle of this variety to greet their relatives. Within the natural world of other animals, there are numerous analo",
+          "text": "Biology and evolution[edit] Black-tailed prairie dogs \"kissing.\" Prairie dogs use a nuzzle of this variety to greet their relatives. Within the natural world of other animals, there are numerous analogies to kissing, notes Crawley, such as \"the billing of birds, the cataglottism of pigeons and the antennal play of some insects.\" Even among mammals such as the dog, cat and bear, similar behavior is noted. Anthropologists have not reached a conclusion as to whether kissing is learned or a behavior from instinct. It may be related to grooming behavior also seen between other animals, or arising as a result of mothers premasticating food for their children. Non-human primates also exhibit kissing behavior. Dogs, cats, birds and other animals display licking, nuzzling, and grooming behavior among themselves, and also towards humans or other species. This is sometimes interpreted by observers as a type of kissing. Kissing in humans is postulated to have evolved from the direct mouth-to-mouth",
           "full_chars": 3310,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -185,53 +185,21 @@
         "query_id": "100",
         "document_id": "plant_light_pho/Chlorophyll_0.txt",
         "query": {
-          "text": "What types of light can't a plant photosynthesize in? I have a plant on my desk, and it got me to wo",
+          "text": "What types of light can't a plant photosynthesize in? I have a plant on my desk, and it got me to wondering: Can my plant use the light from my monitors to photosynthesize? If so, what light (apart from green light, to a degree) can't plants use to perform photosynthesis? I know that plants have the photosynthetic pigments to absorb many different wavelengths of light (primarily red and blue) but would there be certain types of light it can't use? (The specific plant by the way is Schlumbergera",
           "full_chars": 509,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Chlorophyll is any of several related green pigments found in cyanobacteria and in the chloroplasts of algae and plants. Its name is derived from the Greek words χλωρός, khloros (\"pale green\") and φύλ",
+          "text": "Chlorophyll is any of several related green pigments found in cyanobacteria and in the chloroplasts of algae and plants. Its name is derived from the Greek words χλωρός, khloros (\"pale green\") and φύλλον, phyllon (\"leaf\"). Chlorophyll allows plants to absorb energy from light. Chlorophylls absorb light most strongly in the blue portion of the electromagnetic spectrum as well as the red portion. Conversely, it is a poor absorber of green and near-green portions of the spectrum. Hence chlorophyll-containing tissues appear green because green light, diffusively reflected by structures like cell walls, is less absorbed. Two types of chlorophyll exist in the photosystems of green plants: chlorophyll a and b.",
           "full_chars": 712,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "91",
-        "document_id": "immune_system_detect_tumor/Major_histocompatibility_complex_8.txt",
-        "query": {
-          "text": "If Tumors have lots of mutations in them how is it the immune system can't detect them? If a cancero",
-          "full_chars": 425,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "In transplant rejection[edit] In a transplant procedure, as of an organ or stem cells, MHC molecules themselves act as antigens and can provoke immune response in the recipient, thus causing transplan",
-          "full_chars": 3065,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "38",
-        "document_id": "virus_used_as_antibiotics/Phage_therapy_3.txt",
-        "query": {
-          "text": "Could viruses be used as antibiotics? Could we use viruses that only affect bacteria to act as antib",
-          "full_chars": 204,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Applications[edit] Collection[edit] Phages for therapeutic use can be collected from environmental sources that likely contain high quantities of bacteria and bacteriophages, such as effluent outlets,",
-          "full_chars": 7339,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
     "source_task": "Biology StackExchange",
-    "example_count": 5
+    "example_count": 3
   }
 }

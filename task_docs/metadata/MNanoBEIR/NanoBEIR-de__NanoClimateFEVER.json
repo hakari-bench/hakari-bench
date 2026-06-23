@@ -165,15 +165,15 @@
         "query_id": "412",
         "document_id": "Paleocene",
         "query": {
-          "text": "Von 1970 bis 1998 gab es eine Erwärmungsperiode, die die Temperaturen um etwa 0,4 Grad Celsius erhöh",
+          "text": "Von 1970 bis 1998 gab es eine Erwärmungsperiode, die die Temperaturen um etwa 0,4 Grad Celsius erhöhte und die globale Erwärmungs-Alarmisten-Bewegung ins Leben gerufen hat.",
           "full_chars": 172,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Das Paläozän (ausgesprochen: /paleoˈtseːn/ oder /ˈpaleoˌtseːn/), auch Paläozän genannt, das „alte Neue“, ist eine geologische Epoche, die etwa von 66 bis 56 Millionen Jahren dauerte. Es ist die erste",
+          "text": "Das Paläozän (ausgesprochen: /paleoˈtseːn/ oder /ˈpaleoˌtseːn/), auch Paläozän genannt, das „alte Neue“, ist eine geologische Epoche, die etwa von 66 bis 56 Millionen Jahren dauerte. Es ist die erste Epoche des Paläogens in der modernen Kainozoischen Ära. Wie bei vielen geologischen Perioden sind die Schichten, die den Beginn und das Ende der Epoche definieren, gut identifiziert, aber die genauen Altersangaben bleiben ungewiss. Die Epoche des Paläozäns umfasst zwei bedeutende Ereignisse in der Erdgeschichte. Sie begann mit dem Massenaussterbeereignis am Ende der Kreidezeit, bekannt als die Kreide-Paläogen-Grenze (K-Pg-Grenze). Dies war eine Zeit, die durch das Aussterben der nicht-vogelartigen Dinosaurier, riesiger Meeresreptilien und vieler anderer Fauna und Flora gekennzeichnet war. Das Aussterben der Dinosaurier hinterließ weltweit unbesetzte ökologische Nischen. Das Paläozän endete mit dem Paläozän-Eozän-Thermischen Maximum, einem geologisch kurzen (ca. 0,2 Millionen Jahre) Interva",
           "full_chars": 1266,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -183,65 +183,33 @@
         "query": {
           "text": "Tatsächlich zeigt der Trend, wenn auch statistisch nicht signifikant, nach unten.",
           "full_chars": 81,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Der Sonnenzyklus oder Sonnenfleckenzyklus ist ein fast periodischer 11-Jahres-Zyklus, der die Aktivität der Sonne (einschließlich Veränderungen in der Sonnenstrahlung und dem Ausstoß von Sonnenmateria",
+          "text": "Der Sonnenzyklus oder Sonnenfleckenzyklus ist ein fast periodischer 11-Jahres-Zyklus, der die Aktivität der Sonne (einschließlich Veränderungen in der Sonnenstrahlung und dem Ausstoß von Sonnenmaterial) und ihr Erscheinungsbild (Veränderungen in der Anzahl und Größe von Sonnenflecken, Flares und anderen Erscheinungen) beschreibt. Diese Veränderungen wurden über Jahrhunderte hinweg beobachtet, sowohl durch Veränderungen im Aussehen der Sonne als auch durch auf der Erde beobachtete Phänomene wie Polarlichter. Die Veränderungen auf der Sonne haben Auswirkungen im Weltraum, in der Atmosphäre und auf der Erdoberfläche. Obwohl es die Hauptkomponente der Sonnenaktivität ist, treten auch unregelmäßige Schwankungen auf.",
           "full_chars": 720,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "109",
         "document_id": "Sea_level",
         "query": {
-          "text": "Lokale und regionale Meeresspiegel zeigen weiterhin typische natürliche Schwankungen, an einigen Ort",
+          "text": "Lokale und regionale Meeresspiegel zeigen weiterhin typische natürliche Schwankungen, an einigen Orten steigen sie, an anderen sinken sie.",
           "full_chars": 138,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Der mittlere Meeresspiegel (MSL) (abgekürzt einfach Meeresspiegel) ist ein Durchschnittswert der Oberfläche eines oder mehrerer Ozeane der Erde, von dem Höhen wie Höhenlagen gemessen werden können. MS",
+          "text": "Der mittlere Meeresspiegel (MSL) (abgekürzt einfach Meeresspiegel) ist ein Durchschnittswert der Oberfläche eines oder mehrerer Ozeane der Erde, von dem Höhen wie Höhenlagen gemessen werden können. MSL ist eine Art vertikaler Datumsbezug, ein standardisierter geodätischer Referenzpunkt, der beispielsweise in der Kartografie und der Schifffahrtsnavigation als Kartenbezugspunkt oder in der Luftfahrt als Referenz für den Meeresspiegel verwendet wird, bei dem der Luftdruck gemessen wird, um die Flughöhe und damit die Flugflughöhen zu kalibrieren. Ein gängiger und relativ einfacher Standard für den mittleren Meeresspiegel ist der Mittelpunkt zwischen mittlerer Niedrig- und mittlerer Hochwasserlinie an einem bestimmten Ort. Meeresspiegel können von vielen Faktoren beeinflusst werden und haben sich über geologische Zeiträume hinweg stark verändert. Die genaue Messung von Veränderungen des MSL kann Einblicke in den fortschreitenden Klimawandel bieten, und der Anstieg des Meeresspiegels wird hä",
           "full_chars": 1164,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "95",
-        "document_id": "Effects_of_global_warming",
-        "query": {
-          "text": "Klimawissenschaftler sagen, dass bei Hurrikan Harvey Hinweise darauf zu finden sind, dass der Klimaw",
-          "full_chars": 126,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Die Auswirkungen des globalen Klimawandels sind die Umwelt- und sozialen Veränderungen, die direkt oder indirekt durch menschliche Emissionen von Treibhausgasen verursacht werden. Es gibt einen wissen",
-          "full_chars": 1421,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "1774",
-        "document_id": "Attribution_of_recent_climate_change",
-        "query": {
-          "text": "Das CERN CLOUD-Experiment hat nur einen von vier notwendigen Anforderungen, um die globale Erwärmung",
-          "full_chars": 221,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Die Zurechnung des jüngsten Klimawandels ist die wissenschaftliche Bemühung, die Mechanismen zu bestimmen, die für die jüngsten Klimaveränderungen auf der Erde verantwortlich sind, die gemeinhin als \"",
-          "full_chars": 2377,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

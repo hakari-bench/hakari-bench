@@ -157,8 +157,6 @@ if evaluation documents remain short answer strings.
 | Quel film du début des année 1970 est-il celui pour lequel Bruce Lee est le plus connu ? [88 chars] | Opération Dragon [16 chars] |
 | Quel acteur a joué Hans Solo et Indiana Jones ? [47 chars] | Harrison Ford [13 chars] |
 | Quel est le nom du tout premier film du réalisateur Kevin Smith ? [65 chars] | Clerks : Les Employés modèles [29 chars] |
-| Quel film de Star Trek a le moins rapporté ? [44 chars] | Star Trek : Nemesis [19 chars] |
-| Dans quel film de Major League ne figurait pas Charlie Sheen ? [62 chars] | Les Indians 3 [13 chars] |
 
 ### Source Reference Table
 

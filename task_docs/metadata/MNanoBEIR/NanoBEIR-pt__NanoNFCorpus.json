@@ -135,13 +135,13 @@
         "query": {
           "text": "Batidas de chocolate saudáveis",
           "full_chars": 30,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Objetivo: Estudar a relação entre o consumo de cerejas e o risco de ataques recorrentes de gota em indivíduos com gota. Métodos: Realizamos um estudo caso-cruzado para examinar as associações de um co",
+          "text": "Objetivo: Estudar a relação entre o consumo de cerejas e o risco de ataques recorrentes de gota em indivíduos com gota. Métodos: Realizamos um estudo caso-cruzado para examinar as associações de um conjunto de fatores de risco putativos com ataques recorrentes de gota. Indivíduos com gota foram recrutados prospectivamente e acompanhados online por um ano. Os participantes foram questionados sobre as seguintes informações ao experimentarem um ataque de gota: a data de início do ataque, sintomas e sinais, medicações (incluindo medicações anti-gota) e potenciais fatores de risco (incluindo a ingestão diária de cerejas e extrato de cereja) durante o período de 2 dias antes do ataque de gota. Avaliamos as mesmas informações de exposição em períodos de controle de 2 dias. Estimamos o risco de ataques recorrentes de gota relacionados ao consumo de cerejas usando regressão logística condicional. Resultados: Nosso estudo incluiu 633 indivíduos com gota. O consumo de cerejas em um período de 2 d",
           "full_chars": 1752,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -151,13 +151,13 @@
         "query": {
           "text": "ética médica",
           "full_chars": 12,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "FUNDAMENTAÇÃO: Um dos principais problemas no controle do colesterol sérico através de intervenção dietética parece ser a necessidade de melhorar a adesão do paciente. OBJETIVOS: Explorar as diversas",
+          "text": "FUNDAMENTAÇÃO: Um dos principais problemas no controle do colesterol sérico através de intervenção dietética parece ser a necessidade de melhorar a adesão do paciente. OBJETIVOS: Explorar as diversas questões relacionadas às barreiras e motivadores para a adesão a dietas que baixam o colesterol. MÉTODOS: Pesquisamos as práticas dietéticas de médicos generalistas franceses para pacientes com hipercolesterolemia e analisamos as atitudes dos pacientes em relação a essa abordagem. RESULTADOS: Analisamos 234 questionários pessoais de médicos e 356 questionários de autoavaliação de pacientes. As razões dos pacientes para não seguirem a dieta prescrita incluíram: 'já ter hábitos alimentares satisfatórios' (34,7%), 'relutância em sofrer privação nutricional' (33,3%), 'dificuldades em conciliar a dieta com a vida familiar' (27,8%) e 'tomar medicamentos para baixar o colesterol' (22,2%). Apesar de uma compreensão geral boa das recomendações dos médicos pelos pacientes, algumas discrepâncias fora",
           "full_chars": 1978,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -167,49 +167,17 @@
         "query": {
           "text": "favas",
           "full_chars": 5,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Nos últimos 20 anos, o crescente interesse pela bioquímica, nutrição e farmacologia da L-arginina levou a estudos extensivos para explorar seus papéis nutricionais e terapêuticos no tratamento e preve",
+          "text": "Nos últimos 20 anos, o crescente interesse pela bioquímica, nutrição e farmacologia da L-arginina levou a estudos extensivos para explorar seus papéis nutricionais e terapêuticos no tratamento e prevenção de distúrbios metabólicos humanos. Evidências emergentes mostram que a suplementação dietética de L-arginina reduz a adiposidade em ratos geneticamente obesos, ratos obesos induzidos por dieta, porcos de engorda e sujeitos humanos obesos com diabetes tipo 2. Os mecanismos responsáveis pelos efeitos benéficos da L-arginina são provavelmente complexos, mas envolvem, em última análise, a alteração do equilíbrio entre a ingestão e o gasto de energia, favorecendo a perda de gordura ou o crescimento reduzido do tecido adiposo branco. Estudos recentes indicam que a suplementação de L-arginina estimula a biogênese mitocondrial e o desenvolvimento do tecido adiposo marrom, possivelmente através da síntese aumentada de moléculas de sinalização celular (por exemplo, óxido nítrico, monóxido de ca",
           "full_chars": 1347,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-68",
-        "document_id": "MED-2991",
-        "query": {
-          "text": "Do que são feitos os nuggets de frango?",
-          "full_chars": 39,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "OBJETIVO: Determinar os componentes dos nuggets de frango de 2 redes de fast food nacionais. CONTEXTO: Os nuggets de frango tornaram-se um componente importante da dieta americana. Buscamos determinar",
-          "full_chars": 790,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-2051",
-        "document_id": "MED-4551",
-        "query": {
-          "text": "gordura saturada",
-          "full_chars": 16,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "O interesse pelo possível impacto da ingestão alimentar materna durante a gravidez no desenvolvimento de doenças alérgicas em crianças tem aumentado. O presente estudo prospectivo examinou a associaçã",
-          "full_chars": 2146,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

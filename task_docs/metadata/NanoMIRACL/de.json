@@ -163,13 +163,13 @@
         "query": {
           "text": "Welche Mechanismen helfen Computern, menschliche Sprache zu verstehen?",
           "full_chars": 70,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Wissen Ein anderes Anwendungsfeld sind Dialogsysteme, die in der Mensch-Computer-Interaktion eingesetzt werden und die Kommunikation eines Menschen mit einem Computer mittels natürlicher Sprache ermög",
+          "text": "Wissen Ein anderes Anwendungsfeld sind Dialogsysteme, die in der Mensch-Computer-Interaktion eingesetzt werden und die Kommunikation eines Menschen mit einem Computer mittels natürlicher Sprache ermöglichen sollen. So simulierte etwa das bereits 1966 von Joseph Weizenbaum programmierte ELIZA das Gespräch mit einem Psychotherapeuten. Auf Aussagen der Art „Ich habe ein Problem mit meinem Vater.“ reagierte das Programm mit dem Satz „Erzählen Sie mir mehr von Ihrer Familie.“ Eine derartige Reaktion wurde möglich durch die semantische Verknüpfung von Begriffen wie „Vater“ und „Familie“. Mittlerweile werden auch Programme geschrieben, die das Ziel haben, eine allgemeine, kontextunabhängige Kommunikation zu ermöglichen. Die Idee eines solchen Programms geht auf den Turing-Test zurück, der 1950 von Alan Turing formuliert wurde. Nach Turing sollte man von „denkenden Maschinen“ genau dann reden, wenn Computer in der Kommunikation nicht von Menschen zu unterscheiden seien. Real existierende Dialo",
           "full_chars": 1585,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -179,14 +179,14 @@
         "query": {
           "text": "In welchem Jahr wurde TikTok gegründet?",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "TikTok \"Douyin\" wurde im September 2016 von Zhang Yiming, dem Gründer von ByteDance, ins Leben gerufen. Im Januar 2017 erhielt das Unternehmen mehrere Millionen Renminbi von der Toutiao-Gruppe, um die",
+          "text": "TikTok \"Douyin\" wurde im September 2016 von Zhang Yiming, dem Gründer von ByteDance, ins Leben gerufen. Im Januar 2017 erhielt das Unternehmen mehrere Millionen Renminbi von der Toutiao-Gruppe, um die Plattform weiter auszubauen. Im September 2017 begann die Expansion auf den indonesischen Markt.",
           "full_chars": 298,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -195,49 +195,17 @@
         "query": {
           "text": "Was macht Südostasien attraktiv für Touristen?",
           "full_chars": 46,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Krabi (Stadt) Krabi ist eines der attraktivsten Reiseziele in Süd-Thailand. Die Andamanensee im Westen, an der zahllose natürliche Attraktionen liegen, ist beeindruckend. Dazu gehören die weißen Sands",
+          "text": "Krabi (Stadt) Krabi ist eines der attraktivsten Reiseziele in Süd-Thailand. Die Andamanensee im Westen, an der zahllose natürliche Attraktionen liegen, ist beeindruckend. Dazu gehören die weißen Sandstrände, steil aufsteigende hohe Felsen, faszinierende Korallenriffe, zahlreiche größere und kleinere Inseln sowie Wälder mit Höhlen und Wasserfällen.",
           "full_chars": 350,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "957112#0",
-        "document_id": "2494104#0",
-        "query": {
-          "text": "Was ist das kleinste Teilchen im Universum?",
-          "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Elementarteilchen Elementarteilchen sind unteilbare subatomare Teilchen und die kleinsten bekannten Bausteine der Materie. Aus der Sicht der theoretischen Physik sind sie die geringsten Anregungsstufe",
-          "full_chars": 731,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "280416#0",
-        "document_id": "4052007#14",
-        "query": {
-          "text": "Wann wurde die erste Brücke über eine Autobahn gebaut?",
-          "full_chars": 54,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Brückenlandschaft Ruhraue Die erste Autobahnbrücke an dieser Stelle wurde im Rahmen des Reichsautobahnsprogrammes geplant und am 12. Dezember 1936 eröffnet, damals noch als einfache, vierstreifige Str",
-          "full_chars": 287,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

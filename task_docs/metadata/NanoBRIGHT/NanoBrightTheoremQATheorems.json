@@ -153,15 +153,15 @@
         "query_id": "TheoremQA_jianyu_xu/Binomial_4.json",
         "document_id": "10463",
         "query": {
-          "text": "A teacher wants to create a special team for a project and needs to pick 3 students out of a class o",
+          "text": "A teacher wants to create a special team for a project and needs to pick 3 students out of a class of 20. Assuming each student has an equal chance to be selected and the order in which they are chosen doesn't matter, how many different teams can the teacher form?",
           "full_chars": 264,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "\\section{Multinomial Theorem} Tags: Multinomial Coefficients, Binomial Coefficients, Discrete Mathematics, Proofs by Induction, Algebra \\begin{theorem} Let $x_1, x_2, \\ldots, x_k \\in F$, where $F$ is",
+          "text": "\\section{Multinomial Theorem} Tags: Multinomial Coefficients, Binomial Coefficients, Discrete Mathematics, Proofs by Induction, Algebra \\begin{theorem} Let $x_1, x_2, \\ldots, x_k \\in F$, where $F$ is a field. Then: :$\\ds \\paren {x_1 + x_2 + \\cdots + x_m}^n = \\sum_{k_1 \\mathop + k_2 \\mathop + \\mathop \\cdots \\mathop + k_m \\mathop = n} \\binom n {k_1, k_2, \\ldots, k_m} {x_1}^{k_1} {x_2}^{k_2} \\cdots {x_m}^{k_m}$ where: :$m \\in \\Z_{> 0}$ is a positive integer :$n \\in \\Z_{\\ge 0}$ is a non-negative integer :$\\dbinom n {k_1, k_2, \\ldots, k_m} = \\dfrac {n!} {k_1! \\, k_2! \\, \\cdots k_m!}$ denotes a multinomial coefficient. The sum is taken for all non-negative integers $k_1, k_2, \\ldots, k_m$ such that $k_1 + k_2 + \\cdots + k_m = n$, and with the understanding that wherever $0^0$ may appear it shall be considered to have a value of $1$. The '''multinomial theorem''' is a generalization of the Binomial Theorem. \\end{theorem} \\begin{proof} The proof proceeds by induction on $m$. For each $m \\in \\N",
           "full_chars": 1275,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -169,15 +169,15 @@
         "query_id": "TheoremQA_elainewan/math_algebra_3_2.json",
         "document_id": "20819",
         "query": {
-          "text": "Imagine you're a graphic designer working on a 3D modeling project. You have three arrows: the first",
+          "text": "Imagine you're a graphic designer working on a 3D modeling project. You have three arrows: the first points 1 unit right, 2 units up, and 3 units forward; the second points 4 units right, 5 units up, and 6 units forward; and the third points 7 units right, 8 units up, and 9 units forward. You can combine arrows by adding any multiple of their right, up, and forward displacements (linear combinations). Can you create a new arrow using a combination of these three without directly tracing any of t",
           "full_chars": 504,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "\\section{Sample Matrix Independence Test} Tags: Linear Second Order ODEs, Linear Algebra \\begin{theorem} Let $V$ be a vector space of real or complex-valued functions on a set $J$. Let $f_1, \\ldots, f",
+          "text": "\\section{Sample Matrix Independence Test} Tags: Linear Second Order ODEs, Linear Algebra \\begin{theorem} Let $V$ be a vector space of real or complex-valued functions on a set $J$. Let $f_1, \\ldots, f_n$ be functions in $V$. Let '''samples''' $x_1, \\ldots, x_n$ from $J$ be given. Define the '''sample matrix''' : :$S = \\begin{bmatrix} \\map {f_1} {x_1} & \\cdots & \\map {f_n} {x_1} \\\\ \\vdots & \\ddots & \\vdots \\\\ \\map {f_1} {x_n} & \\cdots & \\map {f_n} {x_n} \\\\ \\end{bmatrix}$ Let $S$ be invertible. Then $f_1, \\ldots, f_n$ are linearly independent in $V$. \\end{theorem} \\begin{proof} The definition of linear independence is applied. Assume a linear combination of the functions $f_1, \\ldots, f_n$ is the zero function: {{begin-eqn}} {{eqn | n = 1 | l = \\sum_{i \\mathop = 1}^n c_i \\map {f_i} x | r = 0 | c = for all $x$ }} {{end-eqn}} Let $\\vec c$ have components $c_1, \\ldots, c_n$. For $i = 1, \\ldots, n$ replace $x = x_i$ in $(1)$. There are $n$ linear homogeneous algebraic equations, written as:",
           "full_chars": 1157,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -185,53 +185,21 @@
         "query_id": "TheoremQA_jianyu_xu/pigeonhole_2.json",
         "document_id": "18695",
         "query": {
-          "text": "Suppose you have a square sandbox of dimension 1 inch by 1 inch. You have 19 flags that you are goin",
+          "text": "Suppose you have a square sandbox of dimension 1 inch by 1 inch. You have 19 flags that you are going to plant anywhere in the sandbox. You also have a circular hoop with a radius of $\\frac{\\sqrt 2}{6}$, which you want to put in the sandbox to include as many flags as possible. What is the minimum number of flags you can ensure will always be within the hoop no matter how the flags are planted in the sandbox?",
           "full_chars": 412,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "\\section{Pigeonhole Principle} Tags: Pigeonhole Principle, Named Theorems, Combinatorics \\begin{theorem} Let $S$ be a finite set whose cardinality is $n$. Let $S_1, S_2, \\ldots, S_k$ be a partition of",
+          "text": "\\section{Pigeonhole Principle} Tags: Pigeonhole Principle, Named Theorems, Combinatorics \\begin{theorem} Let $S$ be a finite set whose cardinality is $n$. Let $S_1, S_2, \\ldots, S_k$ be a partition of $S$ into $k$ subsets. Then: :at least one subset $S_i$ of $S$ contains at least $\\ceiling {\\dfrac n k}$ elements where $\\ceiling {\\, \\cdot \\,}$ denotes the ceiling function. \\end{theorem} \\begin{proof} {{AimForCont}} no subset $S_i$ of $S$ has as many as $\\ceiling {\\dfrac n k}$ elements. Then the maximum number of elements of any $S_i$ would be $\\ceiling {\\dfrac n k} - 1$. So the total number of elements of $S$ would be no more than $k \\paren {\\ceiling {\\dfrac n k} - 1} = k \\ceiling {\\dfrac n k} - k$. There are two cases: :$n$ is divisible by $k$ :$n$ is not divisible by $k$. Suppose $k \\divides n$. Then $\\ceiling {\\dfrac n k} = \\dfrac n k$ is an integer and: :$k \\ceiling {\\dfrac n k} - k = n - k$ Thus: :$\\ds \\card S = \\sum_{i \\mathop = 1}^k \\card {S_i} \\le n - k < n$ This contradicts the",
           "full_chars": 1575,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "TheoremQA_jianyu_xu/Stirling_number_first_kind_5.json",
-        "document_id": "15792",
-        "query": {
-          "text": "Imagine you're organizing a small dinner party with 8 friends and you have 2 identical round tables",
-          "full_chars": 274,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "\\section{Construction of Permutations} Tags: Factorials, Combinatorics, Counting Arguments, Permutation Theory, Construction of Permutations, Permutations \\begin{theorem} The ${}^n P_n$ permutations o",
-          "full_chars": 520,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "TheoremQA_jianyu_xu/Ramsey_4.json",
-        "document_id": "20117",
-        "query": {
-          "text": "Imagine you're organizing a tournament with teams from different cities, and each match can end in o",
-          "full_chars": 525,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "\\section{Ramsey's Theorem} Tags: Ramsey Theory, Named Theorems, Combinatorics \\begin{theorem} In any coloring of the edges of a sufficiently large complete graph, one will find monochromatic complete",
-          "full_chars": 1743,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
     "source_task": "TheoremQA theorem retrieval",
-    "example_count": 5
+    "example_count": 3
   }
 }

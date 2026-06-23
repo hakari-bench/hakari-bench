@@ -121,83 +121,51 @@
         "query_id": "cf5f0ccc-d966-4562-b92d-215400a407f5",
         "document_id": "5128",
         "query": {
-          "text": "¿Por qué la autoridad estadística propone instrumento jurídico para consolidar datos de salud poblac",
+          "text": "¿Por qué la autoridad estadística propone instrumento jurídico para consolidar datos de salud poblacional y seguridad laboral y apoyar metodologías?",
           "full_chars": 148,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Ésta es la razón por la que la Comisión (Eurostat) considera que es hora de establecer una base sólida mediante un acto jurídico fundamental sobre estadísticas de salud pública y salud y seguridad en",
+          "text": "Ésta es la razón por la que la Comisión (Eurostat) considera que es hora de establecer una base sólida mediante un acto jurídico fundamental sobre estadísticas de salud pública y salud y seguridad en el trabajo. Los ámbitos regulados por la propuesta de Reglamento del Parlamento Europeo y del Consejo se refieren a actividades y cambios en curso que se llevan a cabo junto con los Estados miembros en los grupos correspondientes de Eurostat o, en el ámbito de la salud pública, en el marco de la asociación en materia de estadísticas de salud pública. El principal objetivo es sentar una buena base consolidada para las recopilaciones ya aplicadas o cuya metodología se está desarrollando o preparando para su aplicación.",
           "full_chars": 722,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "242f0fcd-74ee-4aec-b973-2a881d8db35f",
         "document_id": "7779",
         "query": {
-          "text": "Cómo quiso el ejecutivo supranacional que corrieran las ayudas: dos años y hasta tres más al convert",
+          "text": "Cómo quiso el ejecutivo supranacional que corrieran las ayudas: dos años y hasta tres más al convertir el contrato?",
           "full_chars": 115,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Dado que el régimen de ayudas (identificado con el no NN 91/A/95) adoptado por la Región de Sicilia mediante el artículo 10 de la Ley regional no 27, de 15 de mayo de 1991, preveía un mecanismo de apo",
+          "text": "Dado que el régimen de ayudas (identificado con el no NN 91/A/95) adoptado por la Región de Sicilia mediante el artículo 10 de la Ley regional no 27, de 15 de mayo de 1991, preveía un mecanismo de aportaciones para un número de anualidades mínimo de dos y máximo de cinco (dos años para la contratación mediante contrato de formación y de trabajo, más un máximo de tres años en caso de transformación del contrato de formación y de trabajo en un contrato de duración indefinida), ¿pretendió la Comisión de las Comunidades Europeas, mediante la Decisión no 95/C 343/11 de 14 de noviembre de 1995, por la que se autorizó la aplicación de dicho régimen:",
           "full_chars": 650,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "0917fcce-9672-4839-a5b5-42196e510412",
         "document_id": "6026",
         "query": {
-          "text": "Cómo relaciona la prevención la explotación insostenible y las intervenciones humanas intencionadas",
+          "text": "Cómo relaciona la prevención la explotación insostenible y las intervenciones humanas intencionadas con catástrofes naturales anómalas y de gran magnitud?",
           "full_chars": 154,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "La prevención es un principio fundamental para la protección y conservación del medio ambiente así como los daños que pudieran causarse a la población civil, y su finalidad es una utilización sostenib",
+          "text": "La prevención es un principio fundamental para la protección y conservación del medio ambiente así como los daños que pudieran causarse a la población civil, y su finalidad es una utilización sostenible de los recursos naturales. Las predicciones de deterioro y la pérdida de la biodiversidad, en su más amplio espectro, se han hecho realidad, con una crudeza que supera las peores de estas predicciones; si a esto le añadimos las intervenciones humanas, a veces intencionadas, el resultado es el que ahora constatamos, una reiteración de las catástrofes, que no por el hecho de ser naturales resultan anómalas, por la corta periodicidad con que se producen, y sobre todo por la gran magnitud de sus efectos.",
           "full_chars": 708,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f8d00840-f16e-4dc4-949a-f68a01423cb0",
-        "document_id": "3897",
-        "query": {
-          "text": "¿Qué impuesto sobre las importaciones intracomunitarias seguían aplicando siete Estados miembros: do",
-          "full_chars": 132,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "La mayoría de los 25 Estados miembros aceptó la orientación del Consejo de 1985 y ha suprimido totalmente el impuesto. En la actualidad, sólo siete Estados miembros continúan aplicándolo: Polonia y Po",
-          "full_chars": 687,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5bc3600c-51a0-4f6a-b589-befb7cfb0216",
-        "document_id": "5977",
-        "query": {
-          "text": "Qué órgano asesor cuestionó la guía para operadores de pools irregulares y propuso ampliar normas de",
-          "full_chars": 135,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Dado que las secciones que tratan sobre el transporte de tramp y los pools de transporte de tramp son menos detalladas por las razones supuestas anteriormente, el CESE se pregunta si serán suficientes",
-          "full_chars": 783,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -128,13 +128,13 @@
         "query": {
           "text": "米国で成人男性が労働市場にとどまれない理由は何ですか？",
           "full_chars": 27,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "米国で成人男性が労働市場にとどまれない理由とは: 米連邦司法統計局の最新のまとめによると、収監中もしくは保護観察中、仮釈放中の男性は2013年、560万人に上った。米紙ニューヨーク・タイムズなどが今年初めに行った調査によれば、25~54歳で無職の男性の約34%が犯罪歴を持っている。 障害を持つ人々にも厳しい雇用環境が迫る。金融危機の間には、",
           "full_chars": 171,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -144,13 +144,13 @@
         "query": {
           "text": "マンガ好きがTPPに注目する理由は何ですか？",
           "full_chars": 22,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "マンガ好きもTPPに注目...「創作活動を萎縮」 : 経済 : 読売新聞(YOMIURI ONLINE): 環太平洋経済連携協定(TPP)交渉で、著作権を巡る議論がアニメやマンガの同人誌を作る愛好家の注目を集めている。 参加12か国は著作権の侵害について、警察が独自の判断で取り締まることができるようにする方向で検討している。愛好家にとってはこのことが「自由な創作活動を萎縮させる」というのだ。",
           "full_chars": 197,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -160,49 +160,17 @@
         "query": {
           "text": "UXの本質について何が重要だと考えられますか？",
           "full_chars": 23,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "UXの本質について: ※本コラムは、長谷川のブログ「underconcept」からの転載です。 ユーザー体験(ユーザーエクスペリエンス/User Experience: UX)という言葉が広く聞かれるようになってきた。半ばバズワードのように、特にウェブデザインやマーケティングの記事などの中では、この言葉を見ない日はない。しかしながら、多くの場合、",
           "full_chars": 174,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "9",
-        "document_id": "doc_id#6d363cb494e5",
-        "query": {
-          "text": "ビットコインの採掘とは何をしているのか?",
-          "full_chars": 20,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "ビットコインの「採掘」に関する基礎知識: ビットコインの採掘とは何をしているのか?という質問が多い。これに関しては、なかなか説明するのが難しく、ちゃんと説明しようとするとテクニカルになって長くなってしまうし、簡単に説明しようとするとイマイチなものになる。 下記の文章は、テクニカルな部分を極力おさえつつ、",
-          "full_chars": 152,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "161",
-        "document_id": "doc_id#51730d7b29c8",
-        "query": {
-          "text": "電子契約において、なぜハンコの印影が法的に不要とされるのか？",
-          "full_chars": 30,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "電子契約ではハンコの印影(押印)が法的に不要となるのはなぜか—押印による二段の推定と比較して解説 | クラウドサイン: 電子契約は、朱肉とハンコを使って押印することで二段の推定が成立する紙の契約書と違って、印影がないものが普通です。しかし、押印による印影がないと、契約として有効に成立しているのか不安という方も少なくありません。この記事では、なぜ電子契約では押印による印影が不要なのか、",
-          "full_chars": 193,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

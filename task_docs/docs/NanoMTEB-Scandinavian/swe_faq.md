@@ -73,10 +73,8 @@ For deployment-like evaluation, this task is a practical test of public-service 
 | Query | Positive document |
 | --- | --- |
 | Kan Försäkringskassan utreda min arbetsskada så att jag kan få ersättning från AFA Försäkring? [94 chars] | Nej. Det beror på att vi bara får utreda om det är en arbetsskada om du uppfyller villkoren för att ha rätt till ersättning för din arbetsskada från Försäkringskassan. Det står i lagen. [185 chars] |
-| Varför behöver mitt vårdbidragsbeslut följas upp? [49 chars] | Ditt beslut om vårdbidrag ska följas upp minst vartannat år, om det inte finns skäl för uppföljning med längre mellanrum. Beslutet ska också följas upp om förhållanden som påverkar behovet av vårdbidr... [200 / 210 chars] |
-| Jag arbetar i Sverige men min familj bor i ett annat EU/EES-land. Kan jag få barnbidrag från Sverige... [100 / 101 chars] | Ja, om du arbetar i Sverige och har barn som bor i ett annat medlemsland kan du ha rätt till barnbidrag från Sverige. När föräldrarna bor eller arbetar i var sitt medlemsland behöver utbetalningen av... [200 / 314 chars] |
-| Jag arbetar i Sverige men den andra föräldern bor i ett annat land inom EU/EES eller Schweiz. Kan he... [100 / 134 chars] | Ja, men först behöver vi utreda i vilket land du och barnets andra förälder är försäkrade. Om ni är försäkrade i var sitt land kan ni ha rätt till föräldrapenning från båda länderna. Den förälder som... [200 / 443 chars] |
-| Vad är LSS? [11 chars] | LSS står för lag om stöd och service till vissa funktionshindrade. I lagen står det att personer med funktionsnedsättningar ska kunna få hjälp att leva som andra. [162 chars] |
+| Varför behöver mitt vårdbidragsbeslut följas upp? [49 chars] | Ditt beslut om vårdbidrag ska följas upp minst vartannat år, om det inte finns skäl för uppföljning med längre mellanrum. Beslutet ska också följas upp om förhållanden som påverkar behovet av vårdbidrag ändras. [210 chars] |
+| Jag arbetar i Sverige men min familj bor i ett annat EU/EES-land. Kan jag få barnbidrag från Sverige? [101 chars] | Ja, om du arbetar i Sverige och har barn som bor i ett annat medlemsland kan du ha rätt till barnbidrag från Sverige. När föräldrarna bor eller arbetar i var sitt medlemsland behöver utbetalningen av barnbidrag samordnas mellan länderna. Kontakta oss på 010-115 10 20 för att få reda på vad som gäller i ditt fall. [314 chars] |
 
 ### Source Reference Table
 

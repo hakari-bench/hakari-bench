@@ -124,14 +124,14 @@
         "query": {
           "text": "find-new/posts&recent=1 jako strona główna: co z SEO?",
           "full_chars": 53,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Czy adres URL z ciągiem zapytania jest lepszy lub gorszy dla SEO niż adres bez niego? Chcę wiedzieć, czy istnieje ogromna różnica pod względem SEO między tymi adresami URL: > mysite.com/ontario/toront",
+          "text": "Czy adres URL z ciągiem zapytania jest lepszy lub gorszy dla SEO niż adres bez niego? Chcę wiedzieć, czy istnieje ogromna różnica pod względem SEO między tymi adresami URL: > mysite.com/ontario/toronto/listings > > lub > > mysite.com/listings.php?p=ontario&c=toronto wyższy niż inny? Czy jest tu duża różnica?",
           "full_chars": 309,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -140,65 +140,33 @@
         "query": {
           "text": "Uniemożliwianie robotom indeksowania określonej części strony",
           "full_chars": 61,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Jak poprosić Google o nieindeksowanie niektórych części mojej strony? > **Możliwy duplikat:** > Uniemożliwianie robotom indeksowania określonej części strony Szukałem dzisiaj starej recenzji w mojej w",
+          "text": "Jak poprosić Google o nieindeksowanie niektórych części mojej strony? > **Możliwy duplikat:** > Uniemożliwianie robotom indeksowania określonej części strony Szukałem dzisiaj starej recenzji w mojej witrynie i zauważyłem, że Google indeksuje tekst nagłówka z mojej najnowszej listy artykułów na każdej stronie, która się pojawia , oczywiście tak sądzę. Problem polega na tym, że wyszukuję moją recenzję Dragon's Lair konkretnie w mojej witrynie, tak jak ta http://www.google.co.za/search?sugexp=chrome,mod=9&sourceid=chrome&ie=UTF-8&q=site%3Alazygamer.net +smoki+lair+recenzja Następnie zwraca mnóstwo stron, które są nieodpowiednie, ponieważ w ogóle nie są związane z recenzją. Powodem, dla którego mnie to obchodzi, jest to, że mam drugą recenzję Dragon's Lair, która została opublikowana lata temu, a teraz nie mogę jej znaleźć. Czy istnieje sposób, aby wskazać Google, że określony tekst nie ma związku z rzeczywistą zawartością strony? czy to okropny pomysł?",
           "full_chars": 963,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "11560",
         "document_id": "45451",
         "query": {
-          "text": "Preferencje SEO dla przekierowania protokołu WWW lub HTTP://? Czy strony www mają wyższą pozycję niż",
+          "text": "Preferencje SEO dla przekierowania protokołu WWW lub HTTP://? Czy strony www mają wyższą pozycję niż strony bez www?",
           "full_chars": 116,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Z www czy bez www? Którego lepiej użyć Właśnie kupiłem nową domenę `www.reversehacking.com` .... Co jest lepsze dla SEO: `http://reversehacking.com` lub `http://www.reversehacking.com` Myślę, że ludzi",
+          "text": "Z www czy bez www? Którego lepiej użyć Właśnie kupiłem nową domenę `www.reversehacking.com` .... Co jest lepsze dla SEO: `http://reversehacking.com` lub `http://www.reversehacking.com` Myślę, że ludzie zrobią więcej linków zaczynających się na www i będzie miało więcej linków zwrotnych do www. Proszę o sugestie, a muszę jak najszybciej uruchomić stronę.",
           "full_chars": 355,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8354",
-        "document_id": "28330",
-        "query": {
-          "text": "Co oznacza podwójny ukośnik w adresach URL?",
-          "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Czy jest jakiś problem z użyciem dwóch ukośników w środku adresu URL? > **Możliwy duplikat:** > Co oznacza podwójny ukośnik w adresach URL? Pracuję nad strukturą adresu URL mod_rewrite w następujący s",
-          "full_chars": 1149,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "26240",
-        "document_id": "37628",
-        "query": {
-          "text": "Dlaczego fragmenty rozszerzone Google miałyby działać u jednego autora witryny, a u innego nie?",
-          "full_chars": 95,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "rozszerzone fragmenty ignorowane przez google > **Możliwy duplikat:** > Dlaczego fragmenty rozszerzone Google miałyby działać u jednego autora witryny, a u innego nie? Mam tu do czynienia z jednym pro",
-          "full_chars": 748,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

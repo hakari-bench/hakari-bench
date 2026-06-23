@@ -64,11 +64,9 @@ Models should learn duplicate intent at the question level. Hard negatives shoul
 
 | Query | Positive document |
 | --- | --- |
-| How can a monk tank effectively for a group? [44 chars] | Monk skills suited for CC and tanking > **Possible Duplicate:** > How can a monk tank effectively for a group? When playing with my friends (who play ranged classes), I mostly end up tanking / crowd c... [200 / 298 chars] |
-| Portal 2 Offline Co-op on Mac [29 chars] | Can we play Portal 2 co-op on one PC or Mac? Is there a way to play Portal 2 co-op on a single PC or Mac? If so, do we need two keyboards, or two mice, or what? Do we need to buy two copies of the gam... [200 / 389 chars] |
-| What type of buildings offer what level of jobs? [48 chars] | Who works in medium value commercial properties? I have some §§ (medium-wealth) buildings that are closed or closing due to a lack of workers. Yet, of my 10,652 §§ workers, 3,205 are unemployed and 15... [200 / 305 chars] |
-| At what rate do players and commanders receive resources per resource node? [75 chars] | How are resources gained, distributed, and spent? > **Possible Duplicate:** > At what rate do players and commanders receive resources per resource node? I'm unclear on how resources gained by aliens... [200 / 1,478 chars] |
-| How many forms of Vivilion are there? [37 chars] | Vivillon's Pattern 3DS Locations - Who do I need to trade with? According to Vivillon's Pokedex Entry, they have different wing patterns depending on their original location in the world: > Vivillon w... [200 / 765 chars] |
+| How can a monk tank effectively for a group? [44 chars] | Monk skills suited for CC and tanking > **Possible Duplicate:** > How can a monk tank effectively for a group? When playing with my friends (who play ranged classes), I mostly end up tanking / crowd controlling with my monk. Are there any specific skills (and runes) that could help me do this? [298 chars] |
+| Portal 2 Offline Co-op on Mac [29 chars] | Can we play Portal 2 co-op on one PC or Mac? Is there a way to play Portal 2 co-op on a single PC or Mac? If so, do we need two keyboards, or two mice, or what? Do we need to buy two copies of the game? Note: The _wireless_ XBox 360 controller does not work standalone out of the box on either an iMac or Windows 7 PC. It needs a receiver as well. I thought it would be Bluetooth, but no. [389 chars] |
+| What type of buildings offer what level of jobs? [48 chars] | Who works in medium value commercial properties? I have some §§ (medium-wealth) buildings that are closed or closing due to a lack of workers. Yet, of my 10,652 §§ workers, 3,205 are unemployed and 152 are commuting out. This confuses me because I assumed §§ workers would work in §§ comercial buildings. [305 chars] |
 
 ### Source Reference Table
 

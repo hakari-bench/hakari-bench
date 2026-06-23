@@ -64,11 +64,9 @@ A model targeting this task should improve short-query intent matching and answe
 
 | Query | Positive document |
 | --- | --- |
-| Vad är ruminationssyndrom? [26 chars] | Ruminationssyndrom. Ruminationssyndrom, även kallat merycism, är en ätstörning som inte passar in i andra kategorier och leder till att mat kastas upp. Även om det inte identifieras som en specifik ät... [200 / 284 chars] |
-| Vem sjöng här kommer vi igen [28 chars] | För andra användningar, se Here I Go Again (upplösning). Here I Go Again är en låt av det brittiska rockbandet Whitesnake. Låten släpptes ursprungligen på albumet Saints & Sinners från 1982 och spelad... [200 / 327 chars] |
-| Vem spelar Cameron Boyce i Liv och Maddie? [42 chars] | Förbered er för några riktigt roligare skratt, ni. I en EXKLUSIV förhandsvisning av avsnittet den 19 april av Liv & Maddie som heter “Prom-A-Rooney.” Självklart. I den roligaste klippet ser vi Jessie-... [200 / 335 chars] |
-| Var förekommer jordens största öknar? [37 chars] | De flesta av jordens öknar ligger utanför de polära områdena. Den största är Saharaöknen, som är en subtropisk öken i norra Afrika. [131 chars] |
-| Vad betyder snutte? [19 chars] | Enligt nuvarande fynd verkar det som att ordet "copper" (en polis, bokstavligt 'en som griper') föregår "cop" (antingen används verbalt och betyder att gripa någon eller som substantiv och betyder en... [200 / 369 chars] |
+| Vad är ruminationssyndrom? [26 chars] | Ruminationssyndrom. Ruminationssyndrom, även kallat merycism, är en ätstörning som inte passar in i andra kategorier och leder till att mat kastas upp. Även om det inte identifieras som en specifik ätstörning i DSM-IV, har vissa parametrar utarbetats för att diagnostisera störningen. [284 chars] |
+| Vem sjöng här kommer vi igen [28 chars] | För andra användningar, se Here I Go Again (upplösning). Here I Go Again är en låt av det brittiska rockbandet Whitesnake. Låten släpptes ursprungligen på albumet Saints & Sinners från 1982 och spelades in på nytt för deras självbetitlade album Whitesnake från 1987. Låten spelades in på nytt samma år i en ny radiomix-version. [327 chars] |
+| Vem spelar Cameron Boyce i Liv och Maddie? [42 chars] | Förbered er för några riktigt roligare skratt, ni. I en EXKLUSIV förhandsvisning av avsnittet den 19 april av Liv & Maddie som heter “Prom-A-Rooney.” Självklart. I den roligaste klippet ser vi Jessie-stjärnan Cameron Boyce dyka upp i en annan Disney-serie för att träffa Maddie (Shelby Wulfert). Hans rollfigur är, eh, lite excentrisk! [335 chars] |
 
 ### Source Reference Table
 

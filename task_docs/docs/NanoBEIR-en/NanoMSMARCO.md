@@ -64,11 +64,9 @@ A model targeting this task should improve answer-bearing passage ranking for sh
 
 | Query | Positive document |
 | --- | --- |
-| what is rumination syndrome [27 chars] | Rumination Syndrome. Rumination syndrome, also called Merycism, is a type of eating disorder not otherwise specified that causes the regurgitation of food. Even though it is not identified as a specif... [200 / 300 chars] |
-| who sang here i go again [24 chars] | For other uses, see Here I Go Again (disambiguation). Here I Go Again is a song by British rock band Whitesnake. Originally released on their 1982 album, Saints & Sinners, the song was re-recorded for... [200 / 308 chars] |
-| who does cameron boyce play in liv and maddie [45 chars] | Get ready for some serious LOLs, you guys. In an EXCLUSIVE sneak peek at the Apr. 19 episode of Liv & Maddie called “Prom-A-Rooney.” Obviously. In the hilarious clip, we see Jessie star Cameron Boyce... [200 / 301 chars] |
-| where do most of earth's large deserts occur [44 chars] | The rest of Earth's deserts are outside of the polar areas. The largest is the Sahara Desert , a subtropical desert in northern Africa. [135 chars] |
-| meaning of copper for a policeman [33 chars] | Based on current findings it seems that copper (a policeman, lit. 'one who arrests') predates cop (either used verbally and meaning to arrest or when a noun meaning a policeman) It may well be that th... [200 / 330 chars] |
+| what is rumination syndrome [27 chars] | Rumination Syndrome. Rumination syndrome, also called Merycism, is a type of eating disorder not otherwise specified that causes the regurgitation of food. Even though it is not identified as a specific eating disorder in the DSM-IV, certain parameters have been outlined for diagnosing the disorder. [300 chars] |
+| who sang here i go again [24 chars] | For other uses, see Here I Go Again (disambiguation). Here I Go Again is a song by British rock band Whitesnake. Originally released on their 1982 album, Saints & Sinners, the song was re-recorded for their eponymous 1987 album Whitesnake. The song was re-recorded again that year in a new radio-mix version. [308 chars] |
+| who does cameron boyce play in liv and maddie [45 chars] | Get ready for some serious LOLs, you guys. In an EXCLUSIVE sneak peek at the Apr. 19 episode of Liv & Maddie called “Prom-A-Rooney.” Obviously. In the hilarious clip, we see Jessie star Cameron Boyce hop over to a different Disney show to meet Maddie (Shelby Wulfert). His character is, um, eccentric! [301 chars] |
 
 ### Source Reference Table
 

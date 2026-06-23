@@ -131,13 +131,13 @@
         "query": {
           "text": "Da li je domaći zadatak koristan?",
           "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Prvo, postoje tri argumenta zašto je domaći zadatak odličan i trebalo bi da se nastavi u modernim školama. 1. Domaći zadatak pomaže učenicima koji uče kroz praksu. Opšte je prihvaćeno da postoje tri t",
+          "text": "Prvo, postoje tri argumenta zašto je domaći zadatak odličan i trebalo bi da se nastavi u modernim školama. 1. Domaći zadatak pomaže učenicima koji uče kroz praksu. Opšte je prihvaćeno da postoje tri tipa učenika: oni koji uče slušanjem, oni koji uče gledanjem i oni koji uče radeći. Dok su mnogi zadovoljni da čuju ili vide objašnjenje određenog predmeta, neki moraju da ga praktično rade. Stoga, domaći zadatak je koristan za ovu poslednju grupu jer se pouka usvaja kroz delovanje. 2. Domaći zadatak učvršćuje gradivo. Iako bi se mnogi verovatno oduševili ako ne bi imali domaći zadatak, kvalitet obrazovanja bi sigurno patio da se on ukine. Bilo da se radi o zadatoj lektiri, seminarskim radovima itd., sve je osmišljeno da učvrsti gradivo u umovima učenika. Na kraju krajeva, oni koji rade domaći zadatak postižu bolje akademske rezultate od onih koji ga ne rade. Smatram da je ovo očigledna istina, ali ću prepustiti Pro da vas razuvéri. 3. Domaći zadatak odražava zahteve stvarnog života. Posle",
           "full_chars": 3651,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -147,13 +147,13 @@
         "query": {
           "text": "Treba li se reklamni lekovi na recept direktno usmeravati potrošačima?",
           "full_chars": 70,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Mnogi oglasi ne sadrže dovoljno informacija o tome koliko lekovi delotvorno deluju. Na primer, Lunesta se reklamira leptirkom koji lebdi kroz prozor spavaće sobe, iznad osobe koja mirno spava. Zapravo",
+          "text": "Mnogi oglasi ne sadrže dovoljno informacija o tome koliko lekovi delotvorno deluju. Na primer, Lunesta se reklamira leptirkom koji lebdi kroz prozor spavaće sobe, iznad osobe koja mirno spava. Zapravo, Lunesta pomaže pacijentima da zaspe 15 minuta brže nakon šestomesečnog lečenja i obezbeđuje 37 minuta dužeg sna po noći. Većina oglasa se zasniva na emocionalnim pozivima, ali malo njih uključuje uzroke stanja, faktore rizika ili važne promene u načinu života. U istraživanju 38 farmaceutskih reklama, istraživači su otkrili da je 82 posto sadržalo činjenične tvrdnje, a 86 posto iznelo racionalne argumente za korišćenje proizvoda. Samo 26 posto je opisalo uzroke stanja, faktore rizika ili učestalost.[1] Time se pacijentima ne pruža uravnotežena informacija koja bi ih učinila svesnim da uzimanje tablete nije magično rešenje za njihov problem. Zapravo, prema studiji sprovedenoj u SAD i Novom Zelandu, pacijenti su zatražili recepte u 12% ispitanih poseta. Od tih zahteva, 42% je bilo za proizv",
           "full_chars": 1697,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Da li bi neke vakcine trebalo da budu obavezne za decu?",
           "full_chars": 55,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Još uvek nije u potpunosti razrađeno... Samo nekoliko manjih stavki koje sam sastavio... Vlade ne bi trebalo da imaju pravo da se mešaju u zdravstvene odluke koje roditelji donose za svoju decu. Prema",
+          "text": "Još uvek nije u potpunosti razrađeno... Samo nekoliko manjih stavki koje sam sastavio... Vlade ne bi trebalo da imaju pravo da se mešaju u zdravstvene odluke koje roditelji donose za svoju decu. Prema istraživanju Univerziteta u Mičigenu iz 2010. godine, 31% roditelja smatra da bi trebalo da imaju pravo da odbiju obavezna školska vakcinisanja za svoju decu. Mnogi roditelji imaju religiozna uverenja protiv vakcinacije. Prisiljavanje takvih roditelja da vakcinišu svoju decu predstavljalo bi kršenje Prvog amandmana koji građanima garantuje pravo na slobodno ispoljavanje religije. Vakcine su često nepotrebne u mnogim slučajevima kada je pretnja od smrti od bolesti mala. Tokom ranog devetnaestog veka, smrtnost od dečjih bolesti poput hripavca, malih boginja i šarlaha drastično je opala pre nego što je imunizacija postala dostupna. Ovaj smanjeni mortalitet pripisuje se poboljšanoj ličnoj higijeni, pročišćavanju vode, efikasnom odlaganju otpada i boljoj higijeni hrane i ishrani. Vakcine ometa",
           "full_chars": 4370,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8",
-        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
-        "query": {
-          "text": "Da li abortus treba da bude legalan?",
-          "full_chars": 36,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Pobačaji bi trebalo da budu legalni jer ličnost počinje nakon što fetus postane sposoban za život ili nakon rođenja, a ne u trenutku začeća. Prema stavu Vrhovnog suda SAD, osoba dobija svoje godine ka",
-          "full_chars": 325,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "26",
-        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
-        "query": {
-          "text": "Da li standardizovani testovi poboljšavaju obrazovanje?",
-          "full_chars": 55,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Rezolucija: SAT, ACT i drugi standardizovani testovi pružaju bolji uvid u spremnost srednjoškolca za obrazovanje na elitnim koledžima i univerzitetima nego srednjoškolski prosek ocena i stoga bi treba",
-          "full_chars": 4097,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

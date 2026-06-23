@@ -158,13 +158,13 @@
         "query": {
           "text": "Was bietet die Abteilung Ferienangebote/Familienpass für die Betreuer:innen an?",
           "full_chars": 79,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Betreuer-innen für Ferienangebote Betreuer*innen für Ferienangebote Du hast Freude im Umgang mit Kindern und Jugendlichen, bist mindestens 18 Jahre alt und suchst einen sinnvollen Ferienjob? Dann meld",
+          "text": "Betreuer-innen für Ferienangebote Betreuer*innen für Ferienangebote Du hast Freude im Umgang mit Kindern und Jugendlichen, bist mindestens 18 Jahre alt und suchst einen sinnvollen Ferienjob? Dann melde dich bei uns! Wir, der Fachbereich Ferienangebote/Familienpass, organisieren Ferienprogramme für Kinder und Jugendliche im Alter von fünf bis 17 Jahren. Für folgende Ferienprojekte suchen wir deine Unterstützung: - Ferienfreizeiten in den Sommerferien, ein- oder zweiwöchig im In- und Ausland - Eintägige Erlebnisreisen in den Sommerferien zu spannenden Ausflugszielen in München und ganz Bayern - Kinder-Zirkus-Attraktionen im Zirkus Simsala Weitere Infos sowie die aktuellen Programmhefte findest du bei den jeweiligen Angeboten. Deine Aufgaben: - pädagogische Betreuung von Kindern und Jugendlichen, mit und ohne besonderem Unterstützungsbedarf oder Beeinträchtigung, - partizipative Mitgestaltung der Ferienprojekte im Team Unser Angebot: - Teilnahme an einem Grundlagenseminar - kostenlose Tei",
           "full_chars": 1283,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -174,13 +174,13 @@
         "query": {
           "text": "Was kostet die Heilpraktikerprüfung?",
           "full_chars": 36,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Allgemeine Heilpraktikererlaubnis kertätigkeit in München: Wenn Ihr amtlicher Wohnsitz nicht im Stadtgebiet München liegt, legen Sie Ihren Mietvertrag, Anstellungsvertrag oder andere Dokumente bei, di",
+          "text": "Allgemeine Heilpraktikererlaubnis kertätigkeit in München: Wenn Ihr amtlicher Wohnsitz nicht im Stadtgebiet München liegt, legen Sie Ihren Mietvertrag, Anstellungsvertrag oder andere Dokumente bei, die Ihre heilkundliche Tätigkeit in München nachweisen. Von den folgenden Unterlagen benötigen Sie eine amtlich beglaubigte Kopie. Bei persönlicher Antragstellung vor Ort genügt eine einfache Kopie mit Vorlage des Originals. - Bildungsnachweis: Hauptschulabschlusszeugnis bzw. gleich- oder höherwertige Bildungsnachweise. - Ausweisdokument: Personalausweis oder Reisepass. Wenn Sie nicht über eine EU-Staatsangehörigkeit verfügen, legen Sie zusätzlich Ihre Aufenthalts- und Arbeitserlaubnis bei. Dauer & Kosten Bearbeitungszeit Spätestens ca. 6 Monate nach Anmeldeschluss zur Antragstellung ist das Prüfungsverfahren organisations- und ablaufbedingt im Regelfall beendet. Gebührenrahmen Im Fall des Bestehens der schriftlichen Prüfung erhalten Sie erst nach der mündlichen Prüfung eine Zahlungsaufforde",
           "full_chars": 1243,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -190,49 +190,17 @@
         "query": {
           "text": "Wo muss ich anrufen, wenn ich Fragen zum Thema Ferienangebote habe?",
           "full_chars": 67,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Betreuer-innen für Ferienangebote leitungen und Fachkräfte - eine faire Aufwandsentschädigung, sowie freie Unterkunft und Verpflegung - Tätigkeitsnachweis über dein ehrenamtliches Engagement Benötigte",
+          "text": "Betreuer-innen für Ferienangebote leitungen und Fachkräfte - eine faire Aufwandsentschädigung, sowie freie Unterkunft und Verpflegung - Tätigkeitsnachweis über dein ehrenamtliches Engagement Benötigte Unterlagen Hast Du Interesse? Dann schicke bitte Dein Motivationsschreiben mit Lebenslauf und dem Zeitraum, in dem Du bei uns mitmachen möchtest, per Mail mit dem Betreff „Bewerbung“ an bewerbung.ferien.soz@muenchen.de Wir freuen uns auf dich! Links & Downloads Plakat A4 - Betreuer*innen gesucht Übersicht der Ferienangebote für Familien Landeshauptstadt München Sozialreferat Ferienangebote/Familienpass Telefon - +49 89 233-33815 - +49 89 233-33816 Internet - E-Mail schreiben Post Landeshauptstadt München Sozialreferat Ferienangebote/Familienpass Meindlstraße 16 81373 München Adresse Meindlstraße 16 81373 München Öffnungszeiten Montag 9 bis 12 Uhr und 13 bis 16 Uhr Dienstag 9 bis 12 Uhr und 13 bis 16 Uhr Mittwoch 9 bis Schlagworte: Freude im Umgang; sinnvollen Ferienjob; Kindern und Jugend",
           "full_chars": 1108,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q_ee1ee35e7239d4226fd80583ab1466e7",
-        "document_id": "d_7e1d1885efd42ebd4d7b15982d8da90a",
-        "query": {
-          "text": "Wo bekomme ich einen Antrag auf Wohngeld?",
-          "full_chars": 41,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Wohngeld – Mietzuschuss für Mietwohnungen Nachweis Kontoauszüge vorlegen, dürfen Sie Verwendungszweck bzw. Empfänger einer Überweisung – nicht aber deren Höhe - schwärzen, wenn es sich um besondere Ka",
-          "full_chars": 1262,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q_52c3eff7b1d247c67098aed0531595b6",
-        "document_id": "d_67d8c861948731aed9586b6acd5fcfd2",
-        "query": {
-          "text": "Woher weiß ich als Mieter wie meine Rauchmelder funktionieren?",
-          "full_chars": 62,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Rauchmelder werden? Die Rauchwarnmelder müssen so eingebaut oderangebracht und betrieben werden, dass Brandrauchfrühzeitig erkannt und gemeldet wird. Genaue Angabenzur Standortwahl, Montage und Wartun",
-          "full_chars": 1174,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

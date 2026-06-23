@@ -132,13 +132,13 @@
         "query": {
           "text": "มันโอเคไหมที่จะหัวเราะกับมุกของตัวเอง?",
           "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "มันแปลกไหมที่หัวเราะกับมุกของตัวเอง?",
           "full_chars": 36,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -148,13 +148,13 @@
         "query": {
           "text": "คำโกหกที่ดีที่สุดที่คุณเคยแต่งขึ้นคืออะไร?",
           "full_chars": 42,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "คำโกหกที่คุณเคยพูดออกมาดีที่สุดคืออะไร?",
           "full_chars": 39,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -164,49 +164,17 @@
         "query": {
           "text": "ทำไม Quora ถึงแนะนำคำตอบที่ดูถูกโดนัลด์ ทรัมป์บ่อยๆ ในฟีดของฉัน?",
           "full_chars": 64,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "ทำไม Quora ถึงดูเหมือนว่าจะมีคำตอบที่มีอคติและเป็นอัตวิสัยเกี่ยวกับคำถามเกี่ยวกับโดนัลด์ ทรัมป์เท่านั้น?",
           "full_chars": 104,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "ฉันจะทำให้ตัวเองแข็งแรงทางกายได้อย่างไร?",
-          "full_chars": 40,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "ฉันจะทำให้ตัวเองแข็งแรงทางกายได้อย่างไร?",
-          "full_chars": 40,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "ดาวเทียมควอนตัมจะทำงานอย่างไร?",
-          "full_chars": 30,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "ดาวเทียมควอนตัมทำงานอย่างไรและการใช้งานหลักบางอย่างจะเป็นอะไรบ้าง?",
-          "full_chars": 66,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -151,14 +151,14 @@
         "query": {
           "text": "Albummet Blood Mountain har en sammenhængde historie og et gennemgående tema.",
           "full_chars": 77,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Blood Mountain er et konceptalbum af heavy metal-gruppen Mastodon. Det er Mastodons tredje studiealbum og blev udgivet i september 2006. Som det foregående album Leviathan er Blood Mountain et koncept",
+          "text": "Blood Mountain er et konceptalbum af heavy metal-gruppen Mastodon. Det er Mastodons tredje studiealbum og blev udgivet i september 2006. Som det foregående album Leviathan er Blood Mountain et konceptalbum med en sammenhængende historie og et gennemgående tema.",
           "full_chars": 261,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -167,14 +167,14 @@
         "query": {
           "text": "Den almindelige perlebusk får perleformede knopper og derefter hvide blomster på dens busk.",
           "full_chars": 91,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Almindelig perlebusk (\"Exochorda racemosa\") er en mellemstor, løvfældende busk med en opret vækst og iøjnefaldende klaser af hvide, perleformede knopper og senere hvide blomster. Busken er fuldt hårdf",
+          "text": "Almindelig perlebusk (\"Exochorda racemosa\") er en mellemstor, løvfældende busk med en opret vækst og iøjnefaldende klaser af hvide, perleformede knopper og senere hvide blomster. Busken er fuldt hårdfør og bruges som prydbusk i haverne.",
           "full_chars": 236,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -183,49 +183,17 @@
         "query": {
           "text": ".my er det malaysiske topdomæne.",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": ".my er et nationalt topdomæne der er reserveret til Malaysia.",
           "full_chars": 61,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
-        }
-      },
-      {
-        "query_id": "Q73",
-        "document_id": "C74",
-        "query": {
-          "text": "Adelen i Storbritannien er den øverste klasse i Storbritannien.",
-          "full_chars": 63,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Adelen i Storbritannien (egentlig: Det Forenede Kongerige Storbritannien og Nordirland) er den øverste samfundsklasse i det britiske samfund og har historisk været bærer af nogle særlige titler, retti",
-          "full_chars": 317,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q3",
-        "document_id": "C4",
-        "query": {
-          "text": "Den 31. oktober 1920 opdagede en astronom småplaneten (944) Hidalgo i det ydre solsystem.",
-          "full_chars": 89,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "(944) Hidalgo (oprindeligt midlertidigt navn: 1920 HZ) er en mørk småplanet med en diameter på ca. 50 km, der befinder sig i det ydre solsystem. Objektet blev opdaget den 31. oktober 1920 af Walter Ba",
-          "full_chars": 635,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

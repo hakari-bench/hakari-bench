@@ -124,14 +124,14 @@
         "query": {
           "text": "Szacunki wariancji z próbki iid",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Intuicyjne wyjaśnienie dzielenia przez (n-1) przy obliczaniu sd? Zapytano mnie dzisiaj na zajęciach, dlaczego przy obliczaniu sd dzieli się sumę błędu kwadratowego przez $(n-1)$ zamiast przez $n$. Pow",
+          "text": "Intuicyjne wyjaśnienie dzielenia przez (n-1) przy obliczaniu sd? Zapytano mnie dzisiaj na zajęciach, dlaczego przy obliczaniu sd dzieli się sumę błędu kwadratowego przez $(n-1)$ zamiast przez $n$. Powiedziałem, że nie będę odpowiadał na to w klasie (ponieważ nie chciałem wchodzić w bezstronne estymatory), ale później zacząłem się zastanawiać - **czy istnieje** intuicyjne wytłumaczenie tego?!",
           "full_chars": 394,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -140,13 +140,13 @@
         "query": {
           "text": "Jak najlepiej wyświetlić graficznie błąd typu II (beta), moc i wielkość próbki?",
           "full_chars": 79,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Rzeczywiste w oparciu o funkcję zasilania! Problem: Jaki jest rzeczywisty przykład funkcji potęgowej? Próbowałem o tym myśleć, ale mi się nie udało. Czy ktoś wie?",
           "full_chars": 162,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -156,49 +156,17 @@
         "query": {
           "text": "Reprezentowanie macierzy odległości w płaszczyźnie",
           "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Jaka jest różnica między analizą głównych składowych a skalowaniem wielowymiarowym? Czym różnią się PCA i klasyczne MDS? Co powiesz na MDS w porównaniu z niemetrycznym MDS? Czy jest czas, kiedy wolisz",
+          "text": "Jaka jest różnica między analizą głównych składowych a skalowaniem wielowymiarowym? Czym różnią się PCA i klasyczne MDS? Co powiesz na MDS w porównaniu z niemetrycznym MDS? Czy jest czas, kiedy wolisz jedno od drugiego? Czym różnią się interpretacje?",
           "full_chars": 250,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "94061",
-        "document_id": "5135",
-        "query": {
-          "text": "Pomoc w interpretacji dopasowania modelu liniowego R",
-          "full_chars": 52,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Interpretacja wyjścia R lm() strony pomocy w R zakładają, że wiem, co oznaczają te liczby. Ja nie :) Staram się naprawdę intuicyjnie zrozumieć każdą liczbę tutaj. Po prostu opublikuję wyniki i skoment",
-          "full_chars": 2192,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "36036",
-        "document_id": "35561",
-        "query": {
-          "text": "Jak radzić sobie z brakującymi wartościami dla PCA?",
-          "full_chars": 51,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Zastąpienie wartości NA do analizy PCA Użyłem funkcji `prcomp()` do przeprowadzenia analizy PCA w R. Jednak w tej funkcji jest błąd, który powoduje, że parametr `na.action` nie działa. Poprosiłem o po",
-          "full_chars": 1484,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

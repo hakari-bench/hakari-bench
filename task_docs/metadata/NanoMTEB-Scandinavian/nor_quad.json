@@ -151,13 +151,13 @@
         "query": {
           "text": "Når ble euroen innført?",
           "full_chars": 23,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "I 1999",
           "full_chars": 6,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -167,13 +167,13 @@
         "query": {
           "text": "Hvilken bok lyver flest briter om at de har lest?",
           "full_chars": 49,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "«Bibelen»",
           "full_chars": 9,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -183,49 +183,17 @@
         "query": {
           "text": "Hvilket land i Øst-Europa var det første til å få en ikke-kommunistisk statsminister?",
           "full_chars": 85,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "30 år uten Berlinmur Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. FOTO: GERARD MALLE/NTB SCANPIX Det heter at muren falt. Som om den tumlet over ende av",
+          "text": "30 år uten Berlinmur Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. FOTO: GERARD MALLE/NTB SCANPIX Det heter at muren falt. Som om den tumlet over ende av utmattelse i kamp mot tidas tann. Men Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. Tida for kommunistiske dinosaurer var ute. Ungarere og polakker hadde samme høst vist vei. Polen hadde i august fått ikke-kommunistisk statsminister, den første i Øst-Europa på 40 år. Sovjetunionens nye leder Mikhail Gorbatsjov hadde skrudd termostaten opp i verden, og under DDR-regimets 40-årsjubileum tidlig i oktober 1989 hadde han gitt østtyskernes forhatte leder Erich Honecker dødskysset ved å si at «Livet straffer de som kommer for sent». Honecker hadde sovet i timen. Hendelsene i 1989 er blitt kalt slutten på historien. Slutten på den politiske og sosiokulturelle evolusjonen. Verden var på en måte i mål. Vestens måte å tenke på hadde vunnet fram. Tilbake s",
           "full_chars": 1948,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
-        }
-      },
-      {
-        "query_id": "87",
-        "document_id": "88",
-        "query": {
-          "text": "Hva kalte romerne provinsen de lagde ut av dagens England og Wales?",
-          "full_chars": 67,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Romersk Britannia",
-          "full_chars": 17,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "235",
-        "document_id": "236",
-        "query": {
-          "text": "Hvordan var tonen til Botnan etter løpet?",
-          "full_chars": 41,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "litt mer spøkefull",
-          "full_chars": 18,
-          "limit_chars": 200,
-          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

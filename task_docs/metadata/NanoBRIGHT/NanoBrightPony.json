@@ -153,85 +153,53 @@
         "query_id": "71",
         "document_id": "Pony/4_control-structures_13.txt",
         "query": {
-          "text": "I will use the programming language pony. Problem: You are given an array of integers stones where s",
+          "text": "I will use the programming language pony. Problem: You are given an array of integers stones where stones[i] is the weight of the ith stone. We are playing a game with the stones. On each turn, we choose the heaviest two stones and smash them together. Suppose the heaviest two stones have weights x and y with x <= y. The result of this smash is: If x == y, both stones are destroyed, and If x != y, the stone of weight x is destroyed, and the stone of weight y has new weight y - x. At the end of t",
           "full_chars": 730,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "So first we ask if there are any more names to get. If there are then we get a name and see if it's \"Jack\" or \"Jill\". If it is we're done and we break out of the loop, handing back the name we've foun",
+          "text": "So first we ask if there are any more names to get. If there are then we get a name and see if it's \"Jack\" or \"Jill\". If it is we're done and we break out of the loop, handing back the name we've found. If not we try again. The line `name'` appears at the end of the loop so that will be our value returned from the last iteration if neither \"Jack\" nor \"Jill\" is found. The `else` block provides our value of \"Herbert\" if there are no names available at all. __Can I break out of multiple, nested loops like the Java labeled break?__ No, Pony does not support that. If you need to break out of multiple loops you should probably refactor your code or use a worker function.",
           "full_chars": 676,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "110",
         "document_id": "Pony/2_ops_11.txt",
         "query": {
-          "text": "I will use the programming language pony. Problem: You are given an integer array nums. The unique e",
+          "text": "I will use the programming language pony. Problem: You are given an integer array nums. The unique elements of an array are the elements that appear exactly once in the array. Write a function that returns the sum of all the unique elements of nums. Here is the code template: fun sumOfUnique(nums: Array[I32]): I32 => ...",
           "full_chars": 323,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "We can see that it makes more sense for the unary operator to be applied before either infix as it only acts on a single number in the expression so it is never ambiguous. Unary operators can also be",
+          "text": "We can see that it makes more sense for the unary operator to be applied before either infix as it only acts on a single number in the expression so it is never ambiguous. Unary operators can also be applied to parentheses and act on the result of all operations in those parentheses prior to applying any infix operators outside the parentheses: ```pony 1 + -(2 * -3) // 7 ```",
           "full_chars": 380,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "100",
         "document_id": "Pony/1_variables_1.txt",
         "query": {
-          "text": "I will use the programming language pony. Problem: Given an array of integers nums, write a function",
+          "text": "I will use the programming language pony. Problem: Given an array of integers nums, write a function that returns the number of good pairs. A pair (i, j) is called good if nums[i] == nums[j] and i < j. Here is the code template: fun numIdenticalPairs(nums: Array[I32]): I32 => ...",
           "full_chars": 281,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "# Local variables Local variables in Pony work very much as they do in other languages, allowing you to store temporary values while you perform calculations. Local variables live within a chunk of co",
+          "text": "# Local variables Local variables in Pony work very much as they do in other languages, allowing you to store temporary values while you perform calculations. Local variables live within a chunk of code (they are _local_ to that chunk) and are created every time that code chunk executes and disposed of when it completes. To define a local variable the `var` keyword is used (`let` can also be used, but we'll get to that later). Right after the `var` comes the variable's name, and then you can (optionally) put a `:` followed by the variable's type. For example: ```pony var x: String = \"Hello\" ``` Here, we're assigning the __string literal__ `\"Hello\"` to `x`. You don't have to give a value to the variable when you define it: you can assign one later if you prefer. If you try to read the value from a variable before you've assigned one, the compiler will complain instead of allowing the dreaded _uninitialised variable_ bug. Every variable has a type, but you don't have to specify it in the",
           "full_chars": 1245,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "83",
-        "document_id": "Pony/2_ops_1.txt",
-        "query": {
-          "text": "I will use the programming language pony. Problem: Given an integer number n, write a function that",
-          "full_chars": 370,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "# Infix Operators Infix operators take two operands and are written between those operands. Arithmetic and comparison operators are the most common: ```pony 1 + 2 a < b ``` Pony has pretty much the sa",
-          "full_chars": 248,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "3",
-        "document_id": "Pony/4_control-structures_13.txt",
-        "query": {
-          "text": "I will use the programming language pony. Problem: A string s is nice if, for every letter of the al",
-          "full_chars": 592,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "So first we ask if there are any more names to get. If there are then we get a name and see if it's \"Jack\" or \"Jill\". If it is we're done and we break out of the loop, handing back the name we've foun",
-          "full_chars": 676,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
     "source_task": "Pony",
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -175,13 +175,13 @@
         "query": {
           "text": "Is homework beneficial?",
           "full_chars": 23,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "First, there are three arguments for why homework is excellent and ought to continue in modern schools. 1. Homework aids doer-learners. It is generally accepted that there are three types of learners:",
+          "text": "First, there are three arguments for why homework is excellent and ought to continue in modern schools. 1. Homework aids doer-learners. It is generally accepted that there are three types of learners: those who learn by hearing, those who learn by seeing, and those who learn by doing. While many are content to hear or see instruction of a given subject, some need to actually do it. Thus, homework is beneficial for this latter group because the instruction is learn through action. 2. Homework reinforces instruction. Although many would probably be thrilled to not have homework, the quality of the education received would certainly suffer if it was removed. Whether the homework is assigned reading, term papers, etc. , all of it is designed to reinforce the instruction in the students' minds. After all, those who do their homework are more academically successful than those who do not. I feel that this is a self-evident truth, but I'll leave it Pro to dissuade you. 3. Homework mirrors rea",
           "full_chars": 3553,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -191,13 +191,13 @@
         "query": {
           "text": "Should prescription drugs be advertised directly to consumers?",
           "full_chars": 62,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Many ads don't include enough information on how well drugs work. For example, Lunesta is advertised by a moth floating through a bedroom window, above a peacefully sleeping person. Actually, Lunesta",
+          "text": "Many ads don't include enough information on how well drugs work. For example, Lunesta is advertised by a moth floating through a bedroom window, above a peacefully sleeping person. Actually, Lunesta helps patients sleep 15 minutes faster after six months of treatment and gives 37 minutes more sleep per night. The Majority of ads are based on emotional appeals, but few include causes of the condition, risk factors, or important lifestyle changes. In a study of 38 pharmaceutical advertisements researchers found that 82 percent made a factual claim and 86 percent made rational arguments for product use. Only 26 percent described condition causes, risk factors, or prevalence.[1] Thus not giving the patients balanced information that would make them aware, that taking one of the pills is not a magic solution to their problem. Actually, according to a study conducted in the US and New Zealand, patients requested prescriptions in 12% of surveyed visits. Of these requests, 42% were for produc",
           "full_chars": 1682,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -207,49 +207,17 @@
         "query": {
           "text": "Should any vaccines be required for children?",
           "full_chars": 45,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Not a full case yet.. Just some little points I put together... Governments should not have the right to intervene in the health decisions parents make for their children. 31% of parents believe they",
+          "text": "Not a full case yet.. Just some little points I put together... Governments should not have the right to intervene in the health decisions parents make for their children. 31% of parents believe they should have the right to refuse mandated school entry vaccinations for their children, according to a 2010 survey by the University of Michigan. Many parents hold religious beliefs against vaccination. Forcing such parents to vaccinate their children would violate the 1st Amendment which guarantees citizens the right to the free exercise of their religion. Vaccines are often unnecessary in many cases where the threat of death from disease is small. During the early nineteenth century, mortality for the childhood diseases whooping cough, measles, and scarlet fever fell drastically before immunization became available. This decreased mortality has been attributed to improved personal hygiene, water purification, effective sewage disposal, and better food hygiene and nutrition. Vaccines inter",
           "full_chars": 4497,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8",
-        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
-        "query": {
-          "text": "Should abortion be legal?",
-          "full_chars": 25,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Abortions should be legal as Personhood begins after a fetus becomes viable or after birth, not at conception. According to the U.S. Supreme Court a person is to get their age when they are out of the",
-          "full_chars": 309,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "26",
-        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
-        "query": {
-          "text": "Do standardized tests improve education?",
-          "full_chars": 40,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Resolved: The SAT, ACT, and other standardized tests provided more insight into a high school student's preparedness for education at elite colleges and universities than high school GPA and therefore",
-          "full_chars": 4159,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

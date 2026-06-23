@@ -170,13 +170,13 @@
         "query": {
           "text": "Een geïntegreerd raamwerk voor het delven van logbestanden voor systeembeheer.",
           "full_chars": 78,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Machine learning in geautomatiseerde tekstcategorisering De geautomatiseerde categorisering (of classificatie) van teksten in vooraf gedefinieerde categorieën heeft de afgelopen 10 jaar een explosieve",
+          "text": "Machine learning in geautomatiseerde tekstcategorisering De geautomatiseerde categorisering (of classificatie) van teksten in vooraf gedefinieerde categorieën heeft de afgelopen 10 jaar een explosieve groei doorgemaakt, te danken aan de toegenomen beschikbaarheid van documenten in digitale vorm en de daaruit voortvloeiende behoefte om deze te organiseren. In de onderzoeksgemeenschap is de dominante aanpak van dit probleem gebaseerd op machine learning technieken: een algemeen inductief proces bouwt automatisch een classifier door, uit een set van vooraf geclassificeerde documenten, de kenmerken van de categorieën te leren. De voordelen van deze aanpak ten opzichte van de knowledge engineering aanpak (bestaande uit de handmatige definitie van een classifier door domeinexperts) zijn een zeer goede effectiviteit, aanzienlijke besparingen in termen van expertise-arbeidskracht, en eenvoudige overdraagbaarheid naar verschillende domeinen. Dit overzicht bespreekt de belangrijkste benaderingen",
           "full_chars": 1249,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -186,13 +186,13 @@
         "query": {
           "text": "Onderwerp-Relevantiekaart: Visualisatie voor Verbetering van het Begrip van Zoekresultaten",
           "full_chars": 90,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Ontwerpen voor explorerend zoeken op touchscreen-apparaten Explorerend zoeken confronteert gebruikers met uitdagingen bij het uitdrukken van zoekintenties, aangezien huidige zoekinterfaces het onderzo",
+          "text": "Ontwerpen voor explorerend zoeken op touchscreen-apparaten Explorerend zoeken confronteert gebruikers met uitdagingen bij het uitdrukken van zoekintenties, aangezien huidige zoekinterfaces het onderzoeken van resultatenlijsten vereisen om zoekrichtingen te identificeren, iteratief typen en het herformuleren van zoekopdrachten. We presenteren het ontwerp van Exploration Wall, een op aanraking gebaseerde zoekgebruikersinterface die incrementele exploratie en betekenisgeving van grote informatieruimten mogelijk maakt door entiteit zoeken, flexibel gebruik van resulterende entiteiten als zoekparameters en ruimtelijke configuratie van zoekstromen die voor interactie worden gevisualiseerd, te combineren. Entiteiten kunnen flexibel worden hergebruikt om nieuwe zoekstromen te wijzigen en te creëren, en gemanipuleerd worden om hun relaties met andere entiteiten te inspecteren. Gegevens bestaande uit op taken gebaseerde experimenten die Exploration Wall vergelijken met een conventionele zoekgebr",
           "full_chars": 1428,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -202,49 +202,17 @@
         "query": {
           "text": "Algoritmische Brokjes in Contentlevering",
           "full_chars": 40,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Consistente Hashing en Willekeurige Bomen: Gedistribueerde Cachingprotocollen voor het Verminderen van Hotspots op het World Wide Web We beschrijven een familie van cachingprotocollen voor gedistribue",
+          "text": "Consistente Hashing en Willekeurige Bomen: Gedistribueerde Cachingprotocollen voor het Verminderen van Hotspots op het World Wide Web We beschrijven een familie van cachingprotocollen voor gedistribueerde netwerken die kunnen worden gebruikt om het voorkomen van hotspots in het netwerk te verminderen of te elimineren. Onze protocollen zijn speciaal ontworpen voor gebruik met zeer grote netwerken zoals het internet, waar vertragingen veroorzaakt door hotspots ernstig kunnen zijn, en waar het niet haalbaar is voor elke server om complete informatie te hebben over de huidige staat van het hele netwerk. De protocollen zijn eenvoudig te implementeren met behulp van bestaande netwerkprotocollen zoals TCP/IP, en vereisen zeer weinig overhead. De protocollen werken met lokale controle, maken efficiënt gebruik van bestaande resources en schalen soepel naarmate het netwerk groeit. Onze cachingprotocollen zijn gebaseerd op een speciaal soort hashing dat we consistente hashing noemen. Ruwweg gezeg",
           "full_chars": 1474,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f1b7cb07e6f6b0c1cb142f8e46da4957ea7960f6",
-        "document_id": "741fd80f0a31fe77f91b1cce3d91c544d6d5b1b2",
-        "query": {
-          "text": "De Enactieve Benadering van Architectonische Ervaring: Een Neurofysiologisch Perspectief op Embodime",
-          "full_chars": 128,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Affectieve uitkomsten van virtual reality exposuretherapie voor angst en specifieke fobieën: een meta-analyse. Virtual reality exposuretherapie (VRET) is een steeds vaker toegepaste behandeling voor a",
-          "full_chars": 862,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5056e36419b95411e4c03e9c011bbdd286bbb7a9",
-        "document_id": "8b3539e359f4dd445c0651ebcb911c034d1ffc5b",
-        "query": {
-          "text": "PD-regeling met online zwaartekrachtcompensatie voor robots met elastische gewrichten: Theorie en ex",
-          "full_chars": 110,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Een op passief gedrag gebaseerde Cartesische impedantieregeling voor robots met flexibele gewrichten - deel I: koppelterugkoppeling en zwaartekrachtcompensatie In dit artikel wordt een nieuwe aanpak g",
-          "full_chars": 912,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

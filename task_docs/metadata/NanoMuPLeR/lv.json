@@ -121,83 +121,51 @@
         "query_id": "cc819740-9fb6-4692-b491-7191c7c348c7",
         "document_id": "956",
         "query": {
-          "text": "Kura Savienības norma paredz ņemt vērā nodarbinātības veicināšanu, sociālo aizsardzību, izslēgtības",
+          "text": "Kura Savienības norma paredz ņemt vērā nodarbinātības veicināšanu, sociālo aizsardzību, izslēgtības apkarošanu, izglītību un veselību?",
           "full_chars": 134,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Tas, piemēram, ir gadījums sociālajā politikā, kur tika ietverts vispārēji piemērojams noteikums (tā sauktā sociālā klauzula), pēc kura Savienībai, nosakot un īstenojot politiku un pasākumus, ir jārēķ",
+          "text": "Tas, piemēram, ir gadījums sociālajā politikā, kur tika ietverts vispārēji piemērojams noteikums (tā sauktā sociālā klauzula), pēc kura Savienībai, nosakot un īstenojot politiku un pasākumus, ir jārēķinās ar prasībām saistībā ar augstu nodarbinātības līmeņa veicināšanu, atbilstošas sociālās aizsardzības nodrošināšanu, sociālās izslēgtības apkarošanu kā arī ar augsta līmeņa vispārējo un profesionālo izglītību un veselības aizsardzību. Tas pats attiecas uz cīņu pret jebkuru diskriminācijas un izslēgtības formu, vispārējās intereses pakalpojumu lomas atzīšanu Savienības sociālās un teritoriālās kohēzijas veicināšanā kā arī, Līgumā jau nostiprinātajā, vides aspektu iesaistīšanā un patērētāju aizsardzības prasībās.",
           "full_chars": 719,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "273a5a20-9979-4154-aad1-2b7413618a35",
         "document_id": "2568",
         "query": {
-          "text": "Kā priekšlikumos plānot esošo digitālās kompetences projektu ilgtspējīgu izplatīšanu, nosaucot starp",
+          "text": "Kā priekšlikumos plānot esošo digitālās kompetences projektu ilgtspējīgu izplatīšanu, nosaucot starpniekus un iekļaujot naratīvus un skaitliskus rādītājus?",
           "full_chars": 155,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Priekšlikumos jākoncentrējas uz esošo digitālās kompetences projektu, darbību vai instrumentu rezultātu efektīvu un ilgtspējīgu izplatīšanu un izmantošanu. Īpašs uzsvars jāliek uz mērķgrupu un to vaja",
+          "text": "Priekšlikumos jākoncentrējas uz esošo digitālās kompetences projektu, darbību vai instrumentu rezultātu efektīvu un ilgtspējīgu izplatīšanu un izmantošanu. Īpašs uzsvars jāliek uz mērķgrupu un to vajadzību precīzu noskaidrošanu, uz starpniekiem (brīvprātīgo nozare, akadēmiķu un pasniedzēju kopienas, pārvaldības u.c.), uz veidu, kā palīdzēt sasniegt galalietotājus un uz konkrētu norādi projektu iznākumu izplatīšanai, kvalitātes un kvantitātes rādītāju iekļaušanai. Priekšlikumiem ir jāsniedz skaidra ilgtermiņa stratēģija, noskaidrojot un analizējot iespējamās problēmas un piedāvājot objektīvus pasākumus to risināšanai.",
           "full_chars": 624,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "0b14e642-8c56-405a-82a9-7b6d664377d7",
         "document_id": "9088",
         "query": {
-          "text": "Kura komiteja secināja, ka resursu piešķiršana maznozīmīgām iekšējām izmeklēšanām ir neefektīva un a",
+          "text": "Kura komiteja secināja, ka resursu piešķiršana maznozīmīgām iekšējām izmeklēšanām ir neefektīva un aicināja iekļaut atlases kritērijus operatīvo procedūru rokasgrāmatā?",
           "full_chars": 168,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Uzraudzības komiteja izvērtēja OLAF de minimis politiku un pārbaudīja 45 izvēlētas lietas, kuru aplēstā finansiālā ietekme nepārsniedz EUR 50000. Uzraudzības komiteja secināja, ka OLAF resursu piešķir",
+          "text": "Uzraudzības komiteja izvērtēja OLAF de minimis politiku un pārbaudīja 45 izvēlētas lietas, kuru aplēstā finansiālā ietekme nepārsniedz EUR 50000. Uzraudzības komiteja secināja, ka OLAF resursu piešķiršana maznozīmīgām iekšējām izmeklēšanām neatbilst labākajam resursu izmantojumam. Komisijas pieņemtā pilnīgas neiecietības politika nenozīmē, ka citas iestādes (piemēram, IDOC) nevarētu izmeklēt šīs lietas, tādējādi atbrīvojot OLAF no šo lietu izmeklēšanas. Uzraudzības komiteja iesaka iekļaut operatīvo procedūru rokasgrāmatā de minimis lietu atlases un apstrādes kritērijus.",
           "full_chars": 576,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f4c7d1cc-c71e-4e85-be9c-4e2453c21244",
-        "document_id": "8426",
-        "query": {
-          "text": "Kura ES konsultatīvā komiteja atbalsta Komisijas pūles iekļaut veselības un sociālās ietekmes akcīze",
-          "full_chars": 138,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Kaut arī sākotnēji akcīzes nodokļa, ar ko apliek tabaku, galvenais mērķis bija tikai fiskāls, mūsdienu pasaulē tā funkcijas mainās, un šis nodoklis arvien vairāk kļūst par sabiedrības veselības un soc",
-          "full_chars": 666,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "60f847ae-bc0f-49ef-8879-c3c06adee5cf",
-        "document_id": "2764",
-        "query": {
-          "text": "Kurš regulējums ļāva iestādēm atzīt uzņēmumus par dominējošiem ar aptuveni 25% tirgus daļas, ņemot v",
-          "full_chars": 138,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Saskaņā ar 1998. gada reglamentējošiem noteikumiem attiecīgajās direktīvās tika noteiktas telekomunikāciju sektora tirgus jomas, kuras bija saskaņā ar ex ante regulu, bet nebija saskaņā ar konkurences",
-          "full_chars": 684,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

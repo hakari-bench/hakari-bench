@@ -131,14 +131,14 @@
         "query": {
           "text": "Fitzgerald bilmuseet Chambersburg, PA",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Fitzgerald Auto Malls är en familjeägd och driven bilhandelskedja som grundades 1966, med sin första plats öppnad i Bethesda, Maryland. År 2014 rankades Fitzgerald Auto Malls som nummer 59 på listan ö",
+          "text": "Fitzgerald Auto Malls är en familjeägd och driven bilhandelskedja som grundades 1966, med sin första plats öppnad i Bethesda, Maryland. År 2014 rankades Fitzgerald Auto Malls som nummer 59 på listan över de \"Topp 125 Bilhandelsgrupperna\" i USA, som publiceras årligen av Automotive News. Fitzgeralds försäljningsställen förekommer fem gånger på WardsAuto e-Dealer 100 2013, på plats 8, 25, 30, 43 och 98.",
           "full_chars": 404,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Samling av noveller från 1994 av Alice Munro är tillgänglig",
           "full_chars": 59,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, född Laidlaw /ˈleɪdlɔː/; född 10 juli 1931) är en kanadensisk författare. Munros verk har beskrivits som att ha förändrat novellens struktur, särskilt i dess tend",
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, född Laidlaw /ˈleɪdlɔː/; född 10 juli 1931) är en kanadensisk författare. Munros verk har beskrivits som att ha förändrat novellens struktur, särskilt i dess tendens att röra sig framåt och bakåt i tiden. Hennes berättelser har sagt att \"mer att avslöja än att visa upp.\" Munros fiktion spelar sig ofta i hennes hemort Huron County i sydvästra Ontario. Hennes berättelser utforskar mänskliga komplexiteter i en enkel och klar prosa.",
           "full_chars": 470,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Galloromansk arkitektur i Paris",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Konst i Paris är en artikel om konstkultur och historia i Paris, Frankrikes huvudstad. Under århundraden har Paris lockat konstnärer från hela världen, som kommit till staden för att utbilda sig och f",
+          "text": "Konst i Paris är en artikel om konstkultur och historia i Paris, Frankrikes huvudstad. Under århundraden har Paris lockat konstnärer från hela världen, som kommit till staden för att utbilda sig och finna inspiration från dess konstnärliga resurser och gallerier. Som ett resultat har Paris förvärvat ett rykte som 'Konstens stad'.",
           "full_chars": 331,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "SemSearch_LS-35",
-        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
-        "query": {
-          "text": "De tidigare jugoslaviska republikerna",
-          "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "1974 års jugoslaviska konstitution var den fjärde och sista konstitutionen för den socialistiska federala republiken Jugoslavien. Den trädde i kraft den 21 februari. Med sina 406 ursprungliga artiklar",
-          "full_chars": 455,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "INEX_XER-72",
-        "document_id": "<dbpedia:A_Little_Romance>",
-        "query": {
-          "text": "Filmer inspelade i Venedig",
-          "full_chars": 26,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "A Little Romance är en amerikansk romantisk komedifilm från 1979 i Technicolor och Panavision, regisserad av George Roy Hill och med Laurence Olivier, Thelonious Bernard och Diane Lane i hennes filmde",
-          "full_chars": 370,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

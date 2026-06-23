@@ -150,15 +150,15 @@
         "query_id": "841",
         "document_id": "853",
         "query": {
-          "text": "Je loue une caravane dans un camping à l'année. Quelles règles s'appliquent à mon bail à Bruxelles ?",
+          "text": "Je loue une caravane dans un camping à l'année. Quelles règles s'appliquent à mon bail à Bruxelles ? Bail de résidence principale (Bruxelles), Champ d'application",
           "full_chars": 162,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "PrincipesLe présent chapitre s'applique aux baux portant sur le logement que le preneur, avec l'accord exprès ou tacite du bailleur, affecte dès l'entrée en jouissance à sa résidence principale. Est r",
+          "text": "PrincipesLe présent chapitre s'applique aux baux portant sur le logement que le preneur, avec l'accord exprès ou tacite du bailleur, affecte dès l'entrée en jouissance à sa résidence principale. Est réputée non écrite la clause interdisant l'affectation du bien à la résidence principale du preneur lorsqu'elle n'est pas appuyée par une justification expresse et sérieuse, relative notamment à la destination naturelle du bien loué, et n'est pas accompagnée de l'indication de la résidence principale du preneur au cours du bail.Le présent chapitre s'applique également si l'affectation à la résidence principale se fait en cours de bail avec l'accord écrit du bailleur. Dans ce cas, le bail prend cours à la date de cet accord.Le présent chapitre s'applique à la sous-location conclue conformément à l'article 230, dans les limites prévues à ce même article.Sauf disposition contraire, le présent chapitre n'est pas applicable lorsque le contrat par lequel le logement est accordé au preneur est l'a",
           "full_chars": 1082,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -166,15 +166,15 @@
         "query_id": "172",
         "document_id": "1865",
         "query": {
-          "text": "J’ai fait un testament. Puis-je le modifier ? Démarches avant décès, Donation et testament, Testamen",
+          "text": "J’ai fait un testament. Puis-je le modifier ? Démarches avant décès, Donation et testament, Testament",
           "full_chars": 101,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Le testament par acte public est celui qui est reçu par un notaire. Le testament par acte public est celui qui est reçu par un notaire, en présence de deux témoins, ou par deux notaires.",
           "full_chars": 186,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -184,49 +184,17 @@
         "query": {
           "text": "Dois-je payer les frais de justice si je conteste une décision d’un organisme de sécurité sociale ?",
           "full_chars": 99,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "L'indemnité de procédure est une intervention forfaitaire dans les frais et honoraires d'avocat de la partie ayant obtenu gain de cause.Après avoir pris l'avis de l'Ordre des barreaux francophones et",
+          "text": "L'indemnité de procédure est une intervention forfaitaire dans les frais et honoraires d'avocat de la partie ayant obtenu gain de cause.Après avoir pris l'avis de l'Ordre des barreaux francophones et germanophone et de l'Orde van Vlaamse Balies, le Roi établit par arrêté délibéré en Conseil des ministres, les montants de base, minima et maxima de l'indemnité de procédure, en fonction notamment de la nature de l'affaire et de l'importance du litige.(A la demande d'une des parties, éventuellement formulée sur interpellation par le juge, celui-ci peut, par décision spécialement motivée,) soit réduire l'indemnité soit l'augmenter, sans pour autant dépasser les montants maxima et minima prévus par le Roi. Dans son appréciation, le juge tient compte : - de la capacité financière de la partie succombante, pour diminuer le montant de l'indemnité;- de la complexité de l'affaire;- des indemnités contractuelles convenues pour la partie qui obtient gain de cause;- du caractère manifestement dérais",
           "full_chars": 2341,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "954",
-        "document_id": "841",
-        "query": {
-          "text": "Mon propriétaire ne fait pas les réparations nécessaires, puis-je faire les réparations à sa place à",
-          "full_chars": 215,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Réparations et entretien§ 1er. Le preneur est tenu des réparations locatives, à l'exception de celles qui sont occasionnées par la vétusté ou la force majeure, et des travaux de menu entretien.Les rép",
-          "full_chars": 555,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "39",
-        "document_id": "16571",
-        "query": {
-          "text": "Comment lire et comprendre ma facture d'eau en Wallonie ? Dettes liées à la fourniture d'eau, En Wal",
-          "full_chars": 105,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Une facture annuelle est établie par le distributeur. De plus, des acomptes ou des factures intermédiaires au minimum trimestriels seront établis.En cas de changement d'usager ainsi qu'en cas de modif",
-          "full_chars": 530,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -53,8 +53,6 @@ A strong model should improve top-rank duplicate placement without confusing top
 | Ist es in Ordnung, über seine eigenen Witze zu lachen? [54 chars] | Ist es merkwürdig, über meine eigenen Witze zu lachen? [54 chars] |
 | Welche ist die beste Lüge, die du je erzählt hast? [50 chars] | Welche ist die beste Lüge, die du je erzählt hast? [50 chars] |
 | Warum schlägt Quora mir häufig Antworten vor, die Donald Trump kritisieren? [75 chars] | Warum gibt es auf Quora nur voreingenommene Antworten zu Fragen über Donald Trump? [82 chars] |
-| Wie werde ich körperlich fit? [29 chars] | Wie kann ich körperlich fit werden? [35 chars] |
-| Wie funktioniert ein Quanten-Satellit? [38 chars] | Wie funktioniert ein Quanten-Satellit und welche Hauptanwendungen hätte er? [75 chars] |
 
 ## Public Sources
 

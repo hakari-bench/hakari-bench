@@ -131,14 +131,14 @@
         "query": {
           "text": "Fitzgerald bilutstillingssenter i Chambersburg, PA",
           "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Fitzgerald Auto Malls er en familieeid og drevet bilforhandler som ble grunnlagt i 1966, med sin første lokalisering åpnet i Bethesda, Maryland. Per 2014, Fitzgerald Auto Malls var rangert som nummer",
+          "text": "Fitzgerald Auto Malls er en familieeid og drevet bilforhandler som ble grunnlagt i 1966, med sin første lokalisering åpnet i Bethesda, Maryland. Per 2014, Fitzgerald Auto Malls var rangert som nummer 59 på listen over 'Topp 125 Bilforhandlere' i USA, som blir publisert årlig av Automotive News. Fitzgerald-forhandlere dukker opp fem ganger på WardsAuto e-Dealer 100 i 2013, på plass nr. 8, nr. 25, nr. 30, nr. 43 og nr. 98.",
           "full_chars": 424,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Hvor kan jeg finne samlingen av kortfortellinger fra 1994 av Alice Munro?",
           "full_chars": 73,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, født Laidlaw /ˈleɪdlɔː/; født 10. juli 1931) er en kanadisk forfatter. Munros arbeid er blitt beskrevet som å ha revolusjonert kortprosasjangeren, spesielt i sin",
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, født Laidlaw /ˈleɪdlɔː/; født 10. juli 1931) er en kanadisk forfatter. Munros arbeid er blitt beskrevet som å ha revolusjonert kortprosasjangeren, spesielt i sin tendens til å bevege seg frem og tilbake i tid. Hennes historier inneholder mer enn å annonsere, avslører mer enn å fremvise. Munros fiksjon er oftest satt i hennes hjemfylke Huron County i sørvestlige Ontario. Hennes historier utforsker menneskelige kompleksiteter i en enkel og klar prosa.",
           "full_chars": 491,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Galloromersk arkitektur i Paris",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kunst i Paris er en artikkel om kunstkulturen og historien i Paris, Frankrikes hovedstad. I århundrer har Paris tiltrukket kunstnere fra hele verden, som kommer til byen for å utdanne seg og finne ins",
+          "text": "Kunst i Paris er en artikkel om kunstkulturen og historien i Paris, Frankrikes hovedstad. I århundrer har Paris tiltrukket kunstnere fra hele verden, som kommer til byen for å utdanne seg og finne inspirasjon i byens kunstneriske ressurser og gallerier. Paris har derfor fått tilnavnet 'Kunstens by'.",
           "full_chars": 300,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "SemSearch_LS-35",
-        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
-        "query": {
-          "text": "De tidligere jugoslaviske republikkene",
-          "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Den jugoslaviske grunnloven av 1974 var den fjerde og siste grunnloven for Den sosialistiske føderale republikken Jugoslavia. Den trådte i kraft 21. februar. Med 406 opprinnelige artikler var den jugo",
-          "full_chars": 436,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "INEX_XER-72",
-        "document_id": "<dbpedia:A_Little_Romance>",
-        "query": {
-          "text": "Filmer innspilt i Venezia",
-          "full_chars": 25,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "En liten romanse er en amerikansk romantisk komedie fra 1979, innspilt i Technicolor og Panavision, regissert av George Roy Hill og med Laurence Olivier, Thelonious Bernard og Diane Lane i hennes film",
-          "full_chars": 376,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

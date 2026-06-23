@@ -167,15 +167,15 @@
         "query_id": "66",
         "document_id": "doc_66",
         "query": {
-          "text": "Q: How can I find the full path to a font from its display name on a Mac? I am using the Photoshop's",
+          "text": "Q: How can I find the full path to a font from its display name on a Mac? I am using the Photoshop's javascript API to find the fonts in a given PSD.",
           "full_chars": 149,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Given a font name returned by the API, I want to find the actual physical font file that font name corresponds to on the disc. This is all happening in a python program running on OSX so I guess I'm l",
+          "text": "Given a font name returned by the API, I want to find the actual physical font file that font name corresponds to on the disc. This is all happening in a python program running on OSX so I guess I'm looking for one of: * *Some Photoshop javascript *A Python function *An OSX API that I can call from python A: open up a terminal (Applications->Utilities->Terminal) and type this in: locate InsertFontHere This will spit out every file that has the name you want. Warning: there may be alot to wade through. A: I haven't been able to find anything that does this directly. I think you'll have to iterate through the various font folders on the system: /System/Library/Fonts, /Library/Fonts, and there can probably be a user-level directory as well ~/Library/Fonts. A: There must be a method in Cocoa to get a list of fonts, then you would have to use the PyObjC bindings to call it.. Depending on what you need them for, you could probably just use something like the following.. import os def get_fon",
           "full_chars": 5076,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -183,15 +183,15 @@
         "query_id": "123",
         "document_id": "doc_123",
         "query": {
-          "text": "Q: How do I delete a file which is locked by another process in C#? I'm looking for a way to delete",
+          "text": "Q: How do I delete a file which is locked by another process in C#? I'm looking for a way to delete a file which is locked by another process using C#. I suspect the method must be able to find which process is locking the file (perhaps by tracking the handles, although I'm not sure how to do this in C#) then close that process before being able to complete the file delete using File.Delete().",
           "full_chars": 396,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "A: If you want to do it programmatically. I'm not sure... and I'd really recommend against it. If you're just troubleshooting stuff on your own machine, SysInternals Process Explorer can help you Run",
+          "text": "A: If you want to do it programmatically. I'm not sure... and I'd really recommend against it. If you're just troubleshooting stuff on your own machine, SysInternals Process Explorer can help you Run it, use the Find Handle command (I think it's either in the find or handle menu), and search for the name of your file. Once the handle(s) is found, you can forcibly close them. You can then delete the file and so on. Beware, doing this may cause the program which owns the handles to behave strangely, as you've just pulled the proverbial rug out from under it, but it works well when you are debugging your own errant code, or when visual studio/windows explorer is being crapped and not releasing file handles even though you told them to close the file ages ago... sigh :-) A: You can use this program, Handle, to find which process has the lock on your file. It's a command-line tool, so I guess you use the output from that. I'm not sure about finding it programmatically. If deleting the file",
           "full_chars": 13199,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -199,51 +199,19 @@
         "query_id": "103",
         "document_id": "doc_103",
         "query": {
-          "text": "Q: Editing database records by multiple users I have designed database tables (normalised, on an MS",
+          "text": "Q: Editing database records by multiple users I have designed database tables (normalised, on an MS SQL server) and created a standalone windows front end for an application that will be used by a handful of users to add and edit information. We will add a web interface to allow searching accross our production area at a later date.",
           "full_chars": 334,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "I am concerned that if two users start editing the same record then the last to commit the update would be the 'winner' and important information may be lost. A number of solutions come to mind but I'",
+          "text": "I am concerned that if two users start editing the same record then the last to commit the update would be the 'winner' and important information may be lost. A number of solutions come to mind but I'm not sure if I am going to create a bigger headache. * *Do nothing and hope that two users are never going to be editing the same record at the same time. - Might never happed but what if it does? *Editing routine could store a copy of the original data as well as the updates and then compare when the user has finished editing. If they differ show user and comfirm update - Would require two copies of data to be stored. *Add last updated DATETIME column and check it matches when we update, if not then show differences. - requires new column in each of the relevant tables. *Create an editing table that registers when users start editing a record that will be checked and prevent other users from editing same record. - would require carful thought of program flow to prevent deadlocks and reco",
           "full_chars": 4026,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "9",
-        "document_id": "doc_9",
-        "query": {
-          "text": "Q: Throw an error preventing a table update in a MySQL trigger If I have a trigger before the update",
-          "full_chars": 177,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "A: CREATE TRIGGER sample_trigger_msg BEFORE INSERT FOR EACH ROW BEGIN IF(NEW.important_value) < (1*2) THEN DECLARE dummy INT; SELECT Enter your Message Here!!! INTO dummy FROM mytable WHERE mytable.id",
-          "full_chars": 5314,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "161",
-        "document_id": "doc_161",
-        "query": {
-          "text": "Q: Bandwith throttling in IIS 6 by IP Address I am writing an application that downloads large files",
-          "full_chars": 391,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Since this is an AIR Application, I figure I will throttle via server-side since I can do it from either the server itself (IIS 6) or the web service (asp.net / C#). Throttling through IIS 6 seems to",
-          "full_chars": 922,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

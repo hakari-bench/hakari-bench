@@ -163,15 +163,15 @@
         "query_id": "150",
         "document_id": "151",
         "query": {
-          "text": "Hej #Twitterhjerne & twitterfolkens (- eller X'ere, whatever 😊) Er der nogen der kan fortælle mig hv",
+          "text": "Hej #Twitterhjerne & twitterfolkens (- eller X'ere, whatever 😊) Er der nogen der kan fortælle mig hvor jeg kan købe IKKE-danske kartofler? Hverken Rema1000, Netto, Kvickly ell SuperBrugsen sælger andet end danske. (Jeg ønsker ikke at spise det hjerneskadende pesticid Reglone)",
           "full_chars": 278,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Økologiske er vel ok?",
           "full_chars": 21,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -179,15 +179,15 @@
         "query_id": "112",
         "document_id": "113",
         "query": {
-          "text": "Hvis I betaler for medieovervågning på arbejdet - hvem bruger I så, og er I tilfredse? #dkmedier #dk",
+          "text": "Hvis I betaler for medieovervågning på arbejdet - hvem bruger I så, og er I tilfredse? #dkmedier #dkbiz #twitterhjerne",
           "full_chars": 118,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Infomedia - og mnjah",
           "full_chars": 20,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -195,51 +195,19 @@
         "query_id": "231",
         "document_id": "232",
         "query": {
-          "text": "Er der andre der døjer med samme problem som mig, min controller til ps5 lader maks 1 streg om natte",
+          "text": "Er der andre der døjer med samme problem som mig, min controller til ps5 lader maks 1 streg om natten. Hver gang jeg sidder og spiller disconneter den hele tiden, jeg har ikke gjort noget ved den. Den havde det allerede 1 uge efter jeg fik konsollen.",
           "full_chars": 250,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Du skal bare indlevere den, hvor du har købt, så får du en ny",
           "full_chars": 61,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "22",
-        "document_id": "23",
-        "query": {
-          "text": "Hej Twitter Ofte når jeg ser madvideoer på engelsk så bruger de noget de kalder heavy cream. Svarer",
-          "full_chars": 152,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Er heavy cream ikke mere 48-50% fløde",
-          "full_chars": 37,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "209",
-        "document_id": "210",
-        "query": {
-          "text": "Teknisk sommerspørgsmål: Hvordan deler i fotos med familien? Krav: ikke Google Photo eller iCloud. M",
-          "full_chars": 259,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "OneDrive. Vi har også Jottacloud til backup, men deling af billeder med andre i OneDrive fungerer fint, oplever jeg.",
-          "full_chars": 116,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

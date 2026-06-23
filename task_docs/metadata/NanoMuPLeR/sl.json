@@ -121,16 +121,16 @@
         "query_id": "d5607064-f0d7-4c09-82cf-00683a041ed6",
         "document_id": "2764",
         "query": {
-          "text": "Kateri regulativni okvir je organom omogočal opredeliti podjetja kot prevladujoča pri 25% tržnem del",
+          "text": "Kateri regulativni okvir je organom omogočal opredeliti podjetja kot prevladujoča pri 25% tržnem deležu, upoštevajoč dostop končnih uporabnikov in finance?",
           "full_chars": 155,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "V skladu z regulativnim okvirom iz leta 1998 so bila področja trga telekomunikacijskega sektorja, za katera je veljala ureditev ex ante, določena v ustreznih direktivah, vendar ti trgi niso bili opred",
+          "text": "V skladu z regulativnim okvirom iz leta 1998 so bila področja trga telekomunikacijskega sektorja, za katera je veljala ureditev ex ante, določena v ustreznih direktivah, vendar ti trgi niso bili opredeljeni v skladu z načeli konkurenčnega prava. Na teh področjih, opredeljenih v skladu z regulativnim okvirom iz leta 1998, so imeli nacionalni regulativni organi pooblastila, da podjetja, ki imajo 25 % tržni delež, opredelijo kot podjetja s pomembno tržno močjo, pri čemer je mogoče odstopanje od tega praga ob upoštevanju sposobnosti podjetja, da vpliva na trg, njegovega prometa glede na velikost trga, njegovega nadzora nad sredstvi dostopa do končnih uporabnikov, njegovega dostopa do finančnih virov in njegovih izkušenj pri zagotavljanju proizvodov in storitev na trgu.",
           "full_chars": 775,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -139,65 +139,33 @@
         "query": {
           "text": "Katere države so v raziskavi zabeležile približno štiri petine podpore za omejitev manjših apoenov?",
           "full_chars": 99,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Bankovci in kovanci. Glede zadovoljstva s sedanjimi apoeni bankovcev in kovancev, je raziskava pokazala, da pri bankovcih spremembe niso potrebne, precejšen odstotek anketirancev (od 80 % na Finskem i",
+          "text": "Bankovci in kovanci. Glede zadovoljstva s sedanjimi apoeni bankovcev in kovancev, je raziskava pokazala, da pri bankovcih spremembe niso potrebne, precejšen odstotek anketirancev (od 80 % na Finskem in v Nemčiji do 33–35 % na Irskem in v Italiji) pa zagovarja zmanjšanje števila eurokovancev, zlasti ukinitev kovancev za 1 in 2 centa, kar bi bilo udobneje in bi poenostavilo plačila. Po drugi strani se večina boji, da bi odstranitev majhnih apoenov eura lahko povzročila rast cen: ta bojazen je zelo razširjena tudi v državah, kjer bi večina želela ukinitev manjših kovancev.",
           "full_chars": 576,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "0cdcd627-2c88-435b-90ec-16fb48138d33",
         "document_id": "7554",
         "query": {
-          "text": "Kateri segment embalaže za pijačo v razpravah v EU predstavlja približno petino skupne embalaže po t",
+          "text": "Kateri segment embalaže za pijačo v razpravah v EU predstavlja približno petino skupne embalaže po teži?",
           "full_chars": 104,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Nacionalni sistemi za ponovno uporabo embalaže upoštevajo več vrst embalaže. Nekateri od teh sistemov delujejo zelo dobro, zlasti tisti za prevozno embalažo, kakršne so gajbe in palete, pa tudi za emb",
-          "full_chars": 524,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f890b09f-7ecc-4fc7-a40e-b9acf8497dbd",
-        "document_id": "9979",
-        "query": {
-          "text": "Kateri delež nacionalne oskrbe bonbonov trgovcem na drobno obvladuje dajalec franšize?",
-          "full_chars": 86,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Trgovci na drobno, ki prodajajo bonbone, jih kupujejo na nacionalnem trgu pri nacionalnih proizvajalcih, ki nudijo nacionalne okuse, ali pri trgovcih na debelo, ki ob tem, da prodajajo bonbone naciona",
-          "full_chars": 740,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5d7d4f7d-e26d-483f-aac9-588848e13c49",
-        "document_id": "5358",
-        "query": {
-          "text": "Katera združitev leta 2004 ni ustvarila prevladujočega nacionalnega igralca in ni zaprla trga za spl",
-          "full_chars": 146,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Medtem ko je bila industrija glasbenih posnetkov koncentrirana že pred združitvijo v letu 2004, tržni deleži družbe Sony BMG ostajajo nižji od vrednosti, ki bi načelno pomenile posamični prevladujoči",
-          "full_chars": 620,
-          "limit_chars": 200,
-          "truncated": true
+          "text": "Nacionalni sistemi za ponovno uporabo embalaže upoštevajo več vrst embalaže. Nekateri od teh sistemov delujejo zelo dobro, zlasti tisti za prevozno embalažo, kakršne so gajbe in palete, pa tudi za embalaže za pijačo v gostinstvu. Na drugih področjih pa je mogoče potreben poseg javnih organov za spodbuditev sistemov ponovne uporabe, ne glede na njihovo dejansko poslovno upravičenost. Pri tem se večji del razprave v Evropski uniji osredotoča na potrošniško embalažo za pijačo (ki znaša okoli 20 % skupne embalaže po teži).",
+          "full_chars": 524,
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

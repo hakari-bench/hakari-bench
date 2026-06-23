@@ -132,13 +132,13 @@
         "query": {
           "text": "자신의 농담에 웃는 것이 괜찮을까?",
           "full_chars": 19,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "자기 자신이 한 농담에 웃는 건 이상한가요?",
           "full_chars": 24,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -148,13 +148,13 @@
         "query": {
           "text": "당신이 지어낸 최고의 거짓말은 무엇입니까?",
           "full_chars": 23,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "당신이 지금까지 지은 가장 잘 꾸며낸 거짓말은 무엇입니까?",
           "full_chars": 32,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -164,49 +164,17 @@
         "query": {
           "text": "왜 Quora는 자주 내 피드에 도널드 트럼프를貶하는 답변들을 추천할까요?",
           "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "왜 도널드 트럼프에 관한 질문에는 주관적이고 편향된 답변만 있는 것처럼 보이나요?",
           "full_chars": 45,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "어떻게 하면 신체적으로 강해질 수 있을까요?",
-          "full_chars": 24,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "어떻게 하면 신체적으로 강해질 수 있을까요?",
-          "full_chars": 24,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "양자 위성은 어떻게 작동할 것인가?",
-          "full_chars": 19,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "양자 위성은 어떻게 작동하며, 주요 용도는 무엇인가요?",
-          "full_chars": 30,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

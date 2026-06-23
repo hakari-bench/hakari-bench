@@ -124,13 +124,13 @@
         "query": {
           "text": "Jak dostać się na Harvard?",
           "full_chars": 26,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Jak dostać się na Uniwersytet Harvarda?",
           "full_chars": 39,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -140,13 +140,13 @@
         "query": {
           "text": "Czym jest 10-20 przypadkowych rzeczy o sobie?",
           "full_chars": 45,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Jakie są 10 przypadkowych faktów o Tobie?",
           "full_chars": 41,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -156,49 +156,17 @@
         "query": {
           "text": "Co powinienem zrobić w swoim CV, aby uzyskać wywiady z zakresu analityki danych?",
           "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Co powinienem poprawić w swoim CV, aby uzyskać wywiady z zakresu analityki danych?",
           "full_chars": 82,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "84691",
-        "document_id": "84690",
-        "query": {
-          "text": "Jak sobie radzisz, gdy czujesz się wyczerpany emocjonalnie?",
-          "full_chars": 59,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Jak przezwyciężyć uczucie wyczerpania emocjonalnego?",
-          "full_chars": 52,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "38659",
-        "document_id": "385529",
-        "query": {
-          "text": "Czy iPhone naprawdę jest wart swojej ceny?",
-          "full_chars": 42,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Czy iPhone jest tego wart?",
-          "full_chars": 26,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

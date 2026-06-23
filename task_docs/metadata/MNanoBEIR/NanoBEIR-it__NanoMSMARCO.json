@@ -131,14 +131,14 @@
         "query": {
           "text": "Cos'è la sindrome da ruminazione?",
           "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Sindrome da Ruminazione. La sindrome da ruminazione, nota anche come mericismo, è un tipo di disturbo alimentare non altrimenti specificato che provoca la rigurgitazione del cibo. Sebbene non sia iden",
+          "text": "Sindrome da Ruminazione. La sindrome da ruminazione, nota anche come mericismo, è un tipo di disturbo alimentare non altrimenti specificato che provoca la rigurgitazione del cibo. Sebbene non sia identificata come un disturbo alimentare specifico nel DSM-IV, sono stati definiti alcuni parametri per diagnosticare il disturbo.",
           "full_chars": 326,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Chi ha cantato \"Ecco che vado di nuovo\"?",
           "full_chars": 40,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Per altri significati, vedi Here I Go Again (disambiguazione). Here I Go Again è una canzone del gruppo rock britannico Whitesnake. Pubblicata originariamente nell'album del 1982 Saints & Sinners, la",
+          "text": "Per altri significati, vedi Here I Go Again (disambiguazione). Here I Go Again è una canzone del gruppo rock britannico Whitesnake. Pubblicata originariamente nell'album del 1982 Saints & Sinners, la canzone è stata registrata nuovamente per l'album omonimo del 1987 Whitesnake. Quell'anno è stata registrata nuovamente in una versione radio-mix.",
           "full_chars": 346,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Chi interpreta Cameron Boyce in \"Liv e Maddie\"?",
           "full_chars": 47,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Preparatevi a sbellicarvi dalle risate, ragazzi. In un'anteprima esclusiva dell'episodio del 19 aprile di 'Liv & Maddie' intitolato 'Prom-A-Rooney.' Ovviamente. Nel divertentissimo clip, vediamo Camer",
+          "text": "Preparatevi a sbellicarvi dalle risate, ragazzi. In un'anteprima esclusiva dell'episodio del 19 aprile di 'Liv & Maddie' intitolato 'Prom-A-Rooney.' Ovviamente. Nel divertentissimo clip, vediamo Cameron Boyce, il protagonista di 'Jessie,' fare un salto in un altro show Disney per incontrare Maddie (Shelby Wulfert). Il suo personaggio è, beh, eccentrico!",
           "full_chars": 355,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971233",
-        "document_id": "4589415",
-        "query": {
-          "text": "Dove si trovano la maggior parte dei grandi deserti della Terra?",
-          "full_chars": 64,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Gli altri deserti della Terra si trovano al di fuori delle aree polari. Il più grande è il deserto del Sahara, un deserto subtropicale nell'Africa settentrionale.",
-          "full_chars": 162,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "1093082",
-        "document_id": "7778956",
-        "query": {
-          "text": "Che significa \"copper\" per un poliziotto?",
-          "full_chars": 41,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Secondo le attuali scoperte, sembra che \"copper\" (un poliziotto, letteralmente 'colui che arresta') preceda \"cop\" (usato sia come verbo per arrestare, sia come sostantivo per indicare un poliziotto).",
-          "full_chars": 371,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

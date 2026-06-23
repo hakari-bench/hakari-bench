@@ -157,13 +157,13 @@
         "query": {
           "text": "Minen, Patronen & Tintenlöscher",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Noodler's Tinte - 90 ml - Schwarz",
           "full_chars": 33,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -173,13 +173,13 @@
         "query": {
           "text": "Handwerkzeuge",
           "full_chars": 13,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "AFA Tooling - (4 Pcs) Radio Removal Tool, OEM: 1C0-051-530 - Wird nicht brechen oder biegen",
           "full_chars": 91,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -189,49 +189,17 @@
         "query": {
           "text": "Stick- & Nähgarn",
           "full_chars": 16,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Clover Stickwerkzeug clover needlecraft this old art of embroidery using a fine hook on a fine cloth tightly stretched in a frame called tambour is reborn with kantan couture bead embroidery tool. bas",
+          "text": "Clover Stickwerkzeug clover needlecraft this old art of embroidery using a fine hook on a fine cloth tightly stretched in a frame called tambour is reborn with kantan couture bead embroidery tool. basic techniques with this tool can create beautiful motifs using sequins and beads. embellish create and make it your own.",
           "full_chars": 321,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q171",
-        "document_id": "B0018BOXWQ",
-        "query": {
-          "text": "Töpferei",
-          "full_chars": 8,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Makin's Clay Tonpistole, Mehrfarbig",
-          "full_chars": 35,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "q164",
-        "document_id": "B0016N6CMU",
-        "query": {
-          "text": "Tafeln",
-          "full_chars": 6,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Sculpey S2 Original-Polymer Clay 1,75 Pounds/Pkg",
-          "full_chars": 48,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -128,13 +128,13 @@
         "query": {
           "text": "بهترین سریال‌های درام کدام‌اند؟",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "بهترین سریال‌های درام کدام‌ها هستند؟",
           "full_chars": 36,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -144,13 +144,13 @@
         "query": {
           "text": "آیا ریاضیات را به عنوان هنر می‌بینید یا علم؟",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "آیا ریاضی هنر است یا علم؟",
           "full_chars": 25,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -160,49 +160,17 @@
         "query": {
           "text": "به نظر شما بهترین آهنگ کلاسیک تمام دوران کدام است؟",
           "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "بهترین قطعه موسیقی کلاسیک تمام دوران کدام است؟",
           "full_chars": 46,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "9163",
-        "document_id": "74652",
-        "query": {
-          "text": "بهترین موسسات آموزش آزمون جی‌مات در دهلی/NCR کدام‌ها هستند؟",
-          "full_chars": 59,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "بهترین موسسه آموزش آزمون جی‌مات در منطقه دهلی ان‌سی‌آر کدام است؟",
-          "full_chars": 64,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "4293",
-        "document_id": "4292",
-        "query": {
-          "text": "بهترین نقاط قوت ارتش هند کدامند؟",
-          "full_chars": 32,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "بزرگترین نقاط قوت ارتش هند کدامند؟",
-          "full_chars": 34,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

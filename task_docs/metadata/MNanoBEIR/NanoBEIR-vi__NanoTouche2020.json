@@ -131,13 +131,13 @@
         "query": {
           "text": "Bài tập về nhà có lợi không?",
           "full_chars": 28,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Đầu tiên, có ba lý do tại sao bài tập về nhà là tuyệt vời và nên tiếp tục trong các trường học hiện đại. 1. Bài tập về nhà hỗ trợ những người học thực hành. Người ta thường chấp nhận rằng có ba loại n",
+          "text": "Đầu tiên, có ba lý do tại sao bài tập về nhà là tuyệt vời và nên tiếp tục trong các trường học hiện đại. 1. Bài tập về nhà hỗ trợ những người học thực hành. Người ta thường chấp nhận rằng có ba loại người học: những người học qua nghe, những người học qua nhìn, và những người học qua làm. Trong khi nhiều người hài lòng khi nghe hoặc nhìn hướng dẫn về một chủ đề nhất định, một số người cần phải thực sự làm điều đó. Do đó, bài tập về nhà có lợi cho nhóm sau này vì việc học được thực hiện thông qua hành động. 2. Bài tập về nhà củng cố việc giảng dạy. Mặc dù nhiều người có thể rất vui mừng nếu không có bài tập về nhà, nhưng chất lượng giáo dục nhận được chắc chắn sẽ bị ảnh hưởng nếu nó bị loại bỏ. Dù bài tập về nhà là đọc sách, viết luận, v.v., tất cả đều được thiết kế để củng cố việc giảng dạy trong tâm trí của học sinh. Sau cùng, những người làm bài tập về nhà thường thành công hơn về mặt học thuật so với những người không làm. Tôi cảm thấy đây là một sự thật hiển nhiên, nhưng tôi sẽ để",
           "full_chars": 3948,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -147,13 +147,13 @@
         "query": {
           "text": "Có nên quảng cáo thuốc theo toa trực tiếp đến người tiêu dùng không?",
           "full_chars": 68,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Nhiều quảng cáo không cung cấp đủ thông tin về hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bằng hình ảnh một con bướm bay qua cửa sổ phòng ngủ, trên một người đang ngủ say. Thực tế, Lunesta giúp",
+          "text": "Nhiều quảng cáo không cung cấp đủ thông tin về hiệu quả của thuốc. Ví dụ, Lunesta được quảng cáo bằng hình ảnh một con bướm bay qua cửa sổ phòng ngủ, trên một người đang ngủ say. Thực tế, Lunesta giúp bệnh nhân ngủ nhanh hơn 15 phút sau sáu tháng điều trị và mang lại thêm 37 phút ngủ mỗi đêm. Phần lớn các quảng cáo dựa trên sự kêu gọi cảm xúc, nhưng ít quảng cáo đề cập đến nguyên nhân của tình trạng, yếu tố nguy cơ, hoặc những thay đổi quan trọng trong lối sống. Trong một nghiên cứu về 38 quảng cáo dược phẩm, các nhà nghiên cứu phát hiện rằng 82% đã đưa ra một tuyên bố thực tế và 86% đã đưa ra các lập luận hợp lý cho việc sử dụng sản phẩm. Chỉ có 26% mô tả nguyên nhân của tình trạng, yếu tố nguy cơ, hoặc tỷ lệ mắc bệnh. Do đó, không cung cấp cho bệnh nhân thông tin cân bằng để họ nhận thức rằng việc dùng một trong những viên thuốc không phải là giải pháp kỳ diệu cho vấn đề của họ. Thực tế, theo một nghiên cứu được thực hiện ở Mỹ và New Zealand, bệnh nhân đã yêu cầu đơn thuốc trong 12%",
           "full_chars": 1324,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Có cần yêu cầu tiêm vắc xin nào cho trẻ em không?",
           "full_chars": 49,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Chưa phải là một trường hợp đầy đủ... Chỉ là một số điểm nhỏ mà tôi đã tổng hợp... Chính phủ không nên có quyền can thiệp vào các quyết định về sức khỏe mà cha mẹ đưa ra cho con cái của họ. 31% cha mẹ",
+          "text": "Chưa phải là một trường hợp đầy đủ... Chỉ là một số điểm nhỏ mà tôi đã tổng hợp... Chính phủ không nên có quyền can thiệp vào các quyết định về sức khỏe mà cha mẹ đưa ra cho con cái của họ. 31% cha mẹ tin rằng họ nên có quyền từ chối việc tiêm chủng bắt buộc khi vào trường cho con cái của họ, theo một khảo sát năm 2010 của Đại học Michigan. Nhiều cha mẹ có niềm tin tôn giáo chống lại việc tiêm chủng. Ép buộc những cha mẹ như vậy tiêm chủng cho con cái của họ sẽ vi phạm Tu chính án thứ nhất, đảm bảo quyền tự do thực hành tôn giáo của công dân. Vắc-xin thường không cần thiết trong nhiều trường hợp mà mối đe dọa tử vong do bệnh là nhỏ. Trong thế kỷ XIX, tỷ lệ tử vong do các bệnh trẻ em như ho gà, sởi và sốt phát ban giảm mạnh trước khi việc tiêm chủng trở nên khả dụng. Sự giảm tỷ lệ tử vong này được cho là do cải thiện vệ sinh cá nhân, lọc nước, xử lý nước thải hiệu quả và cải thiện vệ sinh thực phẩm và dinh dưỡng. Vắc-xin can thiệp vào luật tự nhiên và kế hoạch của Chúa cho nhân loại. Bệ",
           "full_chars": 3913,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8",
-        "document_id": "e12b54d9-2019-04-18T12:19:14Z-00001-000",
-        "query": {
-          "text": "Phá thai có nên hợp pháp không?",
-          "full_chars": 31,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Nạo phá thai nên hợp pháp vì nhân cách bắt đầu khi thai nhi trở nên khả thi hoặc sau khi sinh, chứ không phải tại thời điểm thụ thai. Theo Tòa án Tối cao Hoa Kỳ, một người được tính tuổi khi họ ra khỏ",
-          "full_chars": 284,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "26",
-        "document_id": "fb47a749-2019-04-18T19:03:58Z-00005-000",
-        "query": {
-          "text": "Các bài kiểm tra chuẩn hóa có cải thiện giáo dục không?",
-          "full_chars": 55,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Đã giải quyết: SAT, ACT và các bài kiểm tra tiêu chuẩn khác cung cấp nhiều thông tin hơn về sự chuẩn bị của học sinh trung học cho giáo dục tại các trường cao đẳng và đại học elite hơn là GPA trung họ",
-          "full_chars": 4046,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

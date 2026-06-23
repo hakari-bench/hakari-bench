@@ -134,83 +134,51 @@
         "query_id": "q_80",
         "document_id": "c_137555",
         "query": {
-          "text": "My objective is to devise a methodology for constructing intelligent robots that mimic human-like be",
+          "text": "My objective is to devise a methodology for constructing intelligent robots that mimic human-like behavior. These robots would be capable of operating in real-world environments and executing a range of complex tasks. Such a robotic agent would interact with its surroundings, making decisions and performing actions. More importantly, it would continuously adapt to its environment by learning from signals and cues it receives. I aim to create a unified framework that can integrate a large number",
           "full_chars": 1172,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "In this paper, we propose a novel task, Manipulation Question Answering (MQA), where the robot performs manipulation actions to change the environment in order to answer a given question. To solve thi",
+          "text": "In this paper, we propose a novel task, Manipulation Question Answering (MQA), where the robot performs manipulation actions to change the environment in order to answer a given question. To solve this problem, a framework consisting of a QA module and a manipulation module is proposed. For the QA module, we adopt the method for the Visual Question Answering (VQA) task. For the manipulation module, a Deep Q Network (DQN) model is designed to generate manipulation actions for the robot to interact with the environment. We consider the situation where the robot continuously manipulating objects inside a bin until the answer to the question is found. Besides, a novel dataset that contains a variety of object models, scenarios and corresponding question-answer pairs is established in a simulation environment. Extensive experiments have been conducted to validate the effectiveness of the proposed framework.",
           "full_chars": 915,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "q_44",
         "document_id": "c_12973",
         "query": {
-          "text": "I want to build a healthcare decision support system that will recommend treatment plans for patient",
+          "text": "I want to build a healthcare decision support system that will recommend treatment plans for patients. In order to make the prediction process transparent and interpretable, I believe I could use reinforcement learning. Given the patient’s past medical history, I will spawn many processes, in each process an artificial or digital twin for the patient is spawned to mimic the patient’s health trajectories. In each process, the patient will receive many treatments, prescriptions, surgeries, and wil",
           "full_chars": 1255,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Although reinforcement learning (RL) has tremendous success in many fields, applying RL to real-world settings such as healthcare is challenging when the reward is hard to specify and no exploration i",
+          "text": "Although reinforcement learning (RL) has tremendous success in many fields, applying RL to real-world settings such as healthcare is challenging when the reward is hard to specify and no exploration is allowed. In this work, we focus on recovering clinicians' rewards in treating patients. We incorporate the what-if reasoning to explain the clinician's treatments based on their potential future outcomes. We use generalized additive models (GAMs) - a class of accurate, interpretable models - to recover the reward. In both simulation and a real-world hospital dataset, we show our model outperforms baselines. Finally, our model's explanations match several clinical guidelines when treating patients while we found the commonly-used linear model often contradicts them.",
           "full_chars": 773,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "q_10",
         "document_id": "c_111207",
         "query": {
-          "text": "I am working on a project analyzing customer feedback for a new product launch, so I need a method t",
+          "text": "I am working on a project analyzing customer feedback for a new product launch, so I need a method that can effectively identify the topics and segments in each feedback. Since the feedback we received is very complicated and contains a lot of noise words that digress from main topics, I need a method that is able to remove noise and simplify these feedbacks. Using this method, I hope our system could provide insights into the most common issues customers are facing and help us improve the produ",
           "full_chars": 730,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "With the evolution of the cloud and customer centric culture, we inherently accumulate huge repositories of textual reviews, feedback, and support data.This has driven enterprises to seek and research",
+          "text": "With the evolution of the cloud and customer centric culture, we inherently accumulate huge repositories of textual reviews, feedback, and support data.This has driven enterprises to seek and research engagement patterns, user network analysis, topic detections, etc.However, huge manual work is still necessary to mine data to be able to mine actionable outcomes. In this paper, we proposed and developed an innovative Semi-Supervised Learning approach by utilizing Deep Learning and Topic Modeling to have a better understanding of the user voice.This approach combines a BERT-based multiclassification algorithm through supervised learning combined with a novel Probabilistic and Semantic Hybrid Topic Inference (PSHTI) Model through unsupervised learning, aiming at automating the process of better identifying the main topics or areas as well as the sub-topics from the textual feedback and support.There are three major break-through: 1. As the advancement of deep learning technology, there ha",
           "full_chars": 1906,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q_87",
-        "document_id": "c_48235",
-        "query": {
-          "text": "I am interested in understanding how modern computer programs can emulate human causal logic. To ach",
-          "full_chars": 749,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Research in Cognitive Science suggests that humans understand and represent knowledge of the world through causal relationships. In addition to observations, they can rely on experimenting and counter",
-          "full_chars": 1606,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q_58",
-        "document_id": "c_162384",
-        "query": {
-          "text": "As a data scientist, I am currently developing an early detection system designed to identify the on",
-          "full_chars": 1196,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Deep learning is attracting significant interest in the neuroimaging community as a means to diagnose psychiatric and neurological disorders from structural magnetic resonance images. However, there i",
-          "full_chars": 1359,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

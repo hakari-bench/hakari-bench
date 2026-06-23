@@ -131,14 +131,14 @@
         "query": {
           "text": "Loại lợi suất nào mà Vanguard đang báo giá?",
           "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "\"Từ trang Vanguard - Đây có vẻ là cái dễ nhất vì dữ liệu S&P dễ tìm. Tôi sử dụng MoneyChimp để lấy - điều này xác nhận rằng trang của Vanguard đang cung cấp CAGR, không phải Trung bình số học. Lưu ý:",
+          "text": "\"Từ trang Vanguard - Đây có vẻ là cái dễ nhất vì dữ liệu S&P dễ tìm. Tôi sử dụng MoneyChimp để lấy - điều này xác nhận rằng trang của Vanguard đang cung cấp CAGR, không phải Trung bình số học. Lưu ý: Vanguard tuyên bố \"\"Đối với lợi nhuận thị trường chứng khoán Mỹ, chúng tôi sử dụng Standard & Poor's 90 từ năm 1926 đến ngày 3 tháng 3 năm 1957,\"\" trong khi Chimp sử dụng dữ liệu từ trang của người đoạt giải Nobel, Robert Shiller.\"",
           "full_chars": 431,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,13 +147,13 @@
         "query": {
           "text": "Các tác động thuế của việc làm tự do ở Hoa Kỳ",
           "full_chars": 45,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Nếu bạn có thu nhập ở Mỹ, bạn sẽ phải nộp thuế thu nhập Mỹ trên số thu nhập đó, trừ khi có hiệp định với quốc gia của bạn quy định khác.",
           "full_chars": 136,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Cái gì được coi là cao hoặc thấp khi nói về âm lượng?",
           "full_chars": 53,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Khối lượng giao dịch hàng ngày thường được so sánh với khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của một cổ phiếu. Khối lượng cao thường được coi là gấp 2 lần hoặc hơn khối lượng gia",
+          "text": "Khối lượng giao dịch hàng ngày thường được so sánh với khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của một cổ phiếu. Khối lượng cao thường được coi là gấp 2 lần hoặc hơn khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của cổ phiếu đó, tuy nhiên một số nhà giao dịch có thể đặt tiêu chí là gấp 3 hoặc 4 lần khối lượng giao dịch trung bình để xác nhận một mẫu hình hoặc sự kiện cụ thể. Khối lượng được so sánh với khối lượng giao dịch trung bình của chính cổ phiếu đó, vì việc so sánh với khối lượng của các cổ phiếu khác sẽ giống như so sánh táo với cam, vì các công ty khác nhau sẽ có số lượng cổ phiếu tổng cộng khác nhau, các mức độ thanh khoản khác nhau và các mức độ biến động khác nhau, tất cả đều có thể góp phần vào khối lượng giao dịch hàng ngày.",
           "full_chars": 782,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "94",
-        "document_id": "245447",
-        "query": {
-          "text": "Sử dụng điểm thẻ tín dụng để thanh toán cho chi phí kinh doanh có thể khấu trừ thuế",
-          "full_chars": 83,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "\"Để đơn giản, hãy bắt đầu bằng cách chỉ xem xét tiền hoàn lại. Nói chung, tiền hoàn lại từ thẻ tín dụng cho mục đích cá nhân không phải chịu thuế, nhưng cho mục đích kinh doanh thì phải chịu thuế (một",
-          "full_chars": 3814,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2903",
-        "document_id": "527776",
-        "query": {
-          "text": "Tôi nên nộp thuế của mình như thế nào với tư cách là một nhà thầu?",
-          "full_chars": 66,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Về mục đích thuế, bạn sẽ cần nộp hồ sơ như một nhân viên (biên lai T4 và thuế bị khấu trừ tự động), nhưng cũng như một doanh nhân. Tôi đã gặp tình huống tương tự năm ngoái. Nhân viên và tự làm chủ là",
-          "full_chars": 723,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

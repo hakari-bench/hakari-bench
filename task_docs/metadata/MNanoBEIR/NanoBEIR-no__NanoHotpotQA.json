@@ -131,14 +131,14 @@
         "query": {
           "text": "Hvilken annen skuespiller medvirket Penny Rae Bridges i en TV-sitcom sammen med?",
           "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Penny Rae Bridges (født 29. juli 1990) er en amerikansk skuespiller. Hun har spilt i \"For Your Love\", \"Family Law\", \"Boy Meets World\" og \"The Parent 'Hood\". Hun er mest kjent for sin rolle i \"Half & H",
+          "text": "Penny Rae Bridges (født 29. juli 1990) er en amerikansk skuespiller. Hun har spilt i \"For Your Love\", \"Family Law\", \"Boy Meets World\" og \"The Parent 'Hood\". Hun er mest kjent for sin rolle i \"Half & Half\", som den unge Mona.",
           "full_chars": 224,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Hvem ga Kaganoi Shigemochi et sverd laget av personen som grunnla Muramasa-skolen?",
           "full_chars": 82,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. august 1600) var en japansk samurai fra Azuchi-Momoyama-perioden som tjenestegjorde for Oda-klanen. Han styrte Kaganoi-slottet. Under slaget ved Komaki og Nagaku",
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27. august 1600) var en japansk samurai fra Azuchi-Momoyama-perioden som tjenestegjorde for Oda-klanen. Han styrte Kaganoi-slottet. Under slaget ved Komaki og Nagakute kjempet Shigemochi under sin far Shigemune, som var tilknyttet styrkene til Oda Nobukatsu. Kort tid etter ble Kaganoi-slottet omringet av styrkene til Toyotomi Hideyoshi. Shigemune overga seg, og Shigemochi ble ansatt av Hideyoshi som budbringer og fikk en lønn på 10 000 \"koku\". Han eide også et sverd laget av Muramasa, som Hideyoshi gav ham i 1598.",
           "full_chars": 554,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Hvilken film er skrevet og regissert av Joby Harold med musikk av Samuel Sim?",
           "full_chars": 77,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Samuel Sim er en komponist for film og fjernsyn. Han fikk først anerkjennelse for sin prisbelønte musikk til BBC-dramaserien \"Dunkirk\". Siden da har han skrevet musikk til en bred vifte av film- og fj",
+          "text": "Samuel Sim er en komponist for film og fjernsyn. Han fikk først anerkjennelse for sin prisbelønte musikk til BBC-dramaserien \"Dunkirk\". Siden da har han skrevet musikk til en bred vifte av film- og fjernsynsproduksjoner, mest nylig for filmen \"Awake\" for The Weinstein Company og BBC/HBO-dramaserien \"House of Saddam\". Hans nyeste anerkjente musikk er soundtracket til \"Home Fires\". \"Home Fires (Musikk fra TV-serien)\" ble utgitt 6. mai 2016 av Sony Classical Records.",
           "full_chars": 468,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae63b2255429908198fa526",
-        "document_id": "46395880",
-        "query": {
-          "text": "Hvilken dato ble denne college football-kampen spilt på Sun Life Stadium i Miami Gardens, Florida, d",
-          "full_chars": 145,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Clemson Tigers fotballaget representerte Clemson University i 2015-sesongen i NCAA Division I FBS. Tigers ble ledet av hovedtrener Dabo Swinney i hans syvende fulle år og åttende år totalt siden han o",
-          "full_chars": 963,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5a84fd085542994c784ddaba",
-        "document_id": "1854777",
-        "query": {
-          "text": "Hva er Devil's Food? Det er en samling med singler av en amerikansk rock and roll-band som også har",
-          "full_chars": 161,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Devil's Food er en samleplate med singler av det amerikanske rock & roll-bandet Supersuckers, utgitt i april 2005 på Mid-Fi Records.",
-          "full_chars": 132,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -124,13 +124,13 @@
         "query": {
           "text": "ジュラシック・パークの第2作目の映画の名前は何というですか？",
           "full_chars": 30,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "ジュラシック・ワールド/炎の王国",
           "full_chars": 16,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -140,13 +140,13 @@
         "query": {
           "text": "荒れ放題のホテルを本拠とし、U2が映画のサウンドトラックの作曲を手掛けた映画は何でしたか？",
           "full_chars": 45,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "ミリオンダラー・ホテル",
           "full_chars": 11,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -156,49 +156,17 @@
         "query": {
           "text": "どのアルバムはビートルズと一緒にレコードしたなかったでしょうか？",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "アビイ・ロード",
           "full_chars": 7,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q891",
-        "document_id": "D1572",
-        "query": {
-          "text": "映画『トワイライト』シリーズで一番長い映画は？",
-          "full_chars": 23,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "ニュームーン/トワイライト・サーガ",
-          "full_chars": 17,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q1658",
-        "document_id": "D962",
-        "query": {
-          "text": "ジョーズの監督の最初の奥さんは誰？",
-          "full_chars": 17,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "エイミー・アーヴィング",
-          "full_chars": 11,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

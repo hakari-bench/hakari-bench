@@ -168,16 +168,16 @@
         "query_id": "723",
         "document_id": "5531479",
         "query": {
-          "text": "Ly49Q directs the organization of neutrophil migration to inflammation sites by regulating membrane",
+          "text": "Ly49Q directs the organization of neutrophil migration to inflammation sites by regulating membrane raft functions.",
           "full_chars": 115,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Neutrophils rapidly undergo polarization and directional movement to infiltrate the sites of infection and inflammation. Here, we show that an inhibitory MHC I receptor, Ly49Q, was crucial for the swi",
+          "text": "Neutrophils rapidly undergo polarization and directional movement to infiltrate the sites of infection and inflammation. Here, we show that an inhibitory MHC I receptor, Ly49Q, was crucial for the swift polarization of and tissue infiltration by neutrophils. During the steady state, Ly49Q inhibited neutrophil adhesion by preventing focal-complex formation, likely by inhibiting Src and PI3 kinases. However, in the presence of inflammatory stimuli, Ly49Q mediated rapid neutrophil polarization and tissue infiltration in an ITIM-domain-dependent manner. These opposite functions appeared to be mediated by distinct use of effector phosphatase SHP-1 and SHP-2. Ly49Q-dependent polarization and migration were affected by Ly49Q regulation of membrane raft functions. We propose that Ly49Q is pivotal in switching neutrophils to their polarized morphology and rapid migration upon inflammation, through its spatiotemporal regulation of membrane rafts and raft-associated signaling molecules.",
           "full_chars": 990,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -186,13 +186,13 @@
         "query": {
           "text": "Antiretroviral therapy reduces rates of tuberculosis across a broad range of CD4 strata.",
           "full_chars": 88,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "BACKGROUND Human immunodeficiency virus (HIV) infection is the strongest risk factor for developing tuberculosis and has fuelled its resurgence, especially in sub-Saharan Africa. In 2010, there were a",
+          "text": "BACKGROUND Human immunodeficiency virus (HIV) infection is the strongest risk factor for developing tuberculosis and has fuelled its resurgence, especially in sub-Saharan Africa. In 2010, there were an estimated 1.1 million incident cases of tuberculosis among the 34 million people living with HIV worldwide. Antiretroviral therapy has substantial potential to prevent HIV-associated tuberculosis. We conducted a systematic review of studies that analysed the impact of antiretroviral therapy on the incidence of tuberculosis in adults with HIV infection. METHODS AND FINDINGS PubMed, Embase, African Index Medicus, LILACS, and clinical trial registries were systematically searched. Randomised controlled trials, prospective cohort studies, and retrospective cohort studies were included if they compared tuberculosis incidence by antiretroviral therapy status in HIV-infected adults for a median of over 6 mo in developing countries. For the meta-analyses there were four categories based on CD4 c",
           "full_chars": 2144,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -200,51 +200,19 @@
         "query_id": "1021",
         "document_id": "9433958",
         "query": {
-          "text": "Rapid up-regulation and higher basal expression of interferon-induced genes reduce survival of granu",
+          "text": "Rapid up-regulation and higher basal expression of interferon-induced genes reduce survival of granule cell neurons that are infected by West Nile virus.",
           "full_chars": 153,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Although susceptibility of neurons in the brain to microbial infection is a major determinant of clinical outcome, little is known about the molecular factors governing this vulnerability. Here we sho",
+          "text": "Although susceptibility of neurons in the brain to microbial infection is a major determinant of clinical outcome, little is known about the molecular factors governing this vulnerability. Here we show that two types of neurons from distinct brain regions showed differential permissivity to replication of several positive-stranded RNA viruses. Granule cell neurons of the cerebellum and cortical neurons from the cerebral cortex have unique innate immune programs that confer differential susceptibility to viral infection ex vivo and in vivo. By transducing cortical neurons with genes that were expressed more highly in granule cell neurons, we identified three interferon-stimulated genes (ISGs; Ifi27, Irg1 and Rsad2 (also known as Viperin)) that mediated the antiviral effects against different neurotropic viruses. Moreover, we found that the epigenetic state and microRNA (miRNA)-mediated regulation of ISGs correlates with enhanced antiviral response in granule cell neurons. Thus, neurons",
           "full_chars": 1153,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971",
-        "document_id": "46695481",
-        "query": {
-          "text": "Primary cervical cancer screening with HPV detection has higher longitudinal sensitivity than conven",
-          "full_chars": 169,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "BACKGROUND Screening for cervical cancer based on testing for human papillomavirus (HPV) increases the sensitivity of detection of high-grade (grade 2 or 3) cervical intraepithelial neoplasia, but whe",
-          "full_chars": 2284,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "180",
-        "document_id": "16966326",
-        "query": {
-          "text": "Blocking the interaction between TDP-43 and respiratory complex I proteins ND3 and ND6 leads to incr",
-          "full_chars": 135,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Genetic mutations in TAR DNA-binding protein 43 (TARDBP, also known as TDP-43) cause amyotrophic lateral sclerosis (ALS), and an increase in the presence of TDP-43 (encoded by TARDBP) in the cytoplasm",
-          "full_chars": 1244,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

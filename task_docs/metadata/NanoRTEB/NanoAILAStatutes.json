@@ -122,15 +122,15 @@
         "query_id": "00040",
         "document_id": "f7ZJ69PqcU",
         "query": {
-          "text": "Appellant calls in question legality of the judgment rendered by High Court confirming his convictio",
+          "text": "Appellant calls in question legality of the judgment rendered by High Court confirming his conviction for offence and sentence of imprisonment for life as awarded by the learned Sessions Judge. Background facts as unfolded during trial by the prosecution are essentially as follows. One P1 (hereinafter referred to as the 'deceased') was having industry and he employed a number of girls. The accused used to make fun of the girls/workers outside the factory and this was objected to by the deceased",
           "full_chars": 3569,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Title: Attempt to murder Desc: Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty or murder, shall be punished",
+          "text": "Title: Attempt to murder Desc: Whoever does any act with such intention or knowledge, and under such circumstances that, if he by that act caused death, he would be guilty or murder, shall be punished with imprisonment of either description for a term which may extend to ten years, and shall also be liable to fine; and if hurt is caused to any person by such act, the offender shall be liable either to 1 [imprisonment for life], or to such punishment as is hereinbefore mentioned. Attempts by life convicts2 [When any person offending under this section is under sentence of 3 [imprisonment for life], he may, if hurt is caused, be punished with death.] Illustrations (a) A shoots at Z with intention to kill him, under such circumstances that, if death ensued. A would be guilty of murder. A is liable to punishment under this section. (b) A, with the intention of causing the death of a child of tender years, exposes it in a desert place. A has committed the offence defined by this section, th",
           "full_chars": 1973,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -138,67 +138,35 @@
         "query_id": "00007",
         "document_id": "DO4lKNEfvu",
         "query": {
-          "text": "This appeal, by special leave, has been preferred against the judgment and order dated 23 February 2",
+          "text": "This appeal, by special leave, has been preferred against the judgment and order dated 23 February 2005 of the High Court (Aurangabad Bench), by which the appeal preferred by the appellants was dismissed and their conviction and sentence of 7 years RI imposed thereunder was affirmed. The deceased P1 was daughter of PW1. P2 resident of village Sanjkheda and she was married to appellant no. 1 P3 son of P4 about two and half years prior to the date of incident which took place on 15 September 1991.",
           "full_chars": 3266,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Title: Dowry death Desc: (1) Where the death of a woman is caused by any burns or bodily injury or occurs otherwise than under normal circumstances within seven years of her marriage and it is shown t",
+          "text": "Title: Dowry death Desc: (1) Where the death of a woman is caused by any burns or bodily injury or occurs otherwise than under normal circumstances within seven years of her marriage and it is shown that soon before her death she was subjected to cruelty or harassment by her husband or any relative of her husband for, or in connection with, any demand for dowry, such death shall be called \"dowry death\", and such husband or relative shall be deemed to have caused her death. Explanation.-For the purpose of this sub-section, \"dowry\" shall have the same meaning as in section 2 of the Dowry Prohibition Act, 1961 (28 of 1961). (2) Whoever commits dowry death shall be punished with imprisonment for a term which shall not be less than seven years but which may extend to imprisonment for life.] Inserted by Act 43 of 1986, section 10 (w.e.f. 19-11-1986).",
           "full_chars": 856,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "00001",
         "document_id": "AwFv0Yg7NZ",
         "query": {
-          "text": "The appellant before us was examined as prime witness in the trial of T.R. on the file of the Specia",
+          "text": "The appellant before us was examined as prime witness in the trial of T.R. on the file of the Special Judge against the first respondent. The trial ended in conviction against the first respondent and when the appeal filed by him came to be heard by the High Court the appellant had become a Cabinet Minister. On account of the disparaging remarks made by the Appellate Judge the appellant tendered his resignation and demitted office for maintaining democratic traditions. It is in that backgroud th",
           "full_chars": 2857,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Title: Certain laws not to be affected by this Act Desc: Nothing in this Act shall affect the provisions of any Act for punishing mutiny and desertion of officers, soldiers, sailors or airmen in the s",
+          "text": "Title: Certain laws not to be affected by this Act Desc: Nothing in this Act shall affect the provisions of any Act for punishing mutiny and desertion of officers, soldiers, sailors or airmen in the service of the Government of India or the provisions of any special or local law.] Substituted by the A.O. 1950, for the original section.",
           "full_chars": 337,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00047",
-        "document_id": "Y7gbtP7ySe",
-        "query": {
-          "text": "Whether sanction is required to initiate criminal proceedings in respect of offences is the question",
-          "full_chars": 1664,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Title: Punishment of criminal conspiracy Desc: (1) Whoever is a party to a criminal conspiracy to commit an offence punishable with death, 1 [imprisonment for life] or rigorous imprisonment for a term",
-          "full_chars": 742,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00017",
-        "document_id": "3npgW2zMj5",
-        "query": {
-          "text": "These appeals involve a pure question of law as to whether an award by which residue assets of a par",
-          "full_chars": 1668,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Title: Documents of which registration is compulsory Desc: (1) The following documents shall be registered, if the property to which they relate is situate in a district in which, and if they of have",
-          "full_chars": 10961,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

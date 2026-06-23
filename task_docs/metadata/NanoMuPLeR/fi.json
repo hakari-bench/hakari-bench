@@ -121,83 +121,51 @@
         "query_id": "c94bfd2e-d558-4efb-a88a-96f5b554007f",
         "document_id": "6132",
         "query": {
-          "text": "Mikä EU:n neuvoa-antava elin ilmoitti tervetulleeksi työnantajien ja työntekijöiden sopimuksen sisäl",
+          "text": "Mikä EU:n neuvoa-antava elin ilmoitti tervetulleeksi työnantajien ja työntekijöiden sopimuksen sisällyttää vuoden 2006 merityön yleissopimus yhteisön lainsäädäntöön?",
           "full_chars": 165,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Tiedonannossa korostetaan inhimillisten tekijöiden merkitystä meriklusterin yhteydessä. ETSK on tyytyväinen työmarkkinaosapuolten (ETF:n ja ECSA:n) tekemään sopimukseen siitä, että vuonna 2006 tehdyn,",
+          "text": "Tiedonannossa korostetaan inhimillisten tekijöiden merkitystä meriklusterin yhteydessä. ETSK on tyytyväinen työmarkkinaosapuolten (ETF:n ja ECSA:n) tekemään sopimukseen siitä, että vuonna 2006 tehdyn, merityön normeja koskevan ILO:n yleissopimuksen määräyksiä sisällytetään yhteisön lainsäädäntöön. Komitea toivoo, että merityön normit, jotka takaavat tasapuoliset toimintamahdollisuudet kaikille merenkulkijoille, pantaisiin yleissopimuksen mukaisesti mahdollisimman nopeasti täytäntöön maailmanlaajuisesti. Yhtä tärkeää on se, että jäsenvaltiot ratifioivat kalastusalan kansainväliset välineet, kuten kalastusalusten työoloja koskevan ILO:n yleissopimuksen vuodelta 2007.",
           "full_chars": 673,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "2291f404-8de0-4ab2-b57d-80e86665d080",
         "document_id": "2764",
         "query": {
-          "text": "Mikä sääntelykehys salli viranomaisten nimetä yrityksiä dominoiviksi noin 25 prosentin markkinaosuud",
+          "text": "Mikä sääntelykehys salli viranomaisten nimetä yrityksiä dominoiviksi noin 25 prosentin markkinaosuuden ja asiakasyhteyksien sekä rahoitusvoiman perusteella?",
           "full_chars": 156,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Vuoden 1998 sääntelyjärjestelmässä ennakkosääntelyn kohteena olevat telealan markkina-alueet määriteltiin asianomaisissa direktiiveissä, mutta niiden määrittelyssä ei sovellettu kilpailuoikeuden peria",
+          "text": "Vuoden 1998 sääntelyjärjestelmässä ennakkosääntelyn kohteena olevat telealan markkina-alueet määriteltiin asianomaisissa direktiiveissä, mutta niiden määrittelyssä ei sovellettu kilpailuoikeuden periaatteita. Näillä vuoden 1998 sääntelyjärjestelmän mukaisesti määritellyillä alueilla kansallisilla sääntelyviranomaisilla oli valta nimetä yritys huomattavan markkinavoiman (EU:n lainsäädännössä samasta asiasta käytetty myös nimitystä merkittävä markkina-asema) yritykseksi, jos yrityksellä oli 25 prosentin markkinaosuus. Tästä markkinaosuusedellytyksestä voitiin kuitenkin poiketa seuraaviin tekijöihin liittyvistä syistä: yrityksen kyky vaikuttaa markkinoihin, yrityksen liikevaihto markkinoiden kokoon verrattuna, se, missä määrin yritys hallitsee jakelukanavia loppukäyttäjille ja millaiset rahoitusmahdollisuudet sillä on käytettävissään, sekä yrityksen kokemus tuotteiden ja palvelujen tarjonnasta kyseisillä markkinoilla.",
           "full_chars": 928,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "098158d8-df77-48d7-83ff-75325647f906",
         "document_id": "7795",
         "query": {
-          "text": "Mikä ehdotettu valittavissa oleva mittaristo tukee kansallisen ammatillisen koulutuksen laatua erote",
+          "text": "Mikä ehdotettu valittavissa oleva mittaristo tukee kansallisen ammatillisen koulutuksen laatua eroten neuvoston 25. toukokuuta 2007 päätelmiistä?",
           "full_chars": 145,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Liitteessä II ehdotettujen viiteindikaattoreiden tarkoituksena on tukea ammatillisen koulutuksen järjestelmien ja/tai järjestäjien arviointia ja laadun parantamista kansallisen lainsäädännön ja käytän",
+          "text": "Liitteessä II ehdotettujen viiteindikaattoreiden tarkoituksena on tukea ammatillisen koulutuksen järjestelmien ja/tai järjestäjien arviointia ja laadun parantamista kansallisen lainsäädännön ja käytännön mukaisesti ja toimia työkalulaatikkona, josta eri käyttäjät voivat poimia oman laadunvarmistusjärjestelmänsä vaatimuksiin parhaiten soveltuvat indikaattorit. Ne olisi luonteensa ja tarkoituksensa puolesta erotettava niistä indikaattoreista ja viitearvoista, joihin viitataan neuvoston 25. toukokuuta 2007 antamissa päätelmissä Lissabonissa asetettujen koulutusalan tavoitteiden edistymisen seurantaan tarkoitettujen indikaattoreiden ja viitearvojen yhdenmukaisesta luettelosta.",
           "full_chars": 681,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "ebfeee12-f389-4d3f-b721-b44fa2d36197",
-        "document_id": "7287",
-        "query": {
-          "text": "Miten henkilöstöresurssien suunnittelijat suosittelevat kohdentamaan koulutusohjelmia työllisyysennu",
-          "full_chars": 156,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Henkilöresurssien kehittäminen on kehittämisstrategioiden vääjäämätön osa. Koulutuksella on tärkeä rooli joustavan ja monipuolisiin työtehtäviin kykenevän ja ammattitaitoisen työvoiman kouluttamisessa",
-          "full_chars": 658,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "54d767fc-ea57-47ac-b66e-afb8595e4ec7",
-        "document_id": "8838",
-        "query": {
-          "text": "Mikä järjestelmätyyppi edellyttää pitkän aikavälin suunnittelua sekä suurten tietomäärien laajamitta",
-          "full_chars": 223,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Älykkäät liikennejärjestelmät perustuvat suurten tietomäärien lisääntyvään hyödyntämiseen. Niiden käyttöönotto vaatii näin ollen sellaisen pitkän aikavälin vision kehittämistä, jossa otetaan nykyisten",
-          "full_chars": 621,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

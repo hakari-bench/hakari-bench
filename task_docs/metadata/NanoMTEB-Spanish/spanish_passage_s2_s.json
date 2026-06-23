@@ -153,13 +153,13 @@
         "query": {
           "text": "¿Cuáles son los beneficios de la leche materna?",
           "full_chars": 47,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "En la misma se reconoce que la lactancia materna es el mejor modo de proporcionar al recién nacido los nutrientes que necesita durante los primeros meses de vida.",
           "full_chars": 162,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -169,14 +169,14 @@
         "query": {
           "text": "¿Cuándo debo introducir alimentos complementarios aparte de la lactancia materna?",
           "full_chars": 81,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Durante los primeros 6 meses de vida el bebé solamente necesita tomar leche materna. Es recomendable utilizar la edad corregida para comenzar a introducir el resto de alimentos, individualizando según",
+          "text": "Durante los primeros 6 meses de vida el bebé solamente necesita tomar leche materna. Es recomendable utilizar la edad corregida para comenzar a introducir el resto de alimentos, individualizando según las necesidades. No es conveniente introducir alimentación complementaria antes de los 4 meses de edad corregida.",
           "full_chars": 314,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -185,49 +185,17 @@
         "query": {
           "text": "¿Tendría que darle el pecho a mi bebé siempre que me lo pida?",
           "full_chars": 61,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Durante el primer mes de vida, su recién nacido debería alimentarse entre ocho y 12 veces al día.",
           "full_chars": 97,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "PR_ES_24_3",
-        "document_id": "doc_28_0_540",
-        "query": {
-          "text": "¿Cuáles son las vacunas por las que no tengo que pagar?",
-          "full_chars": 55,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Vacunas sistemáticas financiadas, las que todos los niños en España reciben de forma universal, que incluye las vacunas oficiales ofertadas gratuitamente por cada una de las CC. AA. Se incluyen las si",
-          "full_chars": 539,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PR_ES_21_4",
-        "document_id": "doc_674_0_184",
-        "query": {
-          "text": "Me gustaría saber más sobre la vacunación para la prevención de enfermedades infecciosas",
-          "full_chars": 88,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Actualmente, los niños en los Estados Unidos reciben vacunas rutinariamente que los protegen de más de una docena de enfermedades como sarampión, polio, tétanos, difteria y tos ferina.",
-          "full_chars": 184,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

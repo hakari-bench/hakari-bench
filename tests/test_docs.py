@@ -91,13 +91,13 @@ def test_task_metadata_examples_store_truncated_text_and_full_lengths() -> None:
             "query": {
                 "text": "short query",
                 "full_chars": 11,
-                "limit_chars": 100,
+                "limit_chars": 500,
                 "truncated": False,
             },
             "positive_document": {
                 "text": "long document preview",
                 "full_chars": 2200,
-                "limit_chars": 200,
+                "limit_chars": 1000,
                 "truncated": True,
             },
         }
@@ -109,11 +109,11 @@ def test_task_metadata_examples_store_truncated_text_and_full_lengths() -> None:
     example = document.task_metadata.examples[0]
     assert example.query.text == "short query"
     assert example.query.full_chars == 11
-    assert example.query.limit_chars == 100
+    assert example.query.limit_chars == 500
     assert not example.query.truncated
     assert example.positive_document.text == "long document preview"
     assert example.positive_document.full_chars == 2200
-    assert example.positive_document.limit_chars == 200
+    assert example.positive_document.limit_chars == 1000
     assert example.positive_document.truncated
 
 
@@ -142,32 +142,32 @@ def test_task_metadata_references_require_valid_source_confidence() -> None:
 
 def test_build_example_metadata_uses_separate_query_and_document_limits() -> None:
     examples = build_example_metadata(
-        queries=[{"_id": "q1", "text": "query " + "x" * 120}],
-        corpus=[{"_id": "d1", "text": "document " + "y" * 240}],
+        queries=[{"_id": "q1", "text": "query " + "x" * 520}],
+        corpus=[{"_id": "d1", "text": "document " + "y" * 1040}],
         qrels=[{"query-id": "q1", "corpus-id": "d1", "score": 1}],
-        sample_size=5,
+        sample_size=3,
         seed=42,
-        query_text_limit=100,
-        document_text_limit=200,
+        query_text_limit=500,
+        document_text_limit=1000,
     )
 
     assert len(examples) == 1
     assert examples[0]["query_id"] == "q1"
     assert examples[0]["document_id"] == "d1"
-    assert examples[0]["query"]["full_chars"] == 126
-    assert examples[0]["query"]["limit_chars"] == 100
+    assert examples[0]["query"]["full_chars"] == 526
+    assert examples[0]["query"]["limit_chars"] == 500
     assert examples[0]["query"]["truncated"] is True
-    assert len(examples[0]["query"]["text"]) == 100
-    assert examples[0]["positive_document"]["full_chars"] == 249
-    assert examples[0]["positive_document"]["limit_chars"] == 200
+    assert len(examples[0]["query"]["text"]) == 500
+    assert examples[0]["positive_document"]["full_chars"] == 1049
+    assert examples[0]["positive_document"]["limit_chars"] == 1000
     assert examples[0]["positive_document"]["truncated"] is True
-    assert len(examples[0]["positive_document"]["text"]) == 200
+    assert len(examples[0]["positive_document"]["text"]) == 1000
 
     table = render_example_table(examples)
 
     assert "| Query | Positive document |" in table
-    assert "... [100 / 126 chars]" in table
-    assert "... [200 / 249 chars]" in table
+    assert "... [500 / 526 chars]" in table
+    assert "... [1,000 / 1,049 chars]" in table
 
 
 def test_task_docs_metadata_validate() -> None:
@@ -177,15 +177,15 @@ def test_task_docs_metadata_validate() -> None:
     assert len(metadata) > 500
     for item in metadata:
         assert item.examples is not None, item.document_path
-        assert len(item.examples) == 5, item.document_path
-        assert item.example_count == 5, item.document_path
+        assert len(item.examples) == 3, item.document_path
+        assert item.example_count == 3, item.document_path
         for example in item.examples:
             assert example.query_id
             assert example.document_id
             assert len(example.query.text) <= example.query.limit_chars
             assert len(example.positive_document.text) <= example.positive_document.limit_chars
-            assert example.query.limit_chars == 100
-            assert example.positive_document.limit_chars == 200
+            assert example.query.limit_chars == 500
+            assert example.positive_document.limit_chars == 1000
 
 
 def _normalize_shell_command(block: str) -> str:

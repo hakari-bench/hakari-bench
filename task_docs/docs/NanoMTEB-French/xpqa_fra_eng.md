@@ -140,8 +140,6 @@ the snippet's actual answer rather than relying on broad product similarity.
 | what is the width of a module? [30 chars] | La largeur d'un module est de 4,21 inch. [40 chars] |
 | for the color do you have white ones as in the photo? [53 chars] | Non. La couleur disponible est violet et gris. [46 chars] |
 | hello, does this spray make hair greasy? thank you. [51 chars] | Oui. Un client dit que cela rend ses cheveux un peu huileux. [60 chars] |
-| hello, no instructions without the box, does anyone know where we can find it? [78 chars] | Oui. Un client dit que vous pouvez télécharger le manuel et guide d'utilisation rapide sur la page Amazon. [106 chars] |
-| is this razor compatible with protector 3 blades? thank you. [60 chars] | Non. Un client dit qu'il n'est pas possible d'ajouter les lames d'autres fabricants. [84 chars] |
 
 ### Source Reference Table
 

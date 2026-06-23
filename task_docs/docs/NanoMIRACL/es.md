@@ -161,10 +161,8 @@ the most direct evidence passages are consistently placed first.
 | Query | Positive document |
 | --- | --- |
 | ¿Cómo es la arquitectura del caravasar de Orbelián? [51 chars] | Caravasar de Orbelian El caravasar está construido con bloques de basalto. [75 chars] |
-| ¿Cómo llaman los judíos al Pentateuco? [38 chars] | Pentateuco Se corresponde con los que en la tradición hebrea forman la "Torá" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el "Tanaj", el cual... [200 / 679 chars] |
-| ¿Cuándo recibió Daniel Harold Rolling la inyección letal de su condenación? [75 chars] | Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación.... [200 / 241 chars] |
-| ¿Cómo definir el parlamentarismo? [33 chars] | Parlamentarismo El parlamentarismo, también conocido como sistema parlamentario o «régimen parlamentario» es en política, un sistema de gobierno en el que la elección del gobierno (poder ejecutivo) em... [200 / 500 chars] |
-| ¿Cuál era la misión de la Guardia Pretoriana? [45 chars] | Guardia Pretoriana La Guardia Pretoriana era un cuerpo militar que servía de escolta y protección a los emperadores romanos. Antes de los emperadores, esta escolta ya era usada por los líderes militar... [200 / 387 chars] |
+| ¿Cómo llaman los judíos al Pentateuco? [38 chars] | Pentateuco Se corresponde con los que en la tradición hebrea forman la "Torá" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el "Tanaj", el cual es considerado sagrado por todas las religiones abrahámicas (judaísmo, cristianismo e islam). No obstante lo anterior y que es uno de sus tres textos sagrados, los musulmanes creen que el texto sufrió corrupción ("tahrif") por los escribas judíos y cristianos por lo que no confían del todo en él. Mientras que los hebreos los nombran por la primera palabra significativa de cada uno, los cristianos han seguido tradicionalmente la nomenclatura de la versión griega de los LXX. [679 chars] |
+| ¿Cuándo recibió Daniel Harold Rolling la inyección letal de su condenación? [75 chars] | Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación. Fue declarado fallecido a las 18:13 EDT. [241 chars] |
 
 ### Public Sources
 

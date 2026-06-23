@@ -150,8 +150,6 @@ product is not enough.
 | bonjour, quels sont les avantages de cette box android, comparée aux autres ? merci [83 chars] | i have had several different android boxes and find this one of the best // easy to set up and lots of memory storage. [118 chars] |
 | sur quel produit fitbit avez vous essayé cette extension ? [58 chars] | this worked great as an extender for the fitbit charge. [55 chars] |
 | bonjour, la vitre est-elle en verre ou en plastique? [52 chars] | the front transparent plastic is a good protect the pictures. [61 chars] |
-| cet article est-il "compatible" avec un smartphone de 5.5 pouces ? [66 chars] | it is described as being appropriate for any handlebar and any device. [70 chars] |
-| bonjour est ce anti lumière bleue? [34 chars] | Product description does not mention anti blue light features. [62 chars] |
 
 ### Source Reference Table
 

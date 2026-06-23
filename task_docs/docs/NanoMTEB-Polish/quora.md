@@ -75,8 +75,6 @@ For evaluation, nDCG@10 is the clearest indicator of direct paraphrase retrieval
 | Jak dostać się na Harvard? [26 chars] | Jak dostać się na Uniwersytet Harvarda? [39 chars] |
 | Czym jest 10-20 przypadkowych rzeczy o sobie? [45 chars] | Jakie są 10 przypadkowych faktów o Tobie? [41 chars] |
 | Co powinienem zrobić w swoim CV, aby uzyskać wywiady z zakresu analityki danych? [80 chars] | Co powinienem poprawić w swoim CV, aby uzyskać wywiady z zakresu analityki danych? [82 chars] |
-| Jak sobie radzisz, gdy czujesz się wyczerpany emocjonalnie? [59 chars] | Jak przezwyciężyć uczucie wyczerpania emocjonalnego? [52 chars] |
-| Czy iPhone naprawdę jest wart swojej ceny? [42 chars] | Czy iPhone jest tego wart? [26 chars] |
 
 ### Source Reference Table
 

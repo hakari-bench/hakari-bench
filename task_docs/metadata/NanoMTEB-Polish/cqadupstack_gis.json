@@ -124,14 +124,14 @@
         "query": {
           "text": "Jak zmienić proporcje mapy bez zmiany skali?",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Jak zmienić rozmiar elementu mapy w edytorze wydruku QGIS bez zmiany skali? Czy można zablokować skalę w kompozytorze wydruku QGIS 2.0.1? Za każdym razem, gdy zmieniam rozmiar mapy, skala jest dostoso",
+          "text": "Jak zmienić rozmiar elementu mapy w edytorze wydruku QGIS bez zmiany skali? Czy można zablokować skalę w kompozytorze wydruku QGIS 2.0.1? Za każdym razem, gdy zmieniam rozmiar mapy, skala jest dostosowywana. To sprawia, że ​​wypróbowywanie różnych układów map jest naprawdę denerwujące.",
           "full_chars": 286,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -140,14 +140,14 @@
         "query": {
           "text": "Jak używać SRTM Global DEM do obliczania nachylenia?",
           "full_chars": 52,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "jaki jest odpowiedni układ współrzędnych rzutowanych do WGS84? > **Możliwe duplikowanie:** > Obliczanie globalnego DEM na nachylenie Chcę obliczyć nachylenie z mojego globalnego DEM? DEM ma odwzorowan",
+          "text": "jaki jest odpowiedni układ współrzędnych rzutowanych do WGS84? > **Możliwe duplikowanie:** > Obliczanie globalnego DEM na nachylenie Chcę obliczyć nachylenie z mojego globalnego DEM? DEM ma odwzorowanie WGS84 (stopnie). Aby poprawnie obliczyć nachylenie z DEM, musi być rzutowana współrzędna system, a nie układ współrzędnych geograficznych.Naprawdę trudno powiedzieć, który z rzutów na liście: rzutowane układy współrzędnych odpowiada układowi WGS84(world) pod listą układów współrzędnych geograficznych.Jakieś pomysły?",
           "full_chars": 520,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -156,49 +156,17 @@
         "query": {
           "text": "Skopiuj odpytywane atrybuty pliku kształtu do nowego pliku kształtu",
           "full_chars": 67,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Tworzenie rekordów w wyjściowym pliku kształtu za pomocą Pythona Mam listę (wyjście z poprzedniej pętli) zawierającą atrybuty z wejściowego pliku kształtu. To, z czym utknąłem, to wprowadzanie tych at",
+          "text": "Tworzenie rekordów w wyjściowym pliku kształtu za pomocą Pythona Mam listę (wyjście z poprzedniej pętli) zawierającą atrybuty z wejściowego pliku kształtu. To, z czym utknąłem, to wprowadzanie tych atrybutów do nowego pliku kształtu. Wykreśliłem dane punktowe za pomocą `w.point(x, y)`, a także stworzyłem odpowiednie pola `w.field()` z pól wejściowych pliku kształtu. Tam, gdzie utknąłem, jest kopia rekordów, która daje mi błąd związany z flagą usunięcia. > AttributeError: obiekt 'tuple' nie ma atrybutu 'startswith' Wklejam fragment kodu z moimi zapytaniami. from datetime import datetime import osgeo.ogr, osgeo.ogr z osgeo import ogr z osgeo import gdal import shapefile import os sf = shapefile.Reader(\"-- Lokalizacja pliku wejściowego --\") # Czytanie pól Shapefile = sf.fields # Odczytywanie pól atrybutów records = sf.records() # Odczytywanie rekordów funkcji shapRecs = sf.shapeRecords() # Odczytuj jednocześnie geometrię i rekordy w = shapefile.Writer(shapefile.POINT) w.autoBalance = 1 wy",
           "full_chars": 1933,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "92312",
-        "document_id": "24947",
-        "query": {
-          "text": "Konwertowanie pliku CSV do pliku kształtu",
-          "full_chars": 41,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Jak mogę przekonwertować plik csv danych WKT na plik kształtu za pomocą programu ogr2ogr? To pytanie dotyczy plików Shape na tekst. Mam plik csv, z jedną kolumną, gdzie wszystkie wiersze odpowiadają W",
-          "full_chars": 579,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "37304",
-        "document_id": "101875",
-        "query": {
-          "text": "Skrypty Pythona, które działają w ArcMap, a te, które działają na zewnątrz?",
-          "full_chars": 75,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "\"EOFError: EOF podczas czytania linii\" Używanie raw_input() w ArcMaps Python Console Piszę skrypt Pythona, aby zautomatyzować przetwarzanie niektórych danych ArcMaps. Dostaję się zawieszony na raw_inp",
-          "full_chars": 739,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

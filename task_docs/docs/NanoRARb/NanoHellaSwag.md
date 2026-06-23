@@ -66,9 +66,7 @@ Models should learn event sequence compatibility over short text. Hard negatives
 | --- | --- |
 | A man dressed in yellow and black winter clothes ice fishes on a a frozen lake. The man [87 chars] | is reeling in a fish for a long time. [37 chars] |
 | A group of people are in a house. A man is mopping the floor with a mop. Another boy [84 chars] | attempts to walk through where he is mopping. [45 chars] |
-| A man is in the gym in tight he bends over picks up a weight over his head and drops it back down. H... [100 / 192 chars] | does this multiple times adding more and more weight to the rack. [65 chars] |
-| Then he takes a small stone from the flowing river and smashes it on another stone. He starts to cru... [100 / 140 chars] | grind it hard to make the pieces smaller. [41 chars] |
-| A person hangs onto the handles of a kite flying overhead. The kite [67 chars] | falls as the wind lessens. [26 chars] |
+| A man is in the gym in tight he bends over picks up a weight over his head and drops it back down. He walks back and loosens up before walking back up and doing it again adding more weight. He [192 chars] | does this multiple times adding more and more weight to the rack. [65 chars] |
 
 ### Source Reference Table
 

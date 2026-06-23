@@ -151,13 +151,13 @@
         "query": {
           "text": "what is the passkey for Douglas Alfaro?",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "The grass is green. Douglas Alfaro's pass key is 6699. Remember it. 6699 is the pass key for Douglas Alfaro. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. T",
+          "text": "The grass is green. Douglas Alfaro's pass key is 6699. Remember it. 6699 is the pass key for Douglas Alfaro. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass i",
           "full_chars": 1786,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -167,13 +167,13 @@
         "query": {
           "text": "what is the passkey for Declan Horton?",
           "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
+          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass",
           "full_chars": 58175,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -183,49 +183,17 @@
         "query": {
           "text": "what is the passkey for Denisse Wilcox?",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
+          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. Denisse Wilcox's pass key is 18025. Remember it. 18025 is the pass key for Denisse Wilcox. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass",
           "full_chars": 3610,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "ctx8192_query56",
-        "document_id": "ctx8192_doc56",
-        "query": {
-          "text": "what is the passkey for Cheyenne Jarvis?",
-          "full_chars": 40,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
-          "full_chars": 29076,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "ctx2048_query73",
-        "document_id": "ctx2048_doc73",
-        "query": {
-          "text": "what is the passkey for Zyaire Sweeney?",
-          "full_chars": 39,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green. The sky is blue. The sun is yellow. Here we go. There and back again. The grass is green.",
-          "full_chars": 7243,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

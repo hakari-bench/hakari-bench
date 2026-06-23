@@ -152,13 +152,13 @@
         "query": {
           "text": "do you have anything that holds at 0 and 90 degrees and doesn't turn on its own?",
           "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Sí. Un cliente ha dicho que soporta la televisión a 0 y 90 grados.",
           "full_chars": 66,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -168,13 +168,13 @@
         "query": {
           "text": "what type of restraint do you have?",
           "full_chars": 35,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Un cliente ha dicho que utilizó ganchos con tiras.",
           "full_chars": 50,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -184,49 +184,17 @@
         "query": {
           "text": "can it be used to wash my face?",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Sí. Son utilizables para cualquier parte del cuerpo.",
           "full_chars": 52,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q9",
-        "document_id": "C314",
-        "query": {
-          "text": "Does it protect from UV rays?",
-          "full_chars": 29,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Sí. Proteje a tus hijos de los rayos de luz ultravioleta y de las quemaduras de sol también.",
-          "full_chars": 92,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q161",
-        "document_id": "C319",
-        "query": {
-          "text": "when are you going to bring more for iPhone 7 plus?",
-          "full_chars": 51,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Un cliente ha dicho que este es el mejor protector de pantalla para el iPhone 7 Plus.",
-          "full_chars": 85,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

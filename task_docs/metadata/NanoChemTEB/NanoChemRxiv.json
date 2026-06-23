@@ -165,15 +165,15 @@
         "query_id": "66",
         "document_id": "60f3ea062b910135237380eb_32",
         "query": {
-          "text": "How are the equilibrium densities from molecular dynamics simulations utilized to determine the solv",
+          "text": "How are the equilibrium densities from molecular dynamics simulations utilized to determine the solvation free energy in binary mixtures?",
           "full_chars": 137,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Vapor-Liquid Equilibrium Simulations. Vapor-liquid equilibrium simulations were performed by setting up systems of dimensions 9 × 9 × Z nm 3 where Z ranges from ≈20 to ≈30 nm depending on the mixture;",
+          "text": "Vapor-Liquid Equilibrium Simulations. Vapor-liquid equilibrium simulations were performed by setting up systems of dimensions 9 × 9 × Z nm 3 where Z ranges from ≈20 to ≈30 nm depending on the mixture; at least 7 nm of the Z dimension is empty-constituting the starting configuration for the vapor phase. The remaining of the box contains a 50:50 mixture of two components-the starting configuration for the liquid phase. A rendering of this setup is shown in Figure . Such starting simulation boxes were set up for all the compositions possible from x A = 0 to x A = 1 in steps of 0.05 where x A is the molar fraction of component A in the mixture. The vapor-liquid binary systems were then simulated for at least 2 µs at each x A in the NVT ensemble at 300 K. This leads to statistically reliable vapor and liquid densities which can be extracted with the GROMACS tool gmx density, as described more in detail in the Supporting Information. The equilibrium densities thus obtained were then used to",
           "full_chars": 1111,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -181,67 +181,35 @@
         "query_id": "123",
         "document_id": "658a7fc466c1381729109408_4",
         "query": {
-          "text": "What percentage threshold of unknown letters was used to exclude viral genome sequences during the a",
+          "text": "What percentage threshold of unknown letters was used to exclude viral genome sequences during the alignment process?",
           "full_chars": 117,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Genome sequences of Variants of Concern (VOCs) were aligned with the Wuhan-Hu-1 sequence using MAFFT 7 . During alignment, sequences containing over 5% unknown letters were excluded. This resulted in",
+          "text": "Genome sequences of Variants of Concern (VOCs) were aligned with the Wuhan-Hu-1 sequence using MAFFT 7 . During alignment, sequences containing over 5% unknown letters were excluded. This resulted in a dataset comprising 9,737 sequences for the Omicron variant (after eliminating one sequence), 8,594 for the Alpha variant (with no sequences exceeding the 5% threshold), 25,000 for the Beta variant (with three sequences removed), 87,680 for the Gamma variant (after eliminating five sequences), and 95,657 for the Delta variant (after eliminating four sequences).",
           "full_chars": 564,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "103",
         "document_id": "6788e4666dde43c908cca650_4",
         "query": {
-          "text": "How does increasing the steric bulk of substituents on the ligands affect the enantioselectivity in",
+          "text": "How does increasing the steric bulk of substituents on the ligands affect the enantioselectivity in the cross-coupling synthesis of 1,1-diarylethanes?",
           "full_chars": 150,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "We commenced our study by investigating the cross-coupling of 2-chloronaphthalene (1a) and benzylic zinc reagent (2a, 1.5 equiv) for the synthesis of 1,1-diarylethanes (3a) (Table ). Firstly, we exami",
+          "text": "We commenced our study by investigating the cross-coupling of 2-chloronaphthalene (1a) and benzylic zinc reagent (2a, 1.5 equiv) for the synthesis of 1,1-diarylethanes (3a) (Table ). Firstly, we examined several privileged chiral phosphine ligands. Unfortunately, no target product was observed (See Supporting Information for details). By contrast, when SIPE (L1) was utilized as a ligand, the coupling product 3a can be obtained in 36% yield and 53:47 enantiomeric ratio (e.r.). We posited that the enantioselectivity may increase in response to the incorporation of bulkier groups on the ligand. As expected, when the bulkier DM-SIPE ligand (L2) with 3,5xylyl groups was used, the enantioselectivity of the reaction increased to 72:28 e.r.. Furthermore, even more sterically demanding DTB-SIPE (L3), which possesses 3,5-di-tert-butyl phenyl groups, improved the enantioselectivity to 90.5:9.5 e.r.. Inspired by our previous work 12a , we envisioned that pushing the four 1-phenethyl substituents o",
           "full_chars": 1519,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "9",
-        "document_id": "66691d0f409abc03453294cb_34",
-        "query": {
-          "text": "How does water content in the ionic liquid electrolyte affect methanol formation rate and Faradaic e",
-          "full_chars": 145,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Were responsible for the excellent performance of NiO-V2O5/Rh. Another study reported a methanol production rate of 752.9 μmol g -1 h -1 with 77% product selectivity using CuO/CeO2 mixed oxides as ano",
-          "full_chars": 835,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "161",
-        "document_id": "6735144df9980725cf195ee7_30",
-        "query": {
-          "text": "What structural features of Ligand 4 caused it to require longer simulation times for accurate bindi",
-          "full_chars": 128,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Average protein-ligand complex ΔG, solvated ligand ΔG, and overall ∆∆𝐺 𝐴→𝐵 𝑏𝑖𝑛𝑑 of the shortrun simulations and long-run simulations with all three equilibration methods are tabulated in Table . ∆∆𝐺 𝐴",
-          "full_chars": 2070,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

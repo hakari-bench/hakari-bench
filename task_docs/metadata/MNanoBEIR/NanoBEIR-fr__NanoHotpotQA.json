@@ -137,14 +137,14 @@
         "query": {
           "text": "Avec quel autre acteur Penny Rae Bridges a-t-elle joué dans une sitcom ?",
           "full_chars": 72,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Penny Rae Bridges (née le 29 juillet 1990) est une actrice américaine. Elle a joué dans les séries \"For Your Love\", \"Family Law\", \"Boy Meets World\" et \"The Parent 'Hood\". Elle est surtout connue pour",
+          "text": "Penny Rae Bridges (née le 29 juillet 1990) est une actrice américaine. Elle a joué dans les séries \"For Your Love\", \"Family Law\", \"Boy Meets World\" et \"The Parent 'Hood\". Elle est surtout connue pour son rôle dans \"Half & Half\", celui de la jeune Mona.",
           "full_chars": 252,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -153,14 +153,14 @@
         "query": {
           "text": "Qui a donné à Kaganoi Shigemochi une lame forgée par Masamune, le fondateur de l'école Muramasa ?",
           "full_chars": 97,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 août 1600) était un samouraï japonais de la période Azuchi-Momoyama, au service du clan Oda. Il gouvernait le château de Kaganoi. Lors de la bataille de Komaki et",
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 août 1600) était un samouraï japonais de la période Azuchi-Momoyama, au service du clan Oda. Il gouvernait le château de Kaganoi. Lors de la bataille de Komaki et Nagakute, Shigemochi combattait sous les ordres de son père, Shigemune, qui était rattaché aux forces d'Oda Nobukatsu. Peu après, le château de Kaganoi fut encerclé par les troupes de Toyotomi Hideyoshi ; Shigemune se rendit, et Shigemochi fut employé par Hideyoshi comme messager, recevant une rente de 10 000 \"koku\". Il possédait également une lame forgée par Muramasa, que Hideyoshi lui offrit en 1598.",
           "full_chars": 606,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -169,49 +169,17 @@
         "query": {
           "text": "Quel film a été écrit et réalisé par Joby Harold avec la musique de Samuel Sim ?",
           "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Samuel Sim est un compositeur de films et de séries télévisées. Il a acquis une notoriété avec sa bande originale récompensée pour la série dramatique de la BBC \"Dunkirk\". Depuis, il a composé la musi",
+          "text": "Samuel Sim est un compositeur de films et de séries télévisées. Il a acquis une notoriété avec sa bande originale récompensée pour la série dramatique de la BBC \"Dunkirk\". Depuis, il a composé la musique pour une grande variété de productions cinématographiques et télévisuelles. Récemment, il a signé la bande originale du film \"Awake\" pour The Weinstein Company et de la série dramatique BBC/HBO \"House of Saddam\". Sa musique la plus récemment acclamée est la bande originale de \"Home Fires\". \"Home Fires (Bande originale de la série télévisée)\" est sorti le 6 mai 2016 chez Sony Classical Records.",
           "full_chars": 600,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae63b2255429908198fa526",
-        "document_id": "46395880",
-        "query": {
-          "text": "Quand a eu lieu ce match de football universitaire au Sun Life Stadium à Miami Gardens, en Floride,",
-          "full_chars": 181,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "L'équipe de football des Tigers de Clemson de 2015 a représenté l'Université de Clemson lors de la saison 2015 de la NCAA Division I FBS. Les Tigers étaient dirigés par l'entraîneur-chef Dabo Swinney,",
-          "full_chars": 1181,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5a84fd085542994c784ddaba",
-        "document_id": "1854777",
-        "query": {
-          "text": "Plat du Diable est un album de titres d'un groupe de rock and roll américain qui a également été con",
-          "full_chars": 150,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Diabolique est une compilation de singles du groupe américain de rock 'n' roll Supersuckers, sortie en avril 2005 chez Mid-Fi Records.",
-          "full_chars": 134,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

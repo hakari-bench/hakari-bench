@@ -150,14 +150,14 @@
         "query": {
           "text": "fitzgerald auto mall chambersburg pa",
           "full_chars": 36,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Fitzgerald Auto Malls is a family owned and operated auto dealership that was founded in 1966, with its first location opening in Bethesda, Maryland. As of 2014, Fitzgerald Auto Malls ranked number 59",
+          "text": "Fitzgerald Auto Malls is a family owned and operated auto dealership that was founded in 1966, with its first location opening in Bethesda, Maryland. As of 2014, Fitzgerald Auto Malls ranked number 59 on the list of the \"Top 125 Dealership Groups\" in the U.S., which is published annually by Automotive News Fitzgerald dealer locations appear five times on the 2013 WardsAuto e-Dealer 100, at No.8, No.25, No.30, No.43 and No.98.",
           "full_chars": 429,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -166,14 +166,14 @@
         "query": {
           "text": "1994 short story collection Alice Munro is Open",
           "full_chars": 47,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, née Laidlaw /ˈleɪdlɔː/; born 10 July 1931) is a Canadian author. Munro's work has been described as having revolutionized the architecture of short stories, espec",
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, née Laidlaw /ˈleɪdlɔː/; born 10 July 1931) is a Canadian author. Munro's work has been described as having revolutionized the architecture of short stories, especially in its tendency to move forward and backward in time. Her stories have been said to \"embed more than announce, reveal more than parade.\"Munro's fiction is most often set in her native Huron County in southwestern Ontario. Her stories explore human complexities in an uncomplicated prose style.",
           "full_chars": 499,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -182,49 +182,17 @@
         "query": {
           "text": "gallo roman architecture in paris",
           "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Art in Paris is an article on the art culture and history in Paris, the capital of France. For centuries, Paris has attracted artists from around the world, arriving in the city to educate themselves",
+          "text": "Art in Paris is an article on the art culture and history in Paris, the capital of France. For centuries, Paris has attracted artists from around the world, arriving in the city to educate themselves and to seek inspiration from its artistic resources and galleries. As a result, Paris has acquired a reputation as the \"City of Art\".",
           "full_chars": 333,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "SemSearch_LS-35",
-        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
-        "query": {
-          "text": "republics of the former Yugoslavia",
-          "full_chars": 34,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "The 1974 Yugoslav Constitution was the fourth and final constitution of the Socialist Federal Republic of Yugoslavia. It came into effect on February 21.With 406 original articles, the 1974 constituti",
-          "full_chars": 436,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "INEX_XER-72",
-        "document_id": "<dbpedia:A_Little_Romance>",
-        "query": {
-          "text": "films shot in Venice",
-          "full_chars": 20,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "A Little Romance is a 1979 American Technicolor and Panavision romantic comedy film directed by George Roy Hill and starring Laurence Olivier, Thelonious Bernard, and Diane Lane in her film debut. The",
-          "full_chars": 371,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

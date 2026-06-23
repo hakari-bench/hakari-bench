@@ -123,13 +123,13 @@
         "query": {
           "text": "What Was AMCOR's Adjusted Non GAAP EBITDA for FY 2023",
           "full_chars": 53,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Twelve Months Ended June 30, 2022 Twelve Months Ended June 30, 2023 ($ million) EBITDA EBIT Net Income EPS (Diluted US cents)(1) EBITDA EBIT Net Income EPS (Diluted US cents)(1) Net income attributabl",
+          "text": "Twelve Months Ended June 30, 2022 Twelve Months Ended June 30, 2023 ($ million) EBITDA EBIT Net Income EPS (Diluted US cents)(1) EBITDA EBIT Net Income EPS (Diluted US cents)(1) Net income attributable to Amcor 805 805 805 52.9 1,048 1,048 1,048 70.5 Net income attributable to non-controlling interests 10 10 10 10 Tax expense 300 300 193 193 Interest expense, net 135 135 259 259 Depreciation and amortization 579 569 EBITDA, EBIT, Net income and EPS 1,829 1,250 805 52.9 2,080 1,510 1,048 70.5 2019 Bemis Integration Plan 37 37 37 2.5 — — — — Net loss on disposals(2) 10 10 10 0.7 — — — — Impact of hyperinflation 16 16 16 1.0 24 24 24 1.9 Property and other losses, net(3) 13 13 13 0.8 2 2 2 0.1 Russia-Ukraine conflict impacts(4) 200 200 200 13.2 (90) (90) (90) (6.0) Pension settlements 8 8 8 0.5 5 5 5 0.3 Other 4 4 4 0.3 (3) (3) (3) (0.3) Amortization of acquired intangibles (5) 163 163 10.7 160 160 10.8 Tax effect of above items (32) (2.1) (57) (4.0) Adjusted EBITDA, EBIT, Net income and",
           "full_chars": 1049,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -137,67 +137,35 @@
         "query_id": "00006",
         "document_id": "000000006",
         "query": {
-          "text": "Which debt securities are registered to trade on a national securities exchange under 3M's name as o",
+          "text": "Which debt securities are registered to trade on a national securities exchange under 3M's name as of Q2 of 2023?",
           "full_chars": 113,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Title of each class Trading Symbol(s) Name of each exchange on which registered Common Stock, Par Value $.01 Per Share MMM New York Stock Exchange MMM Chicago Stock Exchange, Inc. 1.500% Notes due 202",
+          "text": "Title of each class Trading Symbol(s) Name of each exchange on which registered Common Stock, Par Value $.01 Per Share MMM New York Stock Exchange MMM Chicago Stock Exchange, Inc. 1.500% Notes due 2026 MMM26 New York Stock Exchange 1.750% Notes due 2030 MMM30 New York Stock Exchange 1.500% Notes due 2031 MMM31 New York Stock Exchange",
           "full_chars": 335,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "00070",
         "document_id": "000000069",
         "query": {
-          "text": "Based on the information provided primarily in the balance sheet and the statement of income, what i",
+          "text": "Based on the information provided primarily in the balance sheet and the statement of income, what is FY2020 days payable outstanding (DPO) for Corning? DPO is defined as: 365 * (average accounts payable between FY2019 and FY2020) / (FY2020 COGS + change in inventory between FY2019 and FY2020). Round your answer to two decimal places.",
           "full_chars": 336,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Index Consolidated Statements of Income Corning Incorporated and Subsidiary Companies Year ended December 31, (In millions, except per share amounts) 2020 2019 2018 Net sales $ 11,303 $ 11,503 $ 11,29",
+          "text": "Index Consolidated Statements of Income Corning Incorporated and Subsidiary Companies Year ended December 31, (In millions, except per share amounts) 2020 2019 2018 Net sales $ 11,303 $ 11,503 $ 11,290 Cost of sales 7,772 7,468 6,829 Gross margin 3,531 4,035 4,461 Operating expenses: Selling, general and administrative expenses 1,747 1,585 1,799 Research, development and engineering expenses 1,154 1,031 993 Amortization of purchased intangibles 121 113 94 Operating income 509 1,306 1,575 Equity in (losses) earnings of affiliated companies (Note 3) (25) 17 390 Interest income 15 21 38 Interest expense (276) (221) (191) Translated earnings contract (loss) gain, net (Note 15) (38) 248 (93) Transaction-related gain, net (Note 4) 498 Other expense, net (60) (155) (216) Income before income taxes 623 1,216 1,503 Provision for income taxes (Note 8) (111) (256) (437) Net income attributable to Corning Incorporated $ 512 $ 960 $ 1,066 Earnings per common share attributable to Corning Incorporat",
           "full_chars": 4015,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00062",
-        "document_id": "000000061",
-        "query": {
-          "text": "Does Boeing have an improving gross margin profile as of FY2022? If gross margin is not a useful met",
-          "full_chars": 161,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "The Boeing Company and Subsidiaries Consolidated Statements of Operations (Dollars in millions, except per share data) Years ended December 31, 2022 2021 2020 Sales of products $55,893 $51,386 $47,142",
-          "full_chars": 479,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00057",
-        "document_id": "000000056",
-        "query": {
-          "text": "What is the FY2019 - FY2020 total revenue growth rate for Block (formerly known as Square)? Answer i",
-          "full_chars": 287,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "SQUARE, INC. CONSOLIDATED STATEMENTS OF OPERATIONS (In thousands, except per share data) Year Ended December 31, 2020 2019 2018 Revenue: Transaction-based revenue $ 3,294,978 $ 3,081,074 $ 2,471,451 S",
-          "full_chars": 1779,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

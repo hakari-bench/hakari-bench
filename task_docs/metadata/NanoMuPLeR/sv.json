@@ -121,83 +121,51 @@
         "query_id": "cb0b6b65-ecc0-4a62-8370-6663a2a23fdb",
         "document_id": "9088",
         "query": {
-          "text": "Vilken kommitté bedömde resursinsatser i små interna utredningar ineffektiva och uppmanade att inarb",
+          "text": "Vilken kommitté bedömde resursinsatser i små interna utredningar ineffektiva och uppmanade att inarbeta urvalskriterier i handboken för operativa metoder?",
           "full_chars": 154,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Kommittén har sett över Olafs hantering av de minimisärenden och undersökte 45 utvalda ärenden med ekonomiska konsekvenser på under 50000 euro var. Kommittén kom fram till att det inte utgör god resur",
+          "text": "Kommittén har sett över Olafs hantering av de minimisärenden och undersökte 45 utvalda ärenden med ekonomiska konsekvenser på under 50000 euro var. Kommittén kom fram till att det inte utgör god resursanvändning att avsätta resurser på interna utredningar av mindre förseelser. Kommissionens nolltoleranspolicy utesluter inte att andra organ (till exempel utrednings- och disciplinbyrån) utreder dessa ärenden, istället för Olaf. Kommittén rekommenderar att Olaf i handboken för operativa metoder inarbetat kriterier för urvalet och behandlingen av de minimisärenden.",
           "full_chars": 567,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "243af637-28d1-464e-9ede-611b1599f7d8",
         "document_id": "8556",
         "query": {
-          "text": "Varför använde beslutet genomsnittlig berörd försäljning för Frankrike istället för senaste hela åre",
+          "text": "Varför använde beslutet genomsnittlig berörd försäljning för Frankrike istället för senaste hela året för MEGAL‑transporterad energi?",
           "full_chars": 133,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Den försäljning som påverkas av överträdelsen är försäljning av gas som tranporteras av E.ON och GDF genom MEGAL-ledningen i Tyskland, förutom försäljning av gas enligt E.ON:s gasprogram (E.ON Gas Rel",
+          "text": "Den försäljning som påverkas av överträdelsen är försäljning av gas som tranporteras av E.ON och GDF genom MEGAL-ledningen i Tyskland, förutom försäljning av gas enligt E.ON:s gasprogram (E.ON Gas Release Programme) och försäljning till konsumenter med kontrakt i Frankrike (beräknad som en procentandel av GDF:s totala försäljning av gas som transporteras genom MEGAL). För Frankrikes vidkommande utgår kommissionen i sitt beslut från ett genomsnitt av den berörda försäljningen under överträdelseperioden i stället för det senaste hela året, eftersom ny fransk lagstiftning fick de berörda kundernas och kundkategoriernas antal att stiga avsevärt under överträdelseperioden.",
           "full_chars": 676,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "086bb12c-c3e5-4d3b-8a7d-c39cb29ed62f",
         "document_id": "9270",
         "query": {
-          "text": "Vem informerar godkännandets innehavare om vilka mindre ändringar i anmälan som godkänts eller avsla",
+          "text": "Vem informerar godkännandets innehavare om vilka mindre ändringar i anmälan som godkänts eller avslagits så att avslagna ändringar upphör omedelbart?",
           "full_chars": 149,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "När en eller flera mindre ändringar av typ IA lämnas in som en del av en anmälan ska referensmedlemsstaten informera innehavaren av godkännandet för försäljning om vilka ändringar som har godkänts ell",
+          "text": "När en eller flera mindre ändringar av typ IA lämnas in som en del av en anmälan ska referensmedlemsstaten informera innehavaren av godkännandet för försäljning om vilka ändringar som har godkänts eller avslagits vid dess granskning. Innehavaren av godkännandet för försäljning ska omedelbart upphöra att tillämpa de avslagna ändringarna. Visserligen avslås inte ändringen automatiskt för att den sökande inte har lämnat all erforderlig dokumentation i ansökan om mindre ändringar av typ IA, om den sökande på begäran av den behöriga myndigheten omedelbart lämnar den dokumentation som fattas. Men det bör poängteras att en mindre ändring av typ 1A under särskilda omständigheter kan avslås, med den påföljden att den sökande måste upphöra att tillämpa ändringar som redan har genomförts.",
           "full_chars": 788,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "ea466f70-5e07-40b3-9ed3-229aeebe3018",
-        "document_id": "4725",
-        "query": {
-          "text": "Varför måste en leverantörs totala kapacitet bedömas enbart vid urval och inte omprövas vid bedömnin",
-          "full_chars": 123,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Tilldelningskriterierna måste utarbetas med omsorg för att se till att dessa inte blandas ihop med urvalskriterierna. I domstolens rättspraxis erinras om betydelsen av att skilja mellan bedömningen en",
-          "full_chars": 702,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5d4dcab6-df33-4b88-8534-955e5474de8c",
-        "document_id": "6770",
-        "query": {
-          "text": "Vilken rådgivande EU-församling välkomnade en kommissionsenhets beslut att återuppliva observationso",
-          "full_chars": 158,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Att känna till och förmedla villkoren för de olika kategorierna av små och medelstora företag. All gemenskapspolitik bör baseras på tydliga fakta som ger kunskap om situationen. Begreppet små och mede",
-          "full_chars": 756,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

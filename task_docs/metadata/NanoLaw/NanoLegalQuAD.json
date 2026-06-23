@@ -144,13 +144,13 @@
         "query": {
           "text": "Wie ist das rechtliche Gehör nach Art. 103 Abs. 1 GG definiert?",
           "full_chars": 64,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "TenorDer Antrag auf Zulassung der Berufung wird abgelehnt.Der Kläger trägt die Kosten des Zulassungsverfahrens; Gerichtskosten werden nicht erhoben.1G r ü n d e2Der Antrag auf Zulassung der Berufun",
+          "text": "TenorDer Antrag auf Zulassung der Berufung wird abgelehnt.Der Kläger trägt die Kosten des Zulassungsverfahrens; Gerichtskosten werden nicht erhoben.1G r ü n d e2Der Antrag auf Zulassung der Berufung hat keinen Erfolg. Die Berufung ist weder wegen des geltend gemachten Zulassungsgrundes eines Verfahrensmangels (dazu I.) noch der grundsätzlichen Bedeutung (dazu II.) zuzulassen.3I. Die Berufung ist zunächst nicht aufgrund des von dem Kläger gerügten Verfahrensmangels der Versagung rechtlichen Gehörs nach § 78 Abs. 3 Nr. 3 AsylG i. V. m. § 138 Nr. 3 VwGO zuzulassen.4Das rechtliche Gehör als prozessuales Grundrecht (Art. 103 Abs. 1 GG) sichert den Beteiligten ein Recht auf Information, Äußerung und Berücksichtigung mit der Folge, dass sie ihr Verhalten eigenbestimmt und situationsspezifisch gestalten können und mit ihren Ausführungen und Anträgen durch das Gericht gehört werden. Das Gericht ist jedoch nicht verpflichtet, den Ausführungen eines Beteiligten in der Sache zu fol",
           "full_chars": 13780,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -160,13 +160,13 @@
         "query": {
           "text": "Welchen Wert hat das Beschwerdeverfahren?",
           "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "TenorDie Beschwerde des Beschwerdeführers vom 27.04.2018 gegen den Beschluss des Amtsgerichts – Familiengericht – Bochum vom 21.03.2018 (57 F 17/18) in Verbindung mit dem Beschluss vom 03.04.2018 wir",
+          "text": "TenorDie Beschwerde des Beschwerdeführers vom 27.04.2018 gegen den Beschluss des Amtsgerichts – Familiengericht – Bochum vom 21.03.2018 (57 F 17/18) in Verbindung mit dem Beschluss vom 03.04.2018 wird zurückgewiesen.Die Kosten des Beschwerdeverfahrens werden dem Beschwerdeführer auferlegt.Der Wert des Beschwerdeverfahrens wird auf 3.000,00 € festgesetzt.Die Rechtsbeschwerde wird zugelassen.1Gründe:2I.3Der am ##.##.2000 geborene Beschwerdeführer ist Staatsangehöriger der Republik Guinea. Durch Beschluss des Amtsgerichts – Familiengericht – Bochum vom 25.11.2016 wurde für ihn das Ruhen der elterlichen Sorge festgestellt und Vormundschaft angeordnet. Zum Vormund wurde die jetzige Verfahrensbevollmächtigte des Beschwerdeführers bestellt.4Durch den angefochtenen Beschluss vom 21.03.2018, hinsichtlich der Beschlussformel berichtigt durch Beschluss vom 03.04.2018, hat das Familiengericht deklaratorisch festgestellt, dass die Vormundschaft beendet ist, weil der Beschwerdeführer mit V",
           "full_chars": 11601,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -174,51 +174,19 @@
         "query_id": "00006",
         "document_id": "zgEz6cwB61",
         "query": {
-          "text": "Muss der Beauftragte dem Auftraggeber erhaltene Gegenstände zur Ausführung des Auftrages zurückgeben",
+          "text": "Muss der Beauftragte dem Auftraggeber erhaltene Gegenstände zur Ausführung des Auftrages zurückgeben?",
           "full_chars": 101,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Tenor1E n t s c h e i d u n g s g r ü n d e :2##blob##nbsp;3##blob##nbsp;4Die in förmlicher Hinsicht unbedenkliche Berufung hat nach demErgebnis der zweitinstanzlichen Beweisaufnahme keinen Erfolg.5",
+          "text": "Tenor1E n t s c h e i d u n g s g r ü n d e :2##blob##nbsp;3##blob##nbsp;4Die in förmlicher Hinsicht unbedenkliche Berufung hat nach demErgebnis der zweitinstanzlichen Beweisaufnahme keinen Erfolg.5Das Landgericht hat die Beklagte im rechtlichen Ausgangspunkt zuRecht aus §§ 667, 665, 669, 398 BGB zur Zahlung verurteilt. DieKreissparkasse K. hat ihren Anspruch auf Rückerstattung desBetrages, der aus dem hier streitigen Überweisungsvorgang derBeklagten gutgeschrieben wurde, an den Kläger abgetreten.6Da die Beklagte den ihr von der Kreissparkasse K. erteiltenAuftrag nicht ordnungsgemäß ausgeführt hat, ist sie diesergegenüber zur Rückerstattung verpflichtet.7Nach § 667 BGB ist der Beauftragte verpflichtet, demAuftraggeber alles, was er zur Ausführung des Auftrags erhält,herauszugeben. Die Anweisung der Kreissparkasse K. an die Beklagte,auf dem Konto des Herrn \"U.H.\" einen Betrag gutzuschreiben, stellteinen Auftrag im Sinne der §§ 667 ff. BGB zwischen denKreditinstituten dar. Dur",
           "full_chars": 13258,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00189",
-        "document_id": "XRvj7uff0L",
-        "query": {
-          "text": "Mit wem wurde der Baubeginn abgestimmt?",
-          "full_chars": 39,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Tenor1.Die Anträge vom 25.04.2012 auf Erlass einer einstweiligen Verfügung werden zurückgewiesen.2.Die Verfügungsklägerin trägt die Kosten des Verfahrens.3.Das Urteil ist vorläufig vollstreckba",
-          "full_chars": 13416,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00070",
-        "document_id": "FJjuGhmKfF",
-        "query": {
-          "text": "Können Gesellschafter zur Erhöhung von Beiträgen verpflichtet werden?",
-          "full_chars": 69,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Auf die Berufung des Beklagten wird das Urteil der 9. Zivilkammer des Landgerichts Koblenz vom 15. Juli 2004 abgeändert und die Klage abgewiesen.Die Kläger tragen die Kosten des Rechtsstreits einsch",
-          "full_chars": 13468,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -150,14 +150,14 @@
         "query": {
           "text": "token to id python",
           "full_chars": 18,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "def strids2ids(tokens: Iterable[str]) -> List[int]: \"\"\" Returns sequence of integer ids given a sequence of string ids. :param tokens: List of integer tokens. :return: List of word ids. \"\"\" return lis",
+          "text": "def strids2ids(tokens: Iterable[str]) -> List[int]: \"\"\" Returns sequence of integer ids given a sequence of string ids. :param tokens: List of integer tokens. :return: List of word ids. \"\"\" return list(map(int, tokens))",
           "full_chars": 244,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -166,14 +166,14 @@
         "query": {
           "text": "python 3 tkinter open file dialog",
           "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "def askopenfilename(**kwargs): \"\"\"Return file name(s) from Tkinter's file open dialog.\"\"\" try: from Tkinter import Tk import tkFileDialog as filedialog except ImportError: from tkinter import Tk, file",
+          "text": "def askopenfilename(**kwargs): \"\"\"Return file name(s) from Tkinter's file open dialog.\"\"\" try: from Tkinter import Tk import tkFileDialog as filedialog except ImportError: from tkinter import Tk, filedialog root = Tk() root.withdraw() root.update() filenames = filedialog.askopenfilename(**kwargs) root.destroy() return filenames",
           "full_chars": 389,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -182,49 +182,17 @@
         "query": {
           "text": "python calc page align",
           "full_chars": 22,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "def page_align_content_length(length): # type: (int) -> int \"\"\"Compute page boundary alignment :param int length: content length :rtype: int :return: aligned byte boundary \"\"\" mod = length % _PAGEBLOB",
+          "text": "def page_align_content_length(length): # type: (int) -> int \"\"\"Compute page boundary alignment :param int length: content length :rtype: int :return: aligned byte boundary \"\"\" mod = length % _PAGEBLOB_BOUNDARY if mod != 0: return length + (_PAGEBLOB_BOUNDARY - mod) return length",
           "full_chars": 323,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q20294",
-        "document_id": "d8224",
-        "query": {
-          "text": "how to separate list elements by white space python",
-          "full_chars": 51,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "def split_strings_in_list_retain_spaces(orig_list): \"\"\" Function to split every line in a list, and retain spaces for a rejoin :param orig_list: Original list :return: A List with split lines \"\"\" temp",
-          "full_chars": 381,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q20175",
-        "document_id": "d1843",
-        "query": {
-          "text": "python how to change file extension",
-          "full_chars": 35,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "def lower_ext(abspath): \"\"\"Convert file extension to lowercase. \"\"\" fname, ext = os.path.splitext(abspath) return fname + ext.lower()",
-          "full_chars": 149,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

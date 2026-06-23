@@ -159,11 +159,9 @@ whether the shared notation actually implies duplicate intent.
 
 | Query | Positive document |
 | --- | --- |
-| Schattingen van variantie uit een iid steekproef [48 chars] | Intuïtieve uitleg voor delen door (n-1) bij het berekenen van de standaarddeviatie? Vandaag kreeg ik in de klas de vraag waarom je de som van de gekwadrateerde afwijkingen deelt door $(n-1)$ in plaats... [200 / 435 chars] |
+| Schattingen van variantie uit een iid steekproef [48 chars] | Intuïtieve uitleg voor delen door (n-1) bij het berekenen van de standaarddeviatie? Vandaag kreeg ik in de klas de vraag waarom je de som van de gekwadrateerde afwijkingen deelt door $(n-1)$ in plaats van door $n$ bij het berekenen van de standaarddeviatie. Ik zei dat ik dat in de klas niet zou beantwoorden (omdat ik niet over zuivere schatters wilde beginnen), maar later vroeg ik me af - **is er** een intuïtieve uitleg hiervoor?! [435 chars] |
 | Hoe kan ik type II (bèta) fout, power en steekproefomvang het beste grafisch weergeven? [87 chars] | Reëel gebaseerd op machtsfunctie Probleem: Wat is een voorbeeld uit het echte leven van een machtsfunctie? Ik heb erover nagedacht, maar ik ben er niet uitgekomen. Weet iemand het? [181 chars] |
-| Het weergeven van een afstandsmatrix in het vlak [48 chars] | Wat is het verschil tussen principale componentenanalyse en multidimensionale schaalverdeling? Hoe verschillen PCA en klassieke MDS? En MDS versus niet-metrische MDS? Is er een situatie waarin je de v... [200 / 280 chars] |
-| Hulp bij het interpreteren van een R lineair model [50 chars] | Basisvragen over de interpretatie van resultaten van summary(lm(...~...)) in R set.seed(11) a = runif (12) b = rep(c(1,2,3),4) summary(lm(a~b))$coeff summary(lm(a~b-1))$coeff Wat betekent een p-waarde... [200 / 433 chars] |
-| Hoe om te gaan met ontbrekende waarden voor PCA? [48 chars] | Vervanging van NA-waarden voor PCA-analyse Ik heb de functie `prcomp()` gebruikt om een PCA-analyse uit te voeren in R. Er zit echter een bug in die functie waardoor de parameter `na.action` niet werk... [200 / 1,676 chars] |
+| Het weergeven van een afstandsmatrix in het vlak [48 chars] | Wat is het verschil tussen principale componentenanalyse en multidimensionale schaalverdeling? Hoe verschillen PCA en klassieke MDS? En MDS versus niet-metrische MDS? Is er een situatie waarin je de voorkeur aan de een boven de ander zou geven? Hoe verschillen de interpretaties? [280 chars] |
 
 ### Source Reference Table
 

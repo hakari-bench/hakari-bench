@@ -177,14 +177,14 @@
         "query": {
           "text": "Was ist das Ruminationssyndrom?",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Ruminationssyndrom, auch Merykismus genannt, ist eine nicht näher bezeichnete Essstörung, die das Erbrechen von Nahrung verursacht. Obwohl es im DSM-IV nicht als spezifische Essstörung identifiziert w",
+          "text": "Ruminationssyndrom, auch Merykismus genannt, ist eine nicht näher bezeichnete Essstörung, die das Erbrechen von Nahrung verursacht. Obwohl es im DSM-IV nicht als spezifische Essstörung identifiziert wird, wurden bestimmte Kriterien für die Diagnose der Störung festgelegt.",
           "full_chars": 272,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -193,14 +193,14 @@
         "query": {
           "text": "Wer hat den Song \"Here I Go Again\" gesungen?",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Für andere Verwendungen siehe Here I Go Again (Bedeutungsübersicht). Here I Go Again ist ein Lied der britischen Rockband Whitesnake. Ursprünglich erschien das Lied 1982 auf ihrem Album Saints & Sinne",
+          "text": "Für andere Verwendungen siehe Here I Go Again (Bedeutungsübersicht). Here I Go Again ist ein Lied der britischen Rockband Whitesnake. Ursprünglich erschien das Lied 1982 auf ihrem Album Saints & Sinners. Für das gleichnamige Album Whitesnake aus dem Jahr 1987 wurde es neu aufgenommen. Im selben Jahr wurde das Lied erneut in einer neuen Radio-Mix-Version aufgenommen.",
           "full_chars": 368,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -209,49 +209,17 @@
         "query": {
           "text": "Wen spielt Cameron Boyce in Liv und Maddie?",
           "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Bereitet euch auf ordentlich Lacher vor, Leute. In einem exklusiven Vorab-Blick auf die Folge vom 19. April von Liv & Maddie mit dem Titel „Prom-A-Rooney.“ Natürlich. Im lustigen Clip sehen wir den Je",
+          "text": "Bereitet euch auf ordentlich Lacher vor, Leute. In einem exklusiven Vorab-Blick auf die Folge vom 19. April von Liv & Maddie mit dem Titel „Prom-A-Rooney.“ Natürlich. Im lustigen Clip sehen wir den Jessie-Star Cameron Boyce in eine andere Disney-Serie wechseln, um Maddie (Shelby Wulfert) zu treffen. Seine Figur ist, ähm, ziemlich exzentrisch!",
           "full_chars": 344,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971233",
-        "document_id": "4589415",
-        "query": {
-          "text": "Wo liegen die meisten großen Wüsten der Erde?",
-          "full_chars": 45,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Die übrigen Wüsten der Erde liegen außerhalb der Polargebiete. Die größte ist die Sahara, eine subtropische Wüste in Nordafrika.",
-          "full_chars": 128,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "1093082",
-        "document_id": "7778956",
-        "query": {
-          "text": "Was bedeutet \"copper\" für einen Polizisten?",
-          "full_chars": 43,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Aufgrund der aktuellen Erkenntnisse scheint es, dass 'Bulle' (ein Polizist, wörtlich 'jemand, der festnimmt') älter ist als 'cop', das entweder als Verb im Sinne von 'festnehmen' oder als Substantiv i",
-          "full_chars": 458,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

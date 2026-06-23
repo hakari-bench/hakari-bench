@@ -168,13 +168,13 @@
         "query": {
           "text": "Ist es in Ordnung, über seine eigenen Witze zu lachen?",
           "full_chars": 54,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Ist es merkwürdig, über meine eigenen Witze zu lachen?",
           "full_chars": 54,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -184,13 +184,13 @@
         "query": {
           "text": "Welche ist die beste Lüge, die du je erzählt hast?",
           "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Welche ist die beste Lüge, die du je erzählt hast?",
           "full_chars": 50,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -200,49 +200,17 @@
         "query": {
           "text": "Warum schlägt Quora mir häufig Antworten vor, die Donald Trump kritisieren?",
           "full_chars": 75,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Warum gibt es auf Quora nur voreingenommene Antworten zu Fragen über Donald Trump?",
           "full_chars": 82,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "Wie werde ich körperlich fit?",
-          "full_chars": 29,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Wie kann ich körperlich fit werden?",
-          "full_chars": 35,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "Wie funktioniert ein Quanten-Satellit?",
-          "full_chars": 38,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Wie funktioniert ein Quanten-Satellit und welche Hauptanwendungen hätte er?",
-          "full_chars": 75,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -127,83 +127,51 @@
         "query_id": "test-politics-eppghwlrba-pro03a",
         "document_id": "test-politics-eppghwlrba-pro03b",
         "query": {
-          "text": "Sports shooting desensitizes people to the lethal nature of firearms Shooting as a sport desensitise",
+          "text": "Sports shooting desensitizes people to the lethal nature of firearms Shooting as a sport desensitises people to the lethal nature of all firearms, creating a gun culture that glamorises and legitimises unnecessary gun ownership. It remains the interest of a minority, who should not be allowed to block the interests of society as a whole in gun control. Compensation can be given to individual gun owners, gun clubs and the retail firearms trade, in recognition of their economic loss if a ban is im",
           "full_chars": 511,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "eneral politics politics general house would limit right bear arms Shooting is a major sport enjoyed by many law-abiding people, both in gun clubs with purpose-built ranges and as a field sport. These",
+          "text": "eneral politics politics general house would limit right bear arms Shooting is a major sport enjoyed by many law-abiding people, both in gun clubs with purpose-built ranges and as a field sport. These people have the right to continue with their chosen leisure pursuit, on which they have spent large amounts of money – an investment the government would effectively be confiscating if their guns were confiscated. In addition, field sports bring money into poor rural economies and provide a motivation for landowners to value environmental protection. While compensation could be given the cost would be huge; in the UK shootings value to the economy was £1.6billion in 2004. [1] [1] ‘£1,600,000,000 – the value of shooting’, Shooting Times, 27 September 2006,",
           "full_chars": 763,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "test-economy-epiasghbf-con04a",
         "document_id": "test-economy-epiasghbf-con04b",
         "query": {
-          "text": "Where are the men? Is the feminisation of labour emerging with a de-masculinisation of jobs? If so,",
+          "text": "Where are the men? Is the feminisation of labour emerging with a de-masculinisation of jobs? If so, how do women cope in the work environment? Are methods being integrated to ensure a just work environment is maintained? Overa’s (2007) study on gender relations within the informal economy indicates how tensions emerge with women and men being forced into similar occupations. The informal economy of retail trade in Ghana is becoming overcrowded as men enter into female jobs; competition is causin",
           "full_chars": 654,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "economic policy international africa society gender house believes feminisation Within Gender and Development the importance of bringing men into the picture of gender discrimination has been recognis",
+          "text": "economic policy international africa society gender house believes feminisation Within Gender and Development the importance of bringing men into the picture of gender discrimination has been recognised. Therefore working with men will change enable gender roles to be changed.",
           "full_chars": 277,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "test-culture-mmciahbans-con04a",
         "document_id": "test-culture-mmciahbans-con04b",
         "query": {
-          "text": "Run education campaigns instead Education is an alternative. Campaigns such as #darkisbeautiful (dar",
+          "text": "Run education campaigns instead Education is an alternative. Campaigns such as #darkisbeautiful (dark is beautiful) in India are the model for advancing equality and marginalizing colourism in India. The campaign has had some success attracting stars, including some such as Vishaka Sing who have modelled for fairness creams, to campaign against the prejudice against darker skin tones. [1] The heavy hand of legislation is not the correct tool – other methods from social media campaigns to changin",
           "full_chars": 829,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "media modern culture international africa house believes african nations should Educational campaigns can and do work on many issues. However, they can only do so much in terms of making genuine progr",
+          "text": "media modern culture international africa house believes african nations should Educational campaigns can and do work on many issues. However, they can only do so much in terms of making genuine progress. If you want to change attitudes – generally subconscious – more concrete action is needed. Legislation affects everyone while a campaign will only ever reach comparatively small numbers.",
           "full_chars": 391,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test-society-epsihbdns-pro02a",
-        "document_id": "test-society-epsihbdns-pro02b",
-        "query": {
-          "text": "Restrictions on migration would benefit people in the cities economically and socially Cities are ve",
-          "full_chars": 1339,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "economic policy society immigration house believes developing nations should People who move to the cities have chosen to move from their families and dear ones, because they want to create a new and",
-          "full_chars": 1414,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test-health-dhgsshbesbc-con02a",
-        "document_id": "test-health-dhgsshbesbc-con02b",
-        "query": {
-          "text": "The risks of ignorance and prejudice are too high This measure could be actively dangerous for HIV-p",
-          "full_chars": 1021,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "disease health general sex sexuality house believes employees should be compelled Employers can be trusted to use this information responsibly. They are already used to keeping sensitive information (",
-          "full_chars": 583,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

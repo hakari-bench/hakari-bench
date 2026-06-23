@@ -132,13 +132,13 @@
         "query": {
           "text": "É normal rir das próprias piadas?",
           "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "É estranho rir das minhas próprias piadas?",
           "full_chars": 42,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -148,13 +148,13 @@
         "query": {
           "text": "Qual é a maior mentira que você já contou?",
           "full_chars": 42,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Qual é a maior mentira que você já contou?",
           "full_chars": 42,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -164,49 +164,17 @@
         "query": {
           "text": "Por que o Quora frequentemente sugere respostas no meu feed que criticam Donald Trump?",
           "full_chars": 86,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Por que o Quora parece ter apenas respostas tendenciosas e subjetivas sobre perguntas relacionadas a Donald Trump?",
           "full_chars": 114,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "Como posso ficar mais forte fisicamente?",
-          "full_chars": 40,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Como posso ficar mais forte fisicamente?",
-          "full_chars": 40,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "Como funciona um satélite quântico?",
-          "full_chars": 35,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Como funciona um satélite quântico e quais seriam suas principais aplicações?",
-          "full_chars": 77,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

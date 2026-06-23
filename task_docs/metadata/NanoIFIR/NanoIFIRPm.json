@@ -138,15 +138,15 @@
         "query_id": "2018_30_v1",
         "document_id": "NCT01530997",
         "query": {
-          "text": "A patient diagnosed with head and neck squamous cell carcinoma with a mutation in the CDKN2A gene. I",
+          "text": "A patient diagnosed with head and neck squamous cell carcinoma with a mutation in the CDKN2A gene. I am looking for possible clinical trials suitable for this patient.",
           "full_chars": 167,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "De-intensification of Radiation and Chemotherapy for Low-Risk Human Papillomavirus-related Oropharyngeal Squamous Cell Carcinoma Carcinoma, Squamous Cell The purpose of this research study is to learn",
+          "text": "De-intensification of Radiation and Chemotherapy for Low-Risk Human Papillomavirus-related Oropharyngeal Squamous Cell Carcinoma Carcinoma, Squamous Cell The purpose of this research study is to learn about the effectiveness of usinglower-intensity radiation and chemotherapy to treat human papillomavirus (HPV) associatedlow-risk oropharyngeal and/or unknown primary squamous cell carcinomas of the head and neck.The cure rate for this type of cancer is estimated to be high, > 90%. The standard treatmentfor this cancer is 7 weeks of radiation with 3 high doses of cisplatin. Sometimes surgery isperformed afterwards. This standard regimen causes a lot of side effects and long termcomplications. This study is evaluating whether a lower dose of radiation and chemotherapymay provide a similar cure rate as the longer, more intensive standard regimen. Patients inthis study will receive 1 less week of radiation and a lower weekly dose of chemotherapyfollowed by a limited surgical evaluation. Incl",
           "full_chars": 3238,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -154,15 +154,15 @@
         "query_id": "2017_16_v1",
         "document_id": "NCT00657982",
         "query": {
-          "text": "Patient diagnosed with prostate cancer with PTEN inactivating gene mutation. I am looking for possib",
+          "text": "Patient diagnosed with prostate cancer with PTEN inactivating gene mutation. I am looking for possible clinical trials suitable for this patient.",
           "full_chars": 145,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Phase II Study of RAD001 in a Neoadjuvant Setting in Men With Intermediate or High Risk Prostate Cancer Prostate Cancer The mechanisms responsible for the development of hormonal refractory prostate c",
+          "text": "Phase II Study of RAD001 in a Neoadjuvant Setting in Men With Intermediate or High Risk Prostate Cancer Prostate Cancer The mechanisms responsible for the development of hormonal refractory prostate cancer (HRPC)have been elusive. Genetic inactivation/loss of the PTEN tumor suppressor gene occurs in30-60% of advanced prostate cancers and in 20% of the localized form. Researchershypothesize that PTEN loss is a landmark genetic event in prostate cancer progression intothe fatal HRPC form. One consequence of PTEN loss is activation of the oncogenic Akt andphosphorylation of downstream Akt targets including mTOR. mTOR controls many importantcellular processes including cell cycle regulation.We propose to evaluate pharmacodynamic assessments of the mTOR inhibitor RAD001 inintermediate and high risk prostate cancer patients in the neoadjuvant setting. Patientswill be admitted to 6 weeks treatment with RAD001 10 mg/day followed by either radicalprostatectomy or radiotherapy combined with horm",
           "full_chars": 3481,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -170,51 +170,19 @@
         "query_id": "2017_10_v1",
         "document_id": "NCT01501604",
         "query": {
-          "text": "A patient diagnosed with gastric cancer with the PIK3CA (E545K) gene mutation. I am looking for poss",
+          "text": "A patient diagnosed with gastric cancer with the PIK3CA (E545K) gene mutation. I am looking for possible clinical trials suitable for this patient.",
           "full_chars": 147,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "BKM120 in Cancers With PIK3CA Activating Mutations Lung Cancer In people whos cancers have a PIK3CA mutation, this trial will be evaluating the drug BKM120as a possible treatment. BKM120 works by bloc",
+          "text": "BKM120 in Cancers With PIK3CA Activating Mutations Lung Cancer In people whos cancers have a PIK3CA mutation, this trial will be evaluating the drug BKM120as a possible treatment. BKM120 works by blocking the phosphatidylinositol-3-kinase(PI3K)pathway, thereby inhibiting tumor growth and survival.The purpose of this study is to learn if the study drug BKM120 can shrink or slow the growthof your tumor. The safety of BKM120 will also be studied. Your physical state, symptoms,change in the size of your tumor, and laboratory findings obtained while you are on studywill help the research team decide if BKM120 is safe and effective in patients with advancedcancers. Inclusion Criteria:- At least 1 site of measurable disease- Life expectancy >/= 12 weeks- Adequate marrow and organ function- Diagnosis of lung cancer, breast cancer, colorectal cancer, cholangiocarcinoma,gastric cancer, pancreatic cancer, prostate cancer, uterine cancer, ovarian cancer,esophageal cancer, or head and neck cancer-",
           "full_chars": 2539,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2018_40_v1",
-        "document_id": "NCT02097810",
-        "query": {
-          "text": "A patient diagnosed with papillary thyroid carcinoma and carrying the NTRK1 gene mutation. I am look",
-          "full_chars": 159,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Study of Oral RXDX-101 in Adult Patients With Locally Advanced or Metastatic Cancer Targeting NTRK1, NTRK2, NTRK3, ROS1, or ALK Molecular Alterations. Locally Advanced Solid Tumors Entrectinib (RXDX-1",
-          "full_chars": 2588,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2017_28_v1",
-        "document_id": "NCT00779454",
-        "query": {
-          "text": "Patient diagnosed with Ampullary carcinoma with KRAS gene mutation. Seeking possible clinical trials",
-          "full_chars": 127,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Combined Biological Treatment and Chemotherapy for Patients With Inoperable Cholangiocarcinoma Cholangiocarcinoma The purpose of this study is partly to continue the good experience the investigators",
-          "full_chars": 2078,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

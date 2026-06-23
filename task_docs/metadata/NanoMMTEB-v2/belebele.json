@@ -151,14 +151,14 @@
         "query": {
           "text": "Vad är enligt avsnittet inte ett bra knep för att spela dragspel?",
           "full_chars": 65,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Se till att din hand är så avslappnad som möjligt medan du fortfarande träffar alla noter korrekt. Försök också att inte göra många överflödiga rörelser med fingrarna. På det här sättet tröttar du ut",
+          "text": "Se till att din hand är så avslappnad som möjligt medan du fortfarande träffar alla noter korrekt. Försök också att inte göra många överflödiga rörelser med fingrarna. På det här sättet tröttar du ut dig själv så lite som möjligt. Kom ihåg att det inte finns något behov av att slå tangenterna med mycket kraft för extra volym som på ett piano. Med ett dragspel använder du bälgen med mer tryck eller högre hastighet för att få högre volym.",
           "full_chars": 440,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -167,65 +167,33 @@
         "query": {
           "text": "وفقاً للفقرة، ما الذي لا يُعتبر نصيحة دقيقة للعزف الناجح على الأكورديون؟",
           "full_chars": 72,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Make sure your hand is as relaxed as possible while still hitting all the notes correctly - also try not to make much extraneous motion with your fingers. This way, you will tire yourself out as littl",
+          "text": "Make sure your hand is as relaxed as possible while still hitting all the notes correctly - also try not to make much extraneous motion with your fingers. This way, you will tire yourself out as little as possible. Remember there's no need to hit the keys with a lot of force for extra volume like on the piano. On the accordion, to get extra volume, you use the bellows with more pressure or speed.",
           "full_chars": 399,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "belebele__arb_Arab-eng_Latn::q::Q0",
         "document_id": "belebele__arb_Arab-eng_Latn::d::C0",
         "query": {
-          "text": "According to the passage, what would not be considered an accurate tip for successfully playing the",
+          "text": "According to the passage, what would not be considered an accurate tip for successfully playing the accordion?",
           "full_chars": 110,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "تأكد من استرخاء يدك قدر الإمكان مع الاستمرار في ضرب كل النغمات بشكل صحيح - حاول كذلك عدم القيام بحركاتٍ غريبةٍ بأصابعك. لن تبذل مجهوداً كبيراً إذا اتبعت تلك الطريقة. ضع نصب عينيك أنه ليس عليك الضغط عل",
-          "full_chars": 364,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "belebele__eng_Latn-slk_Latn::q::Q0",
-        "document_id": "belebele__eng_Latn-slk_Latn::d::C0",
-        "query": {
-          "text": "Čo sa podľa úryvku nepovažuje za presné odporúčanie, ako dobre hrať na akordeóne?",
-          "full_chars": 81,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Make sure your hand is as relaxed as possible while still hitting all the notes correctly - also try not to make much extraneous motion with your fingers. This way, you will tire yourself out as littl",
-          "full_chars": 399,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "belebele__eng_Latn-npi_Latn::q::Q0",
-        "document_id": "belebele__eng_Latn-npi_Latn::d::C82",
-        "query": {
-          "text": "anuchhed anusar, kun MySpace suvidhaley padhna samasya vayeka vidyarthiharulai faidajanak huna sakch",
-          "full_chars": 103,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "MySpace is the third most popular website used in the United States and has 54 million profiles currently. These websites have gotten a lot of attention, especially in the education setting. There are",
-          "full_chars": 638,
-          "limit_chars": 200,
-          "truncated": true
+          "text": "تأكد من استرخاء يدك قدر الإمكان مع الاستمرار في ضرب كل النغمات بشكل صحيح - حاول كذلك عدم القيام بحركاتٍ غريبةٍ بأصابعك. لن تبذل مجهوداً كبيراً إذا اتبعت تلك الطريقة. ضع نصب عينيك أنه ليس عليك الضغط على مفاتيح الأكورديون بقوةٍ كبيرةٍ لتحصل على مستوى صوتٍ أعلى كما في البيانو. في الأكورديون، للحصول على صوت أعلى إضافي، يمكنك استخدام المنفاخ بمزيد من الضغط أو السرعة.",
+          "full_chars": 364,
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

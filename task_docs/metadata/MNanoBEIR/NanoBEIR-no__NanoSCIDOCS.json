@@ -131,14 +131,14 @@
         "query": {
           "text": "Ny DC-DC Flernivå Boostkonverter",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "AbstructMultilevel spenningskilder omformere dukker opp som nye typer kraftomformere for høyeffektsapplikasjoner. Multilevel spenningskilder omformere syntetiserer vanligvis en trappet spenningsbølge",
+          "text": "AbstructMultilevel spenningskilder omformere dukker opp som nye typer kraftomformere for høyeffektsapplikasjoner. Multilevel spenningskilder omformere syntetiserer vanligvis en trappet spenningsbølge fra flere nivåer av likestrømskondensatorspenninger. En av de største begrensningene ved multilevel omformere er spenningsubalanse mellom de forskjellige nivåene. Teknikkene for å balansere spenningen mellom de forskjellige nivåene involverer vanligvis spenningsbegrensning eller kontroll av kondensatorladning. Det finnes flere måter å implementere spenningsbalanse i multilevel omformere. Uten å vurdere tradisjonelle magnetisk koblete omformere, presenterer denne artikkelen tre nylig utviklede multilevel spenningskilder omformere: 1) diodespenningsbegrensning, 2) flygende kondensatorer, og 3) kaskaderte omformere med separate likestrømskilder. Driftsprinsippet, egenskaper, begrensninger og potensielle applikasjoner av disse omformerne vil bli diskutert.",
           "full_chars": 962,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,13 +147,13 @@
         "query": {
           "text": "Hurtig læringsalgoritme for sparsete Gaussiske Markov-felt basert på Cholesky-faktorisering",
           "full_chars": 91,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Sure, please provide the English document text that you need translated into Norwegian.",
           "full_chars": 87,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Tekstursyntese ved hjelp av konvolusjonelle neuronnettverk",
           "full_chars": 58,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "I denne arbeidet undersøker vi hvordan dybden av et konvolusjonelt nettverk påvirker dets nøyaktighet i store bildegjenkjenningssettinger. Vår hovedbidrag er en grundig vurdering av nettverk med økend",
+          "text": "I denne arbeidet undersøker vi hvordan dybden av et konvolusjonelt nettverk påvirker dets nøyaktighet i store bildegjenkjenningssettinger. Vår hovedbidrag er en grundig vurdering av nettverk med økende dybde, som viser at betydelige forbedringer av tidligere konfigurasjoner kan oppnås ved å øke dybden til 16–19 vektlag. Disse funnene var grunnlaget for vårt innsending til ImageNet Challenge 2014, hvor vårt lag sikret første- og andreplass i lokaliserings- og klassifiseringskonkurransene. Vi viser også at våre representasjoner generaliserer godt til andre datasett, hvor de oppnår toppresultater. Viktigst av alt, har vi gjort våre to beste ConvNet-modeller tilgjengelige for allmennheten for å fremme videre forskning på bruk av dype visuelle representasjoner i databehandling av bilde.",
           "full_chars": 792,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
-        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
-        "query": {
-          "text": "Planar bredbåndsannulærringantenne med sirkulær polarisering for RFID-system",
-          "full_chars": 76,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "I denne artikkelen foreslås en horisontalt meanderende strip (HMS) matningsmetode for å oppnå god impedansmatching og symmetriske bredsideutstrålingsmønstre for en enkeltmatet bredbånds sirkulært pola",
-          "full_chars": 1263,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
-        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
-        "query": {
-          "text": "Utforming av avansert digital hjerteovervåker ved bruk av grunnleggende elektroniske komponenter",
-          "full_chars": 96,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "I denne artikkelen presenterer vi design og utvikling av en ny integrert enhet for måling av hjertefrekvens ved bruk av fingertupp for å forbedre estimering av hjertefrekvens. Da hjertesykdommer øker",
-          "full_chars": 1047,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

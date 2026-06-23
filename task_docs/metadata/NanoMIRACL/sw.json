@@ -166,14 +166,14 @@
         "query": {
           "text": "Chelsea F.C. ilizinduliwa lini?",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Chelsea F.C. Chelsea Football Club ni klabu ya mpira wa miguu ya nchini Uingereza iliyo na maskani yake Fulham, London. Klabu hii ilianzishwa mwaka 1905, na kwa miaka mingi sana imekuwa ikishiriki lig",
+          "text": "Chelsea F.C. Chelsea Football Club ni klabu ya mpira wa miguu ya nchini Uingereza iliyo na maskani yake Fulham, London. Klabu hii ilianzishwa mwaka 1905, na kwa miaka mingi sana imekuwa ikishiriki ligi kuu ya Uingereza. Uwanja wao wa nyumbani ni Stamford Bridge ambao una uwezo wa kuingiza watazamaji 41,837, wameutumia uwanja huu tangu klabu ilivyoanzishwa.",
           "full_chars": 359,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -182,13 +182,13 @@
         "query": {
           "text": "Rais wa kwanza wa Gabon aliitwa nani?",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Omar Bongo Kiongozi huyo amevunja rekodi ya kuwa Rais aliyekaa muda mrefu marakani kuliko Rais yeyote barani Afrika. Rais huyo amefariki dunia akiwa na umri wa miaka 73, ambapo ameiongoza Gabon kwa mi",
+          "text": "Omar Bongo Kiongozi huyo amevunja rekodi ya kuwa Rais aliyekaa muda mrefu marakani kuliko Rais yeyote barani Afrika. Rais huyo amefariki dunia akiwa na umri wa miaka 73, ambapo ameiongoza Gabon kwa miaka 42. Bongo alijiunga na serikali ya Gabon mwaka 1965 na mwaka 1967 akawa makamu wa Rais ambapo mwaka huo huo akashika hatamu ya kuwa Rais wa nchi hiyo kufuatia cha kifo cha ghafla cha Rais Leon Mba. Bongo alipoingia madarakani alijenga utawala imara ambao ulinufaika zaidi baada ya kugunduliwa kwa mafuta nchini Gabon ingawa utajiri wake ulinufaisha idadi ndogo ya watu wanaokadiriwa kuwa milioni 1.5. kitu kilicholeta lawama kubwa kwa kiongozi huyo. Rais huyo amefariki dunia wakati akipata tiba ya saratani jijini Barcelona nchini Hispania. Rais Bongo ameaga dunia takribani miezi mitatu baada ya kifo cha mkewe, Edith Lucie Bongo Ondimba (45) aliyefariki dunia 14 Machi mwaka huu wakati akipata tiba mjini Rabat nchini Morocco. Bongo na Edith walifunga ndoa mwaka 1990. Edith aliuguzwa kwa miez",
           "full_chars": 1263,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -198,49 +198,17 @@
         "query": {
           "text": "Je,nani mwanzilishi wa mziki wa hIhop nchini Tanzania?",
           "full_chars": 54,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Machozi Jasho na Damu Halkadhalika ame-enzi kazi ya mwanzilishi halisi wa rap ya Kiswahili nchini Tanzania bwana Edward Mtui (maarufu kama Fresh XE) kwa kuchukua kiitikio chake cha \"Piga Makofi\" ambac",
+          "text": "Machozi Jasho na Damu Halkadhalika ame-enzi kazi ya mwanzilishi halisi wa rap ya Kiswahili nchini Tanzania bwana Edward Mtui (maarufu kama Fresh XE) kwa kuchukua kiitikio chake cha \"Piga Makofi\" ambacho kilimpelekea ashinde tuzo ya Yo Rap Bonanza katika miaka ya 1980, lakini hakutoa nyimbo. Jay anatungia wimbo kiitikio hicho na ndani yake anataja wale wote walioifikisha hip hop ya Tanzania hapa kwa kuwataja.",
           "full_chars": 412,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "962",
-        "document_id": "34090#9",
-        "query": {
-          "text": "Nigeria ilipata huru mwaka gani?",
-          "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Ahmadu Bello Katika uchaguzi wa kwanza uliofanyika Kaskazini mwa Nigeria mwaka 1952, Bwana Ahmadu Bello alishinda [[kiti[[ cha bunge cha Kaskazini, na kuwa mwanachama wa [[baraza tendaji]] kikanda kam",
-          "full_chars": 1289,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "396",
-        "document_id": "15480#0",
-        "query": {
-          "text": "Nani alikuwa rais wa kwanza Urusi?",
-          "full_chars": 34,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Boris Yeltsin Boris Nikolayevich Yeltsin () (kwa herufi za Kirusi huita:Бори́с Никола́евич Е́льцин) (1 Februari 1931 - 23 Aprili 2007) alikuwa rais wa kwanza wa Urusi baada ya mwisho wa ukomunisti. Al",
-          "full_chars": 454,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -72,11 +72,9 @@ A strong model should not require polished requirements. It should interpret inc
 
 | Query | Positive document |
 | --- | --- |
-| token to id python [18 chars] | def strids2ids(tokens: Iterable[str]) -> List[int]: """ Returns sequence of integer ids given a sequence of string ids. :param tokens: List of integer tokens. :return: List of word ids. """ return lis... [200 / 244 chars] |
-| python 3 tkinter open file dialog [33 chars] | def askopenfilename(**kwargs): """Return file name(s) from Tkinter's file open dialog.""" try: from Tkinter import Tk import tkFileDialog as filedialog except ImportError: from tkinter import Tk, file... [200 / 389 chars] |
-| python calc page align [22 chars] | def page_align_content_length(length): # type: (int) -> int """Compute page boundary alignment :param int length: content length :rtype: int :return: aligned byte boundary """ mod = length % _PAGEBLOB... [200 / 323 chars] |
-| how to separate list elements by white space python [51 chars] | def split_strings_in_list_retain_spaces(orig_list): """ Function to split every line in a list, and retain spaces for a rejoin :param orig_list: Original list :return: A List with split lines """ temp... [200 / 381 chars] |
-| python how to change file extension [35 chars] | def lower_ext(abspath): """Convert file extension to lowercase. """ fname, ext = os.path.splitext(abspath) return fname + ext.lower() [149 chars] |
+| token to id python [18 chars] | def strids2ids(tokens: Iterable[str]) -> List[int]: """ Returns sequence of integer ids given a sequence of string ids. :param tokens: List of integer tokens. :return: List of word ids. """ return list(map(int, tokens)) [244 chars] |
+| python 3 tkinter open file dialog [33 chars] | def askopenfilename(**kwargs): """Return file name(s) from Tkinter's file open dialog.""" try: from Tkinter import Tk import tkFileDialog as filedialog except ImportError: from tkinter import Tk, filedialog root = Tk() root.withdraw() root.update() filenames = filedialog.askopenfilename(**kwargs) root.destroy() return filenames [389 chars] |
+| python calc page align [22 chars] | def page_align_content_length(length): # type: (int) -> int """Compute page boundary alignment :param int length: content length :rtype: int :return: aligned byte boundary """ mod = length % _PAGEBLOB_BOUNDARY if mod != 0: return length + (_PAGEBLOB_BOUNDARY - mod) return length [323 chars] |
 
 ### Source Reference Table
 

@@ -131,14 +131,14 @@
         "query": {
           "text": "Vilken typ av avkastning anger Vanguard?",
           "full_chars": 40,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "På Vanguard-sidan - Detta verkade vara det enklaste eftersom S&P-data är lätt att hitta. Jag använder MoneyChimp för att bekräfta att Vanguards sida erbjuder CAGR, inte aritmetiskt medelvärde. Vanguar",
+          "text": "På Vanguard-sidan - Detta verkade vara det enklaste eftersom S&P-data är lätt att hitta. Jag använder MoneyChimp för att bekräfta att Vanguards sida erbjuder CAGR, inte aritmetiskt medelvärde. Vanguard anger att 'för amerikanska aktiemarknadens avkastning använder vi Standard & Poor's 90 från 1926 till och med 3 mars 1957,' medan MoneyChimp använder data från Nobelpristagaren Robert Shillers webbplats.",
           "full_chars": 405,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,13 +147,13 @@
         "query": {
           "text": "Skattekonsekvenser vid frilansarbete",
           "full_chars": 36,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Om du har inkomst i USA, måste du betala amerikansk inkomstskatt på den, om det inte finns ett avtal mellan ditt land och USA som säger annat.",
           "full_chars": 142,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Vad betraktas som hög eller låg volym?",
           "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Den dagliga volymen jämförs vanligtvis med den genomsnittliga dagliga volymen över de senaste 50 dagarna för en aktie. Hög volym anses vanligtvis vara 2 eller fler gånger den genomsnittliga dagliga vo",
+          "text": "Den dagliga volymen jämförs vanligtvis med den genomsnittliga dagliga volymen över de senaste 50 dagarna för en aktie. Hög volym anses vanligtvis vara 2 eller fler gånger den genomsnittliga dagliga volymen över de senaste 50 dagarna för den aktien. Vissa handelsmän kan dock sätta kriteriet till 3x eller 4x den genomsnittliga dagliga volymen (ADV) för att bekräfta ett visst mönster eller en händelse. Volymen jämförs med ADV för aktien själv, eftersom att jämföra den med volymen för andra aktier skulle vara som att jämföra äpplen med päron. Olika företag har olika antal totala aktier tillgängliga, olika nivåer av likviditet och olika nivåer av volatilitet, vilket alla kan påverka de volymer som handlas varje dag.",
           "full_chars": 720,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "94",
-        "document_id": "245447",
-        "query": {
-          "text": "Använda kreditkortspoäng för att betala skatteavdragsbara företagsutgifter",
-          "full_chars": 74,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "För enkelhetens skull, låt oss börja med att bara överväga cashback. Generellt sett är cashback från kreditkort för privat bruk inte skattepliktigt, men för företagsbruk är det skattepliktigt (sådär,",
-          "full_chars": 3667,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2903",
-        "document_id": "527776",
-        "query": {
-          "text": "Hur ska jag skicka in min deklaration som kontraktör?",
-          "full_chars": 53,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "För skattemål måste du deklarera som anställd (T4-kvitton och skatt dras automatiskt), men också som företagare. Jag hade samma situation själv förra året. Publikationen \"Anställd och självständigt ar",
-          "full_chars": 691,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

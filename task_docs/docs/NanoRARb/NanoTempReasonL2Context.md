@@ -64,11 +64,9 @@ Models should learn to identify the relevant interval before ranking short answe
 
 | Query | Positive document |
 | --- | --- |
-| Question: Which position did Patricia de Lille hold in Sep, 2015? Facts: Patricia de Lille holds the... [100 / 11,244 chars] | mayor of Cape Town [18 chars] |
-| Question: Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? Facts: Lord Douglas... [100 / 2,981 chars] | Member of the 11th Parliament of the United Kingdom [51 chars] |
-| Question: Who was the head of Russia in Jul, 1999? Facts: Mikhail Kasyanov is the head of the govern... [100 / 71,906 chars] | Sergei Stepashin [16 chars] |
-| Question: Which team did Glynn Snodin play for in Jan, 1992? Facts: Glynn Snodin plays for Heart of... [100 / 5,484 chars] | Leeds United F.C. [17 chars] |
-| Question: Who was the head of Romania in May, 1935? Facts: Take Ionescu is the head of the governmen... [100 / 75,421 chars] | Gheorghe Tătărescu [18 chars] |
+| Question: Which position did Patricia de Lille hold in Sep, 2015? Facts: Patricia de Lille holds the position of Member of Provincial Parliament of Western Cape from Sep, 2010 to May, 2011. Patricia de Lille holds the position of mayor of Cape Town from Jun, 2011 to Oct, 2018. Patricia de Lille holds the position of member of the National Assembly of South Africa from May, 2019 to Dec, 2022. Context: Patricia de LillePatricia de Lille (née Lindt; born 17 February 1951) is a South African politic... [500 / 11,244 chars] | mayor of Cape Town [18 chars] |
+| Question: Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? Facts: Lord Douglas Gordon-Hallyburton holds the position of Member of the 13th Parliament of the United Kingdom from Jul, 1837 to Jun, 1841. Lord Douglas Gordon-Hallyburton holds the position of Member of the 11th Parliament of the United Kingdom from Dec, 1832 to Dec, 1834. Lord Douglas Gordon-Hallyburton holds the position of Member of the 10th Parliament of the United Kingdom from Jan, 1832 to Dec, 1832. Lord Dou... [500 / 2,981 chars] | Member of the 11th Parliament of the United Kingdom [51 chars] |
+| Question: Who was the head of Russia in Jul, 1999? Facts: Mikhail Kasyanov is the head of the government of Russia from May, 2000 to Feb, 2004. Viktor Khristenko is the head of the government of Russia from Feb, 2004 to Mar, 2004. Sergey Kiriyenko is the head of the government of Russia from Mar, 1998 to Aug, 1998. Yegor Gaidar is the head of the government of Russia from Jun, 1992 to Dec, 1992. Dmitry Medvedev is the head of the government of Russia from May, 2012 to Jan, 2020. Viktor Zubkov is... [500 / 71,906 chars] | Sergei Stepashin [16 chars] |
 
 ### Source Reference Table
 

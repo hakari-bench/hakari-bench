@@ -129,15 +129,15 @@
         "query_id": "412",
         "document_id": "Paleocene",
         "query": {
-          "text": "Từ năm 1970 đến năm 1998 đã có một giai đoạn ấm lên làm tăng nhiệt độ khoảng 0,7 độ F, điều này đã g",
+          "text": "Từ năm 1970 đến năm 1998 đã có một giai đoạn ấm lên làm tăng nhiệt độ khoảng 0,7 độ F, điều này đã giúp khởi xướng phong trào báo động về sự nóng lên toàn cầu.",
           "full_chars": 159,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Thế Paleocen ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) hay Palaeocene, được gọi là \"cũ gần đây\", là một kỷ địa chất kéo dài từ khoảng thời gian nào đó. Đây là kỷ đầu tiên của Thế Paleogen",
+          "text": "Thế Paleocen ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) hay Palaeocene, được gọi là \"cũ gần đây\", là một kỷ địa chất kéo dài từ khoảng thời gian nào đó. Đây là kỷ đầu tiên của Thế Paleogene trong Kỷ Đệ Tứ hiện đại. Giống như nhiều kỷ địa chất khác, các lớp đất xác định sự bắt đầu và kết thúc của kỷ này được xác định rõ ràng, nhưng độ tuổi chính xác vẫn chưa chắc chắn. Kỷ Paleocen bao gồm hai sự kiện lớn trong lịch sử Trái Đất. Nó bắt đầu với sự kiện tuyệt chủng hàng loạt vào cuối kỷ Phấn Trắng, được gọi là ranh giới Kỷ Phấn Trắng - Paleogene (K - Pg). Đây là thời kỳ đánh dấu sự diệt vong của các loài khủng long không bay, các loài bò sát biển khổng lồ và nhiều động thực vật khác. Sự tuyệt chủng của khủng long để lại những ngách sinh thái chưa được lấp đầy trên toàn cầu. Kỷ Paleocen kết thúc với sự kiện Tối đa Nhiệt độ Paleocen - Eocen, một khoảng thời gian địa chất ngắn (khoảng 0.2 triệu năm) đặc trưng bởi những thay đổi cực đoan trong khí hậu và chu trình carbon. Tên gọi \"",
           "full_chars": 1144,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -147,65 +147,33 @@
         "query": {
           "text": "Trên thực tế, xu hướng, mặc dù không có ý nghĩa thống kê, đang giảm.",
           "full_chars": 68,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Chu kỳ mặt trời hoặc chu kỳ hoạt động từ tính của mặt trời là sự thay đổi gần như định kỳ 11 năm trong hoạt động của Mặt Trời (bao gồm sự thay đổi trong mức độ bức xạ mặt trời và sự phun trào vật chất",
+          "text": "Chu kỳ mặt trời hoặc chu kỳ hoạt động từ tính của mặt trời là sự thay đổi gần như định kỳ 11 năm trong hoạt động của Mặt Trời (bao gồm sự thay đổi trong mức độ bức xạ mặt trời và sự phun trào vật chất từ mặt trời) và hình thức (thay đổi trong số lượng và kích thước của các đốm mặt trời, các cơn bùng phát và các biểu hiện khác). Chúng đã được quan sát (qua sự thay đổi trong hình thức của mặt trời và qua những thay đổi thấy trên Trái Đất, chẳng hạn như cực quang) trong nhiều thế kỷ. Những thay đổi trên mặt trời gây ra các tác động trong không gian, trong bầu khí quyển và trên bề mặt Trái Đất. Trong khi nó là biến số chi phối trong hoạt động mặt trời, các dao động không định kỳ cũng xảy ra.",
           "full_chars": 696,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "109",
         "document_id": "Sea_level",
         "query": {
-          "text": "Mực nước biển địa phương và khu vực tiếp tục thể hiện sự biến đổi tự nhiên điển hình - ở một số nơi",
+          "text": "Mực nước biển địa phương và khu vực tiếp tục thể hiện sự biến đổi tự nhiên điển hình - ở một số nơi tăng lên và ở những nơi khác giảm xuống.",
           "full_chars": 140,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Mực nước biển trung bình (MSL) (viết tắt đơn giản là mực nước biển) là mức trung bình của bề mặt một hoặc nhiều đại dương của Trái Đất từ đó có thể đo được độ cao như độ cao địa hình. MSL là một loại",
+          "text": "Mực nước biển trung bình (MSL) (viết tắt đơn giản là mực nước biển) là mức trung bình của bề mặt một hoặc nhiều đại dương của Trái Đất từ đó có thể đo được độ cao như độ cao địa hình. MSL là một loại dữ liệu thẳng đứng, một điểm tham chiếu địa chất được chuẩn hóa, được sử dụng, chẳng hạn, làm dữ liệu bản đồ trong bản đồ học và điều hướng hàng hải, hoặc, trong hàng không, là mực nước biển chuẩn mà tại đó áp suất khí quyển được đo để hiệu chỉnh độ cao và, do đó, các mức bay của máy bay. Một tiêu chuẩn mực nước biển trung bình phổ biến và tương đối đơn giản là điểm giữa giữa mực nước thấp trung bình và mực nước cao trung bình tại một vị trí cụ thể. Mực nước biển có thể bị ảnh hưởng bởi nhiều yếu tố và được biết là đã thay đổi rất nhiều qua các thang thời gian địa chất. Việc đo lường cẩn thận các biến đổi trong MSL có thể cung cấp những hiểu biết về sự thay đổi khí hậu đang diễn ra, và sự gia tăng mực nước biển đã được trích dẫn rộng rãi như là bằng chứng của sự nóng lên toàn cầu đang diễn",
           "full_chars": 1089,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "95",
-        "document_id": "Effects_of_global_warming",
-        "query": {
-          "text": "[Các nhà khoa học khí hậu] nói rằng các khía cạnh của trường hợp bão Harvey cho thấy sự nóng lên toà",
-          "full_chars": 136,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Các tác động của sự nóng lên toàn cầu là những thay đổi môi trường và xã hội do (trực tiếp hoặc gián tiếp) khí thải khí nhà kính của con người gây ra. Có sự đồng thuận khoa học rằng biến đổi khí hậu đ",
-          "full_chars": 1376,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "1774",
-        "document_id": "Attribution_of_recent_climate_change",
-        "query": {
-          "text": "Thí nghiệm CLOUD của CERN chỉ kiểm tra một phần ba của một trong bốn yêu cầu cần thiết để đổ lỗi cho",
-          "full_chars": 187,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Việc quy kết biến đổi khí hậu gần đây là nỗ lực xác định một cách khoa học các cơ chế chịu trách nhiệm cho những biến đổi khí hậu gần đây trên Trái Đất, thường được gọi là \"nóng lên toàn cầu\". Nỗ lực",
-          "full_chars": 2045,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

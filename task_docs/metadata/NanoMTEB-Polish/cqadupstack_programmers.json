@@ -124,14 +124,14 @@
         "query": {
           "text": "Czy powinienem nadal inwestować w struktury danych i algorytmy?",
           "full_chars": 63,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Czy implementacja algorytmów poprawia Twoje umiejętności programistyczne? Od jakiegoś czasu uczę się samodzielnie algorytmów i struktur danych i obecnie się tym cieszę. Ilekroć rozumiem algorytm, zwyk",
+          "text": "Czy implementacja algorytmów poprawia Twoje umiejętności programistyczne? Od jakiegoś czasu uczę się samodzielnie algorytmów i struktur danych i obecnie się tym cieszę. Ilekroć rozumiem algorytm, zwykle próbuję zakodować go od zera dla zabawy i zawsze odkryję jakąś logikę, o której nigdy wcześniej nie myślałem. Nie jestem tego pewien, ale zawsze myślę, że kiedy koduję algorytmy, może ćwiczę swoje umiejętności programowania. Czy to prawda? Wiem, że są ważne, ale czy moje umiejętności programowania naprawdę poprawią się dzięki ich kodowaniu?",
           "full_chars": 545,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -140,14 +140,14 @@
         "query": {
           "text": "Nauka Django na przykładzie",
           "full_chars": 27,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Jak poprawnie zrozumieć framework django? Mam przyzwoitą znajomość php, tj. umiem wziąć framework, przeczytać jego kod i jeśli dokumentacja jest odpowiednia, zrozumieć, co robi. Głównym powodem jest t",
+          "text": "Jak poprawnie zrozumieć framework django? Mam przyzwoitą znajomość php, tj. umiem wziąć framework, przeczytać jego kod i jeśli dokumentacja jest odpowiednia, zrozumieć, co robi. Głównym powodem jest to, że php jest w rzeczywistości bardzo łatwym językiem, który jest dosłownie stworzony dla web-dev. Od tygodnia próbuję nauczyć się django, mogę podbić z nim podstawową aplikację, ale jest po prostu zbyt wiele rzeczy, które przechodzą mi przez głowę, np. Wygląda jak magia, powód tego, myślę, że całość interakcja z serwerem jest częścią django, która jest obsługiwana przez twój serwer w php, chcę przeczytać więcej o tej części, tj. jakie wszystkie tematy powinienem omówić, aby to \"zdobyć\". proszę zasugerować też kilka książek",
           "full_chars": 730,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -156,49 +156,17 @@
         "query": {
           "text": "Walidacja licencji i dzwonienie do domu",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Bezpieczna walidacja licencji na oprogramowanie Obecnie pracuję nad produktem (w języku C#), który będzie dostępny do pobrania za darmo, ale wymaga miesięcznej subskrypcji, aby mógł być używany po okr",
+          "text": "Bezpieczna walidacja licencji na oprogramowanie Obecnie pracuję nad produktem (w języku C#), który będzie dostępny do pobrania za darmo, ale wymaga miesięcznej subskrypcji, aby mógł być używany po określonym okresie próbnym. To, co zamierzam zrobić, to pozwolić użytkownikowi zarejestrować konto na naszej stronie i doładować je kredytami w celu korzystania z aplikacji. Jednak jako nowicjusz w dziedzinie licencjonowania napotkałem kilka problemów. * Jak ta logika jest zwykle wdrażana. * Jak podłączyć moją aplikację C# do bazy danych mojej witryny i pobrać wymagane dane (czy okres próbny wygasł, jeśli tak, czy użytkownik ma wystarczającą ilość kredytów). * Jak się upewnić, że jestem w co najmniej 80% (lub więcej) zabezpieczony przed atakującymi, którzy mogą rozpocząć atak MATM w celu zmiany otrzymanych pakietów i uzyskania nieautoryzowanego dostępu do mojego programu. * Jak już słyszałem. Korzystanie z SSL może dać mi pewność, że moja aplikacja łączy się z właściwym adresem, ale jak jeszc",
           "full_chars": 1698,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "89944",
-        "document_id": "121829",
-        "query": {
-          "text": "jeśli używam .NET Framework dla mojej aplikacji, czy muszę coś płacić firmie Microsoft?",
-          "full_chars": 87,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Chcę sprzedać swoje oprogramowanie [aplikacja komputerowa C#], ale utknąłem w licencjonowaniu > **Możliwy duplikat:** > jeśli używam .NET Framework dla mojej aplikacji, czy muszę coś płacić > Microsof",
-          "full_chars": 1291,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "17898",
-        "document_id": "209408",
-        "query": {
-          "text": "Jakie jest ładne wytłumaczenie wskaźników?",
-          "full_chars": 42,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Jaka jest definicja wskaźnika? Koncepcyjnie „wskaźnik” jest po prostu czymś, co „wskazuje” na coś innego; czy ta definicja jest wystarczająca, aby dokładnie powiedzieć, czym jest wskaźnik w językach p",
-          "full_chars": 839,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

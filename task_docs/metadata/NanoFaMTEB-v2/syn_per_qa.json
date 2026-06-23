@@ -128,13 +128,13 @@
         "query": {
           "text": "آیا بینگ راسل در فیلم‌های معروفی مانند 'دود اسلحه' نقش داشته است؟",
           "full_chars": 65,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "بله، بینگ راسل در مجموعه تلویزیونی 'دود اسلحه' که از سال ۱۹۵۶ تا ۱۹۷۴ پخش می‌شد، نقش Ed Shelby را ایفا کرد. این مجموعه یکی از محبوب‌ترین و شناخته‌شده‌ترین سریال‌های وسترن در تاریخ تلویزیون است.",
           "full_chars": 193,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -144,13 +144,13 @@
         "query": {
           "text": "کتاب تحقیق در عملیات پیشرفته در چه انتشاراتی منتشر شده است؟",
           "full_chars": 59,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "این کتاب توسط انتشارات دانشگاه شهید بهشتی منتشر شده است. این انتشارات به عنوان یکی از مراکز معتبر در نشر آثار علمی و پژوهشی در ایران شناخته می‌شود.",
           "full_chars": 147,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -160,49 +160,17 @@
         "query": {
           "text": "آیا این آیه در مکه نازل شده است؟",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "نه، این آیه در مدینه بر پیامبر اسلام صلی الله علیه و آله نازل گردیده است.",
           "full_chars": 73,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
-        }
-      },
-      {
-        "query_id": "test_9",
-        "document_id": "46417",
-        "query": {
-          "text": "چگونه می‌توان نسخه چاپی کتاب رباعیات شیخ شیراز سعدی را تهیه کرد؟",
-          "full_chars": 64,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "نسخه چاپی این کتاب را می‌توانید از طاقچه سفارش دهید. طاقچه یک پلتفرم آنلاین برای خرید کتاب است که امکان دسترسی به کتاب‌های مختلف را برای کاربران فراهم می‌کند.",
-          "full_chars": 158,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "test_161",
-        "document_id": "71250",
-        "query": {
-          "text": "چرا مصر همواره در کانون توجه ایرانیان قرار داشته است؟",
-          "full_chars": 53,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "مصر به دلایل مختلفی همواره در کانون توجه ایرانیان قرار داشته است. این توجه نه تنها به لحاظ تمدنی و فرهنگی بلکه به دلیل جایگاه مهمی که هر دو کشور در خاورمیانه دارند، شکل گرفته است. همچنین اشتراکات اسلا",
-          "full_chars": 266,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

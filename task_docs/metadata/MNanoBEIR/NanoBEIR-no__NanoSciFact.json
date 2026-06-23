@@ -135,16 +135,16 @@
         "query_id": "723",
         "document_id": "5531479",
         "query": {
-          "text": "Ly49Q styrer organiseringen av neutrofilmigrering til betennelsesområder ved å regulere membranraftf",
+          "text": "Ly49Q styrer organiseringen av neutrofilmigrering til betennelsesområder ved å regulere membranraftfunksjoner.",
           "full_chars": 110,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Neutrofiler gjennomgår rask polarisering og rettet bevegelse for å trenge inn i infeksjons- og betennelsesområder. Her viser vi at en inhiberende MHC I-reseptor, Ly49Q, var avgjørende for rask polaris",
+          "text": "Neutrofiler gjennomgår rask polarisering og rettet bevegelse for å trenge inn i infeksjons- og betennelsesområder. Her viser vi at en inhiberende MHC I-reseptor, Ly49Q, var avgjørende for rask polarisering og vevsinfiltrering av neutrofiler. Under stasjonær tilstand hemmet Ly49Q neutrofiladhæsjon ved å forhindre dannelse av fokalkomplekser, sannsynligvis ved å hemme Src- og PI3-kinaser. Imidlertid, i nærvær av betennelsesstimuli, medierte Ly49Q rask neutrofilpolarisering og vevsinfiltrering på en måte som er avhengig av ITIM-domener. Disse motstridende funksjonene synes å være mediert av forskjellig bruk av effektor fosfatase SHP-1 og SHP-2. Ly49Q-avhengig polarisering og migrasjon ble påvirket av Ly49Q-regulering av membranraftfunksjoner. Vi foreslår at Ly49Q er avgjørende for å omstille neutrofiler til deres polariserte morfologi og rask migrasjon ved betennelse, gjennom sin spatiotemporale regulering av membranrafter og raft-assosierte signalmolekyler.",
           "full_chars": 969,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -153,13 +153,13 @@
         "query": {
           "text": "Antiretroviral behandling reduserer forekomsten av tuberkulose i ulike CD4-nivåer.",
           "full_chars": 82,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "BAKGRUNN Humant immunsviktvirus (HIV) infeksjon er den sterkeste risikofaktoren for å utvikle tuberkulose og har bidratt til en økning i forekomsten, spesielt i sub-Sahara-Afrika. I 2010 var det anslå",
+          "text": "BAKGRUNN Humant immunsviktvirus (HIV) infeksjon er den sterkeste risikofaktoren for å utvikle tuberkulose og har bidratt til en økning i forekomsten, spesielt i sub-Sahara-Afrika. I 2010 var det anslått 1,1 millioner nye tilfeller av tuberkulose blant de 34 millioner menneskene som levde med HIV i verden. Antiretroviral behandling har betydelig potensial for å forebygge HIV-relatert tuberkulose. Vi gjennomførte en systematisk gjennomgang av studier som analyserte effekten av antiretroviral behandling på forekomsten av tuberkulose hos voksne med HIV-infeksjon. METODER OG FUNN Vi gjennomførte systematiske søk i PubMed, Embase, African Index Medicus, LILACS og kliniske forsøksregister. Tilfeldig kontrollerte studier, prospektive kohortstudier og retrospektive kohortstudier ble inkludert hvis de sammenlignet forekomsten av tuberkulose basert på antiretroviral behandlingsstatus hos HIV-infiserte voksne i utviklingsland i en median på over 6 måneder. For meta-analysene var det fire kategorie",
           "full_chars": 2211,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -167,51 +167,19 @@
         "query_id": "1021",
         "document_id": "9433958",
         "query": {
-          "text": "Rask oppregulering og høyere basal ekspresjon av interferon-induserte gener reduserer overlevelsen a",
+          "text": "Rask oppregulering og høyere basal ekspresjon av interferon-induserte gener reduserer overlevelsen av granulære celler i hjernen som er infisert med Vest-Nil-virus.",
           "full_chars": 164,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Selv om neuroners følsomhet for mikrobiell infeksjon i hjernen er en viktig faktor for klinisk utfall, er det lite kjent om de molekylære faktorer som styrer denne sårbarheten. Her viser vi at to type",
+          "text": "Selv om neuroners følsomhet for mikrobiell infeksjon i hjernen er en viktig faktor for klinisk utfall, er det lite kjent om de molekylære faktorer som styrer denne sårbarheten. Her viser vi at to typer neuroner fra forskjellige hjerneregioner viste forskjellig tillatelse til replikasjon av flere positive-strengede RNA-virus. Granulær cellene i lillehjernen og kortikale neuroner fra storhjernen har unike medfødte immunprogrammer som gir forskjellig følsomhet for viral infeksjon både ex vivo og in vivo. Ved å introdusere gener i kortikale neuroner som var mer uttrykt i granulær cellene, identifiserte vi tre interferon-stimulerte gener (ISG; Ifi27, Irg1 og Rsad2 (også kjent som Viperin)) som medierte antivirale effekter mot forskjellige nevrotrope virus. Videre fant vi at den epigenetiske tilstanden og miRNA-mediert regulering av ISG korrelerer med forbedret antiviral respons i granulær cellene. Dermed har neuroner fra evolusjonært forskjellige hjerneregioner unike medfødte immunsignature",
           "full_chars": 1072,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971",
-        "document_id": "46695481",
-        "query": {
-          "text": "Primær screening for livmorhalskreft med HPV-detektering har høyere langtidssensitivitet enn konvens",
-          "full_chars": 165,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "BAKGRUNN Screening for livmorhalskreft basert på testing for humant papillomavirus (HPV) øker følsomheten for å oppdage høygradig (grad 2 eller 3) livmorhalskreft forstadier, men om denne økningen rep",
-          "full_chars": 2218,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "180",
-        "document_id": "16966326",
-        "query": {
-          "text": "Å blokkere interaksjonen mellom TDP-43 og respiratorisk kompleks I-proteiner ND3 og ND6 fører til øk",
-          "full_chars": 134,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Genetiske mutasjoner i TAR DNA-binding protein 43 (TARDBP, også kjent som TDP-43) fører til amyotrofisk lateralsklerose (ALS). Økt tilstedeværelse av TDP-43 (kodet av TARDBP) i cytoplasma er et fremtr",
-          "full_chars": 1254,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

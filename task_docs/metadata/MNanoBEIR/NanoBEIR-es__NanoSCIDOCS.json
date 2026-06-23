@@ -177,13 +177,13 @@
         "query": {
           "text": "Convertidor elevador multinivel CC-CC innovador",
           "full_chars": 47,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Los conversores de fuente de voltaje multinivel están emergiendo como una nueva generación de opciones de conversores de potencia para aplicaciones de alta potencia. Los conversores de fuente de volta",
+          "text": "Los conversores de fuente de voltaje multinivel están emergiendo como una nueva generación de opciones de conversores de potencia para aplicaciones de alta potencia. Los conversores de fuente de voltaje multinivel generalmente sintetizan la onda de voltaje en escalera a partir de varios niveles de voltajes de condensadores de corriente continua. Una de las principales limitaciones de los conversores multinivel es el desequilibrio de voltaje entre los diferentes niveles. Las técnicas para equilibrar el voltaje entre los diferentes niveles generalmente implican el clampeo de voltaje o el control de carga de condensadores. Existen varias formas de implementar el equilibrio de voltaje en los conversores multinivel. Sin considerar los conversores tradicionales acoplados magnéticamente, este artículo presenta tres conversores de fuente de voltaje multinivel desarrollados recientemente: 1) diodo-clamp, 2) condensadores voladores, y 3) inversores en cascada con fuentes de corriente continua se",
           "full_chars": 1128,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -191,15 +191,15 @@
         "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
         "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
         "query": {
-          "text": "Aprendizaje rápido de campos aleatorios de Markov gaussianos esparcidos utilizando la factorización",
+          "text": "Aprendizaje rápido de campos aleatorios de Markov gaussianos esparcidos utilizando la factorización de Cholesky",
           "full_chars": 111,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Sure, please provide the English document text that you need translated into Spanish.",
           "full_chars": 85,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -209,49 +209,17 @@
         "query": {
           "text": "Síntesis de Texturas mediante Redes Neuronales Convolucionales",
           "full_chars": 62,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "En este trabajo, investigamos el efecto de la profundidad de las redes convolucionales en su precisión en el contexto de reconocimiento de imágenes a gran escala. Nuestra principal contribución es una",
+          "text": "En este trabajo, investigamos el efecto de la profundidad de las redes convolucionales en su precisión en el contexto de reconocimiento de imágenes a gran escala. Nuestra principal contribución es una evaluación exhaustiva de redes de profundidad creciente, que demuestra que una mejora significativa sobre las configuraciones del estado del arte puede lograrse aumentando la profundidad a 16-19 capas de peso. Estos hallazgos fueron la base de nuestra participación en el ImageNet Challenge 2014, donde nuestro equipo obtuvo el primer y segundo lugar en las categorías de localización y clasificación, respectivamente. También mostramos que nuestras representaciones se generalizan bien a otros conjuntos de datos, donde obtenemos resultados de vanguardia. Es importante destacar que hemos puesto a disposición del público nuestros dos modelos ConvNet de mejor rendimiento para facilitar futuras investigaciones sobre el uso de representaciones visuales profundas en visión por computadora.",
           "full_chars": 991,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
-        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
-        "query": {
-          "text": "Antena plana de banda ancha de anillo con polarización circular para sistema RFID",
-          "full_chars": 81,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "En este artículo, se propone una técnica de alimentación con una tira meandrante horizontal (HMS) para lograr una buena adaptación de impedancia y patrones de radiación simétricos en el plano frontal",
-          "full_chars": 1522,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
-        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
-        "query": {
-          "text": "Diseño de un monitor avanzado digital de frecuencia cardíaca con componentes electrónicos básicos",
-          "full_chars": 97,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "En este artículo, presentamos el diseño y desarrollo de un nuevo dispositivo integrado para medir la frecuencia cardíaca utilizando la yema del dedo, con el fin de mejorar la estimación de la frecuenc",
-          "full_chars": 1322,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

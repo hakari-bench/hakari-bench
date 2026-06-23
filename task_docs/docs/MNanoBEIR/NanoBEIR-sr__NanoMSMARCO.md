@@ -108,11 +108,9 @@ rerankers that distinguish answer passages from topical passages.
 
 | Query | Positive document |
 | --- | --- |
-| Šta je sindrom ruminacije? [26 chars] | Ruminacioni sindrom. Ruminacioni sindrom, takođe poznat kao Mericizam, je vrsta poremećaja ishrane koji nije drugačije određen, a uzrokuje regurgitaciju hrane. Iako nije prepoznat kao specifični porem... [200 / 285 chars] |
-| Ko je pevao pesmu "Here I Go Again"? [36 chars] | Za druge upotrebe, pogledajte Here I Go Again (razvrstavanje). "Here I Go Again" je pesma britanskog rok benda Whitesnake. Prvobitno objavljena na njihovom albumu iz 1982. godine Saints & Sinners, pes... [200 / 342 chars] |
-| Koga Kameron Bojs glumi u seriji "Liv i Madi"? [46 chars] | Spremite se na prave hah-ahe, ljudi. U EKSKLUZIVNOM prethodnom prikazu epizode "Liv i Madi" od 19. aprila pod nazivom "Maturska večer-A-Runi". Naravno. U urnebesnom isečku vidimo Džesijevu zvezdu Kame... [200 / 315 chars] |
-| Gde se nalazi većina velikih pustinja na Zemlji? [48 chars] | Ostale pustinje na Zemlji nalaze se izvan polarnih područja. Najveća je Sahara, suptropska pustinja u severnoj Africi. [118 chars] |
-| Značenje bakra za policajca [27 chars] | Na osnovu trenutnih nalaza, čini se da je reč "copper" (policajac, doslovno "onaj koji hapsi") starija od reč "cop" (bilo kao glagol u značenju "hapsiti" ili kao imenica za policajca). Sasvim je moguć... [200 / 333 chars] |
+| Šta je sindrom ruminacije? [26 chars] | Ruminacioni sindrom. Ruminacioni sindrom, takođe poznat kao Mericizam, je vrsta poremećaja ishrane koji nije drugačije određen, a uzrokuje regurgitaciju hrane. Iako nije prepoznat kao specifični poremećaj ishrane u DSM-IV, određeni parametri su definisani za dijagnozu ovog poremećaja. [285 chars] |
+| Ko je pevao pesmu "Here I Go Again"? [36 chars] | Za druge upotrebe, pogledajte Here I Go Again (razvrstavanje). "Here I Go Again" je pesma britanskog rok benda Whitesnake. Prvobitno objavljena na njihovom albumu iz 1982. godine Saints & Sinners, pesma je ponovo snimljena za njihov istoimeni album iz 1987. godine Whitesnake. Iste godine pesma je ponovo snimljena u novoj radio-miks verziji. [342 chars] |
+| Koga Kameron Bojs glumi u seriji "Liv i Madi"? [46 chars] | Spremite se na prave hah-ahe, ljudi. U EKSKLUZIVNOM prethodnom prikazu epizode "Liv i Madi" od 19. aprila pod nazivom "Maturska večer-A-Runi". Naravno. U urnebesnom isečku vidimo Džesijevu zvezdu Kamerona Bojsa kako prelazi u drugi Diznijev šou kako bi upoznao Madi (Šelbi Vulfert). Njegov lik je, hm, ekscentričan! [315 chars] |
 
 ### Public Sources
 

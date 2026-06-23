@@ -132,13 +132,13 @@
         "query": {
           "text": "Si può ridere delle proprie battute?",
           "full_chars": 36,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "È strano ridere delle proprie battute?",
           "full_chars": 38,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -148,13 +148,13 @@
         "query": {
           "text": "Qual è la bugia più ingegnosa che hai mai raccontato?",
           "full_chars": 53,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Qual è la bugia più elaborata che tu abbia mai raccontato?",
           "full_chars": 58,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -164,49 +164,17 @@
         "query": {
           "text": "Perché Quora suggerisce spesso risposte nel mio feed che criticano Donald Trump?",
           "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Perché su Quora sembrano esserci solo risposte soggettive e di parte riguardo alle domande su Donald Trump?",
           "full_chars": 107,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "Come posso diventare più forte fisicamente?",
-          "full_chars": 43,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Come posso diventare più forte fisicamente?",
-          "full_chars": 43,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "Come funziona un satellite quantistico?",
-          "full_chars": 39,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Come funziona un satellite quantistico e quali potrebbero essere i suoi principali utilizzi?",
-          "full_chars": 92,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

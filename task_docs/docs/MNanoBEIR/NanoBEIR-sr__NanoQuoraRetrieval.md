@@ -67,8 +67,6 @@ A model targeting this task should prioritize fine-grained question intent match
 | Da li je u redu da se smeješ svojim šalama? [43 chars] | Je li čudno da se smejem svojim šalama? [39 chars] |
 | Koja je najbolja laž koju ste ikada ispricali? [46 chars] | Koja je najbolje osmišljena laž koju ste ikada ispričali? [57 chars] |
 | Zašto Quora često predlaže odgovore u mom feedu koji omalovažavaju Donalda Trumpa? [82 chars] | Zašto se čini da Quora ima samo subjektivne, pristrasne odgovore na pitanja o Donaldu Trampu? [93 chars] |
-| Kako mogu da postanem fizički jak? [34 chars] | Kako da postanem fizički jak? [29 chars] |
-| Kako će raditi kvantni satelit? [31 chars] | Kako funkcioniše kvantni satelit i koje bi bile njegove osnovne primene? [72 chars] |
 
 ### Source Reference Table
 

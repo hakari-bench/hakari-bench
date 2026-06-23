@@ -168,83 +168,51 @@
         "query_id": "587",
         "document_id": "Obstentrics_Williams_7884",
         "query": {
-          "text": "A 33-year-old G2P1 woman presents to the office because of poor diabetic control. She is currently a",
+          "text": "A 33-year-old G2P1 woman presents to the office because of poor diabetic control. She is currently at 18 weeks gestation and admits to having poor control of her type 1 diabetes before becoming pregnant. Her family history is non-contributory. The physical examination shows a pregnant woman with a fundal height of 20 cm (7.9 in). An abdominal ultrasound is ordered. What is the most likely congenital abnormality shown on the ultrasound?",
           "full_chars": 439,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Malformations. he incidence of major malformations in women with type 1 diabetes is at least doubled and approximates 11 percent Qovanovic, 2015). These account for almost half of perinatal deaths in",
+          "text": "Malformations. he incidence of major malformations in women with type 1 diabetes is at least doubled and approximates 11 percent Qovanovic, 2015). These account for almost half of perinatal deaths in diabetic pregnancies. As shown in Table 57-6, cardiovascular malformations accounted for more than half of the anomalies. In a cohort study of more than 2 million births in Canada, the risk of an isolated cardiac defect was ivefold higher in women with type 1 diabetes (Uu, 2013). he caudal regression sequence, described in Chapter 10 (p. 196), is a rare malformation frequently associated with maternal diabetes (Garne, 2012).",
           "full_chars": 628,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "1117",
         "document_id": "Anatomy_Gray_2246",
         "query": {
-          "text": "A 68-year-old man presents with difficulty breathing for the last 3 hours. Upon asking about other s",
+          "text": "A 68-year-old man presents with difficulty breathing for the last 3 hours. Upon asking about other symptoms, he mentions that he had a cough for the last 4 months which he attributes to his smoking. He says he had frequent nasal stuffiness and headaches over the last 3 months, for which he takes over-the-counter cold medications and analgesics. Over the last 2 months, he often felt that his face was mildly swollen, especially in the morning hours, but he did not consider it to be anything seriou",
           "full_chars": 986,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "The optic nerve [II] is not a true cranial nerve, but rather an extension of the brain carrying afferent fibers from the retina of the eyeball to the visual centers of the brain. The optic nerve is su",
+          "text": "The optic nerve [II] is not a true cranial nerve, but rather an extension of the brain carrying afferent fibers from the retina of the eyeball to the visual centers of the brain. The optic nerve is surrounded by the cranial meninges, including the subarachnoid space, which extends as far forward as the eyeball. Any increase in intracranial pressure therefore results in increased pressure in the subarachnoid space surrounding the optic nerve. This may impede venous return along the retinal veins, causing edema of the optic disc (papilledema), which can be seen when the retina is examined using an ophthalmoscope. The optic nerve leaves the orbit through the optic canal (Fig. 8.101). It is accompanied in the optic canal by the ophthalmic artery. The oculomotor nerve [III] leaves the anterior surface of the brainstem between the midbrain and the pons. It passes forward in the lateral wall of the cavernous sinus.",
           "full_chars": 921,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "1010",
         "document_id": "InternalMed_Harrison_14074",
         "query": {
-          "text": "A 25-year-old woman presents to her primary care provider for evaluation of a \"painful mass in my le",
+          "text": "A 25-year-old woman presents to her primary care provider for evaluation of a \"painful mass in my left groin.\" She says that her symptoms began 4 days ago as a painful mass that slowly enlarged, ruptured, and ulcerated. However, she denies fever, chills, dysuria, or hematuria. Three weeks prior to her current symptoms she noted a small, painless ulcer on her labium majorum that resolved after a few days. She admits to having unprotected sex with a male partner a month ago while she was traveling",
           "full_chars": 796,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "lympHogranUloma venereUm C. trachomatis serovars L1, L2, and L3 cause LGV, an invasive systemic STD. The peak inci dence of LGV corresponds with the age of greatest sexual activity: the second and thi",
+          "text": "lympHogranUloma venereUm C. trachomatis serovars L1, L2, and L3 cause LGV, an invasive systemic STD. The peak inci dence of LGV corresponds with the age of greatest sexual activity: the second and third decades of life. The worldwide incidence of LGV is falling, but the disease is still endemic and a major cause of morbidity in parts of Asia, Africa, South America, and the Caribbean. LGV is rare in industrialized countries; for more than a decade, the reported incidence in the United States has been only 0.1 case per 100,000 population. In the Bahamas, an apparent outbreak of LGV was described in association with a concurrent increase in heterosexual infection with HIV. Reports of outbreaks with the newly identified variant L2b in Europe, Australia, and the United States indicate that LGV is becoming more prevalent among MSM. These cases have usually presented as hemorrhagic proctocolitis in HIV-positive men. More widespread use of NAATs for identification of rectal infections may",
           "full_chars": 995,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "708",
-        "document_id": "InternalMed_Harrison_23361",
-        "query": {
-          "text": "A one-week-old boy presents with yellow sclerae, severe lethargy, and decreased muscle tone. His mot",
-          "full_chars": 637,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Crigler-Najjar Syndrome, Type I CN-I is characterized by striking uncon jugated hyperbilirubinemia of about 340–765 μmol/L (20–45 mg/dL) that appears in the neonatal period and persists for life. Othe",
-          "full_chars": 997,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "219",
-        "document_id": "Pathology_Robbins_1526",
-        "query": {
-          "text": "A 4-year-old girl is brought to the emergency department with a persistent cough, fever, and vomitin",
-          "full_chars": 888,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Mendelian Disorders: Diseases Caused by Single-Gene Defects251 abnormally viscid mucous secretions that block the airways and the pancreatic ducts which in turn are responsible for the two most import",
-          "full_chars": 845,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -67,8 +67,6 @@ Models need stronger temporal knowledge and better date-conditioned retrieval be
 | Which position did Patricia de Lille hold in Sep, 2015? [55 chars] | mayor of Cape Town [18 chars] |
 | Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833? [69 chars] | Member of the 11th Parliament of the United Kingdom [51 chars] |
 | Who was the head of Russia in Jul, 1999? [40 chars] | Sergei Stepashin [16 chars] |
-| Which team did Glynn Snodin play for in Jan, 1992? [50 chars] | Leeds United F.C. [17 chars] |
-| Who was the head of Romania in May, 1935? [41 chars] | Gheorghe Tătărescu [18 chars] |
 
 ### Source Reference Table
 

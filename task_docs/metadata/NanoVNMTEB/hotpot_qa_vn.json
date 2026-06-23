@@ -179,31 +179,31 @@
         "query_id": "5adf37a95542995ec70e8f97",
         "document_id": "32971919",
         "query": {
-          "text": "Đội bóng rổ nam đại học VCU Rams 2011-12, dẫn dắt bởi huấn luyện viên trưởng năm thứ ba Shaka Smart,",
+          "text": "Đội bóng rổ nam đại học VCU Rams 2011-12, dẫn dắt bởi huấn luyện viên trưởng năm thứ ba Shaka Smart, đại diện cho trường Đại học Virginia Commonwealth được thành lập vào năm nào?",
           "full_chars": 178,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Đội bóng rổ nam VCU Rams mùa 2011–12 Đội bóng rổ nam đại học VCU Rams 2011-12 đại diện cho trường Đại học Virginia Commonwealth trong giải bóng rổ NCAA Division I mùa giải 2011-12. Đây là mùa thứ 44 đ",
+          "text": "Đội bóng rổ nam VCU Rams mùa 2011–12 Đội bóng rổ nam đại học VCU Rams 2011-12 đại diện cho trường Đại học Virginia Commonwealth trong giải bóng rổ NCAA Division I mùa giải 2011-12. Đây là mùa thứ 44 đội bóng rổ nam của trường tham gia thi đấu. Dưới sự dẫn dắt của huấn luyện viên trưởng năm thứ ba Shaka Smart, đội bóng đang cố gắng bước vào vòng bán kết sau khi có thành tích tốt ở các trận chung kết trước đó. Được dự đoán sẽ không thể có được vị trí cao trong bảng xếp hạng thường niên, đội đã hoàn tất một vị trí thứ hai với tỉ lệ thắng thua là 3-5 tại hội nghị này và giành chiến thắng trong Giải vô địch Hội nghị Bóng rổ Nam CAA năm 2012 trước Drexel với tỷ số cuối cùng là 59–56 để giành quyền vào vòng đấu NCAA lần thứ mười một của họ. Đây cũng là lần đầu tiên kể từ năm học 84-85 mà đội liên tiếp đủ điều kiện tham gia tranh tài ở giải đấu NCAA.",
           "full_chars": 856,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "5a7a0e1e5542990783324e1a",
         "document_id": "2333138",
         "query": {
-          "text": "Con chó mà tổ tiên gồm cả Gordon và Irish Setters là giống chó gì: Manchester Terrier hay Scotch Col",
+          "text": "Con chó mà tổ tiên gồm cả Gordon và Irish Setters là giống chó gì: Manchester Terrier hay Scotch Collie?",
           "full_chars": 104,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Chó Manchester Terrier Chó Manchester Terrier là một giống chó thuộc họ chó săn có lông trơn.",
           "full_chars": 94,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -213,49 +213,17 @@
         "query": {
           "text": "Bộ phim nào được viết kịch bản và đạo diễn bởi Joby Harold với nhạc nền của Samuel Sim?",
           "full_chars": 87,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Samuel Sim Samuel Sim là một nhạc sĩ phim và truyền hình. Anh nhận được sự công nhận đầu tiên với điểm số đoạt giải cho bộ phim truyền hình \"Dunkirk\" của BBC. Từ đó, anh đã viết âm nhạc cho nhiều bộ p",
+          "text": "Samuel Sim Samuel Sim là một nhạc sĩ phim và truyền hình. Anh nhận được sự công nhận đầu tiên với điểm số đoạt giải cho bộ phim truyền hình \"Dunkirk\" của BBC. Từ đó, anh đã viết âm nhạc cho nhiều bộ phim và chương trình truyền hình khác nhau, gần đây nhất là ghi điểm cho bộ phim \"Awake\" của The Weinstein Company và loạt phim truyền hình BBC/HBO \"Nhà của Saddam\". Âm nhạc mới nhất của anh ấy được ca ngợi là bản nhạc nền cho Home Fires. Bản ghi âm Home Fires (Nhạc từ loạt bài hát) được phát hành vào ngày 6 tháng 5 năm 2016 bởi Sony Classical Records.",
           "full_chars": 554,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae738f75542991bbc9761c4",
-        "document_id": "1756392",
-        "query": {
-          "text": "Năm nào thì anh trai của cầu thủ được đội Washington Redskins chọn ở lượt thứ nhất trong giải tuyển",
-          "full_chars": 124,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Ba-lê Rodney \"Boss\" Bailey (sinh ngày 14 tháng 10 năm 1979) là một cựu cầu thủ bóng đá Mỹ từng thi đấu ở vị trí hậu vệ trong giải bóng đá quốc gia NFL. Anh được tuyển chọn bởi đội Detroit Lions trong",
-          "full_chars": 389,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5a877e5d5542993e715abf7d",
-        "document_id": "11835533",
-        "query": {
-          "text": "Kịch bản gia có tác phẩm \"Evolution\" đã cùng viết một bộ phim mà Nicolas Cage và Téa Leoni đóng vai",
-          "full_chars": 112,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "David Weissman David Weissman là một biên kịch và đạo diễn. Các bộ phim của ông bao gồm \"The Family Man\" (năm 2000), \"Evolution\" (năm 2001) và \"\"When in Rome\"\" (năm 2010).",
-          "full_chars": 172,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

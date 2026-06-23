@@ -52,9 +52,7 @@ Strong models should preserve near-duplicate recognition while improving paraphr
 | --- | --- |
 | Est-ce que c'est permis de rire de ses propres blagues ? [56 chars] | Est-ce que c'est bizarre de rire de mes propres blagues ? [57 chars] |
 | Quel est le plus gros mensonge que tu aies jamais raconté ? [59 chars] | Quel est le plus beau mensonge que vous ayez jamais raconté ? [61 chars] |
-| Pourquoi Quora suggère-t-il fréquemment des réponses dans mon fil d'actualité qui critiquent Donald... [100 / 107 chars] | Pourquoi Quora ne propose-t-il que des réponses partisanes aux questions sur Donald Trump ? [91 chars] |
-| Comment renforcer ma condition physique ? [41 chars] | Comment puis-je améliorer ma condition physique ? [49 chars] |
-| Comment fonctionne un satellite quantique ? [43 chars] | Comment fonctionne un satellite quantique et quelles seraient ses principales utilisations ? [92 chars] |
+| Pourquoi Quora suggère-t-il fréquemment des réponses dans mon fil d'actualité qui critiquent Donald Trump ? [107 chars] | Pourquoi Quora ne propose-t-il que des réponses partisanes aux questions sur Donald Trump ? [91 chars] |
 
 ## Public Sources
 

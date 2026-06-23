@@ -126,8 +126,6 @@ specifically on question equivalence.
 | Er det greit å le av egne vitser? [33 chars] | Er det rart å le av mine egne vitser? [37 chars] |
 | Hva er den mest geniale løgn du noen gang har fortalt? [54 chars] | Hva er den mest gjennomtenkte løgnen du noen gang har fortalt? [62 chars] |
 | Hvorfor fremmer Quora ofte svar i min feed som kritiserer Donald Trump? [71 chars] | Hvorfor virker det som om Quora bare har subjektive og partiske svar på spørsmål om Donald Trump? [97 chars] |
-| Hvordan kan jeg bli sterkere fysisk? [36 chars] | Hvordan blir jeg fysisk sterk? [30 chars] |
-| Hvordan fungerer en kvantum-satellitt? [38 chars] | Hvordan fungerer en Quantum-satellitt, og hva er noen av dens hovedbruk? [72 chars] |
 
 ### Public Sources
 

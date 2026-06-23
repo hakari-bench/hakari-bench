@@ -131,14 +131,14 @@
         "query": {
           "text": "Dove si terrà la Final Four quest'anno?",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "L'80ª edizione del Torneo di Pallacanestro Maschile della Divisione I della NCAA 2018 è stato un torneo a eliminazione diretta con 68 squadre per determinare il campione nazionale di pallacanestro del",
+          "text": "L'80ª edizione del Torneo di Pallacanestro Maschile della Divisione I della NCAA 2018 è stato un torneo a eliminazione diretta con 68 squadre per determinare il campione nazionale di pallacanestro della Divisione I della NCAA per la stagione 2017-18. Il torneo è iniziato il 13 marzo 2018 e si è concluso con la finale il 2 aprile all'Alamodome di San Antonio, Texas.",
           "full_chars": 367,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "L'incubo prima di Natale è stato originariamente un film Disney?",
           "full_chars": 64,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Il film \"Nightmare Before Christmas\" ha avuto origine da una poesia scritta da Tim Burton nel 1982, mentre lavorava come animatore presso la Walt Disney Feature Animation. Grazie al successo di \"Vince",
+          "text": "Il film \"Nightmare Before Christmas\" ha avuto origine da una poesia scritta da Tim Burton nel 1982, mentre lavorava come animatore presso la Walt Disney Feature Animation. Grazie al successo di \"Vincent\" nello stesso anno, la Walt Disney Studios iniziò a considerare la possibilità di sviluppare \"Nightmare Before Christmas\" come cortometraggio o speciale televisivo di 30 minuti. Nel corso degli anni, Burton tornò più volte a questo progetto, e nel 1990, strinse un accordo di sviluppo con Disney. La produzione iniziò a luglio 1991 a San Francisco; Disney distribuì il film sotto l'etichetta Touchstone Pictures, poiché lo studio riteneva che il film fosse \"troppo oscuro e spaventoso per i bambini\".[4]",
           "full_chars": 706,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Perché l'Angelo del Nord si trova lì?",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Secondo Gormley, il significato dell'angelo era triplice: innanzitutto, per indicare che sotto il sito della sua costruzione, i minatori di carbone avevano lavorato per due secoli; in secondo luogo, p",
+          "text": "Secondo Gormley, il significato dell'angelo era triplice: innanzitutto, per indicare che sotto il sito della sua costruzione, i minatori di carbone avevano lavorato per due secoli; in secondo luogo, per comprendere la transizione dall'era industriale a quella dell'informazione, e infine, per fungere da punto di riferimento per le nostre speranze e paure in evoluzione.",
           "full_chars": 370,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test826",
-        "document_id": "doc29757",
-        "query": {
-          "text": "Dove era originariamente stabilito il compromesso dei tre quinti nella Costituzione degli Stati Unit",
-          "full_chars": 102,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Il Compromesso dei Tre Quinti è contenuto nell'Articolo 1, Sezione 2, Clausola 3 della Costituzione degli Stati Uniti, che recita:",
-          "full_chars": 130,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
-        }
-      },
-      {
-        "query_id": "test2079",
-        "document_id": "doc72413",
-        "query": {
-          "text": "Chi canta \"Somebody's Watching Me\" con Michael Jackson?",
-          "full_chars": 55,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "\"Somebody's Watching Me\" è un brano del cantante americano Rockwell, tratto dal suo album di debutto omonimo Somebody's Watching Me (1984). È stato pubblicato come primo singolo di Rockwell e singolo",
-          "full_chars": 384,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -167,83 +167,51 @@
         "query_id": "test-health-ppelfhwbpba-con02a",
         "document_id": "test-health-ppelfhwbpba-con02b",
         "query": {
-          "text": "Tegenstand tegen abortus provocatus in late fase maakt deel uit van een strategie die erop gericht i",
+          "text": "Tegenstand tegen abortus provocatus in late fase maakt deel uit van een strategie die erop gericht is abortus in het algemeen te verbieden. Abortus provocatus in late fase vormt een klein percentage van alle abortussen, maar vanuit medisch en psychologisch oogpunt zouden ze het minst controversieel moeten zijn. De reden voor deze focus is dat abortussen in late fase het meest evident onaangenaam zijn, omdat foetussen in late fase meer op baby's lijken dan embryo's of foetussen in een eerder ontw",
           "full_chars": 804,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "zwangerschap filosofie ethiek leven gezin huis zou partiële geboorte-abortussen verbieden Hoewel veel mensen die tegen partiële geboorte-abortus zijn, ook tegen abortus in het algemeen zijn, is er gee",
+          "text": "zwangerschap filosofie ethiek leven gezin huis zou partiële geboorte-abortussen verbieden Hoewel veel mensen die tegen partiële geboorte-abortus zijn, ook tegen abortus in het algemeen zijn, is er geen noodzakelijk verband, aangezien partiële geboorte-abortus een bijzonder gruwelijke vorm van abortus is. Dit komt om de reeds uitgelegde redenen: het omvat een opzettelijke, moorddadige fysieke aanval op een halfgeboren baby, van wie we zeker weten dat hij pijn zal voelen en zal lijden als gevolg. We accepteren dat er een legitiem medisch debat bestaat over de vraag of embryo's en vroegere foetussen pijn voelen; in dit geval is er geen dergelijk debat, en daarom is partiële geboorte-abortus uniek gruwelijk en uniek onrechtvaardig.",
           "full_chars": 738,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "test-environment-chbwtlgcc-con03a",
         "document_id": "test-environment-chbwtlgcc-con03b",
         "query": {
-          "text": "Nieuwe technologie heeft de wereld herhaaldelijk revolutionair veranderd door monumentale uitvinding",
+          "text": "Nieuwe technologie heeft de wereld herhaaldelijk revolutionair veranderd door monumentale uitvindingen als landbouw, staal, antibiotica en microchips. En naarmate de technologie verbeterde, verbeterde ook het tempo waarin de technologie zich verbeterde. Er wordt voorspeld dat er tussen 2000 en 2050 32 keer meer verandering zal zijn dan tussen 1950 en 2000. Te midden hiervan zullen veel grote geesten zich richten op emissiereductie en klimaatregelingstechnologieën. Dus, zelfs als de meest ernstig",
           "full_chars": 1095,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Climate House gelooft dat we te laat zijn met de wereldwijde klimaatverandering Technologische verbeteringen zullen vrijwel zeker worden ontwikkeld voor degenen die het zich kunnen veroorloven (zoals",
+          "text": "Climate House gelooft dat we te laat zijn met de wereldwijde klimaatverandering Technologische verbeteringen zullen vrijwel zeker worden ontwikkeld voor degenen die het zich kunnen veroorloven (zoals de meeste technologie). Klimaatverandering zal echter de grootste gevolgen hebben voor arme landen die zich geen mitigatie kunnen veroorloven. Mogelijk betekent het vermogen om de rijken te beschermen niet dat we niet te laat zijn met de wereldwijde klimaatverandering.",
           "full_chars": 470,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "test-environment-aeghhgwpe-pro04a",
         "document_id": "test-environment-aeghhgwpe-pro04b",
         "query": {
-          "text": "Vegetarisch eten vermindert het risico op voedselvergiftiging. Bijna alle gevaarlijke vormen van voe",
+          "text": "Vegetarisch eten vermindert het risico op voedselvergiftiging. Bijna alle gevaarlijke vormen van voedselvergiftiging worden via vlees of eieren overgedragen. Zo worden Campylobacter-bacteriën, de meest voorkomende oorzaak van voedselvergiftiging in Engeland, meestal aangetroffen in rauw vlees en gevogelte, niet-gepasteuriseerde melk en onbehandeld water. Salmonella komt van rauw vlees, gevogelte en zuivelproducten en de meeste gevallen van Escherichia coli (E-coli) voedselvergiftiging treden op",
           "full_chars": 945,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "dieren milieu algemene gezondheid gezondheid algemeen gewicht filosofie ethiek Voedselveiligheid en -hygiëne zijn zeer belangrijk voor iedereen, en overheden moeten maatregelen nemen om hoge standaard",
+          "text": "dieren milieu algemene gezondheid gezondheid algemeen gewicht filosofie ethiek Voedselveiligheid en -hygiëne zijn zeer belangrijk voor iedereen, en overheden moeten maatregelen nemen om hoge standaarden te garanderen, met name in restaurants en andere plaatsen waar mensen hun voedsel vandaan halen. Maar voedselvergiftiging kan overal voorkomen. \"Mensen geven niet graag toe dat de bacteriën uit hun eigen huis zouden kunnen komen\" [1], en hoewel vlees bijzonder kwetsbaar is voor besmetting, zijn er bacteriën die via groenten kunnen worden overgedragen, bijvoorbeeld Listeria monocytogenes via rauwe groenten. [2] Bijna driekwart van de zoönotische transmissies wordt veroorzaakt door pathogenen van wilde dieren; zelfs sommige die door vee zouden kunnen zijn veroorzaakt, zoals vogelgriep, zouden evengoed van wilde dieren kunnen komen. Er is weinig dat we kunnen doen aan de overdracht van dergelijke ziekten, behalve door nauw contact te verminderen. Een overstap naar vegetarisme kan dergelijk",
           "full_chars": 1743,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test-sport-tshbmlbscac-pro02a",
-        "document_id": "test-sport-tshbmlbscac-pro02b",
-        "query": {
-          "text": "Botsingen horen bij het spel. Ten eerste maken botsingen deel uit van de traditie van honkbal. Ze ma",
-          "full_chars": 2371,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Team Sports House vindt dat de Major League Baseball botsingen moet blijven toestaan Botsingen maken veel minder deel uit van het spel dan veel mensen denken. Het idee dat botsingen al eeuwenlang deel",
-          "full_chars": 1658,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test-free-speech-debate-magghbcrg-pro01a",
-        "document_id": "test-free-speech-debate-magghbcrg-pro01b",
-        "query": {
-          "text": "Lokale radio geeft een stem aan het volk in plaats van de stemmen van de machtigen op te leggen. De",
-          "full_chars": 1396,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Media en goed bestuur geloven dat community radio goed is Community radio kan inderdaad de vele wonderlijke dingen doen die Prop ervan lijkt te verwachten. Het kan ook min of meer alles anders doen. A",
-          "full_chars": 597,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

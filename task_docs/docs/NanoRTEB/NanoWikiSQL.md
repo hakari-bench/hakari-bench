@@ -64,11 +64,9 @@ Models should encode the relation between question wording, schema columns, row 
 
 | Query | Positive document |
 | --- | --- |
-| tell the final for lindsey graham {'header': ['State (linked to summaries below)', 'Senator', 'Party... [100 / 2,038 chars] | SELECT Result FROM table WHERE Senator = Lindsey Graham [55 chars] |
-| what's the total w–l where player is boro jovanović category:articles with hcards {'header': ['Playe... [100 / 1,190 chars] | SELECT Total W–L FROM table WHERE Player = Boro Jovanović Category:Articles with hCards [87 chars] |
-| What was the date of the race in Misano? {'header': ['No', 'Date', 'Round', 'Circuit', 'Pole Positio... [100 / 1,742 chars] | SELECT Date FROM table WHERE Circuit = Misano [45 chars] |
-| What was the record at week 7 {'header': ['Week', 'Date', 'Opponent', 'Result', 'Kickoff [a ]', 'Ven... [100 / 1,687 chars] | SELECT Record FROM table WHERE Week = 7 [39 chars] |
-| what's the original air date with title "hell" {'header': ['No. in series', 'No. in season', 'Title'... [100 / 1,341 chars] | SELECT Original air date FROM table WHERE Title = "Hell" [56 chars] |
+| tell the final for lindsey graham {'header': ['State (linked to summaries below)', 'Senator', 'Party', 'Electoral history', 'Result', 'Candidates Winning candidate in bold'], 'page_title': '', 'page_id': '', 'types': ['text', 'text', 'text', 'text', 'text', 'text'], 'id': '1-1133844-4', 'section_title': '', 'caption': '', 'rows': [['Arkansas', 'Mark Pryor', 'Democratic', '2002', 'Incumbent re-elected', 'Mark Pryor (D) 79.5% Rebekah Kennedy (G) 20.5%'], ['Delaware', 'Joe Biden', 'Democratic', '19... [500 / 2,038 chars] | SELECT Result FROM table WHERE Senator = Lindsey Graham [55 chars] |
+| what's the total w–l where player is boro jovanović category:articles with hcards {'header': ['Player', 'Total W–L', 'Singles W–L', 'Doubles W–L', 'Ties played', 'Debut', 'Years played'], 'page_title': 'Yugoslavia Davis Cup team', 'page_id': '', 'types': ['text', 'text', 'text', 'text', 'real', 'real', 'real'], 'id': '1-10294071-1', 'section_title': 'Players', 'caption': 'Players', 'rows': [['Željko Franulović Category:Articles with hCards', '32–27', '23–15', '9–12', '22', '1967', '12'], ['Boro... [500 / 1,190 chars] | SELECT Total W–L FROM table WHERE Player = Boro Jovanović Category:Articles with hCards [87 chars] |
+| What was the date of the race in Misano? {'header': ['No', 'Date', 'Round', 'Circuit', 'Pole Position', 'Fastest Lap', 'Race winner', 'Report'], 'page_title': '2007 Supersport World Championship season', 'page_id': '', 'types': ['real', 'text', 'text', 'text', 'text', 'text', 'text', 'text'], 'id': '1-10083598-1', 'section_title': 'Season calendar', 'caption': 'Season calendar', 'rows': [['1', '24 February', 'Qatar', 'Losail', 'Kevin Curtain', 'Sébastien Charpentier', 'Kenan Sofuoğlu', 'Report']... [500 / 1,742 chars] | SELECT Date FROM table WHERE Circuit = Misano [45 chars] |
 
 ### Source Reference Table
 

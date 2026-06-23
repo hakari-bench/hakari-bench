@@ -131,29 +131,29 @@
         "query": {
           "text": "What are self/cutting or self-drilling screws?",
           "full_chars": 46,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "The Use of MMF Screws: Surgical Technique, Indications, Contraindications, and Common Problems in Review of the Literature Self-cutting or self-drilling screws have a drill-shaped point to penetrate t",
+          "text": "The Use of MMF Screws: Surgical Technique, Indications, Contraindications, and Common Problems in Review of the Literature Self-cutting or self-drilling screws have a drill-shaped point to penetrate through the bone with more ease.",
           "full_chars": 231,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "27c394ec-8453-4156-a543-2486b97ce445",
         "document_id": "4132ec6d-df46-4941-2160-240926616cfb",
         "query": {
-          "text": "Where is the bad split in sagittal split osteotomies of the mandible usually located during orthogna",
+          "text": "Where is the bad split in sagittal split osteotomies of the mandible usually located during orthognathic surgery?",
           "full_chars": 113,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Dal Pont vs Hunsuck: Which Technique Can Lead to a Lower Incidence of Bad Split during Bilateral Sagittal Split Osteotomy? A Triple-blind Randomized Clinical Trial Older age is definitely correlated t",
+          "text": "Dal Pont vs Hunsuck: Which Technique Can Lead to a Lower Incidence of Bad Split during Bilateral Sagittal Split Osteotomy? A Triple-blind Randomized Clinical Trial Older age is definitely correlated to a higher risk of bad split fractures during SSRO, , , . The relationship between the occurrence of a bad split and mandibular anatomy upon SSRO was evaluated. The buccolingual thickness of the retromandibular area, the buccolingual of the ramus at the level of the lingula, the height of the mandible from the alveolar crest to the inferior border of the mandible, and the anterior-posterior width of the ramus were measured through CBCTs. Mandibular anatomy can significantly affect the risk for bad split fractures when a BSSO surgery is being performed . A thin retromolar area can increase the risk for bad split osteotomies in the buccal or lingual plate of the proximal or distal segments. This may be attributable to the fact that a fragile and inadequate mandibular bone cannot tolerate usu",
           "full_chars": 1064,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -163,49 +163,17 @@
         "query": {
           "text": "Which are the advantages of endoscopic approach to treat massive arterial epistaxis?",
           "full_chars": 84,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Success Rate of Endoscopic Sphenopalatine Artery Ligation for the Management of Refractory Posterior Epistaxis Patients in a Tertiary Care Hospital: A Descriptive Cross-sectional Study The findings of",
+          "text": "Success Rate of Endoscopic Sphenopalatine Artery Ligation for the Management of Refractory Posterior Epistaxis Patients in a Tertiary Care Hospital: A Descriptive Cross-sectional Study The findings of the study conclude that ESPAL has a high success rate in patients with intractile posterior epistaxis. From our study, we would like to recommend that endoscopic sphenopalatine artery ligation or cauterization should be preferred as first-line treatment for posterior epistaxis. This study will be beneficial for the development of knowledge by healthcare professionals for the management of posterior epistaxis.",
           "full_chars": 613,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "6ed6a2da-fd95-46aa-9bca-6c7c10b90eb5",
-        "document_id": "16587382-b718-b5a8-7b84-d0b77fad8c35",
-        "query": {
-          "text": "How do fixed orthodontic appliances contribute to the development of white spot lesions?",
-          "full_chars": 88,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "In-vivo durability of a fluoride-releasing sealant (OpalSeal) for protection against white-spot lesion formation in orthodontic patients The results of this study provide some evidence on the abatemen",
-          "full_chars": 1370,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "62aa4b3a-de67-4d8d-8b32-17d8d1ce820a",
-        "document_id": "8d45176b-a8e8-a5e5-83df-0503f741e173",
-        "query": {
-          "text": "What is the most frequent type of dental injury when anterior and buccal teeth are associated with f",
-          "full_chars": 116,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Traumatic Dental Injury—An Enigma for Adolescents: A Series of Case Reports Coronal fractures of permanent dentition are the most frequent type of dental injury. Fractured anterior teeth are usually t",
-          "full_chars": 733,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

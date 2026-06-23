@@ -152,13 +152,13 @@
         "query": {
           "text": "En orden cronológico, ¿cuál es la segunda película de Crepúsculo?",
           "full_chars": 65,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "The Twilight Saga: New Moon",
           "full_chars": 27,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -168,13 +168,13 @@
         "query": {
           "text": "¿Qué película de Harry Potter es dirigida por Alfonso Cuarón?",
           "full_chars": 61,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Harry Potter y el prisionero de Azkaban",
           "full_chars": 39,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -184,49 +184,17 @@
         "query": {
           "text": "¿Quién es más joven, Drew Barrymore o Reese Whiterspoon?",
           "full_chars": 56,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Reese Witherspoon",
           "full_chars": 17,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q889",
-        "document_id": "D68",
-        "query": {
-          "text": "¿Qué película de dibujos animados se estrenó en 2007 y fue dirigida por Tim Hill?",
-          "full_chars": 81,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Alvin and the Chipmunks",
-          "full_chars": 23,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "Q1773",
-        "document_id": "D761",
-        "query": {
-          "text": "En orden cronológico, ¿cuál es la tercera película de Crepúsculo?",
-          "full_chars": 65,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "The Twilight Saga: Eclipse",
-          "full_chars": 26,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -163,30 +163,30 @@
         "query": {
           "text": "In what field did a Swiss physicist who had a geometrical representation named after him work in?",
           "full_chars": 97,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Felix Bloch Felix Bloch (23 October 1905 – 10 September 1983) was a Swiss physicist, working mainly in the U.S. He and Edward Mills Purcell were awarded the 1952 Nobel Prize for Physics for \"their dev",
+          "text": "Felix Bloch Felix Bloch (23 October 1905 – 10 September 1983) was a Swiss physicist, working mainly in the U.S. He and Edward Mills Purcell were awarded the 1952 Nobel Prize for Physics for \"their development of new ways and methods for nuclear magnetic precision measurements.\" In 1954–1955, he served for one year as the first Director-General of CERN.",
           "full_chars": 354,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "5a739b1955429978a71e9044",
         "document_id": "198153",
         "query": {
-          "text": "What company claims to manufacture one out of every three objects that provide a shelf life typicall",
+          "text": "What company claims to manufacture one out of every three objects that provide a shelf life typically ranging from one to five years?",
           "full_chars": 133,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Canning Canning is a method of preserving food in which the food contents are processed and sealed in an airtight container. Canning provides a shelf life typically ranging from one to five years, alt",
+          "text": "Canning Canning is a method of preserving food in which the food contents are processed and sealed in an airtight container. Canning provides a shelf life typically ranging from one to five years, although under specific circumstances it can be much longer. A freeze-dried canned product, such as canned dried lentils, could last as long as 30 years in an edible state. In 1974, samples of canned food from the wreck of the \"Bertrand\", a steamboat that sank in the Missouri River in 1865, were tested by the National Food Processors Association. Although appearance, smell and vitamin content had deteriorated, there was no trace of microbial growth and the 109-year-old food was determined to be still safe to eat.",
           "full_chars": 715,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -195,49 +195,17 @@
         "query": {
           "text": "WHat dish is Dacryopinax spathularia included in that is also sometimes called Luóhàn cài?",
           "full_chars": 91,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Dacryopinax spathularia Dacryopinax spathularia (syn. Guepinia spathularia) is an edible jelly fungus. It is orange in color. In Chinese culture, it is called \"guìhuā'ěr\" (桂花耳; literally \"sweet osmant",
+          "text": "Dacryopinax spathularia Dacryopinax spathularia (syn. Guepinia spathularia) is an edible jelly fungus. It is orange in color. In Chinese culture, it is called \"guìhuā'ěr\" (桂花耳; literally \"sweet osmanthus ear,\" referring to its similarity in appearance to that flower). It is sometimes included in a vegetarian dish called Buddha's delight.",
           "full_chars": 339,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ae54bbd5542990ba0bbb262",
-        "document_id": "427655",
-        "query": {
-          "text": "What is another name for basidiomycete fungus?",
-          "full_chars": 46,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Boletus edulis Boletus edulis (English: penny bun, cep, porcino or porcini) is a basidiomycete fungus, and the type species of the genus \"Boletus\". Widely distributed in the Northern Hemisphere across",
-          "full_chars": 821,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5ac43ddf5542995c82c4ad08",
-        "document_id": "7707347",
-        "query": {
-          "text": "What substance is always in a trap to prevent the passage of anything from either direction, even se",
-          "full_chars": 111,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Trap (plumbing) In plumbing, a trap is a device which has a shape that uses a bending path to capture water to prevent sewer gases from entering buildings, while allowing waste to pass through. In ref",
-          "full_chars": 322,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

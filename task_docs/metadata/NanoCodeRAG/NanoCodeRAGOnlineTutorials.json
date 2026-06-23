@@ -169,13 +169,13 @@
         "query": {
           "text": "How to turn Android device screen on and off programmatically?",
           "full_chars": 62,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "This example demonstrate about How to turn Android device screen on and off programmatically. Step 1 − Create a new project in Android Studio, go to File ⇒ New Project and fill all required details to",
+          "text": "This example demonstrate about How to turn Android device screen on and off programmatically. Step 1 − Create a new project in Android Studio, go to File ⇒ New Project and fill all required details to create a new project. Step 2 − Add the following code to res/layout/activity_main.xml <? xml version= \"1.0\" encoding= \"utf-8\" ?> <RelativeLayout xmlns: android = \"http://schemas.android.com/apk/res/android\" xmlns: tools = \"http://schemas.android.com/tools\" android :layout_width= \"match_parent\" android :layout_height= \"match_parent\" android :layout_margin= \"16dp\" tools :context= \".MainActivity\" > <LinearLayout android :layout_width= \"match_parent\" android :layout_height= \"wrap_content\" android :layout_centerInParent= \"true\" android :orientation= \"horizontal\" > <Button android :id= \"@+id/btnEnable\" android :layout_width= \"0dp\" android :layout_height= \"wrap_content\" android :layout_weight= \"1\" android :onClick= \"enablePhone\" android :text= \"Enable\" /> <Button android :id= \"@+id/btnLock\" andr",
           "full_chars": 6654,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -185,13 +185,13 @@
         "query": {
           "text": "Tools to Securely Delete Files from Linux - GeeksforGeeks",
           "full_chars": 57,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "16 Feb, 2021 Every time you delete a file from your Linux system using the shift + delete or rm command, it doesn’t actually permanently and securely delete the file from the hard disk. When you delet",
+          "text": "16 Feb, 2021 Every time you delete a file from your Linux system using the shift + delete or rm command, it doesn’t actually permanently and securely delete the file from the hard disk. When you delete a file with the rm command, the file system just frees up the appropriate inode but the contents of the old file are still in that space until it is overwritten which pave a way to recover the files. The space that was used by the file that you deleted is now free to be used by other new files. But the contents of the old files are still in the hard disk, Until and unless that space is overwritten by something else, so there is a good chance that the file can be recovered by anyone (maybe by some data thieves) with good knowledge of recovering data. It is like removing the index page of a book, where the chapters are still there, it just becomes much hard to find, but we can find it. Shred will help you to overwrite a deleted file, so it becomes difficult to recover it. It is like tearin",
           "full_chars": 3940,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -201,49 +201,17 @@
         "query": {
           "text": "Difference between Private and Protected in C++ with Example - GeeksforGeeks",
           "full_chars": 76,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "03 Jan, 2022 Protected Protected access modifier is similar to that of private access modifiers, the difference is that the class member declared as Protected are inaccessible outside the class but th",
+          "text": "03 Jan, 2022 Protected Protected access modifier is similar to that of private access modifiers, the difference is that the class member declared as Protected are inaccessible outside the class but they can be accessed by any subclass(derived class) of that class.Example: CPP // C++ program to demonstrate// protected access modifier #include <bits/stdc++.h>using namespace std; // base classclass Parent { // protected data membersprotected: int id_protected;}; // sub class or derived classclass Child : public Parent { public: void setId(int id) { // Child class is able to access the inherited // protected data members of the base class id_protected = id; } void displayId() { cout << \"id_protected is: \" << id_protected << endl; }}; // main functionint main(){ Child obj1; // member function of the derived class can // access the protected data members of the base class obj1.setId(81); obj1.displayId(); return 0;} id_protected is: 81 Private The class members declared as private can be acc",
           "full_chars": 2559,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "9",
-        "document_id": "doc_9",
-        "query": {
-          "text": "How to print Superscript and Subscript in Python? - GeeksforGeeks",
-          "full_chars": 65,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "24 Jan, 2021 Whenever we are working with formulas there may be a need of writing the given formula in a given format which may require subscripts or superscripts. There are several methods available",
-          "full_chars": 2336,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "161",
-        "document_id": "doc_161",
-        "query": {
-          "text": "Maximum Difference | Practice | GeeksforGeeks",
-          "full_chars": 45,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Given array A[] of integers, the task is to complete the function findMaxDiff which finds the maximum absolute difference between nearest left and right smaller element of every element in array.If th",
-          "full_chars": 12706,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -72,11 +72,9 @@ For reranking, this task rewards models that can judge whether a short reply act
 
 | Query | Positive document |
 | --- | --- |
-| Hej #Twitterhjerne & twitterfolkens (- eller X'ere, whatever 😊) Er der nogen der kan fortælle mig hv... [100 / 278 chars] | Økologiske er vel ok? [21 chars] |
-| Hvis I betaler for medieovervågning på arbejdet - hvem bruger I så, og er I tilfredse? #dkmedier #dk... [100 / 118 chars] | Infomedia - og mnjah [20 chars] |
-| Er der andre der døjer med samme problem som mig, min controller til ps5 lader maks 1 streg om natte... [100 / 250 chars] | Du skal bare indlevere den, hvor du har købt, så får du en ny [61 chars] |
-| Hej Twitter Ofte når jeg ser madvideoer på engelsk så bruger de noget de kalder heavy cream. Svarer... [100 / 152 chars] | Er heavy cream ikke mere 48-50% fløde [37 chars] |
-| Teknisk sommerspørgsmål: Hvordan deler i fotos med familien? Krav: ikke Google Photo eller iCloud. M... [100 / 259 chars] | OneDrive. Vi har også Jottacloud til backup, men deling af billeder med andre i OneDrive fungerer fint, oplever jeg. [116 chars] |
+| Hej #Twitterhjerne & twitterfolkens (- eller X'ere, whatever 😊) Er der nogen der kan fortælle mig hvor jeg kan købe IKKE-danske kartofler? Hverken Rema1000, Netto, Kvickly ell SuperBrugsen sælger andet end danske. (Jeg ønsker ikke at spise det hjerneskadende pesticid Reglone) [278 chars] | Økologiske er vel ok? [21 chars] |
+| Hvis I betaler for medieovervågning på arbejdet - hvem bruger I så, og er I tilfredse? #dkmedier #dkbiz #twitterhjerne [118 chars] | Infomedia - og mnjah [20 chars] |
+| Er der andre der døjer med samme problem som mig, min controller til ps5 lader maks 1 streg om natten. Hver gang jeg sidder og spiller disconneter den hele tiden, jeg har ikke gjort noget ved den. Den havde det allerede 1 uge efter jeg fik konsollen. [250 chars] | Du skal bare indlevere den, hvor du har købt, så får du en ny [61 chars] |
 
 ### Source Reference Table
 

@@ -131,14 +131,14 @@
         "query": {
           "text": "Gde se održava Final Four ove godine?",
           "full_chars": 37,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "NCAA Divizija I muški košarkaški turnir 2018. bio je turnir sa 68 timova po sistemu direktnog ispadanja, održan kako bi se odredio nacionalni šampion u muškoj koledž košarci NCAA Divizije I za sezonu",
+          "text": "NCAA Divizija I muški košarkaški turnir 2018. bio je turnir sa 68 timova po sistemu direktnog ispadanja, održan kako bi se odredio nacionalni šampion u muškoj koledž košarci NCAA Divizije I za sezonu 2017–18. Osamdeseto izdanje turnira počelo je 13. marta 2018. godine, a završilo se finalnom utakmicom 2. aprila na Alamodome-u u San Antoniju u Teksasu.",
           "full_chars": 353,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Da li je \"Noćna mora pre Božića\" originalno bio Diznijev film?",
           "full_chars": 62,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "\"Pakao pre Božića\" nastao je iz pesme koju je Tim Burton napisao 1982. godine, dok je radio kao animator u studiju Walt Disney Feature Animation. Uz uspeh filma \"Vinsent\" iste godine, studijo Walt Dis",
+          "text": "\"Pakao pre Božića\" nastao je iz pesme koju je Tim Burton napisao 1982. godine, dok je radio kao animator u studiju Walt Disney Feature Animation. Uz uspeh filma \"Vinsent\" iste godine, studijo Walt Disney počeo je da razmatra razvoj \"Pakla pre Božića\" kao kratkog filma ili 30-minutne TV specijalne emisije. Tokom godina, Burton se redovno vraćao projektu, a 1990. godine sklopio je ugovor o razvoju sa Disneyjem. Produkcija je započela u julu 1991. u San Francisku; Disney je film distribuirao preko svoje podružnice Touchstone Pictures jer je studio smatrao da bi film bio \"previše mračan i zastrašujuć za decu\".[4]",
           "full_chars": 616,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Zašto je anđeo severa tu?",
           "full_chars": 25,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Prema Gormliju, značaj anđela je bio trostruk: prvo, da označi da su ispod mesta njegove izgradnje rudari uglja radili dva veka; drugo, da obuhvati prelazak iz industrijskog u informaciono doba, i tre",
+          "text": "Prema Gormliju, značaj anđela je bio trostruk: prvo, da označi da su ispod mesta njegove izgradnje rudari uglja radili dva veka; drugo, da obuhvati prelazak iz industrijskog u informaciono doba, i treće, da posluži kao fokus naših evoluirajućih nada i strahova.[2]",
           "full_chars": 264,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test826",
-        "document_id": "doc29757",
-        "query": {
-          "text": "Gde je kompromis 3/5 prvobitno naveden u ustavu?",
-          "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Kompromis o tri petine nalazi se u Članu 1, Odeljku 2, Stav 3 Ustava Sjedinjenih Država, koji glasi:",
-          "full_chars": 100,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "test2079",
-        "document_id": "doc72413",
-        "query": {
-          "text": "Ko peva pesmu \"Somebody's Watching Me\" sa Majklom Džeksonom?",
-          "full_chars": 60,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "\"Somebody's Watching Me\" je pesma američkog pevača Rokvela sa njegovog debitantskog studijskog albuma Somebody's Watching Me (1984). Objavljena je kao Rokvelov debitanski singl i vodeći singl sa album",
-          "full_chars": 358,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

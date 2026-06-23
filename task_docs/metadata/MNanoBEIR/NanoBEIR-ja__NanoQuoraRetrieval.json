@@ -132,13 +132,13 @@
         "query": {
           "text": "自分のジョークを笑っても大丈夫ですか？",
           "full_chars": 19,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "自分のジョークで笑うのは変ですか？",
           "full_chars": 17,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -148,13 +148,13 @@
         "query": {
           "text": "今までで最高の嘘は何ですか？",
           "full_chars": 14,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "今までで最も巧妙に練り上げた嘘は何ですか？",
           "full_chars": 21,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -164,49 +164,17 @@
         "query": {
           "text": "なぜQuoraは頻繁に私のフィードにドナルド・トランプを貶めるような回答をおすすめするのですか？",
           "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "なぜクオラではドナルド・トランプに関する質問に対して、主観的で偏った回答しか見受けられるのでしょうか？",
           "full_chars": 51,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "どうすれば身体的に強く鍛えられますか？",
-          "full_chars": 19,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "どうすれば身体を強くできますか？",
-          "full_chars": 16,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "量子衛星はどのように機能するのでしょうか？",
-          "full_chars": 21,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "量子衛星はどのように機能し、その主な用途にはどのようなものがあるでしょうか？",
-          "full_chars": 38,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

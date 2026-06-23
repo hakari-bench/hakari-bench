@@ -135,13 +135,13 @@
         "query": {
           "text": "Hälsosamma chokladmjölkshakes",
           "full_chars": 29,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Syfte: Att undersöka sambandet mellan intag av körsbär och risken för återkommande giktattacker hos individer med gikt. Metoder: Vi genomförde en fall-korsstudie för att undersöka sambandet mellan en",
+          "text": "Syfte: Att undersöka sambandet mellan intag av körsbär och risken för återkommande giktattacker hos individer med gikt. Metoder: Vi genomförde en fall-korsstudie för att undersöka sambandet mellan en uppsättning misstänkta riskfaktorer och återkommande giktattacker. Individer med gikt rekryterades prospektivt och följdes online i ett år. Deltagarna ombads att ange följande information vid en giktattack: attackens startdatum, symptom och tecken, mediciner (inklusive anti-giktmedicin) och potentiella riskfaktorer (inklusive dagligt intag av körsbär och körsbärextrakt) under de två dagarna före attacken. Vi bedömde samma exponeringsinformation över tvådagar under kontrollperioder. Vi uppskattade risken för återkommande giktattacker i samband med körsbärsintag med hjälp av konditionell logistisk regression. Resultat: Vår studie inkluderade 633 individer med gikt. Intag av körsbär under en tvådagarsperiod var förknippat med en 35% lägre risk för giktattacker jämfört med ingen intag (multiva",
           "full_chars": 1591,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -151,13 +151,13 @@
         "query": {
           "text": "medicinsk etik",
           "full_chars": 14,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Bakgrund: En av de stora utmaningarna med att kontrollera serumkolesterol genom dietintervention verkar vara behovet av att förbättra patientens följsamhet. Syfte: Att utforska de många frågorna kring",
+          "text": "Bakgrund: En av de stora utmaningarna med att kontrollera serumkolesterol genom dietintervention verkar vara behovet av att förbättra patientens följsamhet. Syfte: Att utforska de många frågorna kring hinder och motiv för att följa en kolesterol-sänkande diet. Metoder: Vi undersökte franska allmänläkares dietpraxis för patienter med hyperkolesterolemi och undersökte deras patienters attityder till en sådan tillvägagångssätt. Resultat: Vi analyserade 234 läkares personliga enkäter och 356 patienters självuppskattningsenkäter. Patienters skäl för att inte följa den föreskrivna kosten inkluderade: 'redan ha tillfredsställande matvanor' (34,7%), 'ovillighet att lida av näringsbrist' (33,3%), 'svårigheter att förena en diet med familjelivet' (27,8%) och 'att ta kolesterol-sänkande läkemedel' (22,2%). Trots en generellt god förståelse hos patienterna av läkarnas rekommendationer, fanns det vissa skillnader mellan deras respektive uttalanden. Medan läkarna i stor utsträckning trodde att patie",
           "full_chars": 1812,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -167,49 +167,17 @@
         "query": {
           "text": "favabönor",
           "full_chars": 9,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "De senaste 20 åren har intresset för L-arginins biokemi, näring och farmakologi ökat, vilket har lett till omfattande studier för att utforska dess näringsmässiga och terapeutiska roller i behandling",
+          "text": "De senaste 20 åren har intresset för L-arginins biokemi, näring och farmakologi ökat, vilket har lett till omfattande studier för att utforska dess näringsmässiga och terapeutiska roller i behandling och förebyggande av mänskliga metaboliska störningar. Nyare bevis visar att kosttillskott av L-arginin minskar fetma hos genetiskt överviktiga råttor, kostinducerat överviktiga råttor, slaktgrisar och överviktiga människor med typ-2-diabetes. Mekanismerna bakom de fördelaktiga effekterna av L-arginin är troligen komplexa, men involverar slutligen förändringar i balansen mellan energiintag och energiförbrukning till förmån för fettförlust eller minskad tillväxt av vitt fettvävnad. Nyliga studier indikerar att tillskott av L-arginin stimulerar mitokondriebildning och utveckling av brunt fettvävnad, möjligen genom ökad syntes av cellsignalerande molekyler (t.ex. kväveoxid, kolmonoxid, polyaminer, cGMP och cAMP) samt ökad uttryck av gener som främjar hela kroppens oxidation av energisubstrat (",
           "full_chars": 1220,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-68",
-        "document_id": "MED-2991",
-        "query": {
-          "text": "Vad finns egentligen i kycklingbitar?",
-          "full_chars": 37,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "SYFTE: Att bestämma innehållet i kycklingbitar från 2 nationella matkedjor. BAKGRUND: Kycklingbitar har blivit en viktig del av den amerikanska kosten. Vi sökte att fastställa den nuvarande sammansätt",
-          "full_chars": 720,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-2051",
-        "document_id": "MED-4551",
-        "query": {
-          "text": "mättat fett",
-          "full_chars": 11,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Intresset har ökat för möjligheten att moderns kostintag under graviditeten kan påverka utvecklingen av allergiska sjukdomar hos barn. Denna prospektiva studie undersökte sambandet mellan moderns inta",
-          "full_chars": 1954,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

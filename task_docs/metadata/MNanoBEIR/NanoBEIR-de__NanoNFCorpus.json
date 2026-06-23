@@ -181,13 +181,13 @@
         "query": {
           "text": "Gesunde Schokoladen-Milchshakes",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Ziel: Untersuchung der Beziehung zwischen dem Verzehr von Kirschen und dem Risiko von wiederkehrenden Gichtanfällen bei Personen mit Gicht. Methoden: Wir führten eine Fall-Kreuz-Studie durch, um die Z",
+          "text": "Ziel: Untersuchung der Beziehung zwischen dem Verzehr von Kirschen und dem Risiko von wiederkehrenden Gichtanfällen bei Personen mit Gicht. Methoden: Wir führten eine Fall-Kreuz-Studie durch, um die Zusammenhänge zwischen einer Reihe von vermuteten Risikofaktoren und wiederkehrenden Gichtanfällen zu untersuchen. Personen mit Gicht wurden prospektiv rekrutiert und ein Jahr lang online begleitet. Die Teilnehmer wurden gebeten, bei einem Gichtanfall folgende Informationen anzugeben: das Datum des Beginns des Gichtanfalls, Symptome und Anzeichen, Medikamente (einschließlich Gichtmedikamente) und potenzielle Risikofaktoren (einschließlich des täglichen Verzehrs von Kirschen und Kirsch-Extrakt) während der 2-Tage-Periode vor dem Gichtanfall. Wir erfassten dieselben Expositionsinformationen über 2-Tage-Kontrollperioden. Wir schätzten das Risiko von wiederkehrenden Gichtanfällen in Bezug auf den Kirschverzehr mit Hilfe der konditionalen logistischen Regression. Ergebnisse: Unsere Studie umfass",
           "full_chars": 1915,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -197,13 +197,13 @@
         "query": {
           "text": "Medizinische Ethik",
           "full_chars": 18,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "HINTERGRUND: Ein Hauptproblem bei der Kontrolle des Serumcholesterins durch diätetische Maßnahmen scheint die Notwendigkeit zu sein, die Patientencompliance zu verbessern. ZIELE: Untersuchung der vers",
+          "text": "HINTERGRUND: Ein Hauptproblem bei der Kontrolle des Serumcholesterins durch diätetische Maßnahmen scheint die Notwendigkeit zu sein, die Patientencompliance zu verbessern. ZIELE: Untersuchung der verschiedenen Fragen bezüglich der Barrieren und Motivatoren für die Einhaltung einer cholesterinsenkenden Diät. METHODEN: Wir befragten französische Allgemeinmediziner zu ihren diätetischen Praktiken bei Patienten mit Hypercholesterinämie und untersuchten die Einstellungen ihrer Patienten zu diesem Ansatz. ERGEBNISSE: Wir analysierten 234 Fragebögen von Ärzten und 356 Selbstauskunftsbögen von Patienten. Die Gründe der Patienten für die Nicht-Einhaltung der vorgeschriebenen Diät umfassten: 'bereits zufriedenstellende Ernährungsgewohnheiten' (34,7 %), 'Unwillen, auf Nährstoffe zu verzichten' (33,3 %), 'Schwierigkeiten, eine Diät mit dem Familienleben zu vereinbaren' (27,8 %) und 'Einnahme von cholesterinsenkenden Medikamenten' (22,2 %). Trotz eines allgemeinen guten Verständnisses der Empfehlun",
           "full_chars": 2153,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -213,49 +213,17 @@
         "query": {
           "text": "Saubohnen",
           "full_chars": 9,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "In den letzten 20 Jahren hat das wachsende Interesse an der Biochemie, Ernährung und Pharmakologie von L-Arginin zu umfangreichen Studien geführt, um seine ernährungsphysiologischen und therapeutische",
+          "text": "In den letzten 20 Jahren hat das wachsende Interesse an der Biochemie, Ernährung und Pharmakologie von L-Arginin zu umfangreichen Studien geführt, um seine ernährungsphysiologischen und therapeutischen Rollen bei der Behandlung und Vorbeugung menschlicher Stoffwechselstörungen zu erforschen. Neue Erkenntnisse zeigen, dass die Supplementierung mit diätetischem L-Arginin die Fettleibigkeit bei genetisch adipösen Ratten, diätetisch adipösen Ratten, Mastschweinen und adipösen Menschen mit Typ-2-Diabetes mellitus reduziert. Die Mechanismen, die für die vorteilhaften Wirkungen von L-Arginin verantwortlich sind, sind wahrscheinlich komplex, beeinflussen jedoch letztlich das Gleichgewicht von Energieaufnahme und -verbrauch zugunsten von Fettabbau oder reduziertem Wachstum von weißem Fettgewebe. Neuere Studien deuten darauf hin, dass die Supplementierung mit L-Arginin die Mitochondrienbiogenese und die Entwicklung von braunem Fettgewebe anregt, möglicherweise durch die verstärkte Synthese von z",
           "full_chars": 1445,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-68",
-        "document_id": "MED-2991",
-        "query": {
-          "text": "Was steckt eigentlich in Chicken Nuggets?",
-          "full_chars": 41,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "ZIEL: Untersuchung der Inhaltsstoffe von Hähnchen-Nuggets zweier nationaler Fast-Food-Ketten. HINTERGRUND: Hähnchen-Nuggets sind ein wesentlicher Bestandteil der amerikanischen Ernährung geworden. Wir",
-          "full_chars": 821,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "PLAIN-2051",
-        "document_id": "MED-4551",
-        "query": {
-          "text": "gesättigte Fette",
-          "full_chars": 16,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Das Interesse an der Möglichkeit, dass die Ernährung der Mutter während der Schwangerschaft die Entwicklung von Allergien bei Kindern beeinflussen könnte, hat zugenommen. Die vorliegende prospektive S",
-          "full_chars": 2356,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

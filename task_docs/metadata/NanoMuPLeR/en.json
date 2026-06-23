@@ -121,83 +121,51 @@
         "query_id": "d147eacf-5423-413a-8028-e8f681b72bbc",
         "document_id": "3467",
         "query": {
-          "text": "Which oversight body supplied a standalone movement-management solution while later inspecting count",
+          "text": "Which oversight body supplied a standalone movement-management solution while later inspecting countries' cross-regime goods controls in 2006?",
           "full_chars": 142,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "In the beginning of the NCTS project several Member States not wishing to develop a national transit application requested the Commission to produce a standard one. MCC as supplied by the Commission i",
+          "text": "In the beginning of the NCTS project several Member States not wishing to develop a national transit application requested the Commission to produce a standard one. MCC as supplied by the Commission is a stand alone application. Member States were thus free to choose between developing a NCTS application for themselves with consequent advantages for integrating that with their existing systems or using the MCC stand alone application supplied by the Commission. During its 2006 inspections of transit the Commission is examining whether Member States have suitable procedures in place to control goods moving from transit into other customs regimes and also goods moving from another regime into transit. The systems used by Member States may be effective, even if they are not fully integrated.",
           "full_chars": 799,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "25eefe7e-69f5-4552-bd42-b021dec52f6e",
         "document_id": "2676",
         "query": {
-          "text": "Which committee urged EU-backed measures to remedy leadership skill and ethics failings after miscon",
+          "text": "Which committee urged EU-backed measures to remedy leadership skill and ethics failings after misconduct undermined workforce and customer confidence?",
           "full_chars": 150,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "The crisis of confidence among employees and consumers is made worse in many countries of the European Union by revelations about mistakes and impropriety on the part of managers and entire management",
+          "text": "The crisis of confidence among employees and consumers is made worse in many countries of the European Union by revelations about mistakes and impropriety on the part of managers and entire management structures. The Committee considers it important that European countries, supported by the European Union, should pay more attention to and do more to correct the shortcomings in qualifications and integrity among managers. In addition, consideration should be given to how, through greater transparency and, where appropriate, tougher rules on liability, people with executive responsibility might be encouraged to concentrate firmly on their tasks and to act in a socially responsible manner.",
           "full_chars": 695,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "08764d5e-77e0-434a-99c7-18954d6b94b6",
         "document_id": "6780",
         "query": {
-          "text": "Which rationale links consensus on sector growth caps to both environmental resilience and long-term",
+          "text": "Which rationale links consensus on sector growth caps to both environmental resilience and long-term market competitiveness and youth job creation?",
           "full_chars": 147,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "The arguments presented in the communication in support of the Agenda seem appropriate, in that they assess both the economic impact of tourism and its ability to create jobs for young people and also",
+          "text": "The arguments presented in the communication in support of the Agenda seem appropriate, in that they assess both the economic impact of tourism and its ability to create jobs for young people and also the necessary balance between sustainability and competitiveness which, in the long term, are of mutual benefit to one another. Impact assessments of matters such as the carbon footprint of different activities and regions or restrictions on carrying and reception capacity are key aspects of striking and maintaining a balance between these variables. Universal acceptance that there are limits to the scale and pace of tourism is essential to achieving balance between sustainability and competitiveness.",
           "full_chars": 707,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "ece5693f-7a65-4675-ab31-25c06c602037",
-        "document_id": "821",
-        "query": {
-          "text": "What does the EU executive do when pro-rated, category-specific inflows exceed set thresholds over a",
-          "full_chars": 128,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "On the basis of the monitoring of imports that it is carrying out in accordance with the provisions of Council Regulation (EEC) No 3030/93, the Commission will be examining regularly whether some indi",
-          "full_chars": 754,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "504ea356-c833-479c-a803-1f6b61fb2b8e",
-        "document_id": "4499",
-        "query": {
-          "text": "Who retains co-signing authority on the dual-signatory interest-bearing account to ensure proper dis",
-          "full_chars": 110,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "In addition to these funds, there are other STABEX funds held by beneficiary ACP States. Once the Commission and the beneficiary (ACP) State have reached agreement on how the STABEX funds are to be ut",
-          "full_chars": 745,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

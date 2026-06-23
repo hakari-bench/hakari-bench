@@ -132,13 +132,13 @@
         "query": {
           "text": "Er det greit å le av egne vitser?",
           "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Er det rart å le av mine egne vitser?",
           "full_chars": 37,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -148,13 +148,13 @@
         "query": {
           "text": "Hva er den mest geniale løgn du noen gang har fortalt?",
           "full_chars": 54,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Hva er den mest gjennomtenkte løgnen du noen gang har fortalt?",
           "full_chars": 62,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -164,49 +164,17 @@
         "query": {
           "text": "Hvorfor fremmer Quora ofte svar i min feed som kritiserer Donald Trump?",
           "full_chars": 71,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Hvorfor virker det som om Quora bare har subjektive og partiske svar på spørsmål om Donald Trump?",
           "full_chars": 97,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "Hvordan kan jeg bli sterkere fysisk?",
-          "full_chars": 36,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Hvordan blir jeg fysisk sterk?",
-          "full_chars": 30,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "Hvordan fungerer en kvantum-satellitt?",
-          "full_chars": 38,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Hvordan fungerer en Quantum-satellitt, og hva er noen av dens hovedbruk?",
-          "full_chars": 72,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

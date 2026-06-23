@@ -134,8 +134,6 @@ lexical fusion.
 | What is the time 9 year and 10 month after Nov, 1170 [52 chars] | Sep, 1180 [9 chars] |
 | What is the time 5 year and 12 month after Jun, 1243 [52 chars] | Jun, 1249 [9 chars] |
 | What is the time 6 year and 4 month after Jun, 1905 [51 chars] | Oct, 1911 [9 chars] |
-| What is the time 10 year and 1 month after Oct, 1093 [52 chars] | Nov, 1103 [9 chars] |
-| What is the time 12 month after May, 2007 [41 chars] | May, 2008 [9 chars] |
 
 ### Public Sources
 

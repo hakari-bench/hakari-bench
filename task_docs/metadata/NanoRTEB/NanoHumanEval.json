@@ -123,13 +123,13 @@
         "query": {
           "text": "Filter an input list of strings only for ones that start with a given prefix.",
           "full_chars": 77,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "return [x for x in strings if x.startswith(prefix)]",
           "full_chars": 51,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -137,67 +137,35 @@
         "query_id": "00006",
         "document_id": "000000006",
         "query": {
-          "text": "Input to this function is a string represented multiple groups for nested parentheses separated by s",
+          "text": "Input to this function is a string represented multiple groups for nested parentheses separated by spaces. For each of the group, output the deepest level of nesting of parentheses. E.g. (()()) has maximum two levels of nesting while ((())) has three.",
           "full_chars": 251,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "def parse_paren_group(s): depth = 0 max_depth = 0 for c in s: if c == '(': depth += 1 max_depth = max(depth, max_depth) else: depth -= 1 return max_depth return [parse_paren_group(x) for x in paren_st",
+          "text": "def parse_paren_group(s): depth = 0 max_depth = 0 for c in s: if c == '(': depth += 1 max_depth = max(depth, max_depth) else: depth -= 1 return max_depth return [parse_paren_group(x) for x in paren_string.split(' ') if x]",
           "full_chars": 331,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "00070",
         "document_id": "000000070",
         "query": {
-          "text": "Write a function that returns true if the given number is the multiplication of 3 prime numbers and",
+          "text": "Write a function that returns true if the given number is the multiplication of 3 prime numbers and false otherwise. Knowing that (a) is less then 100. Example: is_multiply_prime(30) == True",
           "full_chars": 191,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "def is_prime(n): for j in range(2,n): if n%j == 0: return False return True for i in range(2,101): if not is_prime(i): continue for j in range(2,101): if not is_prime(j): continue for k in range(2,101",
-          "full_chars": 396,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00062",
-        "document_id": "000000062",
-        "query": {
-          "text": "In this task, you will be given a string that represents a number of apples and oranges that are dis",
-          "full_chars": 606,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "lis = list() for i in s.split(' '): if i.isdigit(): lis.append(int(i)) return n - sum(lis)",
-          "full_chars": 118,
-          "limit_chars": 200,
+          "limit_chars": 500,
           "truncated": false
-        }
-      },
-      {
-        "query_id": "00057",
-        "document_id": "000000057",
-        "query": {
-          "text": "brackets is a string of \"(\" and \")\". return True if every opening bracket has a corresponding closin",
-          "full_chars": 110,
-          "limit_chars": 100,
-          "truncated": true
         },
         "positive_document": {
-          "text": "depth = 0 for b in brackets: if b == \"(\": depth += 1 else: depth -= 1 if depth < 0: return False return depth == 0",
-          "full_chars": 182,
-          "limit_chars": 200,
+          "text": "def is_prime(n): for j in range(2,n): if n%j == 0: return False return True for i in range(2,101): if not is_prime(i): continue for j in range(2,101): if not is_prime(j): continue for k in range(2,101): if not is_prime(k): continue if i*j*k == a: return True return False",
+          "full_chars": 396,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

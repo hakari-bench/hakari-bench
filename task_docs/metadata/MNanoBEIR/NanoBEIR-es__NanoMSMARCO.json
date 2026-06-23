@@ -177,14 +177,14 @@
         "query": {
           "text": "¿Qué es el síndrome de rumiación?",
           "full_chars": 33,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Síndrome de rumiación. El síndrome de rumiación, también conocido como mericismo, es un tipo de trastorno de la alimentación no especificado de otra manera que provoca la regurgitación de alimentos. A",
+          "text": "Síndrome de rumiación. El síndrome de rumiación, también conocido como mericismo, es un tipo de trastorno de la alimentación no especificado de otra manera que provoca la regurgitación de alimentos. Aunque no se identifica como un trastorno de la alimentación específico en el DSM-IV, se han establecido ciertos parámetros para diagnosticar el trastorno.",
           "full_chars": 354,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -193,14 +193,14 @@
         "query": {
           "text": "¿Quién canta \"Here I Go Again\"?",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Para otros usos, consulte Aquí Voy Otra Vez (desambiguación). Aquí Voy Otra Vez es una canción de la banda de rock británica Whitesnake. La canción fue lanzada originalmente en su álbum de 1982, Santo",
+          "text": "Para otros usos, consulte Aquí Voy Otra Vez (desambiguación). Aquí Voy Otra Vez es una canción de la banda de rock británica Whitesnake. La canción fue lanzada originalmente en su álbum de 1982, Santos y Pecadores, y luego fue re-grabada para su álbum homónimo de 1987, Whitesnake. Ese mismo año, la canción fue re-grabada en una nueva versión para radio.",
           "full_chars": 355,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -209,49 +209,17 @@
         "query": {
           "text": "¿Quién interpreta Cameron Boyce en Liv y Maddie?",
           "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Prepárense para reírse a carcajadas, chicos. En un adelanto EXCLUSIVO del episodio del 19 de abril de 'Liv & Maddie' titulado 'Prom-A-Rooney.' ¡Obviamente! En el divertido clip, vemos a Cameron Boyce,",
+          "text": "Prepárense para reírse a carcajadas, chicos. En un adelanto EXCLUSIVO del episodio del 19 de abril de 'Liv & Maddie' titulado 'Prom-A-Rooney.' ¡Obviamente! En el divertido clip, vemos a Cameron Boyce, la estrella de Jessie, aparecer en otro programa de Disney para encontrarse con Maddie (Shelby Wulfert). ¡Su personaje es, bueno, ¡muy excéntrico!",
           "full_chars": 347,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971233",
-        "document_id": "4589415",
-        "query": {
-          "text": "¿Dónde se encuentran la mayoría de los grandes desiertos del mundo?",
-          "full_chars": 67,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Los demás desiertos del planeta se encuentran fuera de las regiones polares. El más extenso es el desierto del Sahara, un desierto subtropical en el norte de África.",
-          "full_chars": 165,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "1093082",
-        "document_id": "7778956",
-        "query": {
-          "text": "¿Qué significa \"copper\" en el contexto de la policía?",
-          "full_chars": 53,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Según los hallazgos actuales parece que \"copper\" (un policía, literalmente 'el que detiene') precede a \"cop\" (tanto como verbo, que significa detener, como sustantivo, que significa policía). Es posib",
-          "full_chars": 382,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

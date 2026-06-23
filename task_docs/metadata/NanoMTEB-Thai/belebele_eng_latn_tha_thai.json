@@ -123,14 +123,14 @@
         "query": {
           "text": "การเปลี่ยนแปลงใดที่เกิดจากการปฏิวัติฝรั่งเศสมีผลกระทบอย่างมากต่อพลเมืองชนชั้นแรงงาน",
           "full_chars": 83,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "There are a lot of social and political effects such as the use of metric system, a shift from absolutism to republicanism, nationalism and the belief the country belongs to the people not to one sole",
+          "text": "There are a lot of social and political effects such as the use of metric system, a shift from absolutism to republicanism, nationalism and the belief the country belongs to the people not to one sole ruler. Also after the Revolution occupations were open to all male applicants allowing the most ambitious and successful to succeed. Same goes for the military because instead of army rankings being based on class they were now based on cailaber. The French Revolution also inspired many other repressed working class people of other country's to began their own revolutions.",
           "full_chars": 576,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -139,14 +139,14 @@
         "query": {
           "text": "จากบทความ ใครน่าจะเป็นผู้สร้างสังคมเกษตรกรรมขึ้น",
           "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "For a long time during the nineteenth and twentieth centuries, it was believed the first inhabitants of New Zealand were the Maori people, who hunted giant birds called moas. The theory then establish",
+          "text": "For a long time during the nineteenth and twentieth centuries, it was believed the first inhabitants of New Zealand were the Maori people, who hunted giant birds called moas. The theory then established the idea that the Maori people migrated from Polynesia in a Great Fleet and took New Zealand from the Moriori, establishing an agricultural society. However, new evidence suggests that the Moriori were a group of mainland Maori who migrated from New Zealand to the Chatham Islands, developing their own distinctive, peaceful culture. There was also another tribe on the Chatham islands these were Maori who migrated away from New Zealand. They called themselves the Moriori there were a few skirmishes and in the end, the Moriori were wiped out",
           "full_chars": 747,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -155,49 +155,17 @@
         "query": {
           "text": "ข้อใดต่อไปนี้กล่าวถึงเกษตรกรรมเพื่อยังชีพได้ถูกต้อง",
           "full_chars": 51,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Subsistence agriculture is agriculture carried out for the production of enough food to meet just the needs of the agriculturalist and his/her family. Subsistence agriculture is a simple, often organi",
+          "text": "Subsistence agriculture is agriculture carried out for the production of enough food to meet just the needs of the agriculturalist and his/her family. Subsistence agriculture is a simple, often organic, system using saved seed native to the ecoregion combined with crop rotation or other relatively simple techniques to maximize yield. Historically most farmers were engaged in subsistence agriculture and this is still the case in many developing nations.",
           "full_chars": 456,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q9",
-        "document_id": "C5",
-        "query": {
-          "text": "จากบทความ ข้อใดเป็นยุคที่มีการนองเลือดที่สุดยุคหนึ่งของจีน",
-          "full_chars": 58,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Ancient China had a unique way of showing different time periods; each stage of China or each family that was in power was a distinctive dynasty. Also between each dynasty was an unstable age of divid",
-          "full_chars": 596,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "Q161",
-        "document_id": "C92",
-        "query": {
-          "text": "กษัตริย์ตุตันคามุนมีชื่อเสียงในแง่ลบตอนไหน",
-          "full_chars": 42,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "\"Yes! King Tutankhamun, sometimes referred to as \"\"King Tut\"\" or \"\"The Boy King\"\", is one of the most well known ancient Egyptian kings in modern times. Interestingly, he was not considered to be very",
-          "full_chars": 570,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

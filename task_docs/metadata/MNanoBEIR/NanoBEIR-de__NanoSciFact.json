@@ -175,15 +175,15 @@
         "query_id": "723",
         "document_id": "5531479",
         "query": {
-          "text": "Ly49Q steuert die Organisation der Migration von Neutrophilen zu Entzündungsherden, indem es die Fun",
+          "text": "Ly49Q steuert die Organisation der Migration von Neutrophilen zu Entzündungsherden, indem es die Funktionen von Membran-Rafts reguliert.",
           "full_chars": 136,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Neutrophile durchlaufen eine schnelle Polarisation und gerichtete Bewegung, um Infektions- und Entzündungsherde zu infiltrieren. Wir zeigen, dass ein inhibitorischer MHC-I-Rezeptor, Ly49Q, für die sch",
+          "text": "Neutrophile durchlaufen eine schnelle Polarisation und gerichtete Bewegung, um Infektions- und Entzündungsherde zu infiltrieren. Wir zeigen, dass ein inhibitorischer MHC-I-Rezeptor, Ly49Q, für die schnelle Polarisation und Gewebeinfiltration von Neutrophilen entscheidend ist. Im Ruhezustand hemmt Ly49Q die Neutrophilenadhäsion, indem es die Bildung von Fokalkomplexen verhindert, wahrscheinlich durch die Hemmung von Src- und PI3-Kinasen. In Gegenwart von entzündlichen Stimuli vermittelt Ly49Q jedoch eine schnelle Neutrophilenpolarisation und Gewebeinfiltration auf ITIM-Domänen-abhängige Weise. Diese gegensätzlichen Funktionen scheinen durch die unterschiedliche Nutzung der Effektor-Phosphatasen SHP-1 und SHP-2 vermittelt zu werden. Die Ly49Q-abhängige Polarisation und Migration werden durch die Regulation der Membran-Raft-Funktionen durch Ly49Q beeinflusst. Wir schlagen vor, dass Ly49Q entscheidend ist, um Neutrophile bei Entzündungen in ihre polarisierte Morphologie und schnelle Migrat",
           "full_chars": 1116,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -193,13 +193,13 @@
         "query": {
           "text": "Antiretrovirale Therapie verringert die Häufigkeit von Tuberkulose bei verschiedenen CD4-Werten.",
           "full_chars": 96,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "HINTERGRUND Die Infektion mit dem humanen Immundefizienz-Virus (HIV) ist der stärkste Risikofaktor für die Entwicklung von Tuberkulose und hat deren Wiederauftreten, insbesondere in Subsahara-Afrika,",
+          "text": "HINTERGRUND Die Infektion mit dem humanen Immundefizienz-Virus (HIV) ist der stärkste Risikofaktor für die Entwicklung von Tuberkulose und hat deren Wiederauftreten, insbesondere in Subsahara-Afrika, begünstigt. Im Jahr 2010 gab es geschätzt 1,1 Millionen neue Tuberkulosefälle unter den 34 Millionen Menschen, die weltweit mit HIV lebten. Die antiretrovirale Therapie hat ein erhebliches Potenzial, HIV-assoziierte Tuberkulose zu verhindern. Wir führten eine systematische Übersichtsarbeit durch, die Studien analysierte, die den Einfluss der antiretroviralen Therapie auf die Inzidenz von Tuberkulose bei Erwachsenen mit HIV-Infektion untersuchten. METHODEN UND ERGEBNISSE Wir durchsuchten systematisch PubMed, Embase, African Index Medicus, LILACS und klinische Studienregister. Randomisierte kontrollierte Studien, prospektive Kohortenstudien und retrospektive Kohortenstudien wurden einbezogen, wenn sie die Tuberkulose-Inzidenz nach antiretroviralem Therapiestatus bei HIV-infizierten Erwachsen",
           "full_chars": 2378,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -207,51 +207,19 @@
         "query_id": "1021",
         "document_id": "9433958",
         "query": {
-          "text": "Eine schnelle Hochregulierung und eine höhere basale Expression von Interferon-induzierten Genen ver",
+          "text": "Eine schnelle Hochregulierung und eine höhere basale Expression von Interferon-induzierten Genen verringern die Überlebensfähigkeit von Granulazellneuronen, die mit dem West-Nil-Virus infiziert sind.",
           "full_chars": 199,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Obwohl die Anfälligkeit von Neuronen im Gehirn für mikrobiologische Infektionen ein entscheidender Faktor für den klinischen Verlauf ist, ist wenig über die molekularen Faktoren bekannt, die diese Anf",
+          "text": "Obwohl die Anfälligkeit von Neuronen im Gehirn für mikrobiologische Infektionen ein entscheidender Faktor für den klinischen Verlauf ist, ist wenig über die molekularen Faktoren bekannt, die diese Anfälligkeit steuern. Hier zeigen wir, dass zwei Arten von Neuronen aus verschiedenen Hirnregionen eine unterschiedliche Anfälligkeit für die Replikation mehrerer positiv-strängiger RNA-Viren zeigen. Granulazellen des Kleinhirns und kortikale Neuronen der Großhirnrinde haben einzigartige angeborene Immunprogramme, die ihre unterschiedliche Anfälligkeit für virale Infektionen ex vivo und in vivo bestimmen. Durch die Übertragung von Genen, die in Granulazellen stärker exprimiert werden, auf kortikale Neuronen identifizierten wir drei Interferon-stimulierte Gene (ISGs; Ifi27, Irg1 und Rsad2 (auch bekannt als Viperin)), die antivirale Wirkungen gegen verschiedene neurotrophe Viren vermitteln. Darüber hinaus fanden wir heraus, dass der epigenetische Zustand und die miRNA-vermittelte Regulation von",
           "full_chars": 1264,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971",
-        "document_id": "46695481",
-        "query": {
-          "text": "Primäre Zervixkarzinom-Screening mit HPV-Nachweis weist eine höhere longitudinale Sensitivität auf a",
-          "full_chars": 192,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "HINTERGRUND Das Screening auf Gebärmutterhalskrebs durch HPV-Tests erhöht die Sensitivität bei der Erkennung von hochgradigen (Grad 2 oder 3) zervikalen intraepithelialen Neoplasien, aber ob dieser Ge",
-          "full_chars": 2622,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "180",
-        "document_id": "16966326",
-        "query": {
-          "text": "Die Hemmung der Interaktion zwischen TDP-43 und den Proteinen ND3 und ND6 des Atmungskomplexes I füh",
-          "full_chars": 157,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Genetische Mutationen im TAR-DNA-bindenden Protein 43 (TARDBP, auch bekannt als TDP-43) verursachen amyotrophe Lateralsklerose (ALS), und eine erhöhte Präsenz von TDP-43 (kodiert durch TARDBP) im Zyto",
-          "full_chars": 1463,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

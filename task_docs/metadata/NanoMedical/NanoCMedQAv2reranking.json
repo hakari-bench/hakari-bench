@@ -144,13 +144,13 @@
         "query": {
           "text": "全部症状：近一个月发现，胸闷，气短、咳嗽、低烧治疗情况",
           "full_chars": 27,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "这样的情况表明癌肿已经侵犯到胸膜，可以说是后期的表现",
           "full_chars": 26,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -160,13 +160,13 @@
         "query": {
           "text": "全部症状：月经来的天数跟原来的一样，就只是量少了，如果是子宫内膜有异常的话该怎么办发病时间及原因：治疗情况",
           "full_chars": 53,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "月经量少的原因很多，月经量少一般可能与内分泌失调、妇科炎症等有关，除了可能是黄体机能不足外，甲状腺、泌乳激素功能异常，或是曾做过人工流产手术或是子宫内膜粘连也都是可能的因素之一。子宫内膜有异常的话，要去医院检查，根据情况在医生指导下用药",
           "full_chars": 118,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -176,49 +176,17 @@
         "query": {
           "text": "主要诊断:右颞叶脑挫裂伤其他诊断:外伤性蛛网膜下腔出血左侧颞骨骨折我想问能不能评上十级伤残主要诊断:右颞叶脑挫裂伤其他诊断:外伤性蛛网膜下腔出血左侧颞骨骨折我想问能不能评上十级伤残？交通事故",
           "full_chars": 95,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "有可能是由于骨折引起肿胀引起的疼痛这样的话需要应用消肿的药物和止痛的药物一般经过2周的时间就会没事的希望好好的保养不要活动",
           "full_chars": 61,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "test_query9",
-        "document_id": "apositive_test_query9_00000",
-        "query": {
-          "text": "我宝宝误喝了一爵臣牌清洗剂有事吗用去医院洗胃吗",
-          "full_chars": 23,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "你的情况要考虑这个如果量比较多的话还是要到医院进行洗胃治疗的。",
-          "full_chars": 31,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "test_query161",
-        "document_id": "apositive_test_query161_00000",
-        "query": {
-          "text": "我母亲半月前出现过几次突然眼前发黑、头很晕、无力，开始血压很高，到医院诊断是脑动脉缺血，医生解释说是脑梗塞前期，我想请问一下怎么治疗？能否治好？在饮食方面具体吃那些东西？药物方面该用什么药？在医院住过",
-          "full_chars": 141,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "你头晕或眩晕是脑供血不足引起的，可能有脑血管痉挛，由于紧张压力等因素造成的，需要放松训练，、最好采用中医中药治疗，中药方剂有效，结合针灸理疗效果好，特别是头针治疗有特效",
-          "full_chars": 84,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

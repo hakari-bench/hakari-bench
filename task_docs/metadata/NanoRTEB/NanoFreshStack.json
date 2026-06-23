@@ -128,15 +128,15 @@
         "query_id": "000163",
         "document_id": "124700",
         "query": {
-          "text": "My buttons are displayed (show method) after a short pause, and if I hover the mouse cursor over the",
+          "text": "My buttons are displayed (show method) after a short pause, and if I hover the mouse cursor over the position where the button will be and leave it, the button will not realize that it is hovered. This is fixed when moving the mouse, but I really want to fix this little problem. I used base signals mouse_entered() and mouse_exited() After show() buttons must understand is mouse in or not. That's all(",
           "full_chars": 403,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <class name=\"InputEventMouse\" inherits=\"InputEventWithModifiers\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"../class.x",
+          "text": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <class name=\"InputEventMouse\" inherits=\"InputEventWithModifiers\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"../class.xsd\"> <brief_description> Base input event type for mouse events. </brief_description> <description> Stores general information about mouse events. </description> <tutorials> <link title=\"Using InputEvent\">$DOCS_URL/tutorials/inputs/inputevent.html</link> </tutorials> <members> <member name=\"button_mask\" type=\"int\" setter=\"set_button_mask\" getter=\"get_button_mask\" enum=\"MouseButtonMask\" is_bitfield=\"true\" default=\"0\"> The mouse button mask identifier, one of or a bitwise combination of the [enum MouseButton] button masks. </member> <member name=\"global_position\" type=\"Vector2\" setter=\"set_global_position\" getter=\"get_global_position\" default=\"Vector2(0, 0)\"> When received in [method Node._input] or [method Node._unhandled_input], returns the mouse's position in the root [Viewport] using the",
           "full_chars": 1732,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -144,15 +144,15 @@
         "query_id": "000028",
         "document_id": "004659",
         "query": {
-          "text": "Angular is failing to compile because of the following error and I'm really confused as to why. erro",
+          "text": "Angular is failing to compile because of the following error and I'm really confused as to why. error TS2322: Type 'string' is not assignable to type 'MenuItem'. 4 <menu-item item={{item}}></menu-item> ~~~~ apps/angular-monorepo/src/app/app.component.ts:10:16 10 templateUrl: './app.component.html', ~~~~~~~~~~~~~~~~~~~~~~ Error occurs in the template of component AppComponent. Why is it complaining that item is of type 'string' when I specified that item is of type MenuItem or undefined @Componen",
           "full_chars": 1922,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "# Binding dynamic text, properties and attributes In Angular, a **binding** creates a dynamic connection between a component's template and its data. This connection ensures that changes to the compon",
+          "text": "# Binding dynamic text, properties and attributes In Angular, a **binding** creates a dynamic connection between a component's template and its data. This connection ensures that changes to the component's data automatically update the rendered template. ## Render dynamic text with text interpolation You can bind dynamic text in templates with double curly braces, which tells Angular that it is responsible for the expression inside and ensuring it is updated correctly. This is called **text interpolation**. ```angular-ts @Component({ template: ` <p>Your color preference is {{ theme }}.</p> `, ... }) export class AppComponent { theme = 'dark'; } ``` In this example, when the snippet is rendered to the page, Angular will replace `{{ theme }}` with `dark`. ```angular-html <!-- Rendered Output --> <p>Your color preference is dark.</p> ``` In addition to evaluating the expression at first render, Angular also updates the rendered content when the expression's value changes. Continuing the t",
           "full_chars": 9518,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -160,51 +160,19 @@
         "query_id": "000006",
         "document_id": "006307",
         "query": {
-          "text": "I am testing angular 16 signals and per my understanding, when I disable zone.js and call signal.upd",
+          "text": "I am testing angular 16 signals and per my understanding, when I disable zone.js and call signal.update() the view should be updated with new value. It is not. Please help me to understand why. main.ts platformBrowserDynamic().bootstrapModule(AppModule, { ngZone: 'noop' }) .catch(err => console.error(err)); app.component.ts @Component({ selector: 'app-root', template: ' <h1>{{ title() }}</h1> <button (click)=\"click()\">Change</button> ', }) export class AppComponent { title = signal('Hello'); cli",
           "full_chars": 734,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "# Resolving zone pollution **Zone.js** is a signaling mechanism that Angular uses to detect when an application state might have changed. It captures asynchronous operations like `setTimeout`, network",
+          "text": "# Resolving zone pollution **Zone.js** is a signaling mechanism that Angular uses to detect when an application state might have changed. It captures asynchronous operations like `setTimeout`, network requests, and event listeners. Angular schedules change detection based on signals from Zone.js. In some cases scheduled [tasks](https://developer.mozilla.org/docs/Web/API/HTML_DOM_API/Microtask_guide#tasks) or [microtasks](https://developer.mozilla.org/docs/Web/API/HTML_DOM_API/Microtask_guide#microtasks) don’t make any changes in the data model, which makes running change detection unnecessary. Common examples are: * `requestAnimationFrame`, `setTimeout` or `setInterval` * Task or microtask scheduling by third-party libraries This section covers how to identify such conditions, and how to run code outside the Angular zone to avoid unnecessary change detection calls. ## Identifying unnecessary change detection calls You can detect unnecessary change detection calls using Angular DevTools",
           "full_chars": 5856,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
-        }
-      },
-      {
-        "query_id": "000189",
-        "document_id": "121177",
-        "query": {
-          "text": "After exporting my project to Android a directory named .godot/exported appeared in the root of my G",
-          "full_chars": 852,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "revent race condition on initial breakpoints from DAP ([GH-84895](https://github.com/godotengine/godot/pull/84895)). - Do not bother with line colors if `line_number_gutter` is not yet calculated ([GH",
-          "full_chars": 6827,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "000070",
-        "document_id": "000510",
-        "query": {
-          "text": "I have an Angular 17 application that uses server-side rendering. The state of the application is ma",
-          "full_chars": 1264,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "# Angular SSR Read the dev guide [here](https://angular.dev/guide/ssr).",
-          "full_chars": 72,
-          "limit_chars": 200,
-          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

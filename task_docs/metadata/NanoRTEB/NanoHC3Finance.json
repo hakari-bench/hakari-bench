@@ -123,14 +123,14 @@
         "query": {
           "text": "Is socialtrend.com or/and feelthetrend.com legitimate?",
           "full_chars": 54,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "It's called a \"Pyramid scheme\". Its illegal in almost every country of the Western world. You're not going to earn lifetime income, of course, and these things collapse pretty quickly. Most of the \"co",
+          "text": "It's called a \"Pyramid scheme\". Its illegal in almost every country of the Western world. You're not going to earn lifetime income, of course, and these things collapse pretty quickly. Most of the \"common folks\" don't return the investment, its the organizers who take the money. Sometimes they run, most times they end up in jail. The way these schemes work is that they pay the early \"investors\" from the fees paid by new \"investors\". As long as a steady stream of new people keep signing up and paying into it those who got in very early make money. The idea is based on the geometric procession of each new person signing up two or more people, and those people doing the same. Pretty quickly at that rate you need to sign up every human being on the planet to keep the new money flowing in to make it work, which obviously is not realistic. Ultimately a small % of the people (if they can stay out of jail) will make a big amount of money the vast majority of \"investors\" get stiffed.",
           "full_chars": 989,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -139,14 +139,14 @@
         "query": {
           "text": "How to read Google Finance data on dividends",
           "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "However, you have to remember that not all dividends are paid quarterly. For example one stock I recently purchased has a price of $8.03 and the Div/yield = 0.08/11.9 . $.08 * 4 = $0.32 which is only",
+          "text": "However, you have to remember that not all dividends are paid quarterly. For example one stock I recently purchased has a price of $8.03 and the Div/yield = 0.08/11.9 . $.08 * 4 = $0.32 which is only 3.9% (But this stock pays monthly dividends). $.08 * 12 = $0.96 which is 11.9 %. So over the course of a year assuming the stock price and the dividends didn't change you would make 11.9%",
           "full_chars": 392,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -155,49 +155,17 @@
         "query": {
           "text": "What is a good way to keep track of your credit card transactions, to reduce likelihood of fraud?",
           "full_chars": 97,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Read your bill, question things that don't look familiar. People who steal credit card numbers don't bother to conceal themselves well. So if you live in Florida, and all of the sudden charges appear",
+          "text": "Read your bill, question things that don't look familiar. People who steal credit card numbers don't bother to conceal themselves well. So if you live in Florida, and all of the sudden charges appear in Idaho, you should investigate. Keeping charge slips seems counter-productive to me. I already know that I bought gasoline from the station down the street, a slip of paper whose date may or may not align with the credit card bill is not very useful. The half-life for a stolen card is hours. So you tend to see a bunch of charges appearing quickly. If someone is stealing $20 a week from you over an extended period of time, the theif is probably someone you live or work with, and paper slips won't help you there either.",
           "full_chars": 725,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00189",
-        "document_id": "000000189",
-        "query": {
-          "text": "When Employees are “Granted” Stock Options, is the Company encouraging Long-Term investments from th",
-          "full_chars": 103,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "There are two things to consider: taxes - beneficial treatment for long-term holding, and for ESPP's you can get lower taxes on higher earnings. Also, depending on local laws, some share schemes allow",
-          "full_chars": 931,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00070",
-        "document_id": "000000070",
-        "query": {
-          "text": "Does lender care what I use the money for?",
-          "full_chars": 42,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "When you borrow from a bank, there are secured loans, as with a mortgage, or unsecured lines of credit, usually a more reasonable amount of money, but also based on income. You just asked about a priv",
-          "full_chars": 429,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

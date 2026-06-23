@@ -138,31 +138,31 @@
         "query_id": "2015_6_v1",
         "document_id": "2270822",
         "query": {
-          "text": "Given some infomation about patient.A 46-year-old woman with sweaty hands, exophthalmia, and weight",
+          "text": "Given some infomation about patient.A 46-year-old woman with sweaty hands, exophthalmia, and weight loss despite increased eating.What is the patient's diagnosis?",
           "full_chars": 162,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Recognizing thyrotoxicosis in a patient with bipolar mania: a case report A thyroid stimulating hormone level is commonly measured in patients presenting with symptoms of mania in order to rule out an",
+          "text": "Recognizing thyrotoxicosis in a patient with bipolar mania: a case report A thyroid stimulating hormone level is commonly measured in patients presenting with symptoms of mania in order to rule out an underlying general medical condition such as hyperthyroidism or thyrotoxicosis. Indeed, many cases have been reported in which a patient is initially treated for bipolar mania, but is later found to have a thyroid condition. Several case reports have noted the development of a thyroid condition in bipolar patients either on lithium maintenance treatment or recently on lithium treatment. We review a case in which a patient with a long history of bipolar disorder presents with comorbid hyperthyroidism and bipolar mania after recent discontinuation of lithium treatment. Physicians should consider a comorbid hyperthyroidism in bipolar manic patients only partially responsive to standard care treatment with a mood stabilizer and antipsychotic.",
           "full_chars": 949,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "2014_18_v1",
         "document_id": "1175926",
         "query": {
-          "text": "Given some infomation about patient.6-month-old male with decreased urine output and edema several h",
+          "text": "Given some infomation about patient.6-month-old male with decreased urine output and edema several hours after surgery. He is hypertensive and tachycardic, has a high BUN and creatinine, and urine microscopy reveals red blood cells and granular casts.What tests should the patient receive?",
           "full_chars": 289,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Serum cystatin C concentration as a marker of acute renal dysfunction in critically ill patients In critically ill patients sudden changes in glomerular filtration rate (GFR) are not instantly followe",
+          "text": "Serum cystatin C concentration as a marker of acute renal dysfunction in critically ill patients In critically ill patients sudden changes in glomerular filtration rate (GFR) are not instantly followed by parallel changes in serum creatinine. The aim of the present study was to analyze the utility of serum cystatin C as a marker of renal function in these patients. Serum creatinine, serum cystatin C and 24-hour creatinine clearance (C Cr ) were determined in 50 critically ill patients (age 21–86 years; mean Acute Physiology and Chronic Health Evaluation II score 20 ± 9). They did not have chronic renal failure but were at risk for developing renal dysfunction. Serum cystatin C was measured using particle enhanced immunonephelometry. Twenty-four-hour body surface adjusted C Cr was used as a control because it is the 'gold standard' for determining GFR. Serum creatinine, serum cystatin C and C Cr (mean ± standard deviation [range]) were 1.00 ± 0.85 mg/dl (0.40–5.61 mg/dl), 1.19 ± 0.79 mg",
           "full_chars": 1849,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -170,51 +170,19 @@
         "query_id": "2014_11_v1",
         "document_id": "1559601",
         "query": {
-          "text": "Given some infomation about patient.40-year-old woman with severe right arm pain and hypotension. Sh",
+          "text": "Given some infomation about patient.40-year-old woman with severe right arm pain and hypotension. She has no history of trauma and right arm exam reveals no significant findings.What tests should the patient receive?",
           "full_chars": 216,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "A simple statistical model for prediction of acute coronary syndrome in chest pain patients in the emergency department Several models for prediction of acute coronary syndrome (ACS) among chest pain",
+          "text": "A simple statistical model for prediction of acute coronary syndrome in chest pain patients in the emergency department Several models for prediction of acute coronary syndrome (ACS) among chest pain patients in the emergency department (ED) have been presented, but many models predict only the likelihood of acute myocardial infarction, or include a large number of variables, which make them less than optimal for implementation at a busy ED. We report here a simple statistical model for ACS prediction that could be used in routine care at a busy ED. Multivariable analysis and logistic regression were used on data from 634 ED visits for chest pain. Only data immediately available at patient presentation were used. To make ACS prediction stable and the model useful for personnel inexperienced in electrocardiogram (ECG) reading, simple ECG data suitable for computerized reading were included. Besides ECG, eight variables were found to be important for ACS prediction, and included in the m",
           "full_chars": 1449,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2014_4_v1",
-        "document_id": "1156909",
-        "query": {
-          "text": "Given some infomation about patient.2-year-old boy with fever and irritability for 5 days. Physical",
-          "full_chars": 396,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Behaviour sequelae following acute Kawasaki disease Kawasaki disease is a systemic vasculitis and may affect cerebral function acutely. The aim of the present study was to measure a number of behaviou",
-          "full_chars": 1803,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "2014_28_v1",
-        "document_id": "2887860",
-        "query": {
-          "text": "Given some infomation about patient.31-year-old female with amenorrhea, milky nipple discharge, nega",
-          "full_chars": 190,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Prolactinomas, Cushing's disease and acromegaly: debating the role of medical therapy for secretory pituitary adenomas Pituitary adenomas are associated with a variety of clinical manifestations resul",
-          "full_chars": 2805,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

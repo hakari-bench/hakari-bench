@@ -124,14 +124,14 @@
         "query": {
           "text": "DeleteDuplicatesBy nie działa tak, jak się spodziewałem. Czy czegoś mi brakuje?",
           "full_chars": 79,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Szybsza alternatywa dla DeleteDuplicates do usuwania elementów z listy Mam listę w tym stylu data={{a1,b1,c1,d1,e1,f1}, {a2,b2,c2,d2,e2,f2}} Muszę usunąć wszystkie elementy, w których znajduje się `b1",
+          "text": "Szybsza alternatywa dla DeleteDuplicates do usuwania elementów z listy Mam listę w tym stylu data={{a1,b1,c1,d1,e1,f1}, {a2,b2,c2,d2,e2,f2}} Muszę usunąć wszystkie elementy, w których znajduje się `b1` równa się „b2” i tak dalej. Muszę tylko przetestować b. Lista, której używam, zawiera ponad 15000 elementów. Użyłem `DeleteDuplicates`: DeleteDuplicates[data, {_, #1, _, _, _, _} == {_, #2, _, _, _, _} &] Wiem, że ta metoda daje poprawny wynik ponieważ przetestowałem to na niewielkiej ilości danych. Ale na liście zawierającej ponad 15 000 elementów po 20 minutach bez powodzenia. Czy istnieje bardziej wydajna metoda?",
           "full_chars": 621,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -140,14 +140,14 @@
         "query": {
           "text": "Czy można zmienić kolor fabuły w programie Show?",
           "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Edytuj wykres/grafikę po narysowaniu. Czasami wpadam w sytuację, gdy istnieją obiekty graficzne (głównie wykresy), których rysowanie zajmuje trochę czasu. Dobra praktyka sugerowałaby, że całą ocenę pr",
+          "text": "Edytuj wykres/grafikę po narysowaniu. Czasami wpadam w sytuację, gdy istnieją obiekty graficzne (głównie wykresy), których rysowanie zajmuje trochę czasu. Dobra praktyka sugerowałaby, że całą ocenę przeprowadzasz poza „Plotką” lub jakąkolwiek inną funkcją kreślenia, ale czasami zapomina się lub jest to proces rysowania, który zajmuje dużo czasu. Więc **pytanie** brzmi, czy można zmienić takie rzeczy jak czcionka `PlotLabel`, `PlotStyle` lub inne ściśle estetyczne właściwości fabuły bez pytania Mathematica o przeliczenie wszystkich punktów.",
           "full_chars": 545,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -156,49 +156,17 @@
         "query": {
           "text": "Uzyskaj wzór na interpolację wielomianową",
           "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Określ funkcje na podstawie punktów danych Czy Mathematica może rozwiązać dla f(x,y) = 0 takie, że {x,y} zawiera `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}} `? Czy musimy najpierw określić f(x,y) ? Dzię",
+          "text": "Określ funkcje na podstawie punktów danych Czy Mathematica może rozwiązać dla f(x,y) = 0 takie, że {x,y} zawiera `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}} `? Czy musimy najpierw określić f(x,y) ? Dziękuję Ci",
           "full_chars": 207,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "8865",
-        "document_id": "14112",
-        "query": {
-          "text": "Przekaż funkcję lub formułę jako parametr funkcji",
-          "full_chars": 49,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Przekazywanie funkcji jako argumentu innej funkcji > **Możliwe duplikowanie:** > Przekaż funkcję lub formułę jako parametr funkcji Próbuję zaimplementować prostą funkcję podobną do wykresu [], z tym s",
-          "full_chars": 892,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "25502",
-        "document_id": "2794",
-        "query": {
-          "text": "Jak wpisać duże „E” w Mathematica 9 za pomocą „ToExpression” i „TeXForm”?",
-          "full_chars": 73,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Nie można przekonwertować danych wejściowych $\\TeX$ na matematykę Wejście ToExpression[\"\\\\sqrt{x y}\", TeXForm] daje mi wynik `$Failed`. Może mój bardzo stary komputer jest problemem, ale to jedyne pol",
-          "full_chars": 278,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

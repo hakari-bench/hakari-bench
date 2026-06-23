@@ -168,14 +168,14 @@
         "query": {
           "text": "Fitzgerald Autohaus in Chambersburg, PA",
           "full_chars": 39,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Fitzgerald Auto Malls ist ein familiengeführtes und -betriebenes Autohaus, das 1966 gegründet wurde und seine erste Filiale in Bethesda, Maryland, eröffnete. Stand 2014 belegte Fitzgerald Auto Malls P",
+          "text": "Fitzgerald Auto Malls ist ein familiengeführtes und -betriebenes Autohaus, das 1966 gegründet wurde und seine erste Filiale in Bethesda, Maryland, eröffnete. Stand 2014 belegte Fitzgerald Auto Malls Platz 59 auf der Liste der \"Top 125 Autohändlergruppen\" in den USA, die jährlich von Automotive News veröffentlicht wird. Fitzgerald-Händlerfilialen tauchen fünfmal in der WardsAuto e-Dealer 100 von 2013 auf, auf den Plätzen 8, 25, 30, 43 und 98.",
           "full_chars": 445,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -184,14 +184,14 @@
         "query": {
           "text": "Ist die Kurzgeschichtensammlung von Alice Munro aus dem Jahr 1994 verfügbar?",
           "full_chars": 76,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, geb. Laidlaw /ˈleɪdlɔː/; geboren 10. Juli 1931) ist eine kanadische Autorin. Munros Werk wird beschrieben, die Struktur von Kurzgeschichten neu definiert zu haben",
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, geb. Laidlaw /ˈleɪdlɔː/; geboren 10. Juli 1931) ist eine kanadische Autorin. Munros Werk wird beschrieben, die Struktur von Kurzgeschichten neu definiert zu haben, insbesondere durch ihre Tendenz, vorwärts und rückwärts in der Zeit zu springen. Ihre Geschichten werden als \"mehr zu enthüllen als zu präsentieren, mehr zu zeigen als zu verkünden\" beschrieben. Munros Fiktion spielt meist in ihrem Heimatbezirk Huron County in Südwest-Ontario. Ihre Geschichten erforschen menschliche Komplexitäten in einem klaren und direkten Schreibstil.",
           "full_chars": 575,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -200,49 +200,17 @@
         "query": {
           "text": "Gallorömische Architektur in Paris",
           "full_chars": 34,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Kunst in Paris ist ein Artikel über die Kunstkultur und -geschichte in Paris, der Hauptstadt Frankreichs. Seit Jahrhunderten hat Paris Künstler aus aller Welt angezogen, die in die Stadt kommen, um si",
+          "text": "Kunst in Paris ist ein Artikel über die Kunstkultur und -geschichte in Paris, der Hauptstadt Frankreichs. Seit Jahrhunderten hat Paris Künstler aus aller Welt angezogen, die in die Stadt kommen, um sich weiterzubilden und Inspiration in seinen künstlerischen Ressourcen und Galerien zu finden. Daher hat sich Paris den Ruf als 'Stadt der Kunst' erworben.",
           "full_chars": 354,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "SemSearch_LS-35",
-        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
-        "query": {
-          "text": "Republiken des ehemaligen Jugoslawiens",
-          "full_chars": 38,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Die Verfassung von 1974 Jugoslawiens war die vierte und letzte Verfassung der Sozialistischen Föderativen Republik Jugoslawien. Sie trat am 21. Februar in Kraft. Mit 406 ursprünglichen Artikeln war di",
-          "full_chars": 454,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "INEX_XER-72",
-        "document_id": "<dbpedia:A_Little_Romance>",
-        "query": {
-          "text": "Filme, die in Venedig gedreht wurden",
-          "full_chars": 36,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "A Little Romance ist ein 1979er amerikanischer Technicolor- und Panavision-Romantikkomödie unter der Regie von George Roy Hill mit Laurence Olivier, Thelonious Bernard und Diane Lane in ihrer ersten F",
-          "full_chars": 366,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

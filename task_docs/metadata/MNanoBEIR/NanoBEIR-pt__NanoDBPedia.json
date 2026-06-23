@@ -131,14 +131,14 @@
         "query": {
           "text": "Fitzgerald Auto Mall em Chambersburg, PA",
           "full_chars": 40,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Fitzgerald Auto Malls é uma concessionária de automóveis de propriedade e operação familiar fundada em 1966, com sua primeira localização abrindo em Bethesda, Maryland. Em 2014, a Fitzgerald Auto Mall",
+          "text": "Fitzgerald Auto Malls é uma concessionária de automóveis de propriedade e operação familiar fundada em 1966, com sua primeira localização abrindo em Bethesda, Maryland. Em 2014, a Fitzgerald Auto Malls ficou em 59º lugar na lista das \"Top 125 Concessionárias\" dos EUA, publicada anualmente pela Automotive News. As localizações da Fitzgerald aparecem cinco vezes na lista WardsAuto e-Dealer 100 de 2013, nas posições 8, 25, 30, 43 e 98.",
           "full_chars": 436,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Coleção de contos de 1994 de Alice Munro está disponível",
           "full_chars": 56,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Alice Ann Munro (nascida Laidlaw; 10 de julho de 1931) é uma autora canadense. O trabalho de Munro é frequentemente descrito como tendo revolucionado a arquitetura dos contos, especialmente por sua te",
+          "text": "Alice Ann Munro (nascida Laidlaw; 10 de julho de 1931) é uma autora canadense. O trabalho de Munro é frequentemente descrito como tendo revolucionado a arquitetura dos contos, especialmente por sua tendência de avançar e retroceder no tempo. Suas histórias são conhecidas por \"embutir mais do que anunciar, revelar mais do que exibir.\" A ficção de Munro é, na maioria das vezes, ambientada em seu condado natal, Huron, no sudoeste de Ontário. Seus contos exploram as complexidades humanas em um estilo de prosa simples e direto.",
           "full_chars": 528,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "Arquitetura galo-romana em Paris",
           "full_chars": 32,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "A Arte em Paris é um artigo sobre a cultura e a história da arte em Paris, a capital da França. Há séculos, Paris atrai artistas de todo o mundo, que chegam à cidade para se educarem e buscar inspiraç",
+          "text": "A Arte em Paris é um artigo sobre a cultura e a história da arte em Paris, a capital da França. Há séculos, Paris atrai artistas de todo o mundo, que chegam à cidade para se educarem e buscar inspiração em seus recursos artísticos e galerias. Como resultado, Paris adquiriu a reputação de \"Cidade da Arte\".",
           "full_chars": 306,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "SemSearch_LS-35",
-        "document_id": "<dbpedia:1974_Yugoslav_Constitution>",
-        "query": {
-          "text": "Repúblicas da antiga Iugoslávia",
-          "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "A Constituição de 1974 da Iugoslávia foi a quarta e última constituição da República Federal Socialista da Iugoslávia. Ela entrou em vigor em 21 de fevereiro. Com 406 artigos originais, a constituição",
-          "full_chars": 440,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "INEX_XER-72",
-        "document_id": "<dbpedia:A_Little_Romance>",
-        "query": {
-          "text": "Filmes filmados em Veneza",
-          "full_chars": 25,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "A Pequena Romântica é um filme de comédia romântica americano de 1979, em Technicolor e Panavision, dirigido por George Roy Hill e estrelado por Laurence Olivier, Thelonious Bernard e Diane Lane, em s",
-          "full_chars": 391,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

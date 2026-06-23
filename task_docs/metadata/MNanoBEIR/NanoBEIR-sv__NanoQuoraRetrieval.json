@@ -132,13 +132,13 @@
         "query": {
           "text": "Är det okej att skratta åt sina egna skämt?",
           "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Är det konstigt att skratta åt sina egna skämt?",
           "full_chars": 47,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -148,13 +148,13 @@
         "query": {
           "text": "Vad är den bästa lögn du någonsin har berättat?",
           "full_chars": 47,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Vilken är den mest genomtänkta lögn du någonsin har berättat?",
           "full_chars": 61,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -164,49 +164,17 @@
         "query": {
           "text": "Varför föreslår Quora ofta svar i min flödesmatning som kritiserar Donald Trump?",
           "full_chars": 80,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Varför verkar Quora bara ha partiska och subjektiva svar på frågor om Donald Trump?",
           "full_chars": 83,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "516276",
-        "document_id": "516277",
-        "query": {
-          "text": "Hur kan jag bli starkare?",
-          "full_chars": 25,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Hur blir jag starkare fysiskt?",
-          "full_chars": 30,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "250143",
-        "document_id": "250142",
-        "query": {
-          "text": "Hur fungerar en kvantsatellit?",
-          "full_chars": 30,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Hur fungerar en kvantumsatellit och vad skulle några av dess huvudanvändningar vara?",
-          "full_chars": 84,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

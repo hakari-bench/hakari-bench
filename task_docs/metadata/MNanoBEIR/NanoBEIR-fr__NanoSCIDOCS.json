@@ -137,13 +137,13 @@
         "query": {
           "text": "Nouveau convertisseur élévateur multiniveau CC-CC",
           "full_chars": 49,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Les convertisseurs de tension à sources multiples sont en train d'émerger comme une nouvelle génération d'options de convertisseurs de puissance pour les applications à haute puissance. Les convertiss",
+          "text": "Les convertisseurs de tension à sources multiples sont en train d'émerger comme une nouvelle génération d'options de convertisseurs de puissance pour les applications à haute puissance. Les convertisseurs de tension à sources multiples synthétisent généralement une onde de tension en escalier à partir de plusieurs niveaux de tensions de condensateurs en courant continu. L'une des principales limitations des convertisseurs à niveaux multiples est le déséquilibre de tension entre les différents niveaux. Les techniques pour équilibrer la tension entre les différents niveaux impliquent généralement le clampage de tension ou le contrôle de la charge des condensateurs. Il existe plusieurs façons de mettre en œuvre l'équilibre de tension dans les convertisseurs à niveaux multiples. Sans considérer les convertisseurs traditionnels à couplage magnétique, cet article présente trois convertisseurs de tension à sources multiples récemment développés : 1) les convertisseurs à diodes de clampage, 2)",
           "full_chars": 1262,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -151,15 +151,15 @@
         "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
         "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
         "query": {
-          "text": "Apprentissage accéléré des champs aléatoires de Markov gaussiens creux basé sur la décomposition de",
+          "text": "Apprentissage accéléré des champs aléatoires de Markov gaussiens creux basé sur la décomposition de Cholesky",
           "full_chars": 108,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "Sure, please provide the English document text that you need translated into French.",
           "full_chars": 84,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -169,49 +169,17 @@
         "query": {
           "text": "Synthèse de textures par réseaux de neurones convolutifs",
           "full_chars": 56,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Dans ce travail, nous examinons l'impact de la profondeur des réseaux convolutifs sur leur précision dans le contexte de la reconnaissance d'images à grande échelle. Notre principale contribution est",
+          "text": "Dans ce travail, nous examinons l'impact de la profondeur des réseaux convolutifs sur leur précision dans le contexte de la reconnaissance d'images à grande échelle. Notre principale contribution est une évaluation approfondie de réseaux de profondeur croissante, qui montre qu'une amélioration significative par rapport aux configurations de l'état de l'art peut être obtenue en augmentant la profondeur à 16–19 couches de poids. Ces résultats ont servi de base à notre soumission au concours ImageNet 2014, où notre équipe a remporté les première et deuxième places dans les catégories de localisation et de classification, respectivement. Nous démontrons également que nos représentations généralisent bien à d'autres ensembles de données, où nous obtenons des résultats à la pointe de la technologie. De plus, nous avons rendu publics nos deux meilleurs modèles de réseaux convolutifs (ConvNet) pour faciliter les recherches futures sur l'utilisation des représentations visuelles profondes en vi",
           "full_chars": 1020,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f6c1eda98cef66438dc89fd9a3d4fcc0a795418a",
-        "document_id": "5ab321e0ea7893dda145331bfb95e102c0b61a5d",
-        "query": {
-          "text": "Antenne annulaire plane à large bande avec polarisation circulaire pour un système RFID",
-          "full_chars": 87,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Dans cet article, une technique d'alimentation à bande horizontale sinueuse (HMS) est proposée pour obtenir une bonne adaptation d'impédance et des diagrammes de rayonnement symétriques en champ loint",
-          "full_chars": 1507,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "4ceb63d79341ba3caa08bd1c6c141478d32a8244",
-        "document_id": "00514b5cd341ef128d216e86f2a795f218ef83db",
-        "query": {
-          "text": "Conception d'un moniteur cardiaque numérique avancé en utilisant des composants électroniques de bas",
-          "full_chars": 101,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Dans cet article, nous présentons la conception et le développement d'un nouveau dispositif intégré pour mesurer la fréquence cardiaque à l'aide du bout des doigts, afin d'améliorer l'estimation de la",
-          "full_chars": 1375,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -154,14 +154,14 @@
         "query": {
           "text": "Schattingen van variantie uit een iid steekproef",
           "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Intuïtieve uitleg voor delen door (n-1) bij het berekenen van de standaarddeviatie? Vandaag kreeg ik in de klas de vraag waarom je de som van de gekwadrateerde afwijkingen deelt door $(n-1)$ in plaats",
+          "text": "Intuïtieve uitleg voor delen door (n-1) bij het berekenen van de standaarddeviatie? Vandaag kreeg ik in de klas de vraag waarom je de som van de gekwadrateerde afwijkingen deelt door $(n-1)$ in plaats van door $n$ bij het berekenen van de standaarddeviatie. Ik zei dat ik dat in de klas niet zou beantwoorden (omdat ik niet over zuivere schatters wilde beginnen), maar later vroeg ik me af - **is er** een intuïtieve uitleg hiervoor?!",
           "full_chars": 435,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -170,13 +170,13 @@
         "query": {
           "text": "Hoe kan ik type II (bèta) fout, power en steekproefomvang het beste grafisch weergeven?",
           "full_chars": 87,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "Reëel gebaseerd op machtsfunctie Probleem: Wat is een voorbeeld uit het echte leven van een machtsfunctie? Ik heb erover nagedacht, maar ik ben er niet uitgekomen. Weet iemand het?",
           "full_chars": 181,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -186,49 +186,17 @@
         "query": {
           "text": "Het weergeven van een afstandsmatrix in het vlak",
           "full_chars": 48,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Wat is het verschil tussen principale componentenanalyse en multidimensionale schaalverdeling? Hoe verschillen PCA en klassieke MDS? En MDS versus niet-metrische MDS? Is er een situatie waarin je de v",
+          "text": "Wat is het verschil tussen principale componentenanalyse en multidimensionale schaalverdeling? Hoe verschillen PCA en klassieke MDS? En MDS versus niet-metrische MDS? Is er een situatie waarin je de voorkeur aan de een boven de ander zou geven? Hoe verschillen de interpretaties?",
           "full_chars": 280,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "94061",
-        "document_id": "59000",
-        "query": {
-          "text": "Hulp bij het interpreteren van een R lineair model",
-          "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Basisvragen over de interpretatie van resultaten van summary(lm(...~...)) in R set.seed(11) a = runif (12) b = rep(c(1,2,3),4) summary(lm(a~b))$coeff summary(lm(a~b-1))$coeff Wat betekent een p-waarde",
-          "full_chars": 433,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "36036",
-        "document_id": "35561",
-        "query": {
-          "text": "Hoe om te gaan met ontbrekende waarden voor PCA?",
-          "full_chars": 48,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Vervanging van NA-waarden voor PCA-analyse Ik heb de functie `prcomp()` gebruikt om een PCA-analyse uit te voeren in R. Er zit echter een bug in die functie waardoor de parameter `na.action` niet werk",
-          "full_chars": 1676,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

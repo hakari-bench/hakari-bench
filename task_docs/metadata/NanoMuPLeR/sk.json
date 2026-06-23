@@ -121,83 +121,51 @@
         "query_id": "c4a595b7-62f1-4aa4-9130-fd37ab0eb095",
         "document_id": "3283",
         "query": {
-          "text": "Ktorá trojstupňová intervenčná schéma sa navrhuje spolu s podporou duševného zdravia, udržiavaním zd",
+          "text": "Ktorá trojstupňová intervenčná schéma sa navrhuje spolu s podporou duševného zdravia, udržiavaním zdravého životného štýlu a prostrediami podporujúcimi sebarealizáciu?",
           "full_chars": 167,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Z tohto hľadiska je potrebné zdôrazniť tri zložky prevencie (primárnu, sekundárnu a terciárnu) a prispôsobiť ich danej oblasti. Je potrebné vypracovať iniciatívy pre viaceré oblasti, vrátane podpory d",
+          "text": "Z tohto hľadiska je potrebné zdôrazniť tri zložky prevencie (primárnu, sekundárnu a terciárnu) a prispôsobiť ich danej oblasti. Je potrebné vypracovať iniciatívy pre viaceré oblasti, vrátane podpory duševného zdravia a informovania verejnosti, osvojenia si a udržania zdravého spôsobu života a vytvorenia prostredia, ktoré podporuje sebarealizáciu. To sa týka aj prevencie, zameranej na zníženie výskytu duševných porúch sústredením pozornosti na rizikové faktory a patogénne situácie, ako napríklad:",
           "full_chars": 500,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "268ae7ad-36ca-4af1-ab44-fb7cd0f1288d",
         "document_id": "2676",
         "query": {
-          "text": "Ktorý výbor vyzval na opatrenia podporované EÚ na nápravu nedostatkov kvalifikácie a etiky vedúcich",
+          "text": "Ktorý výbor vyzval na opatrenia podporované EÚ na nápravu nedostatkov kvalifikácie a etiky vedúcich po strate dôvery zamestnancov a spotrebiteľov?",
           "full_chars": 146,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Kríza spojená so stratou dôvery sa medzi zamestnancami a spotrebiteľmi v mnohých krajinách Európskeho spoločenstva zhoršila po odhalení chýb a nesprávneho počínania riadiacich pracovníkov a celých ria",
+          "text": "Kríza spojená so stratou dôvery sa medzi zamestnancami a spotrebiteľmi v mnohých krajinách Európskeho spoločenstva zhoršila po odhalení chýb a nesprávneho počínania riadiacich pracovníkov a celých riadiacich štruktúr. Výbor považuje za dôležité, aby európske štáty za podpory Európskeho spoločenstva venovali zvýšenú pozornosť nedostatkom v oblasti kvalifikácie a integrity riadiacich pracovníkov a viac urobiť pre ich odstránenie. Okrem toho by bolo potrebné zvážiť, ako prostredníctvom väčšej transparentnosti, prípadne aj zvýšenej miery zodpovednosti trvať u zodpovedných pracovníkoch na tom, aby sa striktne zameriavali na plnenie svojich úloh a na svoju sociálnu zodpovednosť.",
           "full_chars": 681,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "0634974c-56de-44ef-8aed-b7b7b7048a3a",
         "document_id": "4191",
         "query": {
-          "text": "Ktorý orgán vysvetľuje politiku pri neriešenej judikatúre bez prejudikácie výkladu ods. 1 a 3 zmluvy",
+          "text": "Ktorý orgán vysvetľuje politiku pri neriešenej judikatúre bez prejudikácie výkladu ods. 1 a 3 zmluvy regionálnymi a súdmi Spoločenstva?",
           "full_chars": 135,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Vzhľadom na niekoľko otázok v týchto usmerneniach je načrtnutý súčasný stav judikatúry Súdneho dvora EZVO a Súdneho dvora Európskych spoločenstiev v súlade so zodpovedajúcimi ustanoveniami v Zmluve o",
+          "text": "Vzhľadom na niekoľko otázok v týchto usmerneniach je načrtnutý súčasný stav judikatúry Súdneho dvora EZVO a Súdneho dvora Európskych spoločenstiev v súlade so zodpovedajúcimi ustanoveniami v Zmluve o ES. Dozorný úrad EZVO má však v úmysle vysvetliť svoju politiku aj v otázkach, ktorými sa judikatúra nezaoberá, resp. ktoré si vyžadujú interpretáciu. Postojom Dozorného úradu EZVO však nie je dotknutá judikatúra Súdneho dvora EZVO, Súdneho dvora a Súdu prvého stupňa Európskych spoločenstiev v súvislosti s interpretáciou článku 53 ods. 1 a 3 a interpretácia, ktorú týmto ustanoveniam môže dať Súdny dvor EZVO a súdy Spoločenstva v budúcnosti.",
           "full_chars": 644,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "ef6c7e6d-9986-42e2-8ba4-d8b21d462bc1",
-        "document_id": "3467",
-        "query": {
-          "text": "Ktorý dohľadový orgán poskytol samostatné riešenie na riadenie pohybu a neskôr v roku 2006 kontrolov",
-          "full_chars": 138,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Na začiatku projektu NCTS niekoľko členských štátov, ktoré si nechceli vypracovať vnútroštátnu aplikáciu pre oblasť tranzitu, požiadali Komisiu, aby vyvinula štandardnú aplikáciu. MCC vytvorená Komisi",
-          "full_chars": 817,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5b0a150d-7dd0-4355-983f-1dd25f85b5d8",
-        "document_id": "1750",
-        "query": {
-          "text": "Ako európske podnikové výbory zakotvujú záväzky spoločenskej zodpovednosti podnikov prostredníctvom",
-          "full_chars": 193,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Rozhodujúcim krokom na európskej úrovni je dobrovoľné a/alebo vyjednané stanovenie záväzkov týkajúcich sa SZP vo všetkých nadnárodných spoločnostiach, ktoré majú európsky podnikový výbor. Týmto spôsob",
-          "full_chars": 834,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

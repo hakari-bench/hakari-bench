@@ -165,31 +165,31 @@
         "query_id": "test-politics-gvhbhlsbr-con04a",
         "document_id": "test-politics-gvhbhlsbr-con04b",
         "query": {
-          "text": "El público es apático ante la reforma. Es discutible si la reforma de la Cámara de los Lores debería",
+          "text": "El público es apático ante la reforma. Es discutible si la reforma de la Cámara de los Lores debería ser una prioridad en el actual clima económico, ya no digamos si un gobierno de coalición podría iniciar e implementar tales medidas. Los intentos de reformar la Cámara de los Lores han sido pospuestos una y otra vez, demostrando las reticencias de la Cámara de los Comunes al cambio. Un sentimiento que sin duda se refleja en la opinión pública británica, como se demostró con el reciente resultado",
           "full_chars": 572,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "La campaña de voto alternativo no puede compararse con una reforma del sistema político. Además, no se debe confundir a un público mal informado debido a la manipulación política con apatía. A menudo,",
+          "text": "La campaña de voto alternativo no puede compararse con una reforma del sistema político. Además, no se debe confundir a un público mal informado debido a la manipulación política con apatía. A menudo, los votantes expresan que son apáticos porque sienten que no pueden cambiar nada, que su voto no tendrá valor. Una reforma que garantice que las personas que gobiernan el país sean directamente elegidas por el pueblo ayudaría a contrarrestar estos sentimientos.",
           "full_chars": 462,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "test-economy-egecegphw-pro02a",
         "document_id": "test-economy-egecegphw-pro02b",
         "query": {
-          "text": "La expansión de Heathrow es vital para la economía. La expansión de Heathrow garantizaría muchos de",
+          "text": "La expansión de Heathrow es vital para la economía. La expansión de Heathrow garantizaría muchos de los empleos actuales y crearía nuevos. Actualmente, Heathrow sostiene aproximadamente 250,000 empleos. Además, cientos de miles más dependen del comercio turístico en Londres, que se basa en buenas conexiones de transporte como Heathrow. Perder competitividad frente a otros aeropuertos europeos no solo podría implicar desperdiciar la oportunidad de crear nuevos empleos, sino también perder algunos",
           "full_chars": 1285,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "La comunidad empresarial está lejos de estar unida en su supuesto apoyo a una tercera pista. Las encuestas sugieren que muchos negocios influyentes, en realidad, no apoyan la expansión. Una carta expr",
+          "text": "La comunidad empresarial está lejos de estar unida en su supuesto apoyo a una tercera pista. Las encuestas sugieren que muchos negocios influyentes, en realidad, no apoyan la expansión. Una carta expresando preocupación fue firmada por Justin King, el Director Ejecutivo de J Sainsbury, y James Murdoch de BskyB. [1] Por lo tanto, considerar a la comunidad empresarial como una sola voz que pide la expansión es un error. También debemos recordar, al considerar las alternativas a la nueva pista de Heathrow, como una nueva pista en otro aeropuerto de Londres o un aeropuerto completamente nuevo, que estas probablemente tendrían un impacto económico similar al de la expansión de Heathrow. Si lo que importa son las conexiones para atraer negocios y turistas, siempre y cuando la conexión sea con Londres, no importa desde qué aeropuerto provenga. Incluso podría haber menos necesidad de que el aeropuerto sea un centro de conexiones si nos enfocamos en los beneficios para Londres. Como dijo Bob Ay",
           "full_chars": 1438,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -197,51 +197,19 @@
         "query_id": "test-culture-mthbah-pro02a",
         "document_id": "test-culture-mthbah-pro02b",
         "query": {
-          "text": "Las personas tienen demasiadas opciones, lo que las hace menos felices. La publicidad lleva a muchas",
+          "text": "Las personas tienen demasiadas opciones, lo que las hace menos felices. La publicidad lleva a muchas personas a sentirse abrumadas por la necesidad interminable de decidir entre demandas competitivas de su atención – esto se conoce como la tiranía de la elección o sobrecarga de opciones. Investigaciones recientes sugieren que, en promedio, las personas son menos felices que hace 30 años, a pesar de estar mejor y tener muchas más opciones de cosas en las que gastar su dinero. Las afirmaciones de",
           "full_chars": 989,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Las personas están descontentas porque no pueden tenerlo todo, no porque se les ofrezca demasiadas opciones y eso les resulte estresante. De hecho, los anuncios juegan un papel crucial al asegurar que",
+          "text": "Las personas están descontentas porque no pueden tenerlo todo, no porque se les ofrezca demasiadas opciones y eso les resulte estresante. De hecho, los anuncios juegan un papel crucial al asegurar que el dinero que las personas tienen, lo gasten en el producto más adecuado para ellas. Si no se permitieran los anuncios, la gente desperdiciaría dinero en un producto inicial cuando, de tener la opción, claramente elegirían otro. Un meta-análisis que incorporó investigaciones de 50 estudios independientes no encontró ninguna conexión significativa entre la elección y la ansiedad, pero especuló que la varianza en los estudios dejaba abierta la posibilidad de que la sobrecarga de opciones podría estar relacionada con ciertas condiciones muy específicas y aún poco comprendidas. 1 ^ Scheibehenne, Benjamin; Greifeneder, R. & Todd, P. M. (2010). \"¿Puede haber demasiadas opciones? Una revisión meta-analítica de la sobrecarga de elección\". Journal of Consumer Research 37: 409-425.",
           "full_chars": 983,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test-science-wsihwclscaaw-con01a",
-        "document_id": "test-science-wsihwclscaaw-con01b",
-        "query": {
-          "text": "Los ataques cibernéticos a menudo son perpetrados por actores no estatales, como ciberterroristas o",
-          "full_chars": 1067,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "En caso de un ataque de actores no estatales, muchos expertos en derecho internacional coinciden en que el estado puede aún retaliar en defensa propia si otro estado es 'incapaz o no está dispuesto a",
-          "full_chars": 599,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test-free-speech-debate-ldhwprhs-pro02a",
-        "document_id": "test-free-speech-debate-ldhwprhs-pro02b",
-        "query": {
-          "text": "Porque la religión promueve la certeza de la creencia, el odio divino es fácil de utilizar para just",
-          "full_chars": 1473,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Nadie está siendo obligado a cometer actos de violencia por las palabras de otra persona; es su elección hacerlo. Igualmente, hay muchas personas que podrían tener opiniones que se considerarían homof",
-          "full_chars": 680,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

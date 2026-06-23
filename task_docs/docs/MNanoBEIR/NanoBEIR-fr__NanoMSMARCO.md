@@ -50,11 +50,9 @@ Strong models should improve answerability ranking while preserving exact entity
 
 | Query | Positive document |
 | --- | --- |
-| Qu'est-ce que le syndrome de rumination ? [41 chars] | Syndrome de rumination. Le syndrome de rumination, également appelé merycisme, est un trouble alimentaire non spécifié qui provoque la régurgitation des aliments. Bien qu'il ne soit pas identifié comm... [200 / 316 chars] |
-| Qui a chanté "Here I Go Again" ? [32 chars] | Pour d'autres usages, voir Here I Go Again (homonymie). "Here I Go Again" est une chanson du groupe de rock britannique Whitesnake. Parue à l'origine sur leur album de 1982, Saints & Sinners, la chans... [200 / 359 chars] |
-| Quel rôle joue Cameron Boyce dans la série Liv et Maddie ? [58 chars] | Préparez-vous à bien rire, les amis. Dans un EXCLUSIF avant-première de l'épisode du 19 avril de Liv & Maddie intitulé “Prom-A-Rooney.” Évidemment. Dans cet extra hilarant, on voit l'acteur de Jessie,... [200 / 334 chars] |
-| Où se situent la plupart des grands déserts de la Terre ? [57 chars] | Les autres déserts de la Terre se situent en dehors des régions polaires. Le plus grand est le désert du Sahara, un désert subtropical situé en Afrique du Nord. [160 chars] |
-| Que signifie le mot "flic" ? [28 chars] | Selon les résultats actuels, il semble que le terme « copper » (un policier, littéralement « celui qui arrête ») soit antérieur à « cop » (utilisé soit verbalement pour signifier « arrêter » ou comme... [200 / 412 chars] |
+| Qu'est-ce que le syndrome de rumination ? [41 chars] | Syndrome de rumination. Le syndrome de rumination, également appelé merycisme, est un trouble alimentaire non spécifié qui provoque la régurgitation des aliments. Bien qu'il ne soit pas identifié comme un trouble alimentaire spécifique dans le DSM-IV, certains critères ont été définis pour diagnostiquer ce trouble. [316 chars] |
+| Qui a chanté "Here I Go Again" ? [32 chars] | Pour d'autres usages, voir Here I Go Again (homonymie). "Here I Go Again" est une chanson du groupe de rock britannique Whitesnake. Parue à l'origine sur leur album de 1982, Saints & Sinners, la chanson a été réenregistrée pour leur album éponyme de 1987, Whitesnake. La chanson a été réenregistrée la même année dans une nouvelle version mixée pour la radio. [359 chars] |
+| Quel rôle joue Cameron Boyce dans la série Liv et Maddie ? [58 chars] | Préparez-vous à bien rire, les amis. Dans un EXCLUSIF avant-première de l'épisode du 19 avril de Liv & Maddie intitulé “Prom-A-Rooney.” Évidemment. Dans cet extra hilarant, on voit l'acteur de Jessie, Cameron Boyce, apparaître dans une autre série Disney pour rencontrer Maddie (Shelby Wulfert). Son personnage est, euh, excentrique ! [334 chars] |
 
 ## Public Sources
 

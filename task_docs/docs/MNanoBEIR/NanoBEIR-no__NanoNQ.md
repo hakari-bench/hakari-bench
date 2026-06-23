@@ -126,11 +126,9 @@ candidate pools.
 
 | Query | Positive document |
 | --- | --- |
-| Hvor blir Final Four avholdt i år? [34 chars] | Turneringen om NCAA Division I menns college-basketball i 2018 var en 68-lags utslagningsturnering som skulle kåre nasjonal mester i college-basketball for sesongen 2017–18. Den 80. utgaven av turneri... [200 / 295 chars] |
-| Var Nattens Hær opprinnelig en Disney-film? [43 chars] | The Nightmare Before Christmas hadde sin opprinnelse i et dikt skrevet av Tim Burton i 1982, mens han jobbet som animator ved Walt Disney Feature Animation. Med suksessen til Vincent samme år begynte... [200 / 629 chars] |
-| Hvorfor står Engelen i Nord-England der? [40 chars] | Ifølge Gormley hadde en engel en trefoldig betydning: først for å indikere at kullgruvearbeidere hadde jobbet i to århundrer under stedet der den ble bygget, andre for å fange overgangen fra en indust... [200 / 302 chars] |
-| Hvor i den amerikanske grunnloven ble 3/5-kompromisset opprinnelig nevnt? [73 chars] | Tre-femtedelskompromisset finnes i Artikkel 1, Avsnitt 2, Punkt 3 i Den amerikanske grunnloven, som lyder: [106 chars] |
-| Hvem synger "Somebody's Watching Me" sammen med Michael Jackson? [64 chars] | "Somebody's Watching Me" er en sang av den amerikanske sangeren Rockwell fra hans debutalbum med samme navn (1984). Den ble utgitt som Rockwells debutsingel og første singel fra albumet 14. januar 198... [200 / 347 chars] |
+| Hvor blir Final Four avholdt i år? [34 chars] | Turneringen om NCAA Division I menns college-basketball i 2018 var en 68-lags utslagningsturnering som skulle kåre nasjonal mester i college-basketball for sesongen 2017–18. Den 80. utgaven av turneringen startet 13. mars 2018 og avsluttet med finalen 2. april på Alamodome i San Antonio, Texas. [295 chars] |
+| Var Nattens Hær opprinnelig en Disney-film? [43 chars] | The Nightmare Before Christmas hadde sin opprinnelse i et dikt skrevet av Tim Burton i 1982, mens han jobbet som animator ved Walt Disney Feature Animation. Med suksessen til Vincent samme år begynte Walt Disney Studios å vurdere å utvikle The Nightmare Before Christmas som enten en kortfilm eller en 30-minutters TV-spesial. Gjennom årene vendte Burtons tanker stadig tilbake til prosjektet, og i 1990 inngikk han en utviklingsavtale med Disney. Produksjonen startet i juli 1991 i San Francisco; Disney ga ut filmen under sitt Touchstone Pictures-banner fordi studioet mente filmen ville være 'for mørk og skremmende for barn'. [629 chars] |
+| Hvorfor står Engelen i Nord-England der? [40 chars] | Ifølge Gormley hadde en engel en trefoldig betydning: først for å indikere at kullgruvearbeidere hadde jobbet i to århundrer under stedet der den ble bygget, andre for å fange overgangen fra en industriell til en informasjonsalder, og tredje for å fungere som et fokus for våre utviklende håp og frykt. [302 chars] |
 
 ### Public Sources
 

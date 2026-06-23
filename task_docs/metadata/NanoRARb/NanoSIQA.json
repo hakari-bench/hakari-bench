@@ -119,15 +119,15 @@
         "query_id": "siqa-q-66",
         "document_id": "siqa-d-194",
         "query": {
-          "text": "Context: Cameron's parents told them to do well at school or they would be grounded. Cameron took th",
+          "text": "Context: Cameron's parents told them to do well at school or they would be grounded. Cameron took their words seriously. Question: What will happen to Cameron?",
           "full_chars": 160,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "study very hard",
           "full_chars": 15,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -137,13 +137,13 @@
         "query": {
           "text": "Context: Riley had a lot of friends. Question: What will happen to Riley?",
           "full_chars": 73,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "they will play with Riley",
           "full_chars": 25,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -151,51 +151,19 @@
         "query_id": "siqa-q-103",
         "document_id": "siqa-d-297",
         "query": {
-          "text": "Context: Sydney is a fan of Hillary Clinton. One day she found a biography of Hillary Clinton. Sydne",
+          "text": "Context: Sydney is a fan of Hillary Clinton. One day she found a biography of Hillary Clinton. Sydney wanted to read it. Question: Why did Sydney do this?",
           "full_chars": 154,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "know more about Hillary Clinton",
           "full_chars": 31,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "siqa-q-9",
-        "document_id": "siqa-d-28",
-        "query": {
-          "text": "Context: Austin knew Quinn intimately and they slept together many times. Question: Why did Austin d",
-          "full_chars": 107,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "found QUinn attractive",
-          "full_chars": 22,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "siqa-q-161",
-        "document_id": "siqa-d-303",
-        "query": {
-          "text": "Context: Quinn knew Ash well enough that they broken into and stole a jacket from Ash's locker. Ques",
-          "full_chars": 138,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "ashamed",
-          "full_chars": 7,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

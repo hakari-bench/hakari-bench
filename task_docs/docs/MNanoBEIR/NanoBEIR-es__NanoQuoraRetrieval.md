@@ -53,8 +53,6 @@ Strong models should preserve exact duplicate detection while improving paraphra
 | ¿Está bien reírse de tus propios chistes? [41 chars] | ¿Es raro reírse de mis propios chistes? [39 chars] |
 | ¿Cuál es la mejor mentira que has contado? [42 chars] | ¿Cuál es la mentira más ingeniosa que hayas contado? [52 chars] |
 | ¿Por qué Quora me sugiere con frecuencia respuestas en mi timeline que critican a Donald Trump? [95 chars] | ¿Por qué parece que en Quora solo hay respuestas subjetivas y parciales sobre Donald Trump? [91 chars] |
-| ¿Cómo puedo fortalecerme físicamente? [37 chars] | ¿Cómo puedo fortalecerme físicamente? [37 chars] |
-| ¿Cómo funcionará un satélite cuántico? [38 chars] | ¿Cómo funciona un satélite cuántico y cuáles serían sus principales usos? [73 chars] |
 
 ## Public Sources
 

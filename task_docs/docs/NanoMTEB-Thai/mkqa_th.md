@@ -67,8 +67,6 @@ This task benefits from retrieval models that combine Thai question understandin
 | อายุจำกัดสำหรับลูกเสือหญิงคือเท่าไหร่ [37 chars] | 5.0 18.0 ปี [11 chars] |
 | ใครเป็นผู้เล่นเบสหนึ่งของแยงกีส์ [32 chars] | Edwin Encarnación [17 chars] |
 | เมืองแอลบูเคอร์คีในรัฐนิวเม็กซิโกมีประชากรเท่าไหร่ [50 chars] | 558545.0 [8 chars] |
-| ใครแสดงบทแม่ในเรื่อง That '70s Show [35 chars] | เดบร้า โจ รัปป์ [15 chars] |
-| แต่ละทีมเล่นในเอ็นบีเอกี่เกมส์ [30 chars] | 82.0 [4 chars] |
 
 ### Source Reference Table
 

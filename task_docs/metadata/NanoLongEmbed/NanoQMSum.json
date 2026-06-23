@@ -151,15 +151,15 @@
         "query_id": "query_66",
         "document_id": "doc_138",
         "query": {
-          "text": "They felt that the battery design should be long-lived, original, and conventional to ensure the bat",
+          "text": "They felt that the battery design should be long-lived, original, and conventional to ensure the battery's innovation, versatility, and durability. It should also not be far from the usual performance, or it may cause problems for new users.",
           "full_chars": 241,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "User Interface: .. . Project Manager: Okay . So , this is uh first meeting of this design project . Um and I um like to show you the agenda for the meeting , I don't know if it was sent round to all o",
+          "text": "User Interface: .. . Project Manager: Okay . So , this is uh first meeting of this design project . Um and I um like to show you the agenda for the meeting , I don't know if it was sent round to all of you . User Interface: Mm , yeah . Project Manager: Maybe not . Anyway , User Interface: I didn't receive it yet {vocalsound} . Project Manager: this is the the plan for today's meeting is um firstly just to introduce the project briefly , um although I'm sure you've actually got some of the information already . Then the main purpose is to {disfmarker} so that we get to know each other a little bit more . Industrial Designer: Mm-hmm . Project Manager: Um then we want to practice using some of the tools that we'll be using during the the course of the design project and the meetings , um specifically the whiteboard over there . Um then we need to go through the specifics of our project plan um and discuss {disfmarker} come up with some preliminary ideas about it . And then that's it . So",
           "full_chars": 22629,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -167,15 +167,15 @@
         "query_id": "query_123",
         "document_id": "doc_152",
         "query": {
-          "text": "The Prime Minister explained that the government recognized that several organizations and companies",
+          "text": "The Prime Minister explained that the government recognized that several organizations and companies were facing difficulties because of COVID-19 and they were supporting people all over the country through that program. Although the opposition party was getting rigorous about the intensity of the question, the Prime Minister kept emphasizing that the government's priority had always been workers in difficulty so that they do not lose their jobs. This applied to all organizations and companies i",
           "full_chars": 537,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "The Chair (Hon. Anthony Rota (NipissingTimiskaming, Lib.)): I call this meeting to order. Welcome to the 12th meeting of the House of Commons Special Committee on the COVID-19 Pandemic. This will be t",
+          "text": "The Chair (Hon. Anthony Rota (NipissingTimiskaming, Lib.)): I call this meeting to order. Welcome to the 12th meeting of the House of Commons Special Committee on the COVID-19 Pandemic. This will be the first hybrid meeting of the committee. Some members will be participating via videoconference and some will be participating in person. This follows the order made by the House on May26,2020. Members who have already participated in a virtual meeting of the special committee may actually not notice any change, except for the fact that some members are also participating from the floor of the House. An additional rubric, that of statements by members, was also added to the proceedings of the committee. In order to ensure that those joining the meeting via video conference can be seen and heard by those in the chamber, two screens have been set up in the chamber on either side of the Speakers chair. Sound amplification for virtual interventions will be available, and members in the chambe",
           "full_chars": 120229,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -183,51 +183,19 @@
         "query_id": "query_103",
         "document_id": "doc_101",
         "query": {
-          "text": "In the product evaluation, the team was satisfied with its success in reducing the number of unused",
+          "text": "In the product evaluation, the team was satisfied with its success in reducing the number of unused buttons. The user interface was considered to be user-friendly enough. However, the team also admitted that there was still room for improvement on the location function, technological innovation, the material, as well as the fashion style of the remote control.",
           "full_chars": 362,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Project Manager: That should hopefully do the trick , um . 'Kay . Sorry about the small delay . Falling a little bit behind schedule . And that's uh fifteen twenty five . Okay . So just to try and rou",
+          "text": "Project Manager: That should hopefully do the trick , um . 'Kay . Sorry about the small delay . Falling a little bit behind schedule . And that's uh fifteen twenty five . Okay . So just to try and roughly go over what we agreed in the last one , um we're gonna go for something uh uh how was it ? Uh The new black , I believe . Marketing: {gap} . Project Manager: Um something that looks good 'cause that seems to be in preference to actual functionality in the end , though we should never avoid functionality , of course . Uh many of our components are gonna be standard , off the shelf , but it seemed like we were gonna require at least an advanced chip and we were still very much for the idea of using an L_C_D_ display . Um other things were we were hoping to use rubber , most likely gonna be double curved , etcetera . Okay . So um due to your hard work , we might as well let the uh two designers go first , and uh show us the prototype . User Interface: Okay , it's a {disfmarker} Project",
           "full_chars": 43300,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "query_9",
-        "document_id": "doc_57",
-        "query": {
-          "text": "Grad F explained that he was focusing on writing his proposal for his qualification exams, which was",
-          "full_chars": 182,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Professor B: I think for two years we were two months , uh , away from being done . PhD A: And what was that , Morgan ? What project ? Professor B: Uh , the , uh , TORRENT chip . PhD A: Oh . Professor",
-          "full_chars": 56387,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "query_161",
-        "document_id": "doc_125",
-        "query": {
-          "text": "The team agreed that there should be 17 buttons on the remote, including number 0 to 9, volume up an",
-          "full_chars": 250,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Project Manager: Right uh . So um . So where's the PowerPoint presentation ? Sorry ? Microsoft PowerPoint , right . Right , okay . So . Right . Okay , so we've got uh so we've got new project requirem",
-          "full_chars": 43476,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

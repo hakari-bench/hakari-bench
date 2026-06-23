@@ -122,8 +122,6 @@ guarantee coverage, but final ranking should emphasize semantic equivalence.
 | Si può ridere delle proprie battute? [36 chars] | È strano ridere delle proprie battute? [38 chars] |
 | Qual è la bugia più ingegnosa che hai mai raccontato? [53 chars] | Qual è la bugia più elaborata che tu abbia mai raccontato? [58 chars] |
 | Perché Quora suggerisce spesso risposte nel mio feed che criticano Donald Trump? [80 chars] | Perché su Quora sembrano esserci solo risposte soggettive e di parte riguardo alle domande su Donald Trump? [107 chars] |
-| Come posso diventare più forte fisicamente? [43 chars] | Come posso diventare più forte fisicamente? [43 chars] |
-| Come funziona un satellite quantistico? [39 chars] | Come funziona un satellite quantistico e quali potrebbero essere i suoi principali utilizzi? [92 chars] |
 
 ### Public Sources
 

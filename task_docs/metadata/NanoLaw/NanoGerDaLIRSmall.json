@@ -142,15 +142,15 @@
         "query_id": "00163",
         "document_id": "qwXXPZtlCG",
         "query": {
-          "text": "Die Streitwertfestsetzung bzw. änderung beruht auf den §§ 0, 0 Abs. 0 und 0, 0 Abs. 0 Satz 0 Nr. 0 i",
+          "text": "Die Streitwertfestsetzung bzw. änderung beruht auf den §§ 0, 0 Abs. 0 und 0, 0 Abs. 0 Satz 0 Nr. 0 i.V.m. 0 Abs. 0 GKG. Für Verfahren, die den Übergang von einer Teilzeitbeschäftigung auf Vollzeitbeschäftigung des Beamten betreffen, sind die Grundsätze für den Teilstatus anzuwenden. Danach ist der Streitwert in Anwendung des [REF] entsprechend der Höhe des zweifachen Jahresbetrags der Besoldungsdifferenz zwischen dem innegehabten und dem erstrebten Teilstatus zu bemessen.",
           "full_chars": 476,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Tenor Der Antrag wird abgelehnt. Der Kläger trägt die Kosten des Zulassungsverfah-rens. Der Streitwert wird unter Abänderung der Streitwertfestsetzung des Verwaltungsgerichts für beide Rechtszüge jewe",
+          "text": "Tenor Der Antrag wird abgelehnt. Der Kläger trägt die Kosten des Zulassungsverfah-rens. Der Streitwert wird unter Abänderung der Streitwertfestsetzung des Verwaltungsgerichts für beide Rechtszüge jeweils auf bis zu 0 EUR festgesetzt. Aus den innerhalb der Begründungsfrist des § 0a Abs. 0 Satz 0 VwGO vorgetragenen Gründen ergeben sich die behaupteten ernstlichen Zweifel an der Richtigkeit des angefochtenen Urteils nicht. Stützt der Rechtsmittelführer seinen Zulassungsantrag auf den Zulassungsgrund der ernstlichen Zweifel im Sinne des [REF] , muss er sich mit den entscheidungstragenden Annahmen des Verwaltungsgerichts auseinandersetzen. Dabei muss er den tragenden Rechtssatz oder die Feststellungen tatsächlicher Art bezeichnen, die er mit seinem Antrag angreifen will, und mit schlüssigen Gegenargumenten in Frage stellen. Es reicht hingegen nicht aus, wenn er pauschal die Unrichtigkeit der Entscheidung des Verwaltungsgerichts behauptet oder wenn er lediglich sein Vorbringen erster Instanz",
           "full_chars": 7138,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -158,15 +158,15 @@
         "query_id": "00028",
         "document_id": "m7haZW9njV",
         "query": {
-          "text": "Das Regierungspräsidium hat die Anordnung des Sofortvollzugs in einer den Anforderungen des [REF] ge",
+          "text": "Das Regierungspräsidium hat die Anordnung des Sofortvollzugs in einer den Anforderungen des [REF] genügenden Weise begründet. Das formale Erfordernis einer schriftlichen Begründung des besonderen Interesses an der sofortigen Vollziehung verlangt eine auf die Umstände des konkreten Falles bezogene Darlegung des besonderen Interesses gerade an der sofortigen Vollziehbarkeit des Verwaltungsakts. Insbesondere muss die Vollziehbarkeitsanordnung erkennen lassen, dass sich die Behörde des rechtlichen A",
           "full_chars": 1266,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Tenor Auf die Beschwerde des Antragsgegners wird der Beschluss des Verwaltungsgerichts Freiburg vom [DATE] [REF] geändert.Der Antrag des Antragstellers auf Wiederherstellung bzw. Anordnung der aufschi",
+          "text": "Tenor Auf die Beschwerde des Antragsgegners wird der Beschluss des Verwaltungsgerichts Freiburg vom [DATE] [REF] geändert.Der Antrag des Antragstellers auf Wiederherstellung bzw. Anordnung der aufschiebenden Wirkung seines Widerspruchs gegen den Bescheid des Landratsamts Waldshut vom [DATE] wird abgelehnt.Der Antragsteller trägt die Kosten des Verfahrens beider Rechtszüge.Der Streitwert wird für beide Rechtszüge auf je 0, EUR festgesetzt. Gründe 0 Das Verwaltungsgericht hat dem Antrag auf vorläufigen Rechtsschutz zu Unrecht stattgegeben. Die Anordnung der sofortigen Vollziehung der Fahrerlaubnisentziehung begegnet weder formell-rechtlich noch, wie vom Verwaltungsgericht angenommen und vom Antragsgegner substantiiert mit der Beschwerde angegriffen, materiell-rechtlich durchgreifenden rechtlichen Bedenken. 0 Entgegen der im erstinstanzlichen Verfahren erhobenen Rüge des Antragstellers genügt die Begründung für die Anordnung der sofortigen Vollziehung im Bescheid des Antragsgegners vom [D",
           "full_chars": 16218,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -174,51 +174,19 @@
         "query_id": "00006",
         "document_id": "WIlnoCqNl4",
         "query": {
-          "text": "Die Entscheidung des Landgerichts, die Beklagte zur Erteilung der Auskunft durch Vorlage eines notar",
+          "text": "Die Entscheidung des Landgerichts, die Beklagte zur Erteilung der Auskunft durch Vorlage eines notariellen Nachlassverzeichnisses und nicht nur zu dessen Ergänzung zu verurteilen, begegnet ebenfalls keinen Bedenken. Wegen der nicht nur geringfügigen Unvollständigkeiten und teilweise offensichtlich unterbliebenen eigenen Ermittlungstätigkeit des Streithelfers stellt das vorgelegte notarielle Nachlassverzeichnis vom [DATE] keine Erfüllung, auch keine Teilerfüllung, dar. Zu einer teilweisen Erfüllu",
           "full_chars": 1431,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": true
         },
         "positive_document": {
-          "text": "Tenor Die Rechtsbeschwerde gegen den Beschluss des 0. Familiensenats in Freiburg des Oberlandesgerichts Karlsruhe vom [DATE] wird auf Kosten des Antragsgegners zurückgewiesen. Von Rechts wegen Gründe",
+          "text": "Tenor Die Rechtsbeschwerde gegen den Beschluss des 0. Familiensenats in Freiburg des Oberlandesgerichts Karlsruhe vom [DATE] wird auf Kosten des Antragsgegners zurückgewiesen. Von Rechts wegen Gründe I. Die beteiligten Ehegatten streiten in erster Stufe eines auf Trennungsunterhalt gerichteten Verfahrens über den Umfang der unterhaltsrechtlichen Auskunftspflicht des Antragsgegners. Die Antragstellerin begehrt Auskunft über das Einkommen des Antragsgegners in den Jahren [DATE] bis [DATE] . Das Familiengericht hat den Ehemann durch Teilbeschluss verpflichtet, Auskunft über seine sämtlichen Einkünfte nach jeweiliger Einkommensart in den Jahren [DATE] , [DATE] und [DATE] in Form einer systematischen Zusammenstellung zu erteilen. Mit seiner hiergegen eingelegten Beschwerde hat der Ehemann geltend gemacht, die Auskunft bereits genügend erteilt zu haben, während die Ehefrau in der Beschwerdeinstanz auf eine Konkretisierung der Beschlussformel angetragen hat. Das Oberlandesgericht hat die Besc",
           "full_chars": 11013,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00189",
-        "document_id": "groJ3cNnwS",
-        "query": {
-          "text": "Zwar müssen Neugestaltungen des Besoldungsrechts auch das Leistungsprinzip wahren . Die Anrechnungsr",
-          "full_chars": 1347,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Tenor § 0 Absatz 0 des Gesetzes zum Personalrecht der Beschäftigten der früheren Deutschen Bundespost in der Fassung des [REF] es vom [DATE] ist mit dem Grundgesetz vereinbar. Gründe A. Die Vorlage de",
-          "full_chars": 40578,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "00070",
-        "document_id": "TJiWvmyBCn",
-        "query": {
-          "text": "„Ob nach ihrem Gesamtergebnis wesentlich gleiche Beurteilungen vorliegen, richtet sich aber nicht al",
-          "full_chars": 627,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Tenor Der Wert des Gegenstands der anwaltlichen Tätigkeit für das Verfassungsbeschwerdeverfahren wird auf 0 € und für das Verfahren über den Antrag auf Erlass einer einstweiligen Anordnung auf 0 € fes",
-          "full_chars": 521,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

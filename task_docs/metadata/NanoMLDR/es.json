@@ -138,15 +138,15 @@
         "query_id": "q-es-890",
         "document_id": "doc-es-6694",
         "query": {
-          "text": "¿Cuál es el catalizador utilizado para convertir el monóxido de carbono en un producto menos perjudi",
+          "text": "¿Cuál es el catalizador utilizado para convertir el monóxido de carbono en un producto menos perjudicial en el dispositivo de producción de hidrógeno a partir de etanol?",
           "full_chars": 169,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Etanol (combustible) El etanol es un compuesto químico obtenido a partir de la fermentación de los azúcares que puede utilizarse como combustible, solo, o bien, mezclado en cantidades variadas con gas",
+          "text": "Etanol (combustible) El etanol es un compuesto químico obtenido a partir de la fermentación de los azúcares que puede utilizarse como combustible, solo, o bien, mezclado en cantidades variadas con gasolina, y su uso se ha extendido principalmente para reemplazar el consumo de derivados del petróleo. El combustible resultante de la mezcla de etanol y gasolina se conoce como gasohol o alconafta. Dos mezclas comunes son E10 y E85, con contenidos de etanol del 10% y 85%, respectivamente. El etanol también se utiliza cada vez más como añadido para oxigenar la gasolina normal, reemplazando al éter metil tert-butílico (MTBE). Este último es responsable de una considerable contaminación del suelo y del agua subterránea. También puede utilizarse como combustible en las celdas de combustible. Como fuente para la producción de etanol en el mundo se utiliza fundamentalmente biomasa. Este etanol es denominado, por su origen, bioetanol. Fuentes y proceso de fabricación El etanol (Alcohol Etílico) pu",
           "full_chars": 31421,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -154,15 +154,15 @@
         "query_id": "q-es-1261",
         "document_id": "doc-es-9250",
         "query": {
-          "text": "¿Cómo perpetúa la actividad financiera en el gueto el estereotipo de la vida judía según Sara Horowi",
+          "text": "¿Cómo perpetúa la actividad financiera en el gueto el estereotipo de la vida judía según Sara Horowitz?",
           "full_chars": 103,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "La lista de Schindler Argumento En Cracovia, durante la Segunda Guerra Mundial, las tropas alemanas de ocupación han forzado a los judíos polacos a vivir recluidos en un gueto. El empresario Oskar Sch",
+          "text": "La lista de Schindler Argumento En Cracovia, durante la Segunda Guerra Mundial, las tropas alemanas de ocupación han forzado a los judíos polacos a vivir recluidos en un gueto. El empresario Oskar Schindler (Liam Neeson), de etnia alemana y miembro del Partido Nazi, llega a la ciudad decidido a hacer fortuna y comienza por sobornar a diversos oficiales de las fuerzas armadas alemanas y de las SS. Asimismo, adquiere una fábrica para producir menaje esmaltado. Para ayudarlo en la gestión del negocio, contrata a Itzhak Stern (Ben Kingsley), un contable judío que tiene contactos en el mercado negro y en la comunidad local de empresarios hebreos y que le ayuda a financiar la factoría. Schindler mantiene relaciones amistosas con los nazis y disfruta de cierta riqueza y estatus social como «Herr Direktor», mientras Stern se ocupa de la administración. Ambos contratan empleados judíos porque sus sueldos son inferiores por imposición alemana y porque Stern busca salvar a su pueblo de la deporta",
           "full_chars": 29815,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -172,49 +172,17 @@
         "query": {
           "text": "¿Cuál es la altura del cerro Calzoncillo en la isla mencionada en el texto?",
           "full_chars": 75,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Golfo de Ancud Geología y orografía Tanto los golfos de Ancud y Corcovado como el seno de Reloncaví, son las cuencas de grandes lagos que, en época remota, formaron parte del valle central que luego s",
+          "text": "Golfo de Ancud Geología y orografía Tanto los golfos de Ancud y Corcovado como el seno de Reloncaví, son las cuencas de grandes lagos que, en época remota, formaron parte del valle central que luego se hundió por trastornos geológicos siendo invadidos por las aguas del océano dando origen a gran cantidad de islas, fiordos y canales. La cordillera de los Andes se muestra como un relieve deprimido cuyas mayores altitudes corresponden a volcanes de alrededor de 2000 msnm; como el Puntiagudo 2493 m, Osorno 2652 m, Calbuco 2015 m, Michinmahuida 2440 m y Corcovado 2290 m ​ Climatología La región, en general, posee un clima templado lluvioso. La parte costera, salvo el sur de la isla de Chiloé, goza de un clima templado frío con lluvias invernales. Por otra parte, hacia el sur, el clima se caracteriza por no poseer estaciones secas, además de constantes lluvias. Además de las frecuentes neblinas que se producen en diferentes épocas del año, debe tenerse en cuenta las grandes columnas de humo",
           "full_chars": 25915,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q-es-272",
-        "document_id": "doc-es-2128",
-        "query": {
-          "text": "¿Cuáles fueron los principales cambios realizados durante la remodelación del Centro Cultural Recole",
-          "full_chars": 111,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Centro Cultural Recoleta Historia El Centro Cultural Recoleta es conocido históricamente como la sede de lo nuevo. Desde su inauguración como centro cultural en 1980, sus salas se convirtieron en el l",
-          "full_chars": 26824,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "q-es-209",
-        "document_id": "doc-es-1644",
-        "query": {
-          "text": "¿Cuál fue la razón principal por la que los desarrolladores de Square decidieron crear un juego de r",
-          "full_chars": 151,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Final Fantasy Legend Modo de juego En The Final Fantasy Legend, el jugador recorre el mundo del juego con un equipo de hasta cuatro personajes, explorando áreas e interactuando con otros personajes no",
-          "full_chars": 26818,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

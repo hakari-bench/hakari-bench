@@ -151,14 +151,14 @@
         "query": {
           "text": "Phiên dịch được sử dụng cho ngôn ngữ nào?",
           "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Nói chung, tất cả mọi người trong nước đều hiểu và nói tiếng Nga, ngoại trừ tại một số vùng xa xôi hẻo lánh. Tiếng Nga là tiếng mẹ đẻ của đa số dân cư Bishkek, và hầu hết các giao dịch thương mại cũng",
+          "text": "Nói chung, tất cả mọi người trong nước đều hiểu và nói tiếng Nga, ngoại trừ tại một số vùng xa xôi hẻo lánh. Tiếng Nga là tiếng mẹ đẻ của đa số dân cư Bishkek, và hầu hết các giao dịch thương mại cũng như chính trị đều được tiến hành bằng ngôn ngữ này. Cho tới gần đây, tiếng Kyrgyz vẫn là ngôn ngữ được sử dụng tại gia đình, và hiếm khi được dùng trong các cuộc gặp gỡ hay các sự kiện khác. Tuy nhiên, đa số các cuộc họp nghị viện hiện nay được tiến hành bằng tiếng Kyrgyz, với phiên dịch đồng thời cho những người không nói tiếng Kyrgyz.",
           "full_chars": 539,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -167,14 +167,14 @@
         "query": {
           "text": "ما هي التقنيات الحديثة المستخدمة للوصول إلى الإنترنت عبر الهاتف المحمول؟",
           "full_chars": 72,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Reichweite und Bandbreite: Mobiler Internetzugriff ist generell langsamer als direkte Kabelverbindungen. Verwendete Technologien sind hier GPRS, oder EDGE, aktuell auch HSDPA und HSUPA, 3G und 4G Netz",
+          "text": "Reichweite und Bandbreite: Mobiler Internetzugriff ist generell langsamer als direkte Kabelverbindungen. Verwendete Technologien sind hier GPRS, oder EDGE, aktuell auch HSDPA und HSUPA, 3G und 4G Netzwerke, sowie das neue 5G Netzwerk. Diese Netzwerke sind meist in Reichweite eines kommerziellen Mobilfunkturms zu erreichen. Kabellose Hochgeschwindigkeitsnetzwerke sind nicht teuer, haben allerdings nur eine sehr begrenzte Reichweite.",
           "full_chars": 435,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -183,49 +183,17 @@
         "query": {
           "text": "Was wurde in den 1990er Jahren eingeführt?",
           "full_chars": 42,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "أما القديس فالنتين الذي كان يعيش في تورني فقد أصبح أسقفًا لمدينة انترامنا (الاسم الحديث لمدينة تورني) تقريبًا في عام 197 بعد الميلاد، ويُقال إنه قد قُتل فترة الاضطهاد التي تعرض له المسيحيون أثناء عهد",
+          "text": "أما القديس فالنتين الذي كان يعيش في تورني فقد أصبح أسقفًا لمدينة انترامنا (الاسم الحديث لمدينة تورني) تقريبًا في عام 197 بعد الميلاد، ويُقال إنه قد قُتل فترة الاضطهاد التي تعرض له المسيحيون أثناء عهد الإمبراطور أوريليان. وجرى دفنه أيضًا قرب \"فيا فلامينا\"، ولكن في مكان مختلف عن المكان الذي تم فيه دفن القديس فالنتين الذي كان يعيش في روما. أما رفاته، فقد تم دفنها في باسيليكا (كنيسة) القديس فالنتين في تورني.",
           "full_chars": 407,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "mlqa__zho-vie::q::Q152",
-        "document_id": "mlqa__zho-vie::d::C145",
-        "query": {
-          "text": "TB-3 là loại phương tiện vận tải gì?",
-          "full_chars": 36,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "图波列夫TB-3（俄语：Тяжёлый Бомбардировщик，转写：Tyazholy Bombardirovschik，意为重型轰炸机；民用型则称为ANT-6）是西元1930年代苏联空军列装的重型轰炸机，并被使用于第二次世界大战。它是世界上第一个悬翼四引擎的重型轰炸机。 西元1939年，TB-3因过时而正式退役，但TB-3仍在整个二次世界大战进行轰炸和运输工作。 TB-3也以Zveno计划",
-          "full_chars": 221,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "mlqa__eng-hin::q::Q492",
-        "document_id": "mlqa__eng-hin::d::C241",
-        "query": {
-          "text": "बाह्यत्वचा की कोशिकाएं क्या कर सकती हैं?",
-          "full_chars": 40,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "The plant epidermis is specialised tissue, composed of parenchyma cells, that covers the external surfaces of leaves, stems and roots. Several cell types may be present in the epidermis. Notable among",
-          "full_chars": 1229,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

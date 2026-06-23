@@ -181,13 +181,13 @@
         "query": {
           "text": "Chúng ta biết gì về vắc xin mRNA cho vi-rút SARS-CoV-2?",
           "full_chars": 55,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Chống dịch COVID-19: Đánh giá nhanh chẩn đoán, liệu pháp và vắc xin Đại dịch COVID-19 do một chủng virus corona mới, SARS-CoV-2, đã lây nhiễm hơn 4.9 triệu người và gây ra trên 300.000 ca tử vong trên",
+          "text": "Chống dịch COVID-19: Đánh giá nhanh chẩn đoán, liệu pháp và vắc xin Đại dịch COVID-19 do một chủng virus corona mới, SARS-CoV-2, đã lây nhiễm hơn 4.9 triệu người và gây ra trên 300.000 ca tử vong trên toàn cầu. Sự lan truyền nhanh chóng của virus và sự gia tăng đột biến số ca bệnh đòi hỏi phải phát triển khẩn cấp các phương pháp chẩn đoán chính xác, các phương pháp điều trị hiệu quả và các loại vắc xin. Ở đây, chúng tôi tổng quan tiến bộ trong việc phát triển các phương pháp chẩn đoán, liệu pháp và vắc xin cho SARS-CoV-2 tập trung vào các thử nghiệm lâm sàng hiện tại và những thách thức của chúng. Đối với chẩn đoán, xét nghiệm khuếch đại axit nucleic vẫn là phương pháp chẩn đoán chính xác nhất để xác nhận phòng thí nghiệm nhiễm SARS-CoV-2, trong khi xét nghiệm kháng thể huyết thanh được sử dụng để hỗ trợ truy tìm tiếp xúc, nghiên cứu dịch tễ học và đánh giá vắc xin. Cách ly virus không được khuyến nghị cho các thủ tục chẩn đoán thông thường do lo ngại về an toàn. Hiện tại, không có thu",
           "full_chars": 2093,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -197,13 +197,13 @@
         "query": {
           "text": "Những chiếc mặt nạ nào là tốt nhất để phòng ngừa nhiễm Covid-19?",
           "full_chars": 64,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Đại dịch SARS, MERS và virus corona chủng mới (COVID-19), các mối đe dọa sức khỏe toàn cầu mới nhất và lớn nhất: chúng ta đã học được gì? MỤC ĐÍCH: Cung cấp tổng quan về ba loại virus corona gây chết",
+          "text": "Đại dịch SARS, MERS và virus corona chủng mới (COVID-19), các mối đe dọa sức khỏe toàn cầu mới nhất và lớn nhất: chúng ta đã học được gì? MỤC ĐÍCH: Cung cấp tổng quan về ba loại virus corona gây chết người và xác định các lĩnh vực cần cải thiện trong kế hoạch chuẩn bị cho tương lai, cũng như cung cấp đánh giá quan trọng về các yếu tố nguy cơ và các biện pháp có thể thực hiện để ngăn chặn sự lây lan của chúng, sử dụng bài học rút ra từ hai đợt bùng phát virus corona trước đó, cũng như báo cáo ban đầu từ dịch bệnh virus corona mới (COVID-19) hiện tại ở Vũ Hán, Trung Quốc. PHƯƠNG PHÁP: Sử dụng trang web của Trung tâm Kiểm soát và Phòng ngừa Dịch bệnh (CDC, Hoa Kỳ) và một đánh giá toàn diện các tài liệu trên PubMed, chúng tôi thu thập được thông tin về các dấu hiệu và triệu chứng lâm sàng, điều trị và chẩn đoán, phương thức truyền nhiễm, phương pháp phòng ngừa và các yếu tố nguy cơ đối với Hội chứng Hô hấp Trung Đông (MERS), Hội chứng Hô hấp Sâu sắc (SARS) và COVID-19. Các so sánh giữa các",
           "full_chars": 2092,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -213,49 +213,17 @@
         "query": {
           "text": "có phải giãn cách xã hội đã ảnh hưởng đến việc làm chậm sự lây lan của COVID-19 không?",
           "full_chars": 86,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Tăng cường phát hiện kết hợp với giãn cách xã hội và quy hoạch năng lực y tế giảm gánh nặng các trường hợp và tử vong do COVID-19: Nghiên cứu khái niệm bằng mô hình mô phỏng tính toán ngẫu nhiên Mục t",
+          "text": "Tăng cường phát hiện kết hợp với giãn cách xã hội và quy hoạch năng lực y tế giảm gánh nặng các trường hợp và tử vong do COVID-19: Nghiên cứu khái niệm bằng mô hình mô phỏng tính toán ngẫu nhiên Mục tiêu: Trong bối cảnh không có vắc-xin, đại dịch COVID-19 đang được kiểm soát thông qua các biện pháp phi dược phẩm được gọi là giãn cách xã hội (SC). Tuy nhiên, liệu SC có đủ để làm giảm độ dốc của đường cong dịch bệnh hay không vẫn còn là vấn đề gây tranh cãi. Bằng cách sử dụng Mô hình Mô phỏng Tính toán Khác ngẫu nhiên, chúng tôi đã nghiên cứu tác động của việc tăng cường SD, giường bệnh viện và tỷ lệ phát hiện COVID-19 trong việc ngăn ngừa các trường hợp và tử vong do COVID-19. Thiết kế và phương pháp nghiên cứu: Mô hình Mô phỏng Khác ngẫu nhiên được xây dựng bằng gói EpiModel trong R. Là một nghiên cứu khái niệm, chúng tôi đã thực hiện mô phỏng trên Kasaragod, quận bị ảnh hưởng nhiều nhất ở Kerala. Chúng tôi đã thêm 3 khoang vào mô hình SEIR để có được mô hình SEIQHRF (Dễ bị nhiễm - Tiế",
           "full_chars": 1616,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "29",
-        "document_id": "02q9y011",
-        "query": {
-          "text": "Protein SARS-CoV-2 có tương tác với protein của con người cho thấy tiềm năng là mục tiêu thuốc. Có t",
-          "full_chars": 176,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Cơ sở phân tử cho sự gắn kết ADP-ribose vào miền Macro-X của Nsp3 của SARS-CoV-2 Virus gây ra COVID-19, SARS-CoV-2, có một bộ gen RNA lớn mã hóa nhiều protein có thể là mục tiêu cho các loại thuốc khá",
-          "full_chars": 841,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "27",
-        "document_id": "00rq0ggi",
-        "query": {
-          "text": "Những gì chúng ta biết về những người bị nhiễm Covid-19 nhưng không có triệu chứng?",
-          "full_chars": 83,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Đường lây truyền của virus corona trên tàu Diamond Princess Đã xảy ra một đợt bùng phát COVID-19 trên tàu du thuyền Diamond Princess vào tháng Giêng và tháng Hai năm 2020. Chúng tôi đã phân tích thông",
-          "full_chars": 2094,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

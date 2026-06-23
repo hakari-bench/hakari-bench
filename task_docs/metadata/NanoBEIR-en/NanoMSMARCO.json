@@ -148,14 +148,14 @@
         "query": {
           "text": "what is rumination syndrome",
           "full_chars": 27,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Rumination Syndrome. Rumination syndrome, also called Merycism, is a type of eating disorder not otherwise specified that causes the regurgitation of food. Even though it is not identified as a specif",
+          "text": "Rumination Syndrome. Rumination syndrome, also called Merycism, is a type of eating disorder not otherwise specified that causes the regurgitation of food. Even though it is not identified as a specific eating disorder in the DSM-IV, certain parameters have been outlined for diagnosing the disorder.",
           "full_chars": 300,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -164,14 +164,14 @@
         "query": {
           "text": "who sang here i go again",
           "full_chars": 24,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "For other uses, see Here I Go Again (disambiguation). Here I Go Again is a song by British rock band Whitesnake. Originally released on their 1982 album, Saints & Sinners, the song was re-recorded for",
+          "text": "For other uses, see Here I Go Again (disambiguation). Here I Go Again is a song by British rock band Whitesnake. Originally released on their 1982 album, Saints & Sinners, the song was re-recorded for their eponymous 1987 album Whitesnake. The song was re-recorded again that year in a new radio-mix version.",
           "full_chars": 308,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -180,49 +180,17 @@
         "query": {
           "text": "who does cameron boyce play in liv and maddie",
           "full_chars": 45,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Get ready for some serious LOLs, you guys. In an EXCLUSIVE sneak peek at the Apr. 19 episode of Liv & Maddie called “Prom-A-Rooney.” Obviously. In the hilarious clip, we see Jessie star Cameron Boyce",
+          "text": "Get ready for some serious LOLs, you guys. In an EXCLUSIVE sneak peek at the Apr. 19 episode of Liv & Maddie called “Prom-A-Rooney.” Obviously. In the hilarious clip, we see Jessie star Cameron Boyce hop over to a different Disney show to meet Maddie (Shelby Wulfert). His character is, um, eccentric!",
           "full_chars": 301,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971233",
-        "document_id": "4589415",
-        "query": {
-          "text": "where do most of earth's large deserts occur",
-          "full_chars": 44,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "The rest of Earth's deserts are outside of the polar areas. The largest is the Sahara Desert , a subtropical desert in northern Africa.",
-          "full_chars": 135,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "1093082",
-        "document_id": "7778956",
-        "query": {
-          "text": "meaning of copper for a policeman",
-          "full_chars": 33,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Based on current findings it seems that copper (a policeman, lit. 'one who arrests') predates cop (either used verbally and meaning to arrest or when a noun meaning a policeman) It may well be that th",
-          "full_chars": 330,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

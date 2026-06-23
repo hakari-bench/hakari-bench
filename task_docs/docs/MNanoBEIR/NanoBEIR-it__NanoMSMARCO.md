@@ -124,11 +124,9 @@ dense baseline at the top of the list.
 
 | Query | Positive document |
 | --- | --- |
-| Cos'è la sindrome da ruminazione? [33 chars] | Sindrome da Ruminazione. La sindrome da ruminazione, nota anche come mericismo, è un tipo di disturbo alimentare non altrimenti specificato che provoca la rigurgitazione del cibo. Sebbene non sia iden... [200 / 326 chars] |
-| Chi ha cantato "Ecco che vado di nuovo"? [40 chars] | Per altri significati, vedi Here I Go Again (disambiguazione). Here I Go Again è una canzone del gruppo rock britannico Whitesnake. Pubblicata originariamente nell'album del 1982 Saints & Sinners, la... [200 / 346 chars] |
-| Chi interpreta Cameron Boyce in "Liv e Maddie"? [47 chars] | Preparatevi a sbellicarvi dalle risate, ragazzi. In un'anteprima esclusiva dell'episodio del 19 aprile di 'Liv & Maddie' intitolato 'Prom-A-Rooney.' Ovviamente. Nel divertentissimo clip, vediamo Camer... [200 / 355 chars] |
-| Dove si trovano la maggior parte dei grandi deserti della Terra? [64 chars] | Gli altri deserti della Terra si trovano al di fuori delle aree polari. Il più grande è il deserto del Sahara, un deserto subtropicale nell'Africa settentrionale. [162 chars] |
-| Che significa "copper" per un poliziotto? [41 chars] | Secondo le attuali scoperte, sembra che "copper" (un poliziotto, letteralmente 'colui che arresta') preceda "cop" (usato sia come verbo per arrestare, sia come sostantivo per indicare un poliziotto).... [200 / 371 chars] |
+| Cos'è la sindrome da ruminazione? [33 chars] | Sindrome da Ruminazione. La sindrome da ruminazione, nota anche come mericismo, è un tipo di disturbo alimentare non altrimenti specificato che provoca la rigurgitazione del cibo. Sebbene non sia identificata come un disturbo alimentare specifico nel DSM-IV, sono stati definiti alcuni parametri per diagnosticare il disturbo. [326 chars] |
+| Chi ha cantato "Ecco che vado di nuovo"? [40 chars] | Per altri significati, vedi Here I Go Again (disambiguazione). Here I Go Again è una canzone del gruppo rock britannico Whitesnake. Pubblicata originariamente nell'album del 1982 Saints & Sinners, la canzone è stata registrata nuovamente per l'album omonimo del 1987 Whitesnake. Quell'anno è stata registrata nuovamente in una versione radio-mix. [346 chars] |
+| Chi interpreta Cameron Boyce in "Liv e Maddie"? [47 chars] | Preparatevi a sbellicarvi dalle risate, ragazzi. In un'anteprima esclusiva dell'episodio del 19 aprile di 'Liv & Maddie' intitolato 'Prom-A-Rooney.' Ovviamente. Nel divertentissimo clip, vediamo Cameron Boyce, il protagonista di 'Jessie,' fare un salto in un altro show Disney per incontrare Maddie (Shelby Wulfert). Il suo personaggio è, beh, eccentrico! [355 chars] |
 
 ### Public Sources
 

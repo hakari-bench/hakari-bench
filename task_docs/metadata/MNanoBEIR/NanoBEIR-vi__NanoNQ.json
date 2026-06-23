@@ -131,14 +131,14 @@
         "query": {
           "text": "Năm nay, vòng chung kết bốn được tổ chức ở đâu",
           "full_chars": 46,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Giải bóng rổ NCAA Division I nam 2018 là một giải đấu loại trực tiếp 68 đội để xác định nhà vô địch quốc gia của Hiệp hội Thể thao Đại học Quốc gia (NCAA) Division I cho mùa giải 2017–18. Phiên bản th",
+          "text": "Giải bóng rổ NCAA Division I nam 2018 là một giải đấu loại trực tiếp 68 đội để xác định nhà vô địch quốc gia của Hiệp hội Thể thao Đại học Quốc gia (NCAA) Division I cho mùa giải 2017–18. Phiên bản thứ 80 của giải đấu bắt đầu vào ngày 13 tháng 3 năm 2018 và kết thúc với trận chung kết vào ngày 2 tháng 4 tại Alamodome ở San Antonio, Texas.",
           "full_chars": 340,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -147,14 +147,14 @@
         "query": {
           "text": "Liệu Nightmare Before Christmas ban đầu có phải là một bộ phim của Disney không",
           "full_chars": 79,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Ác Mộng Trước Giáng Sinh bắt nguồn từ một bài thơ được viết bởi Tim Burton vào năm 1982, khi ông đang làm hoạt hình tại Walt Disney Feature Animation. Với sự thành công của Vincent trong cùng năm đó,",
+          "text": "Ác Mộng Trước Giáng Sinh bắt nguồn từ một bài thơ được viết bởi Tim Burton vào năm 1982, khi ông đang làm hoạt hình tại Walt Disney Feature Animation. Với sự thành công của Vincent trong cùng năm đó, Walt Disney Studios bắt đầu xem xét phát triển Ác Mộng Trước Giáng Sinh như một bộ phim ngắn hoặc chương trình truyền hình dài 30 phút. Qua nhiều năm, những suy nghĩ của Burton thường quay trở lại với dự án, và vào năm 1990, ông đã ký một thỏa thuận phát triển với Disney. Sản xuất bắt đầu vào tháng 7 năm 1991 tại San Francisco; Disney phát hành bộ phim qua nhãn hiệu Touchstone Pictures của mình vì studio tin rằng bộ phim sẽ \"quá tối tăm và đáng sợ cho trẻ em\".",
           "full_chars": 664,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -163,49 +163,17 @@
         "query": {
           "text": "tại sao thiên thần phía bắc lại ở đó",
           "full_chars": 36,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Theo Gormley, ý nghĩa của một thiên thần có ba khía cạnh: đầu tiên, để chỉ ra rằng dưới địa điểm xây dựng của nó, các thợ mỏ than đã làm việc trong hai thế kỷ; thứ hai, để nắm bắt sự chuyển đổi từ thờ",
+          "text": "Theo Gormley, ý nghĩa của một thiên thần có ba khía cạnh: đầu tiên, để chỉ ra rằng dưới địa điểm xây dựng của nó, các thợ mỏ than đã làm việc trong hai thế kỷ; thứ hai, để nắm bắt sự chuyển đổi từ thời đại công nghiệp sang thời đại thông tin, và thứ ba, để phục vụ như một điểm tập trung cho những hy vọng và nỗi sợ hãi đang phát triển của chúng ta.",
           "full_chars": 349,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test826",
-        "document_id": "doc29757",
-        "query": {
-          "text": "nơi nào thỏa thuận 3/5 được nêu ra trong hiến pháp",
-          "full_chars": 50,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Thỏa thuận Ba Năm Phần được tìm thấy trong Điều 1, Mục 2, Khoản 3 của Hiến pháp Hoa Kỳ, trong đó viết:",
-          "full_chars": 102,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "test2079",
-        "document_id": "doc72413",
-        "query": {
-          "text": "ai hát bài somebody's watching me với michael jackson",
-          "full_chars": 53,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "\"Somebody's Watching Me\" là một bài hát của ca sĩ người Mỹ Rockwell từ album phòng thu đầu tay của anh, Somebody's Watching Me (1984). Nó được phát hành như là đĩa đơn đầu tay của Rockwell và đĩa đơn",
-          "full_chars": 390,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

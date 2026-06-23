@@ -151,11 +151,9 @@ hybrid retrieval keeps all judged positives available for reranking.
 
 | Query | Positive document |
 | --- | --- |
-| ilé iṣẹ iroyin wo ni Eugenia Abu bá ṣiṣe? [41 chars] | Eugenia Abu Eugenia Abu (bíi ni ọjọ́ mọ́kàndinlógún oṣù kẹwàá ọdún 1961) jẹ́ oniroyin, agbóhùnsáfẹ́fẹ́, akọ̀wé àti akéwì. Òun ni atọkun ètò ìròyìn tẹ́lẹ̀ fún Nigerian Television Authority (NTA) . Ó ṣe... [200 / 246 chars] |
-| Awon orile ede wo lo yika Austria? [34 chars] | Austríà Austríà ( tabi ; ), lonibise bi Orileominira ile Austria (German: "Republik Österreich"), je orile-ede atimo ile to ni awon eniyan bi egbegberun 8.8 to wa ni Aringbongan Europe. O ni bode mo O... [200 / 685 chars] |
+| ilé iṣẹ iroyin wo ni Eugenia Abu bá ṣiṣe? [41 chars] | Eugenia Abu Eugenia Abu (bíi ni ọjọ́ mọ́kàndinlógún oṣù kẹwàá ọdún 1961) jẹ́ oniroyin, agbóhùnsáfẹ́fẹ́, akọ̀wé àti akéwì. Òun ni atọkun ètò ìròyìn tẹ́lẹ̀ fún Nigerian Television Authority (NTA) . Ó ṣe atọkun ètò lórí NTA fún ọdún mẹ́tàdínlọgbọn. [246 chars] |
+| Awon orile ede wo lo yika Austria? [34 chars] | Austríà Austríà ( tabi ; ), lonibise bi Orileominira ile Austria (German: "Republik Österreich"), je orile-ede atimo ile to ni awon eniyan bi egbegberun 8.8 to wa ni Aringbongan Europe. O ni bode mo Orileominira Tseki ati Jemani ni ariawa, Slofakia ati Hungari ni ilaorun, Slofenia ati Italia ni gusu, ati Switsalandi ati Likstenstein ni iwoorun. Gbogbo agbegbe ile Austríà je be sini ojuojo ibe je onitutu ati alpini. Ori ile Austríà je oloke gan nitori pe awon Alpi po nibe; 32% ibe nikan ni won wa ni abe , be sin oke re togajulo je . Opo awon iyeolubugbe unso ede Jemani, to tun je ede onibise orile-ede ohun. Awon ede ibile onibise miran tun ni ede Kroatia, Hungari ati Slofenia. [685 chars] |
 | ẹgbẹ wo ni Huey Newton da silẹ? [31 chars] | Huey P. Newton Huey Percy Newton (February 17, 1942 – August 22, 1989) je omo ile Amerika. Newton je oludasile ati olori egbe oselu Black Panther Party. [153 chars] |
-| Odun wo ni Stella Obasanjo s'alaisi? [36 chars] | Stella Obasanjo Stella Obasanjo (14 November 1945 – 23 October 2005) ni Iyaafin Akoko ile Naijiria lati 1999 titi di ojo iku re ni 23 osu kewa, 2005. Ohun ni iyawo aare totikoja Olusegun Obasanjo. [197 chars] |
-| Orukọ wo ni a n pe orile-ede Botswana ki wọn to yi pada? [56 chars] | Bòtswánà Ni orundun 19k, ogun sele larin awon Tswana ti won ti ungbe Botswana ati awon eya Ndebele ti won sese unko bo si agbegbe yi lati ariwa-ilaorun. Bakanna rogbodiyan sele pelu awon ateludo Boer... [200 / 661 chars] |
 
 ### Public Sources
 

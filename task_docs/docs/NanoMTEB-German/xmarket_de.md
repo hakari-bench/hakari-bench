@@ -139,9 +139,7 @@ brand names, to determine whether an item satisfies the query.
 | --- | --- |
 | Minen, Patronen & Tintenlöscher [31 chars] | Noodler's Tinte - 90 ml - Schwarz [33 chars] |
 | Handwerkzeuge [13 chars] | AFA Tooling - (4 Pcs) Radio Removal Tool, OEM: 1C0-051-530 - Wird nicht brechen oder biegen [91 chars] |
-| Stick- & Nähgarn [16 chars] | Clover Stickwerkzeug clover needlecraft this old art of embroidery using a fine hook on a fine cloth tightly stretched in a frame called tambour is reborn with kantan couture bead embroidery tool. bas... [200 / 321 chars] |
-| Töpferei [8 chars] | Makin's Clay Tonpistole, Mehrfarbig [35 chars] |
-| Tafeln [6 chars] | Sculpey S2 Original-Polymer Clay 1,75 Pounds/Pkg [48 chars] |
+| Stick- & Nähgarn [16 chars] | Clover Stickwerkzeug clover needlecraft this old art of embroidery using a fine hook on a fine cloth tightly stretched in a frame called tambour is reborn with kantan couture bead embroidery tool. basic techniques with this tool can create beautiful motifs using sequins and beads. embellish create and make it your own. [321 chars] |
 
 ### Source Reference Table
 

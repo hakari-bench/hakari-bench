@@ -175,15 +175,15 @@
         "query_id": "723",
         "document_id": "5531479",
         "query": {
-          "text": "Ly49Q dirige la migración de los neutrófilos hacia áreas inflamadas regulando las funciones de las b",
+          "text": "Ly49Q dirige la migración de los neutrófilos hacia áreas inflamadas regulando las funciones de las balsas lipídicas.",
           "full_chars": 116,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Los neutrófilos rápidamente sufren polarización y movimiento direccional para infiltrarse en los sitios de infección e inflamación. Aquí mostramos que un receptor inhibidor de MHC I, Ly49Q, fue crucia",
+          "text": "Los neutrófilos rápidamente sufren polarización y movimiento direccional para infiltrarse en los sitios de infección e inflamación. Aquí mostramos que un receptor inhibidor de MHC I, Ly49Q, fue crucial para la rápida polarización y la infiltración tisular de los neutrófilos. En estado estacionario, Ly49Q inhibió la adhesión de neutrófilos al prevenir la formación de complejos focales, probablemente inhibiendo las quinasas Src y PI3. Sin embargo, en presencia de estímulos inflamatorios, Ly49Q mediaba la rápida polarización y la infiltración tisular de los neutrófilos de manera dependiente del dominio ITIM. Estas funciones opuestas parecían estar mediadas por el uso distinto de las fosfatasas efectoras SHP-1 y SHP-2. La polarización y migración dependientes de Ly49Q fueron afectadas por la regulación de Ly49Q de las funciones de las balsas lipídicas de la membrana. Proponemos que Ly49Q es pivotal para cambiar la morfología polarizada de los neutrófilos y su rápida migración ante la infla",
           "full_chars": 1125,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -193,13 +193,13 @@
         "query": {
           "text": "La terapia antirretroviral reduce las tasas de tuberculosis en diferentes niveles de CD4.",
           "full_chars": 89,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "ANTECEDENTES La infección por el virus de la inmunodeficiencia humana (VIH) es el factor de riesgo más fuerte para desarrollar tuberculosis y ha impulsado su resurgimiento, especialmente en el África",
+          "text": "ANTECEDENTES La infección por el virus de la inmunodeficiencia humana (VIH) es el factor de riesgo más fuerte para desarrollar tuberculosis y ha impulsado su resurgimiento, especialmente en el África subsahariana. En 2010, se estimaron 1.1 millones de casos incidentes de tuberculosis entre los 34 millones de personas que vivían con VIH en todo el mundo. La terapia antirretroviral tiene un potencial significativo para prevenir la tuberculosis asociada al VIH. Realizamos una revisión sistemática de estudios que analizaron el impacto de la terapia antirretroviral en la incidencia de tuberculosis en adultos con infección por VIH. MÉTODOS Y RESULTADOS Se realizaron búsquedas sistemáticas en PubMed, Embase, African Index Medicus, LILACS y registros de ensayos clínicos. Se incluyeron ensayos controlados aleatorios, estudios de cohortes prospectivos y estudios de cohortes retrospectivos si comparaban la incidencia de tuberculosis según el estado de terapia antirretroviral en adultos con VIH du",
           "full_chars": 2420,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -207,51 +207,19 @@
         "query_id": "1021",
         "document_id": "9433958",
         "query": {
-          "text": "Aumento rápido y mayor expresión basal de genes inducidos por interferón reducen la supervivencia de",
+          "text": "Aumento rápido y mayor expresión basal de genes inducidos por interferón reducen la supervivencia de neuronas de células granulares infectadas por el virus del Nilo Occidental.",
           "full_chars": 176,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Aunque la susceptibilidad de las neuronas del cerebro a la infección microbiana es un determinante mayor del resultado clínico, se sabe poco sobre los factores moleculares que gobiernan esta vulnerabi",
+          "text": "Aunque la susceptibilidad de las neuronas del cerebro a la infección microbiana es un determinante mayor del resultado clínico, se sabe poco sobre los factores moleculares que gobiernan esta vulnerabilidad. Aquí mostramos que dos tipos de neuronas de distintas regiones cerebrales presentaron una permisividad diferencial a la replicación de varios virus de ARN de cadena positiva. Las neuronas de células granulares del cerebelo y las neuronas corticales de la corteza cerebral tienen programas inmunitarios innatos únicos que confieren una susceptibilidad diferencial a la infección viral ex vivo e in vivo. Al transducir neuronas corticales con genes que se expresaban más en neuronas de células granulares, identificamos tres genes estimulados por interferón (ISGs; Ifi27, Irg1 y Rsad2 (también conocido como Viperin)) que mediaron los efectos antivirales contra diferentes virus neurotrópicos. Además, encontramos que el estado epigenético y la regulación mediada por microARN (miARN) de los ISG",
           "full_chars": 1284,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "971",
-        "document_id": "46695481",
-        "query": {
-          "text": "El cribado primario de cáncer cervical con detección de VPH tiene mayor sensibilidad longitudinal qu",
-          "full_chars": 184,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "ANTECEDENTES La detección de cáncer cervical basada en la prueba del virus del papiloma humano (VPH) aumenta la sensibilidad para detectar neoplasia intraepitelial cervical de alto grado (grado 2 o 3)",
-          "full_chars": 2540,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "180",
-        "document_id": "16966326",
-        "query": {
-          "text": "Bloquear la interacción entre TDP-43 y las proteínas del complejo respiratorio I ND3 y ND6 resulta e",
-          "full_chars": 156,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Las mutaciones genéticas en la proteína TAR DNA-binding protein 43 (TARDBP, también conocida como TDP-43) causan esclerosis lateral amiotrófica (ELA), y un aumento en la presencia de TDP-43 (codificad",
-          "full_chars": 1483,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

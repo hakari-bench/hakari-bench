@@ -177,13 +177,13 @@
         "query": {
           "text": "Keith Godchaux conocía a los Grateful Dead",
           "full_chars": 42,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "La Grateful Dead fue una banda de rock estadounidense formada en 1965 en Palo Alto, California. Conformada por entre cinco y siete miembros, la banda es conocida por su estilo único y ecléctico, que f",
+          "text": "La Grateful Dead fue una banda de rock estadounidense formada en 1965 en Palo Alto, California. Conformada por entre cinco y siete miembros, la banda es conocida por su estilo único y ecléctico, que fusionaba elementos de rock, psicodelia, música experimental, jazz modal, country, folk, bluegrass, blues, reggae y space rock. También eran famosos por sus largos solos instrumentales en vivo y por su leal base de seguidores, conocidos como \"Deadheads\". Según Lenny Kaye, \"su música toca terrenos que la mayoría de los otros grupos ni siquiera saben que existen\". Estas diversas influencias se fusionaron en un todo diverso y psicodélico que convirtió a la Grateful Dead en \"los pioneros padres del mundo de las bandas de jam\". La banda fue ubicada en el puesto 57 por la revista Rolling Stone en su lista de \"Los Mejores Artistas de Todos los Tiempos\". Fueron incluidos en el Salón de la Fama del Rock and Roll en 1994, y una grabación de su presentación del 8 de mayo de 1977 en el Barton Hall de l",
           "full_chars": 3117,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -193,14 +193,14 @@
         "query": {
           "text": "Taarak Mehta Ka Ooltah Chashmah es una comedia de situación",
           "full_chars": 59,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Taarak Mehta Ka Ooltah Chashmah (en inglés: La Perspectiva Diferente de Taarak Mehta) es la sitcom más longeva de la India, producida por Neela Tele Films Private Limited. La serie se estrenó el 28 de",
+          "text": "Taarak Mehta Ka Ooltah Chashmah (en inglés: La Perspectiva Diferente de Taarak Mehta) es la sitcom más longeva de la India, producida por Neela Tele Films Private Limited. La serie se estrenó el 28 de julio de 2008. Se emite de lunes a viernes a las 8:30 pm, con su repetición a las 11:00 pm y al día siguiente a las 3:00 pm en SAB TV. La serie comenzó su retransmisión en Sony Pal el 2 de noviembre de 2015 a las 4:30 pm y 8:00 pm todos los días. La serie está basada en la columna Duniya Ne Oondha Chashma, escrita por el columnista y periodista Taarak Mehta para la revista semanal gujarati Chitralekha.",
           "full_chars": 606,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -209,49 +209,17 @@
         "query": {
           "text": "Aviones de alta tecnología y secretos se fabricaron en Burbank, California.",
           "full_chars": 75,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Burbank es una ciudad en el condado de Los Ángeles, en el sur de California, Estados Unidos, a 12 millas al noroeste del centro de Los Ángeles. Según el censo de 2010, su población era de 103,340 habi",
+          "text": "Burbank es una ciudad en el condado de Los Ángeles, en el sur de California, Estados Unidos, a 12 millas al noroeste del centro de Los Ángeles. Según el censo de 2010, su población era de 103,340 habitantes. Conocida como la \"Capital Mundial de los Medios\" y situada a solo unas pocas millas al noreste de Hollywood, numerosas empresas de medios y entretenimiento tienen su sede o instalaciones de producción significativas en Burbank, incluyendo The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios con la sucursal de la Costa Oeste de Cartoon Network, e Insomniac Games. La ciudad también alberga el Aeropuerto Bob Hope. Fue el lugar donde se encontraba el Skunk Works de Lockheed, que produjo algunos de los aviones más secretos y tecnológicamente avanzados, incluyendo los aviones espía U-2 que descubrieron componentes de misiles soviéticos en Cuba en octubre de 1962. Burbank se compone de dos áreas distintas: una sección céntrica/co",
           "full_chars": 1475,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "85454",
-        "document_id": "Julio-Claudian_dynasty",
-        "query": {
-          "text": "Nero es una persona",
-          "full_chars": 19,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "La dinastía Julio-Claudia se refiere a los primeros cinco emperadores romanos —Augusto, Tiberio, Calígula, Claudio y Nerón— o a la familia a la que pertenecían. Gobernaron el Imperio Romano desde su f",
-          "full_chars": 2075,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "172320",
-        "document_id": "Scream_2",
-        "query": {
-          "text": "Scream 2 es una película exclusivamente alemana.",
-          "full_chars": 48,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "Scream 2 es una película de terror estadounidense de 1997 dirigida por Wes Craven y escrita por Kevin Williamson. Protagonizada por David Arquette, Neve Campbell, Courteney Cox, Sarah Michelle Gellar,",
-          "full_chars": 2742,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

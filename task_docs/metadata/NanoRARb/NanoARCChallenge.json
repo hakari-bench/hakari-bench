@@ -119,15 +119,15 @@
         "query_id": "ARC-Challenge-q-66",
         "document_id": "ARC-Challenge-d-264",
         "query": {
-          "text": "Some students are performing hardness tests on several substances. X scratches Y. Y scratches Z. Z s",
+          "text": "Some students are performing hardness tests on several substances. X scratches Y. Y scratches Z. Z scratches W. Which of these statements best describes substance W's hardness?",
           "full_chars": 176,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
           "text": "W is the softest of the four substances tested.",
           "full_chars": 47,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -137,13 +137,13 @@
         "query": {
           "text": "Hurricanes form over equatorial areas. This is because",
           "full_chars": 54,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "solar heating is greatest near the equator.",
           "full_chars": 43,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -153,49 +153,17 @@
         "query": {
           "text": "The best description of the troposphere is the layer of the atmosphere with the",
           "full_chars": 79,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "greatest density.",
           "full_chars": 17,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "ARC-Challenge-q-9",
-        "document_id": "ARC-Challenge-d-36",
-        "query": {
-          "text": "Copper is an element that is used in electrical wires. What is the smallest unit of copper that stil",
-          "full_chars": 142,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "the atom",
-          "full_chars": 8,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "ARC-Challenge-q-161",
-        "document_id": "ARC-Challenge-d-639",
-        "query": {
-          "text": "If you throw each one of these things away, which will decay fastest?",
-          "full_chars": 69,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "An apple core",
-          "full_chars": 13,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -129,15 +129,15 @@
         "query_id": "412",
         "document_id": "Paleocene",
         "query": {
-          "text": "Från 1970 till 1998 fanns det en uppvärmningsperiod som höjde temperaturerna med cirka 0,7 Fahrenhei",
+          "text": "Från 1970 till 1998 fanns det en uppvärmningsperiod som höjde temperaturerna med cirka 0,7 Fahrenheit, vilket bidrog till att skapa rörelsen för global uppvärmning.",
           "full_chars": 164,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Paleocen (uttalas /ˈpæliəˌsiːn/ eller /ˈpæ - , - lioʊ - /) eller Paleocen, den \"gamla nya\", är en geologisk epok som varade från cirka . Det är den första epoken i Paleogenperioden under den moderna C",
+          "text": "Paleocen (uttalas /ˈpæliəˌsiːn/ eller /ˈpæ - , - lioʊ - /) eller Paleocen, den \"gamla nya\", är en geologisk epok som varade från cirka . Det är den första epoken i Paleogenperioden under den moderna Cenozoiska eran. Som med många geologiska perioder är de lager som definierar epokens början och slut väl identifierade, men de exakta åldrarna förblir osäkra. Paleocenepoken omfattar två stora händelser i jordens historia. Den började med massutdöendet vid slutet av Kritaperioden, känt som Krita-Paleogen-gränsen (K-Pg-gränsen). Detta var en tid präglad av försvinnandet av icke-flygande dinosaurier, jättelika havsreptiler och mycket annan fauna och flora. Dinosauriernas utdöende lämnade tomma ekologiska nischer över hela världen. Paleocen avslutades med Paleocen-Eocen-termiska maximum, en geologiskt kort (ca 0,2 miljoner år) period präglad av extrema förändringar i klimat och kolcykling. Namnet \"Paleocen\" kommer från antik grekiska och syftar på den \"gamla nya\" fauna som uppstod under epoke",
           "full_chars": 1004,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": true
         }
       },
@@ -147,65 +147,33 @@
         "query": {
           "text": "I själva verket är trenden nedåtgående, även om det inte är statistiskt signifikant.",
           "full_chars": 84,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Solarcykeln eller solaktivitetscykeln är den nästan periodiska 11-årsförändringen i solens aktivitet (inklusive förändringar i nivåerna av solstrålning och utsändning av solmaterial) och utseende (för",
+          "text": "Solarcykeln eller solaktivitetscykeln är den nästan periodiska 11-årsförändringen i solens aktivitet (inklusive förändringar i nivåerna av solstrålning och utsändning av solmaterial) och utseende (förändringar i antalet och storleken på solfläckar, fläckar och andra manifestationer). De har observerats (genom förändringar i solens utseende och genom förändringar som kan ses på jorden, såsom norrsken) i århundraden. Förändringarna på solen orsakar effekter i rymden, i atmosfären och på jordens yta. Även om det är den dominerande variabeln i solaktiviteten, förekommer också icke-periodiska variationer.",
           "full_chars": 607,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "109",
         "document_id": "Sea_level",
         "query": {
-          "text": "Lokala och regionala havsnivåer fortsätter visa den vanliga naturliga variationen, stiger på vissa s",
+          "text": "Lokala och regionala havsnivåer fortsätter visa den vanliga naturliga variationen, stiger på vissa ställen och sjunker på andra.",
           "full_chars": 128,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Medelhavsnivå (MSL) (förkortat havsnivå) är en genomsnittlig nivå av jordens havsytor, från vilken höjder som höjder kan mätas. MSL är en typ av vertikal datum, en standardiserad geodetisk referenspun",
+          "text": "Medelhavsnivå (MSL) (förkortat havsnivå) är en genomsnittlig nivå av jordens havsytor, från vilken höjder som höjder kan mätas. MSL är en typ av vertikal datum, en standardiserad geodetisk referenspunkt som används, till exempel, som ett kartdatum i kartografi och sjöfart, eller inom flyg, som standardhavsnivå vid vilken atmosfärstrycket mäts för att kalibrera höjd och därmed flygplanens flygnivåer. En vanlig och relativt enkel medelhavsnivåstandard är mittpunkten mellan medellåg- och medelhögvatten vid en viss plats. Havsnivåer kan påverkas av många faktorer och har visat sig variera mycket över geologiska tidsskalen. Noggrann mätning av variationer i MSL kan ge insikter om pågående klimatförändringar, och havsnivåhöjning har ofta citerats som bevis på pågående global uppvärmning. Termen över havsnivå hänvisar vanligtvis till över medelhavsnivå (AMSL).",
           "full_chars": 867,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "95",
-        "document_id": "Effects_of_global_warming",
-        "query": {
-          "text": "Klimatforskare säger att i fallet med Orkanen Harvey tyder det på att global uppvärmning förvärrar e",
-          "full_chars": 124,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "De globala uppvärmningens effekter är de miljö- och samhällsförändringar som orsakas (direkt eller indirekt) av människans utsläpp av växthusgaser. Det finns en vetenskaplig konsensus om att klimatför",
-          "full_chars": 1368,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "1774",
-        "document_id": "Attribution_of_recent_climate_change",
-        "query": {
-          "text": "CERN:s CLOUD-experiment testade endast en tredjedel av ett av fyra krav som krävs för att skylla på",
-          "full_chars": 197,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Tillskrivning av den senaste klimatförändringen är ansträngningen att vetenskapligt fastställa mekanismer som är ansvariga för de senaste klimatförändringarna på jorden, vanligtvis kända som `global u",
-          "full_chars": 2098,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

@@ -135,13 +135,13 @@
         "query": {
           "text": "فیلم سینمایی۳۵۶ روز بدون‌سانسور",
           "full_chars": 31,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "دانلود فیلم 365 روز 1 (بدون سانسور) - فیلو دانلود فیلم 365 روز 1 (بدون سانسور) تیزر مووی",
           "full_chars": 89,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -151,13 +151,13 @@
         "query": {
           "text": "کلیپ عاشفانه",
           "full_chars": 12,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
           "text": "آپارات | کافه کلیپ عاشقانه",
           "full_chars": 27,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       },
@@ -167,49 +167,17 @@
         "query": {
           "text": "واکینگ دد قسمت ۲۲ فصل ۱۱",
           "full_chars": 24,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "سریال مردگان متحرک :: فصل 11 قسمت 22 :: زیرنویس فارسی دانلود فصل یازدهم مجموعه واکینگ دِد(The Walking Dead - مردگان متحرک) با زیرنویس فارسی و کیفیت فول اچ دی 1080p Full HD | رده سنی: 15+ سال | محصول:",
+          "text": "سریال مردگان متحرک :: فصل 11 قسمت 22 :: زیرنویس فارسی دانلود فصل یازدهم مجموعه واکینگ دِد(The Walking Dead - مردگان متحرک) با زیرنویس فارسی و کیفیت فول اچ دی 1080p Full HD | رده سنی: 15+ سال | محصول: امریکا | ژانر:درام، وحشت، ماجراجویی | IMDb خلاصه: سریال مردگان متحرک (The Walking Dead) یکی از محبوب‌ترین مجموعه‌های تاریخ تلویزیون است. این مجموعه در طول ۱۰ فصل قبلی‌اش با فراز و نشیب‌های بسیاری همراه بوده و هم‌اکنون با فصل یازدهم، می‌خواهد تجربه تازه‌ای را برای مخاطبان رقم بزند آخرین فصل از مجموعه تلویزیونی مردگان متحرک است که شامل ۲۴ قسمت خواهد بود و در طول سالهای ۲۰۲۱ و ۲۰۲۲ پخش خواهد شد.",
           "full_chars": 596,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test_730",
-        "document_id": "111424",
-        "query": {
-          "text": "اگه ارومیه بشی روت ارس میکشم",
-          "full_chars": 28,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "دانلود آهنگ اگه ارومیه بشی روت ارس میکشم + ریمیکس (کامل + متن) دانلود آهنگ اگه ارومیه بشی روت ارس میکشم اهنگ اگه ارومیه بشی روت ارس میکشم با بالاترین کیفیت بصورت کامل Download Music Hichkas - Age Urum",
-          "full_chars": 216,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test_2541",
-        "document_id": "34922",
-        "query": {
-          "text": "سوره قران",
-          "full_chars": 9,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "سوره بیستم قران ⚡️ [ پاســخ کامــل و درست ] سوره بیستم قران جواب سوره بیستم قران کاملا رایگان در سایت مجله اینترنتی باحال مگ",
-          "full_chars": 126,
-          "limit_chars": 200,
+          "limit_chars": 1000,
           "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

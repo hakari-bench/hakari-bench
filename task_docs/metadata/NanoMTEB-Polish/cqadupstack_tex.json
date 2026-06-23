@@ -124,14 +124,14 @@
         "query": {
           "text": "BibLaTeX: bibliografia główna i drugorzędna",
           "full_chars": 43,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "biblatex: drukowanie oddzielnych bibliografii Używam `biblatex` i mam to ustawione tak: W moim pliku bib mam 3 rodzaje wpisów, online, broszura i książka. A w mojej pracy dyplomowej chcę je wydrukować",
+          "text": "biblatex: drukowanie oddzielnych bibliografii Używam `biblatex` i mam to ustawione tak: W moim pliku bib mam 3 rodzaje wpisów, online, broszura i książka. A w mojej pracy dyplomowej chcę je wydrukować osobno w następujący sposób: \\printbibliography[heading=subbibliography,title={Książki},type=book, nottype=url, nottype=booklet, nottype=online] \\printbibliography[heading=subbibliography,title= {Strony internetowe},type=online, nottype=book, nottype=booklet, nottype=url] \\printbibliography[heading=subbibliography,title={Różne},type=booklet] Z jakiegoś powodu to nie zadziała, nadal umieszcza strony internetowe, na których powinny być książki. I wzajemnie. Broszura jednak działa, pokazuje tam tylko moje wpisy do broszury. Niedawno zacząłem używać `biblatex`, więc to może być głupie pytanie.",
           "full_chars": 797,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -140,14 +140,14 @@
         "query": {
           "text": "Jak mogę przyspieszyć kompilację dokumentu z wieloma obrazami?",
           "full_chars": 62,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Pomiń przetwarzanie wszystkich obrazów Próbuję zrobić szkic, zmuszając LaTeX do ignorowania wszystkich obrazów. Jak mam powiedzieć LaTeX, aby pominął wszystkie nazwy plików obrazów (w poleceniu `\\incl",
+          "text": "Pomiń przetwarzanie wszystkich obrazów Próbuję zrobić szkic, zmuszając LaTeX do ignorowania wszystkich obrazów. Jak mam powiedzieć LaTeX, aby pominął wszystkie nazwy plików obrazów (w poleceniu `\\includegraphics`) i po prostu wstawił puste pole? Problem z opcjami `[draft]` polega na tym, że nadal wymaga to, abym wszystkie obrazy znajdowały się w folderze, w którym znajdują się moje pliki `.tex`.",
           "full_chars": 398,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -156,49 +156,17 @@
         "query": {
           "text": "Puste linie w wyrównanym środowisku",
           "full_chars": 35,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Błąd w wyrównaniu środowiska - niekontrolowany argument? > **Possible Duplicate:** > Puste linie w środowisku wyrównania \\documentclass[12pt,a4paper]{article} \\usepackage[wersja=3]{mhchem} \\usepackage",
+          "text": "Błąd w wyrównaniu środowiska - niekontrolowany argument? > **Possible Duplicate:** > Puste linie w środowisku wyrównania \\documentclass[12pt,a4paper]{article} \\usepackage[wersja=3]{mhchem} \\usepackage{siunitx} \\begin{document} \\begin{align*} \\ce{K_a} & = \\frac{\\ce{[H3O+][A^-]}}{\\ce{[HA]}} \\\\ \\end{align*} \\end{document} podaje argument Runaway? \\ce {K_a} & = \\frac {\\ce {[H3O+][A^-]}}{\\ce {[HA]}} \\\\ ! Akapit zakończył się przed ukończeniem \\align*. <do przeczytania ponownie> \\par l.8 ?",
           "full_chars": 488,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "9253",
-        "document_id": "114693",
-        "query": {
-          "text": "alternatywa slashbox",
-          "full_chars": 20,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Tworzenie tabeli, jak pokazano na rysunku Chcę utworzyć tabelę w LaTeX, która zaczyna się tak, jak pokazano na poniższym rysunku. Jak to zrobić, korzystając z pakietu tabel/tabel? Zrobiłem to za pomoc",
-          "full_chars": 295,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "160046",
-        "document_id": "57997",
-        "query": {
-          "text": "Umieszczanie innego obrazu w każdym rogu strony",
-          "full_chars": 47,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "flipbook w pracy magisterskiej Właśnie piszę pracę magisterską z informatyki na temat wizualizacji. Ponieważ sednem mojej pracy magisterskiej jest złożona wizualizacja 3D, która wysyła wiadomość tylko",
-          "full_chars": 2698,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

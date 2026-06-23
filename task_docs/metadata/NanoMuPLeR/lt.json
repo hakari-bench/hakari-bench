@@ -123,81 +123,49 @@
         "query": {
           "text": "Kada turėjo įsigalioti harmonizuotas minimalus €380 už 1 kubinį metrą akcizas gazoliui ir benzinui?",
           "full_chars": 99,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Šiuo pasiūlymu iš dalies keičiama Direktyva 2003/96/EB (EMD) dėl gazolio, naudojamo kaip degalai, apmokestinimo tvarkos, kuri taikoma visose Europos Sąjungos šalyse. Praktiškai šiuo pasiūlymu numatoma",
+          "text": "Šiuo pasiūlymu iš dalies keičiama Direktyva 2003/96/EB (EMD) dėl gazolio, naudojamo kaip degalai, apmokestinimo tvarkos, kuri taikoma visose Europos Sąjungos šalyse. Praktiškai šiuo pasiūlymu numatoma pamažu didinti minimalų gazolio akcizo tarifą, kad būtų galima šiuos tarifus suvienodinti (direktyvoje naudojamas terminas koordinavimas) su benzino akcizais: 380 EUR 1000 litrų abiejų degalų rūšių nuo 2014 m. sausio 1 d. Galutinis įgyvendinimo terminas valstybėms narėms, kurioms nesuteikti pereinamieji laikotarpiai, buvo pratęstas.",
           "full_chars": 535,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "2a1f4cc4-5eb3-4807-be42-7d57e3386847",
         "document_id": "3897",
         "query": {
-          "text": "Kuris mokestis už ES vidaus importą vis dar buvo taikomas septynių valstybių narių: dviem ≤0,5%, vie",
+          "text": "Kuris mokestis už ES vidaus importą vis dar buvo taikomas septynių valstybių narių: dviem ≤0,5%, vienai 0,6%, keturioms 1%?",
           "full_chars": 123,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Dauguma ES 25 valstybių narių laikėsi Tarybos 1985 m. rekomendacijos ir visiškai panaikino mokestį; šiuo metu jį taiko tik septynios valstybės narės: Lenkija ir Portugalija taiko 0,5 proc. arba mažesn",
+          "text": "Dauguma ES 25 valstybių narių laikėsi Tarybos 1985 m. rekomendacijos ir visiškai panaikino mokestį; šiuo metu jį taiko tik septynios valstybės narės: Lenkija ir Portugalija taiko 0,5 proc. arba mažesnės normos mokestį, Kipras — 0,6 proc., o Graikija, Ispanija, Liuksemburgas ir Austrija visą jo normą — 1 proc. Tokia nevienoda tvarka trukdo sudaryti vienodas sąlygas Europos įmonėms, o tai yra viena išankstinių sąlygų, užtikrinančių tinkamą bendrosios rinkos veikimą. Tiesa, mokesčių srityje yra nemažai ir kitų skirtumų bei kliūčių, tačiau tai neturėtų būti priežastis atsisakyti panaikinti šį mokestį visiems laikams.",
           "full_chars": 620,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
         "query_id": "04ff491d-a4b1-4e2c-bb95-d94bbf1cf9d5",
         "document_id": "8404",
         "query": {
-          "text": "Kokia valdymo struktūra buvo siūloma trumpalaikiam visų narių metrologijos mokslinių tyrimų bandomaj",
+          "text": "Kokia valdymo struktūra buvo siūloma trumpalaikiam visų narių metrologijos mokslinių tyrimų bandomajam projektui, kurio terminas būtų apribotas iki 2013 m.?",
           "full_chars": 156,
-          "limit_chars": 100,
-          "truncated": true
+          "limit_chars": 500,
+          "truncated": false
         },
         "positive_document": {
-          "text": "Apibendrinant, EESRK mano, kad būtų tikslingiau nuspręsti įgyvendinti bandomąjį Europos metrologijos mokslinių tyrimų (EMMT) projektą, kurio terminas būtų apribotas iki 2013 m., remiantis i MERA Plus,",
+          "text": "Apibendrinant, EESRK mano, kad būtų tikslingiau nuspręsti įgyvendinti bandomąjį Europos metrologijos mokslinių tyrimų (EMMT) projektą, kurio terminas būtų apribotas iki 2013 m., remiantis i MERA Plus, ir parengiamuosiuose pasiūlymuose dėl 2014–2020 m. Aštuntosios bendrosios MTTP programos išnagrinėti galimybę vykdyti tikrą, nuolatinę Bendrijos programą, kurioje būtų nustatyti aiškūs ir laiko išbandyti mechanizmai. Tokiai programai, kurią visų valstybių narių ir asocijuotųjų šalių labui vadovautų Komisija, turėtų būti numatytas valdymo komitetas bei konsultacinis komitetas ir sudarytos sąlygos plataus masto konsultacijų procesui su labiausiai pramonės poreikiai suinteresuotais subjektais, kurie nustatytų veiklos kryptis ir ją stebėtų.",
           "full_chars": 743,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "f4df06e3-d88a-4f5d-856a-06a27bb88c33",
-        "document_id": "35",
-        "query": {
-          "text": "Kiek laiko suinteresuotos šalys turi pranešti apie save po pranešimo paskelbimo, kad išsaugotų proce",
-          "full_chars": 154,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Jei tyrimo metu atsižvelgiama į šalių prašymus (nusiskundimus), visos suinteresuotos šalys per 40 dienų nuo šio pranešimo paskelbimo Europos Sąjungos oficialiajame leidinyje, jei nenurodyta kitaip, tu",
-          "full_chars": 595,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "5935f6db-a9b8-4a45-9ec2-089d222e81f4",
-        "document_id": "9702",
-        "query": {
-          "text": "Kuris ES organas pritarė Tarybos patvirtintam veiksmų planui sustiprinti įtariamųjų ir kaltinamųjų p",
-          "full_chars": 152,
-          "limit_chars": 100,
-          "truncated": true
-        },
-        "positive_document": {
-          "text": "Įtariamųjų ir kaltinamųjų baudžiamuosiuose procesuose teisių apsauga yra viena iš pagrindinių Sąjungos vertybių, kuri yra labai svarbi siekiant išlaikyti valstybių narių tarpusavio pasitikėjimą ir vis",
-          "full_chars": 556,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }

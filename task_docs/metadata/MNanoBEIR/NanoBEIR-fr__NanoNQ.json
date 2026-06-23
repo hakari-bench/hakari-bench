@@ -137,14 +137,14 @@
         "query": {
           "text": "Où se déroule le Final Four cette année ?",
           "full_chars": 41,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Le tournoi de basket-ball universitaire de la Division I de la NCAA 2018 était un tournoi à élimination directe de 68 équipes visant à désigner le champion national de basket-ball universitaire de la",
+          "text": "Le tournoi de basket-ball universitaire de la Division I de la NCAA 2018 était un tournoi à élimination directe de 68 équipes visant à désigner le champion national de basket-ball universitaire de la Division I de la NCAA pour la saison 2017-2018. La 80e édition du tournoi a commencé le 13 mars 2018 et s'est terminée par la finale le 2 avril à l'Alamodome de San Antonio, au Texas.",
           "full_chars": 383,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -153,14 +153,14 @@
         "query": {
           "text": "Le film \"L'Étrange Noël de Monsieur Jack\" était-il à l'origine un film de Disney ?",
           "full_chars": 82,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "L'idée de L'Étrange Noël de Monsieur Jack est née d'un poème écrit par Tim Burton en 1982, alors qu'il travaillait comme animateur chez Walt Disney Feature Animation. Grâce au succès de Vincent la mêm",
+          "text": "L'idée de L'Étrange Noël de Monsieur Jack est née d'un poème écrit par Tim Burton en 1982, alors qu'il travaillait comme animateur chez Walt Disney Feature Animation. Grâce au succès de Vincent la même année, les studios Walt Disney ont commencé à envisager de développer L'Étrange Noël de Monsieur Jack en tant que court-métrage ou spécial télévisé de 30 minutes. Au fil des années, Burton est régulièrement revenu sur ce projet, et en 1990, il a conclu un accord de développement avec Disney. La production a débuté en juillet 1991 à San Francisco; Disney a sorti le film sous le label Touchstone Pictures, estimant qu'il serait \"trop sombre et effrayant pour les enfants\".[4]",
           "full_chars": 678,
-          "limit_chars": 200,
-          "truncated": true
+          "limit_chars": 1000,
+          "truncated": false
         }
       },
       {
@@ -169,49 +169,17 @@
         "query": {
           "text": "Pourquoi l'Ange du Nord se trouve-t-il à cet endroit ?",
           "full_chars": 54,
-          "limit_chars": 100,
+          "limit_chars": 500,
           "truncated": false
         },
         "positive_document": {
-          "text": "Selon Gormley, la signification de cet ange est triple : d'abord, pour indiquer que sous le site de sa construction, des mineurs de charbon ont travaillé pendant deux siècles ; ensuite, pour marquer l",
+          "text": "Selon Gormley, la signification de cet ange est triple : d'abord, pour indiquer que sous le site de sa construction, des mineurs de charbon ont travaillé pendant deux siècles ; ensuite, pour marquer la transition d'une ère industrielle à une ère de l'information, et enfin, pour servir de point de mire à nos espoirs et à nos peurs en évolution.",
           "full_chars": 345,
-          "limit_chars": 200,
-          "truncated": true
-        }
-      },
-      {
-        "query_id": "test826",
-        "document_id": "doc29757",
-        "query": {
-          "text": "Où le compromis des trois cinquièmes était-il initialement mentionné dans la Constitution ?",
-          "full_chars": 91,
-          "limit_chars": 100,
+          "limit_chars": 1000,
           "truncated": false
-        },
-        "positive_document": {
-          "text": "Le Compromis des trois cinquièmes se trouve à l'Article 1, Section 2, Clause 3 de la Constitution des États-Unis, qui stipule :",
-          "full_chars": 127,
-          "limit_chars": 200,
-          "truncated": false
-        }
-      },
-      {
-        "query_id": "test2079",
-        "document_id": "doc72413",
-        "query": {
-          "text": "Qui chante \"Someone's Watching Me\" en duo avec Michael Jackson ?",
-          "full_chars": 64,
-          "limit_chars": 100,
-          "truncated": false
-        },
-        "positive_document": {
-          "text": "“Somebody's Watching Me” est une chanson du chanteur américain Rockwell issue de son premier album studio éponyme, Somebody's Watching Me (1984). Elle a été publiée en tant que premier single et singl",
-          "full_chars": 389,
-          "limit_chars": 200,
-          "truncated": true
         }
       }
     ],
-    "example_count": 5
+    "example_count": 3
   }
 }
