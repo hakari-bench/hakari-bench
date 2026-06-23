@@ -348,13 +348,25 @@
       event.preventDefault();
       event.stopPropagation();
       const modal = document.getElementById("count-breakdown-modal");
+      const title = document.getElementById("count-breakdown-title");
       if (!modal) return;
-      if (typeof modal.showModal === "function") modal.showModal();
-      const sectionId = `count-breakdown-${trigger.dataset.countBreakdownTrigger || ""}`;
-      const section = document.getElementById(sectionId);
-      if (section && typeof section.scrollIntoView === "function") {
-        section.scrollIntoView({ block: "nearest" });
+      const selectedSection = trigger.dataset.countBreakdownTrigger || "";
+      let activeTitle = "Result breakdown";
+      for (const section of document.querySelectorAll("[data-count-breakdown-section]")) {
+        const isActive = section.dataset.countBreakdownSection === selectedSection;
+        section.hidden = !isActive;
+        if (isActive) activeTitle = section.dataset.countBreakdownTitle || activeTitle;
       }
+      if (title) title.textContent = activeTitle;
+      if (typeof modal.showModal === "function") modal.showModal();
+    });
+
+    document.addEventListener("click", (event) => {
+      const link = closestElement(event.target, ".count-breakdown-task-link");
+      if (!link || !link.href) return;
+      event.preventDefault();
+      event.stopPropagation();
+      window.open(link.href, "_blank", "noopener,noreferrer");
     });
 
     document.addEventListener("click", (event) => {

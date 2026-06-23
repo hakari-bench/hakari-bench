@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from collections import Counter
 from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
 import csv
@@ -34,8 +33,6 @@ from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome
 from hakari_bench.viewer.filters import (
     FILTER_NONE_VALUE,
     FilterContext,
-    commercial_bucket,
-    commercial_bucket_label,
     row_filter_context,
     visible_row_count,
 )
@@ -1278,13 +1275,14 @@ def _render_count_breakdown_modal(
     benchmark_docs: BenchmarkDocs | None,
 ) -> str:
     visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
+    model_views = model_cell_views(result.rows)
     return f"""
-<dialog id="count-breakdown-modal" class="hakari-modal">
+<dialog id="count-breakdown-modal" class="hakari-modal hakari-count-modal">
   <form method="dialog">
     <div class="hakari-modal-header">
       <h3 class="hakari-modal-title">
         {_icon_svg("activity", class_name="hakari-icon")}
-        <span>Result breakdown</span>
+        <span id="count-breakdown-title">Result breakdown</span>
       </h3>
       <button type="submit" class="hakari-modal-close">Close</button>
     </div>
@@ -1297,6 +1295,7 @@ def _render_count_breakdown_modal(
           count=len(visible_rows),
           description="Rows currently visible after text, facet, and range filters.",
           rows=visible_rows,
+          model_views=model_views,
       )}
       {_render_count_breakdown_section(
           section_id="count-breakdown-complete",
@@ -1304,6 +1303,7 @@ def _render_count_breakdown_modal(
           count=len(result.rows),
           description="Complete rows in the selected benchmark scope before row visibility filters.",
           rows=result.rows,
+          model_views=model_views,
       )}
       {_render_task_breakdown_section(result=result, benchmark_docs=benchmark_docs)}
     </div>
@@ -1319,44 +1319,33 @@ def _render_count_breakdown_section(
     count: int,
     description: str,
     rows: list[LeaderboardRow],
+    model_views: dict[str, ModelCellView],
 ) -> str:
-    family_counts = Counter(_status_model_type_label(row) for row in rows)
-    commercial_counts = Counter(commercial_bucket(row.license) for row in rows)
+    section_key = section_id.removeprefix("count-breakdown-")
     return f"""
-      <section id="{section_id}" class="border-t border-zinc-200 pt-2">
+      <section id="{section_id}" data-count-breakdown-section="{escape(section_key, quote=True)}" data-count-breakdown-title="{escape(title, quote=True)}" hidden class="pt-2">
         <h4 class="font-semibold text-zinc-900">{escape(title)}: {count}</h4>
         <p class="mt-1 text-sm text-zinc-600">{escape(description)}</p>
-        <div class="mt-2 grid gap-2 sm:grid-cols-2">
-          {_render_count_list("Model family", family_counts)}
-          {_render_count_list(
-              "Commercial use",
-              Counter({commercial_bucket_label(bucket): value for bucket, value in commercial_counts.items()}),
-          )}
-        </div>
+        {_render_status_model_list(rows=rows, model_views=model_views)}
       </section>
     """
 
 
-def _render_count_list(title: str, counts: Counter[str]) -> str:
-    if not counts:
-        return f"""
-          <div>
-            <h5 class="font-medium text-zinc-800">{escape(title)}</h5>
-            <p class="mt-1 text-sm text-zinc-500">No rows.</p>
-          </div>
-        """
-    items = "".join(
-        f"""<li class="flex items-center justify-between gap-3 border-t border-zinc-200 py-1">
-          <span>{escape(label)}</span><span class="tabular-nums text-zinc-900">{count}</span>
-        </li>"""
-        for label, count in sorted(counts.items(), key=lambda item: (-item[1], item[0].casefold()))
-    )
-    return f"""
-      <div>
-        <h5 class="font-medium text-zinc-800">{escape(title)}</h5>
-        <ul class="mt-1 text-sm text-zinc-600">{items}</ul>
-      </div>
-    """
+def _render_status_model_list(*, rows: list[LeaderboardRow], model_views: dict[str, ModelCellView]) -> str:
+    if not rows:
+        return '<p class="mt-2 text-sm text-zinc-500">No models.</p>'
+    items = []
+    for row in rows:
+        model_view = model_views.get(row.model_name)
+        metadata = model_view.metadata if model_view is not None else {"model_name": row.model_name}
+        metadata_json = escape(json.dumps(metadata, ensure_ascii=False, separators=(",", ":")), quote=True)
+        items.append(
+            f"""<li class="border-t border-zinc-200 py-1">
+              <button type="button" class="model-detail-trigger break-all text-left font-mono text-sm underline underline-offset-2 hover:text-cyan-700"
+                      data-model-metadata="{metadata_json}">{escape(row.model_name)}</button>
+            </li>"""
+        )
+    return f"""<ul class="mt-2 max-h-72 overflow-auto">{''.join(items)}</ul>"""
 
 
 def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs: BenchmarkDocs | None) -> str:
@@ -1371,7 +1360,7 @@ def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs:
         if doc is not None:
             task_items.append(
                 f"""<li class="border-t border-zinc-200 py-1">
-                  <a class="underline underline-offset-2 hover:text-cyan-700" href="{escape(doc.url, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(label)}</a>
+                  <a class="count-breakdown-task-link underline underline-offset-2 hover:text-cyan-700" href="{escape(doc.url, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(label)}</a>
                 </li>"""
             )
         else:
@@ -1384,24 +1373,12 @@ def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs:
         else '<p class="mt-2 text-sm text-zinc-500">Task-level breakdown is unavailable for this precomputed summary.</p>'
     )
     return f"""
-      <section id="count-breakdown-tasks" class="border-t border-zinc-200 pt-2">
-        <h4 class="font-semibold text-zinc-900">Task docs: {result.expected_tasks}</h4>
+      <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden class="pt-2">
+        <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
         <p class="mt-1 text-sm text-zinc-600">Tasks in the selected benchmark scope. Linked tasks have verified local documentation and open in a new tab.</p>
         {task_body}
       </section>
     """
-
-
-def _status_model_type_label(row: LeaderboardRow) -> str:
-    key = model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
-    labels = {
-        "dense": "Dense",
-        "bm25": "BM25",
-        "sparse": "Sparse",
-        "late-interaction": "Late interaction",
-        "reranker": "Reranker",
-    }
-    return labels.get(key, key or "Unknown")
 
 
 PLOT_SCORE_OPTIONS = {

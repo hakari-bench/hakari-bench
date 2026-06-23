@@ -743,7 +743,7 @@ def test_leaderboard_status_modal_links_existing_task_docs_in_blank_tabs(tmp_pat
     assert response.status_code == 200
     assert 'id="count-breakdown-modal"' in response.text
     assert (
-        '<a class="underline underline-offset-2 hover:text-cyan-700" '
+        '<a class="count-breakdown-task-link underline underline-offset-2 hover:text-cyan-700" '
         'href="/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna" '
         'target="_blank" rel="noopener noreferrer">'
     ) in response.text

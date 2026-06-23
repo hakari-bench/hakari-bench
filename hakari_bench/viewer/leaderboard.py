@@ -6,7 +6,7 @@ from functools import lru_cache
 import math
 from pathlib import Path
 import re
-from typing import Any, Iterable, Literal
+from typing import Any, Iterable, Literal, Sequence
 
 import duckdb
 from pydantic import BaseModel, ConfigDict, Field
@@ -20,6 +20,7 @@ from hakari_bench.viewer.config import (
     ScoreAggregation,
     ScoreGroupConfig,
     ViewerConfig,
+    benchmark_name_from_selection_key,
     normalize_benchmark_selection_values,
 )
 from hakari_bench.viewer.data import (
@@ -450,6 +451,11 @@ class LeaderboardService:
                     rows = _with_model_card_parameters_for_leaderboard_rows(
                         rows, self.model_card_parameters
                     )
+                    task_breakdowns = _load_task_breakdowns_for_benchmarks(
+                        duckdb_path=self.duckdb_path,
+                        benchmarks=benchmarks,
+                        config=self.config,
+                    )
                     sorted_rows = sort_rows(rows, sort=sort, direction=direction)
                     request_timing["task_score_count"] = None
                     request_timing["leaderboard_row_count"] = len(sorted_rows)
@@ -488,6 +494,7 @@ class LeaderboardService:
                             else None
                         ),
                         metric_columns=[],
+                        task_breakdowns=task_breakdowns,
                         available_languages=available_languages,
                         selected_languages=(),
                         selected_benchmarks=selected_benchmark_names,
@@ -2677,20 +2684,89 @@ def _metric_columns(
 def _task_breakdowns(rows: list[TaskScore]) -> list[TaskBreakdown]:
     by_key: dict[str, TaskBreakdown] = {}
     for row in rows:
-        if row.task_key in by_key:
-            continue
-        doc_key = f"{row.benchmark}::{row.dataset_name}::{row.task_name}"
-        label_parts = [row.benchmark]
-        if row.dataset_name and row.dataset_name != row.benchmark:
-            label_parts.append(row.dataset_name)
-        if row.task_name and row.task_name not in {row.dataset_name, row.benchmark}:
-            label_parts.append(row.task_name)
-        by_key[row.task_key] = TaskBreakdown(
-            key=row.task_key,
-            label=" / ".join(label_parts) if label_parts else row.task_key,
-            doc_key=doc_key,
+        _add_task_breakdown(
+            by_key,
+            benchmark=row.benchmark,
+            dataset_name=row.dataset_name,
+            task_name=row.task_name,
+            task_key=row.task_key,
         )
     return sorted(by_key.values(), key=lambda task: task.label.casefold())
+
+
+def _load_task_breakdowns_for_benchmarks(
+    *, duckdb_path: Path, benchmarks: Sequence[str], config: ViewerConfig
+) -> list[TaskBreakdown]:
+    if not duckdb_path.exists() or not benchmarks:
+        return []
+    benchmark_names = sorted({benchmark_name_from_selection_key(benchmark) for benchmark in benchmarks})
+    if not benchmark_names:
+        return []
+    con = duckdb.connect(str(duckdb_path), read_only=True)
+    try:
+        if not _table_exists(con, "viewer_task_results"):
+            return []
+        columns = _table_columns(con, "viewer_task_results")
+        required_columns = {"benchmark", "dataset_name", "task_name", "task_key"}
+        if not required_columns.issubset(columns):
+            return []
+        placeholders = ", ".join("?" for _ in benchmark_names)
+        rows = con.execute(
+            f"""
+            SELECT DISTINCT benchmark, dataset_name, task_name, task_key
+            FROM viewer_task_results
+            WHERE benchmark IN ({placeholders})
+            ORDER BY lower(benchmark), lower(dataset_name), lower(task_name), lower(task_key)
+            """,
+            benchmark_names,
+        ).fetchall()
+    finally:
+        con.close()
+    by_key: dict[str, TaskBreakdown] = {}
+    excluded_by_benchmark = {
+        benchmark.name: set(benchmark.excluded_tasks)
+        for benchmark in config.benchmarks
+        if benchmark.excluded_tasks
+    }
+    for benchmark, dataset_name, task_name, task_key in rows:
+        benchmark_value = str(benchmark)
+        task_name_value = str(task_name)
+        task_key_value = str(task_key)
+        if task_name_value in excluded_by_benchmark.get(
+            benchmark_value, set()
+        ) or task_key_value in excluded_by_benchmark.get(benchmark_value, set()):
+            continue
+        _add_task_breakdown(
+            by_key,
+            benchmark=benchmark_value,
+            dataset_name=str(dataset_name),
+            task_name=task_name_value,
+            task_key=task_key_value,
+        )
+    return sorted(by_key.values(), key=lambda task: task.label.casefold())
+
+
+def _add_task_breakdown(
+    by_key: dict[str, TaskBreakdown],
+    *,
+    benchmark: str,
+    dataset_name: str,
+    task_name: str,
+    task_key: str,
+) -> None:
+    if task_key in by_key:
+        return
+    doc_key = f"{benchmark}::{dataset_name}::{task_name}"
+    label_parts = [benchmark]
+    if dataset_name and dataset_name != benchmark:
+        label_parts.append(dataset_name)
+    if task_name and task_name not in {dataset_name, benchmark}:
+        label_parts.append(task_name)
+    by_key[task_key] = TaskBreakdown(
+        key=task_key,
+        label=" / ".join(label_parts) if label_parts else task_key,
+        doc_key=doc_key,
+    )
 
 
 def _metric_column_doc_keys(

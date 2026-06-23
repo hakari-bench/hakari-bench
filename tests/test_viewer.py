@@ -446,11 +446,30 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 ["Overall", "all", True, False, False, False, "ja", "Japanese", 3],
             ],
         )
+        con.execute(
+            """
+            CREATE TABLE viewer_task_results (
+                benchmark VARCHAR,
+                dataset_name VARCHAR,
+                task_name VARCHAR,
+                task_key VARCHAR
+            )
+            """
+        )
+        con.executemany(
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?)",
+            [
+                ("BenchA", "BenchA", "TaskA", "BenchA::TaskA"),
+                ("BenchA", "BenchA", "TaskB", "BenchA::TaskB"),
+                ("BenchA", "BenchA", "IgnoredTask", "BenchA::IgnoredTask"),
+                ("BenchPrimary", "BenchPrimary-ja", "TaskC", "BenchPrimary::TaskC"),
+            ],
+        )
     finally:
         con.close()
     config = ViewerConfig(
         benchmarks=[
-            BenchmarkConfig(name="BenchA"),
+            BenchmarkConfig(name="BenchA", excluded_tasks=["IgnoredTask"]),
             BenchmarkConfig(name="BenchPrimary", language_filter_mode="primary_language"),
         ],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA", "BenchPrimary"])],
@@ -484,6 +503,15 @@ runtime:
     )
 
     assert result.expected_tasks == 3
+    assert [(task.key, task.label, task.doc_key) for task in result.task_breakdowns] == [
+        ("BenchA::TaskA", "BenchA / TaskA", "BenchA::BenchA::TaskA"),
+        ("BenchA::TaskB", "BenchA / TaskB", "BenchA::BenchA::TaskB"),
+        (
+            "BenchPrimary::TaskC",
+            "BenchPrimary / BenchPrimary-ja / TaskC",
+            "BenchPrimary::BenchPrimary-ja::TaskC",
+        ),
+    ]
     assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)", "bm25"]
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
@@ -1011,6 +1039,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
+    assert ".hakari-count-modal{width:min(92vw,48rem);max-height:92vh}" in css_response.text
+    assert ".hakari-count-modal .hakari-modal-body{max-height:calc(92vh - 4rem);overflow:auto}" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200
@@ -1035,6 +1065,11 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
     assert ".leaderboard-status-count-trigger" in viewer_js_response.text
     assert 'document.getElementById("count-breakdown-modal")' in viewer_js_response.text
+    assert 'document.getElementById("count-breakdown-title")' in viewer_js_response.text
+    assert "[data-count-breakdown-section]" in viewer_js_response.text
+    assert "section.hidden = !isActive;" in viewer_js_response.text
+    assert ".count-breakdown-task-link" in viewer_js_response.text
+    assert 'window.open(link.href, "_blank", "noopener,noreferrer");' in viewer_js_response.text
     assert 'event.target.id === "count-breakdown-modal"' in viewer_js_response.text
     assert "setTimeout(() =>" in viewer_js_response.text
     assert "const delay = trigger.dataset.tooltipDelay" in viewer_js_response.text
@@ -1778,17 +1813,32 @@ def test_leaderboard_status_counts_are_clickable_and_open_breakdown_modal() -> N
     assert ">2 shown</button>" in status_html
     assert ">2 complete models</button>" in status_html
     assert ">2 tasks</button>" in status_html
-    assert 'id="count-breakdown-modal"' in html
+    assert 'id="count-breakdown-modal" class="hakari-modal hakari-count-modal"' in html
     assert 'id="count-breakdown-shown"' in html
     assert 'id="count-breakdown-complete"' in html
     assert 'id="count-breakdown-tasks"' in html
+    assert 'id="count-breakdown-title"' in html
+    assert 'data-count-breakdown-section="shown" data-count-breakdown-title="Visible rows" hidden' in html
+    assert 'data-count-breakdown-section="complete" data-count-breakdown-title="Complete models" hidden' in html
+    assert 'data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden' in html
     assert "Visible rows" in html
     assert "Complete models" in html
-    assert "Task docs" in html
-    assert ">Dense</span>" in html
-    assert ">Reranker</span>" in html
-    assert ">Commercial</span>" in html
-    assert ">Non-commercial</span>" in html
+    assert "Tasks: 2" in html
+    modal_html = html.split('id="count-breakdown-modal"', 1)[1].split("</dialog>", 1)[0]
+    shown_section = html.split('id="count-breakdown-shown"', 1)[1].split('id="count-breakdown-complete"', 1)[0]
+    complete_section = html.split('id="count-breakdown-complete"', 1)[1].split('id="count-breakdown-tasks"', 1)[0]
+    tasks_section = html.split('id="count-breakdown-tasks"', 1)[1].split("</dialog>", 1)[0]
+    assert shown_section.count("model-detail-trigger") == 2
+    assert complete_section.count("model-detail-trigger") == 2
+    assert 'data-model-metadata="' in shown_section
+    assert ">model/a</button>" in shown_section
+    assert ">model/b</button>" in complete_section
+    assert "Model family" not in modal_html
+    assert "Commercial use" not in modal_html
+    assert "Dense</span>" not in shown_section
+    assert "Reranker</span>" not in complete_section
+    assert "model-detail-trigger" not in tasks_section
+    assert "count-breakdown-task-link" in modal_html or "Task-level breakdown is unavailable" in modal_html
 
 
 def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
