@@ -158,12 +158,21 @@ This Space hosts the public leaderboard for HAKARI-Bench, a Nano-set information
 The leaderboard viewer runs from a prebuilt Docker image published by the HAKARI-Bench GitHub repository:
 
 - Project repository: https://github.com/hakari-bench/hakari-bench
+- Paper: https://huggingface.co/papers/2606.22778
 - Space page: https://huggingface.co/spaces/hakari-bench/leaderboard
 - Direct app: https://hakari-bench-leaderboard.hf.space/
 - Leaderboard database: https://huggingface.co/datasets/hakari-bench/leaderboard_database
 
 The app downloads the current DuckDB leaderboard database at startup and serves the interactive benchmark tables, model comparisons, task documentation, and filtering views from that database.
 EOF
+```
+
+Create or update the static model-link file from the latest local leaderboard
+DuckDB cache. The Space app does not import this file; Hugging Face scans the
+literal model ids to link this Space from model repository pages.
+
+```bash
+uv run python scripts/generate_space_models_py.py --output "$SPACE_WORKDIR/models.py"
 ```
 
 Create the Space Dockerfile:
@@ -187,7 +196,7 @@ EOF
 Force push the minimal commit:
 
 ```bash
-git add README.md Dockerfile .gitignore
+git add README.md Dockerfile .gitignore models.py
 git commit -m "Deploy prebuilt Docker leaderboard image"
 git push -f origin HEAD:main
 ```
