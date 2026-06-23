@@ -5,7 +5,7 @@
 
 <p align="left">
   📊 <a href="https://huggingface.co/spaces/hakari-bench/leaderboard">🤗 Leaderboard</a> | 
-  📄 Paper [WIP]
+  📄 <a href="https://arxiv.org/abs/2606.22778">Paper: HAKARI-Bench</a>
 </p>
 
 HAKARI-Bench is a lightweight IR benchmark that rebuilds retrieval tasks as
@@ -110,3 +110,19 @@ retain their respective license, terms, and attribution requirements.
 ## 👤 Main Author
 
 Yuichi Tateno ([@hotchpotch](https://github.com/hotchpotch))
+
+## 📚 Citation
+
+If you use HAKARI-Bench in a paper, please cite:
+
+```bibtex
+@misc{tateno2026hakaribenchlightweightbenchmarkcomparing,
+  title={HAKARI-Bench: A Lightweight Benchmark for Comparing Retrieval Architectures and Efficiency Settings under Unified Conditions},
+  author={Yuichi Tateno},
+  year={2026},
+  eprint={2606.22778},
+  archivePrefix={arXiv},
+  primaryClass={cs.IR},
+  url={https://arxiv.org/abs/2606.22778},
+}
+```
