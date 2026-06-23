@@ -509,9 +509,14 @@
 
   .benchmark-doc p,
   .benchmark-doc li,
-  .benchmark-doc td,
+  .benchmark-doc td {
+    color: var(--hakari-text);
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
   .benchmark-doc blockquote {
-    color: var(--hakari-text-muted);
+    color: color-mix(in srgb, var(--hakari-text) 88%, var(--hakari-text-muted));
     font-size: 0.875rem;
     line-height: 1.55;
   }
@@ -1191,7 +1196,7 @@
   border-radius: var(--hakari-radius-sm);
   background-color: var(--hakari-surface-faint);
   padding: 0.5rem 0.75rem;
-  color: var(--hakari-text-muted);
+  color: color-mix(in srgb, var(--hakari-text) 88%, var(--hakari-text-muted));
 }
 
 .benchmark-doc pre {
