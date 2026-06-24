@@ -2,7 +2,7 @@ id: sentence-transformers/all-MiniLM-L6-v2
 source:
   type: huggingface
   name: sentence-transformers/all-MiniLM-L6-v2
-  revision: c9745ed1d9f2
+  revision: 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
 method: dense
 license:
   id: apache-2.0
@@ -100,3 +100,8 @@ target:
   - hakari-bench/NanoRTEB
   - hakari-bench/NanoRuMTEB
   - hakari-bench/NanoVNMTEB
+notes:
+- sentence_bert_config.json advertises max_seq_length 256, but the underlying
+  Transformer config and tokenizer support 512 tokens. Use the documented
+  Sentence Transformers max sequence length for benchmark-comparable runs; a
+  2026-06-24 explicit 512-token override reduced retrieval scores.

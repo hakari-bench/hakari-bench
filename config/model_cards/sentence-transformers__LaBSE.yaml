@@ -47,3 +47,8 @@ language_support:
     high_non_english_language_count: 1
     high_non_english_family_count: 1
     evaluated_language_count: 24
+notes:
+- sentence_bert_config.json advertises max_seq_length 256, but the underlying
+  Transformer config and tokenizer support 512 tokens. Use the documented
+  Sentence Transformers max sequence length for benchmark-comparable runs; a
+  2026-06-24 explicit 512-token override reduced retrieval scores.

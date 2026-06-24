@@ -71,11 +71,18 @@ Applies to:
 
 - `cl-nagoya/ruri-v3-30m`
 - `cl-nagoya/ruri-v3-310m`
+- `cl-nagoya/ruri-v3-reranker-310m`
 
 Use the retrieval prompts documented by the model card:
 
 - query prompt: `検索クエリ: `
 - document/corpus prompt: `検索文書: `
+
+These prompts apply to the dense embedding checkpoints. The
+`cl-nagoya/ruri-v3-reranker-310m` README documents direct CrossEncoder pair
+scoring with `predict([[query, document], ...])` and `rank(query, documents)`;
+do not add dense query/document prompt prefixes unless an official reranker
+usage note is updated to require them.
 
 Example:
 
@@ -90,6 +97,9 @@ Runtime notes:
 
 - Prefer Transformers 4.x with Flash Attention 2 for ruri-v3 unless a newer
   runtime has been revalidated for the exact model and task set.
+- For `cl-nagoya/ruri-v3-reranker-310m`, use the `tf4-fa2` dependency group,
+  `attn_implementation: flash_attention_2`, bf16, and the model's 8192 token
+  maximum sequence length.
 - In this project, `cl-nagoya/ruri-v3-310m` on NanoJMTEB/NanoJaqket produced
   abnormally low scores with `transformers==5.7.0` despite correct prompts.
   Re-running with `transformers==4.57.6` and Flash Attention 2 restored the
@@ -711,3 +721,33 @@ Truncation notes:
 - The model card documents Matryoshka support.
 - Use `--embedding-variant truncate:512,256,128,64,32` when measuring
   dimensional trade-offs.
+
+## Sentence Transformers MiniLM and LaBSE max length
+
+Applies to:
+
+- `sentence-transformers/all-MiniLM-L12-v2`
+- `sentence-transformers/LaBSE`
+- `sentence-transformers/all-MiniLM-L6-v2`
+- `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`
+- `sentence-transformers/paraphrase-multilingual-mpnet-base-v2`
+
+These models advertise shorter Sentence Transformers defaults in
+`sentence_bert_config.json` for some repositories, even though their underlying
+Transformer configs and tokenizers support roughly 512-token inputs. Keep the
+model cards on the documented Sentence Transformers max sequence length for
+benchmark-comparable runs:
+
+```bash
+uv run hakari-bench evaluate from-model-card \
+  --model-card config/model_cards/sentence-transformers__all-MiniLM-L12-v2.yaml \
+  --all \
+  --dtype bf16 \
+  --attn-implementation sdpa
+```
+
+Use the matching model card for the other Sentence Transformers models. A
+2026-06-24 512-token override sweep confirmed that these repositories can
+execute with 512-token inputs, but retrieval quality dropped relative to the
+documented Sentence Transformers lengths. A follow-up rerun at the documented
+lengths reproduced the remote DuckDB scores with only small numerical drift.

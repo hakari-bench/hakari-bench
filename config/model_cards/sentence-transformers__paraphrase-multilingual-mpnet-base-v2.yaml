@@ -49,3 +49,9 @@ language_support:
     high_non_english_language_count: 2
     high_non_english_family_count: 2
     evaluated_language_count: 24
+notes:
+- sentence_bert_config.json advertises max_seq_length 128, while the underlying
+  MPNet config has 514 positions and the tokenizer supports 512 tokens.
+  Use the documented Sentence Transformers max sequence length for
+  benchmark-comparable runs; a 2026-06-24 explicit 512-token override reduced
+  retrieval scores.
