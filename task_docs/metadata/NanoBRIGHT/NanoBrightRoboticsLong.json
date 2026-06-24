@@ -138,17 +138,68 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "81",
+        "document_id": "nav2bringup/READMEmd.txt",
+        "query": {
+          "text": "ROS2 Map not received when using nav2_bringup I'm currently using the TurtleBot2 on Ubuntu 22.04 Humble and successfully generated a map with ros2 launch nav2_bringup navigation_launch.py. I was able to use the command ros2 launch nav2_bringup bringup_launch.py map:=/name/of/path.yaml several times (it was showing the map sometimes and wasnt showing the map sometimes aswell) but now whenever I am launching the command it tells me [component_container_isolated-1] [INFO] [1695317742.382350265] [gl",
+          "full_chars": 1101,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "# Map Server The `Map Server` provides maps to the rest of the Nav2 system using both topic and service interfaces. Map server will expose maps on the node bringup, but can also change maps using a `load_map` service during run-time, as well as save maps using a `save_map` server. See its [Configuration Guide Page](https://navigation.ros.org/configuration/packages/configuring-map-server.html) for additional parameter descriptions. ### Architecture In contrast to the ROS1 navigation map server, the nav2 map server will support a variety of map types, and thus some aspects of the original code have been refactored to support this new extensible framework. Currently map server divides into tree parts: - `map_server` - `map_saver` - `map_io` library `map_server` is responsible for loading the map from a file through command-line interface or by using service requests. `map_saver` saves the map into a file. Like `map_server`, it has an ability to save the map from command-line or by calling",
+          "full_chars": 5260,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "20",
+        "document_id": "hardware_control/1240.txt",
+        "query": {
+          "text": "Custom hardware interface type I would like to write a controller that needs all joint states to update a single joint. My idea was to create a class MyStateInterface which inherits from hardware_interface::StateInterface and stores all information for each joint. Then, I would like to export this class inside the hardware interface to pass the joint information to the controller. To make it clear, I modify this example: std::vector<double> hw_states_; CallbackReturn MyRobotHardware::on_init(con",
+          "full_chars": 2560,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to content Toggle navigation [ ](https://github.com/) [ Sign in ](/login?return_to=https%3A%2F%2Fgithub.com%2Fros- controls%2Fros2_control%2Fpull%2F1240) * Product * [ Actions Automate any workflow ](/features/actions) * [ Packages Host and manage packages ](/features/packages) * [ Security Find and fix vulnerabilities ](/features/security) * [ Codespaces Instant dev environments ](/features/codespaces) * [ Copilot Write better code with AI ](/features/copilot) * [ Code review Manage code changes ](/features/code-review) * [ Issues Plan and track work ](/features/issues) * [ Discussions Collaborate outside of code ](/features/discussions) Explore * [ All features ](/features) * [ Documentation ](https://docs.github.com) * [ GitHub Skills ](https://skills.github.com/) * [ Blog ](https://github.blog) * Solutions For * [ Enterprise ](/enterprise) * [ Teams ](/team) * [ Startups ](/enterprise/startups) * [ Education ](https://education.github.com) By Solution * [ CI/CD & Automation ](",
+          "full_chars": 75706,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "relative_path/PackagesClientLibrar.txt",
+        "query": {
+          "text": "Add files to be loaded when ROS node is launched Rosanswers logo Hello ROS community, I have a python code for a hardware device (radar) that uses a parameters.cfg file for hardware settings (independantly of ROS). In the same code, I am creating a ROS node so that the device publishes its collected data. When I use a launch file, the basic format is as follows : <launch> <node pkg=\"radar_uart\" name=\"radar\" type=\"radar.py\" output=\"screen\"> </node> </launch> But when I do my $roslaunch radar rada",
+          "full_chars": 1169,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "[ ![ros.org](/custom/images/ros_org.png) ](/) | [ About ](http://www.ros.org/about-ros) | [ Support ](/Support) | [ Discussion Forum ](http://discourse.ros.org/) | [ Index ](http://index.ros.org/) | [ Service Status ](http://status.ros.org/) | [ ros @ Robotics Stack Exchange ](https://robotics.stackexchange.com/questions/tagged/ros) ---|--- ![](/custom/images/menu_left.png) [ ![Documentation](/custom/images/menu_documentation.png) ](/) ![](/custom/images/menu_spacer.png) [ ![Browse Software](/custom/images/menu_browse_software.png) ](https://index.ros.org/packages) ![](/custom/images/menu_spacer.png) [ ![News](/custom/images/menu_news.png) ](https://discourse.ros.org/c/general) ![](/custom/images/menu_spacer.png) [ ![Download](/custom/images/menu_download.png) ](/ROS/Installation) ![](/custom/images/menu_right.png) * [ Packages ](/Packages) #### ROS 2 Documentation The ROS Wiki is for ROS 1. Are you using ROS 2 ( [ Humble ](http://docs.ros.org/en/humble/) , [ Iron ](http://docs.ros.org",
+          "full_chars": 7029,
+          "limit_chars": 1000,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Robotics StackExchange long-document"
+    "source_task": "Robotics StackExchange long-document",
+    "example_count": 3
   }
 }

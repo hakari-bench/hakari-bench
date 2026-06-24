@@ -161,6 +161,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "67244",
+        "document_id": "Duke_of_York",
+        "query": {
+          "text": "De huidige Hertog van York is een persoon.",
+          "full_chars": 42,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hertog van York De Hertog van York is een adellijke titel in de Peerage van het Verenigd Koninkrijk. Sinds de 15e eeuw is deze titel, wanneer verleend, meestal gegeven aan de tweede zoon van Engelse (later Britse) monarchen. De equivalente titel in de Schotse peerage was Hertog van Albany. Aanvankelijk verleend in de 14e eeuw in de Peerage van Engeland, is de titel Hertog van York acht keer gecreëerd. Daarnaast is de titel Hertog van York en Albany drie keer gecreëerd. Dit gebeurde in de 18e eeuw, na de unificatie van het Koninkrijk Engeland en het Koninkrijk Schotland in 1707 tot één verenigd rijk. De dubbele naamgeving werd gedaan zodat een territoriale aanduiding uit elk van de voorheen afzonderlijke rijken kon worden opgenomen. De huidige Hertog van York is Prins Andrew, de tweede zoon van Koningin Elizabeth II. Prins Andrew heeft momenteel geen mannelijke erfgenamen en is sinds zijn scheiding in 1996 ongehuwd.",
+          "full_chars": 931,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "130048",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Burbank, Californië is altijd volledig verstoken geweest van industrie.",
+          "full_chars": 71,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank, Californië Burbank is een stad in Los Angeles County in Zuid-Californië, Verenigde Staten, 19 km ten noordwesten van het centrum van Los Angeles. De bevolking bedroeg bij de volkstelling van 2010 103.340 inwoners. Bekend als de \"Mediahoofdstad van de Wereld\" en slechts een paar kilometer ten noordoosten van Hollywood, hebben talloze media- en entertainmentbedrijven hun hoofdkantoor of belangrijke productiefaciliteiten in Burbank, waaronder The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios met de West Coast-tak van Cartoon Network, en Insomniac Games. De stad herbergt ook Bob Hope Airport. Het was de locatie van Lockheed's Skunk Works, dat enkele van de meest geheime en technologisch geavanceerde vliegtuigen produceerde, waaronder de U-2 spionagevliegtuigen die in oktober 1962 de raketonderdelen van de Sovjet-Unie op Cuba ontdekten. Burbank bestaat uit twee verschillende gebieden: een centrum/voetheuvelgedeelte, in",
+          "full_chars": 1459,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "114158",
+        "document_id": "Adobe_Photoshop",
+        "query": {
+          "text": "Er is software, genaamd Adobe Photoshop, waarvan de versies met een nummer worden aangeduid.",
+          "full_chars": 92,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Adobe Photoshop Adobe Photoshop is een rastergrafische editor ontwikkeld en uitgegeven door Adobe Systems voor macOS en Windows. Photoshop werd in 1988 gecreëerd door Thomas en John Knoll. Sindsdien is het de facto industriestandaard geworden in rastergrafische bewerking, zodanig dat het woord \"photoshoppen\" een werkwoord is geworden, zoals in \"een afbeelding photoshoppen\", \"photoshoppen\" en \"photoshop-wedstrijd\", hoewel Adobe dit gebruik afraadt. Het kan rasterafbeeldingen in meerdere lagen bewerken en samenstellen en ondersteunt maskers, alfakanaalcompositing en verschillende kleurmodellen, waaronder RGB, CMYK, CIELAB, spotkleur en duotonen. Photoshop heeft brede ondersteuning voor grafische bestandsformaten, maar gebruikt ook zijn eigen PSD- en PSB-bestandsformaten die alle bovengenoemde functies ondersteunen. Naast rastergraphics heeft het beperkte mogelijkheden om tekst, vectorgraphics (vooral via clipping paths), 3D-graphics en video te bewerken of te renderen. De functieset van",
+          "full_chars": 2249,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

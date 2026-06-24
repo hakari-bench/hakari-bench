@@ -86,28 +86,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
-        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "An overview of the European Union's highly multilingual parallel corpora",
-        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
-        "year": 2014,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "DGT-Acquis",
-        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMuPLeR",
       "source_urls": [
@@ -116,6 +94,78 @@
           "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
+        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "An overview of the European Union's highly multilingual parallel corpora",
+        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
+        "year": 2014,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DGT-Acquis",
+        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "cb0b6b65-ecc0-4a62-8370-6663a2a23fdb",
+        "document_id": "9088",
+        "query": {
+          "text": "Vilken kommitté bedömde resursinsatser i små interna utredningar ineffektiva och uppmanade att inarbeta urvalskriterier i handboken för operativa metoder?",
+          "full_chars": 154,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kommittén har sett över Olafs hantering av de minimisärenden och undersökte 45 utvalda ärenden med ekonomiska konsekvenser på under 50000 euro var. Kommittén kom fram till att det inte utgör god resursanvändning att avsätta resurser på interna utredningar av mindre förseelser. Kommissionens nolltoleranspolicy utesluter inte att andra organ (till exempel utrednings- och disciplinbyrån) utreder dessa ärenden, istället för Olaf. Kommittén rekommenderar att Olaf i handboken för operativa metoder inarbetat kriterier för urvalet och behandlingen av de minimisärenden.",
+          "full_chars": 567,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "243af637-28d1-464e-9ede-611b1599f7d8",
+        "document_id": "8556",
+        "query": {
+          "text": "Varför använde beslutet genomsnittlig berörd försäljning för Frankrike istället för senaste hela året för MEGAL‑transporterad energi?",
+          "full_chars": 133,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Den försäljning som påverkas av överträdelsen är försäljning av gas som tranporteras av E.ON och GDF genom MEGAL-ledningen i Tyskland, förutom försäljning av gas enligt E.ON:s gasprogram (E.ON Gas Release Programme) och försäljning till konsumenter med kontrakt i Frankrike (beräknad som en procentandel av GDF:s totala försäljning av gas som transporteras genom MEGAL). För Frankrikes vidkommande utgår kommissionen i sitt beslut från ett genomsnitt av den berörda försäljningen under överträdelseperioden i stället för det senaste hela året, eftersom ny fransk lagstiftning fick de berörda kundernas och kundkategoriernas antal att stiga avsevärt under överträdelseperioden.",
+          "full_chars": 676,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "086bb12c-c3e5-4d3b-8a7d-c39cb29ed62f",
+        "document_id": "9270",
+        "query": {
+          "text": "Vem informerar godkännandets innehavare om vilka mindre ändringar i anmälan som godkänts eller avslagits så att avslagna ändringar upphör omedelbart?",
+          "full_chars": 149,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "När en eller flera mindre ändringar av typ IA lämnas in som en del av en anmälan ska referensmedlemsstaten informera innehavaren av godkännandet för försäljning om vilka ändringar som har godkänts eller avslagits vid dess granskning. Innehavaren av godkännandet för försäljning ska omedelbart upphöra att tillämpa de avslagna ändringarna. Visserligen avslås inte ändringen automatiskt för att den sökande inte har lämnat all erforderlig dokumentation i ansökan om mindre ändringar av typ IA, om den sökande på begäran av den behöriga myndigheten omedelbart lämnar den dokumentation som fattas. Men det bör poängteras att en mindre ändring av typ 1A under särskilda omständigheter kan avslås, med den påföljden att den sökande måste upphöra att tillämpa ändringar som redan har genomförts.",
+          "full_chars": 788,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

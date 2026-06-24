@@ -62,9 +62,11 @@ A model targeting this task should improve domain-specific answer matching while
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FiQA-2018, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| What type of returns Vanguard is quoting? [41 chars] | "From the Vanguard page - This seemed the easiest one as S&P data is simple to find. I use MoneyChimp to get - which confirms that Vanguard's page is offering CAGR, not arithmetic Average. Note: Vanguard states ""For U.S. stock market returns, we use the Standard & Poor's 90 from 1926 through March 3, 1957,"" while the Chimp uses data from Nobel Prize winner, Robert Shiller's site." [387 chars] |
+| Freelancing Tax implication [27 chars] | If you have income in the US, you will owe US income tax on it, unless there is a treaty with your country that says otherwise. [127 chars] |
+| What is considered high or low when talking about volume? [57 chars] | The daily Volume is usually compared to the average daily volume over the past 50 days for a stock. High volume is usually considered to be 2 or more times the average daily volume over the last 50 days for that stock, however some traders might set the crireia to be 3x or 4x the ADV for confirmation of a particular pattern or event. The volume is compared to the ADV of the stock itself, as comparing it to the volume of other stocks would be like comparing apples with oranges, as difference companies would have different number of total stocks available, different levels of liquidity and different levels of volatility, which can all contribute to the volumes traded each day. [684 chars] |
 
 ### Source Reference Table
 

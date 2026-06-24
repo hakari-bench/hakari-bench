@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "references": [
-      {
-        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
-        "url": "https://arxiv.org/abs/1611.09268",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MS MARCO: A Human Generated Machine Reading Comprehension Dataset",
+        "url": "https://arxiv.org/abs/1611.09268",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "ルミネーション症候群とは何ですか",
+          "full_chars": 16,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "反芻症候群。反芻症候群（ルミネーション症候群）は、別名マリシズムとも呼ばれ、食物の再反流を引き起こす、他の特定されていないタイプの摂食障害である。DSM-IVでは特定の摂食障害として明記されていないが、この障害を診断するための一定の基準が示されている。",
+          "full_chars": 126,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "「Here I Go Again」を歌ったのは誰ですか？",
+          "full_chars": 28,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "他の用法については、Here I Go Again (曖昧さ回避) を参照してください。『Here I Go Again』は、イギリスのロックバンド、ホワイトスネイクによる楽曲です。もともとは1982年のアルバム『Saints & Sinners』に収録されていましたが、1987年の同名のアルバム『Whitesnake』用に再レコーディングされました。同年に、新たにラジオミックスバージョンとして再レコーディングも行われました。",
+          "full_chars": 215,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "カメロン・ボイドは『Liv and Maddie』でルーク・ロス役を演じています。",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "皆さんのために最高の笑いを用意しましたよ。4月19日の『リブ・アンド・マディー』のエピソード「プロム・ア・ルーニー」の独占先行映像です。もちろんね。この面白すぎるクリップでは、『ジェシー』のキャメロン・ボイドが別のディズニーショーに登場し、マディー（シェルビー・ウルファート）と出会います。彼のキャラクターは、ええと、かなり個性的なんです！",
+          "full_chars": 170,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

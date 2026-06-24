@@ -120,11 +120,9 @@ final ranking.
 
 | Query | Positive document |
 | --- | --- |
-| Que tipos de rentabilidade a Vanguard está oferecendo? | Da página da Vanguard - Esta pareceu a mais fácil, pois os dados da S&P são simples de encontrar... |
-| Quais são as implicações fiscais do trabalho freelancer? | Se você tiver rendimentos nos EUA, terá de pagar imposto de renda dos EUA sobre eles, a menos que haja um tratado... |
-| O que é considerado alto ou baixo quando se fala de volume? | O volume diário é geralmente comparado ao volume médio diário dos últimos 50 dias para uma ação... |
-| Como utilizar os pontos do cartão de crédito para pagar despesas empresariais que podem ser deduzidas no imposto de renda? | Para simplificar, vamos começar considerando apenas o cashback. Em geral, o cashback de cartões de crédito para uso pessoal não é tributável... |
-| Como devo declarar meus impostos como autônomo? | Para fins fiscais, você precisará declarar como empregado e também como empreendedor... |
+| Que tipos de rentabilidade a Vanguard está oferecendo? [54 chars] | Da página da Vanguard - Esta pareceu a mais fácil, pois os dados da S&P são simples de encontrar. Utilizo o MoneyChimp para confirmar - o que verifica que a página da Vanguard oferece a TIRC, e não a média aritmética. Nota: A Vanguard afirma: "Para os retornos do mercado de ações dos EUA, utilizamos o Standard & Poor's 90 de 1926 até 3 de março de 1957", enquanto o MoneyChimp utiliza dados do site do vencedor do Prêmio Nobel, Robert Shiller. [445 chars] |
+| Quais são as implicações fiscais do trabalho freelancer? [56 chars] | Se você tiver rendimentos nos EUA, terá de pagar imposto de renda dos EUA sobre eles, a menos que haja um tratado com o seu país que o isente dessa obrigação. [158 chars] |
+| O que é considerado alto ou baixo quando se fala de volume? [59 chars] | O volume diário é geralmente comparado ao volume médio diário dos últimos 50 dias para uma ação. Volume alto é considerado ser 2 ou mais vezes o volume médio diário dos últimos 50 dias para essa ação. No entanto, alguns traders podem definir o critério como 3x ou 4x o volume médio diário (ADV) para confirmar um padrão ou evento específico. O volume é comparado ao ADV da própria ação, pois compará-lo ao volume de outras ações seria como comparar maçãs com laranjas, já que diferentes empresas têm diferentes números de ações totais disponíveis, diferentes níveis de liquidez e diferentes níveis de volatilidade, que podem todos contribuir para os volumes negociados diariamente. [681 chars] |
 
 ### Public Sources
 
@@ -138,7 +136,7 @@ final ranking.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FiQA: Financial Opinion Mining and Question Answering | 2018 | task paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA: Financial Opinion Mining and Question Answering | 2018 | task paper | [https://doi.org/10.1145/3184558.3192301](https://doi.org/10.1145/3184558.3192301) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

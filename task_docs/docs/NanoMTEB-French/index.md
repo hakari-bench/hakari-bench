@@ -139,6 +139,6 @@ synthetic seeds.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
-| FQuAD: French Question Answering Dataset | 2020 | paper | https://aclanthology.org/2020.findings-emnlp.107/ |
-| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | paper | https://aclanthology.org/2022.coling-1.138/ |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| FQuAD: French Question Answering Dataset | 2020 | paper | [https://aclanthology.org/2020.findings-emnlp.107/](https://aclanthology.org/2020.findings-emnlp.107/) |
+| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | paper | [https://aclanthology.org/2022.coling-1.138/](https://aclanthology.org/2022.coling-1.138/) |

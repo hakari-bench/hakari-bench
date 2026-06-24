@@ -133,21 +133,20 @@ dense retrieval gives the strongest initial ranking.
 
 ## Example Data
 
-### Public Sources
-
-- [WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval](https://arxiv.org/abs/2502.20936), 2025.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [mteb/WebFAQRetrieval](https://huggingface.co/datasets/mteb/WebFAQRetrieval), source dataset card.
-- [PaDaS Lab Hugging Face organization](https://huggingface.co/PaDaS-Lab), source organization.
+| Query | Positive document |
+| --- | --- |
+| Wat is belangrijk bij adviseren? [32 chars] | Zorg ervoor dat je weet hoe degene aan wie je advies geeft in elkaar steekt, zodat je je advies op de persoon of situatie kunt aanpassen. Ook is het belangrijk om je eigen mening op de achtergrond te houden. [207 chars] |
+| Wat is verschil tussen 2D-tekening en 3D-tekening van keukenontwerp? [68 chars] | Een 2D-tekening is in feite een plattegrond. Met deze 2D tekening kan je goed kijken of je alle ruimte optimaal benut. Ook krijg je een duidelijk beeld van de indeling. Als je tevreden bent met het 2D keukenontwerp wordt er een 3D tekening gemaakt met behulp van ontwerpsoftware. Een 3D keukenontwerp is ontzettend realistisch en geeft echt een kijkje in de keuken. [365 chars] |
+| Hoe programmeer ik NFC-tags? [28 chars] | Dit doe je gemakkelijk met software op je NFC ondersteunende telefoon. Hier vind je meer informatie. [100 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2502.20936 |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| mteb/WebFAQRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/WebFAQRetrieval |
-| PaDaS Lab Hugging Face organization |  | project page | https://huggingface.co/PaDaS-Lab |
+| WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2502.20936](https://arxiv.org/abs/2502.20936) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| mteb/WebFAQRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/WebFAQRetrieval](https://huggingface.co/datasets/mteb/WebFAQRetrieval) |
+| PaDaS Lab Hugging Face organization |  | project page | [https://huggingface.co/PaDaS-Lab](https://huggingface.co/PaDaS-Lab) |
 
 ### Representative Snippets
 

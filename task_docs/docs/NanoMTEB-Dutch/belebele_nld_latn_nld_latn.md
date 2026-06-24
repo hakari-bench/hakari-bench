@@ -174,21 +174,20 @@ rather than a pure dense-only benchmark.
 
 ## Example Data
 
-### Public Sources
-
-- [The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants](https://arxiv.org/abs/2308.16884), 2023.
-- [facebookresearch/belebele](https://github.com/facebookresearch/belebele), source repository.
-- [mteb/belebele](https://huggingface.co/datasets/mteb/belebele), MTEB dataset card.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
+| Query | Positive document |
+| --- | --- |
+| Welke uitspraak over het evenement waar de schietpartij plaatsvond, is juist? [77 chars] | Er waren op zijn minst 100 mensen op het feest aanwezig die de eerste huwelijksdag vierden van een koppel dat vorig jaar trouwde. Er stond een formeel verjaardagsevenement gepland voor een latere datum, volgens de ambtenaren. Het stel trouwde een jaar geleden in Texas en vierde het in Buffalo met vrienden en familie. De 30-jarige echtgenoot is in Buffalo geboren en een van de vier personen die bij de schietpartij zijn gedood, maar zijn vrouw is niet gewond geraakt. [469 chars] |
+| Wat moeten arrestanten volgens het tijdelijke contactverbod dat in de tekst wordt genoemd, krijgen om langer dan 24 uur te mogen worden vastgehouden? [149 chars] | In de afgelopen 3 maanden zijn er meer dan 80 arrestanten uit de Central Booking-inrichting vrijgelaten zonder dat ze officieel zijn aangeklaagd. In april van dit jaar heeft rechter Glynn een tijdelijk contactverbod tegen de faciliteit uitgevaardigd om zo de vrijlating van mensen af te dwingen die 24 uur na hun verbalisering nog werden vastgehouden en voor wie nog geen hoorzitting van een gerechtscommissaris mogelijk was. De commissaris bepaalt, indien van toepassing, de borgtocht en maakt de aanklachten formeel die zijn ingediend door de arresterende agent. De aanklachten worden vervolgens in het computersysteem van de staat ingevoerd, waarna de zaak wordt bijgehouden. Vanaf de hoorzitting heeft de verdachte ook recht op een snel proces. [748 chars] |
+| Welke uitspraak over de maansonde van de Chandrayaan-1 is niet waar? [68 chars] | De onbemande ruimtesonde Chandrayaan-1 wierp zijn Moon Impact Probe (MIP) uit, die vervolgens met 1,5 kilometer per seconde (3000 mijl per uur) over de oppervlakte van de maan werd geslingerd en met succes in de buurt van de zuidpool van de maan landde. De maansonde bevatte naast drie belangrijke wetenschappelijke instrumenten ook een afbeelding van de Indiase vlag, die er aan alle kanten is opgeschilderd. [409 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | https://arxiv.org/abs/2308.16884 |
-| facebookresearch/belebele | 2023 | repository | https://github.com/facebookresearch/belebele |
-| mteb/belebele |  | dataset card | https://huggingface.co/datasets/mteb/belebele |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| facebookresearch/belebele | 2023 | repository | [https://github.com/facebookresearch/belebele](https://github.com/facebookresearch/belebele) |
+| mteb/belebele |  | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
 
 ### Representative Snippets
 

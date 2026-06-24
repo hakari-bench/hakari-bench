@@ -62,9 +62,11 @@ A model targeting this task should improve semantic answer matching while keepin
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Natural Questions, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Năm nay, vòng chung kết bốn được tổ chức ở đâu [46 chars] | Giải bóng rổ NCAA Division I nam 2018 là một giải đấu loại trực tiếp 68 đội để xác định nhà vô địch quốc gia của Hiệp hội Thể thao Đại học Quốc gia (NCAA) Division I cho mùa giải 2017–18. Phiên bản thứ 80 của giải đấu bắt đầu vào ngày 13 tháng 3 năm 2018 và kết thúc với trận chung kết vào ngày 2 tháng 4 tại Alamodome ở San Antonio, Texas. [340 chars] |
+| Liệu Nightmare Before Christmas ban đầu có phải là một bộ phim của Disney không [79 chars] | Ác Mộng Trước Giáng Sinh bắt nguồn từ một bài thơ được viết bởi Tim Burton vào năm 1982, khi ông đang làm hoạt hình tại Walt Disney Feature Animation. Với sự thành công của Vincent trong cùng năm đó, Walt Disney Studios bắt đầu xem xét phát triển Ác Mộng Trước Giáng Sinh như một bộ phim ngắn hoặc chương trình truyền hình dài 30 phút. Qua nhiều năm, những suy nghĩ của Burton thường quay trở lại với dự án, và vào năm 1990, ông đã ký một thỏa thuận phát triển với Disney. Sản xuất bắt đầu vào tháng 7 năm 1991 tại San Francisco; Disney phát hành bộ phim qua nhãn hiệu Touchstone Pictures của mình vì studio tin rằng bộ phim sẽ "quá tối tăm và đáng sợ cho trẻ em". [664 chars] |
+| tại sao thiên thần phía bắc lại ở đó [36 chars] | Theo Gormley, ý nghĩa của một thiên thần có ba khía cạnh: đầu tiên, để chỉ ra rằng dưới địa điểm xây dựng của nó, các thợ mỏ than đã làm việc trong hai thế kỷ; thứ hai, để nắm bắt sự chuyển đổi từ thời đại công nghiệp sang thời đại thông tin, và thứ ba, để phục vụ như một điểm tập trung cho những hy vọng và nỗi sợ hãi đang phát triển của chúng ta. [349 chars] |
 
 ### Source Reference Table
 

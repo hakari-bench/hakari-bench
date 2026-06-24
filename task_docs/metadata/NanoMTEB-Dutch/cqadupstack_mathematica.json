@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,86 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "55294",
+        "document_id": "2419",
+        "query": {
+          "text": "DeleteDuplicatesBy werkt niet zoals ik had gehoopt. Mis ik iets?",
+          "full_chars": 64,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dubbele elementen uit een lijst verwijderen Als een lijst dubbele elementen bevat, bijvoorbeeld list = {a, 1, 5, 3, 5, x^2, x^2}, hoe kunnen de dubbele elementen worden verwijderd? Het resultaat zou zijn uniqueElements = {a, 1, 5, 3, x^2}",
+          "full_chars": 274,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "17250",
+        "document_id": "51414",
+        "query": {
+          "text": "Is het mogelijk om de kleur van de plot in Show te veranderen?",
+          "full_chars": 62,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Plot bewerken na aanmaak Ik probeer een manier te vinden om een plot te manipuleren die ik eerder heb gemaakt. (voor de volledige code, neem de functie x[t_]:=Sin[2t] ) Stel dat ik een plot heb: plot1 = Plot[x[t], {t, 0, 10}, PlotStyle -> Purple, ImagePadding -> 55, Frame -> {True, True, True, False}, FrameStyle -> {Automatic, Purple, Automatic, Automatic}, FrameLabel -> {None, \"Signaal\", None, None}, LabelStyle -> {16}, ImageSize -> 600]; En later wil ik dezelfde plot gebruiken met een punt op de lijn. De complete code zou zijn: plot1 = Plot[x[t], {t, 0, 10}, PlotStyle -> Purple, ImagePadding -> 55, Frame -> {True, True, True, False}, FrameStyle -> {Automatic, Purple, Automatic, Automatic}, FrameLabel -> {None, \"Signaal\", None, None}, LabelStyle -> {16}, ImageSize -> 600, Epilog -> {Directive[{Purple}], PointSize -> Large, Point[{2, x[2]}]}]; Maar is er een andere manier? Zoiets als SetOptions[plot1,Epilog -> {Directive[{Purple}], PointSize -> Large, Point[{2, x[2]}]}] En wat als ik d",
+          "full_chars": 1150,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11794",
+        "document_id": "50550",
+        "query": {
+          "text": "Krijg polynomiale interpolatieformule",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Functies Bepalen Gegeven Datapunten Kan Mathematica f(x,y) = 0 oplossen zodanig dat {x,y} bevat `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}}`? Moeten we f(x,y) eerst specificeren? Dank u.",
+          "full_chars": 186,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

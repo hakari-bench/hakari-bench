@@ -51,7 +51,7 @@ def test_visible_row_count_uses_same_context_as_row_visibility() -> None:
     assert visible_row_count(rows, context) == 1
 
 
-def test_model_type_filter_groups_bm25_with_sparse_models() -> None:
+def test_model_type_filter_separates_bm25_from_sparse_models() -> None:
     rows = [
         _row("model/dense", embedding_dim=768, quantization=None, dtype=None, attn=None, prompt=None),
         _row("org/sparse-encoder", embedding_dim=30000, quantization=None, dtype=None, attn=None, prompt=None, model_type="sparse"),
@@ -65,10 +65,18 @@ def test_model_type_filter_groups_bm25_with_sparse_models() -> None:
 
     assert context.model_type_options == [
         ("dense", "Dense"),
-        ("sparse", "Sparse / BM25"),
+        ("bm25", "BM25"),
+        ("sparse", "Sparse"),
         ("reranker", "Reranker"),
     ]
-    assert [row.model_name for row in rows if context.is_visible(row)] == ["org/sparse-encoder", "bm25"]
+    assert [row.model_name for row in rows if context.is_visible(row)] == ["org/sparse-encoder"]
+
+    bm25_context = row_filter_context(
+        rows,
+        FilterState(filters_active=True, model_type_filters=("bm25",)),
+    )
+
+    assert [row.model_name for row in rows if bm25_context.is_visible(row)] == ["bm25"]
 
 
 def test_short_model_filter_terms_do_not_hide_rows() -> None:

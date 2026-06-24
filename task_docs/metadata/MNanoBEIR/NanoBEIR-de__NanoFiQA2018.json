@@ -143,7 +143,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -151,15 +151,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Welche Art von Renditen bietet Vanguard an?",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Von der Vanguard-Seite - Dies erschien als das einfachste, da die S&P-Daten leicht zu finden sind. Ich nutze MoneyChimp, um zu bestätigen, dass die Vanguard-Seite den CAGR und nicht den arithmetischen Durchschnitt anbietet. Hinweis: Vanguard gibt an, dass für die Renditen des US-Aktienmarktes der Standard & Poor's 90 von 1926 bis zum 3. März 1957 verwendet wird, während MoneyChimp Daten von der Website des Nobelpreisträgers Robert Shiller nutzt.",
+          "full_chars": 449,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Steuerliche Auswirkungen des Freelancings",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wenn Sie in den USA Einkommen erzielen, müssen Sie darauf US-Einkommensteuer zahlen, es sei denn, es gibt ein Abkommen mit Ihrem Land, das etwas anderes regelt.",
+          "full_chars": 160,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "Was bedeutet \"hoch\" oder \"niedrig\" im Zusammenhang mit Lautstärke?",
+          "full_chars": 66,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Das tägliche Handelsvolumen wird in der Regel mit dem durchschnittlichen Tageshandelsvolumen der letzten 50 Tage für eine Aktie verglichen. Ein hohes Handelsvolumen wird in der Regel als 2-mal oder mehr des durchschnittlichen Tageshandelsvolumens der letzten 50 Tage für diese Aktie betrachtet. Einige Händler könnten jedoch die Kriterien auf 3-fach oder 4-fach des durchschnittlichen Tageshandelsvolumens festlegen, um ein bestimmtes Muster oder Ereignis zu bestätigen. Das Handelsvolumen wird mit dem durchschnittlichen Tageshandelsvolumen der jeweiligen Aktie verglichen, da ein Vergleich mit dem Handelsvolumen anderer Aktien wie das Vergleichen von Äpfeln mit Birnen wäre. Verschiedene Unternehmen haben unterschiedliche Anzahl an verfügbaren Aktien, unterschiedliche Liquiditätsgrade und unterschiedliche Volatilitätsniveaus, die alle zum gehandelten Volumen pro Tag beitragen können.",
+          "full_chars": 890,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

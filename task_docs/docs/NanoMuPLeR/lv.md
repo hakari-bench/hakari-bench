@@ -62,19 +62,19 @@ Models should handle Latvian legal morphology, exact institutional names, numeri
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Kura Savienības norma paredz ņemt vērā nodarbinātības veicināšanu, sociālo aizsardzību, izslēgtības apkarošanu, izglītību un veselību? [134 chars] | Tas, piemēram, ir gadījums sociālajā politikā, kur tika ietverts vispārēji piemērojams noteikums (tā sauktā sociālā klauzula), pēc kura Savienībai, nosakot un īstenojot politiku un pasākumus, ir jārēķinās ar prasībām saistībā ar augstu nodarbinātības līmeņa veicināšanu, atbilstošas sociālās aizsardzības nodrošināšanu, sociālās izslēgtības apkarošanu kā arī ar augsta līmeņa vispārējo un profesionālo izglītību un veselības aizsardzību. Tas pats attiecas uz cīņu pret jebkuru diskriminācijas un izslēgtības formu, vispārējās intereses pakalpojumu lomas atzīšanu Savienības sociālās un teritoriālās kohēzijas veicināšanā kā arī, Līgumā jau nostiprinātajā, vides aspektu iesaistīšanā un patērētāju aizsardzības prasībās. [719 chars] |
+| Kā priekšlikumos plānot esošo digitālās kompetences projektu ilgtspējīgu izplatīšanu, nosaucot starpniekus un iekļaujot naratīvus un skaitliskus rādītājus? [155 chars] | Priekšlikumos jākoncentrējas uz esošo digitālās kompetences projektu, darbību vai instrumentu rezultātu efektīvu un ilgtspējīgu izplatīšanu un izmantošanu. Īpašs uzsvars jāliek uz mērķgrupu un to vajadzību precīzu noskaidrošanu, uz starpniekiem (brīvprātīgo nozare, akadēmiķu un pasniedzēju kopienas, pārvaldības u.c.), uz veidu, kā palīdzēt sasniegt galalietotājus un uz konkrētu norādi projektu iznākumu izplatīšanai, kvalitātes un kvantitātes rādītāju iekļaušanai. Priekšlikumiem ir jāsniedz skaidra ilgtermiņa stratēģija, noskaidrojot un analizējot iespējamās problēmas un piedāvājot objektīvus pasākumus to risināšanai. [624 chars] |
+| Kura komiteja secināja, ka resursu piešķiršana maznozīmīgām iekšējām izmeklēšanām ir neefektīva un aicināja iekļaut atlases kritērijus operatīvo procedūru rokasgrāmatā? [168 chars] | Uzraudzības komiteja izvērtēja OLAF de minimis politiku un pārbaudīja 45 izvēlētas lietas, kuru aplēstā finansiālā ietekme nepārsniedz EUR 50000. Uzraudzības komiteja secināja, ka OLAF resursu piešķiršana maznozīmīgām iekšējām izmeklēšanām neatbilst labākajam resursu izmantojumam. Komisijas pieņemtā pilnīgas neiecietības politika nenozīmē, ka citas iestādes (piemēram, IDOC) nevarētu izmeklēt šīs lietas, tādējādi atbrīvojot OLAF no šo lietu izmeklēšanas. Uzraudzības komiteja iesaka iekļaut operatīvo procedūru rokasgrāmatā de minimis lietu atlases un apstrādes kritērijus. [576 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

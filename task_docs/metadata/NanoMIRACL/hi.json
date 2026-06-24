@@ -141,20 +141,71 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "743693#0",
+        "document_id": "213351#0",
+        "query": {
+          "text": "रडार में किस प्रकार की तरंगें होती हैं ?",
+          "full_chars": 40,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "रडार रडार (Radar) वस्तुओं का पता लगाने वाली एक प्रणाली है जो सूक्ष्मतरंगों का उपयोग करती है। इसकी सहायता से गतिमान वस्तुओं जैसे वायुयान, जलयान, मोटरगाड़ियों आदि की दूरी (परास), ऊंचाई, दिशा, चाल आदि का दूर से ही पता चल जाता है। इसके अलावा मौसम में तेजी से आ रहे परिवर्तनों (weather formations) का भी पता चल जाता है। 'रडार' (RADAR) शब्द मूलतः एक संक्षिप्त रूप है जिसका प्रयोग अमेरिका की नौसेना ने १९४० में 'रेडियो डिटेक्शन ऐण्ड रेंजिंग' (radio detection and ranging) के लिये प्रयोग किया था। बाद में यह संक्षिप्त रूप इतना प्रचलित हो गया कि अंग्रेजी शब्दावली में आ गया और अब इसके लिये बड़े अक्षरों (कैपिटल) का इस्तेमाल नहीं किया जाता। इसकी खोज का श्रेय रॉबर्ट वाटसन वाट्ट को दिया जाता है।",
+          "full_chars": 685,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1272354#0",
+        "document_id": "26160#0",
+        "query": {
+          "text": "भारत का गणतंत्र दिवस किस तारीख पर आता है?",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "गणतन्त्र दिवस (भारत) गणतन्त्र दिवस भारत का एक राष्ट्रीय पर्व है जो प्रति वर्ष 26 जनवरी को मनाया जाता है। इसी दिन सन् 1950 को भारत सरकार अधिनियम (1935) को हटाकर भारत का संविधान लागू किया गया था। यह भारत के तीन राष्ट्रीय अवकाशों में से एक है, अन्य दो स्‍वतन्त्रता दिवस और गांधी जयंती हैं।",
+          "full_chars": 287,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1033752#0",
+        "document_id": "6394#10",
+        "query": {
+          "text": "कांग्रेस दल का नेता कौन है ?",
+          "full_chars": 28,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "भारतीय राष्ट्रीय कांग्रेस 1947 में भारत की स्वतन्त्रता के बाद से भारतीय राष्ट्रीय काँग्रेस भारत के मुख्य राजनैतिक दलों में से एक रही है। इस दल के कई प्रमुख नेता भारत के प्रधानमन्त्री रह चुके हैं। जवाहरलाल नेहरू, लाल बहादुर शास्त्री,पण्डित नेहरू की पुत्री इन्दिरा गाँधी एवं उनके नाती राजीव गाँधी इसी दल से थे। राजीव गाँधी के बाद सीताराम केसरी काँग्रेस के अध्यक्ष बने जिन्हे सोनिया गाँधी के समर्थकों ने नामंजूर कर दिया तथा सोनिया गाँधी को हाईकमान बनाया, राजीव गाँधी की पत्नी सोनिया गाँधी काँग्रेस की अध्यक्ष तथा यूपीए की चेयरपर्सन भी रह चुकी हैं। कपिल सिब्बल, काँग्रेस महासचिव दिग्विजय सिंह, अहमद पटेल, राशिद अल्वी, राज बब्बर, मनीष तिवारी आदि काँग्रेस के वरिष्ट नेता हैं। भारत के पूर्व प्रधानमंत्री डॉ॰ मनमोहन सिंह भी काँग्रेस से ताल्लुक रखते हैं।",
+          "full_chars": 746,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

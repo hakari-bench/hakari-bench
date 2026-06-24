@@ -89,11 +89,19 @@ components:
       same vertical center line. The title uses the same body-scale typography,
       color, weight, and font family as the short product description below it.
       The brand mark is a single-color inline SVG that follows the same
-      stroke-based icon style as header actions.
+      stroke-based icon style as header actions. The brand/title target links to
+      `/` so users can refresh back to the default leaderboard state.
   leaderboard-configuration:
     purpose: Select evaluation mode, benchmark scope, metrics, task facets, display,
       variants, and filters.
     treatment: One integrated workspace above the table; no marketing panels.
+      Model family filters expose BM25 separately from Sparse so lexical
+      baselines can be compared or hidden independently from learned sparse
+      retrievers. License filters include commercial-use buckets derived from
+      model-card license metadata; BM25 rows follow the bm25s MIT license and
+      appear in the commercial bucket. Commercial-use license filters are shown
+      as inline checkboxes, matching Model family rather than hidden inside a
+      secondary disclosure.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.
@@ -115,7 +123,71 @@ components:
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
-      they improve scanning.
+      they improve scanning. Table display includes an optional Others toggle
+      for low-frequency metadata columns such as License and Model Type,
+      appended at the far right so the core score columns remain stable. These
+      cells must stay one line using short labels such as Apache, CC BY-NC,
+      OpenAI, and Late int.; expose the full label through hover tooltip and
+      Model Details.
+  model-details:
+    purpose: Modal metadata for a single result row.
+    treatment: Prefer model-card metadata when present. Order fields as Language,
+      Model type, Ranking label, parameter counts, max tokens, truncate dims,
+      license, Hugging Face, GitHub, papers, then runtime and variant details.
+      GitHub links should show the `owner/repo` label instead of generic copy.
+      Prompt metadata should use Query Prompt and Doc Prompt labels. Optional
+      model-card notices are short user-facing caveats and render as the final
+      Model Details row.
+  leaderboard-plot:
+    purpose: Optional visual comparison surface for score, scale, dimension, and
+      compression trade-offs using the same scoped and filtered rows as the table.
+    treatment: Available as icon-labeled Table / Chart tabs at the start of the
+      result status line before the current scope and evaluation mode. The chart
+      uses compact Y axis, X axis, and Color selectors positioned in the graph
+      area's top-right corner, muted grid lines, fixed-size circles, and
+      hover-only tooltips for row metadata. Color defaults to Dims and uses a
+      high-contrast violet-to-cyan-to-amber scale that remains distinguishable
+      on both light and dark backgrounds. The tooltip preserves line breaks so
+      score/rank and model metadata scan as separate groups. The right-side color
+      legend label is vertical and sits
+      to the right of the gradient bar and tick labels. It must preserve the current
+      benchmark scope and filters, quantization axes must automatically include
+      quantization variants, sparse/BM25 rows use a representative average
+      regular dense dimension for plotting, late-interaction rows use their
+      token-interaction dimension for Dims-driven plot size/color and label it
+      as Token dim in tooltips,
+      Dims on the X axis should render grid/tick marks on 128-dimension
+      boundaries through 1024, then only show major high-dimension markers such
+      as 2048 and the visible maximum to avoid label collisions. Dims X-axis
+      spacing should compress the low-dimension 0-256 range so small dimensions
+      do not consume the same visual width as the more important mid/high range,
+      nonnegative measures must not render negative axis or legend labels, quantization
+      channels use a fixed 1-16 scale where none is 16,
+      int8 is 8, and binary is 1. Active Params and Total Params default to
+      explicit log-scale channels and also offer linear channels; log-scale
+      labels should include "(log scale)" in the plotted axis or legend title.
+      Dims and token channels use logarithmic scaling where they drive position
+      or color, the Color selector may use None to render one constant color
+      without extra encoding, and all leaderboard controls must preserve the
+      current chart view state. Mobile-width viewports should hide the chart and
+      chart controls and show a concise message that chart view requires a wider
+      device.
+      BM25-style baselines and static embeddings should remain visible at 0
+      params in active/total-parameter plot channels because they do not have
+      model weights in the same sense as neural models. Other rows with unknown
+      active/total params, such as hosted API models, should use the visible
+      maximum param value for plotting so unknown scale is not confused with
+      zero-weight baselines. Log-scaled parameter axes that include 0-param rows
+      should reserve a small left bucket for zero so the smallest positive
+      neural model is not drawn on top of the zero baseline. Rows without
+      max-token metadata should use the
+      visible maximum max-token value for plotting so they are not dropped
+      solely because color or another plot channel uses Max Tokens. Borda Score
+      uses a fixed 0-100 Y axis, while Task Mean scores use the visible score
+      minimum and maximum as the Y-axis bounds.
+    status-line: The current benchmark scope sits directly after the Table / Chart
+      switch with the same database icon used by the Benchmark scope control;
+      avoid a bare slash before the scope label.
   model-score-bar:
     purpose: Show relative Borda strength behind the sticky model name.
     treatment: Subtle background bar scaled by visible max score; never competes with text.
@@ -225,6 +297,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep the page top chrome tight: the brand row should sit close to the viewport
   top, and intro/status copy should use compact margins and padding so the
   leaderboard remains the first meaningful surface.
+- The Table / Chart switch belongs directly above the result surface. Chart is an
+  inspection mode for the current table rows, not a separate dashboard; it should
+  not duplicate the main benchmark, filter, or variant controls.
 - Use help modals rather than permanent explanatory copy for technical controls.
   The control area should remain compact.
 - Avoid nested cards. Sections should be low-border surfaces or full-width
@@ -248,7 +323,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
   such as Overall/Overall (EN) or Safeguard positives.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
-- In Refine results, Params sits above Length and uses compact numeric inputs
+- In Filter results, Params sits above Length and uses compact numeric inputs
+  narrow enough not to dominate the filter row
   in millions for Active Params and Total Params bounds.
 - Keep the HAKARI-Bench brand mark as a simple single-color balance icon with
   `currentColor` stroke so it can inherit the viewer accent color in both
@@ -290,6 +366,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
   CSP forbids them.
 - Keep both themes intentional here too. Docs colors come from the same tokens as
   the leaderboard; never let docs fall back to a fixed light palette.
+- Documentation body copy, list items, and table data use the primary text token
+  in each theme. Reserve muted text for card summaries, captions, and secondary
+  notes so long-form docs keep strong contrast in both light and dark themes.
 - Render documentation tables with a distinct header row, light row striping, and
   a rounded border so dense metadata stays scannable. Inline code should read as a
   subtle bordered chip, and code blocks use the faint code background.

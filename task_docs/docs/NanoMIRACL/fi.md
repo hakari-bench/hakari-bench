@@ -152,11 +152,11 @@ signals are still needed for complete coverage.
 
 ## Example Data
 
-Representative queries ask where the word `markka` comes from, what Arimaa game
-pieces are like, whether Uranus has moons, whether a book series has a shared
-plot, or where Anglesey is located. Positive documents are Finnish Wikipedia
-passages containing the requested definition, description, count, relation, or
-location evidence.
+| Query | Positive document |
+| --- | --- |
+| Kuka perusti Ferrarin? [22 chars] | Ferrari Ferrari S.p.A. on italialainen urheiluautojen valmistaja. Ferrarin perusti Enzo Ferrari vuonna 1939 nimellä "Auto Avio Costruzioni". Ferrari on juridisesti alankomaalainen yhtiö, mutta sen pääkonttori sijaitsee Maranellossa. Ferrari S.p.A.:n emoyhtiönä on holdingyhtiö Ferrari N.V., jonka omistavat Exor ja Piero Ferrari. Ferrarin toimitusjohtaja on Louis Carey Camilleri ja hallituksen puheenjohtaja on John Elkann. [425 chars] |
+| Mitä tarkoittaa psykoosi? [25 chars] | Hallusinaatio Psykoosi tarkoittaa, että ihmisen todellisuudentaju on heikentynyt, eli hän ei tajua psykoosin laukaisemia kuulo- tai muita harhoja harhoiksi. Psykoosisairauttakin sairastava henkilö voi hyvin tajuta äänet harhoiksi kun ei ole psykoosissa. Joskus kuuloharhat jäävät psykoosin loputtua päälle. [307 chars] |
+| Onko Uranuksella kuita? [23 chars] | Uranus Uranuksella on 27 tunnettua kuuta. Kaksi suurinta kuuta, Titanian ja Oberonin, löysi Herschel 13. maaliskuuta 1787. William Lassell löysi Arielin ja Umbrielin vuonna 1851. William Herschelin poika John nimesi vuotta myöhemmin silloin tunnetut neljä kuuta. Seuraavan kuun, Mirandan, löysi Gerard Kuiper vuonna 1948. Voyager 2:n ohitus lisäsi tunnettujen kuiden määrää kymmenellä, ja myöhemmin löydettiin vielä yksi kuu lisää luotaimen vanhoja kuvia tutkimalla. Sen jälkeen lisää kuita on löydetty Maasta käsin kaukoputkilla: kaksi vuonna 1997, kolme vuonna 1999, kolme vuonna 2001 ja kolme vuonna 2003. 1990-luvulla löytyneet kuut ovat pienikokoisia, ja osa niistä on todennäköisesti planeetan kiertoradalleen kaappaamia asteroideja, sillä ne kiertävät emäplaneettaansa kaukaisilla, epäsäännöllisillä ja retrogradisilla radoilla. On todennäköistä, että Uranuksella on lisää pieniä kuita yhä löytämättä. [909 chars] |
 
 ### Public Sources
 
@@ -174,10 +174,10 @@ location evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

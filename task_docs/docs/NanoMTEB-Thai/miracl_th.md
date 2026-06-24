@@ -62,19 +62,19 @@ The most promising improvements are Thai-aware tokenization for sparse systems, 
 
 ## Example Data
 
-### Public Sources
-
-- [Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages](https://arxiv.org/abs/2210.09984), 2022.
-- [MIRACL project page](http://miracl.ai/).
-- [mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives), source task dataset card.
+| Query | Positive document |
+| --- | --- |
+| ชาวนอร์มันหมายถึงอะไร? [22 chars] | นอร์มัน นอร์มัน () คือกลุ่มชนผู้ให้นามแก่ดินแดนนอร์ม็องดีซึ่งเป็นบริเวณทางตอนเหนือของฝรั่งเศส ชนนอร์มันสืบเชื้อสายมาจากไวกิงผู้ได้รับชัยชนะต่อผู้ตั้งถิ่นฐานอยู่แต่เดิมที่เป็นชนแฟรงค์ (Franks) และกอลล์-โรมัน (Gallo-Roman) ความเป็น “ชนนอร์มัน” เริ่มเป็นที่รู้จักกันเป็นครั้งแรกราวครึ่งแรกของคริสต์ศตวรรษที่ 10 และค่อยๆ วิวัฒนาการเรื่อยมาในคริสต์ศตวรรษต่อๆ มาจนกระทั่งสูญหายไปจากการเป็นกลุ่มชนที่เป็นเอกลักษณ์ของตนเองในต้นคริสต์ศตวรรษที่ 13 คำว่า “นอร์มัน” มาจากคำว่า “นอร์สเม็น” หรือ “นอร์ธเม็น” (Norsemen หรือ Northmen) ตามชื่อไวกิงจากสแกนดิเนเวียผู้ก่อตั้งนอร์ม็องดี หรือ “นอร์ธมานเนีย” เดิมในภาษาละติน [603 chars] |
+| สัตว์ประจำชาติสหรัฐอเมริกาคืออะไร? [34 chars] | สหรัฐ นิเวศวิทยาของสหรัฐนั้นหลากหลายมาก (megadiverse) โดยมีพืชมีท่อลำเลียงประมาณ 17,000 ชนิดในสหรัฐแผ่นดินใหญ่และรัฐอะแลสกา และพบพืชดอกกว่า 1,800 ชนิดในรัฐฮาวาย ซึ่งมีจำนวนน้อยที่พบในแผ่นดินใหญ่ สหรัฐเป็นถิ่นที่อยู่ของสัตว์เลี้ยงลูกด้วยนม 428 ชนิด นก 784 ชนิด สัตว์เลื้อยคลาน 311 ชนิดและสัตว์สะเทินน้ำสะเทินบก 295 ชนิด มีการพบแมลงประมาณ 91,000 ชนิด อินทรีหัวขาวเป็นนกประจำชาติและสัตว์ประจำชาติของสหรัฐ และเป็นสัญลักษณ์ของประเทศเสมอมา [434 chars] |
+| สไปรูไลนามีโปรตีนอยู่ราวเท่าไหร่? [33 chars] | สไปรูลินา (ผลิตภัณฑ์เสริมอาหาร) สไปรูไลนามีโปรตีนอยู่ราว 60% (51-71%) ในสไปรูไลนามีโปรตีนที่มีกรดอะมิโนจำเป็นทุกชนิด แม้ว่าจะมีปริมาณเมไทโอนีน ซีสเตอีนและไลซีนเมื่อเทียบกับโปรตีนที่ได้จากเนื้อสัตว์ ไข่และนม อย่างไรก็ตาม สไปรูไลนาเหนือกว่าโปรตีนพืชตัวอย่าง อย่างเช่นที่ได้จากพืชตระกูลถั่ว (legume) ในภาพรวม ขณะที่สไปรูไลนามักถูกโฆษณาว่าเป็นแหล่งโปรตีนที่ยอดเยี่ยม แต่มันก็ไม่ได้ดีไปกว่านมหรือเนื้อสัตว์ (เว้นเสียแต่มันมีโปรตีนที่มีกรดอะมิโนจำเป็นครบ) และเป็นโปรตีนที่ราคาต่อกรัมแพงกว่าโปรตีนแหล่งอื่นอย่างน้อย 30 เท่า [517 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL project page |  | project page | http://miracl.ai/ |
-| mteb/MIRACLRetrievalHardNegatives |  | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL project page |  | project page | [http://miracl.ai/](http://miracl.ai/) |
+| mteb/MIRACLRetrievalHardNegatives |  | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives) |
 
 ### Representative Snippets
 

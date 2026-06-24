@@ -62,19 +62,19 @@ This task is best used to verify Thai QA-context retrieval behavior and error mo
 
 ## Example Data
 
-### Public Sources
-
-- [On the Cross-lingual Transferability of Monolingual Representations](https://arxiv.org/abs/1910.11856), source paper for XQuAD.
-- [google-deepmind/xquad](https://github.com/google-deepmind/xquad), source repository.
-- [google/xquad](https://huggingface.co/datasets/google/xquad), Hugging Face dataset card.
+| Query | Positive document |
+| --- | --- |
+| ศิลปินท่านใดที่ทำงานแกะสลักไม้ให้กับไบเบิลของลูเทอร์? [53 chars] | ถูกเผยแพร่ในเวลาที่มีความต้องการเพิ่มมากขึ้นสำหรับ สิ่งพิมพ์ภาษาเยอรมัน งานแปล คัมภีร์ไบเบิล เวอร์ชั่นของลูเทอร์กลายเป็นที่นิยมและมีอิทธิพลอย่างรวดเร็ว เช่นนั้น งานชิ้นนี้เป็นส่วนช่วยสำคัญแก่ วิวัฒนาการของภาษาและวรรณกรรมเยอรมัน ตกแต่งด้วยบันทึกและบทนำโดยลูเทอร์ และด้วยไม้แกะสลักโดย ลูคัส ครานัค ที่มีภาพต่อต้านสมเด็จพระสันตะปาปา หนังสือนี้มีบทบาทสำคัญในการเผยแพร่คำสอนของลูเทอร์ทั่วทั้งเยอรมนี หนังสือ Luther Bible มีอิทธิพลต่องานแปลอื่น เช่นไบเบิลภาษาอังกฤษของ วิลเลียม ทนเดล (1525 ถัดมา) คัมภีร์ก่อนหน้า King James Bible [523 chars] |
+| ระหว่างการแข่งขันเพลย์ออฟ ใครไม่ได้ขว้างลูกบอลเลย [49 chars] | ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในการแข่งขันแชมป์ชิงเอเอฟซี 20–18 ด้วยการอินเตอร์เซปการขว้างลูกของนิวอิงแลนด์ที่พยายามทำ 2 คะแนนหลังทัชดาวน์ โดยมีเวลาเหลือ 17 วินาที ถึงแม้ แมนนิง จะมีปัญหากับการอินเตอร์เซปในฤดูกาลนี้ แต่เขาก็ไม่ได้ขว้างลูกบอลเลยในการแข่งขันเพลย์ออฟทั้งสองครั้งของพวกเขา [453 chars] |
+| ทีมบรอนคอสทำคะแนนได้เท่าไรในสามนาทีสุดท้ายของการแข่งขันกับทีมพิตต์สเบิร์ก [73 chars] | ทีมบรอนคอส เอาชนะทีม พิตต์สเบิร์ก สตีลเลอร์ส ในรอบดิวิชั่น 23–16 ด้วยการทำ 11 คะแนนในสามนาทีสุดท้ายของเกม จากนั้นพวกเขาก็เอาชนะทีมรับของ นิวอิงแลนด์แพทริออตส์ ซึ่งเป็นแชมป์ซูเปอร์โบว์ลครั้งที่ 49 ในการแข่งขันแชมป์ชิงเอเอฟซี 20–18 ด้วยการอินเตอร์เซปการขว้างลูกของนิวอิงแลนด์ที่พยายามทำ 2 คะแนนหลังทัชดาวน์ โดยมีเวลาเหลือ 17 วินาที ถึงแม้ แมนนิง จะมีปัญหากับการอินเตอร์เซปในฤดูกาลนี้ แต่เขาก็ไม่ได้ขว้างลูกบอลเลยในการแข่งขันเพลย์ออฟทั้งสองครั้งของพวกเขา [453 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| On the Cross-lingual Transferability of Monolingual Representations | 2019 | paper | https://arxiv.org/abs/1910.11856 |
-| google-deepmind/xquad |  | repository | https://github.com/google-deepmind/xquad |
-| google/xquad |  | dataset card | https://huggingface.co/datasets/google/xquad |
+| On the Cross-lingual Transferability of Monolingual Representations | 2019 | paper | [https://arxiv.org/abs/1910.11856](https://arxiv.org/abs/1910.11856) |
+| google-deepmind/xquad |  | repository | [https://github.com/google-deepmind/xquad](https://github.com/google-deepmind/xquad) |
+| google/xquad |  | dataset card | [https://huggingface.co/datasets/google/xquad](https://huggingface.co/datasets/google/xquad) |
 
 ### Representative Snippets
 

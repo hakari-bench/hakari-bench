@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 
-MODEL_TYPE_FILTER_ORDER = ("dense", "sparse", "late-interaction", "reranker")
+MODEL_TYPE_FILTER_ORDER = ("dense", "bm25", "sparse", "late-interaction", "reranker")
 MODEL_TYPE_FILTER_LABELS = {
     "dense": "Dense",
-    "sparse": "Sparse / BM25",
+    "bm25": "BM25",
+    "sparse": "Sparse",
     "late-interaction": "Late interaction",
     "reranker": "Reranker",
 }
@@ -27,8 +28,7 @@ def normalized_model_type(*, model_name: str, model_type: str | None = None) -> 
 
 
 def model_type_filter_key(*, model_name: str, model_type: str | None = None) -> str:
-    normalized = normalized_model_type(model_name=model_name, model_type=model_type)
-    return "sparse" if normalized == "bm25" else normalized
+    return normalized_model_type(model_name=model_name, model_type=model_type)
 
 
 def is_bm25_model(*, model_name: str, model_type: str | None = None) -> bool:

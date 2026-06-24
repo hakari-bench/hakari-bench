@@ -62,9 +62,11 @@ A model targeting this task should improve short Thai query understanding and an
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on MS MARCO, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| โรคการคิดซ้ำคืออะไร [19 chars] | โรคการย้อนกลับอาหาร โรคการย้อนกลับอาหาร ซึ่งเรียกว่า Merycism เป็นประเภทของความผิดปกติในการกินที่ไม่ได้ระบุไว้ในประเภทอื่น ซึ่งทำให้เกิดการย้อนกลับของอาหาร แม้ว่าจะไม่ได้ถูกระบุว่าเป็นความผิดปกติในการกินเฉพาะใน DSM-IV แต่มีพารามิเตอร์บางประการที่ได้ถูกกำหนดไว้สำหรับการวินิจฉัยโรคนี้ [283 chars] |
+| ใครร้องเพลง Here I Go Again [27 chars] | สำหรับการใช้งานอื่น ๆ ดูที่ Here I Go Again (การชี้แจงความหมาย) Here I Go Again เป็นเพลงของวงร็อคอังกฤษ Whitesnake เปิดตัวครั้งแรกในอัลบั้ม Saints & Sinners ปี 1982 เพลงนี้ถูกบันทึกเสียงใหม่สำหรับอัลบั้ม Whitesnake ปี 1987 ของพวกเขา เพลงนี้ถูกบันทึกเสียงใหม่อีกครั้งในปีนั้นในเวอร์ชันมิกซ์วิทยุใหม่ [298 chars] |
+| คาเมรอน บอยซ์ แสดงเป็นใครในลิฟและแมดดี้ [39 chars] | เตรียมตัวให้พร้อมสำหรับเสียงหัวเราะที่จริงจังนะทุกคน ในการชมพิเศษก่อนออกอากาศตอนวันที่ 19 เม.ย. ของ Liv & Maddie ที่ชื่อว่า “Prom-A-Rooney” แน่นอน ในคลิปที่ตลกขบขันนี้ เราเห็นเจสซี่ที่แสดงโดยแคเมอรอน บอยซ์ กระโดดไปยังรายการดิสนีย์อื่นเพื่อพบกับแมดดี้ (เชลบี วูลเฟิร์ต) ตัวละครของเขานั้น, เอ่อ, แปลกประหลาด! [306 chars] |
 
 ### Source Reference Table
 

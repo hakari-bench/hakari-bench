@@ -144,7 +144,7 @@
         "title": "MS MARCO dataset site",
         "url": "https://microsoft.github.io/msmarco/Datasets.html",
         "is_paper": false,
-        "source_confidence": "definitive_dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "792789",
+        "document_id": "7970736",
+        "query": {
+          "text": "Was ist das Ruminationssyndrom?",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ruminationssyndrom, auch Merykismus genannt, ist eine nicht näher bezeichnete Essstörung, die das Erbrechen von Nahrung verursacht. Obwohl es im DSM-IV nicht als spezifische Essstörung identifiziert wird, wurden bestimmte Kriterien für die Diagnose der Störung festgelegt.",
+          "full_chars": 272,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1049867",
+        "document_id": "7946528",
+        "query": {
+          "text": "Wer hat den Song \"Here I Go Again\" gesungen?",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Für andere Verwendungen siehe Here I Go Again (Bedeutungsübersicht). Here I Go Again ist ein Lied der britischen Rockband Whitesnake. Ursprünglich erschien das Lied 1982 auf ihrem Album Saints & Sinners. Für das gleichnamige Album Whitesnake aus dem Jahr 1987 wurde es neu aufgenommen. Im selben Jahr wurde das Lied erneut in einer neuen Radio-Mix-Version aufgenommen.",
+          "full_chars": 368,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1027209",
+        "document_id": "7831679",
+        "query": {
+          "text": "Wen spielt Cameron Boyce in Liv und Maddie?",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Bereitet euch auf ordentlich Lacher vor, Leute. In einem exklusiven Vorab-Blick auf die Folge vom 19. April von Liv & Maddie mit dem Titel „Prom-A-Rooney.“ Natürlich. Im lustigen Clip sehen wir den Jessie-Star Cameron Boyce in eine andere Disney-Serie wechseln, um Maddie (Shelby Wulfert) zu treffen. Seine Figur ist, ähm, ziemlich exzentrisch!",
+          "full_chars": 344,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

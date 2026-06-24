@@ -134,15 +134,66 @@
         "url": "https://github.com/project-miracl/hagrid",
         "year": 2023,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/HagridRetrieval",
         "url": "https://huggingface.co/datasets/mteb/HagridRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "721",
+        "document_id": "53fcb7d3-108d-4cfc-afa2-ddd0dac5cb62",
+        "query": {
+          "text": "How many clubs are in the Australian Football League?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Australian Football League consists of 18 clubs [1][2]",
+          "full_chars": 58,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1213",
+        "document_id": "972c50b9-de47-4db0-a237-3ca1ba36b4d1",
+        "query": {
+          "text": "What was the film Nausicaä of the Valley of the Wind adapted from?",
+          "full_chars": 66,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nausicaä of the Valley of the Wind was adapted from the manga series of the same name written and illustrated by Hayao Miyazaki. [4]",
+          "full_chars": 132,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "105",
+        "document_id": "c511cb13-606c-46e6-8186-a04cf60abe24",
+        "query": {
+          "text": "Is Abi Branning still a character on EastEnders?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "No, Abi Branning is not a regular character on EastEnders as she was killed off in January 2018 after falling from the roof of The Queen Victoria pub [2]. However, she did make a few guest appearances in 2018, with one being in July and another being over the Christmas period [1].",
+          "full_chars": 281,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 55
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-stats-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-stats-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Stats-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-stats-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-stats-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "84116",
+        "document_id": "3931",
+        "query": {
+          "text": "Szacunki wariancji z próbki iid",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Intuicyjne wyjaśnienie dzielenia przez (n-1) przy obliczaniu sd? Zapytano mnie dzisiaj na zajęciach, dlaczego przy obliczaniu sd dzieli się sumę błędu kwadratowego przez $(n-1)$ zamiast przez $n$. Powiedziałem, że nie będę odpowiadał na to w klasie (ponieważ nie chciałem wchodzić w bezstronne estymatory), ale później zacząłem się zastanawiać - **czy istnieje** intuicyjne wytłumaczenie tego?!",
+          "full_chars": 394,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "14140",
+        "document_id": "72581",
+        "query": {
+          "text": "Jak najlepiej wyświetlić graficznie błąd typu II (beta), moc i wielkość próbki?",
+          "full_chars": 79,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Rzeczywiste w oparciu o funkcję zasilania! Problem: Jaki jest rzeczywisty przykład funkcji potęgowej? Próbowałem o tym myśleć, ale mi się nie udało. Czy ktoś wie?",
+          "full_chars": 162,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "105489",
+        "document_id": "14002",
+        "query": {
+          "text": "Reprezentowanie macierzy odległości w płaszczyźnie",
+          "full_chars": 50,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jaka jest różnica między analizą głównych składowych a skalowaniem wielowymiarowym? Czym różnią się PCA i klasyczne MDS? Co powiesz na MDS w porównaniu z niemetrycznym MDS? Czy jest czas, kiedy wolisz jedno od drugiego? Czym różnią się interpretacje?",
+          "full_chars": 250,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

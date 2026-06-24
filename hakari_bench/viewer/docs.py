@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from html import escape
@@ -10,6 +11,13 @@ from urllib.parse import quote, urlparse
 from pydantic import ValidationError
 
 from hakari_bench.task_docs import TaskMetadata, load_task_metadata
+
+
+HAKARI_BENCH_PAPER_TITLE = (
+    "HAKARI-Bench: A Lightweight Benchmark for Comparing Retrieval Architectures "
+    "and Efficiency Settings under Unified Conditions"
+)
+HAKARI_BENCH_PAPER_URL = "http://arxiv.org/abs/2606.22778"
 
 
 @dataclass(frozen=True)
@@ -37,14 +45,27 @@ class DocsPageChrome:
 
 
 class BenchmarkDocs:
-    def __init__(self, docs_dir: Path, *, metadata_dir: Path | None = None) -> None:
+    def __init__(
+        self,
+        docs_dir: Path,
+        *,
+        metadata_dir: Path | None = None,
+        group_names: Sequence[str] | None = None,
+    ) -> None:
         self.docs_dir = docs_dir
         self.metadata_dir = metadata_dir
+        self.group_names = tuple(group_names) if group_names is not None else None
 
     def group_docs(self) -> list[BenchmarkDoc]:
         if not self.docs_dir.is_dir():
             return []
         docs: list[BenchmarkDoc] = []
+        if self.group_names is not None:
+            for group_name in self.group_names:
+                doc = self.group_doc(group_name)
+                if doc is not None:
+                    docs.append(doc)
+            return docs
         for path in sorted(self.docs_dir.glob("*/index.md")):
             if not _is_relative_to(path, self.docs_dir):
                 continue
@@ -123,17 +144,34 @@ class BenchmarkDocs:
         )
 
     def _markdown_with_metadata(self, *, path: Path, markdown: str) -> str:
+        source_markdown = markdown
+        display_markdown = _prefer_example_data_sections(_compact_source_reference_sections(markdown))
         if self.metadata_dir is None:
-            return markdown
+            return display_markdown
         if path.name == "index.md":
             task_metadata = self._group_task_metadata(path.parent)
-            if not task_metadata or "## Metadata Summary" in markdown:
-                return markdown
-            return f"{markdown.rstrip()}\n\n{_render_group_metadata_markdown(group_dir=path.parent, task_metadata=task_metadata)}\n"
+            if not task_metadata or "## Metadata Summary" in source_markdown:
+                return display_markdown
+            return f"{display_markdown.rstrip()}\n\n{_render_group_metadata_markdown(group_dir=path.parent, task_metadata=task_metadata)}\n"
         metadata = self._load_metadata(path)
-        if metadata is None or "## Dataset Information" in markdown:
-            return markdown
-        return f"{markdown.rstrip()}\n\n{_render_task_metadata_markdown(metadata)}\n"
+        if metadata is None or "## Dataset Information" in source_markdown:
+            return display_markdown
+        rendered = display_markdown.rstrip()
+        examples = _examples_markdown(metadata)
+        if examples and "## Example Data" not in source_markdown:
+            rendered = f"{rendered}\n\n{examples}"
+        rendered = _prefer_example_data_sections(rendered).rstrip()
+        return (
+            f"{rendered}\n\n"
+            f"{_render_task_metadata_markdown(
+                metadata,
+                include_links=not (
+                    _has_markdown_heading(source_markdown, 'Hugging Face Links')
+                    or _has_markdown_heading(source_markdown, 'Source Reference Table')
+                ),
+                include_references=not _has_markdown_heading(source_markdown, 'Source Reference Table'),
+            )}\n"
+        )
 
     def _group_task_metadata(self, group_dir: Path) -> list[tuple[Path, TaskMetadata]]:
         items: list[tuple[Path, TaskMetadata]] = []
@@ -199,6 +237,12 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) 
         <li><span aria-current="page">Benchmark documentation</span></li>
       </ol>
     </nav>
+    <section class="mb-4">
+      <h2 class="text-lg font-semibold text-zinc-950">Paper</h2>
+      <p class="mt-1 text-sm text-zinc-600">
+        <a class="underline underline-offset-2" href="{escape(HAKARI_BENCH_PAPER_URL, quote=True)}">{escape(HAKARI_BENCH_PAPER_TITLE)}</a>
+      </p>
+    </section>
     <header class="mb-4">
       <h1 class="text-lg font-semibold text-zinc-950">Benchmark documentation</h1>
       <p class="mt-1 text-sm text-zinc-600">Dataset and benchmark task group descriptions used by the leaderboard viewer.</p>
@@ -209,7 +253,12 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) 
     return _render_docs_document(chrome=chrome, title="Benchmark documentation - HAKARI-Bench docs", body_html=body)
 
 
-def _render_task_metadata_markdown(metadata: TaskMetadata) -> str:
+def _render_task_metadata_markdown(
+    metadata: TaskMetadata,
+    *,
+    include_links: bool = True,
+    include_references: bool = True,
+) -> str:
     rows = [
         ("Nano set", metadata.nano_set),
         ("Backing dataset", metadata.backing_dataset),
@@ -240,10 +289,10 @@ def _render_task_metadata_markdown(metadata: TaskMetadata) -> str:
     learning = _learning_markdown(metadata)
     if learning:
         sections.extend(["", "### Training and Leakage Metadata", "", learning])
-    links = _links_markdown(metadata)
+    links = _links_markdown(metadata) if include_links else ""
     if links:
         sections.extend(["", "### Hugging Face Links", "", links])
-    references = _references_table(metadata)
+    references = _references_table(metadata) if include_references else ""
     if references:
         sections.extend(["", "### Source Reference Table", "", references])
     return "\n".join(sections)
@@ -356,6 +405,30 @@ def _candidate_subsets_table(metadata: TaskMetadata) -> str:
     return _markdown_table(["Profile", "Config", "nDCG@10", "Hit@10", "Recall@100", "Candidates"], rows) if rows else ""
 
 
+def _examples_markdown(metadata: TaskMetadata) -> str:
+    if not metadata.examples:
+        return ""
+    rows = [
+        [
+            _format_example_text(example.query.text, example.query.full_chars, example.query.limit_chars, example.query.truncated),
+            _format_example_text(
+                example.positive_document.text,
+                example.positive_document.full_chars,
+                example.positive_document.limit_chars,
+                example.positive_document.truncated,
+            ),
+        ]
+        for example in metadata.examples
+    ]
+    return "\n".join(["## Example Data", "", _markdown_table(["Query", "Positive document"], rows)])
+
+
+def _format_example_text(text: str, full_chars: int, limit_chars: int, truncated: bool) -> str:
+    if truncated:
+        return f"{text}... [{_format_int(limit_chars)} / {_format_int(full_chars)} chars]"
+    return f"{text} [{_format_int(full_chars)} chars]"
+
+
 def _profile_scores(metadata: TaskMetadata) -> dict[str, float]:
     subsets = metadata.candidate_subsets
     if subsets is None:
@@ -409,7 +482,7 @@ def _references_table(metadata: TaskMetadata) -> str:
             reference.title,
             str(reference.year) if reference.year is not None else "",
             "paper" if reference.is_paper else "dataset page",
-            reference.url,
+            f"[{reference.url}]({reference.url})",
         ]
         for reference in metadata.references
     ]
@@ -459,6 +532,7 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
     code_lines: list[str] = []
     in_table = False
     details_level: int | None = None
+    current_heading = ""
 
     def flush_paragraph() -> None:
         nonlocal paragraph
@@ -523,6 +597,7 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
                 )
                 details_level = level
                 continue
+            current_heading = heading_text.lower()
             html.append(f"<h{level}>{_inline_markdown(heading_text, base_url=base_url)}</h{level}>")
             continue
         if line.startswith(">"):
@@ -539,6 +614,9 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
                 in_list = True
             html.append(f"<li>{_inline_markdown(line[2:].strip(), base_url=base_url)}</li>")
             continue
+        if in_list and raw_line[:1].isspace() and html and html[-1].startswith("<li>"):
+            html[-1] = f"{html[-1][:-5]} {_inline_markdown(line.strip(), base_url=base_url)}</li>"
+            continue
         if _is_table_row(line):
             flush_paragraph()
             close_list()
@@ -547,7 +625,12 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
             cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
             row_html = "".join(f"<td>{_inline_markdown(cell, base_url=base_url)}</td>" for cell in cells)
             if not in_table:
-                html.append('<div class="overflow-x-auto"><table><tbody>')
+                table_class = (
+                    ' class="benchmark-doc-example-table"'
+                    if current_heading in {"example data", "representative snippets"}
+                    else ""
+                )
+                html.append(f'<div class="overflow-x-auto"><table{table_class}><tbody>')
                 in_table = True
             html.append(f"<tr>{row_html}</tr>")
             continue
@@ -593,6 +676,94 @@ def _doc_url_parts(url: str) -> list[str]:
 
 def _read_markdown(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def _has_markdown_heading(markdown: str, heading: str) -> bool:
+    pattern = rf"^\s*#{{1,6}}\s+{re.escape(heading)}\s*#*\s*$"
+    return re.search(pattern, markdown, flags=re.IGNORECASE | re.MULTILINE) is not None
+
+
+def _compact_source_reference_sections(markdown: str) -> str:
+    headings = _markdown_heading_spans(markdown)
+    source_table_levels = [level for level, title, _, _ in headings if title.lower() == "source reference table"]
+    if not source_table_levels:
+        return markdown
+    min_source_table_level = min(source_table_levels)
+    removable_titles = {"public sources", "hugging face links"}
+    replacements: list[tuple[int, int, str]] = []
+    for index, (level, title, start, _) in enumerate(headings):
+        if title.lower() not in removable_titles:
+            continue
+        end = len(markdown)
+        for next_level, _, next_start, _ in headings[index + 1 :]:
+            if next_level <= level:
+                end = next_start
+                break
+        section = markdown[start:end]
+        nested_source_table = [
+            (nested_level, nested_start, nested_end)
+            for nested_level, nested_title, nested_start, nested_end in _markdown_heading_spans(section)
+            if nested_title.lower() == "source reference table"
+        ]
+        if nested_source_table:
+            nested_level, nested_start, nested_end = nested_source_table[0]
+            if nested_level > level:
+                replacements.append((start, start + nested_end, f"{'#' * level} Source Reference Table"))
+            continue
+        if level < min_source_table_level:
+            continue
+        replacements.append((start, end, ""))
+    if not replacements:
+        return markdown
+    compacted = []
+    cursor = 0
+    for start, end, replacement in replacements:
+        if start < cursor:
+            continue
+        compacted.append(markdown[cursor:start].rstrip())
+        if replacement:
+            compacted.append(replacement)
+        cursor = end
+    compacted.append(markdown[cursor:].lstrip("\n"))
+    return re.sub(r"\n{3,}", "\n\n", "\n\n".join(part for part in compacted if part)).strip() + "\n"
+
+
+def _prefer_example_data_sections(markdown: str) -> str:
+    if not _has_markdown_heading(markdown, "Example Data"):
+        return markdown
+    return _remove_markdown_sections(markdown, {"representative snippets"})
+
+
+def _remove_markdown_sections(markdown: str, titles: set[str]) -> str:
+    headings = _markdown_heading_spans(markdown)
+    replacements: list[tuple[int, int]] = []
+    for index, (level, title, start, _) in enumerate(headings):
+        if title.lower() not in titles:
+            continue
+        end = len(markdown)
+        for next_level, _, next_start, _ in headings[index + 1 :]:
+            if next_level <= level:
+                end = next_start
+                break
+        replacements.append((start, end))
+    if not replacements:
+        return markdown
+    compacted = []
+    cursor = 0
+    for start, end in replacements:
+        if start < cursor:
+            continue
+        compacted.append(markdown[cursor:start].rstrip())
+        cursor = end
+    compacted.append(markdown[cursor:].lstrip("\n"))
+    return re.sub(r"\n{3,}", "\n\n", "\n\n".join(part for part in compacted if part)).strip() + "\n"
+
+
+def _markdown_heading_spans(markdown: str) -> list[tuple[int, str, int, int]]:
+    headings: list[tuple[int, str, int, int]] = []
+    for match in re.finditer(r"^(#{1,6})\s+(.+?)\s*#*\s*$", markdown, flags=re.MULTILINE):
+        headings.append((len(match.group(1)), match.group(2).strip(), match.start(), match.end()))
+    return headings
 
 
 @lru_cache(maxsize=1024)

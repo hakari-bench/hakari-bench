@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 5
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants",
-        "url": "https://arxiv.org/abs/2308.16884",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "facebookresearch/belebele",
-        "url": "https://github.com/facebookresearch/belebele",
-        "year": 2023,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/belebele",
-        "url": "https://huggingface.co/datasets/mteb/belebele",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Thai",
       "source_urls": [
@@ -116,6 +93,79 @@
           "url": "https://huggingface.co/datasets/mteb/belebele"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants",
+        "url": "https://arxiv.org/abs/2308.16884",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "facebookresearch/belebele",
+        "url": "https://github.com/facebookresearch/belebele",
+        "year": 2023,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/belebele",
+        "url": "https://huggingface.co/datasets/mteb/belebele",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C38",
+        "query": {
+          "text": "การเปลี่ยนแปลงใดที่เกิดจากการปฏิวัติฝรั่งเศสมีผลกระทบอย่างมากต่อพลเมืองชนชั้นแรงงาน",
+          "full_chars": 83,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "There are a lot of social and political effects such as the use of metric system, a shift from absolutism to republicanism, nationalism and the belief the country belongs to the people not to one sole ruler. Also after the Revolution occupations were open to all male applicants allowing the most ambitious and successful to succeed. Same goes for the military because instead of army rankings being based on class they were now based on cailaber. The French Revolution also inspired many other repressed working class people of other country's to began their own revolutions.",
+          "full_chars": 576,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C71",
+        "query": {
+          "text": "จากบทความ ใครน่าจะเป็นผู้สร้างสังคมเกษตรกรรมขึ้น",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "For a long time during the nineteenth and twentieth centuries, it was believed the first inhabitants of New Zealand were the Maori people, who hunted giant birds called moas. The theory then established the idea that the Maori people migrated from Polynesia in a Great Fleet and took New Zealand from the Moriori, establishing an agricultural society. However, new evidence suggests that the Moriori were a group of mainland Maori who migrated from New Zealand to the Chatham Islands, developing their own distinctive, peaceful culture. There was also another tribe on the Chatham islands these were Maori who migrated away from New Zealand. They called themselves the Moriori there were a few skirmishes and in the end, the Moriori were wiped out",
+          "full_chars": 747,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C59",
+        "query": {
+          "text": "ข้อใดต่อไปนี้กล่าวถึงเกษตรกรรมเพื่อยังชีพได้ถูกต้อง",
+          "full_chars": 51,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Subsistence agriculture is agriculture carried out for the production of enough food to meet just the needs of the agriculturalist and his/her family. Subsistence agriculture is a simple, often organic, system using saved seed native to the ecoregion combined with crop rotation or other relatively simple techniques to maximize yield. Historically most farmers were engaged in subsistence agriculture and this is still the case in many developing nations.",
+          "full_chars": 456,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

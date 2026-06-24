@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models",
         "url": "https://arxiv.org/abs/2306.08952",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "TR1-q-66",
+        "document_id": "TR1-d-66",
+        "query": {
+          "text": "What is the time 9 year and 10 month after Nov, 1170",
+          "full_chars": 52,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sep, 1180",
+          "full_chars": 9,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR1-q-123",
+        "document_id": "TR1-d-123",
+        "query": {
+          "text": "What is the time 5 year and 12 month after Jun, 1243",
+          "full_chars": 52,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jun, 1249",
+          "full_chars": 9,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR1-q-103",
+        "document_id": "TR1-d-103",
+        "query": {
+          "text": "What is the time 6 year and 4 month after Jun, 1905",
+          "full_chars": 51,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Oct, 1911",
+          "full_chars": 9,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -103,22 +103,74 @@
         "title": "FaMTEB: Massive Text Embedding Benchmark in Persian Language",
         "url": "https://arxiv.org/abs/2502.11571",
         "year": 2025,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB: Massive Text Embedding Benchmark",
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MCINext/synthetic-persian-qa-retrieval",
         "url": "https://huggingface.co/datasets/MCINext/synthetic-persian-qa-retrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test_66",
+        "document_id": "196254",
+        "query": {
+          "text": "آیا بینگ راسل در فیلم‌های معروفی مانند 'دود اسلحه' نقش داشته است؟",
+          "full_chars": 65,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "بله، بینگ راسل در مجموعه تلویزیونی 'دود اسلحه' که از سال ۱۹۵۶ تا ۱۹۷۴ پخش می‌شد، نقش Ed Shelby را ایفا کرد. این مجموعه یکی از محبوب‌ترین و شناخته‌شده‌ترین سریال‌های وسترن در تاریخ تلویزیون است.",
+          "full_chars": 193,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_123",
+        "document_id": "169061",
+        "query": {
+          "text": "کتاب تحقیق در عملیات پیشرفته در چه انتشاراتی منتشر شده است؟",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "این کتاب توسط انتشارات دانشگاه شهید بهشتی منتشر شده است. این انتشارات به عنوان یکی از مراکز معتبر در نشر آثار علمی و پژوهشی در ایران شناخته می‌شود.",
+          "full_chars": 147,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_103",
+        "document_id": "59042",
+        "query": {
+          "text": "آیا این آیه در مکه نازل شده است؟",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "نه، این آیه در مدینه بر پیامبر اسلام صلی الله علیه و آله نازل گردیده است.",
+          "full_chars": 73,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -62,9 +62,11 @@ A model targeting this task should combine scientific terminology precision with
 
 ## Example Data
 
-### Public Sources
-
-The original task is connected to SCIDOCS and SPECTER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Bộ chuyển đổi tăng áp đa mức DC-DC mới [38 chars] | Tóm tắt: Các bộ chuyển đổi nguồn điện đa mức đang nổi lên như một loại tùy chọn bộ chuyển đổi năng lượng mới cho các ứng dụng công suất cao. Các bộ chuyển đổi nguồn điện đa mức thường tổng hợp sóng điện áp bậc thang từ nhiều mức điện áp của tụ điện một chiều. Một trong những hạn chế lớn của các bộ chuyển đổi đa mức là sự mất cân bằng điện áp giữa các mức khác nhau. Các kỹ thuật để cân bằng điện áp giữa các mức khác nhau thường liên quan đến việc kẹp điện áp hoặc kiểm soát sạc tụ điện. Có nhiều cách để thực hiện cân bằng điện áp trong các bộ chuyển đổi đa mức. Không xem xét các bộ chuyển đổi liên kết từ tính truyền thống, bài báo này trình bày ba bộ chuyển đổi nguồn điện đa mức mới được phát triển gần đây: 1) kẹp diode, 2) tụ điện bay, và 3) bộ biến tần nối tiếp với các nguồn điện một chiều riêng biệt. Nguyên lý hoạt động, đặc điểm, ràng buộc và ứng dụng tiềm năng của các bộ chuyển đổi này sẽ được thảo luận. [920 chars] |
+| Học Lĩnh Vực Ngẫu Nhiên Markov Gauss Thưa Nhanh Dựa Trên Phân Tích Cholesky [75 chars] | Văn bản đã được dịch: [21 chars] |
+| Tổng hợp kết cấu sử dụng mạng nơ-ron tích chập [46 chars] | Trong công trình này, chúng tôi nghiên cứu ảnh hưởng của độ sâu của mạng nơ-ron tích chập đến độ chính xác của nó trong bối cảnh nhận diện hình ảnh quy mô lớn. Đóng góp chính của chúng tôi là một đánh giá kỹ lưỡng về các mạng có độ sâu tăng dần, cho thấy rằng một cải thiện đáng kể so với các cấu hình trước đó có thể đạt được bằng cách đẩy độ sâu lên 16–19 lớp trọng số. Những phát hiện này là cơ sở cho bài nộp của chúng tôi trong Cuộc thi ImageNet 2014, nơi đội của chúng tôi đã giành được vị trí thứ nhất và thứ hai trong các hạng mục định vị và phân loại tương ứng. Chúng tôi cũng chỉ ra rằng các biểu diễn của chúng tôi tổng quát tốt cho các tập dữ liệu khác, nơi chúng đạt được kết quả tốt nhất trong lĩnh vực. Quan trọng là, chúng tôi đã công khai hai mô hình ConvNet hoạt động tốt nhất của mình để tạo điều kiện cho nghiên cứu thêm về việc sử dụng các biểu diễn hình ảnh sâu trong thị giác máy tính. [908 chars] |
 
 ### Source Reference Table
 

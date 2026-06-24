@@ -127,11 +127,9 @@ claim-specific reranking over long evidence passages.
 
 | Query | Positive document |
 | --- | --- |
-| Keith Godchaux kjente Grateful Dead. | The Grateful Dead var et amerikansk rockeband som ble dannet i 1965 i Palo Alto, California... |
-| Taarak Mehta Ka Ooltah Chashmah er en situasjonskomedie. | Taarak Mehta Ka Ooltah Chashmah er Indias lengst løpende sitcom-serie, produsert av Neela Tele Films Private Limited... |
-| Hemmelige og teknologisk avanserte fly ble bygget i Burbank, California. | Burbank er en by i Los Angeles County i Sør-California, USA, 12 mil nordvest for sentrum av Los Angeles... |
-| Nero er en person. | Julio-Claudiske dynasti refererer til de første fem romerske keiserne, inkludert Augustus, Tiberius, Caligula, Claudius og Nero... |
-| Scream 2 er kun en tysk film. | Scream 2 er en amerikansk slasherfilm fra 1997, regissert av Wes Craven og skrevet av Kevin Williamson... |
+| Keith Godchaux kjente Grateful Dead. [36 chars] | The Grateful Dead var et amerikansk rockeband som ble dannet i 1965 i Palo Alto, California. Bandet, som besto av fem til syv medlemmer, er kjent for sin unike og eklektiske stil, som kombinerte elementer av rock, psychedelia, eksperimentell musikk, modal jazz, country, folk, bluegrass, blues, reggae og space rock. De var også kjent for sine lange instrumentale jam-sesjoner og sin trofaste fanskare, kjent som "Deadheads". Som Lenny Kaye skriver, "berører deres musikk områder som de fleste andre grupper ikke engang vet eksisterer." Disse ulike påvirkningene ble destillert til en mangfoldig og psykedelisk helhet som gjorde The Grateful Dead til "de banebrytende gudfadrene i jam-band-verdenen". Bandet ble rangert som nummer 57 på Rolling Stone sin liste over "The Greatest Artists of All Time". De ble innlemmet i Rock and Roll Hall of Fame i 1994, og en opptak av deres konsert på Cornell Universitys Barton Hall 8. mai 1977 ble lagt til National Recording Registry ved Library of Congress i... [1,000 / 2,873 chars] |
+| Taarak Mehta Ka Ooltah Chashmah er en situasjonskomedie. [56 chars] | Taarak Mehta Ka Ooltah Chashmah (norsk: Taarak Mehtas forskjellige perspektiver) er Indias lengst løpende sitcom-serie, produsert av Neela Tele Films Private Limited. Serien ble sendt på lufta 28. juli 2008. Den sendes mandag til fredag klokken 20:30, med gjentakelse klokken 23:00 samme kveld og neste dag klokken 15:00 på SAB TV. Serien startet gjentakelse på Sony Pal 2. november 2015 klokken 16:30 og 20:00 hver dag. Serien er basert på kolonnen "Duniya Ne Oondha Chashma", skrevet av kolumnist og journalist Taarak Mehta for den gujarati-ukentlige magasinet Chitralekha. [575 chars] |
+| Hemmelige og teknologisk avanserte fly ble bygget i Burbank, California. [72 chars] | Burbank er en by i Los Angeles County i Sør-California, USA, 12 mil nordvest for sentrum av Los Angeles. Ved folketellingen i 2010 var befolkningen 103 340. Kjent som 'Verdens mediehovedstad' og bare noen få mil nordøst for Hollywood, har mange medie- og underholdningsbedrifter hovedkontor eller betydelige produksjonsanlegg i Burbank, inkludert The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios med vestkystavdelingen av Cartoon Network, og Insomniac Games. Byen er også hjemsted for Bob Hope Airport. Den var stedet for Lockheed's Skunk Works, som produserte noen av de mest hemmelige og teknologisk avanserte flyene, inkludert U-2-spionflyene som avslørte Sovjetunionens missilkomponenter på Cuba i oktober 1962. Burbank består av to distinkte områder: en sentrum/fjellfot-seksjon i fjellet Verdugo Mountains, og flattlandsseksjonen. Burbank er den østligste byen i San Fernando-dalen. Burbanks nabo, Glendale, er den vestligste byen... [1,000 / 1,248 chars] |
 
 ### Public Sources
 
@@ -145,7 +143,7 @@ claim-specific reranking over long evidence passages.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | https://arxiv.org/abs/1803.05355 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FEVER: a Large-scale Dataset for Fact Extraction and VERification | 2018 | task paper | [https://arxiv.org/abs/1803.05355](https://arxiv.org/abs/1803.05355) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -159,22 +159,20 @@ underlying confusion.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Moet ik blijven investeren in datastructuren en algoritmes? [59 chars] | Hoe belangrijk is het leren van algoritmes voor programmeurs van hogere programmeertalen? **Mogelijk duplicaat:** > Hoe belangrijk is het bestuderen van algoritmes en theorie om een geweldige > programmeur te worden? Vandaag leerde ik het quicksort-algoritme. Ik betwijfel of ik ooit mijn eigen versie zal implementeren, aangezien C# zijn eigen ingebouwde sorteermethode heeft voor lijsten en arrays. Hoe belangrijk is het leren van algoritmes voor programmeurs van hogere programmeertalen? In mijn voorbeeld had ik geen voordeel van het kennen van het algoritme, maar was mijn voorbeeld misschien te triviaal om accuraat te zijn? [632 chars] |
+| Django leren aan de hand van voorbeelden [40 chars] | Hoe begrijp ik het Django framework goed? Ik heb redelijke kennis van PHP, d.w.z. ik kan een framework pakken, de code lezen en als de documentatie adequaat is, begrijpen wat het doet. De belangrijkste reden hiervoor is dat PHP eigenlijk een zeer eenvoudige taal is die letterlijk gemaakt is voor webontwikkeling. Ik probeer nu een week Django te leren, ik kan er een basisapplicatie mee maken, maar er zijn gewoon te veel dingen die boven mijn pet gaan, d.w.z. die als magie lijken. De reden hiervoor is, denk ik, dat de hele interactie met de server onderdeel is van Django, terwijl dat in PHP allemaal door je server wordt afgehandeld. Ik wil meer lezen over dit onderdeel, d.w.z. welke onderwerpen moet ik behandelen om dit te 'begrijpen'. Suggesties voor boeken zijn ook welkom. [786 chars] |
+| Licentieverificatie en contact opnemen met de thuisserver [57 chars] | Softwarelicentie veilig valideren Ik ontwikkel momenteel een product (in C#) dat gratis te downloaden is, maar een maandelijks abonnement vereist om na een specifieke proefperiode te kunnen gebruiken. Mijn bedoeling is dat de gebruiker een account registreert op onze website en deze opwaardeert met tegoed om de applicatie te gebruiken. Echter, ik loop als nieuwkomer in het licentievak tegen een aantal problemen aan: * Hoe wordt deze logica meestal geïmplementeerd? * Hoe verbind ik mijn C#-applicatie met de database van mijn website en haal ik de benodigde gegevens op (is de proefperiode verlopen, zo ja, heeft de gebruiker voldoende tegoed)? * Hoe zorg ik ervoor dat ik minstens 80% (of zo) beveiligd ben tegen aanvallers die een MITM-aanval zouden kunnen starten om de ontvangen pakketten te wijzigen en ongeautoriseerde toegang tot mijn programma te krijgen? * Zoals ik al gehoord heb, kan SSL garanderen dat mijn applicatie verbinding maakt met het juiste adres. Maar hoe maak ik zo'n verbi... [1,000 / 1,674 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

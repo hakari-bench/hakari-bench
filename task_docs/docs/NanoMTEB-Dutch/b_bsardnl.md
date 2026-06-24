@@ -130,11 +130,11 @@ quality. Better legal reranking is needed to use hybrid coverage effectively.
 
 ## Example Data
 
-Representative queries ask what rules apply to a caravan rental in Brussels,
-whether a testament can be changed, whether court costs must be paid when
-challenging a social-security decision, whether a tenant can make repairs if
-the landlord does not, and how to read a water bill in Wallonia. Positive
-documents are Dutch Belgian statutory articles.
+| Query | Positive document |
+| --- | --- |
+| Ik huur het hele jaar door een caravan op een camping. Welke regels zijn van toepassing op mijn huurcontract in Brussel? [120 chars] | Art. 234. - Beginselen Dit hoofdstuk is van toepassing op huurovereenkomsten betreffende een woning die de huurder, met uitdrukkelijke of stilzwijgende toestemming van de verhuurder, vanaf de ingenottreding tot zijn hoofdverblijfplaats bestemt. Het beding dat de bestemming van het goed als hoofdverblijfplaats van de huurder verbiedt en dat niet uitdrukkelijk noch ernstig kan worden gestaafd, onder meer door elementen met betrekking tot de natuurlijke bestemming van het goed, en waarin de hoofdverblijfplaats van de huurder tijdens de huurovereenkomst niet is vermeld, wordt voor niet geschreven gehouden. Dit hoofdstuk is tevens van toepassing indien de woning, met de schriftelijke toestemming van de verhuurder, in de loop van de huurovereenkomst tot hoofdverblijfplaats wordt bestemd. In dat geval, neemt de huurovereenkomst een aanvang op de dag waarop deze toestemming is verleend. Dit hoofdstuk is van toepassing op de onderverhuring aangegaan overeenkomstig artikel 230, en binnen de gren... [1,000 / 1,287 chars] |
+| Ik heb een testament gemaakt. Kan ik het wijzigen? [50 chars] | Art. 969. Een testament kan eigenhandig, of bij openbare akte of in de vorm van het internationaal testament, gemaakt worden. [125 chars] |
+| Moet ik de gerechtskosten betalen als ik een beslissing van een sociale zekerheidsinstelling betwist? [101 chars] | Art. 1017. Tenzij bijzondere wetten anders bepalen, verwijst ieder eindvonnis, zelfs ambtshalve, de in het ongelijk gestelde partij in de kosten, onverminderd de overeenkomst tussen partijen, die het eventueel bekrachtigt. Niettemin worden nutteloze kosten, met inbegrip van de rechtsplegingsvergoeding bedoeld in artikel 1022, zelfs ambtshalve ten laste gelegd van de partij die ze foutief heeft veroorzaakt Behalve wanneer het geding roekeloos of tergend is, wordt de overheid of de instelling belast met het toepassen van de wetten en verordeningen : 1° bedoeld in de artikelen 579, 6°, 579, 7°, 580, 581 en 582, 1° en 2°, ter zake van vorderingen ingesteld door of tegen de sociaal verzekerden persoonlijk, steeds in de kosten verwezen; 2° betreffende de sociale zekerheid van het statutair personeel van de openbare sector die gelijkwaardig zijn met de in de bepaling onder 1° bedoelde wetten en verordeningen betreffende de sociale zekerheid van werknemers, ter zake van vorderingen ingesteld d... [1,000 / 1,690 chars] |
 
 ### Public Sources
 
@@ -149,10 +149,10 @@ documents are Dutch Belgian statutory articles.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2412.07462 |
-| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | proceedings page | https://aclanthology.org/2025.regnlp-1.3/ |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| clips/mteb-nl-bbsard |  | dataset card | https://huggingface.co/datasets/clips/mteb-nl-bbsard |
+| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2412.07462](https://arxiv.org/abs/2412.07462) |
+| Bilingual BSARD: Extending Statutory Article Retrieval to Dutch | 2025 | proceedings page | [https://aclanthology.org/2025.regnlp-1.3/](https://aclanthology.org/2025.regnlp-1.3/) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| clips/mteb-nl-bbsard |  | dataset card | [https://huggingface.co/datasets/clips/mteb-nl-bbsard](https://huggingface.co/datasets/clips/mteb-nl-bbsard) |
 
 ### Representative Snippets
 

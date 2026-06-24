@@ -158,11 +158,11 @@ the most direct evidence passages are consistently placed first.
 
 ## Example Data
 
-Representative queries ask what the first women's university in Japan was, what
-Jews call the Pentateuch, how Massachusetts is pronounced, which cities are
-most touristic in Greece, or what Bertram Fletcher Robinson died of. Positive
-documents are Spanish Wikipedia passages containing the relevant name, relation,
-pronunciation, list context, or biographical evidence.
+| Query | Positive document |
+| --- | --- |
+| ¿Cómo es la arquitectura del caravasar de Orbelián? [51 chars] | Caravasar de Orbelian El caravasar está construido con bloques de basalto. [75 chars] |
+| ¿Cómo llaman los judíos al Pentateuco? [38 chars] | Pentateuco Se corresponde con los que en la tradición hebrea forman la "Torá" —La Ley—, núcleo de la religión judía. Los cinco libros que lo componen son:Está contenido a su vez en el "Tanaj", el cual es considerado sagrado por todas las religiones abrahámicas (judaísmo, cristianismo e islam). No obstante lo anterior y que es uno de sus tres textos sagrados, los musulmanes creen que el texto sufrió corrupción ("tahrif") por los escribas judíos y cristianos por lo que no confían del todo en él. Mientras que los hebreos los nombran por la primera palabra significativa de cada uno, los cristianos han seguido tradicionalmente la nomenclatura de la versión griega de los LXX. [679 chars] |
+| ¿Cuándo recibió Daniel Harold Rolling la inyección letal de su condenación? [75 chars] | Daniel Harold Rolling Rolling fue ejecutado por inyección letal en prisión estatal de Florida el 25 de octubre de 2006, después de que la Corte Suprema de Estados Unidos rechazó una última apelación. Fue declarado fallecido a las 18:13 EDT. [241 chars] |
 
 ### Public Sources
 
@@ -180,10 +180,10 @@ pronunciation, list context, or biographical evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

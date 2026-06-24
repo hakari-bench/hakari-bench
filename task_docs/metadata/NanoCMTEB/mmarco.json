@@ -134,14 +134,65 @@
         "url": "https://arxiv.org/abs/2309.07597",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "definitive_benchmark_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/MMarcoRetrieval",
         "url": "https://huggingface.co/datasets/mteb/MMarcoRetrieval",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "54235",
+        "document_id": "7981606",
+        "query": {
+          "text": "黑死病对欧洲文化的影响",
+          "full_chars": 11,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "继续阅读以了解他们的发现。在接下来的几个世纪里，黑死病在欧洲偶尔抬头。但到了 1352 年，它基本上已经放松了控制。欧洲人口受到重创，这对经济产生了影响。劳动力被摧毁——农场被废弃，建筑物倒塌。劳动力短缺，劳动力价格飞涨，商品成本上升。",
+          "full_chars": 118,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "17635",
+        "document_id": "4178175",
+        "query": {
+          "text": "adh 的增加会导致肾脏 ________ 重吸收水分，从而产生 _______ 尿液。",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "抗利尿激素 (ADH) 和肾功能。 ADH 的主要作用是通过增加重新吸收到血液中的水量来限制尿液中丢失的水量。",
+          "full_chars": 55,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "11050",
+        "document_id": "3746070",
+        "query": {
+          "text": "拒绝漂亮女人和鬼魂的女演员",
+          "full_chars": 13,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "莫莉·林沃德拒绝了《漂亮女人》中薇薇安的角色和《鬼魂》中莫莉的角色等。她还获得了《尖叫》中的一个角色，但她拒绝了，因为她已经 20 岁了，不想扮演青少年角色。",
+          "full_chars": 79,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -142,4 +142,4 @@ and near-duplicate positives have been removed.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CodeRAG-Bench: Can Retrieval Augment Code Generation? | 2025 | paper | https://aclanthology.org/2025.findings-naacl.176/ |
+| CodeRAG-Bench: Can Retrieval Augment Code Generation? | 2025 | paper | [https://aclanthology.org/2025.findings-naacl.176/](https://aclanthology.org/2025.findings-naacl.176/) |

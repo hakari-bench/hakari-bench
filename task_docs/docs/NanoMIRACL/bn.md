@@ -157,11 +157,11 @@ candidate coverage.
 
 ## Example Data
 
-Representative queries ask about the father of a public figure, the location of
-Lalon's akhra, the number of suras in the Qur'an, river or country attributes,
-and facts about software, literature, films, or sports organizations. Positive
-documents are Bengali Wikipedia passages containing the requested answer
-evidence.
+| Query | Positive document |
+| --- | --- |
+| শ্রীনিবাস রামানুজনের বাবার নাম কি ছিল ? [39 chars] | শ্রীনিবাস রামানুজন রামানুজন ১৮৮৭ খ্রিস্টাব্দের ২২ ডিসেম্বর প্রাচীন ভারতের মাদ্রাজ প্রদেশের তাঞ্জোর জেলার ইরেভদ শহরের এক দরিদ্র ব্রাহ্মণ পরিবারে জন্মগ্রহণ করেন। তাঁর পিতা "কে শ্রীনিবাস ইয়েঙ্গার" ছিলেন শহরের একটি কাপড়ের দোকানের হিসাব রক্ষক। তাঁর মা "কোমালাটাম্মাল" একজন গৃহিনী ছিলেন এবং একটি স্থানীয় মন্দিরে গান গাইতেন। তিনি ছিলেন তীক্ষ্ম বুদ্ধিসম্পন্ন মহিলা। প্রচলিত আছে যে, রামানুজনের মায়ের বিয়ের পর বেশ কয়েকবছর কোন সন্তান না হওয়ায়, রামানুজনের মাতামহ "নামাক্কল" শহরের বিখ্যাত নামগিরি দেবীর নিকট নিজ কন্যা সন্তানের জন্য প্রার্থনা করেন। এরপরই জ্যেষ্ঠ সন্তান রামানুজন জন্মগ্রহণ করেন। [589 chars] |
+| জে কে রাউলিং রচিত হ্যারি পটার উপন্যাসের প্রকাশক কে ? [52 chars] | হ্যারি পটার এই বইয়ের সাফল্য রাউলিংকে ইতিহাসে সবচেয়ে বেশী উপার্জন করা লেখকের তালিকায় শীর্ষস্থান দিয়েছে। বইগুলোর ইংরেজি সংস্করণণ প্রকাশ করে ব্লুমসবারি যুক্তরাজ্যে, স্কলাস্টিক প্রেস যুক্তরাষ্ট্রে, অ্যালেন ও আনউইন অস্ট্রেলিয়ায় ও রেইনকোস্ট বুকস কানাডায়। [256 chars] |
+| খেজুর গাছে খেজুর ফল আসতে কতদিন সময় লাগে ? [41 chars] | খেজুর গাছে ফল উৎপাদনের জন্য সচরাচর ৪ থেকে ৮ বছর পর্যন্ত অপেক্ষা করতে হয়। তবে বাণিজ্যিকভাবে ফসল উৎপাদন উপযোগী খেজুর গাছে ফল আসতে ৭ থেকে ১০ বছর সময় লেগে যায়। পূর্ণাঙ্গ খেজুর গাছে প্রতি মৌসুমে গড়ে ৮০-১২০ কিলোগ্রাম (১৭৬-২৬৪ পাউন্ড) ফল পাওয়া যায়। বাজারজাতকরণের উপযোগী ফল আহরণের জন্য ফলের শাখাকে পাতলা হতে হয়। এর ফলে ফলগুচ্ছ নুইয়ে পড়ে, নীচের ফলগুলো বড় আকারের হয় এবং বাজে আবহাওয়া ও পাখির আক্রমণ থেকে রক্ষা পায়। [417 chars] |
 
 ### Public Sources
 
@@ -179,10 +179,10 @@ evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

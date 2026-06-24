@@ -62,19 +62,19 @@ Dutch legal retrieval models should retain exact handling of quoted terms, acron
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Wie heeft de Commissie op 11 oktober 2004 geïnformeerd over een aandelenverwerving die gezamenlijk zeggenschap geeft over een Finse metaalcoatonderneming? [154 chars] | Op 11 oktober 2004 ontving de Commissie een aanmelding van een voorgenomen concentratie in de zin van artikel 4 van Verordening (EG) nr. 139/2004 van de Raad waarin wordt meegedeeld dat de ondernemingen Outokumpu Wasacopper Oy (Wassacopper, Finland) die deel uitmaakt van het Outokumpu-concern (Finland), en Aurajoki Oy (Aurajoki, Finland) die onder zeggenschap staat van Cap Man Oy (Finland) in de zin van artikel 3, lid 1), sub b), van genoemde verordening gezamenlijk zeggenschap verkrijgen over de onderneming Cupru Oy, waarvan de naam zal veranderd worden in Aura Coat Oy (Aura Coat Oy, Finland), door de aankoop van aandelen. [631 chars] |
+| Wat is het aandeel inwoners van de Unie dat binnen drie jaar naar een derde land wil reizen? [92 chars] | Toch wensen de burgers dat de Europese dimensie wordt versterkt. Zo is uit een recente Eurobarometer-enquête naar voren gekomen dat de burgers niet op de hoogte zijn van hun rechten en dat zij op dat gebied hoge verwachtingen koesteren ten aanzien van Europa. Bovendien gaf de helft van de personen met woonplaats in de Unie aan dat zij voornemens waren tijdens de komende drie jaar naar een derde land te reizen, terwijl slechts 23 % van de geënquêteerden verklaarde de door artikel 20 van het EG-Verdrag geboden mogelijkheden te kennen; tegelijkertijd was 17 % van mening dat het mogelijk is bij de delegaties van de Commissie om bescherming te verzoeken. [657 chars] |
+| Welk EU-adviesorgaan steunde de derde optie van de Commissie en benadrukte dat buitengerechtelijke consumentenbeslechting met collectieve rechtsmiddelen moet samengaan? [168 chars] | Het EESC stelde eerder al dat … invoering van een groepsactie op EG-niveau … op generlei wijze afbreuk doet aan de stelsels voor buitengerechtelijke beslechting van consumentengeschillen. Het Comité steunt deze laatste voorbehoudloos en vindt dat de mogelijkheden ervan nog verder moeten worden uitgediept en ontwikkeld, zoals wordt voorgesteld in Optie 3 van het Groenboek van de Commissie. Immers, de maatregelen die de Commissie onder die optie voorstelt, zijn bedoeld als aanvulling op en niet als vervanging van het gerechtelijke EU-instrument zoals dat hierboven is beschreven. [583 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

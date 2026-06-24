@@ -145,21 +145,20 @@ excellent, but dense retrieval provides a stronger initial top order.
 
 ## Example Data
 
-### Public Sources
-
-- [Natural Questions: A Benchmark for Question Answering Research](https://aclanthology.org/Q19-1026/), 2019.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-nq](https://huggingface.co/datasets/clips/beir-nl-nq), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Wanneer is Chinees Nieuwjaar en welk jaar is het [48 chars] | Chinees Nieuwjaar Chinees Nieuwjaar,[a][2] ook wel bekend als het Lentefeest in modern China,[b] is een belangrijk Chinees festival dat wordt gevierd bij de overgang van de traditionele lunisolaire Chinese kalender. Het is een van de verschillende Lunar New Years in Azië. Vieringen lopen traditioneel van de avond voorafgaand aan de eerste dag tot het Lantaarnfestival op de 15e dag van de eerste kalendermaand. De eerste dag van het nieuwe jaar valt op de nieuwe maan tussen 21 januari en 20 februari.[3] In 2018 viel de eerste dag van het Chinees Nieuwjaar op vrijdag 16 februari, waarmee het jaar van de Hond begon. [620 chars] |
+| wat is het verschil tussen ron en mon [37 chars] | Octaangetal Een ander type octaangetal, Motor Octaangetal (MON) genaamd, wordt bepaald bij een motorsnelheid van 900 tpm in plaats van de 600 tpm voor RON.[1] Bij MON-tests wordt een vergelijkbare testmotor gebruikt als bij RON-tests, maar met een voorverwarmd brandstofmengsel, een hogere motorsnelheid en variabele ontstekingstiming om de klopvastheid van de brandstof verder te belasten. Afhankelijk van de samenstelling van de brandstof, zal de MON van een moderne tankbenzine ongeveer 8 tot 12 octaan lager zijn dan de RON, maar er is geen directe relatie tussen RON en MON. Specificaties voor tankbenzine vereisen doorgaans zowel een minimale RON als een minimale MON.[bron?] [682 chars] |
+| aan wie behoorde puerto rico voordat het tot de VS behoorde [59 chars] | Puerto Rico Oorspronkelijk bewoond door de inheemse Taíno-bevolking, werd het eiland in 1493 tijdens zijn tweede reis door Christoffel Columbus voor Spanje geclaimd. Later onderging het invasiepogingen van de Fransen, Nederlanders en Britten. Vier eeuwen Spaans koloniaal bestuur beïnvloedden het culturele landschap van het eiland met golven van Afrikaanse slaven, Canarische en Andalusische kolonisten. In het Spaanse Rijk speelde Puerto Rico een secundaire, maar strategische rol in vergelijking met rijkere koloniën zoals Peru en de vastelandgedeelten van Nieuw-Spanje.[22][23] Spanjes verre administratieve controle duurde voort tot het einde van de 19e eeuw, wat bijdroeg aan het ontstaan van een onderscheidende creoolse Hispanische cultuur en taal die elementen combineerde van de Native Americans, Afrikanen en Iberianen.[24] In 1898, na de Spaans-Amerikaanse Oorlog, verwierf de Verenigde Staten Puerto Rico volgens de bepalingen van het Verdrag van Parijs. Het verdrag trad op 11 april 189... [1,000 / 1,017 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | ACL paper | https://aclanthology.org/Q19-1026/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-nq |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-nq |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | ACL paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-nq |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-nq](https://huggingface.co/datasets/clips/beir-nl-nq) |
 
 ### Representative Snippets
 

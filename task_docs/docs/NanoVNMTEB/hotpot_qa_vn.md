@@ -70,13 +70,11 @@ Error analysis should track whether each query retrieves zero, one, or two posit
 
 ## Example Data
 
-### Public Sources
-
-- [HotpotQA paper](https://arxiv.org/abs/1809.09600)
-- [HotpotQA project page](https://hotpotqa.github.io/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/hotpotqa-vn](https://huggingface.co/datasets/GreenNode/hotpotqa-vn)
+| Query | Positive document |
+| --- | --- |
+| Đội bóng rổ nam đại học VCU Rams 2011-12, dẫn dắt bởi huấn luyện viên trưởng năm thứ ba Shaka Smart, đại diện cho trường Đại học Virginia Commonwealth được thành lập vào năm nào? [178 chars] | Đội bóng rổ nam VCU Rams mùa 2011–12 Đội bóng rổ nam đại học VCU Rams 2011-12 đại diện cho trường Đại học Virginia Commonwealth trong giải bóng rổ NCAA Division I mùa giải 2011-12. Đây là mùa thứ 44 đội bóng rổ nam của trường tham gia thi đấu. Dưới sự dẫn dắt của huấn luyện viên trưởng năm thứ ba Shaka Smart, đội bóng đang cố gắng bước vào vòng bán kết sau khi có thành tích tốt ở các trận chung kết trước đó. Được dự đoán sẽ không thể có được vị trí cao trong bảng xếp hạng thường niên, đội đã hoàn tất một vị trí thứ hai với tỉ lệ thắng thua là 3-5 tại hội nghị này và giành chiến thắng trong Giải vô địch Hội nghị Bóng rổ Nam CAA năm 2012 trước Drexel với tỷ số cuối cùng là 59–56 để giành quyền vào vòng đấu NCAA lần thứ mười một của họ. Đây cũng là lần đầu tiên kể từ năm học 84-85 mà đội liên tiếp đủ điều kiện tham gia tranh tài ở giải đấu NCAA. [856 chars] |
+| Con chó mà tổ tiên gồm cả Gordon và Irish Setters là giống chó gì: Manchester Terrier hay Scotch Collie? [104 chars] | Chó Manchester Terrier Chó Manchester Terrier là một giống chó thuộc họ chó săn có lông trơn. [94 chars] |
+| Bộ phim nào được viết kịch bản và đạo diễn bởi Joby Harold với nhạc nền của Samuel Sim? [87 chars] | Samuel Sim Samuel Sim là một nhạc sĩ phim và truyền hình. Anh nhận được sự công nhận đầu tiên với điểm số đoạt giải cho bộ phim truyền hình "Dunkirk" của BBC. Từ đó, anh đã viết âm nhạc cho nhiều bộ phim và chương trình truyền hình khác nhau, gần đây nhất là ghi điểm cho bộ phim "Awake" của The Weinstein Company và loạt phim truyền hình BBC/HBO "Nhà của Saddam". Âm nhạc mới nhất của anh ấy được ca ngợi là bản nhạc nền cho Home Fires. Bản ghi âm Home Fires (Nhạc từ loạt bài hát) được phát hành vào ngày 6 tháng 5 năm 2016 bởi Sony Classical Records. [554 chars] |
 
 ### Source Reference Table
 

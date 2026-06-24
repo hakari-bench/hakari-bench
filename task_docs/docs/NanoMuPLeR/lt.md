@@ -62,19 +62,19 @@ Models should combine robust Lithuanian lexical matching with semantic alignment
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Kada turėjo įsigalioti harmonizuotas minimalus €380 už 1 kubinį metrą akcizas gazoliui ir benzinui? [99 chars] | Šiuo pasiūlymu iš dalies keičiama Direktyva 2003/96/EB (EMD) dėl gazolio, naudojamo kaip degalai, apmokestinimo tvarkos, kuri taikoma visose Europos Sąjungos šalyse. Praktiškai šiuo pasiūlymu numatoma pamažu didinti minimalų gazolio akcizo tarifą, kad būtų galima šiuos tarifus suvienodinti (direktyvoje naudojamas terminas koordinavimas) su benzino akcizais: 380 EUR 1000 litrų abiejų degalų rūšių nuo 2014 m. sausio 1 d. Galutinis įgyvendinimo terminas valstybėms narėms, kurioms nesuteikti pereinamieji laikotarpiai, buvo pratęstas. [535 chars] |
+| Kuris mokestis už ES vidaus importą vis dar buvo taikomas septynių valstybių narių: dviem ≤0,5%, vienai 0,6%, keturioms 1%? [123 chars] | Dauguma ES 25 valstybių narių laikėsi Tarybos 1985 m. rekomendacijos ir visiškai panaikino mokestį; šiuo metu jį taiko tik septynios valstybės narės: Lenkija ir Portugalija taiko 0,5 proc. arba mažesnės normos mokestį, Kipras — 0,6 proc., o Graikija, Ispanija, Liuksemburgas ir Austrija visą jo normą — 1 proc. Tokia nevienoda tvarka trukdo sudaryti vienodas sąlygas Europos įmonėms, o tai yra viena išankstinių sąlygų, užtikrinančių tinkamą bendrosios rinkos veikimą. Tiesa, mokesčių srityje yra nemažai ir kitų skirtumų bei kliūčių, tačiau tai neturėtų būti priežastis atsisakyti panaikinti šį mokestį visiems laikams. [620 chars] |
+| Kokia valdymo struktūra buvo siūloma trumpalaikiam visų narių metrologijos mokslinių tyrimų bandomajam projektui, kurio terminas būtų apribotas iki 2013 m.? [156 chars] | Apibendrinant, EESRK mano, kad būtų tikslingiau nuspręsti įgyvendinti bandomąjį Europos metrologijos mokslinių tyrimų (EMMT) projektą, kurio terminas būtų apribotas iki 2013 m., remiantis i MERA Plus, ir parengiamuosiuose pasiūlymuose dėl 2014–2020 m. Aštuntosios bendrosios MTTP programos išnagrinėti galimybę vykdyti tikrą, nuolatinę Bendrijos programą, kurioje būtų nustatyti aiškūs ir laiko išbandyti mechanizmai. Tokiai programai, kurią visų valstybių narių ir asocijuotųjų šalių labui vadovautų Komisija, turėtų būti numatytas valdymo komitetas bei konsultacinis komitetas ir sudarytos sąlygos plataus masto konsultacijų procesui su labiausiai pramonės poreikiai suinteresuotais subjektais, kurie nustatytų veiklos kryptis ir ją stebėtų. [743 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

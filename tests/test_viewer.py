@@ -24,9 +24,13 @@ from hakari_bench.viewer.app import (
     _z_score_bucket_class,
     create_app,
     render_display_controls,
+    render_leaderboard,
     render_tabs,
     render_leaderboard_csv,
+    render_leaderboard_plot,
     render_page,
+    render_result_view_tabs,
+    render_controls,
     render_table_body,
     render_table_head,
 )
@@ -52,6 +56,7 @@ from hakari_bench.viewer.store import (
     resolve_duckdb_location,
 )
 from hakari_bench.viewer.state import FilterState
+from hakari_bench.viewer.state import normalize_query_state
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
 
 
@@ -441,11 +446,30 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 ["Overall", "all", True, False, False, False, "ja", "Japanese", 3],
             ],
         )
+        con.execute(
+            """
+            CREATE TABLE viewer_task_results (
+                benchmark VARCHAR,
+                dataset_name VARCHAR,
+                task_name VARCHAR,
+                task_key VARCHAR
+            )
+            """
+        )
+        con.executemany(
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?)",
+            [
+                ("BenchA", "BenchA", "TaskA", "BenchA::TaskA"),
+                ("BenchA", "BenchA", "TaskB", "BenchA::TaskB"),
+                ("BenchA", "BenchA", "IgnoredTask", "BenchA::IgnoredTask"),
+                ("BenchPrimary", "BenchPrimary-ja", "TaskC", "BenchPrimary::TaskC"),
+            ],
+        )
     finally:
         con.close()
     config = ViewerConfig(
         benchmarks=[
-            BenchmarkConfig(name="BenchA"),
+            BenchmarkConfig(name="BenchA", excluded_tasks=["IgnoredTask"]),
             BenchmarkConfig(name="BenchPrimary", language_filter_mode="primary_language"),
         ],
         overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA", "BenchPrimary"])],
@@ -479,6 +503,15 @@ runtime:
     )
 
     assert result.expected_tasks == 3
+    assert [(task.key, task.label, task.doc_key) for task in result.task_breakdowns] == [
+        ("BenchA::TaskA", "BenchA / TaskA", "BenchA::BenchA::TaskA"),
+        ("BenchA::TaskB", "BenchA / TaskB", "BenchA::BenchA::TaskB"),
+        (
+            "BenchPrimary::TaskC",
+            "BenchPrimary / BenchPrimary-ja / TaskC",
+            "BenchPrimary::BenchPrimary-ja::TaskC",
+        ),
+    ]
     assert [row.model_name for row in result.rows] == ["model/a (768 dims, int8)", "bm25"]
     assert result.rows[0].model_name == "model/a (768 dims, int8)"
     assert result.rows[0].borda_score == 99.0
@@ -570,6 +603,70 @@ parameters: {}
 
     assert result.rows[0].model_type == "reranker"
     assert model_cell_views(result.rows)[result.rows[0].model_name].metadata["model_type"] == "Cross-encoder reranker"
+
+
+def test_leaderboard_service_backfills_model_detail_metadata_from_model_cards(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "jinaai/jina-embeddings-v3",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "a1",
+                "a1",
+                "BenchA::a1",
+                0.90,
+                None,
+                None,
+                None,
+            ),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "jinaai__jina-embeddings-v3.yaml").write_text(
+        """
+id: jinaai/jina-embeddings-v3
+method: dense
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+links:
+  huggingface: https://huggingface.co/jinaai/jina-embeddings-v3
+  github: https://github.com/jina-ai/embeddings
+embedding:
+  truncate_dims:
+    - 32
+    - 64
+prompts:
+  query_prompt_name: retrieval.query
+  document_prompt_name: retrieval.passage
+notice: "Use the provider tokenizer limit for deployment, but HAKARI evaluated this model with a smaller max-token setting."
+""".strip(),
+        encoding="utf-8",
+    )
+    config = ViewerConfig(benchmarks=[BenchmarkConfig(name="BenchA")], overalls=[])
+
+    result = LeaderboardService(
+        duckdb_path=db_path,
+        config=config,
+        model_cards_path=model_cards_dir,
+    ).get_leaderboard("BenchA")
+    metadata = model_cell_views(result.rows)[result.rows[0].model_name].metadata
+
+    assert result.rows[0].license == {"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"}
+    assert result.rows[0].truncate_dims == (32, 64)
+    assert metadata["links"]["github"] == "https://github.com/jina-ai/embeddings"
+    assert metadata["truncate_dims"] == [32, 64]
+    assert metadata["query_prompt_name"] == "retrieval.query"
+    assert metadata["document_prompt_name"] == "retrieval.passage"
+    assert (
+        metadata["notice"]
+        == "Use the provider tokenizer limit for deployment, but HAKARI evaluated this model with a smaller max-token setting."
+    )
 
 
 def test_leaderboard_service_backfills_language_support_from_model_cards(tmp_path: Path) -> None:
@@ -735,6 +832,9 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
         ],
         dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
     )
+    with duckdb.connect(str(db_path)) as con:
+        con.execute("ALTER TABLE meta_database ADD COLUMN built_at_utc VARCHAR")
+        con.execute("UPDATE meta_database SET built_at_utc = '2026-05-22T20:27:54.839377+00:00'")
     config_dir = tmp_path / "config"
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
@@ -749,6 +849,9 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "HAKARI-Bench leaderboard" in response.text
     assert '<div class="flex items-center justify-between gap-3">' in response.text
     assert '<h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">' in response.text
+    assert 'id="hakari-home-link"' in response.text
+    assert 'href="/"' in response.text
+    assert 'aria-label="Refresh HAKARI-Bench leaderboard"' in response.text
     assert 'data-icon="hakari-bench"' in response.text
     assert 'id="hakari-github-link"' in response.text
     assert 'href="https://github.com/hakari-bench/hakari-bench"' in response.text
@@ -800,7 +903,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "https://unpkg.com/htmx.org" not in response.text
     assert 'hx-get="/leaderboard?view=Overall' in response.text
     assert "<footer" in response.text
-    assert '<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">' in response.text
+    assert (
+        '<footer id="hakari-page-footer" '
+        'class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">'
+    ) in response.text
     footer_html = response.text.split("<footer", 1)[1]
     assert "HAKARI-Bench leaderboard" not in footer_html
     assert "[overflow-wrap:anywhere]" not in response.text
@@ -816,6 +922,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "Dataset diagnostics" not in leaderboard_response.text
     assert 'hx-get="/analysis?' not in leaderboard_response.text
     assert "leaderboard-table-scroll" in leaderboard_response.text
+    assert 'id="hakari-page-footer"' in leaderboard_response.text
+    assert 'hx-swap-oob="outerHTML"' in leaderboard_response.text
+    assert "Latest update: 2026-05-22T20:27:54(UTC)" in leaderboard_response.text
+    assert f"database: local / {db_path}" in leaderboard_response.text
     assert TestClient(app).get("/analysis").status_code == 404
 
     page_with_latest = render_page(
@@ -912,6 +1022,7 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "button[data-leaderboard-pending=true]:after" not in css_response.text
     assert "content:\"\";display:inline-block;height:.55rem" not in css_response.text
     assert ".global-tooltip" in css_response.text
+    assert "white-space:pre-line" in css_response.text
     assert ".model-tooltip" not in css_response.text
     assert ".doc-summary-trigger{background-color:transparent" in css_response.text
     assert ".doc-summary-trigger:hover" in css_response.text
@@ -928,6 +1039,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
+    assert ".hakari-count-modal{width:min(92vw,48rem);max-height:92vh}" in css_response.text
+    assert ".hakari-count-modal .hakari-modal-body{max-height:calc(92vh - 4rem);overflow:auto}" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200
@@ -935,6 +1048,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
 
     viewer_js_response = client.get("/assets/viewer.js")
     assert viewer_js_response.status_code == 200
+    assert 'trigger.dataset.tooltipDelay === "0"' in viewer_js_response.text
+    assert 'trigger.dataset.tooltipHoverOnly === "true"' in viewer_js_response.text
     assert "javascript" in viewer_js_response.headers["content-type"]
     assert "window.__hakariApplyHashQueryState" in viewer_js_response.text
     assert "window.__hakariSyncHashQueryStateToParent" in viewer_js_response.text
@@ -948,8 +1063,17 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
+    assert ".leaderboard-status-count-trigger" in viewer_js_response.text
+    assert 'document.getElementById("count-breakdown-modal")' in viewer_js_response.text
+    assert 'document.getElementById("count-breakdown-title")' in viewer_js_response.text
+    assert "[data-count-breakdown-section]" in viewer_js_response.text
+    assert "section.hidden = !isActive;" in viewer_js_response.text
+    assert ".count-breakdown-task-link" in viewer_js_response.text
+    assert 'window.open(link.href, "_blank", "noopener,noreferrer");' in viewer_js_response.text
+    assert 'event.target.id === "count-breakdown-modal"' in viewer_js_response.text
     assert "setTimeout(() =>" in viewer_js_response.text
-    assert ", 1000);" in viewer_js_response.text
+    assert "const delay = trigger.dataset.tooltipDelay" in viewer_js_response.text
+    assert ", delay);" in viewer_js_response.text
     assert "const queryString = mergedStateQueryString();" in viewer_js_response.text
     assert 'window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co")' in viewer_js_response.text
     assert 'panel.setAttribute("hx-get", "/leaderboard?" + queryString);' in viewer_js_response.text
@@ -1021,6 +1145,55 @@ def test_viewer_leaderboard_endpoint_shows_duckdb_sync_progress_when_database_is
     assert "25.0%" in response.text
     assert "Downloading leaderboard DuckDB..." in response.text
     assert "leaderboard-table-scroll" not in response.text
+
+
+def test_viewer_leaderboard_endpoint_does_not_reload_for_background_source_check(
+    tmp_path: Path,
+) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    class CheckingStore:
+        path = db_path
+        location = DuckDbLocation(
+            local_path=db_path,
+            hf_source=HuggingFaceDuckDbSource(repo_id="hakari-bench/leaderboard_database"),
+        )
+
+        def start_background_sync(self) -> DuckDbSyncStatus:
+            return DuckDbSyncStatus(
+                state="checking",
+                message="Checking leaderboard DuckDB source...",
+                local_path=db_path,
+            )
+
+        def sync_status(self) -> DuckDbSyncStatus:
+            return self.start_background_sync()
+
+        def ensure_current(self) -> bool:
+            raise AssertionError("source checks should stay in the background when a local DuckDB exists")
+
+    app = create_app(store=cast(Any, CheckingStore()), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1")
+
+    assert response.status_code == 200
+    assert "leaderboard-table-scroll" in response.text
+    assert 'id="duckdb-sync-progress"' not in response.text
+    assert "Checking leaderboard DuckDB source..." not in response.text
+    assert 'hx-swap-oob="outerHTML"' in response.text
 
 
 def test_viewer_duckdb_sync_status_reloads_leaderboard_when_ready(tmp_path: Path) -> None:
@@ -1501,6 +1674,1498 @@ def test_display_controls_preserve_custom_benchmark_selection() -> None:
     assert 'name="lang_filter" value="ja"' in column_form
 
 
+def test_result_view_tabs_switch_table_and_chart_without_losing_state() -> None:
+    result = LeaderboardResult(
+        view_name="Custom",
+        view_label="Custom",
+        is_overall=True,
+        expected_tasks=0,
+        rows=[],
+        available_views=["Overall", "NanoJMTEB-v2"],
+        available_view_labels={"Overall": "Overall", "NanoJMTEB-v2": "JMTEB-v2"},
+        selected_benchmarks=("NanoJMTEB-v2",),
+        include_quantization_variants=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_result_view_tabs(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=FilterState(language_filters=("ja",), model_filter="e5"),
+        result_view="chart",
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_color="embedding_dim",
+    )
+
+    assert 'aria-label="Result view"' in html
+    assert 'aria-selected="true"' in html
+    assert 'data-icon="table-properties"' in html
+    assert 'data-icon="chart-scatter"' in html
+    assert ">Table</span></button>" in html
+    assert ">Chart</span></button>" in html
+    assert ">Y axis</span>" not in html
+    assert ">X axis</span>" not in html
+    assert ">Size</span>" not in html
+    assert ">Left</span>" not in html
+    assert ">Bottom</span>" not in html
+    assert "result_view=chart" in html
+    assert "bench=NanoJMTEB-v2" in html
+    assert "lang_filter=ja" in html
+    assert "model_filter=e5" in html
+    assert "quantization=1" in html
+
+
+def test_chart_controls_render_inside_plot_shell_and_view_switch_precedes_status() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/a",
+                borda_score=80,
+                mean_score=0.80,
+                macro_mean=0.80,
+                task_count=1,
+                active_parameters=100_000_000,
+                total_parameters=120_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            )
+        ],
+        available_views=["Overall", "BenchA"],
+        available_view_labels={"Overall": "Overall", "BenchA": "BenchA"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        result_view="chart",
+    )
+
+    status_html = html.split('data-shown-count="1"', 1)[1].split("</div>", 1)[0]
+    assert status_html.index('aria-label="Result view"') < status_html.index(">Overall</span>")
+    assert status_html.index(">Overall</span>") < status_html.index(">Retrieval</span>")
+    assert 'data-icon="table-properties"' in status_html
+    assert 'data-icon="chart-scatter"' in status_html
+    assert 'data-icon="database"' in status_html
+    assert "/</span>\n      <span" not in status_html.split(">Overall</span>", 1)[0]
+    assert html.index('id="plot-controls"') > html.index('class="leaderboard-plot-shell')
+    plot_shell = html.split('class="leaderboard-plot-shell', 1)[1].split("</svg>", 1)[0]
+    assert 'id="plot-controls"' in plot_shell
+    assert plot_shell.index('id="plot-controls"') < plot_shell.index("<svg")
+
+
+def test_leaderboard_status_counts_are_clickable_and_open_breakdown_modal() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/a",
+                model_type="dense",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=2,
+                license={"commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/b",
+                model_type="reranker",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                license={"commercial_use": "not_allowed"},
+            ),
+        ],
+        available_views=["Overall", "BenchA"],
+        available_view_labels={"Overall": "Overall", "BenchA": "BenchA"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+    )
+
+    status_html = html.split('data-shown-count="2"', 1)[1].split("</div>", 1)[0]
+    assert 'class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700"' in status_html
+    assert 'data-count-breakdown-trigger="shown"' in status_html
+    assert 'data-count-breakdown-trigger="complete"' in status_html
+    assert 'data-count-breakdown-trigger="tasks"' in status_html
+    assert ">2 shown</button>" in status_html
+    assert ">2 complete models</button>" in status_html
+    assert ">2 tasks</button>" in status_html
+    assert 'id="count-breakdown-modal" class="hakari-modal hakari-count-modal"' in html
+    assert 'id="count-breakdown-shown"' in html
+    assert 'id="count-breakdown-complete"' in html
+    assert 'id="count-breakdown-tasks"' in html
+    assert 'id="count-breakdown-title"' in html
+    assert 'data-count-breakdown-section="shown" data-count-breakdown-title="Visible rows" hidden' in html
+    assert 'data-count-breakdown-section="complete" data-count-breakdown-title="Complete models" hidden' in html
+    assert 'data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden' in html
+    assert "Visible rows" in html
+    assert "Complete models" in html
+    assert "Tasks: 2" in html
+    modal_html = html.split('id="count-breakdown-modal"', 1)[1].split("</dialog>", 1)[0]
+    shown_section = html.split('id="count-breakdown-shown"', 1)[1].split('id="count-breakdown-complete"', 1)[0]
+    complete_section = html.split('id="count-breakdown-complete"', 1)[1].split('id="count-breakdown-tasks"', 1)[0]
+    tasks_section = html.split('id="count-breakdown-tasks"', 1)[1].split("</dialog>", 1)[0]
+    assert shown_section.count("model-detail-trigger") == 2
+    assert complete_section.count("model-detail-trigger") == 2
+    assert 'data-model-metadata="' in shown_section
+    assert ">model/a</button>" in shown_section
+    assert ">model/b</button>" in complete_section
+    assert "Model family" not in modal_html
+    assert "Commercial use" not in modal_html
+    assert "Dense</span>" not in shown_section
+    assert "Reranker</span>" not in complete_section
+    assert "model-detail-trigger" not in tasks_section
+    assert "count-breakdown-task-link" in modal_html or "Task-level breakdown is unavailable" in modal_html
+
+
+def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/alpha",
+                borda_score=86.0,
+                mean_score=0.86,
+                macro_mean=0.84,
+                micro_mean=0.86,
+                task_count=2,
+                active_parameters=435_000_000,
+                total_parameters=500_000_000,
+                max_seq_length=8192,
+                embedding_dim=4096,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/beta",
+                borda_score=70.0,
+                mean_score=0.70,
+                macro_mean=0.71,
+                micro_mean=0.70,
+                task_count=2,
+                active_parameters=100_000_000,
+                total_parameters=120_000_000,
+                max_seq_length=2048,
+                embedding_variant_name="truncate:256",
+                embedding_dim=256,
+                quantization="int8",
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        include_quantization_variants=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+    filter_context = row_filter_context(result.rows, FilterState(filters_active=True, model_filter="alpha"))
+
+    html = render_leaderboard_plot(
+        result=result,
+        filter_context=filter_context,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_color="embedding_dim",
+    )
+
+    assert 'data-testid="leaderboard-plot"' in html
+    assert "Chart view is available only on wider screens." in html
+    assert "Borda Score" in html
+    assert "Active Params" in html
+    assert "Dims" in html
+    assert "Max Tokens" not in html.split('class="plot-legend"', 1)[1].split("</g>", 1)[0]
+    assert html.count("leaderboard-plot-point") == 1
+    assert 'data-tooltip-hover-only="true"' in html
+    assert 'data-tooltip-delay="0"' in html
+    assert "model-detail-trigger" in html
+    assert 'data-model-metadata="' in html
+    assert "model/alpha" in html
+    assert "model/alpha\nType: Dense\n\nBorda score: 86.00\nMean (Micro): 0.86\nMean (Macro): 0.84\nRank: 1" in html
+    assert "\n\nActive params: 435,000,000" in html
+    assert "Active params: 435,000,000" in html
+    assert "Embedding dim: 4,096" in html
+    assert "Quantization: none" in html
+    assert "Quantization: orig" not in html
+    assert "model/beta" not in html
+
+
+def test_leaderboard_plot_uses_fixed_circle_size_and_optional_single_color() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/small",
+                borda_score=60.0,
+                mean_score=0.60,
+                task_count=2,
+                active_parameters=10_000_000,
+                total_parameters=12_000_000,
+                max_seq_length=512,
+                embedding_dim=128,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/large",
+                borda_score=80.0,
+                mean_score=0.80,
+                task_count=2,
+                active_parameters=1_000_000_000,
+                total_parameters=1_200_000_000,
+                max_seq_length=8192,
+                embedding_dim=4096,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_color="none",
+    )
+
+    circles = re.findall(r'<circle[^>]+class="leaderboard-plot-point[^"]+"[^>]+>', html)
+
+    def circle_attr(circle: str, name: str) -> str:
+        match = re.search(rf'\b{name}="([^"]+)"', circle)
+        assert match
+        return match.group(1)
+
+    radii = {circle_attr(circle, "r") for circle in circles}
+    fills = {circle_attr(circle, "fill") for circle in circles}
+
+    assert '<option value="none" selected>None</option>' in html
+    assert ">Size</span>" not in html
+    assert "Circle:" not in html
+    assert "plot-legend" not in html
+    assert len(circles) == 2
+    assert len(radii) == 1
+    assert radii == {"5.50"}
+    assert len(fills) == 1
+
+
+def test_leaderboard_plot_uses_sparse_average_dims_and_fills_missing_plot_metadata() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="dense/a",
+                model_type="dense",
+                borda_score=86.0,
+                mean_score=0.86,
+                macro_mean=0.84,
+                micro_mean=0.86,
+                task_count=2,
+                active_parameters=435_000_000,
+                total_parameters=500_000_000,
+                max_seq_length=8192,
+                embedding_dim=4096,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="bm25",
+                model_type="bm25",
+                borda_score=76.0,
+                mean_score=0.76,
+                macro_mean=0.74,
+                micro_mean=0.76,
+                task_count=2,
+                active_parameters=None,
+                total_parameters=None,
+                max_seq_length=None,
+                embedding_dim=None,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="sentence-transformers/static-similarity-mrl-multilingual-v1",
+                model_type="dense",
+                borda_score=66.0,
+                mean_score=0.66,
+                macro_mean=0.64,
+                micro_mean=0.66,
+                task_count=2,
+                active_parameters=600_000_000,
+                total_parameters=900_000_000,
+                max_seq_length=None,
+                embedding_dim=1024,
+            ),
+            LeaderboardRow(
+                borda_rank=4,
+                mean_rank=4,
+                model_name="openai/text-embedding-3-large",
+                model_type="dense",
+                borda_score=64.0,
+                mean_score=0.64,
+                macro_mean=0.62,
+                micro_mean=0.64,
+                task_count=2,
+                active_parameters=None,
+                total_parameters=None,
+                max_seq_length=None,
+                embedding_dim=3072,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert html.count("leaderboard-plot-point") == 4
+    assert "bm25" in html
+    assert "Embedding dim: sparse" in html
+    assert "sentence-transformers/static-similarity-mrl-multilingual-v1" in html
+    assert "Active params: 0" in html
+    assert "Total params: 0" in html
+    assert "openai/text-embedding-3-large" in html
+    assert (
+        "dense/a\nType: Dense\n\nBorda score: 86.00\nMean (Micro): 0.86\nMean (Macro): 0.84\n"
+        "Rank: 1\n\nActive params: 435,000,000\nTotal params: 500,000,000"
+    ) in html
+    assert (
+        "openai/text-embedding-3-large\nType: Dense\n\nBorda score: 64.00\n"
+        "Mean (Micro): 0.64\nMean (Macro): 0.62\nRank: 4\n\n"
+        "Active params: Unknown\nTotal params: Unknown\nMax tokens: Unknown"
+    ) in html
+    assert "Active params: 600,000,000" not in html
+    assert "Total params: 900,000,000" not in html
+    assert "Max tokens: 8,192" in html
+    assert ">0</text>" in html
+    assert 'class="plot-axis-label plot-legend-label"' in html
+    assert "rotate(-90" in html
+    assert '<rect x="1004" y="42" width="18"' in html
+    assert '<text x="1088" y="257.00" class="plot-axis-label plot-legend-label"' in html
+
+
+def test_leaderboard_plot_late_interaction_dims_use_token_dims_for_plot_channels() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=3,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="dense/small",
+                model_type="dense",
+                borda_score=82.0,
+                mean_score=0.82,
+                task_count=3,
+                active_parameters=100_000_000,
+                max_seq_length=8192,
+                embedding_dim=384,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="dense/large",
+                model_type="dense",
+                borda_score=80.0,
+                mean_score=0.80,
+                task_count=3,
+                active_parameters=200_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="colbert/model",
+                model_type="late-interaction",
+                borda_score=78.0,
+                mean_score=0.78,
+                task_count=3,
+                active_parameters=150_000_000,
+                max_seq_length=8192,
+                embedding_dim=128,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="embedding_dim",
+    )
+
+    dense_large_circle = re.search(
+        r'<circle[^>]+data-tooltip="dense/large\b[^"]+"[^>]*>',
+        html,
+        flags=re.DOTALL,
+    )
+    late_interaction_circle = re.search(
+        r'<circle[^>]+data-tooltip="colbert/model\b[^"]+"[^>]*>',
+        html,
+        flags=re.DOTALL,
+    )
+    assert dense_large_circle is not None
+    assert late_interaction_circle is not None
+    dense_large_attrs = dense_large_circle.group(0)
+    late_interaction_attrs = late_interaction_circle.group(0)
+
+    assert 'r="5.50"' in dense_large_attrs
+    dense_large_fill = re.search(r'fill="([^"]+)"', dense_large_attrs)
+    late_interaction_fill = re.search(
+        r'fill="([^"]+)"',
+        late_interaction_attrs,
+    )
+    assert dense_large_fill is not None
+    assert late_interaction_fill is not None
+    assert dense_large_fill.group(1) != late_interaction_fill.group(1)
+    assert 'r="5.50"' in late_interaction_attrs
+    assert "Type: Late interaction" in late_interaction_attrs
+    assert "Token dim: 128" in late_interaction_attrs
+    assert "Embedding dim: 128" not in late_interaction_attrs
+
+
+def test_leaderboard_plot_score_extents_follow_score_semantics() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/a",
+                borda_score=40,
+                mean_score=0.40,
+                macro_mean=0.40,
+                micro_mean=0.40,
+                task_count=2,
+                active_parameters=100_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/b",
+                borda_score=50,
+                mean_score=0.50,
+                macro_mean=0.50,
+                micro_mean=0.50,
+                task_count=2,
+                active_parameters=200_000_000,
+                max_seq_length=8192,
+                embedding_dim=1024,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    borda_html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+    macro_html = render_leaderboard_plot(
+        result=result,
+        plot_y="macro_mean",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+    micro_html = render_leaderboard_plot(
+        result=result,
+        plot_y="micro_mean",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert '>0</text>' in borda_html
+    assert '>100</text>' in borda_html
+    assert '>0.4</text>' in macro_html
+    assert '>0.5</text>' in macro_html
+    assert '>0</text>' not in macro_html
+    assert '>0.4</text>' in micro_html
+    assert '>0.5</text>' in micro_html
+    assert '>0</text>' not in micro_html
+    assert '>100</text>' not in macro_html
+
+
+def test_leaderboard_plot_clamps_nonnegative_axis_and_legend_labels() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/tiny-a",
+                borda_score=0.01,
+                mean_score=0.01,
+                macro_mean=0.01,
+                micro_mean=0.01,
+                task_count=2,
+                active_parameters=10,
+                total_parameters=20,
+                max_seq_length=1,
+                embedding_dim=128,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/tiny-b",
+                borda_score=0.02,
+                mean_score=0.02,
+                macro_mean=0.02,
+                micro_mean=0.02,
+                task_count=2,
+                active_parameters=20,
+                total_parameters=40,
+                max_seq_length=2,
+                embedding_dim=256,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="quantization",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert ">-" not in html
+
+
+def test_leaderboard_plot_quantization_extent_is_fixed_from_binary_to_none() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=3,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/none",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=3,
+                active_parameters=100_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/int8",
+                borda_score=78,
+                mean_score=0.78,
+                task_count=3,
+                active_parameters=100_000_001,
+                max_seq_length=8192,
+                embedding_dim=768,
+                quantization="int8",
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="model/binary",
+                borda_score=76,
+                mean_score=0.76,
+                task_count=3,
+                active_parameters=100_000_002,
+                max_seq_length=8192,
+                embedding_dim=768,
+                quantization="binary",
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="quantization",
+    )
+
+    legend = html.split('class="plot-legend"', 1)[1].split("</g>", 1)[0]
+    assert ">16</text>" in legend
+    assert ">8</text>" in legend
+    assert ">1</text>" in legend
+
+
+def test_leaderboard_plot_uses_fixed_radius_for_all_points() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/small-dim",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                active_parameters=100_000_000,
+                max_seq_length=8192,
+                embedding_dim=128,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/large-dim",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=2,
+                active_parameters=1_000_000_000,
+                max_seq_length=8192,
+                embedding_dim=4096,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="embedding_dim",
+    )
+
+    circles = re.findall(r'<circle[^>]+class="leaderboard-plot-point[^"]+"[^>]+>', html)
+    radii = set()
+    for circle in circles:
+        radius_match = re.search(r'\br="([^"]+)"', circle)
+        assert radius_match is not None
+        radii.add(radius_match.group(1))
+
+    assert len(circles) == 2
+    assert radii == {"5.50"}
+
+
+def test_leaderboard_plot_color_uses_high_contrast_palette() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=4,
+        rows=[
+            LeaderboardRow(
+                borda_rank=index + 1,
+                mean_rank=index + 1,
+                model_name=f"model/{embedding_dim}",
+                borda_score=70 + index,
+                mean_score=0.70 + index / 100,
+                task_count=4,
+                active_parameters=100_000_000 + index,
+                max_seq_length=8192,
+                embedding_dim=embedding_dim,
+            )
+            for index, embedding_dim in enumerate([128, 384, 768, 1024])
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_color="embedding_dim",
+    )
+
+    assert 'stop-color="#4f46e5"' in html
+    assert 'stop-color="#0891b2"' in html
+    assert 'stop-color="#f59e0b"' in html
+    assert 'fill="rgb(79 70 229 / 0.88)"' in html
+    assert 'fill="rgb(245 158 11 / 0.90)"' in html
+
+
+def test_leaderboard_plot_dims_x_axis_uses_128_step_grid_ticks() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=4,
+        rows=[
+            LeaderboardRow(
+                borda_rank=index + 1,
+                mean_rank=index + 1,
+                model_name=f"model/{embedding_dim}",
+                borda_score=70 + index,
+                mean_score=0.70 + index / 100,
+                macro_mean=0.70 + index / 100,
+                task_count=4,
+                active_parameters=100_000_000 + index,
+                max_seq_length=8192,
+                embedding_dim=embedding_dim,
+            )
+            for index, embedding_dim in enumerate([128, 256, 384, 512])
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="macro_mean",
+        plot_x="embedding_dim",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert ">128</text>" in html
+    assert ">256</text>" in html
+    assert ">384</text>" in html
+    assert ">512</text>" in html
+
+
+def test_leaderboard_plot_dims_x_axis_thins_ticks_above_1024() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=7,
+        rows=[
+            LeaderboardRow(
+                borda_rank=index + 1,
+                mean_rank=index + 1,
+                model_name=f"model/{embedding_dim}",
+                borda_score=70 + index,
+                mean_score=0.70 + index / 100,
+                macro_mean=0.70 + index / 100,
+                task_count=7,
+                active_parameters=100_000_000 + index,
+                max_seq_length=8192,
+                embedding_dim=embedding_dim,
+            )
+            for index, embedding_dim in enumerate([256, 384, 768, 1024, 1536, 2048, 3072])
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="macro_mean",
+        plot_x="embedding_dim",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert ">1,024</text>" in html
+    assert ">2,048</text>" in html
+    assert ">3,072</text>" in html
+    assert ">1,152</text>" not in html
+    assert ">1,536</text>" not in html
+    assert ">1,920</text>" not in html
+    assert ">2,560</text>" not in html
+
+
+def test_leaderboard_plot_dims_x_axis_compresses_low_dimensions() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=4,
+        rows=[
+            LeaderboardRow(
+                borda_rank=index + 1,
+                mean_rank=index + 1,
+                model_name=f"model/{embedding_dim}",
+                borda_score=70 + index,
+                mean_score=0.70 + index / 100,
+                macro_mean=0.70 + index / 100,
+                task_count=4,
+                active_parameters=100_000_000 + index,
+                max_seq_length=8192,
+                embedding_dim=embedding_dim,
+            )
+            for index, embedding_dim in enumerate([128, 256, 1024, 3072])
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="macro_mean",
+        plot_x="embedding_dim",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    def cx_for(model_name: str) -> float:
+        match = re.search(rf'<circle[^>]+cx="([0-9.]+)"[^>]+data-tooltip="{re.escape(model_name)}\b', html)
+        assert match is not None
+        return float(match.group(1))
+
+    cx_128 = cx_for("model/128")
+    cx_256 = cx_for("model/256")
+    cx_1024 = cx_for("model/1024")
+    cx_3072 = cx_for("model/3072")
+
+    assert cx_256 - cx_128 < 70
+    assert cx_1024 - cx_256 > 300
+    assert cx_3072 - cx_1024 > 250
+
+
+def test_leaderboard_plot_mobile_css_hides_plot_and_shows_message() -> None:
+    css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
+    mobile_css = css_source.split("@media (max-width: 767px)", 1)[1].split(".plot-frame", 1)[0]
+
+    assert ".leaderboard-plot-mobile-message" in css_source
+    assert re.search(r"\.leaderboard-plot-mobile-message\s*{[^}]*display: none;", css_source, flags=re.DOTALL)
+    assert re.search(
+        r"\.leaderboard-plot,\s*"
+        r"\.leaderboard-plot-controls-region\s*{[^}]*display: none;",
+        mobile_css,
+        flags=re.DOTALL,
+    )
+    assert re.search(r"\.leaderboard-plot-mobile-message\s*{[^}]*display: flex;", mobile_css, flags=re.DOTALL)
+
+
+def test_leaderboard_plot_param_log_axis_uses_decade_and_minor_tick_labels() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=index + 1,
+                mean_rank=index + 1,
+                model_name=f"model/{active_parameters}",
+                borda_score=50 + index,
+                mean_score=0.50 + index / 100,
+                task_count=2,
+                active_parameters=active_parameters,
+                max_seq_length=8192,
+                embedding_dim=768,
+            )
+            for index, active_parameters in enumerate(
+                [2_000_000, 5_000_000, 10_000_000, 100_000_000, 1_000_000_000]
+            )
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    assert ">10M</text>" in html
+    assert ">100M</text>" in html
+    assert ">1.00B</text>" in html
+    assert ">2</text>" in html
+    assert ">5</text>" in html
+    assert ">20M</text>" not in html
+    assert ">50M</text>" not in html
+
+
+def test_leaderboard_plot_parameter_axes_offer_log_and_linear_labels() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/small",
+                borda_score=50,
+                mean_score=0.50,
+                task_count=2,
+                active_parameters=10_000_000,
+                total_parameters=12_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="model/large",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                active_parameters=1_000_000_000,
+                total_parameters=1_200_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    log_html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="total_parameters",
+    )
+    linear_html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters_linear",
+        plot_size="total_parameters_linear",
+        plot_color="total_parameters_linear",
+    )
+
+    assert '<option value="active_parameters" selected>Active Params (log scale)</option>' in log_html
+    assert '<option value="active_parameters_linear">Active Params</option>' in log_html
+    assert '<option value="total_parameters">Total Params (log scale)</option>' in log_html
+    assert '<option value="total_parameters_linear">Total Params</option>' in log_html
+    assert ">Active Params (log scale)</text>" in log_html
+    assert ">Total Params (log scale)</text>" in log_html
+    assert '<option value="active_parameters_linear" selected>Active Params</option>' in linear_html
+    assert ">Active Params</text>" in linear_html
+    assert ">Active Params (log scale)</text>" not in linear_html
+    assert ">Total Params</text>" in linear_html
+
+
+def test_leaderboard_plot_param_log_axis_separates_zero_from_smallest_positive() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="sentence-transformers/static-retrieval-mrl-en-v1",
+                model_type="dense",
+                borda_score=40,
+                mean_score=0.40,
+                task_count=2,
+                active_parameters=None,
+                max_seq_length=None,
+                embedding_dim=1024,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="hotchpotch/bekko-embedding-v1-a8m",
+                model_type="dense",
+                borda_score=63,
+                mean_score=0.63,
+                task_count=2,
+                active_parameters=7_671_168,
+                max_seq_length=8192,
+                embedding_dim=384,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="dense/large",
+                model_type="dense",
+                borda_score=70,
+                mean_score=0.70,
+                task_count=2,
+                active_parameters=100_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(
+        result=result,
+        plot_y="borda_score",
+        plot_x="active_parameters",
+        plot_size="embedding_dim",
+        plot_color="max_seq_length",
+    )
+
+    def cx_for(model_name: str) -> float:
+        match = re.search(rf'<circle[^>]+cx="([0-9.]+)"[^>]+data-tooltip="{re.escape(model_name)}\b', html)
+        assert match
+        return float(match.group(1))
+
+    zero_cx = cx_for("sentence-transformers/static-retrieval-mrl-en-v1")
+    smallest_positive_cx = cx_for("hotchpotch/bekko-embedding-v1-a8m")
+
+    assert smallest_positive_cx - zero_cx > 40
+    assert ">0</text>" in html
+    assert ">10M</text>" in html
+
+
+def test_chart_state_is_preserved_in_display_and_filter_controls() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/a",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=1,
+                active_parameters=100_000_000,
+                total_parameters=120_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            )
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        result_view="chart",
+        plot_y="macro_mean",
+        plot_x="total_parameters",
+        plot_color="max_seq_length",
+    )
+
+    variant_form = html.split('id="variant-controls"', 1)[1].split("</form>", 1)[0]
+    filter_form = html.split('id="filter-controls"', 1)[1].split("</form>", 1)[0]
+    assert 'name="result_view" value="chart"' in variant_form
+    assert 'name="chart_y" value="macro_mean"' in variant_form
+    assert 'name="chart_x" value="total_parameters"' in variant_form
+    assert 'name="chart_color" value="max_seq_length"' in variant_form
+    assert 'name="result_view" value="chart"' in filter_form
+    assert 'name="chart_x" value="total_parameters"' in filter_form
+    assert 'name="chart_color" value="max_seq_length"' in filter_form
+    assert "result_view=chart" in html
+    assert "chart_x=total_parameters" in html
+
+
+def test_variant_controls_clear_facet_filters_but_keep_text_and_range_filters() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=True,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="jina/model",
+                borda_score=80,
+                mean_score=0.80,
+                task_count=1,
+                active_parameters=100_000_000,
+                total_parameters=120_000_000,
+                max_seq_length=8192,
+                embedding_dim=768,
+            )
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=FilterState(
+            model_filter="jina",
+            filters_active=True,
+            dim_filters=("768",),
+            quant_filters=("__none__",),
+            model_type_filters=("dense",),
+            dtype_filters=("bf16",),
+            active_params_max="2000",
+        ),
+    )
+
+    variant_form = html.split('id="variant-controls"', 1)[1].split("</form>", 1)[0]
+    column_form = html.split('id="column-controls"', 1)[1].split("</form>", 1)[0]
+
+    assert 'name="model_filter" value="jina"' in variant_form
+    assert 'name="active_params_max" value="2000"' in variant_form
+    assert 'name="dim_filter"' not in variant_form
+    assert 'name="quant_filter"' not in variant_form
+    assert 'name="model_type_filter"' not in variant_form
+    assert 'name="dtype_filter"' not in variant_form
+    assert 'name="dim_filter" value="768"' in column_form
+    assert 'name="quant_filter" value="__none__"' in column_form
+
+
+def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/sparse-encoder",
+                model_type="sparse",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                embedding_dim=30000,
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="bm25",
+                model_type="bm25",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="sentence-transformers/static-similarity-mrl-multilingual-v1",
+                model_type="dense",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                embedding_dim=1024,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    body = render_table_body(result=result)
+
+    assert "30,000" not in body
+    assert body.count(">sparse</td>") >= 2
+    assert body.count(">None</td>") >= 2
+
+
+def test_table_display_others_adds_license_and_model_type_columns() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/sparse-encoder",
+                model_type="sparse",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "mit", "label": "MIT"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        show_other_columns=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    controls = render_display_controls(result=result, sort="borda_score", direction="desc")
+    head = render_table_head(result=result, sort="borda_score", direction="desc")
+    body = render_table_body(result=result)
+
+    assert 'name="other_columns" value="1" checked' in controls
+    assert ">Others</span>" in controls
+    assert 'data-column-key="license"' in head
+    assert 'data-column-key="model_type"' in head
+    assert ">Max Tokens</span>" in head
+    assert ">Max Len</span>" not in head
+    assert ">License</span>" in head
+    assert ">Model Type</span>" in head
+    assert ">MIT</td>" in body
+    assert ">Sparse</td>" in body
+
+
+def test_table_display_others_uses_short_labels_with_tooltips() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/apache-model",
+                model_type="dense",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "apache-2.0", "label": "Apache 2.0"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="org/cc-model",
+                model_type="reranker",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                license={"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"},
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="openai/text-embedding-3-small",
+                model_type="late-interaction",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                license={"id": "openai-service-terms", "label": "OpenAI Service Terms"},
+            ),
+            LeaderboardRow(
+                borda_rank=4,
+                mean_rank=4,
+                model_name="naver/splade-v3",
+                model_type="sparse",
+                borda_score=70,
+                mean_score=70,
+                task_count=1,
+                license={"id": "cc-by-nc-sa-4.0", "label": "CC BY-NC-SA 4.0"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        show_other_columns=True,
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    body = render_table_body(result=result)
+
+    assert "max-w-[7rem] truncate whitespace-nowrap" in body
+    assert ">Apache</td>" in body
+    assert 'data-tooltip="Apache 2.0"' in body
+    assert ">CC BY-NC</td>" in body
+    assert 'data-tooltip="CC BY-NC 4.0"' in body
+    assert 'data-tooltip="CC BY-NC-SA 4.0"' in body
+    assert ">OpenAI</td>" in body
+    assert 'data-tooltip="OpenAI Service Terms"' in body
+    assert ">Late int.</td>" in body
+    assert 'data-tooltip="Late interaction"' in body
+
+
+def test_filter_results_includes_commercial_license_filter() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="org/apache-model",
+                model_type="dense",
+                borda_score=100,
+                mean_score=100,
+                task_count=1,
+                license={"id": "apache-2.0", "label": "Apache 2.0", "commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=2,
+                model_name="org/cc-model",
+                model_type="dense",
+                borda_score=90,
+                mean_score=90,
+                task_count=1,
+                license={"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0", "commercial_use": "not_allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=3,
+                mean_rank=3,
+                model_name="bm25",
+                model_type="bm25",
+                borda_score=80,
+                mean_score=80,
+                task_count=1,
+                license={"id": "mit", "label": "MIT", "commercial_use": "allowed"},
+            ),
+            LeaderboardRow(
+                borda_rank=4,
+                mean_rank=4,
+                model_name="org/not-applicable-baseline",
+                model_type="dense",
+                borda_score=70,
+                mean_score=70,
+                task_count=1,
+                license={"id": "n/a", "label": "N/A", "commercial_use": "not_applicable"},
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+    filter_state = FilterState(filters_active=True, commercial_filters=("commercial",))
+    filter_context = row_filter_context(result.rows, filter_state)
+
+    controls = render_controls(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=filter_state,
+        filter_context=filter_context,
+    )
+
+    assert 'name="commercial_filter" value="commercial"' in controls
+    assert 'name="commercial_filter" value="non_commercial"' in controls
+    assert 'name="commercial_filter" value="not_applicable"' in controls
+    assert 'id="commercial-use-controls"' in controls
+    assert 'data-filter-detail="commercial_filter"' not in controls
+    assert "Commercial use" in controls
+    assert [row.model_name for row in result.rows if filter_context.is_visible(row)] == [
+        "org/apache-model",
+        "bm25",
+    ]
+
+
+def test_chart_quantization_axis_normalization_enables_quantization_variants() -> None:
+    config = ViewerConfig(
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"])],
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+    )
+
+    query = normalize_query_state(
+        viewer_config=config,
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        chart_x="quantization",
+        chart_y="borda_score",
+        chart_color="max_seq_length",
+        result_view="chart",
+    )
+
+    assert query["result_view"] == "chart"
+    assert query["chart_x"] == "quantization"
+    assert query["quantization"] == "1"
+
+
 def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     result = LeaderboardResult(
         view_name="Overall",
@@ -1601,7 +3266,8 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert "optional rank-101 safeguard positive" in response.text
     assert "usually produced by BM25" not in response.text
     # Default sort is now Borda Score (desc); the bm25 baseline sorts by its score.
-    assert response.text.index("model/b") < response.text.index("model/a") < response.text.index("bm25")
+    table_body = response.text.split("<tbody>", 1)[1].split("</tbody>", 1)[0]
+    assert table_body.index("model/b") < table_body.index("model/a") < table_body.index("bm25")
 
 
 def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: Path) -> None:
@@ -2082,7 +3748,9 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert 'data-shown-count="2"' in response.text
     assert 'data-icon="search"' in response.text
     assert "Retrieval" in response.text
-    assert "2 shown / 2 complete models / 1 tasks" in response.text
+    assert 'data-count-breakdown-trigger="shown">2 shown</button>' in response.text
+    assert 'data-count-breakdown-trigger="complete">2 complete models</button>' in response.text
+    assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in response.text
 
 
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
@@ -2353,11 +4021,11 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
     assert response.text.index("Table display") < response.text.index("Efficiency variants")
-    assert response.text.index("Efficiency variants") < response.text.index("Refine results")
-    assert response.text.index("Table display") < response.text.index("Refine results")
-    assert response.text.index("Refine results") < response.text.index("Model family") < response.text.index('id="model-filter-input"')
+    assert response.text.index("Efficiency variants") < response.text.index("Filter results")
+    assert response.text.index("Table display") < response.text.index("Filter results")
+    assert response.text.index("Filter results") < response.text.index("Model family") < response.text.index('id="model-filter-input"')
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
-    assert "Refine results" in response.text
+    assert "Filter results" in response.text
     assert 'data-icon="filter"' in response.text
     assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white" open>' in response.text
     assert 'refine-results-summary flex cursor-pointer list-none items-center justify-between gap-2 p-2' in response.text
@@ -2369,6 +4037,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-icon="ruler"' in response.text
     assert 'data-filter-detail="quant_filter"' in response.text
     assert 'data-filter-icon="binary"' in response.text
+    assert 'id="commercial-use-controls"' in response.text
+    assert 'data-filter-detail="commercial_filter"' not in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
     assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800"' in response.text
     assert "grid-cols-2" in response.text
@@ -2859,6 +4529,9 @@ def test_variant_suffix_is_not_repeated_in_rendered_model_label(tmp_path: Path) 
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "Language" in viewer_js_response.text
     assert "model_url" in viewer_js_response.text
+    assert viewer_js_response.text.index('["Dimensions", "embedding_dim"]') < viewer_js_response.text.index(
+        '["Truncate dims", "truncate_dims"]'
+    )
     assert 'return key === "active_parameters" || key === "total_parameters";' in viewer_js_response.text
     assert 'const value = shouldShowUnknownModelDetailValue(key, rawValue) ? "Unknown"' in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
@@ -3326,7 +4999,7 @@ language_support:
     assert "border-cyan-200 bg-cyan-50" not in body
 
 
-def test_leaderboard_table_hides_sparse_dimension_values() -> None:
+def test_leaderboard_table_labels_sparse_dimension_values() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -3354,6 +5027,7 @@ def test_leaderboard_table_hides_sparse_dimension_values() -> None:
 
     assert "30,000" not in body
     assert ">sparse</span>" in body
+    assert ">sparse</td>" in body
     assert '<tr class="leaderboard-row odd:bg-white even:bg-zinc-50">' in body
     assert '<td class="leaderboard-col-model sticky z-10' in body
     assert '<td class="leaderboard-col-index sticky z-10' in body
@@ -4645,7 +6319,111 @@ def test_leaderboard_service_recalculates_ranking_with_model_type_filter(tmp_pat
         model_type_filters=("sparse",),
     )
 
-    assert [row.model_name for row in result.rows] == ["bm25", "org/sparse-encoder"]
+    assert [row.model_name for row in result.rows] == ["org/sparse-encoder"]
+
+    bm25_result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        model_type_filters=("bm25",),
+    )
+
+    assert [row.model_name for row in bm25_result.rows] == ["bm25"]
+
+
+def test_leaderboard_service_recalculates_ranking_with_commercial_filter(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("org/apache-model", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.95, 10, 12, 8192),
+            ("org/cc-model", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.90, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.80, 0, 0, 0),
+            ("org/not-applicable-baseline", "BenchA", "bench/a", "BenchA", "t1", "t1", "BenchA::t1", 0.70, 0, 0, 0),
+        ],
+    )
+    model_cards_dir = tmp_path / "model_cards"
+    model_cards_dir.mkdir()
+    (model_cards_dir / "org__apache-model.yaml").write_text(
+        """
+id: org/apache-model
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "org__cc-model.yaml").write_text(
+        """
+id: org/cc-model
+method: dense
+license:
+  id: cc-by-nc-sa-4.0
+  label: CC BY-NC-SA 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "bm25.yaml").write_text(
+        """
+id: bm25
+method: bm25
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    (model_cards_dir / "org__not-applicable-baseline.yaml").write_text(
+        """
+id: org/not-applicable-baseline
+method: dense
+license:
+  id: n/a
+  label: N/A
+  type: not_applicable
+  commercial_use: not_applicable
+  source: test
+""".strip(),
+        encoding="utf-8",
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    service = LeaderboardService(
+        duckdb_path=db_path,
+        config=load_viewer_config(config_dir),
+        model_cards_path=model_cards_dir,
+    )
+
+    commercial_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("commercial",),
+    )
+    non_commercial_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("non_commercial",),
+    )
+    not_applicable_result = service.get_leaderboard(
+        "BenchA",
+        rank_filtered=True,
+        commercial_filters=("not_applicable",),
+    )
+
+    assert [row.model_name for row in commercial_result.rows] == ["org/apache-model", "bm25"]
+    assert [row.model_name for row in non_commercial_result.rows] == ["org/cc-model"]
+    assert [row.model_name for row in not_applicable_result.rows] == ["org/not-applicable-baseline"]
 
 
 def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
@@ -4726,6 +6504,9 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
     assert "using parameter metadata measured in millions of parameters" in response.text
     assert "at most 100M active parameters" in response.text
     assert 'name="active_params_max" value="100"' in response.text
+    params_filter_section = response.text.split(">Length</span>", 1)[0]
+    assert params_filter_section.count("viewer-text-input w-20") >= 4
+    assert "viewer-text-input w-24" not in params_filter_section
     assert "model/small" in response.text
     assert "model/large" not in response.text
 
@@ -5009,7 +6790,7 @@ def test_max_len_uses_compact_k_display_for_1k_and_above() -> None:
     assert _fmt_max_len(1_536) == "2K"
     assert _fmt_max_len(4_096) == "4K"
     assert _fmt_max_len(8_192) == "8K"
-    assert _fmt_max_len(None) == ""
+    assert _fmt_max_len(None) == "None"
 
 
 def test_parameter_counts_use_compact_rounded_display() -> None:
@@ -5569,6 +7350,8 @@ def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Pat
     assert rows[0]["Model Name"] == "model-a"
     assert rows[0]["Full Model Name"] == "org/model-a"
     assert rows[0]["Ranking Model Name"] == "org/model-a (1024 dims)"
+    assert rows[0]["Max Tokens"] == "1024"
+    assert "Max Sequence Length" not in rows[0]
     assert rows[0]["Embedding Dims"] == "1024"
     assert rows[0]["Original Embedding Dims"] == "1024"
     assert rows[0]["Truncated Embedding Dims"] == ""

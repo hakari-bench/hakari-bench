@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
-        "url": "https://arxiv.org/abs/1803.05355",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-th",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "คีธ กอดชอว์ รู้จักเกรทฟูล เดด.",
+          "full_chars": 30,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Grateful Dead เป็นวงร็อคอเมริกันที่ก่อตั้งขึ้นในปี 1965 ที่พาโลอัลโต รัฐแคลิฟอร์เนีย วงนี้มีสมาชิกตั้งแต่ห้าคนถึงเจ็ดคน และเป็นที่รู้จักในสไตล์ที่เป็นเอกลักษณ์และหลากหลาย ซึ่งผสมผสานองค์ประกอบของร็อค, จิตวิญญาณ, ดนตรีทดลอง, แจ๊สโมดัล, คันทรี, โฟล์ค, บลูเกรส, บลูส์, เร้กเก้ และสเปซร็อค สำหรับการแสดงสดที่มีการเล่นดนตรียาวนาน และสำหรับฐานแฟนคลับที่มีความภักดี ซึ่งรู้จักกันในชื่อ \"Deadheads\" \"ดนตรีของพวกเขา\" เลนนี่ เคย์ เขียน \"สัมผัสกับพื้นดินที่กลุ่มอื่นๆ ส่วนใหญ่ไม่รู้แม้แต่จะมีอยู่\" อิทธิพลต่างๆ เหล่านี้ถูกกลั่นกรองเป็นทั้งหมดที่หลากหลายและจิตวิญญาณที่ทำให้ Grateful Dead \"เป็นบิดาแห่งวงดนตรีแจมที่เป็นแนวหน้า\" วงนี้ได้รับการจัดอันดับที่ 57 โดยนิตยสาร Rolling Stone ในฉบับศิลปินที่ยิ่งใหญ่ที่สุดตลอดกาล วงนี้ถูกนำเข้าสู่ Rock and Roll Hall of Fame ในปี 1994 และการบันทึกการแสดงของพวกเขาเมื่อวันที่ 8 พฤษภาคม 1977 ที่ Barton Hall ของมหาวิทยาลัย Cornell ถูกเพิ่มลงใน National Recording Registry ของห้องสมุดรัฐสภาในปี 2012 Grateful Dead ขายอัลบั้มมากกว่า 35 ล้านชุดทั่วโลก Grateful Dead ถูกก่อตั้งข",
+          "full_chars": 2683,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah ซิทคอม?",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ตาราค เมห์ตา คา อูลดาห์ ชัชมะ (ภาษาอังกฤษ: มุมมองที่แตกต่างของตาราค เมห์ตา) เป็นซิทคอมที่มีการออกอากาศยาวนานที่สุดในอินเดีย ผลิตโดย Neela Tele Films Private Limited รายการเริ่มออกอากาศเมื่อวันที่ 28 กรกฎาคม 2008 ออกอากาศตั้งแต่วันจันทร์ถึงวันศุกร์เวลา 20:30 น. โดยมีการออกอากาศซ้ำเวลา 23:00 น. และวันถัดไปเวลา 15:00 น. ทาง SAB TV รายการเริ่มการออกอากาศซ้ำบน Sony Pal ตั้งแต่วันที่ 2 พฤศจิกายน 2015 เวลา 16:30 น. และ 20:00 น. ทุกวัน รายการนี้อิงจากคอลัมน์ Duniya Ne Oondha Chashma ที่เขียนโดยนักเขียนคอลัมน์และนักข่าวตาราค เมห์ตาสำหรับนิตยสารภาษากุจาราติ Chitralekha",
+          "full_chars": 565,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "มีเครื่องบินลับและมีเทคโนโลยีขั้นสูงถูกผลิตในเบอร์แบงค์ รัฐแคลิฟอร์เนียหรือไม่?",
+          "full_chars": 79,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "เบอร์แบงค์เป็นเมืองในเขตลอสแองเจลิสในแคลิฟอร์เนียตอนใต้ สหรัฐอเมริกา ห่างจากใจกลางเมืองลอสแองเจลิสไปทางตะวันตกเฉียงเหนือ 12 ไมล์ ประชากรในปี 2010 มีจำนวน 103,340 คน ถูกเรียกว่า \"เมืองหลวงแห่งสื่อของโลก\" และอยู่ห่างจากฮอลลีวูดไปทางตะวันออกเฉียงเหนือเพียงไม่กี่ไมล์ บริษัทสื่อและบันเทิงจำนวนมากมีสำนักงานใหญ่หรือมีสถานที่ผลิตที่สำคัญในเบอร์แบงค์ รวมถึงบริษัทวอลต์ดิสนีย์, วอร์เนอร์ บรอส. เอนเตอร์เทนเมนต์, สตูดิโอแอนิเมชันนิคเคลโอเดียน, NBC, สตูดิโอการ์ตูนเน็ตเวิร์คซึ่งมีสาขาฝั่งตะวันตกของการ์ตูนเน็ตเวิร์ค และอินซอมเนียค เกม เมืองนี้ยังเป็นที่ตั้งของสนามบินบ็อบ โฮป อีกด้วย ที่นี่เคยเป็นสถานที่ของล็อคฮีด สคังค์ เวิร์ค ซึ่งผลิตเครื่องบินที่ลับสุดยอดและมีเทคโนโลยีล้ำสมัย รวมถึงเครื่องบินสอดแนม U-2 ที่เปิดเผยส่วนประกอบขีปนาวุธของสหภาพโซเวียตในคิวบาในเดือนตุลาคมปี 1962 เบอร์แบงค์ประกอบด้วยสองพื้นที่ที่แตกต่างกัน: ส่วนใจกลางเมือง/เชิงเขาในเชิงเขาของเทือกเขาเวอร์ดูโก และส่วนที่ราบ เบอร์แบงค์เป็นเมืองที่อยู่ทางตะวันออกสุดในหุบเขาซานเฟอร์นันโด เพื่อนบ้านของเบอร์แบงค์คือกลอเดล ซึ่งเป็นเมืองที่อยู่ทางต",
+          "full_chars": 1266,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

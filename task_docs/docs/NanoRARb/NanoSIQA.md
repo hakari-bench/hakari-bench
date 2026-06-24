@@ -62,17 +62,18 @@ Models should learn situation-to-answer social inference over very short documen
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [SocialIQA: Commonsense Reasoning about Social Interactions](https://arxiv.org/abs/1904.09728), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Context: Cameron's parents told them to do well at school or they would be grounded. Cameron took their words seriously. Question: What will happen to Cameron? [160 chars] | study very hard [15 chars] |
+| Context: Riley had a lot of friends. Question: What will happen to Riley? [73 chars] | they will play with Riley [25 chars] |
+| Context: Sydney is a fan of Hillary Clinton. One day she found a biography of Hillary Clinton. Sydney wanted to read it. Question: Why did Sydney do this? [154 chars] | know more about Hillary Clinton [31 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| SocialIQA: Commonsense Reasoning about Social Interactions | 2019 | arXiv paper | https://arxiv.org/abs/1904.09728 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| SocialIQA: Commonsense Reasoning about Social Interactions | 2019 | arXiv paper | [https://arxiv.org/abs/1904.09728](https://arxiv.org/abs/1904.09728) |
 
 ### Representative Snippets
 

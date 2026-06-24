@@ -26,7 +26,7 @@ env:
 
 jobs:
   validation:
-    name: Unit, lint, and type checks
+    name: Python tests, lint, and types
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -38,9 +38,12 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
           enable-cache: true
-          cache-dependency-glob: uv.lock
+          cache-dependency-glob: |
+            uv.lock
+            pyproject.toml
+          cache-suffix: tox
 
-      - name: Run validation
+      - name: Run Python tests, lint, and type checks
         run: uv run tox
 
   build:

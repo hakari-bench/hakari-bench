@@ -130,20 +130,19 @@ passages while prioritizing the most answer-bearing one.
 
 ## Example Data
 
-### Public Sources
-
-- [MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages](https://arxiv.org/abs/2210.09984)
-- [MIRACL project page](http://miracl.ai/)
-- [mteb/MIRACLRetrieval](https://huggingface.co/datasets/mteb/MIRACLRetrieval)
-- [hakari-bench/NanoMTEB-Korean](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Korean)
+| Query | Positive document |
+| --- | --- |
+| 헤라클레스는 그리스 신들 중 한 명인가? [22 chars] | 그리스 신화 헤라클레스는 에트루리아와 로마의 신화 및 숭배에도 등장하며, 로마인이 쓰던 라틴어 감탄사 "mehercule"은 그리스어인 "Herakleis"에서 유래한 것이었다. 이탈리아에서는 헤라클레스를 상인의 신으로 숭배하였는데, 다른 나라에서는 그의 특징적인 재능인 행운이나 위험에서의 구조를 염원하기도 하였다. [178 chars] |
+| 숙종은 몇 번째 왕인가? [13 chars] | 조선 숙종 숙종(肅宗, 1661년 10월 7일(음력 8월 15일) ~ 1720년 7월 12일(음력 6월 8일))은 조선의 제19대 왕이다. 성은 이(李), 휘는 돈(焞), 본관은 전주(全州)., 초명은 용상(龍祥), 광(爌), 자는 명보(明譜), 사후 시호는 숙종현의광륜예성영렬장문헌무경명원효대왕(肅宗顯義光倫睿聖英烈章文憲武敬明元孝大王)이며 이후 존호가 더해져 정식 시호는 숙종현의광륜예성영렬유모영운홍인준덕배천합도계휴독경정중협극신의대훈장문헌무경명원효대왕(肅宗顯義光倫睿聖英烈裕謨永運洪仁峻德配天合道啓休篤慶正中恊極神毅大勳章文憲武敬明元孝大王)이다. 현종과 명성왕후의 외아들로 비는 김만기의 딸 인경왕후, 계비는 민유중의 딸 인현왕후, 제2계비는 김주신의 딸 인원왕후이다. [371 chars] |
+| 가톨릭교회의 교회법(CIC)은 교회의 고유한 조직과 운영, 그리고 신자들이 교회의 목적을 좇아 이루도록 합법적인 교회의 권위로 제정한 법을 말하나요? [83 chars] | 로마 가톨릭교회 가톨릭교회의 교회법(CIC)은 교회의 고유한 조직과 운영, 그리고 신자들이 교회의 목적을 좇아 이루도록 합법적인 교회의 권위로 제정한 법을 말한다. 가톨릭교회는 영신적이면서도 가시적인 형태로 존재하며, 신적인 것과 인간적인 것이 함께 존재한다. 그러므로 교회법도 자연히 신약성경과 성전 안에 나오는 신법과, 교회와 인간이 제정한 실정법으로 이루어진다. 이러한 법의 제정 및 공표는 교황만이 할 수 있다. 교황은 보편 교회의 최고 목자로서 자기 임무에 의하여 교회에서 최고의 완전하고 직접적이며 보편적인 직권을 가지며 이를 언제나 자유로이 행사할 수 있다. [320 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | Paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL project page | 2023 | Project page | http://miracl.ai/ |
-| mteb/MIRACLRetrieval | 2025 | Dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrieval |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | Paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL project page | 2023 | Project page | [http://miracl.ai/](http://miracl.ai/) |
+| mteb/MIRACLRetrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrieval](https://huggingface.co/datasets/mteb/MIRACLRetrieval) |
 
 ### Representative Snippets
 

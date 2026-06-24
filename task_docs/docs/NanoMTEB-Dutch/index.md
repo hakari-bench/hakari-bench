@@ -163,6 +163,6 @@ training seeds.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | paper | https://arxiv.org/abs/2104.08663 |
-| Belebele: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | paper | https://arxiv.org/abs/2308.16884 |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| Belebele: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |

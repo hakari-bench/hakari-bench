@@ -62,9 +62,11 @@ A model targeting this task should improve relation-aware answer passage ranking
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Natural Questions, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| where is final four being held this year [40 chars] | The 2018 NCAA Division I Men's Basketball Tournament was a 68-team single-elimination tournament to determine the men's National Collegiate Athletic Association (NCAA) Division I college basketball national champion for the 2017–18 season. The 80th edition of the tournament began on March 13, 2018, and concluded with the championship game on April 2 at the Alamodome in San Antonio, Texas. [391 chars] |
+| was nightmare before christmas originally a disney movie [56 chars] | The Nightmare Before Christmas originated in a poem written by Tim Burton in 1982, while he was working as an animator at Walt Disney Feature Animation. With the success of Vincent in the same year, Walt Disney Studios began to consider developing The Nightmare Before Christmas as either a short film or 30-minute television special. Over the years, Burton's thoughts regularly returned to the project, and in 1990, he made a development deal with Disney. Production started in July 1991 in San Francisco; Disney released the film through its Touchstone Pictures banner because the studio believed the film would be "too dark and scary for kids".[4] [650 chars] |
+| why is the angel of the north there [35 chars] | According to Gormley, the significance of an angel was three-fold: first, to signify that beneath the site of its construction, coal miners worked for two centuries; second, to grasp the transition from an industrial to an information age, and third, to serve as a focus for our evolving hopes and fears .[2] [308 chars] |
 
 ### Source Reference Table
 

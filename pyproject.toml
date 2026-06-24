@@ -118,6 +118,7 @@ pylate = { git = "https://github.com/lightonai/pylate.git", rev = "1f1f47cee5df3
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
+    "pytest-xdist>=3.8.0",
     "ruff>=0.15.12",
     "tox>=4.53.0",
     "tox-uv>=1.35.1",
@@ -168,7 +169,7 @@ dependency_groups =
     dev
     viewer
 commands =
-    python -m pytest {posargs:-m "not browser"}
+    python -m pytest -n 2 --dist loadfile {posargs:-m "not browser"}
     ty check
 
 [testenv:lint]

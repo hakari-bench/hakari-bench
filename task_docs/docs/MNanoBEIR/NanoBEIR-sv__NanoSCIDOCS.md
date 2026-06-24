@@ -62,9 +62,11 @@ A model targeting this task should improve scientific relatedness rather than an
 
 ## Example Data
 
-### Public Sources
-
-The original task is connected to SCIDOCS and SPECTER-style scientific document representation evaluation, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Ny DC-DC flernivåspänningshöjande omvandlare [44 chars] | Multinivåspänningsomvandlare är på väg att bli en ny typ av kraftomvandlare för högspänningsapplikationer. Multinivåspänningsomvandlare syntetiserar vanligtvis en trappformad spänningsvåg från flera nivåer av likspänningskondensatorer. En av de största begränsningarna med multinivåomvandlare är spänningsobalansen mellan olika nivåer. Teknikerna för att balansera spänningen mellan olika nivåer involverar vanligtvis spänningsklämning eller kondensatorladdningskontroll. Det finns flera sätt att implementera spänningsbalans i multinivåomvandlare. Utan att ta hänsyn till traditionella magnetiskt kopplade omvandlare presenterar denna artikel tre nyligen utvecklade multinivåspänningsomvandlare: 1) diodklämning, 2) flygkondensatorer, och 3) kaskaderade växelriktare med separata likspänningskällor. Driftsprincipen, egenskaperna, begränsningarna och potentiella applikationerna för dessa omvandlare kommer att diskuteras. [923 chars] |
+| Snabb inlärning av glesa gaussiska Markovfält baserat på Cholesky-faktorisering [79 chars] | Sure, please provide the English document text that you need translated into Swedish. [85 chars] |
+| Textursyntes med konvolutiva neurala nätverk [44 chars] | I detta arbete undersöker vi effekten av djupet i ett konvolutivt nätverk på dess noggrannhet i en stor skala bildigenkänningsinställning. Vår huvudsakliga bidrag är en grundlig utvärdering av nätverk med ökande djup, vilket visar att en betydande förbättring av tidigare konfigurationer kan uppnås genom att öka djupet till 16–19 viktskikt. Dessa resultat låg till grund för vårt bidrag till ImageNet Challenge 2014, där vårt team tog förstaplatsen och andraplatsen i lokaliserings- och klassificeringsbanorna respektive. Vi visar också att våra representationer fungerar bra på andra datamängder, där vi uppnår toppresultat. Viktigt att nämna är att vi har gjort våra två bästa ConvNet-modeller tillgängliga för allmänheten för att underlätta vidare forskning om användningen av djupa visuella representationer inom datorseende. [830 chars] |
 
 ### Source Reference Table
 

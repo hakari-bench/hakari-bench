@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 50
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-wordpress-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-wordpress-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Wordpress-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-wordpress-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-wordpress-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "66180",
+        "document_id": "8357",
+        "query": {
+          "text": "Programowe wstawianie terminów hierarchicznych i ustalanie terminów dla postów powoduje usterkę?",
+          "full_chars": 96,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wstawianie terminów w taksonomii hierarchicznej Naprawdę mam kilka problemów z wstawianiem terminów. Oto mój scenariusz: mam taksonomię o nazwie veda_release_type: //Release Type and Region $labels = array( 'name'=> _x('Release Types/Regions', 'Taxonomy general name' ), 'singular_name' => _x ('Typ/region wydania', 'taksonomia pojedyncza nazwa'), 'search_items' => __('Wyszukaj typy/regiony wydań'), 'popular_items' => __('Popularne typy/regiony wydań'), 'all_items' => __('Wszystkie typy/regiony wydania'), 'edit_item' => __('Edytuj typ/regiony wydania'), 'edit_item' => __('Edytuj typ/region wydania'), 'update_item' => __('Typ/region aktualizacji'), 'add_new_item' => __('Dodaj typ/region nowej wersji'), 'new_item_name' => __('Typ/nazwa nowego wydania'), 'separate_items_with_commas' => __('Oddziel typy wydań/regiony przecinkami'), 'add_or_remove_items' => __('Dodaj lub usuń R zwolnij typy/regiony'), 'choose_from_most_used' => __('Wybierz z najczęściej używanych typów/regionów wydań') ); $ar",
+          "full_chars": 3822,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "119899",
+        "document_id": "69436",
+        "query": {
+          "text": "Jak zwiększyć długość fragmentu w wordpressie?",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "fragment w postaciach Mam kod w functions.php: function string_limit_words($string, $word_limit) { $words = explode(' ', $string, ($word_limit + 1)); if(count($słowa) > $word_limit) array_pop($słowa); return implode(' ', $słowa); } ale muszę ograniczyć fragment w liczbie znaków, czy możesz mi w tym pomóc?",
+          "full_chars": 306,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "104722",
+        "document_id": "98644",
+        "query": {
+          "text": "Strona biblioteki multimediów bardzo wolno, ładuje obrazy w pełnej jakości",
+          "full_chars": 74,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wordpress 3.5 Media Manager - Zmień rozmiar załadowanego obrazu Nowy menedżer mediów ładuje obrazy w PEŁNYM rozmiarze, co jest NAPRAWDĘ nieefektywne dla miniatury. Chciałbym go zastąpić miniaturą o innym rozmiarze, która jest również przechowywana dla każdego obrazu źródłowego. Nie mogę też znaleźć na to sposobu. Czy ktoś ma jakieś wskazówki?",
+          "full_chars": 344,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

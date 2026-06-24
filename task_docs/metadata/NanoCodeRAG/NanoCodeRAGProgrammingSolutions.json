@@ -152,15 +152,66 @@
         "url": "https://code-rag-bench.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "code-rag-bench/programming-solutions",
         "url": "https://huggingface.co/datasets/code-rag-bench/programming-solutions",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "68",
+        "document_id": "doc_221",
+        "query": {
+          "text": "# Write a python function to check whether the given array is monotonic or not.",
+          "full_chars": 79,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def is_Monotonic(A): return (all(A[i] <= A[i + 1] for i in range(len(A) - 1)) or all(A[i] >= A[i + 1] for i in range(len(A) - 1)))",
+          "full_chars": 149,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "126",
+        "document_id": "doc_279",
+        "query": {
+          "text": "# Write a python function to find the sum of common divisors of two given numbers.",
+          "full_chars": 82,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def sum(a,b): sum = 0 for i in range (1,min(a,b)): if (a % i == 0 and b % i == 0): sum += i return sum",
+          "full_chars": 143,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "106",
+        "document_id": "doc_259",
+        "query": {
+          "text": "# Write a function to add the given list to the given tuples.",
+          "full_chars": 61,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "def add_lists(test_list, test_tup): res = tuple(list(test_tup) + test_list) return (res)",
+          "full_chars": 94,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

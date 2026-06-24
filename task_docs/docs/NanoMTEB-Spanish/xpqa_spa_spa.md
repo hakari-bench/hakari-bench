@@ -70,11 +70,11 @@ For evaluation, this split measures monolingual e-commerce answer retrieval. The
 
 ## Example Data
 
-### Public Sources
-
-- xPQA paper: https://arxiv.org/abs/2305.09249
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- Source task dataset card: https://huggingface.co/datasets/mteb/XPQARetrieval
+| Query | Positive document |
+| --- | --- |
+| el pack de 3 cintas, ¿es una de cada tamaño o las 3 del mismo tamaño? [69 chars] | El paquete contiene 3 piezas de 120 cm de largo. [48 chars] |
+| que son tallas grandes o justas? [32 chars] | Son de talla ajustada moldeando la curvatura del cuerpo. [56 chars] |
+| és el modelo acústico o electro acústico? [41 chars] | Este producto es una guitarra electroacústica. [46 chars] |
 
 ### Source Reference Table
 

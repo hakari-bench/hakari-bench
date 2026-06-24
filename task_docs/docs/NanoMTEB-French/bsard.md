@@ -134,19 +134,19 @@ both vocabulary mismatch and statutory-scope errors.
 
 ## Example Data
 
-### Public Sources
-
-- [A Statutory Article Retrieval Dataset in French](https://arxiv.org/abs/2108.11792), 2022.
-- [mteb/BSARDRetrieval](https://huggingface.co/datasets/mteb/BSARDRetrieval), source dataset card.
-- [MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis](https://arxiv.org/abs/2405.20468), 2024.
+| Query | Positive document |
+| --- | --- |
+| Je loue une caravane dans un camping à l'année. Quelles règles s'appliquent à mon bail à Bruxelles ? Bail de résidence principale (Bruxelles), Champ d'application [162 chars] | PrincipesLe présent chapitre s'applique aux baux portant sur le logement que le preneur, avec l'accord exprès ou tacite du bailleur, affecte dès l'entrée en jouissance à sa résidence principale. Est réputée non écrite la clause interdisant l'affectation du bien à la résidence principale du preneur lorsqu'elle n'est pas appuyée par une justification expresse et sérieuse, relative notamment à la destination naturelle du bien loué, et n'est pas accompagnée de l'indication de la résidence principale du preneur au cours du bail.Le présent chapitre s'applique également si l'affectation à la résidence principale se fait en cours de bail avec l'accord écrit du bailleur. Dans ce cas, le bail prend cours à la date de cet accord.Le présent chapitre s'applique à la sous-location conclue conformément à l'article 230, dans les limites prévues à ce même article.Sauf disposition contraire, le présent chapitre n'est pas applicable lorsque le contrat par lequel le logement est accordé au preneur est l'a... [1,000 / 1,082 chars] |
+| J’ai fait un testament. Puis-je le modifier ? Démarches avant décès, Donation et testament, Testament [101 chars] | Le testament par acte public est celui qui est reçu par un notaire. Le testament par acte public est celui qui est reçu par un notaire, en présence de deux témoins, ou par deux notaires. [186 chars] |
+| Dois-je payer les frais de justice si je conteste une décision d’un organisme de sécurité sociale ? [99 chars] | L'indemnité de procédure est une intervention forfaitaire dans les frais et honoraires d'avocat de la partie ayant obtenu gain de cause.Après avoir pris l'avis de l'Ordre des barreaux francophones et germanophone et de l'Orde van Vlaamse Balies, le Roi établit par arrêté délibéré en Conseil des ministres, les montants de base, minima et maxima de l'indemnité de procédure, en fonction notamment de la nature de l'affaire et de l'importance du litige.(A la demande d'une des parties, éventuellement formulée sur interpellation par le juge, celui-ci peut, par décision spécialement motivée,) soit réduire l'indemnité soit l'augmenter, sans pour autant dépasser les montants maxima et minima prévus par le Roi. Dans son appréciation, le juge tient compte : - de la capacité financière de la partie succombante, pour diminuer le montant de l'indemnité;- de la complexité de l'affaire;- des indemnités contractuelles convenues pour la partie qui obtient gain de cause;- du caractère manifestement dérais... [1,000 / 2,341 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A Statutory Article Retrieval Dataset in French | 2022 | arXiv paper | https://arxiv.org/abs/2108.11792 |
-| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | https://arxiv.org/abs/2405.20468 |
-| mteb/BSARDRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/BSARDRetrieval |
+| A Statutory Article Retrieval Dataset in French | 2022 | arXiv paper | [https://arxiv.org/abs/2108.11792](https://arxiv.org/abs/2108.11792) |
+| MTEB-French: Resources for French Sentence Embedding Evaluation and Analysis | 2024 | arXiv paper | [https://arxiv.org/abs/2405.20468](https://arxiv.org/abs/2405.20468) |
+| mteb/BSARDRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/BSARDRetrieval](https://huggingface.co/datasets/mteb/BSARDRetrieval) |
 
 ### Representative Snippets
 

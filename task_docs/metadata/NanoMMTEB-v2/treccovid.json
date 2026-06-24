@@ -134,15 +134,66 @@
         "url": "https://ir.nist.gov/covidSubmit/index.html",
         "year": 2020,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/trec-covid",
         "url": "https://huggingface.co/datasets/mteb/trec-covid",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "46",
+        "document_id": "g4xh2b3g",
+        "query": {
+          "text": "what evidence is there for dexamethasone as a treatment for COVID-19?",
+          "full_chars": 69,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Targeting inflammation and cytokine storm in COVID-19",
+          "full_chars": 53,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "0a5fccio",
+        "query": {
+          "text": "how long does coronavirus remain stable on surfaces?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Body fluids may contribute to human-to-human transmission of severe acute respiratory syndrome coronavirus 2: evidence and practical experience BACKGROUND: In December 2019, an unbelievable outbreak of pneumonia associated with coronavirus was reported in the city of Wuhan, Hubei Province. This virus was called severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2). Although much effort has been spent on clarifying the transmission route of SARS-CoV-2, but, very little evidence is available regarding the relationship between human body fluids and transmission of SARS-CoV-2 virus. Considerable evidence from hospital in Wuhan indicates that strict rules to avoid occupational exposure to patients’ body fluids in healthcare settings, particularly among every medical staff, limited person-to-person transmission of nosocomial infections by direct or indirect contact. CONCLUSION: We tried to provide important information for understanding the possible transmission routes of SARS-CoV-2 v",
+          "full_chars": 1172,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "0xymzkzn",
+        "query": {
+          "text": "has social distancing had an impact on slowing the spread of COVID-19?",
+          "full_chars": 70,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A first study on the impact of current and future control measures on the spread of COVID-19 in Germany The novel coronavirus (SARS-CoV-2), identified in China at the end of December 2019 and causing the disease COVID-19, has meanwhile led to outbreaks all over the globe, with about 571,700 confirmed cases and about 26,500 deaths as of March 28th, 2020. We present here the preliminary results of a mathematical study directed at informing on the possible application or lifting of control measures in Germany. The developed mathematical models allow to study the spread of COVID-19 among the population in Germany and to asses the impact of non-pharmaceutical interventions. The overall goal is to suggest strategies for the mitigation of the current outbreak, slowing down the spread of the virus and thus reducing the peak in daily diagnosed cases, the demand for hospitalization or intensive care units admissions, and eventually fatalities.",
+          "full_chars": 948,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

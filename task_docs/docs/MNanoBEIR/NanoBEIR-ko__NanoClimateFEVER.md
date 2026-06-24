@@ -111,11 +111,9 @@ on whether the passage actually supports, refutes, or contextualizes the claim.
 
 | Query | Positive document |
 | --- | --- |
-| 1970년부터 1998년까지 약 0.7°F의 온도 상승을 가져온 온난화 시기가 있었으며, 이는 전지구적 온난화 경고 운동의 출현을 도왔다. | 파레오세 또는 파라이오세는 약 사이에 지속된 지질 시대의 한 시기로, 신생대에 속하는 첫 번째 시대이다. |
-| 사실, 통계적으로 유의미하지는 않지만 하락하는 추세이다. | 태양 주기 또는 태양 자기 활동 주기는 태양의 활동과 외형에서 나타나는 거의 주기적인 11년 주기의 변화를 말한다. |
-| 지역 및 지역적인 해수면은 여전히 전형적인 자연 변동성을 나타내고 있으며, 일부 지역에서는 상승하고 다른 지역에서는 하락하고 있다. | 평균 해수면은 지구의 해양 표면의 평균 수준으로, 고도를 측정하는 기준이 된다. |
-| 기후 과학자들은 허리케인 하비의 여러 측면이 지구 온난화가 나쁜 상황을 더욱 악화시키고 있음을 시사한다고 말한다. | 지구 온난화의 영향은 온실가스의 인간 배출로 인해 직접 또는 간접적으로 발생하는 환경적 및 사회적 변화이다. |
-| CERN의 CLOUD 실험은 우주선이 지구 온난화의 원인이라고 주장하기 위해 필요한 조건 중 일부만을 테스트했다. | 최근 기후 변화의 원인 규명은 지구상에서 관측되는 최근의 기후 변화, 즉 지구 온난화의 책임 있는 메커니즘을 과학적으로 밝히는 노력을 의미한다. |
+| 1970년부터 1998년까지 약 0.7°F의 온도 상승을 가져온 온난화 시기가 있었으며, 이는 전지구적 온난화 경고 운동의 출현을 도왔다. [77 chars] | 파레오세(Paleocene, -LSB- 발음: /ˈpæliəˌsiːn/, /ˈpæ-/, /-lioʊ-/ -RSB-) 또는 파라이오세(Palaeocene)는 약 ~ 사이에 지속된 지질 시대의 한 시기로, '오래된 최근'을 의미한다. 이 시기는 현대의 신생대(제3기)에 속하는 파레오제(제3기)의 첫 번째 시대이다. 많은 지질 시대와 마찬가지로 이 시대의 시작과 끝을 정의하는 지층은 잘 알려져 있지만, 정확한 연대는 여전히 불확실하다. 파레오세 시대는 지구 역사상 두 가지 주요 사건을 포함하고 있다. 먼저 백악기 말의 대량 멸종 사건으로 시작되는데, 이는 백악기-제3기(K-Pg) 경계로 알려져 있으며, 비조류 공룡, 거대한 해양 파충류 및 기타 많은 동식물의 멸종이 특징이다. 공룡의 멸종은 전 세계적으로 생태적 틈새를 비워두게 되었다. 파레오세는 이후 파레오세-에오세 온난화 시기(PETM)로 끝나는데, 이는 지질학적으로 매우 짧은 기간(~20만 년)으로, 극단적인 기후 변화와 탄소 순환의 변화가 특징이다. '파레오세(Paleocene)'라는 이름은 고대 그리스어에서 유래하였으며, 이 시기에 출현한 '오래된(παλαιός, palaios)' '새로운(καινός, kainos)' 생물군을 가리킨다. [619 chars] |
+| 사실, 통계적으로 유의미하지는 않지만 하락하는 추세이다. [31 chars] | 태양 주기 또는 태양 자기 활동 주기는 태양의 활동(태양 복사량과 태양 물질 방출 정도의 변화 포함)과 외형(태양 흑점, 플레어 및 기타 현상의 수와 크기 변화)에서 나타나는 거의 주기적인 11년 주기의 변화를 말한다. 이러한 변화는 수세기 동안 태양의 외형 변화와 오로라와 같은 지구상에서 관측되는 변화를 통해 관찰되어 왔다. 태양의 변화는 우주와 대기, 지구 표면에 영향을 미친다. 태양 활동에서 가장 지배적인 변수이긴 하지만, 비주기적인 변동도 함께 발생한다. [260 chars] |
+| 지역 및 지역적인 해수면은 여전히 전형적인 자연 변동성을 나타내고 있으며, 일부 지역에서는 상승하고 다른 지역에서는 하락하고 있다. [73 chars] | 평균 해수면(MSL, Mean Sea Level)은 지구의 해양 표면의 평균 수준으로, 고도(예: 해발 고도)를 측정하는 기준이 된다. MSL은 표준화된 지오데식 기준점인 수직 기준면으로, 예를 들어 지도 제작 및 해양 항해에서 사용되는 도법 기준면(chart datum)이나 항공 분야에서 대기압을 측정하여 고도를 보정하고 항공기 비행 고도층을 결정하는 기준으로 사용된다. 일반적이고 비교적 간단한 평균 해수면 기준은 특정 지점에서 평균 조수 저수위와 평균 조수 만수위의 중간 지점이다. 해수면은 여러 요인의 영향을 받을 수 있으며 지질학적 시간 척도에 따라 크게 변동해 왔던 것으로 알려져 있다. MSL의 변화를 정밀하게 측정하면 현재 진행 중인 기후 변화에 대한 통찰을 얻을 수 있으며, 해수면 상승은 지구 온난화가 진행 중임을 보여주는 대표적인 증거로 자주 인용된다. '해수면 위(above sea level)'라는 용어는 일반적으로 평균 해수면 위(AMSL, above mean sea level)를 의미한다. [514 chars] |
 
 ### Public Sources
 
@@ -129,7 +127,7 @@ on whether the passage actually supports, refutes, or contextualizes the claim.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER | 2020 | task paper | https://arxiv.org/abs/2012.00614 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| CLIMATE-FEVER | 2020 | task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

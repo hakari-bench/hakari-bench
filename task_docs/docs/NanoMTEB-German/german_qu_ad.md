@@ -132,21 +132,19 @@ main challenge is selecting the paragraph that actually supports the answer.
 
 ## Example Data
 
-### Public Sources
-
-- [GermanQuAD and GermanDPR](https://arxiv.org/abs/2104.12741)
-- [ACL Anthology record](https://aclanthology.org/2021.mrqa-1.4/)
-- [mteb/germanquad-retrieval](https://huggingface.co/datasets/mteb/germanquad-retrieval)
-- [deepset/germanquad](https://huggingface.co/datasets/deepset/germanquad)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Was versuchen die Umweltorganisationen wie CSE in Indien zu verbessern? [71 chars] | Rajasthan === Umweltorganisationen fördern traditionelles Sammeln von Regenwasser === Umweltorganisationen in Indien, wie das Centre for Science and Environment (CSE), haben vor über 20 Jahren damit begonnen, die alten traditionellen Methoden des Regenwassersammelns zu dokumentieren und Pilotprojekte aufzubauen. In Rajasthan heißen die einfachsten Lösungen für die Bauern ''Johads.'' Ein Johad ist ein halbmondförmiger Teich, der so in der Landschaft liegt, dass er in der Regenzeit viele kleine Bäche und Quellen aus einer größeren Umgebung auffangen kann. Jeder Johad ist anders in Größe und Form, je nach Bodenbeschaffenheit oder Topographie. Dieser kleine See entsteht durch Anhäufen von Erdwällen. Ihre Funktion ist, Wasser zu stauen, das die Menschen nach der Regenzeit nutzen. Noch wichtiger sind sie allerdings für das Grundwasser. Denn die enormen Niederschläge würden sonst weggespült werden und zu Landerosionen führen. Durch das Anstauen hat das Wasser aber genug Zeit, um langsam im Bo... [1,000 / 1,933 chars] |
+| Wann muss man die Zieletage in seillosen Aufzügen auswählen? [60 chars] | Aufzugsanlage === Seilloser Aufzug === An der RWTH Aachen im Institut für Elektrische Maschinen wurde ein seilloser Aufzug entwickelt und ein Prototyp aufgebaut. Die Kabine wird hierbei durch zwei elektromagnetische Synchron-Linearmotoren angetrieben und somit nur durch ein vertikal bewegliches Magnetfeld gehalten bzw. bewegt. Diese Arbeit soll der Entwicklung von Aufzugsanlagen für sehr hohe Gebäude dienen. Ein Ziel ist der Einsatz mehrerer Kabinen pro Schacht, die sich unabhängig voneinander steuern lassen. Bei Auswahl des Fahrtziels vor Fahrtantritt (d. h. noch außerhalb des Aufzug) wird ein bestimmter Fahrkorb in einem der Aufzugsschächte für die Fahrt ausgewählt, mit der sich der geplante Transport am schnellsten durchführen lässt. Der Platzbedarf für die gesamte Aufzugsanlage könnte somit um ein oder mehrere Schächte reduziert werden. Da die Kabinen seillos betrieben werden, ist ein Schachtwechsel ebenfalls denkbar. Hiermit können weitere Betriebsstrategien für die seillose Aufzu... [1,000 / 1,766 chars] |
+| Warum sind Schwarze aus Überseegebieten in Frankreich tendenziell besser integriert als Schwarze aus Schwarzafrika? [115 chars] | Schwarze ==== Frankreich ==== Die Bevölkerung Frankreichs setzt sich aus zahlreichen Ethnien zusammen, darunter sind 2,5 bis 5 Millionen schwarze Menschen. Die meisten von ihnen sind Einwanderer oder deren Nachkommen aus den afrikanischen und karibischen Kolonien Frankreichs. Amtliche Zahlen gibt es nicht, weil bei Volkszählungen nicht nach ethnischen oder religiösen Kategorien gefragt wird. Die Einwanderung Dunkelhäutiger ins Mutterland hat eine lange Vorgeschichte. Die Bewohner der ''vieilles colonies'' in der Karibik sowie der ''Quatre Communes'' im Senegal hatten seit 1848 das französische Bürgerrecht und entsandten Abgeordnete in die Nationalversammlung, etwa Blaise Diagne. Unter den Vorfahren des berühmten Schriftstellers Alexandre Dumas befand sich eine schwarze Sklavin aus Haiti, weswegen er oft rassistisch beleidigt wurde. In der Zwischenkriegszeit und besonders nachdem alle Bewohner der Kolonien 1946 das Wahlrecht erhalten hatten, gab es in französischen Regierungen oft schwa... [1,000 / 3,198 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | https://arxiv.org/abs/2104.12741 |
-| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | https://aclanthology.org/2021.mrqa-1.4/ |
-| mteb/germanquad-retrieval | 2025 | Dataset card | https://huggingface.co/datasets/mteb/germanquad-retrieval |
+| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | [https://arxiv.org/abs/2104.12741](https://arxiv.org/abs/2104.12741) |
+| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | [https://aclanthology.org/2021.mrqa-1.4/](https://aclanthology.org/2021.mrqa-1.4/) |
+| mteb/germanquad-retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/germanquad-retrieval](https://huggingface.co/datasets/mteb/germanquad-retrieval) |
 
 ### Representative Snippets
 

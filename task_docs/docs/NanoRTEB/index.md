@@ -161,7 +161,7 @@ inflate scores without improving retrieval generalization.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark page | https://huggingface.co/blog/rteb |
-| Overview of the FIRE 2019 AILA Track | 2019 | source task paper | https://ceur-ws.org/Vol-2517/T1-1.pdf |
-| Plain English Summarization of Contracts | 2019 | source task paper | https://aclanthology.org/W19-2201/ |
-| FinanceBench | 2023 | source task paper | https://arxiv.org/abs/2311.11944 |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark page | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
+| Overview of the FIRE 2019 AILA Track | 2019 | source task paper | [https://ceur-ws.org/Vol-2517/T1-1.pdf](https://ceur-ws.org/Vol-2517/T1-1.pdf) |
+| Plain English Summarization of Contracts | 2019 | source task paper | [https://aclanthology.org/W19-2201/](https://aclanthology.org/W19-2201/) |
+| FinanceBench | 2023 | source task paper | [https://arxiv.org/abs/2311.11944](https://arxiv.org/abs/2311.11944) |

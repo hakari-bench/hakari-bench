@@ -127,15 +127,66 @@
         "url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "A question-entailment approach to question answering",
         "url": "https://doi.org/10.1186/s12859-019-3119-4",
         "year": 2019,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "cdc7459f-56a2-4d9d-bc44-05cc5ae1a18b",
+        "document_id": "bdd254d7-d114-4a00-942a-401d7e930180",
+        "query": {
+          "text": "What are the symptoms of Nocardiosis ?",
+          "full_chars": 38,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The symptoms of nocardiosis vary depending on which part of your body is affected. Nocardiosis infection most commonly occurs in the lung. If your lungs are infected, you can experience: - Fever - Weight loss - Night sweats - Cough - Chest pain - Pneumonia When lung infections occur, the infection commonly spreads to the brain. If your central nervous system (brain and spinal cord) is infected, you can experience: - Headache - Weakness - Confusion - Seizures (sudden, abnormal electrical activity in the brain) Skin infections can occur when open wounds or cuts come into contact with contaminated soil. If your skin is affected, you can experience: - Ulcers - Nodules sometimes draining and spreading along lymph nodes",
+          "full_chars": 823,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "25be7d4f-7a1c-4070-a05f-f735f32b020f",
+        "document_id": "2e2bfd35-1517-4e50-bcc6-55725dd72f12",
+        "query": {
+          "text": "What are the treatments for Parasites - Babesiosis ?",
+          "full_chars": 52,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Effective treatments are available. People who do not have any symptoms or signs of babesiosis usually do not need to be treated. Before considering treatment, the first step is to make sure the diagnosis is correct. For more information, people should talk to their health care provider. More on: Resources for Health Professionals: Treatment",
+          "full_chars": 358,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "0ac17d6b-7af4-4dfa-bf0b-4a5f1c47b24d",
+        "document_id": "89200fbf-6e53-4cc5-bf78-9124c224c70d",
+        "query": {
+          "text": "How to diagnose Parasites - Zoonotic Hookworm ?",
+          "full_chars": 47,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cutaneous larva migrans (CLM) is a clinical diagnosis based on the presence of the characteristic signs and symptoms, and exposure history to zoonotic hookworm. For example, the diagnosis can be made based on finding red, raised tracks in the skin that are very itchy. This is usually found on the feet or lower part of the legs on persons who have recently traveled to tropical areas and spent time at the beach. There is no blood test for zoonotic hookworm infection. Persons who think they have CLM should consult their health care provider for accurate diagnosis.",
+          "full_chars": 567,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

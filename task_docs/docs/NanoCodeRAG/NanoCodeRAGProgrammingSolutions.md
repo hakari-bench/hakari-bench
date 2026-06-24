@@ -70,9 +70,11 @@ For reranking, execution-informed or test-informed signals may be useful. A rank
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeRAGProgrammingSolutions is documented through CodeRAG-Bench and its public project resources. The source-specific dataset card is `code-rag-bench/programming-solutions`.
+| Query | Positive document |
+| --- | --- |
+| # Write a python function to check whether the given array is monotonic or not. [79 chars] | def is_Monotonic(A): return (all(A[i] <= A[i + 1] for i in range(len(A) - 1)) or all(A[i] >= A[i + 1] for i in range(len(A) - 1))) [149 chars] |
+| # Write a python function to find the sum of common divisors of two given numbers. [82 chars] | def sum(a,b): sum = 0 for i in range (1,min(a,b)): if (a % i == 0 and b % i == 0): sum += i return sum [143 chars] |
+| # Write a function to add the given list to the given tuples. [61 chars] | def add_lists(test_list, test_tup): res = tuple(list(test_tup) + test_list) return (res) [94 chars] |
 
 ### Source Reference Table
 

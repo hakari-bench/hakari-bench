@@ -48,13 +48,11 @@ Strong models should combine exact issue matching with argument-awareness. Usefu
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Ist Hausaufgaben sinnvoll? | Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten... |
-| Sollten verschreibungspflichtige Medikamente direkt an Verbraucher beworben werden dürfen? | Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken... |
-| Welche Impfungen sind für Kinder notwendig? | Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... |
-| Sollte Abtreibung legal sein? | Abtreibungen sollten legal sein, da die Persönlichkeit erst beginnt, wenn ein Fötus lebensfähig ist oder nach der Geburt... |
-| Verbessern standardisierte Tests die Qualität der Bildung? | Die SAT, ACT und andere standardisierte Tests bieten mehr Einblicke in die Vorbereitung eines Schülers auf das Studium... |
+| Query | Positive document |
+| --- | --- |
+| Ist Hausaufgaben sinnvoll? [26 chars] | Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten. 1. Hausaufgaben unterstützen Lernende, die durch Handeln lernen. Es ist allgemein anerkannt, dass es drei Arten von Lernenden gibt: solche, die durch Hören lernen, solche, die durch Sehen lernen, und solche, die durch Tun lernen. Während viele zufrieden sind, Anweisungen zu hören oder zu sehen, benötigen einige tatsächlich selbst aktiv zu werden. Daher sind Hausaufgaben für diese Gruppe von Vorteil, da das Lernen durch Handeln erfolgt. 2. Hausaufgaben festigen den Unterricht. Obwohl viele wahrscheinlich froh wären, keine Hausaufgaben zu haben, würde die Qualität der erhaltenen Bildung sicherlich leiden, wenn sie abgeschafft würden. Ob es sich um Hausaufgaben zum Lesen, Facharbeiten oder Ähnliches handelt, all das ist darauf ausgelegt, den Unterricht im Gedächtnis der Schüler zu verankern. Schließlich sind diejenigen, die ihre Hausaufgaben machen, akademisch erfolgre... [1,000 / 4,185 chars] |
+| Sollten verschreibungspflichtige Medikamente direkt an Verbraucher beworben werden dürfen? [90 chars] | Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken. Zum Beispiel wird Lunesta durch einen Schmetterling beworben, der durch ein Schlafzimmerfenster fliegt, über einer friedlich schlafenden Person. Tatsächlich hilft Lunesta Patienten, 15 Minuten schneller einzuschlafen nach sechs Monaten der Behandlung und verschafft ihnen 37 Minuten mehr Schlaf pro Nacht. Die Mehrheit der Werbeanzeigen basiert auf emotionalen Appellen, aber nur wenige enthalten Informationen über die Ursachen der Erkrankung, Risikofaktoren oder wichtige Lebensstiländerungen. In einer Studie von 38 pharmazeutischen Werbeanzeigen fanden Forscher heraus, dass 82 Prozent eine faktische Aussage machten und 86 Prozent rationale Argumente für die Produktnutzung lieferten. Nur 26 Prozent beschrieben die Ursachen der Erkrankung, Risikofaktoren oder die Häufigkeit. [1] Somit geben sie den Patienten keine ausgewogene Information, die sie darauf aufmerksam machen würde, dass die Einnahme... [1,000 / 2,016 chars] |
+| Welche Impfungen sind für Kinder notwendig? [43 chars] | Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... Regierungen sollten kein Recht haben, in die gesundheitlichen Entscheidungen einzugreifen, die Eltern für ihre Kinder treffen. Laut einer Umfrage der University of Michigan aus dem Jahr 2010 glauben 31% der Eltern, dass sie das Recht haben sollten, vorgeschriebene Schulimpfungen für ihre Kinder abzulehnen. Viele Eltern haben religiöse Bedenken gegen Impfungen. Eltern, die aus religiösen Gründen gegen Impfungen sind, zu zwingen, ihre Kinder zu impfen, würde das 1. Verfassungszusatz verletzen, der den Bürgern das Recht auf freie Religionsausübung garantiert. Impfungen sind in vielen Fällen, in denen die Gefahr eines tödlichen Krankheitsverlaufs gering ist, oft überflüssig. Im frühen 19. Jahrhundert sank die Sterblichkeitsrate bei Kinderkrankheiten wie Keuchhusten, Masern und Scharlach drastisch, bevor Impfungen verfügbar wurden. Diese sinkende Sterblichkeitsrate wird verbe... [1,000 / 4,993 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should combine exact issue matching with argument-awareness. Usefu
 
 | Label | URL |
 |---|---|
-| Touché 2020 overview | https://doi.org/10.1007/978-3-030-58219-7_26 |
-| Touché 2020 dataset | https://doi.org/10.5281/zenodo.6862281 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Touché 2020 overview (https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Touché 2020 dataset (https://doi.org/10.5281/zenodo.6862281) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

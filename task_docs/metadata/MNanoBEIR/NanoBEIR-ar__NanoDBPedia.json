@@ -143,7 +143,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -151,15 +151,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "موقع فيتزجيرالد أوتو مول في تشامبرسبيرج، بنسلفانيا",
+          "full_chars": 50,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "فيتزجيرالد للسيارات هي شركة تجارية لبيع السيارات مملوكة من قبل عائلة وتديرها العائلة، تأسست في عام 1966، حيث افتتحت أول موقع لها في بيتسدا، ماريلاند. اعتبارًا من عام 2014، احتلت فيتزجيرالد للسيارات المرتبة 59 في قائمة \"أفضل 125 مجموعة تجارية\" في الولايات المتحدة، والتي تنشرها مجلة \"أوتوموتيف نيوز\" سنويًا. كما ظهرت مواقع فيتزجيرالد التجارية خمس مرات في قائمة ووردز أوتو الإليكترونية 100 لعام 2013، في المراتب 8، 25، 30، 43، و98.",
+          "full_chars": 429,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "مجموعة قصص قصيرة صدرت في عام 1994 لأليس مونرو متاحة",
+          "full_chars": 51,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "أليس آن مونرو (مواليد 10 يوليو 1931) هي كاتبة كندية. عمل مونرو وصف بأنه قد أحدث ثورة في بناء القصص القصيرة، خاصة في قدرته على الانتقال بين الزمن الأمامي والخلفي. قصصها تُصف بأنها \"تضمّن أكثر من إعلان، تكشف أكثر من عرض\". قصص مونرو غالبًا ما تكون موجهة إلى موطنها الأصلي، مقاطعة هورون في جنوب غرب أونتاريو. قصصها تستكشف تعقيدات الإنسان بلغة بسيطة ووضوح.",
+          "full_chars": 351,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "العمارة الغالو-رومانية في باريس",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "الفن في باريس هو مقال عن ثقافة الفن والتاريخ في باريس، عاصمة فرنسا. منذ قرون طويلة، جذبت باريس الفنانين من جميع أنحاء العالم، ليأتوا إلى المدينة لتعلمهم واستلهموا من مواردها الفنية ومتاحفها. وبالتالي، اكتسبت باريس سمعة مدينة الفن.",
+          "full_chars": 230,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

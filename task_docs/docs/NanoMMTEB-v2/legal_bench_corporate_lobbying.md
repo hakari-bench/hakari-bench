@@ -132,10 +132,11 @@ baseline.
 
 ## Example Data
 
-Representative queries describe a strategy for secure 5G systems, a business
-incubator program for Indian reservation communities, worker-classification
-safe harbors, Middle East security assistance, and carbon capture research.
-Positive documents are the matching bill records and structured summaries.
+| Query | Positive document |
+| --- | --- |
+| To require the President to develop a strategy to ensure the security of next generation mobile telecommunications systems and infrastructure in the United States and to assist allies and strategic partners in maximizing the security of next generation mobile telecommunications systems, infrastructure, and software, and for other purposes. [341 chars] | Secure 5G and Beyond Act of 2020 This bill requires the President, in consultation with relevant federal agencies, to develop (1) a strategy to secure and protect U.S. fifth and future generations (5G) systems and infrastructure, and (2) an implementation plan for the strategy. Such strategy shall (1) ensure the security of 5G wireless communications systems and infrastructure within the United States; (2) assist mutual defense treaty allies, strategic partners, and other countries in maximizing the security of 5G systems and infrastructure; and (3) protect the competitiveness of U.S. companies, the privacy of U.S. consumers, and the impartiality of standards-setting bodies. [685 chars] |
+| To establish a business incubators program within the Department of the Interior to promote economic development in Indian reservation communities. [147 chars] | Native American Business Incubators Program Act This bill requires the Department of the Interior to establish a grant program in the Office of Indian Energy and Economic Development for establishing and operating business incubators that serve Native American communities. A business incubator is an organization that (1) provides physical workspace and facilities resources to startups and established businesses, and (2) is designed to accelerate the growth and success of businesses through a variety of business support resources and services. Grant applicants may be institutions of higher education, private nonprofits, Native American tribes, or tribal nonprofits. Interior must facilitate the establishment of relationships between grant recipients and educational institutions serving Native American communities. [826 chars] |
+| To amend the Internal Revenue Code of 1986 to provide a safe harbor for determinations of worker classification, to require increased reporting, and for other purposes. [168 chars] | New Economy Works to Guarantee Independence and Growth Act of 2019 or the NEW GIG Act of 2019 This bill establishes a test for determining if a service provider should be classified as an independent contractor rather than as an employee for tax purposes. If the requirements of the test are met, the provider may not be treated as an employee, the recipient or any payor may not be treated as an employer, and compensation for the service may not be treated as paid or received with respect to employment. The factors of the test include the relationship between the parties (i.e., the provider incurs expenses; does not work exclusively for a single recipient; performs the service for a particular amount of time, to achieve a specific result, or to complete a specific task; or is a sales person compensated primarily on a commission basis); the place of business or ownership of the equipment (i.e., the provider has a principal place of business, does not work primarily at the recipient's plac... [1,000 / 1,572 chars] |
 
 ### Public Sources
 
@@ -150,9 +151,9 @@ Positive documents are the matching bill records and structured summaries.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| LEGALBENCH: A Collaboratively Built Benchmark | 2023 | benchmark paper | https://proceedings.neurips.cc/paper_files/paper/2023/file/89e44582fd28ddfea1ea4dcb0ebbf4b0-Paper-Datasets_and_Benchmarks.pdf |
-| LegalBench corporate_lobbying task page | 2023 | task page | https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html |
-| mteb/legalbench_corporate_lobbying | 2024 | dataset card | https://huggingface.co/datasets/mteb/legalbench_corporate_lobbying |
+| LEGALBENCH: A Collaboratively Built Benchmark | 2023 | benchmark paper | [https://proceedings.neurips.cc/paper_files/paper/2023/file/89e44582fd28ddfea1ea4dcb0ebbf4b0-Paper-Datasets_and_Benchmarks.pdf](https://proceedings.neurips.cc/paper_files/paper/2023/file/89e44582fd28ddfea1ea4dcb0ebbf4b0-Paper-Datasets_and_Benchmarks.pdf) |
+| LegalBench corporate_lobbying task page | 2023 | task page | [https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html](https://hazyresearch.stanford.edu/legalbench/tasks/corporate_lobbying.html) |
+| mteb/legalbench_corporate_lobbying | 2024 | dataset card | [https://huggingface.co/datasets/mteb/legalbench_corporate_lobbying](https://huggingface.co/datasets/mteb/legalbench_corporate_lobbying) |
 
 ### Representative Snippets
 

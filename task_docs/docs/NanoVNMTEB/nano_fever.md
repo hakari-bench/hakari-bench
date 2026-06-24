@@ -70,13 +70,11 @@ Error analysis should separate entity recall failures from relation-ordering fai
 
 ## Example Data
 
-### Public Sources
-
-- [FEVER paper](https://arxiv.org/abs/1803.05355)
-- [FEVER project page](https://fever.ai/)
-- [VN-MTEB paper](https://aclanthology.org/2026.findings-eacl.86/)
-- [BEIR paper](https://arxiv.org/abs/2104.08663)
-- [GreenNode/nano-fever-vn](https://huggingface.co/datasets/GreenNode/nano-fever-vn)
+| Query | Positive document |
+| --- | --- |
+| Watchmen là một bộ phim được đặt trong bối cảnh lịch sử thay thế vào năm 1985. [78 chars] | Watchmen (phim) Watchmen là một bộ phim siêu anh hùng Mỹ năm 2009 do Zack Snyder đạo diễn, dựa trên loạt truyện tranh cùng tên của DC Comics ra mắt năm 1986-87 của Alan Moore và Dave Gibbons. Phim có sự tham gia của dàn diễn viên Malin Åkerman, Billy Crudup, Matthew Goode, Carla Gugino, Jackie Earle Haley, Jeffrey Dean Morgan và Patrick Wilson. Đây là một tác phẩm châm biếm đen tối về thể loại phim siêu anh hùng với bối cảnh lịch sử thay thế trong thời Chiến tranh Lạnh vào năm 1985 giữa Hoa Kỳ và Liên Xô khi nhóm siêu anh hùng đã giải nghệ điều tra vụ giết người đồng đội trước khi phát hiện âm mưu phức tạp chết chóc; đồng thời những hạn chế về đạo đức bị thách thức bởi tính chất phức tạp của hoàn cảnh. Từ tháng 10/1987 đến tháng 10/2005 dự án chuyển thể phim hành động sống từ loạt truyện Watchmen bị vướng mắc trong địa ngục phát triển; nhà sản xuất Lawrence Gordon khởi đầu dự án tại hãng phim 20th Century Fox và Warner Bros., công ty mẹ của nhà xuất bản truyện tranh DC - nơi ra đời Wat... [1,000 / 2,181 chars] |
+| Jenny McCarthy là một người mẫu. [32 chars] | Jenny McCarthy Jennifer Ann McCarthy ( sinh ngày 1 tháng 11 năm 1972), được biết đến với tên Jenny McCarthy và Jenny Wahlberg, là một nữ diễn viên, người mẫu, người dẫn chương trình truyền hình, tác giả kịch bản điện ảnh và nhà vận động chống tiêm chủng. Cô bắt đầu sự nghiệp của mình vào năm 1993 khi làm người mẫu khỏa thân cho tạp chí Playboy và sau đó trở thành Playmate của năm theo bình chọn của tạp chí này. Sau đó cô sử dụng danh tiếng từ những bức hình trên Playboy để phát triển sự nghiệp diễn xuất trong lĩnh vực truyền hình cũng như điện ảnh bằng việc tham gia đồng dẫn chương trình Singled Out của đài MTV trước khi tham gia các bộ phim hài tự đề cử cùng tên với cô như BASEketball, Diamonds hay Scream 3 cùng với Santa Baby. Cô từng là đồng MC cho chương trình The View thuộc đài ABC. McCarthy đã viết sách về cách nuôi dạy con cái và trở thành một nhà vận động thúc đẩy nghiên cứu về các vấn đề môi trường cũng như điều trị y học thay thế cho bệnh tự kỷ. Cô tuyên bố rằng vắc-xin gây r... [1,000 / 1,368 chars] |
+| James Brolin đã từng đóng vai trong những vở kịch hài tình huống. [65 chars] | James Brolin James Brolin ( - LSB- broʊlᵻn - RSB- sinh ngày 18 tháng Bảy năm 1940 ) là một diễn viên , nhà sản xuất và đạo diễn người Mỹ, được biết đến với những vai diễn phim và truyền hình , bao gồm sitcom cũng như opera xà phòng . Anh là cha của nam diễn viên Josh Brolin và chồng của ca sĩ/diễn viên Barbra Streisand. Trong số các giải thưởng khác, ông đã giành hai Quả cầu vàng cùng với một giải Emmy. Ông nhận được ngôi sao trên Đại lộ Danh vọng Hollywood vào ngày 27 tháng Tám năm 1998. [494 chars] |
 
 ### Source Reference Table
 

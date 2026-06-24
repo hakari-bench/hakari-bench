@@ -144,11 +144,11 @@ reranker.
 
 ## Example Data
 
-Representative queries ask why Irena has not killed herself, what item reveals
-a bomber's identity, whose hand Grayes reluctantly takes in marriage, who Plato
-did not deter from writing according to Cicero, and what Mrs. Lovett reveals to
-Todd. Positive documents are whole books or scripts that contain the relevant
-scene or narrative explanation.
+| Query | Positive document |
+| --- | --- |
+| Why hasn't Irena killed herself before? [39 chars] | ï»¿The Project Gutenberg EBook of When We Dead Awaken, by Henrik Ibsen This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the terms of the Project Gutenberg License included with this eBook or online at www.gutenberg.org Title: When We Dead Awaken Author: Henrik Ibsen Commentator: William Archer Translator: William Archer Release Date: December, 2003 [EBook #4782] Posting Date: February 17, 2010 Language: English *** START OF THIS PROJECT GUTENBERG EBOOK WHEN WE DEAD AWAKEN *** Produced by Sonia K WHEN WE DEAD AWAKEN By Henrik Ibsen. Introduction and translation by William Archer. INTRODUCTION. From _Pillars of Society_ to _John Gabriel Borkman_, Ibsen's plays had followed each other at regular intervals of two years, save when his indignation over the abuse heaped upon _Ghosts_ reduced to a single year the interval between that play and _An Enemy of the People_. _John Gabriel Borkman_ hav... [1,000 / 131,749 chars] |
+| What does the bomber leave behind that reveals his identity? [60 chars] | <html> <head><title>Source Code Script at IMSDb.</title> <meta name="description" content="Source Code script at the Internet Movie Script Database."> <meta name="keywords" content="Source Code script, Source Code movie script, Source Code film script"> <meta name="viewport" content="width=device-width, initial-scale=1" /> <meta name="HandheldFriendly" content="true"> <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"> <meta http-equiv="Content-Language" content="EN"> <meta name=objecttype CONTENT=Document> <meta name=ROBOTS CONTENT="INDEX, FOLLOW"> <meta name=Subject CONTENT="Movie scripts, Film scripts"> <meta name=rating CONTENT=General> <meta name=distribution content=Global> <meta name=revisit-after CONTENT="2 days"> <link href="/style.css" rel="stylesheet" type="text/css"> <script type="text/javascript"> var _gaq = _gaq \|\| []; _gaq.push(['_setAccount', 'UA-3785444-3']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga... [1,000 / 219,018 chars] |
+| Whose hand does Grayes reluctantly take in marriage? [52 chars] | ï»¿The Project Gutenberg EBook of Desperate Remedies, by Thomas Hardy This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever. You may copy it, give it away or re-use it under the terms of the Project Gutenberg License included with this eBook or online at www.gutenberg.org Title: Desperate Remedies Author: Thomas Hardy Release Date: November 2000 [EBook #3044] Posting Date: May 25, 2009 Language: English *** START OF THIS PROJECT GUTENBERG EBOOK DESPERATE REMEDIES *** Produced by Les Bowler DESPERATE REMEDIES By Thomas Hardy CONTENTS PREFATORY NOTE I. THE EVENTS OF THIRTY YEARS II. THE EVENTS OF A FORTNIGHT III. THE EVENTS OF EIGHT DAYS IV. THE EVENTS OF ONE DAY V. THE EVENTS OF ONE DAY VI. THE EVENTS OF TWELVE HOURS VII. THE EVENTS OF EIGHTEEN DAYS VIII. THE EVENTS OF EIGHTEEN DAYS IX. THE EVENTS OF TEN WEEKS X. THE EVENTS OF A DAY AND NIGHT XI. THE EVENTS OF FIVE DAYS XII. THE EVENTS OF TEN MONTHS XIII. THE EVENTS OF ONE DAY XIV. THE EVENTS... [1,000 / 817,284 chars] |
 
 ### Public Sources
 
@@ -165,9 +165,9 @@ scene or narrative explanation.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The NarrativeQA Reading Comprehension Challenge | 2018 | arXiv paper | https://arxiv.org/abs/1712.07040 |
-| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | https://arxiv.org/abs/2404.12096 |
-| dwzhu/LongEmbed | 2024 | dataset card | https://huggingface.co/datasets/dwzhu/LongEmbed |
+| The NarrativeQA Reading Comprehension Challenge | 2018 | arXiv paper | [https://arxiv.org/abs/1712.07040](https://arxiv.org/abs/1712.07040) |
+| LongEmbed: Extending Embedding Models for Long Context Retrieval | 2024 | arXiv paper | [https://arxiv.org/abs/2404.12096](https://arxiv.org/abs/2404.12096) |
+| dwzhu/LongEmbed | 2024 | dataset card | [https://huggingface.co/datasets/dwzhu/LongEmbed](https://huggingface.co/datasets/dwzhu/LongEmbed) |
 
 ### Representative Snippets
 

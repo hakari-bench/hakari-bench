@@ -68,9 +68,11 @@ The observed hybrid recall advantage suggests a practical pipeline: use hybrid o
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on BRIGHT's reasoning-intensive retrieval benchmark, with NanoBRIGHT providing the compact dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Imagine you have a family tree of 100 members, and you're trying to figure out how many ways you can assign one person to be the 'ancestor' such that the family tree still makes sense with everyone else coming after them in the lineage. How many different ways can you do this? [277 chars] | If there exists an ordered numbering of the nodes such that for each node there are no links going to a lower-numbered node, then there are no directed cycles in a directed graph. True or false? True. If there exists an ordered numbering of the nodes such that for each node there are no links going to a lower-numbered node, then it means that the graph can be topologically sorted. A topological sort of a directed acyclic graph (DAG) is a linear ordering of its vertices such that for every directed edge uv from vertex u to vertex v, u comes before v in the ordering. Therefore, if a graph can be topologically sorted, it must be a DAG, which means there are no directed cycles in the graph. Therefore, the answer is True. [730 chars] |
+| A teacher wants to create a special team for a project and needs to pick 3 students out of a class of 20. Assuming each student has an equal chance to be selected and the order in which they are chosen doesn't matter, how many different teams can the teacher form? [264 chars] | What is the coefficient of $x^2y^5$ for the formula $(x + 2y)^7$? We can use the binomial theorem to expand $(x+2y)^7$ as follows: $$(x+2y)^7 = \sum_{k=0}^{7} \binom{7}{k} x^{7-k}(2y)^k$$ To find the coefficient of $x^2y^5$, we need to find the term in the expansion where $x$ has exponent 2 and $y$ has exponent 5. This occurs when $k=5$, so we can substitute $k=5$ into the formula above to get: $$\binom{7}{5} x^{7-5}(2y)^5 = 21x^2(32y^5) = 672x^2y^5$$ Therefore, the coefficient of $x^2y^5$ for the formula $(x+2y)^7$ is $\boxed{672}$. [539 chars] |
+| You're organizing a book club represented by the group S_3 * Z_2. What is its order? [84 chars] | What is the order of group Z_{18}? The order of a group is the number of elements in the group. In this case, Z_{18} is the group of integers modulo 18 under addition. The elements of this group are {0, 1, 2, ..., 17}. Therefore, the order of group Z_{18} is 18. Therefore, the answer is 18. [293 chars] |
 
 ### Source Reference Table
 

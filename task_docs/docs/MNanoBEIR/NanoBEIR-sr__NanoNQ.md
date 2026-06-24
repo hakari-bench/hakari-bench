@@ -62,9 +62,11 @@ A model targeting this task should preserve entity precision while improving ans
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on Natural Questions, with BEIR-style retrieval framing and multilingual NanoBEIR packaging. The NanoBEIR-sr dataset is distributed on Hugging Face as part of the NanoBEIR multilingual collection.
+| Query | Positive document |
+| --- | --- |
+| Gde se održava Final Four ove godine? [37 chars] | NCAA Divizija I muški košarkaški turnir 2018. bio je turnir sa 68 timova po sistemu direktnog ispadanja, održan kako bi se odredio nacionalni šampion u muškoj koledž košarci NCAA Divizije I za sezonu 2017–18. Osamdeseto izdanje turnira počelo je 13. marta 2018. godine, a završilo se finalnom utakmicom 2. aprila na Alamodome-u u San Antoniju u Teksasu. [353 chars] |
+| Da li je "Noćna mora pre Božića" originalno bio Diznijev film? [62 chars] | "Pakao pre Božića" nastao je iz pesme koju je Tim Burton napisao 1982. godine, dok je radio kao animator u studiju Walt Disney Feature Animation. Uz uspeh filma "Vinsent" iste godine, studijo Walt Disney počeo je da razmatra razvoj "Pakla pre Božića" kao kratkog filma ili 30-minutne TV specijalne emisije. Tokom godina, Burton se redovno vraćao projektu, a 1990. godine sklopio je ugovor o razvoju sa Disneyjem. Produkcija je započela u julu 1991. u San Francisku; Disney je film distribuirao preko svoje podružnice Touchstone Pictures jer je studio smatrao da bi film bio "previše mračan i zastrašujuć za decu".[4] [616 chars] |
+| Zašto je anđeo severa tu? [25 chars] | Prema Gormliju, značaj anđela je bio trostruk: prvo, da označi da su ispod mesta njegove izgradnje rudari uglja radili dva veka; drugo, da obuhvati prelazak iz industrijskog u informaciono doba, i treće, da posluži kao fokus naših evoluirajućih nada i strahova.[2] [264 chars] |
 
 ### Source Reference Table
 

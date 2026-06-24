@@ -62,19 +62,19 @@ The task rewards balanced retrieval. Sparse term matching should be preserved fo
 
 ## Example Data
 
-### Public Sources
-
-- [WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval](https://arxiv.org/abs/2502.20936), 2025.
-- [PaDaS-Lab/webfaq](https://huggingface.co/datasets/PaDaS-Lab/webfaq), source dataset card.
-- [mteb/WebFAQRetrieval](https://huggingface.co/datasets/mteb/WebFAQRetrieval), MTEB dataset card.
+| Query | Positive document |
+| --- | --- |
+| จากสนามบินเข้าตัวเมืองอย่างไร? [30 chars] | รถบัสสนามบิน LAX FlyAway เป็นวิธีการเดินทางที่รวดเร็วและสะดวกที่สุดจากสนามบินลอสแองเจลิสไปยังตัวเมือง ซึ่งสามารถพาผู้โดยสารตรงไปยังสถานี Union และย่านฮอลลีวูดได้ เนื่องจากไม่มีรถไฟใต้ดินที่สนามบินลอสแองเจลิส ผู้โดยสารสามารถใช้บริการรถรับส่ง LAX สาย G ฟรีไปยังสถานี Aviation/LAX บนรถไฟใต้ดินสาย C แล้วเปลี่ยนสายไปยังจุดหมายปลายทางอื่นๆ [334 chars] |
+| ใช้เวลาในการจัดส่งนานเท่าใด? [28 chars] | โดยปกติ เวลาในการจัดส่งปัจจุบันจะอยู่ภายใน 1 – 3 วัน [52 chars] |
+| ได้รับความนิยม แถวนี้ tracking วัฒนา กรุงเทพมหานคร [50 chars] | รวมข้อมูล แสดงตำแหน่ง ที่ตั้ง และเส้นทาง ไป > tracking วัฒนา กรุงเทพมหานคร [74 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval | 2025 | paper | https://arxiv.org/abs/2502.20936 |
-| PaDaS-Lab/webfaq |  | dataset card | https://huggingface.co/datasets/PaDaS-Lab/webfaq |
-| mteb/WebFAQRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/WebFAQRetrieval |
+| WebFAQ: A Multilingual Collection of Natural Q&A Datasets for Dense Retrieval | 2025 | paper | [https://arxiv.org/abs/2502.20936](https://arxiv.org/abs/2502.20936) |
+| PaDaS-Lab/webfaq |  | dataset card | [https://huggingface.co/datasets/PaDaS-Lab/webfaq](https://huggingface.co/datasets/PaDaS-Lab/webfaq) |
+| mteb/WebFAQRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/WebFAQRetrieval](https://huggingface.co/datasets/mteb/WebFAQRetrieval) |
 
 ### Representative Snippets
 

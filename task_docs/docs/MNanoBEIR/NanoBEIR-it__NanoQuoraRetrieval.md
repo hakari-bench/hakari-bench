@@ -119,11 +119,9 @@ guarantee coverage, but final ranking should emphasize semantic equivalence.
 
 | Query | Positive document |
 | --- | --- |
-| Si può ridere delle proprie battute? | È strano ridere delle proprie battute? |
-| Qual è la bugia più ingegnosa che hai mai raccontato? | Qual è la bugia più elaborata che tu abbia mai raccontato? |
-| Perché Quora suggerisce spesso risposte nel mio feed che criticano Donald Trump? | Perché su Quora sembrano esserci solo risposte soggettive e di parte riguardo alle domande su Donald Trump? |
-| Come posso diventare più forte fisicamente? | Come posso diventare più forte fisicamente? |
-| Come funziona un satellite quantistico? | Come funziona un satellite quantistico e quali potrebbero essere i suoi principali utilizzi? |
+| Si può ridere delle proprie battute? [36 chars] | È strano ridere delle proprie battute? [38 chars] |
+| Qual è la bugia più ingegnosa che hai mai raccontato? [53 chars] | Qual è la bugia più elaborata che tu abbia mai raccontato? [58 chars] |
+| Perché Quora suggerisce spesso risposte nel mio feed che criticano Donald Trump? [80 chars] | Perché su Quora sembrano esserci solo risposte soggettive e di parte riguardo alle domande su Donald Trump? [107 chars] |
 
 ### Public Sources
 
@@ -137,7 +135,7 @@ guarantee coverage, but final ranking should emphasize semantic equivalence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Quora Question Pairs | 2017 | dataset page | https://kaggle.com/competitions/quora-question-pairs |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Quora Question Pairs | 2017 | dataset page | [https://kaggle.com/competitions/quora-question-pairs](https://kaggle.com/competitions/quora-question-pairs) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

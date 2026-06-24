@@ -162,6 +162,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "77492",
+        "document_id": "21850",
+        "query": {
+          "text": "Tập tin đặc biệt gây ra lỗi I/O",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tạo ra lỗi đọc lặp đi lặp lại để thử nghiệm? Tôi đang cố gắng thử nghiệm xử lý lỗi trong một số phần mềm, đặc biệt là những gì xảy ra khi có lỗi xảy ra khi đọc từ một tập tin hoặc đường ống. Có cách nào đơn giản để gửi một lượng dữ liệu nhất định đến stdout và sau đó tạo ra một lỗi I/O không? (ví dụ: tiến trình thực hiện việc đọc sẽ thấy read(2) trả về -1.) Một công thức shell đơn giản sẽ rất tuyệt, nhưng tôi không ngại viết mã nếu đó là cách duy nhất.",
+          "full_chars": 457,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "121222",
+        "document_id": "125155",
+        "query": {
+          "text": "Xác định gen từ một danh sách các gen",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "So sánh hai tập tin để tìm các dòng trùng khớp và lưu kết quả dương tính Tôi có 2 file. ### File 1: A0001 C001 B0003 C896 A0024 C234 . B1542 C231 . tới 28412 dòng như thế này ### File 2: A0001 A0024 B1542 . . và 12000 dòng như thế này Tôi muốn so sánh File 2 với File 1 và lưu các dòng khớp từ File 1. Tôi đã thử Perl và Bash nhưng không có cái nào hoạt động được. Mới đây tôi đã thử một cái gì đó như thế này for (@q) # sau khi lưu nội dung của file thứ hai vào mảng $line =`cat File1 | grep $_`; #gọi trực tiếp File 1 từ bash print $line; nhưng nó không thành công.",
+          "full_chars": 568,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "104429",
+        "document_id": "134238",
+        "query": {
+          "text": "Làm thế nào để tôi chỉnh sửa một tập tin như là root?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cách để chỉnh sửa fstab ở Debian Tôi muốn thay đổi tập tin fstab để có thể giải quyết \"lỗi đính kèm\" (tôi đã thử xóa dòng cuối của tập tin fstab) # /etc/fstab: thông tin hệ thống tập tin tĩnh. # # Sử dụng 'blkid' để in định danh duy nhất trên toàn cầu cho một # thiết bị; điều này có thể được sử dụng với UUID= như một cách mạnh mẽ hơn để đặt tên các thiết bị # hoạt động ngay cả khi đĩa được thêm vào và tháo ra. Xem fstab(5). # # <hệ thống tập tin> <điểm đính kèm> <loại> <tùy chọn> <dump> <pass> # / was on /dev/sda5 during installation UUID=8a97edce-fb5d-4dfb-8843-1d6a8f40c8ed / ext4 errors=remount-ro 0 1 # /home was on /dev/sda7 during installation UUID=20c4aa72-06e1-47eb-acae-2ca0a53ebc93 /home ext4 defaults 0 2 # swap was on /dev/sda6 during installation UUID=638f2aee-806c-4845-bb1b-3bff47728184 none swap sw 0 0 /dev/sr0 /media/cdrom0 udf,iso9660 user,noauto 0 0 #/dev/sdb1 /media/usb0 auto rw,user,noauto 0 0 Nhưng bây giờ tôi cần \"quyền ghi tập tin.\" Làm thế nào để làm điều đó?",
+          "full_chars": 1069,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

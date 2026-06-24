@@ -111,11 +111,9 @@ retrieval for recall and a duplicate-specific reranker for final ordering.
 
 | Query | Positive document |
 | --- | --- |
-| É normal rir das próprias piadas? | É estranho rir das minhas próprias piadas? |
-| Qual é a maior mentira que você já contou? | Qual é a maior mentira que você já contou? |
-| Por que o Quora frequentemente sugere respostas no meu feed que criticam Donald Trump? | Por que o Quora parece ter apenas respostas tendenciosas e subjetivas sobre perguntas relacionadas a Donald Trump? |
-| Como posso ficar mais forte fisicamente? | Como posso ficar mais forte fisicamente? |
-| Como funciona um satélite quântico? | Como funciona um satélite quântico e quais seriam suas principais aplicações? |
+| É normal rir das próprias piadas? [33 chars] | É estranho rir das minhas próprias piadas? [42 chars] |
+| Qual é a maior mentira que você já contou? [42 chars] | Qual é a maior mentira que você já contou? [42 chars] |
+| Por que o Quora frequentemente sugere respostas no meu feed que criticam Donald Trump? [86 chars] | Por que o Quora parece ter apenas respostas tendenciosas e subjetivas sobre perguntas relacionadas a Donald Trump? [114 chars] |
 
 ### Public Sources
 
@@ -129,7 +127,7 @@ retrieval for recall and a duplicate-specific reranker for final ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Quora Question Pairs | 2017 | dataset competition | https://kaggle.com/competitions/quora-question-pairs |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Quora Question Pairs | 2017 | dataset competition | [https://kaggle.com/competitions/quora-question-pairs](https://kaggle.com/competitions/quora-question-pairs) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

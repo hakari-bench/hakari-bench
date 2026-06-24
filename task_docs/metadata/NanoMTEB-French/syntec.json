@@ -131,8 +131,59 @@
         "url": "https://huggingface.co/datasets/lyon-nlp/mteb-fr-retrieval-syntec-s2p",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "82",
+        "document_id": "article-18",
+        "query": {
+          "text": "Puis-je justifier d'une indemnité de licenciement si cela fait-il plus de 2 ans que je suis dans cette entreprise ?",
+          "full_chars": 115,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Article 18 : Indemnité de licenciement – Conditions d’attribution Modification Avenant n° 7 du 5/07/1991 Il est attribué à tout salarié licencié justifiant d’au moins 2 années d’ancienneté une indemnité de licenciement distincte de l’indemnité éventuelle de préavis. Cette indemnité de licenciement n’est pas due dans le cas où le licenciement est intervenu pour faute grave ou lourde. Cette indemnité sera réduite de 1/3 lorsque le salarié sera pourvu par l’employeur, avant la fin de la période de préavis, d’un emploi équivalent et accepté par l’intéressé en dehors de l’entreprise. Ce tiers restant sera versé à l’intéressé si la période d’essai dans le nouvel emploi reste sans suite.",
+          "full_chars": 690,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "21",
+        "document_id": "article-75",
+        "query": {
+          "text": "Mon entreprise a déposé un brevet sur mon invention. A quoi ai-je droit ?",
+          "full_chars": 73,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Article 75 : Invention des salariés dans le cadre des activités professionnelles Dispositions générales : Les règles relatives aux inventions des salariés sont fixées par la loi n° 78-742 du 13 juillet 1978 modifiant et complétant la loi n° 68-1 du 2 janvier 1968 tendant à valoriser l’activité inventive et à modifier le régime des brevets d’invention. Conformément aux dispositions de l’article 1er (alinéa 1) de la loi de 1978, sont réputées appartenir à l’employeur les inventions faites par le salarié dans l’exécution soit d’un contrat de travail comportant une mission inventive qui correspond à ses fonctions effectives, soit d’études et de recherches qui lui sont explicitement confiées. Les formalités que le salarié et l’employeur doivent effectuer l’un envers l’autre, notamment la déclaration d’invention du salarié, les communications de l’employeur et l’accord entre le salarié et l’employeur, sont précisées par le décret n° 79-797 du 4 septembre 1979, modifié par le décret n° 84-684",
+          "full_chars": 3628,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "11",
+        "document_id": "article-25",
+        "query": {
+          "text": "Quelle est la période de prise de congés ?",
+          "full_chars": 42,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Article 25 : Période de congés Les droits à congé s’acquièrent du 1er juin de l’année précédente au 31 mai de l’année en cours. La période de prise de ces congés, dans tous les cas, est de treize mois au maximum. Aucun report de congés ne peut être toléré au-delà de cette période sauf demande écrite de l’employeur. L’employeur peut soit procéder à la fermeture totale de l’entreprise dans une période située entre le 1er mai et le 31 octobre, soit établir les congés par roulement après consultation du comité d’entreprise (ou à défaut des délégués du personnel) sur le principe de cette alternative. Si l’entreprise ferme pour les congés, la date de fermeture doit être portée à la connaissance du personnel au plus tard le 1er mars de chaque année.",
+          "full_chars": 753,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

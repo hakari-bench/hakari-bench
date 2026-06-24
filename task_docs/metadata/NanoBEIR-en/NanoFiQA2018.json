@@ -132,7 +132,7 @@
         "title": "FiQA 2018 official challenge site",
         "url": "https://sites.google.com/view/fiqa/home",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -140,8 +140,59 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "What type of returns Vanguard is quoting?",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"From the Vanguard page - This seemed the easiest one as S&P data is simple to find. I use MoneyChimp to get - which confirms that Vanguard's page is offering CAGR, not arithmetic Average. Note: Vanguard states \"\"For U.S. stock market returns, we use the Standard & Poor's 90 from 1926 through March 3, 1957,\"\" while the Chimp uses data from Nobel Prize winner, Robert Shiller's site.\"",
+          "full_chars": 387,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Freelancing Tax implication",
+          "full_chars": 27,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "If you have income in the US, you will owe US income tax on it, unless there is a treaty with your country that says otherwise.",
+          "full_chars": 127,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "What is considered high or low when talking about volume?",
+          "full_chars": 57,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The daily Volume is usually compared to the average daily volume over the past 50 days for a stock. High volume is usually considered to be 2 or more times the average daily volume over the last 50 days for that stock, however some traders might set the crireia to be 3x or 4x the ADV for confirmation of a particular pattern or event. The volume is compared to the ADV of the stock itself, as comparing it to the volume of other stocks would be like comparing apples with oranges, as difference companies would have different number of total stocks available, different levels of liquidity and different levels of volatility, which can all contribute to the volumes traded each day.",
+          "full_chars": 684,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

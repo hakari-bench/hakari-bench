@@ -70,11 +70,11 @@ For evaluation, this split is a clear test of multilingual e-commerce retrieval.
 
 ## Example Data
 
-### Public Sources
-
-- xPQA paper: https://arxiv.org/abs/2305.09249
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- Source task dataset card: https://huggingface.co/datasets/mteb/XPQARetrieval
+| Query | Positive document |
+| --- | --- |
+| el pack de 3 cintas, ¿es una de cada tamaño o las 3 del mismo tamaño? [69 chars] | gm climbing pack of 3 16mm nylon sling runner 120cm / 48inch (gray) [67 chars] |
+| que son tallas grandes o justas? [32 chars] | The waist-tightening and slim-fitting design hides your proud flesh at your waist and instead forms a curve there. [114 chars] |
+| és el modelo acústico o electro acústico? [41 chars] | martin drs2 dreadnought acoustic-electric guitar [48 chars] |
 
 ### Source Reference Table
 

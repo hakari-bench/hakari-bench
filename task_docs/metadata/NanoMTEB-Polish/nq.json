@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 9
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Natural Questions: A Benchmark for Question Answering Research",
-        "url": "https://aclanthology.org/Q19-1026/",
-        "year": 2019,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Natural Questions project page",
-        "url": "https://ai.google.com/research/NaturalQuestions/",
-        "year": 2019,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/NQ-PLHardNegatives",
-        "url": "https://huggingface.co/datasets/mteb/NQ-PLHardNegatives",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/NQ-PLHardNegatives"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Natural Questions: A Benchmark for Question Answering Research",
+        "url": "https://aclanthology.org/Q19-1026/",
+        "year": 2019,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Natural Questions project page",
+        "url": "https://ai.google.com/research/NaturalQuestions/",
+        "year": 2019,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/NQ-PLHardNegatives",
+        "url": "https://huggingface.co/datasets/mteb/NQ-PLHardNegatives",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test602",
+        "document_id": "doc21533",
+        "query": {
+          "text": "którzy byli sędziami tańca na lodzie 2014",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taniec na lodzie Phillip Schofield i Christine Bleakley powrócili do współobecności. Dean, Torvill i Karen Barber powrócili, by mentorować celebrytów. Robin Cousins, Jason Gardiner, Barber i Ashley Roberts powrócili z odpowiednio dziewiątą, ósmą, siódmą i drugą serią na The Ice Panel. Kuzyni byli nieobecni przez 6 i 7 tygodni z powodu komentowania Zimowych Igrzysk Olimpijskich 2014, więc były sędzia Nicky Slater powrócił na jego miejsce, a Barber był tymczasowym sędzią głównym.",
+          "full_chars": 483,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test201",
+        "document_id": "doc7251",
+        "query": {
+          "text": "kiedy wyjdzie sezon 5 rubinu?",
+          "full_chars": 29,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lista odcinków RWBY RWBY to trwająca amerykańska seria internetowa w stylu anime, stworzona przez Rooster Teeth Productions. Premiera odbyła się 18 lipca 2013 r. Na stronie internetowej Rooster Teeth, a odcinki zostały później przesłane na YouTube i strony strumieniowe, takie jak Crunchyroll. Wydano cztery sezony, określane jako „Tomy”, z których piąty trwa od premiery 14 października 2017 r.[1] Do października 2017 r. wydano 54 odcinki, które są określane jako „Rozdziały”.",
+          "full_chars": 479,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test124",
+        "document_id": "doc4632",
+        "query": {
+          "text": "kiedy w alton towers zamknięto koryto z bali?",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Korytarz (wieże Alton) The Flume był log Flume w Alton Towers w Staffordshire. Został otwarty w 1981 roku i został odnowiony w 2004 roku, co zbiegło się z jego sponsorowaniem przez Imperial Leather. Przejażdżka była rynną z bali o tematyce kąpielowej z trzema kroplami. W momencie otwarcia była to najdłuższa atrakcja z bali na świecie. Atrakcja została zamknięta w 2015 roku i została usunięta rok później w celu przekształcenia obszaru w kolejkę górską SW8.",
+          "full_chars": 460,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

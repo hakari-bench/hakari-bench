@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
-        "url": "https://arxiv.org/abs/1809.09600",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "Penny Rae Bridges đã đóng vai trong một bộ phim hài truyền hình cùng với diễn viên nào khác?",
+          "full_chars": 92,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (sinh ngày 29 tháng 7 năm 1990) là một nữ diễn viên người Mỹ. Công việc truyền hình của cô đã bao gồm các vai diễn trong \"For Your Love\", \"Family Law\", \"Boy Meets World\" và \"The Parent 'Hood\". Cô được biết đến nhiều nhất với vai diễn trong \"Half & Half\", trong vai Mona trẻ.",
+          "full_chars": 292,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "Ai đã tặng Kaganoi Shigemochi một thanh kiếm được làm bởi người sáng lập trường Muramasa?",
+          "full_chars": 89,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 tháng 8, 1600) là một samurai Nhật Bản của thời kỳ Azuchi-Momoyama, phục vụ cho gia tộc Oda. Ông cai trị lâu đài Kaganoi. Trong trận chiến Komaki và Nagakute, Shigemochi chiến đấu dưới sự chỉ huy của cha mình là Shigemune, người đã tham gia vào lực lượng của Oda Nobukatsu. Ngay sau đó, lâu đài Kaganoi bị bao vây bởi lực lượng của Toyotomi Hideyoshi; Shigemune đã đầu hàng, và Shigemochi được Hideyoshi tuyển dụng làm sứ giả, nhận một khoản trợ cấp 10.000 \"koku\". Ông cũng sở hữu một thanh kiếm được chế tác bởi Muramasa, mà Hideyoshi đã ban tặng cho ông vào năm 1598.",
+          "full_chars": 607,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "Bộ phim nào được viết và đạo diễn bởi Joby Harold với nhạc được viết bởi Samuel Sim?",
+          "full_chars": 84,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim là một nhạc sĩ phim và truyền hình. Ông lần đầu tiên được công nhận với bản nhạc đoạt giải cho loạt phim truyền hình của BBC \"Dunkirk\". Kể từ đó, ông đã sáng tác nhạc cho nhiều sản phẩm phim và truyền hình khác nhau, gần đây nhất là nhạc cho bộ phim \"Awake\" của The Weinstein Company và loạt phim truyền hình BBC/HBO \"House of Saddam\". Bản nhạc được đánh giá cao gần đây nhất của ông là nhạc phim cho Home Fires. Home Fires (Nhạc từ loạt phim truyền hình) được phát hành vào ngày 6 tháng 5 năm 2016 bởi Sony Classical Records.",
+          "full_chars": 537,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

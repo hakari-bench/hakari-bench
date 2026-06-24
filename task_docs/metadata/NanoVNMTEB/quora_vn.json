@@ -161,6 +161,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "8229",
+        "document_id": "8228",
+        "query": {
+          "text": "Xiaomi Redmi note 4 ra mắt ở Ấn Độ vào ngày nào?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hãy chuyển câu này sang tiếng Việt: Khi nào Xiaomi Redmi note 4 sẽ ra mắt ở Ấn Độ?",
+          "full_chars": 83,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1566",
+        "document_id": "161940",
+        "query": {
+          "text": "Có khả năng Trump sẽ thắng cuộc bầu cử không?",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nếu bạn muốn dịch câu này sang tiếng Việt, hãy viết câu đó ở dưới này. Trump có cơ hội thắng cử không?",
+          "full_chars": 103,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10991",
+        "document_id": "10990",
+        "query": {
+          "text": "Có nên thực hiện một phim truyền hình dựa trên bộ phim Shiva Trilogy?",
+          "full_chars": 69,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chào các bạn, Nếu bộ ba Shiva được chuyển thể thành một series phim truyền hình thì nó sẽ như thế nào?",
+          "full_chars": 103,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

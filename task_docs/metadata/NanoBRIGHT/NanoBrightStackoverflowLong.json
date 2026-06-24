@@ -138,17 +138,68 @@
         "url": "https://brightbenchmark.github.io/",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "xlangai/BRIGHT",
         "url": "https://huggingface.co/datasets/xlangai/BRIGHT",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "67",
+        "document_id": "Mmdn_Methods_Properties/Mmdn_methods.txt",
+        "query": {
+          "text": "Sort tbody list which is populated with Javascript getList? I have a router with a DHCP page which is not sorted by the internal IP number, instead it is fully random. I have full access to the html and javascript, and I can modify this without any issues. However I cannot figure out how to make the list sorted by IP-address by default. I have no need to be able to manually click and sort, I just want the list to always be sorted by IP-address. I cannot figure out if it is possible to sort a get",
+          "full_chars": 12432,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "* Skip to main content * Skip to search * Skip to select language [ MDN Web Docs ](/en-US/) Open main menu * References [ References ](/en-US/docs/Web) * [ Overview / Web Technology Web technology reference for developers ](/en-US/docs/Web) * [ HTML Structure of content on the web ](/en-US/docs/Web/HTML) * [ CSS Code used to describe document style ](/en-US/docs/Web/CSS) * [ JavaScript General-purpose scripting language ](/en-US/docs/Web/JavaScript) * [ HTTP Protocol for transmitting web resources ](/en-US/docs/Web/HTTP) * [ Web APIs Interfaces for building web applications ](/en-US/docs/Web/API) * [ Web Extensions Developing extensions for web browsers ](/en-US/docs/Mozilla/Add-ons/WebExtensions) * [ Web Technology Web technology reference for developers ](/en-US/docs/Web) * Guides [ Guides ](/en-US/docs/Learn) * [ Overview / MDN Learning Area Learn web development ](/en-US/docs/Learn) * [ MDN Learning Area Learn web development ](/en-US/docs/Learn) * [ HTML Learn to structure web con",
+          "full_chars": 951658,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "110",
+        "document_id": "WinSCP/WinSCP.txt",
+        "query": {
+          "text": "Copy and delete files from SFTP folder I have to pick (remove) the files with file mask `FileName_A_*` and `FileName_B_*` from SFTP location and place them in an sharedrive. I tried using WinSCP. I have created an `HourlyFile.txt` file with below code and placed it under `C:\\Program Files (x86)\\WinSCP`. Another batch file `HourlyFile.bat` to execute the script from HourlyFile.txt HourlyFile.txt: ``` option batch abort option confirm off open sftp.......... get -filemask=\"FileName_A_*\" /outbound/",
+          "full_chars": 1125,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Menu Toggle search [ ![](https://winscp- static-746341.c.cdn77.org/assets/images/logos/logo.png?v=7032) WinSCP Free SFTP, SCP, S3 and FTP client for Windows ](https://winscp.net/) * [ Home ](/eng/index.php) * [ News ](/eng/news.php) * [ Introduction ](/eng/docs/introduction) * [ Download ](/eng/download.php) * [ Install ](/eng/docs/guide_install) * [ Documentation ](/eng/docs/) * [ Forum ](/forum/) Close Search Close [ Documentation ](/eng/docs/start \"Documentation\") » [ Features ](/eng/docs/feature_index \"Features\") » [ Scripting ](/eng/docs/scripting \"Scripting\") » [ Script Commands ](/eng/docs/scripting#commands \"Script Commands\") » # call command With [ SFTP and SCP protocols ](/eng/docs/protocols) , executes arbitrary [ remote shell command ](/eng/docs/remote_command) . With FTP protocol, executes a protocol command. Not supported with WebDAV and S3 protocols. * Syntax * Remarks * Examples * Converting to .NET Assembly _Advertisement_ ## Syntax call <command> ## Remarks With SFTP",
+          "full_chars": 190917,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "100",
+        "document_id": "Learn_filter_financial_functions/Learn_filter.txt",
+        "query": {
+          "text": "DAX RLS Function using LOOKUPVALUE Parsing but not working I have a table that I'm trying to implement RLS on using a secondary table with a structure below: EmployeeTable ``` EmployeeID EmployeeEmail 1 1234@email.com 2 4567@email.com ``` FilterTable ``` EmployeeID ManagerHierarchy 1 3&4&5 2 6&7&4&5 ``` The ManagerHierarchy column is a string that shows all managers of an employee concatenated together and separated by \"&\". The goal of the RLS is to create a filter that allows any manager to vie",
+          "full_chars": 1525,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "Skip to main content This browser is no longer supported. Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support. [ Download Microsoft Edge ](https://go.microsoft.com/fwlink/p/?LinkID=2092881 ) [ More info about Internet Explorer and Microsoft Edge ](https://learn.microsoft.com/en-us/lifecycle/faq/internet-explorer-microsoft- edge) Table of contents Exit focus mode Read in English Save [ ](https://github.com/MicrosoftDocs/query- docs/blob/main/query-languages/dax/lookupvalue-function-dax.md \"Edit This Document\") Table of contents Read in English Save Add to Plan [ Edit ](https://github.com/MicrosoftDocs/query-docs/blob/main/query- languages/dax/lookupvalue-function-dax.md \"Edit This Document\") Print Twitter LinkedIn Facebook Email Table of contents # LOOKUPVALUE * Article * 10/20/2023 * 4 contributors Feedback ## In this article Returns the value for the row that meets all criteria specified by one or more search conditions. ## Synta",
+          "full_chars": 42606,
+          "limit_chars": 1000,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "xlangai/BRIGHT",
-    "source_task": "Stack Overflow long-document"
+    "source_task": "Stack Overflow long-document",
+    "example_count": 3
   }
 }

@@ -48,13 +48,11 @@ Strong models should improve answer relation matching while keeping entity preci
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| ¿Dónde se celebrará el Final Four este año? | El Torneo de Baloncesto Masculino de la División I de la NCAA de 2018 fue un torneo de eliminación directa... |
-| ¿Era "Pesadilla antes de Navidad" originalmente una película de Disney? | La Pesadilla Antes de Navidad surgió de un poema escrito por Tim Burton en 1982... |
-| ¿Por qué está el Ángel del Norte ahí? | Según Gormley, el significado de un ángel tenía tres aspectos importantes: primero, representar que bajo el lugar de su construcción... |
-| ¿Dónde se estableció originalmente el Compromiso de los Tres Quintos en la Constitución? | El Compromiso de los Tres Quintos se encuentra en el Artículo 1, Sección 2, Cláusula 3... |
-| ¿Quién canta "Somebody's Watching Me" con Michael Jackson? | "Somebody's Watching Me" es una canción del cantante estadounidense Rockwell de su álbum debut... |
+| Query | Positive document |
+| --- | --- |
+| ¿Dónde se celebrará el Final Four este año? [43 chars] | El Torneo de Baloncesto Masculino de la División I de la NCAA de 2018 fue un torneo de eliminación directa de 68 equipos para determinar el campeón nacional de baloncesto universitario de la División I de la NCAA para la temporada 2017–18. La 80ª edición del torneo comenzó el 13 de marzo de 2018 y finalizó con el partido por el campeonato el 2 de abril en el Alamodome de San Antonio, Texas. [393 chars] |
+| ¿Era "Pesadilla antes de Navidad" originalmente una película de Disney? [71 chars] | La Pesadilla Antes de Navidad surgió de un poema escrito por Tim Burton en 1982, mientras trabajaba como animador en Walt Disney Feature Animation. Con el éxito de Vincent ese mismo año, Walt Disney Studios comenzó a considerar desarrollar La Pesadilla Antes de Navidad como un cortometraje o un especial de televisión de 30 minutos. A lo largo de los años, los pensamientos de Burton regresaban regularmente al proyecto, y en 1990, hizo un acuerdo de desarrollo con Disney. La producción comenzó en julio de 1991 en San Francisco; Disney lanzó la película bajo su sello Touchstone Pictures porque el estudio creía que la película sería "demasiado oscura y aterradora para los niños".[4] [687 chars] |
+| ¿Por qué está el Ángel del Norte ahí? [37 chars] | Según Gormley, el significado de un ángel tenía tres aspectos importantes: primero, representar que bajo el lugar de su construcción, los mineros de carbón trabajaron durante dos siglos; segundo, reflejar la transición de una era industrial a una era de la información, y tercero, actuar como punto de referencia para nuestras esperanzas y miedos en evolución. [360 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should improve answer relation matching while keeping entity preci
 
 | Label | URL |
 |---|---|
-| Natural Questions paper | https://aclanthology.org/Q19-1026/ |
-| Natural Questions dataset page | https://ai.google.com/research/NaturalQuestions |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions paper (https://aclanthology.org/Q19-1026/) |
+| Natural Questions dataset page (https://ai.google.com/research/NaturalQuestions) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

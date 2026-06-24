@@ -62,19 +62,19 @@ Models should learn evidence specificity, not only topic similarity. Training sh
 
 ## Example Data
 
-### Public Sources
-
-- [CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims](https://arxiv.org/abs/2012.00614), 2020.
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316), 2023.
-- [mteb/ClimateFEVER_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Currently, sea-level rise does not seem to depend on ocean temperature, and certainly not on CO2. [97 chars] | Paleocene–Eocene Thermal Maximum The Paleocene -- Eocene Thermal Maximum ( PETM ) , alternatively ( ETM1 ) , and formerly known as the `` Initial Eocene '' or '' '' was a time period with more than 8 ° C warmer global average temperature than today . This climate event began at the time boundary between the Paleocene and Eocene geological epochs . The exact age and duration of the event is uncertain but it is estimated to have occurred around 55.5 million years ago . The associated period of massive carbon injection into the atmosphere has been estimated to have lasted no longer than 20,000 years . The entire warm period lasted for about 200,000 years . Global temperatures increased by 5 -- 8 ° C . The carbon dioxide was likely released in two pulses , the first lasting less than 2,000 years . Such a repeated carbon release is in line with current global warming . A main difference is that during the Paleocene -- Eocene Thermal Maximum , the planet was essentially ice-free . The onset... [1,000 / 2,549 chars] |
+| The main greenhouse gas is water vapour[…] [42 chars] | Greenhouse gas A greenhouse gas ( abbrev . GHG ) is a gas in an atmosphere that absorbs and emits radiation within the thermal infrared range . This process is the fundamental cause of the greenhouse effect . The primary greenhouse gases in Earth 's atmosphere are water vapor , carbon dioxide , methane , nitrous oxide , and ozone . Without greenhouse gases , the average temperature of Earth 's surface would be about -18 ° C , rather than the present average of 15 ° C . In the Solar System , the atmospheres of Venus , Mars and Titan also contain gases that cause a greenhouse effect . Human activities since the beginning of the Industrial Revolution ( taken as the year 1750 ) have produced a 40 % increase in the atmospheric concentration of carbon dioxide , from 280 ppm in 1750 to 406 ppm in early 2017 . This increase has occurred despite the uptake of a large portion of the emissions by various natural `` sinks '' involved in the carbon cycle . Anthropogenic carbon dioxide emissions ( i... [1,000 / 1,706 chars] |
+| the warming is not nearly as great as the climate change computer models have predicted. [88 chars] | Deforestation Deforestation , clearance or clearing is the removal of a forest or stand of trees where the land is thereafter converted to a non-forest use . Examples of deforestation include conversion of forestland to farms , ranches , or urban use . The most concentrated deforestation occurs in tropical rainforests . About 30 % of Earth 's land surface is covered by forests . Deforestation occurs for multiple reasons : trees are cut down to be used for building or sold as fuel , ( sometimes in the form of charcoal or timber ) , while cleared land is used as pasture for livestock and plantation . The removal of trees without sufficient reforestation has resulted in damage to habitat , biodiversity loss and aridity . It has adverse impacts on biosequestration of atmospheric carbon dioxide . Deforestation has also been used in war to deprive the enemy of vital resources and cover for its forces . Modern examples of this were the use of Agent Orange by the British military in Malaya dur... [1,000 / 2,080 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | source task paper | https://arxiv.org/abs/2012.00614 |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| mteb/ClimateFEVER_test_top_250_only_w_correct-v2 |  | dataset card | https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2 |
+| CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims | 2020 | source task paper | [https://arxiv.org/abs/2012.00614](https://arxiv.org/abs/2012.00614) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| mteb/ClimateFEVER_test_top_250_only_w_correct-v2 |  | dataset card | [https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2](https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2) |
 
 ### Representative Snippets
 

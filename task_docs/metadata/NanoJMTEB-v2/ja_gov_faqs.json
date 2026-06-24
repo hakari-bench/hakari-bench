@@ -86,23 +86,6 @@
         "rows_with_101_candidates": 9
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "sbintuitions/JMTEB",
-        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoJMTEB-v2",
       "source_urls": [
@@ -115,6 +98,73 @@
           "url": "https://huggingface.co/datasets/sbintuitions/JMTEB"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "sbintuitions/JMTEB",
+        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "66",
+        "document_id": "12706",
+        "query": {
+          "text": "入学後に家計が苦しくなった場合、後から申し込むことは可能ですか。",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "入学後に申し込むことも可能です。災害や生計維持者（父母等）の死亡などの予期できない事情があって家計が急変した場合には、特例的に、随時申込みを受け付け、急変後の所得に基づいて要件を満たすかどうかを判定し、支援対象とします。（資料７参照）（大学等の事務担当者におかれては、「授業料等減免事務処理要領」及びJASSOからの案内を御確認 の上、学生等の相談に応じていただけるよう、お願いします。）",
+          "full_chars": 194,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "4542",
+        "query": {
+          "text": "公的研究機関の場合、「事情」欄はどのように記載すればよいですか。",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "出願人が研究所の場合は、「出願人○○は公的研究機関である」と記載してください。なお、出願人が都道府県名等であって、当該研究所名と異なる場合は、ガイドラインのII. 5.（1）②の記載を参考にしてください。",
+          "full_chars": 102,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "9706",
+        "query": {
+          "text": "どのような手数料が必要ですか。",
+          "full_chars": 15,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "法人文書の開示にあたっては、情報公開法の規定による「開示請求手数料」および「開示実施手数料」の納付が必要です。開示請求手数料は、法人文書1件について300円の納付が必要です。開示実施手数料は、文書の種類、開示の実施方法、開示文書の量等により計算した額から開示請求の際に納付された300円を減額した額が納付する額となります。納付する開示実施手数料の額は、開示決定通知書に記載しお知らせします。",
+          "full_chars": 195,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

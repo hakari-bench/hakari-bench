@@ -62,21 +62,20 @@ Models should learn to map lay medical questions to evidence passages that suppo
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/Medical-Sciences dataset card](https://huggingface.co/datasets/R2MED/Medical-Sciences).
+| Query | Positive document |
+| --- | --- |
+| Is food prepared in a microwave oven less healthy?/nThere are people who avoid preparing their food in microwave ovens for various health-related reasons. The claims most often stated are: Microwave radiation is harmful. Microwaving destroys vitamins and other nutrients. Is there any scientific evidence to suggest that microwaved food is less healthy compared to food prepared in more conventional ways? [405 chars] | How much water you're cooking with. Water-soluble vitamins like B and C can leach out of the vegetables and into the cooking water. For this reason, cooking methods that use little or no water are the best ones. Boiling (unless you're making a stew and so will be consuming the vitamin-filled water) is not a great choice. Microwaving and flash-steaming score high. Fat-soluble vitamins, such as A, D, E, K and carotenoids, are less affected by this factor. How much heat you're cooking with. Heat has been proven to degrade nutrients. Of course, it's tough to avoid heat when cooking. To retain as much of the good stuff as possible, simply limit the amount of time the vegetables are exposed to heat. Which brings us to … [729 chars] |
+| Increase in acne during weight loss. Is it normal?/nI'm 100kg male. I'm losing 1kg-2kg per week with cardio and diet. Recently I noticed an increase in acnes around my arm and back. Also my forehad is more oily than usual. Are these changes normal for someone who is losing weight? I am overweight because of junk food and I still eat junk food. 1/3 of my daily intake is chips, pizza etc. but it is limited to 500cal a day on average. [435 chars] | Once the bacteria is on the scene, it attracts white blood cells to help fight back. This is what ultimately causes the inflammation that we refer to as a pimple. Blocked pores, dirty pores and an excess of oil production can all lead to acne. Some people may notice that exercise and perspiration causes an outbreak. There's long been a rumor that a good sweat will actually clean out your pores, but science says that's not the case. Sweat glands and oil pores are two different things, so not only does sweat not clean out oil pores, but it might actually make things worse. For one, irritants like dust and dirt are more likely to stick to moist skin, which can lead to clogged pores. [691 chars] |
+| Why is it so much harder to swallow pills than it is to swallow food?/nI don't have any real trouble swallowing pills, and I do it several times a day. But when I try to swallow a pill without food or water in my mouth, it is a bit tricky. We're not talking about huge horse pills either, just regular, relatively small pills. I can swallow a whole raw oyster, which is the size of hundreds of pills combined, but a single little capsule or tablet is too much for me to consume without food or water?... [500 / 927 chars] | (A) The bolus is held between the anterior surface of the tongue and hard palate, in a “swallow ready” position (end of oral preparatory stage). The tongue presses against the palate both in front of and behind the bolus to prevent spillage. (B) The bolus is propelled from the oral cavity to the pharynx through the fauces (Oral propulsive stage). The anterior tongue pushes the bolus against the hard palate just behind the upper incisors while posterior tongue drops away from the palate. (C-D) Pharyngeal stage. (C) The soft palate elevates, closing off the nasopharynx. The area of tongue-palate contact spreads posteriorly, squeezing the bolus into the pharynx. The larynx is displaced upward and forward as the epiglottis tilts backward. (D) The upper esophageal sphincter opens. [786 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/Medical-Sciences | 2025 | dataset card | https://huggingface.co/datasets/R2MED/Medical-Sciences |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/Medical-Sciences | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/Medical-Sciences](https://huggingface.co/datasets/R2MED/Medical-Sciences) |
 
 ### Representative Snippets
 

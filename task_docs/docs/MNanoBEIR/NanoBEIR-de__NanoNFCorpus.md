@@ -48,13 +48,11 @@ Improvements should come from better biomedical German representations, lay-to-t
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Gesunde Schokoladen-Milchshakes | Ziel: Untersuchung der Beziehung zwischen dem Verzehr von Kirschen und dem Risiko von wiederkehrenden Gichtanfällen bei Personen mit Gicht... |
-| Medizinische Ethik | HINTERGRUND: Ein Hauptproblem bei der Kontrolle des Serumcholesterins durch diätetische Maßnahmen scheint die Notwendigkeit zu sein... |
-| Saubohnen | In den letzten 20 Jahren hat das wachsende Interesse an der Biochemie, Ernährung und Pharmakologie von L-Arginin... |
-| Was steckt eigentlich in Chicken Nuggets? | ZIEL: Untersuchung der Inhaltsstoffe von Hähnchen-Nuggets zweier nationaler Fast-Food-Ketten... |
-| gesättigte Fette | Das Interesse an der Möglichkeit, dass die Ernährung der Mutter während der Schwangerschaft die Entwicklung von Allergien bei Kindern beeinflussen könnte... |
+| Query | Positive document |
+| --- | --- |
+| Gesunde Schokoladen-Milchshakes [31 chars] | Ziel: Untersuchung der Beziehung zwischen dem Verzehr von Kirschen und dem Risiko von wiederkehrenden Gichtanfällen bei Personen mit Gicht. Methoden: Wir führten eine Fall-Kreuz-Studie durch, um die Zusammenhänge zwischen einer Reihe von vermuteten Risikofaktoren und wiederkehrenden Gichtanfällen zu untersuchen. Personen mit Gicht wurden prospektiv rekrutiert und ein Jahr lang online begleitet. Die Teilnehmer wurden gebeten, bei einem Gichtanfall folgende Informationen anzugeben: das Datum des Beginns des Gichtanfalls, Symptome und Anzeichen, Medikamente (einschließlich Gichtmedikamente) und potenzielle Risikofaktoren (einschließlich des täglichen Verzehrs von Kirschen und Kirsch-Extrakt) während der 2-Tage-Periode vor dem Gichtanfall. Wir erfassten dieselben Expositionsinformationen über 2-Tage-Kontrollperioden. Wir schätzten das Risiko von wiederkehrenden Gichtanfällen in Bezug auf den Kirschverzehr mit Hilfe der konditionalen logistischen Regression. Ergebnisse: Unsere Studie umfass... [1,000 / 1,915 chars] |
+| Medizinische Ethik [18 chars] | HINTERGRUND: Ein Hauptproblem bei der Kontrolle des Serumcholesterins durch diätetische Maßnahmen scheint die Notwendigkeit zu sein, die Patientencompliance zu verbessern. ZIELE: Untersuchung der verschiedenen Fragen bezüglich der Barrieren und Motivatoren für die Einhaltung einer cholesterinsenkenden Diät. METHODEN: Wir befragten französische Allgemeinmediziner zu ihren diätetischen Praktiken bei Patienten mit Hypercholesterinämie und untersuchten die Einstellungen ihrer Patienten zu diesem Ansatz. ERGEBNISSE: Wir analysierten 234 Fragebögen von Ärzten und 356 Selbstauskunftsbögen von Patienten. Die Gründe der Patienten für die Nicht-Einhaltung der vorgeschriebenen Diät umfassten: 'bereits zufriedenstellende Ernährungsgewohnheiten' (34,7 %), 'Unwillen, auf Nährstoffe zu verzichten' (33,3 %), 'Schwierigkeiten, eine Diät mit dem Familienleben zu vereinbaren' (27,8 %) und 'Einnahme von cholesterinsenkenden Medikamenten' (22,2 %). Trotz eines allgemeinen guten Verständnisses der Empfehlun... [1,000 / 2,153 chars] |
+| Saubohnen [9 chars] | In den letzten 20 Jahren hat das wachsende Interesse an der Biochemie, Ernährung und Pharmakologie von L-Arginin zu umfangreichen Studien geführt, um seine ernährungsphysiologischen und therapeutischen Rollen bei der Behandlung und Vorbeugung menschlicher Stoffwechselstörungen zu erforschen. Neue Erkenntnisse zeigen, dass die Supplementierung mit diätetischem L-Arginin die Fettleibigkeit bei genetisch adipösen Ratten, diätetisch adipösen Ratten, Mastschweinen und adipösen Menschen mit Typ-2-Diabetes mellitus reduziert. Die Mechanismen, die für die vorteilhaften Wirkungen von L-Arginin verantwortlich sind, sind wahrscheinlich komplex, beeinflussen jedoch letztlich das Gleichgewicht von Energieaufnahme und -verbrauch zugunsten von Fettabbau oder reduziertem Wachstum von weißem Fettgewebe. Neuere Studien deuten darauf hin, dass die Supplementierung mit L-Arginin die Mitochondrienbiogenese und die Entwicklung von braunem Fettgewebe anregt, möglicherweise durch die verstärkte Synthese von z... [1,000 / 1,445 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Improvements should come from better biomedical German representations, lay-to-t
 
 | Label | URL |
 |---|---|
-| NFCorpus paper | https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf |
-| NFCorpus project page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| NFCorpus paper (https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf) |
+| NFCorpus project page (https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

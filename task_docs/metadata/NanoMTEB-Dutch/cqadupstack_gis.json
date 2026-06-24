@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,86 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "78923",
+        "document_id": "77018",
+        "query": {
+          "text": "Hoe verander ik de beeldverhouding van een kaart zonder dat de schaal verandert?",
+          "full_chars": 80,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe de grootte van het kaart item in de QGIS print composer aan te passen zonder de schaal te veranderen? Is het mogelijk om de schaal te vergrendelen in de QGIS 2.0.1 print composer? Elke keer dat ik de kaart verplaats, wordt de schaal aangepast. Dit maakt het uitproberen van verschillende kaartlay-outs erg vervelend.",
+          "full_chars": 321,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "14750",
+        "document_id": "74210",
+        "query": {
+          "text": "Hoe gebruik ik SRTM Global DEM voor hellingberekening?",
+          "full_chars": 54,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "GTOPO30 hellinganalyse in ArcGIS 10.1 Gebruikmakend van de gereedschapskist oppervlakte - hellinganalyse. Alle waarden voor de hellingberekening liggen tussen 80 en 89. Er zijn geen waarden onder de 80. Wat doe ik verkeerd?",
+          "full_chars": 224,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "102288",
+        "document_id": "102384",
+        "query": {
+          "text": "Attributen van een shapefile kopiëren naar een nieuw shapefile",
+          "full_chars": 62,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Records aanmaken in een output shapefile met behulp van Python Ik heb een lijst (output van een eerdere loop) met attributen van een input shapefile. Waar ik vastloop is het invoeren van die attributen in een nieuwe shapefile. Ik heb de puntgegevens geplot met behulp van `w.point(x, y)` en ook de relevante velden `w.field()` aangemaakt vanuit de velden van de input shapefile. Waar ik vastloop is bij het kopiëren van de records, wat een fout geeft met betrekking tot de verwijderingsvlag. > AttributeError: 'tuple' object has no attribute 'startswith' Ik plak een gedeelte van de code met mijn vragen. from datetime import datetime import osgeo.ogr, osgeo.ogr from osgeo import ogr from osgeo import gdal import shapefile import os sf = shapefile.Reader(\"-- Input File Locatie --\") # Shapefile inlezen fields = sf.fields # Attribuutvelden inlezen records = sf.records() # Records van de features inlezen shapRecs = sf.shapeRecords() # Geometrie en records tegelijkertijd inlezen w = shapefile.Writ",
+          "full_chars": 2511,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

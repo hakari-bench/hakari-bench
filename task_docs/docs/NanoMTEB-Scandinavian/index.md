@@ -167,13 +167,13 @@ FAQ answers, or answer tweets from adjacent topics.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Scandinavian Embedding Benchmarks | 2024 | benchmark paper | https://arxiv.org/abs/2406.02396 |
-| DanFEVER: claim verification dataset for Danish | 2021 | source task paper | https://aclanthology.org/2021.nodalida-main.47/ |
-| NorQuAD: Norwegian Question Answering Dataset | 2023 | source task paper | https://aclanthology.org/2023.nodalida-1.17/ |
-| Superlim: A Swedish Language Understanding Evaluation Benchmark | 2023 | benchmark paper | https://aclanthology.org/2023.emnlp-main.506/ |
-| SweDN resource page |  | dataset page | https://spraakbanken.gu.se/en/resources/swedn |
-| Nordjylland News datasheet |  | dataset page | https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html |
-| #Twitterhjerne dataset card |  | dataset card | https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne |
-| strombergnlp/danfever |  | dataset card | https://huggingface.co/datasets/strombergnlp/danfever |
-| mteb/norquad_retrieval |  | dataset card | https://huggingface.co/datasets/mteb/norquad_retrieval |
-| mteb/SweFaqRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/SweFaqRetrieval |
+| The Scandinavian Embedding Benchmarks | 2024 | benchmark paper | [https://arxiv.org/abs/2406.02396](https://arxiv.org/abs/2406.02396) |
+| DanFEVER: claim verification dataset for Danish | 2021 | source task paper | [https://aclanthology.org/2021.nodalida-main.47/](https://aclanthology.org/2021.nodalida-main.47/) |
+| NorQuAD: Norwegian Question Answering Dataset | 2023 | source task paper | [https://aclanthology.org/2023.nodalida-1.17/](https://aclanthology.org/2023.nodalida-1.17/) |
+| Superlim: A Swedish Language Understanding Evaluation Benchmark | 2023 | benchmark paper | [https://aclanthology.org/2023.emnlp-main.506/](https://aclanthology.org/2023.emnlp-main.506/) |
+| SweDN resource page |  | dataset page | [https://spraakbanken.gu.se/en/resources/swedn](https://spraakbanken.gu.se/en/resources/swedn) |
+| Nordjylland News datasheet |  | dataset page | [https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html](https://www.foundationmodels.dk/data/nordjyllandnews/nordjyllandnews.html) |
+| #Twitterhjerne dataset card |  | dataset card | [https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne](https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne) |
+| strombergnlp/danfever |  | dataset card | [https://huggingface.co/datasets/strombergnlp/danfever](https://huggingface.co/datasets/strombergnlp/danfever) |
+| mteb/norquad_retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/norquad_retrieval](https://huggingface.co/datasets/mteb/norquad_retrieval) |
+| mteb/SweFaqRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/SweFaqRetrieval](https://huggingface.co/datasets/mteb/SweFaqRetrieval) |

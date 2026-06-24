@@ -62,21 +62,20 @@ Models should learn both exact biomedical terminology and lay-to-technical bridg
 
 ## Example Data
 
-### Public Sources
-
-- [A Full-Text Learning to Rank Dataset for Medical Information Retrieval](https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf), 2016.
-- [NFCorpus official dataset page](https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/).
-- [ECIR DOI record](https://doi.org/10.1007/978-3-319-30671-1_58).
-- [mteb/nfcorpus](https://huggingface.co/datasets/mteb/nfcorpus), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| avocados [8 chars] | Role of insulin in the pathogenesis of free fatty acid-induced insulin resistance in skeletal muscle. Insulin resistance is a pathophysiological link of obesity to type 2 diabetes. The initial cause of insulin resistance is critical for prevention and treatment of type 2 diabetes. Lipotoxicity is a well-known concept in the explanation of initiation of insulin resistance. Although there are several prevailing hypotheses about the cellular/molecular mechanisms of lipotoxicity, such as inflammation, oxidative stress, hyperinsulinemia, and ER stress, the relative importance of these hypothesized events remains to be determined. The role of hyperinsulinemia is relatively under documented in the literature for the initiation of insulin resistance. In this review, an interaction of fatty acid and beta-cells, and a synergy between free fatty acids (FFAs) and insulin are emphasized for the role of hyperinsulinemia. This article presents the evidence about FFA-induced insulin secretion in vitro... [1,000 / 1,694 chars] |
+| grapes [6 chars] | A berry thought-provoking idea: the potential role of plant polyphenols in the treatment of age-related cognitive disorders. Today, tens of millions of elderly individuals worldwide suffer from dementia. While the pathogenesis of dementia is complex and incompletely understood, it may be, at least to a certain extent, the consequence of systemic vascular pathology. The metabolic syndrome and its individual components induce a proinflammatory state that damages blood vessels. This condition of chronic inflammation may damage the vasculature of the brain or be directly neurotoxic. Associations have been established between the metabolic syndrome, its constituents and dementia. A relationship has also been observed between certain dietary factors, such as constituents of the 'Mediterranean diet', and the metabolic syndrome; similar associations have been noted between these dietary factors and dementia. Fruit juices and extracts are under investigation as treatments for cognitive impairme... [1,000 / 1,862 chars] |
+| Dr. Walter Willett [18 chars] | Coconut oil predicts a beneficial lipid profile in pre-menopausal women in the Philippines Coconut oil is a common edible oil in many countries, and there is mixed evidence for its effects on lipid profiles and cardiovascular disease risk. Here we examine the association between coconut oil consumption and lipid profiles in a cohort of 1,839 Filipino women (age 35–69 years) participating in the Cebu Longitudinal Health and Nutrition Survey, a community based study in Metropolitan Cebu City. Coconut oil intake was measured as individual coconut oil intake calculated using two 24-hour dietary recalls (9.54 ± 8.92 grams). Cholesterol profiles were measured in plasma samples collected after an overnight fast. Mean lipid values in this sample were total cholesterol (TC) (186.52 ± 38.86 mg/dL), high density lipoprotein cholesterol (HDL-c) (40.85 ± 10.30 mg/dL), low density lipoprotein cholesterol (LDL-c) (119.42 ± 33.21 mg/dL), triglycerides (130.75 ± 85.29 mg/dL) and the TC/HDL ratio (4.80... [1,000 / 1,360 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | ECIR paper PDF | https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf |
-| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | official dataset page | https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/ |
-| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | DOI | https://doi.org/10.1007/978-3-319-30671-1_58 |
-| mteb/nfcorpus |  | dataset card | https://huggingface.co/datasets/mteb/nfcorpus |
+| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | ECIR paper PDF | [https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf](https://www.cl.uni-heidelberg.de/~sokolov/pubs/boteva16full.pdf) |
+| NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | official dataset page | [https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/](https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/) |
+| A Full-Text Learning to Rank Dataset for Medical Information Retrieval | 2016 | DOI | [https://doi.org/10.1007/978-3-319-30671-1_58](https://doi.org/10.1007/978-3-319-30671-1_58) |
+| mteb/nfcorpus |  | dataset card | [https://huggingface.co/datasets/mteb/nfcorpus](https://huggingface.co/datasets/mteb/nfcorpus) |
 
 ### Representative Snippets
 

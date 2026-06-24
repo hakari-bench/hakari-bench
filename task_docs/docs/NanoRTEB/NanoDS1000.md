@@ -62,19 +62,19 @@ Models should encode API intent, data shape, mathematical operation, and expecte
 
 ## Example Data
 
-### Public Sources
-
-- [DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation](https://arxiv.org/abs/2211.11501), task paper.
-- [xlangai/DS-1000](https://huggingface.co/datasets/xlangai/DS-1000), source dataset card.
-- [Introducing RTEB: A New Standard for Retrieval Evaluation](https://huggingface.co/blog/rteb), benchmark article.
+| Query | Positive document |
+| --- | --- |
+| Problem: I have a list of numpy vectors of the format: [array([[-0.36314615, 0.80562619, -0.82777381, ..., 2.00876354,2.08571887, -1.24526026]]), array([[ 0.9766923 , -0.05725135, -0.38505339, ..., 0.12187988,-0.83129255, 0.32003683]]), array([[-0.59539878, 2.27166874, 0.39192573, ..., -0.73741573,1.49082653, 1.42466276]])] here, only 3 vectors in the list are shown. I have 100s.. The maximum number of elements in one vector is around 10 million All the arrays in the list have unequal number of... [500 / 1,055 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import numpy as np import scipy.sparse as sparse vectors, max_vector_size = pickle.load(open(f"input/input{args.test_case}.pkl", "rb")) result = sparse.lil_matrix((len(vectors), max_vector_size)) for i, v in enumerate(vectors): result[i, :v.size] = v #print(result) with open('result/result_{}.pkl'.format(args.test_case), 'wb') as f: pickle.dump(result, f) [520 chars] |
+| Problem: I'm trying to reduce noise in a binary python array by removing all completely isolated single cells, i.e. setting "1" value cells to 0 if they are completely surrounded by other "0"s like this: 0 0 0 0 1 0 0 0 0 I have been able to get a working solution by removing blobs with sizes equal to 1 using a loop, but this seems like a very inefficient solution for large arrays. In this case, eroding and dilating my array won't work as it will also remove features with a width of 1. I feel th... [500 / 925 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import numpy as np import scipy.ndimage square = pickle.load(open(f"input/input{args.test_case}.pkl", "rb")) def filter_isolated_cells(array, struct): filtered_array = np.copy(array) id_regions, num_ids = scipy.ndimage.label(filtered_array, structure=struct) id_sizes = np.array(scipy.ndimage.sum(array, id_regions, range(num_ids + 1))) area_mask = (id_sizes == 1) filtered_array[area_mask[id_regions]] = 0 return filtered_array square = filter_isolated_cells(square, struct=np.ones((3,3))) #print(square) with open('result/result_{}.pkl'.format(args.test_case), 'wb') as f: pickle.dump(square, f) [777 chars] |
+| Problem: I am having a problem with minimization procedure. Actually, I could not create a correct objective function for my problem. Problem definition • My function: yn = a_11*x1**2 + a_12*x2**2 + ... + a_m*xn**2,where xn- unknowns, a_m - coefficients. n = 1..N, m = 1..M • In my case, N=5 for x1,..,x5 and M=3 for y1, y2, y3. I need to find the optimum: x1, x2,...,x5 so that it can satisfy the y My question: • How to solve the question using scipy.optimize? My code: (tried in lmfit, but return... [500 / 1,716 chars] | import pickle import argparse parser = argparse.ArgumentParser() parser.add_argument("--test_case", type=int, default=1) args = parser.parse_args() import scipy.optimize import numpy as np a, x_true, y, x0, x_lower_bounds = pickle.load(open(f"input/input{args.test_case}.pkl", "rb")) def residual_ans(x, a, y): s = ((y - a.dot(x**2))**2).sum() return s bounds = [[x, None] for x in x_lower_bounds] out = scipy.optimize.minimize(residual_ans, x0=x0, args=(a, y), method= 'L-BFGS-B', bounds=bounds).x #print(out) with open('result/result_{}.pkl'.format(args.test_case), 'wb') as f: pickle.dump(out, f) [614 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation | 2022 | task paper | https://arxiv.org/abs/2211.11501 |
-| xlangai/DS-1000 |  | dataset card | https://huggingface.co/datasets/xlangai/DS-1000 |
-| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | https://huggingface.co/blog/rteb |
+| DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation | 2022 | task paper | [https://arxiv.org/abs/2211.11501](https://arxiv.org/abs/2211.11501) |
+| xlangai/DS-1000 |  | dataset card | [https://huggingface.co/datasets/xlangai/DS-1000](https://huggingface.co/datasets/xlangai/DS-1000) |
+| Introducing RTEB: A New Standard for Retrieval Evaluation | 2025 | benchmark article | [https://huggingface.co/blog/rteb](https://huggingface.co/blog/rteb) |
 
 ### Representative Snippets
 

@@ -70,11 +70,11 @@ For downstream QA systems, this split is useful because the retrieved passage mu
 
 ## Example Data
 
-### Public Sources
-
-- PUGG paper: https://aclanthology.org/2024.findings-acl.652/
-- Source dataset card: https://huggingface.co/datasets/clarin-pl/PUGG_IR
-- PUGG repository: https://github.com/CLARIN-PL/PUGG
+| Query | Positive document |
+| --- | --- |
+| kto napisał balladyne? [22 chars] | Balladyna – dramat romantyczny w pięciu aktach, napisany przez Juliusza Słowackiego w Genewie w 1834 roku, a wydany w Paryżu w roku 1839. == Opis dramatu == Dramat miał być prawdopodobnie jedną z sześciu części planowanego przez Słowackiego cyklu kronik o bajecznych dziejach narodu (kontynuację zamysłu stanowiła "Lilla Weneda"). Na początku utworu znajduje się list dedykacyjny ("Apologon") poświęcający "Balladynę" Zygmuntowi Krasińskiemu, autorowi "Irydiona", który wysoko cenił utwór Słowackiego. Prapremiera sceniczna "Balladyny" odbyła się 7 marca 1862 w Teatrze im. Stanisława hr. Skarbka we Lwowie. Balladyna to również imię głównej bohaterki wspomnianego utworu. Utwór Słowackiego to opowieść o żądzy władzy i o dorastaniu do roli zbrodniarza. Nie przypadkiem imię głównej bohaterki nawiązuje do ballady, w której zazwyczaj pojawiają się motywy fantastyczne [867 chars] |
+| co obiecano polakom w akcie 5 listopada? [40 chars] | 5 listopada 1916 w wyniku konferencji w Pszczynie władze niemieckie i austro-węgierskie wydały proklamację, z podpisami swych generalnych gubernatorów von Beselera i Kuka, zawierającą obietnicę powstania Królestwa Polskiego, pozostającego w niesprecyzowanej „łączności z obu sprzymierzonymi mocarstwami”. W akcie tym nie określono granic przyszłej monarchii, a jej status wyrażało słowo „samodzielne” zamiast „niepodległe”, co nie satysfakcjonowało m.in. polskich działaczy narodowych na Śląsku, którzy uznali ogłoszenie tego aktu za działanie pozorne. Dokument ten zawierał natomiast sformułowania dotyczące utworzenia armii polskiej. Po bitwie pod Kościuchnówką, w której I Brygada Legionów Polskich walcząca po stronie Austro-Węgier zapobiegła przerwaniu frontu przez wojska rosyjskie, generał Erich Ludendorff, generalny kwatermistrz Armii Cesarstwa Niemieckiego, napisał list do władz w Berlinie, postulując utworzenie zależnego od Niemiec państwa polskiego i [964 chars] |
+| jakie pouczenia wynikają z biblijnej opowieści o stworzeniu świata? [67 chars] | Stworzenie świata – pojęcie biblijne wyjaśniające naturę i sposób powstania wszechświata. W ujęciu judeo-chrześcijańskim zarówno niebo (materialne i duchowe), jak i ziemia i wszystko co istnieje jest dziełem Boga-Stwórcy. Wszechświat powstał nie jako skutek procesu emanacji lub zrodzenia czy też ślepej ewolucji, lecz w wyniku wypowiedzenia przez Boga "Słowa" (por. Ps 33/32/, 6). Dwa rozpoczynające całą Biblię opisy stworzenia, zawarte w pierwszych trzech rozdziałach Księgi Rodzaju, przedstawiają pochodzenie wszechświata i człowieka od Stwórcy, zależności między Bogiem, człowiekiem i światem oraz podkreślają zasadniczą dobroć tego, co stworzone. Interpretacja teologiczna opisów stworzenia jest różna w zależności od wyznania. Przyjmuje się, że nie zawierają one istotnej informacji z dziedziny nauk przyrodniczych, lecz są opowiadaniami symbolicznymi, których zasadniczym kluczem interpretacyjnym jest pojęcie "stworzenia z [931 chars] |
 
 ### Source Reference Table
 

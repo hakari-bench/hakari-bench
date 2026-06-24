@@ -48,13 +48,11 @@ Strong models should learn finance-domain terminology and scenario-level reasoni
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| ¿Qué tipo de rentabilidad está ofreciendo Vanguard? | De la página de Vanguard: pareció la opción más sencilla, ya que los datos de S&P son fáciles de encontrar... |
-| Implicaciones fiscales del trabajo freelance | Si tienes ingresos en EE.UU., deberás pagar impuestos sobre la renta en EE.UU. a menos que exista un tratado... |
-| ¿Qué se entiende por volumen alto o bajo? | El volumen diario generalmente se compara con el volumen promedio diario de los últimos 50 días para una acción... |
-| Canjear puntos de tarjeta de crédito para cubrir gastos empresariales deducibles | Para simplificar, empecemos considerando solo el reembolso en efectivo. En general, el reembolso en efectivo de las tarjetas de crédito... |
-| ¿Cómo debo declarar mis impuestos como autónomo? | Para efectos fiscales, deberás presentar tus impuestos como empleado y también como emprendedor... |
+| Query | Positive document |
+| --- | --- |
+| ¿Qué tipo de rentabilidad está ofreciendo Vanguard? [51 chars] | De la página de Vanguard - Pareció la opción más sencilla, ya que los datos de S&P son fáciles de encontrar. Utilizo MoneyChimp para verificar, lo que confirma que la página de Vanguard ofrece la Tasa de Crecimiento Anual Compuesta (CAGR), no el promedio aritmético. Tenga en cuenta: Vanguard indica 'Para los rendimientos del mercado de valores de EE. UU., utilizamos el Standard & Poor's 90 desde 1926 hasta el 3 de marzo de 1957,' mientras que el Chimp utiliza datos del sitio del ganador del Premio Nobel, Robert Shiller. [525 chars] |
+| Implicaciones fiscales del trabajo freelance [44 chars] | Si tienes ingresos en EE.UU., deberás pagar impuestos sobre la renta en EE.UU. a menos que exista un tratado con tu país que lo indique. [136 chars] |
+| ¿Qué se entiende por volumen alto o bajo? [41 chars] | El volumen diario generalmente se compara con el volumen promedio diario de los últimos 50 días para una acción. Un volumen alto generalmente se considera que es 2 o más veces el volumen promedio diario de los últimos 50 días para esa acción. Sin embargo, algunos operadores pueden establecer el criterio en 3x o 4x el VPD para confirmar un patrón o evento específico. El volumen se compara con el VPD de la propia acción, ya que compararlo con el volumen de otras acciones sería como comparar peras con manzanas. Diferentes empresas tendrían un número diferente de acciones totales disponibles, diferentes niveles de liquidez y diferentes niveles de volatilidad, lo cual puede influir en los volúmenes negociados cada día. [723 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should learn finance-domain terminology and scenario-level reasoni
 
 | Label | URL |
 |---|---|
-| FiQA paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA paper (https://doi.org/10.1145/3184558.3192301) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

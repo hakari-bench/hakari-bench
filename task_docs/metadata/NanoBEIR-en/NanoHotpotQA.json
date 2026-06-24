@@ -130,7 +130,7 @@
         "title": "HotpotQA official site",
         "url": "https://hotpotqa.github.io/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -138,8 +138,59 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "Penny Rae Bridges starred in a television sitcom with what other actor?",
+          "full_chars": 71,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (born July 29, 1990) is an American actress. Her television work has included roles in \"For Your Love\", \"Family Law\", \"Boy Meets World\" and \"The Parent 'Hood\". She is best known for her role in \"Half & Half\", as the young Mona.",
+          "full_chars": 245,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "Who bestowed Kaganoi Shigemochi with a blade made by the person that founded the Muramasa school?",
+          "full_chars": 97,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望 , 1561 – August 27, 1600) was a Japanese samurai of the Azuchi-Momoyama period, who served the Oda clan. He ruled Kaganoi Castle. During the Battle of Komaki and Nagakute, Shigemochi fought under his father Shigemune, who was attached to the forces of Oda Nobukatsu. Soon after, Kaganoi Castle was surrounded by the forces of Toyotomi Hideyoshi; Shigemune surrendered, and Shigemochi was employed by Hideyoshi as a messenger, receiving a stipend of 10,000 \"koku\". He also possessed a blade made by Muramasa, which Hideyoshi bestowed on him in 1598.",
+          "full_chars": 575,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "What film was written and directed by Joby Harold with music written by Samuel Sim?",
+          "full_chars": 83,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim is a film and television composer. He first gained recognition with his award winning score for the BBC drama series \"Dunkirk\". Since then he has written the music for a wide variety of film and television productions, most recently scoring the film \"Awake\" for The Weinstein Company and the BBC/HBO drama series \"House of Saddam\". His most recent acclaimed music is the soundtrack for Home Fires. Home Fires (Music from the Television Series) released May 6, 2016 by Sony Classical Records.",
+          "full_chars": 502,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

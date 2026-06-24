@@ -144,21 +144,20 @@ literature discovery in Dutch-translated settings.
 
 ## Example Data
 
-### Public Sources
-
-- [SPECTER: Document-level Representation Learning using Citation-informed Transformers](https://arxiv.org/abs/2004.07180), 2020.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [clips/beir-nl-scidocs](https://huggingface.co/datasets/clips/beir-nl-scidocs), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Een geïntegreerd raamwerk voor het delven van logbestanden voor systeembeheer. [78 chars] | Machine learning in geautomatiseerde tekstcategorisering De geautomatiseerde categorisering (of classificatie) van teksten in vooraf gedefinieerde categorieën heeft de afgelopen 10 jaar een explosieve groei doorgemaakt, te danken aan de toegenomen beschikbaarheid van documenten in digitale vorm en de daaruit voortvloeiende behoefte om deze te organiseren. In de onderzoeksgemeenschap is de dominante aanpak van dit probleem gebaseerd op machine learning technieken: een algemeen inductief proces bouwt automatisch een classifier door, uit een set van vooraf geclassificeerde documenten, de kenmerken van de categorieën te leren. De voordelen van deze aanpak ten opzichte van de knowledge engineering aanpak (bestaande uit de handmatige definitie van een classifier door domeinexperts) zijn een zeer goede effectiviteit, aanzienlijke besparingen in termen van expertise-arbeidskracht, en eenvoudige overdraagbaarheid naar verschillende domeinen. Dit overzicht bespreekt de belangrijkste benaderingen... [1,000 / 1,249 chars] |
+| Onderwerp-Relevantiekaart: Visualisatie voor Verbetering van het Begrip van Zoekresultaten [90 chars] | Ontwerpen voor explorerend zoeken op touchscreen-apparaten Explorerend zoeken confronteert gebruikers met uitdagingen bij het uitdrukken van zoekintenties, aangezien huidige zoekinterfaces het onderzoeken van resultatenlijsten vereisen om zoekrichtingen te identificeren, iteratief typen en het herformuleren van zoekopdrachten. We presenteren het ontwerp van Exploration Wall, een op aanraking gebaseerde zoekgebruikersinterface die incrementele exploratie en betekenisgeving van grote informatieruimten mogelijk maakt door entiteit zoeken, flexibel gebruik van resulterende entiteiten als zoekparameters en ruimtelijke configuratie van zoekstromen die voor interactie worden gevisualiseerd, te combineren. Entiteiten kunnen flexibel worden hergebruikt om nieuwe zoekstromen te wijzigen en te creëren, en gemanipuleerd worden om hun relaties met andere entiteiten te inspecteren. Gegevens bestaande uit op taken gebaseerde experimenten die Exploration Wall vergelijken met een conventionele zoekgebr... [1,000 / 1,428 chars] |
+| Algoritmische Brokjes in Contentlevering [40 chars] | Consistente Hashing en Willekeurige Bomen: Gedistribueerde Cachingprotocollen voor het Verminderen van Hotspots op het World Wide Web We beschrijven een familie van cachingprotocollen voor gedistribueerde netwerken die kunnen worden gebruikt om het voorkomen van hotspots in het netwerk te verminderen of te elimineren. Onze protocollen zijn speciaal ontworpen voor gebruik met zeer grote netwerken zoals het internet, waar vertragingen veroorzaakt door hotspots ernstig kunnen zijn, en waar het niet haalbaar is voor elke server om complete informatie te hebben over de huidige staat van het hele netwerk. De protocollen zijn eenvoudig te implementeren met behulp van bestaande netwerkprotocollen zoals TCP/IP, en vereisen zeer weinig overhead. De protocollen werken met lokale controle, maken efficiënt gebruik van bestaande resources en schalen soepel naarmate het netwerk groeit. Onze cachingprotocollen zijn gebaseerd op een speciaal soort hashing dat we consistente hashing noemen. Ruwweg gezeg... [1,000 / 1,474 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | arXiv paper | https://arxiv.org/abs/2004.07180 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| clips/beir-nl-scidocs |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-scidocs |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | arXiv paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| clips/beir-nl-scidocs |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-scidocs](https://huggingface.co/datasets/clips/beir-nl-scidocs) |
 
 ### Representative Snippets
 

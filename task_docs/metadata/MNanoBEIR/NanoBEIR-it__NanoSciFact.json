@@ -85,42 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "SciFact repository",
-        "url": "https://github.com/allenai/scifact",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -129,6 +93,93 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "SciFact repository",
+        "url": "https://github.com/allenai/scifact",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q regola la migrazione dei neutrofili verso i siti di infiammazione modulando le funzioni dei raft di membrana.",
+          "full_chars": 115,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Neutrofili subiscono rapidamente una polarizzazione e un movimento direzionale per infiltrarsi nei siti di infezione e infiammazione. Qui mostriamo che un recettore MHC I inibitorio, Ly49Q, è stato fondamentale per la rapida polarizzazione e l'infiltramento tissutale dei neutrofili. Durante lo stato di equilibrio, Ly49Q ha inibito l'adesione dei neutrofili impedendo la formazione di complessi focali, probabilmente inibendo le chinasi Src e PI3. Tuttavia, in presenza di stimoli infiammatori, Ly49Q ha mediato una rapida polarizzazione dei neutrofili e l'infiltramento tissutale in modo dipendente dal dominio ITIM. Queste funzioni opposte sembrano essere mediate da un utilizzo distinto delle fosfatasi effettrici SHP-1 e SHP-2. La polarizzazione e la migrazione dipendenti da Ly49Q sono state influenzate dalla regolazione delle funzioni delle raft di membrana da parte di Ly49Q. Proponiamo che Ly49Q sia fondamentale nel far passare i neutrofili alla loro morfologia polarizzata e alla rapida m",
+          "full_chars": 1148,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "La terapia antiretrovirale riduce l'incidenza di tubercolosi in un ampio spettro di livelli di CD4.",
+          "full_chars": 99,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "CONTESTO L'infezione da virus dell'immunodeficienza umana (HIV) è il principale fattore di rischio per lo sviluppo della tubercolosi e ha contribuito alla sua ripresa, specialmente nell'Africa subsahariana. Nel 2010, si stima che ci siano stati circa 1,1 milioni di nuovi casi di tubercolosi tra i 34 milioni di persone che vivevano con l'HIV in tutto il mondo. La terapia antiretrovirale ha un grande potenziale per prevenire la tubercolosi associata all'HIV. Abbiamo condotto una revisione sistematica degli studi che hanno analizzato l'impatto della terapia antiretrovirale sull'incidenza della tubercolosi negli adulti con infezione da HIV. METODI E RISULTATI Sono state effettuate ricerche sistematiche su PubMed, Embase, African Index Medicus, LILACS e registri di trial clinici. Sono stati inclusi trial clinici randomizzati, studi di coorte prospettici e studi di coorte retrospettivi se hanno confrontato l'incidenza della tubercolosi in base allo stato di terapia antiretrovirale in adulti",
+          "full_chars": 2437,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "La regolazione rapida verso l'alto e l'espressione basale più elevata dei geni indotti da interferone riducono la sopravvivenza dei neuroni a granulo infetti dal virus del Nilo occidentale.",
+          "full_chars": 189,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "La suscettibilità dei neuroni del cervello all'infezione microbica è un determinante principale dell'esito clinico. Poco si sa riguardo ai fattori molecolari che governano questa vulnerabilità. Qui dimostriamo che due tipi di neuroni provenienti da regioni cerebrali distinte hanno mostrato una permissività differenziale alla replicazione di diversi virus a RNA a filamento positivo. I neuroni delle cellule granulari del cervelletto e i neuroni corticali della corteccia cerebrale hanno programmi immunitari innati unici che conferiscono una suscettibilità differenziale all'infezione virale ex vivo e in vivo. Trasducendo i neuroni corticali con geni espressi in modo più elevato nei neuroni delle cellule granulari, abbiamo identificato tre geni stimolati da interferone (ISGs; Ifi27, Irg1 e Rsad2, noto anche come Viperin) che hanno mediato gli effetti antivirali contro diversi virus neurotropici. Inoltre, abbiamo riscontrato che lo stato epigenetico e la regolazione mediata da microRNA (miRN",
+          "full_chars": 1295,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

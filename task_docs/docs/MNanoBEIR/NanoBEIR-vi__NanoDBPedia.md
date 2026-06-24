@@ -62,9 +62,11 @@ A model targeting this task should combine exact name precision with semantic ty
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on DBpedia Entity Retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| fitzgerald auto mall chambersburg pa [36 chars] | Fitzgerald Auto Malls là một đại lý ô tô thuộc sở hữu và điều hành bởi gia đình, được thành lập vào năm 1966, với địa điểm đầu tiên mở cửa tại Bethesda, Maryland. Tính đến năm 2014, Fitzgerald Auto Malls đứng thứ 59 trong danh sách "125 Nhóm Đại Lý Hàng Đầu" tại Hoa Kỳ, được xuất bản hàng năm bởi Automotive News. Các địa điểm đại lý Fitzgerald xuất hiện năm lần trong danh sách WardsAuto e-Dealer 100 năm 2013, ở vị trí số 8, số 25, số 30, số 43 và số 98. [457 chars] |
+| Tập truyện ngắn năm 1994 của Alice Munro là Mở [46 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, tên thật là Laidlaw /ˈleɪdlɔː/; sinh ngày 10 tháng 7 năm 1931) là một tác giả người Canada. Tác phẩm của Munro được mô tả là đã cách mạng hóa cấu trúc của truyện ngắn, đặc biệt là trong xu hướng di chuyển tới lui trong thời gian. Các câu chuyện của bà được cho là "nhúng nhiều hơn là công bố, tiết lộ nhiều hơn là phô trương." Tiểu thuyết của Munro thường diễn ra ở quận Huron quê hương bà tại miền tây nam Ontario. Các câu chuyện của bà khám phá những phức tạp của con người trong một phong cách văn xuôi đơn giản. [553 chars] |
+| kiến trúc Gallo-Roman ở Paris [29 chars] | Nghệ thuật ở Paris là một bài viết về văn hóa và lịch sử nghệ thuật ở Paris, thủ đô của Pháp. Trong nhiều thế kỷ, Paris đã thu hút các nghệ sĩ từ khắp nơi trên thế giới, đến thành phố để học hỏi và tìm kiếm cảm hứng từ các nguồn tài nguyên nghệ thuật và phòng trưng bày của nó. Kết quả là, Paris đã có được danh tiếng là "Thành phố Nghệ thuật". [344 chars] |
 
 ### Source Reference Table
 

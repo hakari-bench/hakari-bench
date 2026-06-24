@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 25
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB: Massive Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2210.07316",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "CLARIN-KNEXT cqadupstack-android-pl",
-        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-android-pl",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/CQADupstack-Android-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://ir.webis.de/anthology/2015.adcs_conference-2015.3/",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB: Massive Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2210.07316",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "CLARIN-KNEXT cqadupstack-android-pl",
+        "url": "https://huggingface.co/datasets/clarin-knext/cqadupstack-android-pl",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "69480",
+        "document_id": "63630",
+        "query": {
+          "text": "Dlaczego urządzenie z Androidem ROM jest specyficzne?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dlaczego nie ma ogólnych instalatorów systemu operacyjnego telefonu? Jestem przyzwyczajony do instalowania i usuwania różnych systemów operacyjnych na moich komputerach, nawet mając kilka naraz. Zazwyczaj instalacja nowego systemu operacyjnego oznacza: 1. Nagranie obrazu ISO na płytę CD/DVD/USB. 2. Włóż go. 3. Uruchom. (Może najpierw musisz trochę poprawić BIOS). Jedyną różnicą między komputerami jest architektura procesora: x86, x86_64, ramię itp. W zależności od tego musisz pobrać jedno lub drugie ISO. Ale nigdy nie muszę się martwić, jaką ma kartę graficzną, mysz, klawiaturę, ekran, kartę sieciową itp. Kreator instalacji automatycznie to wykryje i zainstaluje odpowiednie sterowniki. Czasami, jeśli nie są dołączone, instalator również je pobiera. W każdym razie kluczową kwestią jest to, że **ISO jest zawsze takie samo**. Teraz pojawia się wiele mobilnych systemów operacyjnych: Ubuntu, Tizen, Firefox OS, wszechobecny Android i dlaczego nie ma żadnej dystrybucji Linuksa ARM!. Niestety",
+          "full_chars": 1811,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16236",
+        "document_id": "22541",
+        "query": {
+          "text": "Jak mogę zapisać plik, zamiast go otwierać?",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jak pobrać plik audio ze strony internetowej? Czy istnieje sposób na pobranie pliku audio, takiego jak plik mp3 z przeglądarki systemu Android na urządzenie, aby móc go później słuchać, gdy będę offline? Czy jest sposób na zaprogramowanie strony internetowej, aby było to możliwe? _Nie_ szukam dodatkowej aplikacji, która pomogłaby mi to osiągnąć.",
+          "full_chars": 347,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10811",
+        "document_id": "5652",
+        "query": {
+          "text": "Jak przechwycić strumień wideo z ekranu telefonu z systemem Android i wyświetlić go na laptopie?",
+          "full_chars": 96,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Jak wyświetlić ekran mojego telefonu z systemem Android do prezentacji? Jak wyświetlić ekran mojego Droid Incredible, aby móc zademonstrować smartfon w pokoju pełnym ludzi? Czy ktoś wie, jak mogę połączyć telefon z komputerem? Do telewizora?",
+          "full_chars": 241,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

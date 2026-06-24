@@ -70,11 +70,11 @@ For evaluation, nDCG@10 mainly measures how close the system is to lexical ceili
 
 ## Example Data
 
-### Public Sources
-
-- Scandinavian Embedding Benchmarks paper: https://arxiv.org/abs/2406.02396
-- DanFEVER paper: https://aclanthology.org/2021.nodalida-main.47/
-- Source dataset card: https://huggingface.co/datasets/strombergnlp/danfever
+| Query | Positive document |
+| --- | --- |
+| Albummet Blood Mountain har en sammenhængde historie og et gennemgående tema. [77 chars] | Blood Mountain er et konceptalbum af heavy metal-gruppen Mastodon. Det er Mastodons tredje studiealbum og blev udgivet i september 2006. Som det foregående album Leviathan er Blood Mountain et konceptalbum med en sammenhængende historie og et gennemgående tema. [261 chars] |
+| Den almindelige perlebusk får perleformede knopper og derefter hvide blomster på dens busk. [91 chars] | Almindelig perlebusk ("Exochorda racemosa") er en mellemstor, løvfældende busk med en opret vækst og iøjnefaldende klaser af hvide, perleformede knopper og senere hvide blomster. Busken er fuldt hårdfør og bruges som prydbusk i haverne. [236 chars] |
+| .my er det malaysiske topdomæne. [32 chars] | .my er et nationalt topdomæne der er reserveret til Malaysia. [61 chars] |
 
 ### Source Reference Table
 

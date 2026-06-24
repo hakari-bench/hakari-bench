@@ -48,13 +48,11 @@ Strong models should learn finance terminology and scenario reasoning. Useful si
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Quel type de rendements Vanguard indique-t-il ? | À partir de la page de Vanguard - Cela semblait être le plus simple, car les données S&P sont faciles à trouver... |
-| Quelles sont les implications fiscales du travail indépendant ? | Si vous avez un revenu aux États-Unis, vous devrez payer l'impôt sur le revenu américain... |
-| Qu'est-ce qui est considéré comme élevé ou bas en matière de volume ? | Le volume quotidien est généralement comparé au volume quotidien moyen des 50 derniers jours pour une action... |
-| Utiliser les points de fidélité de votre carte de crédit pour régler des dépenses professionnelles déductibles fiscalement | Pour simplifier, commençons par considérer uniquement le remboursement en espèces... |
-| Comment dois-je déclarer mes impôts en tant que travailleur indépendant ? | Pour des raisons fiscales, vous devrez déclarer vos revenus en tant qu'employé et aussi en tant qu'entrepreneur... |
+| Query | Positive document |
+| --- | --- |
+| Quel type de rendements Vanguard indique-t-il ? [47 chars] | À partir de la page de Vanguard - Cela semblait être le plus simple, car les données S&P sont faciles à trouver. J'utilise MoneyChimp pour obtenir des informations - ce qui confirme que la page de Vanguard propose le taux de croissance annuel composé (TCAC), et non la moyenne arithmétique. Remarque : Vanguard indique : « Pour les rendements du marché boursier américain, nous utilisons le Standard & Poor's 90 de 1926 jusqu'au 3 mars 1957 », tandis que le site MoneyChimp utilise les données du site du lauréat du prix Nobel, Robert Shiller. [543 chars] |
+| Quelles sont les implications fiscales du travail indépendant ? [63 chars] | Si vous avez un revenu aux États-Unis, vous devrez payer l'impôt sur le revenu américain. Sauf si un traité entre votre pays et les États-Unis en dispose autrement. [164 chars] |
+| Qu'est-ce qui est considéré comme élevé ou bas en matière de volume ? [69 chars] | Le volume quotidien est généralement comparé au volume quotidien moyen des 50 derniers jours pour une action. Un volume élevé est généralement considéré comme étant 2 fois ou plus le volume quotidien moyen des 50 derniers jours pour cette action. Cependant, certains traders peuvent fixer le critère à 3 fois ou 4 fois le volume moyen quotidien (VMQ) pour confirmer un schéma ou un événement particulier. Le volume est comparé au VMQ de l'action elle-même, car le comparer au volume d'autres actions serait comme comparer des pommes et des oranges, car différentes entreprises ont un nombre différent d'actions en circulation, des niveaux de liquidité différents et des niveaux de volatilité différents, qui peuvent tous influencer les volumes échangés chaque jour. [765 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should learn finance terminology and scenario reasoning. Useful si
 
 | Label | URL |
 |---|---|
-| FiQA paper | https://doi.org/10.1145/3184558.3192301 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| FiQA paper (https://doi.org/10.1145/3184558.3192301) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

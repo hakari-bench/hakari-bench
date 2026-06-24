@@ -164,22 +164,20 @@ reranker can make the final duplicate judgment.
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), 2015.
-- [Author-hosted CQADupStack PDF](https://eltimster.github.io/www/pubs/adcs2015.pdf), 2015.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Hoe verander ik de beeldverhouding van een kaart zonder dat de schaal verandert? [80 chars] | Hoe de grootte van het kaart item in de QGIS print composer aan te passen zonder de schaal te veranderen? Is het mogelijk om de schaal te vergrendelen in de QGIS 2.0.1 print composer? Elke keer dat ik de kaart verplaats, wordt de schaal aangepast. Dit maakt het uitproberen van verschillende kaartlay-outs erg vervelend. [321 chars] |
+| Hoe gebruik ik SRTM Global DEM voor hellingberekening? [54 chars] | GTOPO30 hellinganalyse in ArcGIS 10.1 Gebruikmakend van de gereedschapskist oppervlakte - hellinganalyse. Alle waarden voor de hellingberekening liggen tussen 80 en 89. Er zijn geen waarden onder de 80. Wat doe ik verkeerd? [224 chars] |
+| Attributen van een shapefile kopiëren naar een nieuw shapefile [62 chars] | Records aanmaken in een output shapefile met behulp van Python Ik heb een lijst (output van een eerdere loop) met attributen van een input shapefile. Waar ik vastloop is het invoeren van die attributen in een nieuwe shapefile. Ik heb de puntgegevens geplot met behulp van `w.point(x, y)` en ook de relevante velden `w.field()` aangemaakt vanuit de velden van de input shapefile. Waar ik vastloop is bij het kopiëren van de records, wat een fout geeft met betrekking tot de verwijderingsvlag. > AttributeError: 'tuple' object has no attribute 'startswith' Ik plak een gedeelte van de code met mijn vragen. from datetime import datetime import osgeo.ogr, osgeo.ogr from osgeo import ogr from osgeo import gdal import shapefile import os sf = shapefile.Reader("-- Input File Locatie --") # Shapefile inlezen fields = sf.fields # Attribuutvelden inlezen records = sf.records() # Records van de features inlezen shapRecs = sf.shapeRecords() # Geometrie en records tegelijkertijd inlezen w = shapefile.Writ... [1,000 / 2,511 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | https://doi.org/10.1145/2838931.2838934 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | https://aclanthology.org/2025.bucc-1.5/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| clips/beir-nl-cqadupstack |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-cqadupstack |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | proceedings paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | proceedings paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| clips/beir-nl-cqadupstack |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-cqadupstack](https://huggingface.co/datasets/clips/beir-nl-cqadupstack) |
 
 ### Representative Snippets
 

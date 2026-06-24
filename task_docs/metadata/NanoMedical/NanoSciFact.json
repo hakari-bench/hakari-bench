@@ -127,15 +127,66 @@
         "url": "https://arxiv.org/abs/2004.14974",
         "year": 2020,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Fact or Fiction: Verifying Scientific Claims",
         "url": "https://aclanthology.org/2020.emnlp-main.609/",
         "year": 2020,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "770",
+        "document_id": "15476777",
+        "query": {
+          "text": "Metastatic colorectal cancer treated with a single agent fluoropyrimidines resulted in reduced efficacy and lower quality of life when compared with oxaliplatin-based chemotherapy in elderly patients.",
+          "full_chars": 200,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chemotherapy options in elderly and frail patients with metastatic colorectal cancer (MRC FOCUS2): an open-label, randomised factorial trial BACKGROUND Elderly and frail patients with cancer, although often treated with chemotherapy, are under-represented in clinical trials. We designed FOCUS2 to investigate reduced-dose chemotherapy options and to seek objective predictors of outcome in frail patients with advanced colorectal cancer. METHODS We undertook an open, 2 × 2 factorial trial in 61 UK centres for patients with previously untreated advanced colorectal cancer who were considered unfit for full-dose chemotherapy. After comprehensive health assessment (CHA), patients were randomly assigned by minimisation to: 48-h intravenous fluorouracil with levofolinate (group A); oxaliplatin and fluorouracil (group B); capecitabine (group C); or oxaliplatin and capecitabine (group D). Treatment allocation was not masked. Starting doses were 80% of standard doses, with discretionary escalation",
+          "full_chars": 3063,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "213",
+        "document_id": "13625993",
+        "query": {
+          "text": "CRP is not predictive of postoperative mortality following Coronary Artery Bypass Graft (CABG) surgery.",
+          "full_chars": 103,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Assessing the cost effectiveness of using prognostic biomarkers with decision models: case study in prioritising patients waiting for coronary artery surgery OBJECTIVE To determine the effectiveness and cost effectiveness of using information from circulating biomarkers to inform the prioritisation process of patients with stable angina awaiting coronary artery bypass graft surgery. DESIGN Decision analytical model comparing four prioritisation strategies without biomarkers (no formal prioritisation, two urgency scores, and a risk score) and three strategies based on a risk score using biomarkers: a routinely assessed biomarker (estimated glomerular filtration rate), a novel biomarker (C reactive protein), or both. The order in which to perform coronary artery bypass grafting in a cohort of patients was determined by each prioritisation strategy, and mean lifetime costs and quality adjusted life years (QALYs) were compared. DATA SOURCES Swedish Coronary Angiography and Angioplasty Regi",
+          "full_chars": 2937,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "127",
+        "document_id": "21598000",
+        "query": {
+          "text": "Arginine 90 in p150n is important for interaction with EB1.",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Structural basis for the activation of microtubule assembly by the EB1 and p150Glued complex. Plus-end tracking proteins, such as EB1 and the dynein/dynactin complex, regulate microtubule dynamics. These proteins are thought to stabilize microtubules by forming a plus-end complex at microtubule growing ends with ill-defined mechanisms. Here we report the crystal structure of two plus-end complex components, the carboxy-terminal dimerization domain of EB1 and the microtubule binding (CAP-Gly) domain of the dynactin subunit p150Glued. Each molecule of the EB1 dimer contains two helices forming a conserved four-helix bundle, while also providing p150Glued binding sites in its flexible tail region. Combining crystallography, NMR, and mutational analyses, our studies reveal the critical interacting elements of both EB1 and p150Glued, whose mutation alters microtubule polymerization activity. Moreover, removal of the key flexible tail from EB1 activates microtubule assembly by EB1 alone, sug",
+          "full_chars": 1198,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

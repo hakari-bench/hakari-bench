@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Overview of Touché 2020: Argument Retrieval",
-        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Os deveres de casa são benéficos?",
+          "full_chars": 33,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Primeiro, existem três argumentos para justificar por que a lição de casa é excelente e deve continuar nas escolas modernas. 1. A lição de casa ajuda os alunos que aprendem fazendo. É amplamente aceito que existem três tipos de aprendizes: aqueles que aprendem ouvindo, aqueles que aprendem vendo e aqueles que aprendem fazendo. Embora muitos estejam satisfeitos em ouvir ou ver a instrução de um determinado assunto, alguns precisam realmente fazer. Portanto, a lição de casa é benéfica para este último grupo, pois a instrução é aprendida através da ação. 2. A lição de casa reforça a instrução. Embora muitos provavelmente ficariam felizes em não ter lição de casa, a qualidade da educação recebida certamente sofreria se fosse eliminada. Seja a lição de casa leitura atribuída, trabalhos de conclusão, etc., tudo isso é projetado para reforçar a instrução na mente dos alunos. Afinal, aqueles que fazem a lição de casa são mais bem-sucedidos academicamente do que aqueles que não fazem. Sinto que",
+          "full_chars": 3935,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Os medicamentos de prescrição devem ser anunciados diretamente aos consumidores?",
+          "full_chars": 80,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Muitos anúncios não incluem informações suficientes sobre a eficácia dos medicamentos. Por exemplo, o Lunesta é anunciado por uma mariposa que voa através de uma janela de quarto, acima de uma pessoa que dorme tranquilamente. Na verdade, o Lunesta ajuda os pacientes a dormir 15 minutos mais rápido após seis meses de tratamento e proporciona 37 minutos a mais de sono por noite. A maioria dos anúncios baseia-se em apelos emocionais, mas poucos incluem causas da condição, fatores de risco ou mudanças importantes no estilo de vida. Em um estudo de 38 anúncios farmacêuticos, pesquisadores descobriram que 82 por cento fizeram uma afirmação factual e 86 por cento apresentaram argumentos racionais para o uso do produto. Apenas 26 por cento descreveram as causas da condição, fatores de risco ou prevalência. Assim, não fornecem aos pacientes informações equilibradas que os tornariam conscientes de que tomar um desses comprimidos não é uma solução mágica para o seu problema. Na verdade, de acordo",
+          "full_chars": 1891,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Quais vacinas as crianças devem tomar?",
+          "full_chars": 38,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Não é um caso completo ainda... Apenas alguns pontos que reuni... Os governos não devem ter o direito de intervir nas decisões de saúde que os pais tomam para seus filhos. De acordo com uma pesquisa de 2010 da Universidade de Michigan, 31% dos pais acreditam que devem ter o direito de recusar vacinas obrigatórias para a entrada na escola de seus filhos. Muitos pais têm crenças religiosas contra a vacinação. Forçar esses pais a vacinar seus filhos violaria a 1ª Emenda, que garante aos cidadãos o direito à livre prática de sua religião. As vacinas são frequentemente desnecessárias em muitos casos onde o risco de morte por doença é pequeno. No início do século XIX, a mortalidade por doenças infantis como coqueluche, sarampo e escarlatina caiu drasticamente antes que a imunização estivesse disponível. Essa redução da mortalidade foi atribuída à melhoria da higiene pessoal, purificação da água, disposição eficaz de esgoto e melhor higiene e nutrição dos alimentos. As vacinas interferem na l",
+          "full_chars": 4624,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

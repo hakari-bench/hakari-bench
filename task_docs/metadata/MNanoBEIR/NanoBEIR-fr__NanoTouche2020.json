@@ -85,43 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Overview of Touché 2020: Argument Retrieval",
-        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
-        "url": "https://doi.org/10.5281/zenodo.6862281",
-        "year": 2022,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-fr",
       "source_urls": [
@@ -130,6 +93,94 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Overview of Touché 2020: Argument Retrieval",
+        "url": "https://doi.org/10.1007/978-3-030-58219-7_26",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
+        "url": "https://doi.org/10.5281/zenodo.6862281",
+        "year": 2022,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Les devoirs sont-ils utiles ?",
+          "full_chars": 29,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Premièrement, voici trois arguments en faveur du maintien des devoirs dans les écoles modernes. 1. Les devoirs aident les apprenants actifs. Il est généralement admis qu'il existe trois types d'apprenants : ceux qui apprennent en écoutant, ceux qui apprennent en voyant et ceux qui apprennent en faisant. Alors que beaucoup se contentent d'entendre ou de voir les instructions sur un sujet donné, certains ont besoin de le faire réellement. Ainsi, les devoirs sont bénéfiques pour ce dernier groupe car l'instruction se fait par l'action. 2. Les devoirs renforcent l'instruction. Bien que beaucoup seraient probablement ravis de ne pas avoir de devoirs, la qualité de l'éducation reçue en souffrirait certainement s'ils étaient supprimés. Que les devoirs soient des lectures imposées, des dissertations, etc., tout est conçu pour renforcer l'instruction dans l'esprit des élèves. Après tout, ceux qui font leurs devoirs sont plus académiquement performants que ceux qui ne le font pas. Je pense que c",
+          "full_chars": 4176,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Les médicaments sur ordonnance doivent-ils être publicisés directement auprès des consommateurs ?",
+          "full_chars": 97,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De nombreuses publicités ne fournissent pas suffisamment d'informations sur l'efficacité des médicaments. Par exemple, Lunesta est promu par une chenille volante entrant par la fenêtre d'une chambre, au-dessus d'une personne dormant paisiblement. En réalité, Lunesta aide les patients à s'endormir 15 minutes plus vite après six mois de traitement et leur offre 37 minutes de sommeil supplémentaire par nuit. La majorité des publicités reposent sur des appels émotionnels, mais peu mentionnent les causes de la condition, les facteurs de risque ou les changements de mode de vie importants. Dans une étude de 38 publicités pharmaceutiques, les chercheurs ont constaté que 82 % faisaient une affirmation factuelle et 86 % présentaient des arguments rationnels pour l'utilisation du produit. Seulement 26 % décrivaient les causes de la condition, les facteurs de risque ou la prévalence. Ainsi, les patients ne reçoivent pas une information équilibrée qui les rendrait conscients que prendre un de ces",
+          "full_chars": 1987,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Quels vaccins les enfants doivent-ils recevoir ?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ce n'est pas encore un dossier complet... Juste quelques points que j'ai rassemblés... Les gouvernements ne devraient pas avoir le droit d'intervenir dans les décisions de santé que les parents prennent pour leurs enfants. Selon un sondage de 2010 réalisé par l'Université du Michigan, 31 % des parents estiment qu'ils devraient avoir le droit de refuser les vaccinations obligatoires à l'entrée à l'école pour leurs enfants. De nombreux parents ont des croyances religieuses contre la vaccination. Forcer de tels parents à vacciner leurs enfants violerait le 1er Amendement, qui garantit aux citoyens le droit à la libre pratique de leur religion. Les vaccins sont souvent inutiles dans de nombreux cas où le risque de décès par maladie est faible. Au début du XIXe siècle, la mortalité due aux maladies infantiles comme la coqueluche, la rougeole et la scarlatine a chuté drastiquement avant que l'immunisation ne soit disponible. Cette diminution de la mortalité a été attribuée à une meilleure hy",
+          "full_chars": 5341,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

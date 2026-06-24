@@ -138,7 +138,7 @@
         "year": 2020,
         "is_paper": true,
         "doi": "10.1007/978-3-030-58219-7_26",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "Touche20-Argument-Retrieval-for-Controversial-Questions",
@@ -146,7 +146,7 @@
         "year": 2022,
         "is_paper": false,
         "doi": "10.5281/zenodo.6862281",
-        "source_confidence": "dataset_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -154,7 +154,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -162,15 +162,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "47",
+        "document_id": "48cd3dfc-2019-04-18T13:56:49Z-00004-000",
+        "query": {
+          "text": "Ist Hausaufgaben sinnvoll?",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Zunächst gibt es drei Argumente dafür, warum Hausaufgaben hervorragend sind und in modernen Schulen fortbestehen sollten. 1. Hausaufgaben unterstützen Lernende, die durch Handeln lernen. Es ist allgemein anerkannt, dass es drei Arten von Lernenden gibt: solche, die durch Hören lernen, solche, die durch Sehen lernen, und solche, die durch Tun lernen. Während viele zufrieden sind, Anweisungen zu hören oder zu sehen, benötigen einige tatsächlich selbst aktiv zu werden. Daher sind Hausaufgaben für diese Gruppe von Vorteil, da das Lernen durch Handeln erfolgt. 2. Hausaufgaben festigen den Unterricht. Obwohl viele wahrscheinlich froh wären, keine Hausaufgaben zu haben, würde die Qualität der erhaltenen Bildung sicherlich leiden, wenn sie abgeschafft würden. Ob es sich um Hausaufgaben zum Lesen, Facharbeiten oder Ähnliches handelt, all das ist darauf ausgelegt, den Unterricht im Gedächtnis der Schüler zu verankern. Schließlich sind diejenigen, die ihre Hausaufgaben machen, akademisch erfolgre",
+          "full_chars": 4185,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "16",
+        "document_id": "8cb27dbc-2019-04-15T20:22:42Z-00009-000",
+        "query": {
+          "text": "Sollten verschreibungspflichtige Medikamente direkt an Verbraucher beworben werden dürfen?",
+          "full_chars": 90,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Viele Werbeanzeigen enthalten nicht genügend Informationen darüber, wie gut Medikamente wirken. Zum Beispiel wird Lunesta durch einen Schmetterling beworben, der durch ein Schlafzimmerfenster fliegt, über einer friedlich schlafenden Person. Tatsächlich hilft Lunesta Patienten, 15 Minuten schneller einzuschlafen nach sechs Monaten der Behandlung und verschafft ihnen 37 Minuten mehr Schlaf pro Nacht. Die Mehrheit der Werbeanzeigen basiert auf emotionalen Appellen, aber nur wenige enthalten Informationen über die Ursachen der Erkrankung, Risikofaktoren oder wichtige Lebensstiländerungen. In einer Studie von 38 pharmazeutischen Werbeanzeigen fanden Forscher heraus, dass 82 Prozent eine faktische Aussage machten und 86 Prozent rationale Argumente für die Produktnutzung lieferten. Nur 26 Prozent beschrieben die Ursachen der Erkrankung, Risikofaktoren oder die Häufigkeit. [1] Somit geben sie den Patienten keine ausgewogene Information, die sie darauf aufmerksam machen würde, dass die Einnahme",
+          "full_chars": 2016,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "10",
+        "document_id": "e890bfaf-2019-04-18T18:22:18Z-00002-000",
+        "query": {
+          "text": "Welche Impfungen sind für Kinder notwendig?",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Es handelt sich noch nicht um einen vollständigen Fall... Nur einige wenige Punkte, die ich zusammengestellt habe... Regierungen sollten kein Recht haben, in die gesundheitlichen Entscheidungen einzugreifen, die Eltern für ihre Kinder treffen. Laut einer Umfrage der University of Michigan aus dem Jahr 2010 glauben 31% der Eltern, dass sie das Recht haben sollten, vorgeschriebene Schulimpfungen für ihre Kinder abzulehnen. Viele Eltern haben religiöse Bedenken gegen Impfungen. Eltern, die aus religiösen Gründen gegen Impfungen sind, zu zwingen, ihre Kinder zu impfen, würde das 1. Verfassungszusatz verletzen, der den Bürgern das Recht auf freie Religionsausübung garantiert. Impfungen sind in vielen Fällen, in denen die Gefahr eines tödlichen Krankheitsverlaufs gering ist, oft überflüssig. Im frühen 19. Jahrhundert sank die Sterblichkeitsrate bei Kinderkrankheiten wie Keuchhusten, Masern und Scharlach drastisch, bevor Impfungen verfügbar wurden. Diese sinkende Sterblichkeitsrate wird verbe",
+          "full_chars": 4993,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

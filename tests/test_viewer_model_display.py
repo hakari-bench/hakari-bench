@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 from hakari_bench.viewer.model_display import (
     model_cell_views,
@@ -296,6 +298,40 @@ def test_model_cell_views_include_late_interaction_metadata_for_details_modal() 
     assert "&quot;late_interaction_query_expansion&quot;:false" in html
 
 
+def test_model_cell_views_include_model_card_detail_metadata() -> None:
+    row = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="jinaai/jina-embeddings-v3",
+        model_type="dense",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        license={"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"},
+        links={"github": "https://github.com/jina-ai/embeddings", "huggingface": "https://huggingface.co/jinaai/jina-embeddings-v3"},
+        truncate_dims=(32, 64, 128),
+        query_prompt_name="retrieval.query",
+        document_prompt_name="retrieval.passage",
+        notice="Use deployment settings carefully.",
+    )
+
+    model_view = model_cell_views([row])[row.model_name]
+    html = render_model_name_cell(row, model_view)
+
+    assert model_view.metadata["license"] == {"id": "cc-by-nc-4.0", "label": "CC BY-NC 4.0"}
+    assert model_view.metadata["links"] == {
+        "github": "https://github.com/jina-ai/embeddings",
+        "huggingface": "https://huggingface.co/jinaai/jina-embeddings-v3",
+    }
+    assert model_view.metadata["truncate_dims"] == [32, 64, 128]
+    assert model_view.metadata["query_prompt_name"] == "retrieval.query"
+    assert model_view.metadata["document_prompt_name"] == "retrieval.passage"
+    assert model_view.metadata["notice"] == "Use deployment settings carefully."
+    assert "&quot;truncate_dims&quot;:[32,64,128]" in html
+    assert "&quot;query_prompt_name&quot;:&quot;retrieval.query&quot;" in html
+    assert "&quot;notice&quot;:&quot;Use deployment settings carefully.&quot;" in html
+
+
 def test_render_model_name_cell_hides_table_type_badge_for_dense_and_bm25() -> None:
     dense = LeaderboardRow(
         borda_rank=1,
@@ -373,3 +409,19 @@ def test_render_model_detail_modal_supports_backdrop_close_and_focus_restore() -
     assert 'id="model-detail-title"' in html
     assert 'id="model-detail-fields"' in html
     assert "<script>" not in html
+
+
+def test_model_detail_script_orders_fields_and_labels_github_repo() -> None:
+    script = Path("hakari_bench/viewer/assets/viewer.js").read_text(encoding="utf-8")
+
+    assert script.index('["Language", "language_support_label"]') < script.index('["Active params", "active_parameters"]')
+    assert script.index('["Max Tokens", "max_seq_length"]') < script.index("appendModelDetailLicense")
+    assert '["Max len", "max_seq_length"]' not in script
+    click_handler = script.split("list.replaceChildren();", 1)[1]
+    assert click_handler.index("appendModelDetailLicense") < click_handler.index("appendModelDetailLinks")
+    assert click_handler.index("appendModelDetailLinks") < click_handler.index("modelDetailFieldsAfterLinks")
+    assert click_handler.index("modelDetailFieldsAfterLinks") < click_handler.index("appendModelDetailNotice")
+    assert '["Query Prompt", "query_prompt"]' in script
+    assert '["Doc Prompt", "document_prompt"]' in script
+    assert 'replace(/^https?:\\/\\/github\\.com\\//, "")' in script
+    assert '"Repository"' not in script

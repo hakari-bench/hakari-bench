@@ -70,12 +70,11 @@ Hybrid systems are well suited to this task. The observed metrics suggest that a
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-gis-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Gis-PL
+| Query | Positive document |
+| --- | --- |
+| Jak zmienić proporcje mapy bez zmiany skali? [44 chars] | Jak zmienić rozmiar elementu mapy w edytorze wydruku QGIS bez zmiany skali? Czy można zablokować skalę w kompozytorze wydruku QGIS 2.0.1? Za każdym razem, gdy zmieniam rozmiar mapy, skala jest dostosowywana. To sprawia, że ​​wypróbowywanie różnych układów map jest naprawdę denerwujące. [286 chars] |
+| Jak używać SRTM Global DEM do obliczania nachylenia? [52 chars] | jaki jest odpowiedni układ współrzędnych rzutowanych do WGS84? > **Możliwe duplikowanie:** > Obliczanie globalnego DEM na nachylenie Chcę obliczyć nachylenie z mojego globalnego DEM? DEM ma odwzorowanie WGS84 (stopnie). Aby poprawnie obliczyć nachylenie z DEM, musi być rzutowana współrzędna system, a nie układ współrzędnych geograficznych.Naprawdę trudno powiedzieć, który z rzutów na liście: rzutowane układy współrzędnych odpowiada układowi WGS84(world) pod listą układów współrzędnych geograficznych.Jakieś pomysły? [520 chars] |
+| Skopiuj odpytywane atrybuty pliku kształtu do nowego pliku kształtu [67 chars] | Tworzenie rekordów w wyjściowym pliku kształtu za pomocą Pythona Mam listę (wyjście z poprzedniej pętli) zawierającą atrybuty z wejściowego pliku kształtu. To, z czym utknąłem, to wprowadzanie tych atrybutów do nowego pliku kształtu. Wykreśliłem dane punktowe za pomocą `w.point(x, y)`, a także stworzyłem odpowiednie pola `w.field()` z pól wejściowych pliku kształtu. Tam, gdzie utknąłem, jest kopia rekordów, która daje mi błąd związany z flagą usunięcia. > AttributeError: obiekt 'tuple' nie ma atrybutu 'startswith' Wklejam fragment kodu z moimi zapytaniami. from datetime import datetime import osgeo.ogr, osgeo.ogr z osgeo import ogr z osgeo import gdal import shapefile import os sf = shapefile.Reader("-- Lokalizacja pliku wejściowego --") # Czytanie pól Shapefile = sf.fields # Odczytywanie pól atrybutów records = sf.records() # Odczytywanie rekordów funkcji shapRecs = sf.shapeRecords() # Odczytuj jednocześnie geometrię i rekordy w = shapefile.Writer(shapefile.POINT) w.autoBalance = 1 wy... [1,000 / 1,933 chars] |
 
 ### Source Reference Table
 

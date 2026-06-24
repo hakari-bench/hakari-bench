@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings",
-        "url": "https://arxiv.org/abs/2502.08638",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "Andrianos/clsd_wmt19_21",
-        "url": "https://huggingface.co/datasets/Andrianos/clsd_wmt19_21",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MTEB retrieval task listing",
-        "url": "https://embeddings-benchmark.github.io/mteb/overview/available_tasks/retrieval/",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc",
       "source_urls": [
@@ -115,6 +93,78 @@
           "url": "https://huggingface.co/datasets/Andrianos/clsd_wmt19_21"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Cross-Lingual Semantic Discrimination for Building Better Multilingual Embeddings",
+        "url": "https://arxiv.org/abs/2502.08638",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "Andrianos/clsd_wmt19_21",
+        "url": "https://huggingface.co/datasets/Andrianos/clsd_wmt19_21",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MTEB retrieval task listing",
+        "url": "https://embeddings-benchmark.github.io/mteb/overview/available_tasks/retrieval/",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "D326",
+        "query": {
+          "text": "L'article 20 du traité de l'UE dispose clairement que les citoyens de l'UE peuvent exercer leur droit de vote et d'éligibilité aux élections au Parlement européen \"dans l'Etat membre\" dans lequel ils ont leur lieu de résidence.",
+          "full_chars": 227,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Artikel 20 des EU-Vertrages besagt klipp und klar, dass EU-Bürger „in dem Mitgliedstaat, in dem sie ihren Wohnsitz haben, das aktive und passive Wahlrecht bei den Wahlen zum Europäischen Parlament“ wahrnehmen können.",
+          "full_chars": 216,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q124",
+        "document_id": "D616",
+        "query": {
+          "text": "Il a de nombreux éléments pour étayer le credo qu'il ranime pour s'opposer aux sirènes des populistes et selon lequel c'est se fourvoyer que de vouloir quitter l'Europe: le changement climatique, l'imposition des entreprises du web, la migration - autant de défis pour lesquels le cadre de référence national est devenu trop petit.",
+          "full_chars": 331,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Für sein nun wiederbelebtes Credo, dass entgegen den Sirenengesängen der Populisten der Rückzug aus Europa ein Holzweg ist, gibt es zahlreiche Belege: Klimawandel, Besteuerung der Internetkonzerne, Migration – für all diese Herausforderungen ist der nationale Bezugsrahmen zu klein geworden.",
+          "full_chars": 291,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q104",
+        "document_id": "D516",
+        "query": {
+          "text": "De fait, Soros est venu en soutien, dans les décennies passées, à de nombreuses associations et initiatives humanitaires, sociales, scientifiques et artistiques à hauteur de plusieurs millards. Cela concerne notamment des initiatives qui s'engagent en faveur des demandeurs d'asile.",
+          "full_chars": 282,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tatsächlich hat Soros in den vergangenen Jahrzehnten mit Milliardensummen zahlreiche humanitäre, soziale, wissenschaftliche und künstlerische Vereine und Initiativen unterstützt. Darunter sind auch solche, die sich für Asylsuchende einsetzen.",
+          "full_chars": 242,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

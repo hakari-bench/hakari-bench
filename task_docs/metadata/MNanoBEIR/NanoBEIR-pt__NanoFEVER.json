@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
-        "url": "https://arxiv.org/abs/1803.05355",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+        "url": "https://arxiv.org/abs/1803.05355",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "64874",
+        "document_id": "Grateful_Dead",
+        "query": {
+          "text": "Keith Godchaux conhecia o Grateful Dead.",
+          "full_chars": 40,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "A Grateful Dead foi uma banda de rock americana formada em 1965 em Palo Alto, Califórnia. Com uma formação que variava de quinteto a septeto, a banda é conhecida por seu estilo único e eclético, que mesclava elementos de rock, psicodelia, música experimental, jazz modal, country, folk, bluegrass, blues, reggae e space rock, além de apresentações ao vivo com longos solos instrumentais e por sua base de fãs devotados, conhecidos como \"Deadheads\". \"Sua música\", escreve Lenny Kaye, \"toca em terrenos que a maioria das outras bandas nem sabe que existem.\" Essas diversas influências foram condensadas em um todo diversificado e psicodélico que fez da Grateful Dead \"os pioneiros e padrinhos do mundo das jam bands\". A banda foi classificada em 57º lugar pela revista Rolling Stone na edição dos \"Maiores Artistas de Todos os Tempos\". A banda foi introduzida no Rock and Roll Hall of Fame em 1994 e uma gravação de sua apresentação de 8 de maio de 1977 na Barton Hall da Universidade Cornell foi adici",
+          "full_chars": 2969,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "13474",
+        "document_id": "Taarak_Mehta_Ka_Ooltah_Chashmah",
+        "query": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah é uma sitcom.",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Taarak Mehta Ka Ooltah Chashmah (em inglês: A Perspectiva Diferente de Taarak Mehta) é a sitcom mais longa da Índia, produzida pela Neela Tele Films Private Limited. O programa estreou no ar em 28 de julho de 2008. É exibido de segunda a sexta-feira às 20:30, com retransmissão às 23:00 e no dia seguinte às 15:00 na SAB TV. A reprise começou no Sony Pal em 2 de novembro de 2015, às 16:30 e 20:00 todos os dias. O programa é baseado na coluna Duniya Ne Oondha Chashma, escrita pelo colunista e jornalista Taarak Mehta para a revista semanal gujarati Chitralekha.",
+          "full_chars": 563,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "106404",
+        "document_id": "Burbank,_California",
+        "query": {
+          "text": "Aviões secretos e avançados foram fabricados em Burbank, Califórnia.",
+          "full_chars": 68,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Burbank é uma cidade no Condado de Los Angeles, no sul da Califórnia, Estados Unidos, a 12 milhas a noroeste do centro de Los Angeles. A população no censo de 2010 era de 103.340 habitantes. Conhecida como a \"Capital Mundial dos Meios de Comunicação\" e situada a poucos quilômetros a nordeste de Hollywood, várias empresas de mídia e entretenimento têm sua sede ou instalações significativas de produção em Burbank, incluindo The Walt Disney Company, Warner Bros. Entertainment, Nickelodeon Animation Studios, NBC, Cartoon Network Studios com o ramo da Costa Oeste da Cartoon Network, e Insomniac Games. A cidade também é a sede do Aeroporto Bob Hope. Foi o local da Skunk Works da Lockheed, que produziu alguns dos aviões mais secretos e tecnologicamente avançados, incluindo os aviões espiões U-2 que revelaram componentes de mísseis soviéticos em Cuba em outubro de 1962. Burbank é composta por duas áreas distintas: uma seção centro/encosta, nas encostas das Montanhas Verdugo, e a seção plana. B",
+          "full_chars": 1406,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

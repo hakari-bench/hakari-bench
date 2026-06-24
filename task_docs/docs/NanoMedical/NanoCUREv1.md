@@ -62,19 +62,19 @@ Models should preserve exact clinical terminology while improving semantic relat
 
 ## Example Data
 
-### Public Sources
-
-- [CURE: A Dataset for Clinical Understanding & Retrieval Evaluation](https://arxiv.org/abs/2412.06954), 2024.
-- [CURE KDD DOI record](https://doi.org/10.1145/3711896.3737435), 2025.
-- [clinia/CUREv1](https://huggingface.co/datasets/clinia/CUREv1), source dataset.
+| Query | Positive document |
+| --- | --- |
+| Which are the factors that should be taken in consideration when deciding the location of IMF screws placement? [111 chars] | The Use of MMF Screws: Surgical Technique, Indications, Contraindications, and Common Problems in Review of the Literature The anatomical site for the placement of MMF screws is chosen with respect to a given fracture location, the dentition, the extent of surgical exposure, the availability and the quality of bone in the direct proximity of the fracture line. [362 chars] |
+| Which are the disadvantages of 3D printed splints in orthognathic surgery? [74 chars] | Comparison between Additive and Subtractive CAD-CAM Technique to Produce Orthognathic Surgical Splints: A Personalized Approach The findings of the present investigation would suggest that surgical splints are more accurate when produced by milling technology, according to the greater percentage of matching found in relation to the original digital project. Clinicians should be aware of this when referring to the lab technician for the construction of the appliance. [470 chars] |
+| Which are the advantages of endoscopic approach to treat massive arterial epistaxis? [84 chars] | Success Rate of Endoscopic Sphenopalatine Artery Ligation for the Management of Refractory Posterior Epistaxis Patients in a Tertiary Care Hospital: A Descriptive Cross-sectional Study The findings of the study conclude that ESPAL has a high success rate in patients with intractile posterior epistaxis. From our study, we would like to recommend that endoscopic sphenopalatine artery ligation or cauterization should be preferred as first-line treatment for posterior epistaxis. This study will be beneficial for the development of knowledge by healthcare professionals for the management of posterior epistaxis. [613 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2024 | arXiv paper | https://arxiv.org/abs/2412.06954 |
-| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2025 | KDD proceedings DOI | https://doi.org/10.1145/3711896.3737435 |
-| clinia/CUREv1 | 2024 | source dataset | https://huggingface.co/datasets/clinia/CUREv1 |
+| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2024 | arXiv paper | [https://arxiv.org/abs/2412.06954](https://arxiv.org/abs/2412.06954) |
+| CURE: A Dataset for Clinical Understanding & Retrieval Evaluation | 2025 | KDD proceedings DOI | [https://doi.org/10.1145/3711896.3737435](https://doi.org/10.1145/3711896.3737435) |
+| clinia/CUREv1 | 2024 | source dataset | [https://huggingface.co/datasets/clinia/CUREv1](https://huggingface.co/datasets/clinia/CUREv1) |
 
 ### Representative Snippets
 

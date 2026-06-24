@@ -62,19 +62,19 @@ Models should handle Slovenian legal morphology, exact numeric expressions, mark
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Kateri regulativni okvir je organom omogočal opredeliti podjetja kot prevladujoča pri 25% tržnem deležu, upoštevajoč dostop končnih uporabnikov in finance? [155 chars] | V skladu z regulativnim okvirom iz leta 1998 so bila področja trga telekomunikacijskega sektorja, za katera je veljala ureditev ex ante, določena v ustreznih direktivah, vendar ti trgi niso bili opredeljeni v skladu z načeli konkurenčnega prava. Na teh področjih, opredeljenih v skladu z regulativnim okvirom iz leta 1998, so imeli nacionalni regulativni organi pooblastila, da podjetja, ki imajo 25 % tržni delež, opredelijo kot podjetja s pomembno tržno močjo, pri čemer je mogoče odstopanje od tega praga ob upoštevanju sposobnosti podjetja, da vpliva na trg, njegovega prometa glede na velikost trga, njegovega nadzora nad sredstvi dostopa do končnih uporabnikov, njegovega dostopa do finančnih virov in njegovih izkušenj pri zagotavljanju proizvodov in storitev na trgu. [775 chars] |
+| Katere države so v raziskavi zabeležile približno štiri petine podpore za omejitev manjših apoenov? [99 chars] | Bankovci in kovanci. Glede zadovoljstva s sedanjimi apoeni bankovcev in kovancev, je raziskava pokazala, da pri bankovcih spremembe niso potrebne, precejšen odstotek anketirancev (od 80 % na Finskem in v Nemčiji do 33–35 % na Irskem in v Italiji) pa zagovarja zmanjšanje števila eurokovancev, zlasti ukinitev kovancev za 1 in 2 centa, kar bi bilo udobneje in bi poenostavilo plačila. Po drugi strani se večina boji, da bi odstranitev majhnih apoenov eura lahko povzročila rast cen: ta bojazen je zelo razširjena tudi v državah, kjer bi večina želela ukinitev manjših kovancev. [576 chars] |
+| Kateri segment embalaže za pijačo v razpravah v EU predstavlja približno petino skupne embalaže po teži? [104 chars] | Nacionalni sistemi za ponovno uporabo embalaže upoštevajo več vrst embalaže. Nekateri od teh sistemov delujejo zelo dobro, zlasti tisti za prevozno embalažo, kakršne so gajbe in palete, pa tudi za embalaže za pijačo v gostinstvu. Na drugih področjih pa je mogoče potreben poseg javnih organov za spodbuditev sistemov ponovne uporabe, ne glede na njihovo dejansko poslovno upravičenost. Pri tem se večji del razprave v Evropski uniji osredotoča na potrošniško embalažo za pijačo (ki znaša okoli 20 % skupne embalaže po teži). [524 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

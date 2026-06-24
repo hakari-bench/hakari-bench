@@ -5,25 +5,28 @@ import random
 import re
 import sys
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from hakari_bench.task_docs import TASK_METADATA_RE, load_task_metadata
+from hakari_bench.task_docs import (
+    TASK_METADATA_RE,
+    TaskMetadataDocument,
+    load_task_metadata,
+    load_task_metadata_document,
+    task_metadata_json_path,
+)
 
 
-EXAMPLE_SECTION_RE = re.compile(r"(## Example Data\n\n).*?(?=\n## Dataset Information)", re.DOTALL)
+EXAMPLE_SECTION_RE = re.compile(
+    r"(## Example Data\n\n).*?(?=\n#{2,3} Public Sources|\n#{2,3} Hugging Face Links|\n#{2,3} Source Reference Table|\n## Dataset Information|\Z)",
+    re.DOTALL,
+)
 METADATA_RE = TASK_METADATA_RE
-DEFAULT_TEXT_LIMIT = 225
-DEFAULT_SAMPLE_SIZE = 5
+DEFAULT_QUERY_TEXT_LIMIT = 500
+DEFAULT_DOCUMENT_TEXT_LIMIT = 1000
+DEFAULT_SAMPLE_SIZE = 3
 DEFAULT_SEED = 42
-
-
-@dataclass(frozen=True)
-class TaskReference:
-    dataset_id: str
-    split_name: str
 
 
 def _as_text(value: Any) -> str:
@@ -94,38 +97,44 @@ def _escape_markdown_cell(text: str) -> str:
     return text.replace("|", r"\|")
 
 
-def format_example_text(text: str, *, text_limit: int = DEFAULT_TEXT_LIMIT) -> str:
+def truncate_example_text(text: str, *, text_limit: int) -> dict[str, Any]:
     stripped = text.strip()
-    full_chars = len(stripped)
     visible = _normalize_visible_text(stripped)
-    if len(visible) > text_limit:
+    truncated = len(visible) > text_limit
+    if truncated:
         visible = visible[:text_limit].rstrip()
-        return _escape_markdown_cell(f"{visible} ... [truncated {text_limit} chars]({full_chars} chars)")
-    return _escape_markdown_cell(f"{visible} ({full_chars} chars)")
+    return {
+        "text": visible,
+        "full_chars": len(stripped),
+        "limit_chars": text_limit,
+        "truncated": truncated,
+    }
 
 
-def _materialize_by_id(rows: Iterable[Mapping[str, Any]]) -> dict[str, str]:
-    return {_row_id(row): _row_text(row) for row in rows}
+def format_example_text(text: str, *, text_limit: int) -> str:
+    item = truncate_example_text(text, text_limit=text_limit)
+    return format_example_text_metadata(item)
 
 
-def _positive_docs_by_query(rows: Iterable[Mapping[str, Any]]) -> dict[str, list[str]]:
-    positives: dict[str, list[str]] = {}
-    for row in rows:
-        if not _is_positive_qrel(row):
-            continue
-        positives.setdefault(_qrel_query_id(row), []).append(_qrel_corpus_id(row))
-    return positives
+def format_example_text_metadata(item: Mapping[str, Any]) -> str:
+    text = _as_text(item["text"])
+    full_chars = int(item["full_chars"])
+    limit_chars = int(item["limit_chars"])
+    if item.get("truncated"):
+        return _escape_markdown_cell(f"{text}... [{limit_chars:,} / {full_chars:,} chars]")
+    return _escape_markdown_cell(f"{text} [{full_chars:,} chars]")
 
 
-def build_example_table(
+def build_example_metadata(
     *,
     queries: Iterable[Mapping[str, Any]],
     corpus: Iterable[Mapping[str, Any]],
     qrels: Iterable[Mapping[str, Any]],
     sample_size: int = DEFAULT_SAMPLE_SIZE,
     seed: int = DEFAULT_SEED,
-    text_limit: int = DEFAULT_TEXT_LIMIT,
-) -> str:
+    query_text_limit: int = DEFAULT_QUERY_TEXT_LIMIT,
+    document_text_limit: int = DEFAULT_DOCUMENT_TEXT_LIMIT,
+) -> list[dict[str, Any]]:
     queries_by_id = _materialize_by_id(queries)
     corpus_by_id = _materialize_by_id(corpus)
     positives_by_query = _positive_docs_by_query(qrels)
@@ -140,19 +149,33 @@ def build_example_table(
     rng = random.Random(seed)
     selected_query_ids = rng.sample(eligible_query_ids, k=min(sample_size, len(eligible_query_ids)))
 
+    examples: list[dict[str, Any]] = []
+    for query_id in selected_query_ids:
+        corpus_id = next(corpus_id for corpus_id in positives_by_query[query_id] if corpus_id in corpus_by_id)
+        examples.append(
+            {
+                "query_id": query_id,
+                "document_id": corpus_id,
+                "query": truncate_example_text(queries_by_id[query_id], text_limit=query_text_limit),
+                "positive_document": truncate_example_text(corpus_by_id[corpus_id], text_limit=document_text_limit),
+            }
+        )
+    return examples
+
+
+def render_example_table(examples: Sequence[Mapping[str, Any]]) -> str:
     lines = [
         "| Query | Positive document |",
         "| --- | --- |",
     ]
-    for query_id in selected_query_ids:
-        corpus_id = next(corpus_id for corpus_id in positives_by_query[query_id] if corpus_id in corpus_by_id)
-        query_text = format_example_text(queries_by_id[query_id], text_limit=text_limit)
-        document_text = format_example_text(corpus_by_id[corpus_id], text_limit=text_limit)
+    for example in examples:
+        query_text = format_example_text_metadata(example["query"])
+        document_text = format_example_text_metadata(example["positive_document"])
         lines.append(f"| {query_text} | {document_text} |")
     return "\n".join(lines)
 
 
-def load_example_table(
+def load_example_metadata(
     *,
     dataset_id: str,
     split_name: str,
@@ -161,19 +184,34 @@ def load_example_table(
     qrels_config: str = "qrels",
     sample_size: int = DEFAULT_SAMPLE_SIZE,
     seed: int = DEFAULT_SEED,
-    text_limit: int = DEFAULT_TEXT_LIMIT,
-) -> str:
+    query_text_limit: int = DEFAULT_QUERY_TEXT_LIMIT,
+    document_text_limit: int = DEFAULT_DOCUMENT_TEXT_LIMIT,
+) -> list[dict[str, Any]]:
     queries = _load_dataset_split(dataset_id, queries_config, split_name)
     corpus = _load_dataset_split(dataset_id, corpus_config, split_name)
     qrels = _load_dataset_split(dataset_id, qrels_config, split_name)
-    return build_example_table(
+    return build_example_metadata(
         queries=queries,
         corpus=corpus,
         qrels=qrels,
         sample_size=sample_size,
         seed=seed,
-        text_limit=text_limit,
+        query_text_limit=query_text_limit,
+        document_text_limit=document_text_limit,
     )
+
+
+def _materialize_by_id(rows: Iterable[Mapping[str, Any]]) -> dict[str, str]:
+    return {_row_id(row): _row_text(row) for row in rows}
+
+
+def _positive_docs_by_query(rows: Iterable[Mapping[str, Any]]) -> dict[str, list[str]]:
+    positives: dict[str, list[str]] = {}
+    for row in rows:
+        if not _is_positive_qrel(row):
+            continue
+        positives.setdefault(_qrel_query_id(row), []).append(_qrel_corpus_id(row))
+    return positives
 
 
 @lru_cache(maxsize=None)
@@ -192,11 +230,6 @@ def _load_dataset_split(dataset_id: str, config_name: str, split_name: str) -> A
         raise KeyError(f"{dataset_id}/{config_name} does not contain split {split_name!r}; available: {available}") from exc
 
 
-def _task_reference_from_doc(path: Path) -> TaskReference:
-    metadata = load_task_metadata(path)
-    return TaskReference(dataset_id=metadata.dataset_id, split_name=metadata.split_name or metadata.task_name)
-
-
 def _replace_example_section(text: str, table: str) -> str:
     updated, count = EXAMPLE_SECTION_RE.subn(lambda match: f"{match.group(1)}{table}\n", text, count=1)
     if count != 1:
@@ -207,9 +240,11 @@ def _replace_example_section(text: str, table: str) -> str:
 def update_docs(
     *,
     docs_root: Path,
+    metadata_root: Path,
     sample_size: int,
     seed: int,
-    text_limit: int,
+    query_text_limit: int,
+    document_text_limit: int,
     dry_run: bool,
 ) -> list[Path]:
     changed: list[Path] = []
@@ -218,20 +253,62 @@ def update_docs(
         text = path.read_text(encoding="utf-8")
         if "## Example Data" not in text:
             continue
-        reference = _task_reference_from_doc(path)
-        table = load_example_table(
-            dataset_id=reference.dataset_id,
-            split_name=reference.split_name,
-            sample_size=sample_size,
-            seed=seed,
-            text_limit=text_limit,
-        )
+        metadata = load_task_metadata(path, docs_root=docs_root, metadata_root=metadata_root)
+        examples = [example.model_dump() for example in metadata.examples or []]
+        if not examples:
+            examples = load_example_metadata(
+                dataset_id=metadata.dataset_id,
+                split_name=metadata.split_name or metadata.task_name,
+                sample_size=sample_size,
+                seed=seed,
+                query_text_limit=query_text_limit,
+                document_text_limit=document_text_limit,
+            )
+        table = render_example_table(examples)
         updated = _replace_example_section(text, table)
         if updated == text:
             continue
         changed.append(path)
         if not dry_run:
             path.write_text(updated, encoding="utf-8")
+    return changed
+
+
+def update_metadata(
+    *,
+    docs_root: Path,
+    metadata_root: Path,
+    sample_size: int,
+    seed: int,
+    query_text_limit: int,
+    document_text_limit: int,
+    dry_run: bool,
+) -> list[Path]:
+    changed: list[Path] = []
+    task_docs = sorted(path for path in docs_root.rglob("*.md") if path.name != "index.md")
+    for path in task_docs:
+        document = load_task_metadata_document(path, docs_root=docs_root, metadata_root=metadata_root)
+        metadata = document.task_metadata
+        examples = load_example_metadata(
+            dataset_id=metadata.dataset_id,
+            split_name=metadata.split_name or metadata.task_name,
+            sample_size=sample_size,
+            seed=seed,
+            query_text_limit=query_text_limit,
+            document_text_limit=document_text_limit,
+        )
+        metadata_payload = metadata.model_dump(mode="python", exclude_none=True)
+        metadata_payload["examples"] = examples
+        metadata_payload["example_count"] = len(examples)
+        updated_document = TaskMetadataDocument.model_validate({"task_metadata": metadata_payload})
+        output_path = task_metadata_json_path(path, docs_root=docs_root, metadata_root=metadata_root)
+        payload = updated_document.model_dump_json(indent=2, exclude_none=True) + "\n"
+        if output_path.exists() and output_path.read_text(encoding="utf-8") == payload:
+            continue
+        changed.append(output_path)
+        if not dry_run:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(payload, encoding="utf-8")
     return changed
 
 
@@ -246,7 +323,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--qrels-config", default="qrels")
     parser.add_argument("--sample-size", type=int, default=DEFAULT_SAMPLE_SIZE)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
-    parser.add_argument("--text-limit", type=int, default=DEFAULT_TEXT_LIMIT)
+    parser.add_argument("--query-text-limit", type=int, default=DEFAULT_QUERY_TEXT_LIMIT)
+    parser.add_argument("--document-text-limit", type=int, default=DEFAULT_DOCUMENT_TEXT_LIMIT)
+    parser.add_argument("--metadata-root", type=Path, default=Path("task_docs/metadata"))
+    parser.add_argument("--update-metadata", type=Path, help="Refresh example metadata JSON below this docs root.")
     parser.add_argument("--update-docs", type=Path, help="Replace Example Data sections below this docs root.")
     parser.add_argument("--dry-run", action="store_true", help="Report changed files without writing them.")
     return parser.parse_args(argv)
@@ -256,15 +336,35 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
     if args.sample_size <= 0:
         raise SystemExit("--sample-size must be positive")
-    if args.text_limit <= 0:
-        raise SystemExit("--text-limit must be positive")
+    if args.query_text_limit <= 0:
+        raise SystemExit("--query-text-limit must be positive")
+    if args.document_text_limit <= 0:
+        raise SystemExit("--document-text-limit must be positive")
+
+    if args.update_metadata:
+        changed = update_metadata(
+            docs_root=args.update_metadata,
+            metadata_root=args.metadata_root,
+            sample_size=args.sample_size,
+            seed=args.seed,
+            query_text_limit=args.query_text_limit,
+            document_text_limit=args.document_text_limit,
+            dry_run=args.dry_run,
+        )
+        action = "Would update" if args.dry_run else "Updated"
+        for path in changed:
+            print(path)
+        print(f"{action} {len(changed)} metadata files.", file=sys.stderr)
+        return 0
 
     if args.update_docs:
         changed = update_docs(
             docs_root=args.update_docs,
+            metadata_root=args.metadata_root,
             sample_size=args.sample_size,
             seed=args.seed,
-            text_limit=args.text_limit,
+            query_text_limit=args.query_text_limit,
+            document_text_limit=args.document_text_limit,
             dry_run=args.dry_run,
         )
         action = "Would update" if args.dry_run else "Updated"
@@ -274,21 +374,23 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
 
     if not args.dataset_id or not args.split_name:
-        raise SystemExit("dataset_id and split_name are required unless --update-docs is used")
+        raise SystemExit("dataset_id and split_name are required unless --update-metadata or --update-docs is used")
     print(
-        load_example_table(
-            dataset_id=args.dataset_id,
-            split_name=args.split_name,
-            queries_config=args.queries_config,
-            corpus_config=args.corpus_config,
-            qrels_config=args.qrels_config,
-            sample_size=args.sample_size,
-            seed=args.seed,
-            text_limit=args.text_limit,
+        render_example_table(
+            load_example_metadata(
+                dataset_id=args.dataset_id,
+                split_name=args.split_name,
+                queries_config=args.queries_config,
+                corpus_config=args.corpus_config,
+                qrels_config=args.qrels_config,
+                sample_size=args.sample_size,
+                seed=args.seed,
+                query_text_limit=args.query_text_limit,
+                document_text_limit=args.document_text_limit,
+            )
         )
     )
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

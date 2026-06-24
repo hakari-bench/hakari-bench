@@ -48,13 +48,11 @@ Strong models should preserve exact entity names while learning attribute and ca
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Concesionario Fitzgerald en Chambersburg, PA | Fitzgerald Auto Malls es una concesionaria de automóviles propiedad y operada por una familia, fundada en 1966... |
-| Colección de cuentos de 1994 de Alice Munro está disponible | Alice Ann Munro es una autora canadiense. La obra de Munro ha sido descrita como haber revolucionado la estructura de los cuentos... |
-| Arquitectura romana gala en París | El arte en París es un artículo sobre la cultura y la historia del arte en París, la capital de Francia... |
-| Repúblicas de la antigua Yugoslavia | La Constitución de 1974 de Yugoslavia fue la cuarta y última constitución de la República Federal Socialista de Yugoslavia... |
-| Películas filmadas en Venecia | A Little Romance es una comedia romántica estadounidense de 1979 dirigida por George Roy Hill... |
+| Query | Positive document |
+| --- | --- |
+| Concesionario Fitzgerald en Chambersburg, PA [44 chars] | Fitzgerald Auto Malls es una concesionaria de automóviles propiedad y operada por una familia, fundada en 1966. Su primera ubicación se abrió en Bethesda, Maryland. A partir de 2014, Fitzgerald Auto Malls ocupó el puesto número 59 en la lista de los "Top 125 Grupos de Concesionarios" en EE. UU., que se publica anualmente por Automotive News. Las ubicaciones de los concesionarios de Fitzgerald aparecen cinco veces en el WardsAuto e-Dealer 100 de 2013, en los puestos No. 8, No. 25, No. 30, No. 43 y No. 98. [509 chars] |
+| Colección de cuentos de 1994 de Alice Munro está disponible [59 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, de soltera Laidlaw /ˈleɪdlɔː/; nacida el 10 de julio de 1931) es una autora canadiense. La obra de Munro ha sido descrita como haber revolucionado la estructura de los cuentos, especialmente en su tendencia a avanzar y retroceder en el tiempo. Sus historias se dice que "más que anunciar, revelan más que exhibir." La ficción de Munro se ambienta, en su mayoría, en su natal condado de Huron, en el suroeste de Ontario. Sus cuentos exploran las complejidades humanas con un estilo de prosa sencillo. [537 chars] |
+| Arquitectura romana gala en París [33 chars] | El arte en París es un artículo sobre la cultura y la historia del arte en París, la capital de Francia. Desde hace siglos, París ha atraído a artistas de todo el mundo, quienes llegan a la ciudad en busca de formación y de inspiración en sus recursos artísticos y galerías. Por ello, París ha ganado la reputación de ser la 'Ciudad del Arte'. [343 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should preserve exact entity names while learning attribute and ca
 
 | Label | URL |
 |---|---|
-| DBpedia-Entity V2 paper | https://doi.org/10.1145/3077136.3080751 |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| DBpedia-Entity V2 paper (https://doi.org/10.1145/3077136.3080751) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

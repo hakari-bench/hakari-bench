@@ -181,21 +181,20 @@ positive above candidates that share only names, countries, or topical words.
 
 ## Example Data
 
-### Public Sources
-
-- [The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants](https://arxiv.org/abs/2308.16884), 2023.
-- [facebookresearch/belebele](https://github.com/facebookresearch/belebele), source repository.
-- [mteb/belebele](https://huggingface.co/datasets/mteb/belebele), MTEB dataset card.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
+| Query | Positive document |
+| --- | --- |
+| Which of the changes prompted by The French Revolution had a significant impact on working class citizens? [106 chars] | De Revolutie heeft grote sociale en politieke gevolgen gehad, zoals het gebruik van het metrieke stelsel, een verschuiving van de absolute monarchie naar republicanisme, nationalisme en de opvatting dat het land aan zijn inwoners toebehoort in plaats van een enkele leider. Voor alle mannelijke sollicitanten waren na de revolutie functies te verkrijgen, zodat de meest ambitieuze en geschikte kandidaten konden slagen. Hetzelfde geldt voor het leger. De legerrangen worden niet meer gebaseerd op iemands klasse maar op het kaliber van de persoon. De Franse Revolutie inspireerde ook in andere landen de onderdrukte arbeidersklasse tot een revolutie. [650 chars] |
+| According to the passage, who may have started an agriculture society? [70 chars] | Voor een groot deel van de negentiende en twintigste eeuw geloofde men dat de vroegste inwoners van Nieuw-Zeeland de Maori waren, die jacht maakten die op enorme vogels genaamd moa's. De theorie leidde tot het idee dat het Maori-volk in een grote vloot uit Polynesië kwam en Nieuw-Zeeland veroverde op de Moriori, waarna er een agrarische samenleving werd gevormd. Er zijn echter nieuwe aanwijzingen dat de Moriori een groep Maori's waren op het vasteland die van Nieuw-Zeeland naar de eilanden van Chatham trokken en daar een persoonlijke, vredevolle gemeenschap opbouwden. Een andere stam op de Cathameilanden waren Maori die vanuit Nieuw-Zeeland zijn geëmigreerd. Ze noemden zichzelf de Moriori en na een paar schermutselingen en werden de Moriori uiteindelijk weggevaagd [774 chars] |
+| Which of the following accurately describes the practice of subsistence agriculture? [84 chars] | Zelfvoorzienende landbouw is landbouw waarbij voldoende voedsel wordt geproduceerd om aan de behoeften van de boer en zijn gezin te voldoen. Landbouw met als doel levensonderhoud is een simpel systeem dat meestal biologisch is. Hierbij wordt opgeslagen zaad gebruikt dat afkomstig is uit de ecoregio, en dat wordt gecombineerd met wisselende gewassen of andere relatief eenvoudige technieken om de opbrengst te optimaal te maken. Vroeger werkten de meeste boeren in de zelfvoorzienende landbouw. In veel ontwikkelingslanden is dit nog steeds het geval. [552 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | https://arxiv.org/abs/2308.16884 |
-| facebookresearch/belebele | 2023 | repository | https://github.com/facebookresearch/belebele |
-| mteb/belebele |  | dataset card | https://huggingface.co/datasets/mteb/belebele |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2023 | arXiv paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| facebookresearch/belebele | 2023 | repository | [https://github.com/facebookresearch/belebele](https://github.com/facebookresearch/belebele) |
+| mteb/belebele |  | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
 
 ### Representative Snippets
 

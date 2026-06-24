@@ -62,19 +62,19 @@ Models should preserve exact Swedish legal names, committee labels, dates, and m
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Vilken kommitté bedömde resursinsatser i små interna utredningar ineffektiva och uppmanade att inarbeta urvalskriterier i handboken för operativa metoder? [154 chars] | Kommittén har sett över Olafs hantering av de minimisärenden och undersökte 45 utvalda ärenden med ekonomiska konsekvenser på under 50000 euro var. Kommittén kom fram till att det inte utgör god resursanvändning att avsätta resurser på interna utredningar av mindre förseelser. Kommissionens nolltoleranspolicy utesluter inte att andra organ (till exempel utrednings- och disciplinbyrån) utreder dessa ärenden, istället för Olaf. Kommittén rekommenderar att Olaf i handboken för operativa metoder inarbetat kriterier för urvalet och behandlingen av de minimisärenden. [567 chars] |
+| Varför använde beslutet genomsnittlig berörd försäljning för Frankrike istället för senaste hela året för MEGAL‑transporterad energi? [133 chars] | Den försäljning som påverkas av överträdelsen är försäljning av gas som tranporteras av E.ON och GDF genom MEGAL-ledningen i Tyskland, förutom försäljning av gas enligt E.ON:s gasprogram (E.ON Gas Release Programme) och försäljning till konsumenter med kontrakt i Frankrike (beräknad som en procentandel av GDF:s totala försäljning av gas som transporteras genom MEGAL). För Frankrikes vidkommande utgår kommissionen i sitt beslut från ett genomsnitt av den berörda försäljningen under överträdelseperioden i stället för det senaste hela året, eftersom ny fransk lagstiftning fick de berörda kundernas och kundkategoriernas antal att stiga avsevärt under överträdelseperioden. [676 chars] |
+| Vem informerar godkännandets innehavare om vilka mindre ändringar i anmälan som godkänts eller avslagits så att avslagna ändringar upphör omedelbart? [149 chars] | När en eller flera mindre ändringar av typ IA lämnas in som en del av en anmälan ska referensmedlemsstaten informera innehavaren av godkännandet för försäljning om vilka ändringar som har godkänts eller avslagits vid dess granskning. Innehavaren av godkännandet för försäljning ska omedelbart upphöra att tillämpa de avslagna ändringarna. Visserligen avslås inte ändringen automatiskt för att den sökande inte har lämnat all erforderlig dokumentation i ansökan om mindre ändringar av typ IA, om den sökande på begäran av den behöriga myndigheten omedelbart lämnar den dokumentation som fattas. Men det bör poängteras att en mindre ändring av typ 1A under särskilda omständigheter kan avslås, med den påföljden att den sökande måste upphöra att tillämpa ändringar som redan har genomförts. [788 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

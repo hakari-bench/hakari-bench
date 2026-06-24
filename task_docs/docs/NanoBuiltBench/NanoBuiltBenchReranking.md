@@ -68,9 +68,11 @@ This task is useful for evaluating whether a model can reduce expert review effo
 
 ## Example Data
 
-### Public Sources
-
-The task is based on BuiltBench, introduced for benchmarking text embedding models in built asset information alignment.
+| Query | Positive document |
+| --- | --- |
+| Nail (Mechanical Fastener type). A thin pointed piece of metal that is hammered into materials as a fastener. [109 chars] | Corrugated fasteners are a type of nail-like product that belong to the fastener category, which is part of the larger group of structural and general products. These fasteners are specifically designed for strong, interlocking connections in wood and similar materials. [270 chars] |
+| Electric Cooker (Electric Appliance Type). An electrical appliance that has the primary function of cooking food (including oven, hob, grill). [142 chars] | Commercial electric grills are a type of commercial cooking device categorized as equipment. They are part of the wider array of products that include signage, sanitary fittings, and other furnishings and equipment (ff&e). These grills are designed for professional kitchen environments. [287 chars] |
+| Expansion Joint Device (Discrete Accessory Type). Assembly connection element between construction elements to allow for thermic differential expansions. [153 chars] | Chloroprene and copper expansion joints are components that belong to the trim products category, specifically within the wider group of covering and finishing products. These expansion joints are designed to accommodate movement and provide durability. These products are essential for ensuring the structural integrity and longevity of various building assemblies. [366 chars] |
 
 ### Source Reference Table
 

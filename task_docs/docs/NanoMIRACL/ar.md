@@ -144,11 +144,11 @@ top-rank ordering.
 
 ## Example Data
 
-Representative queries ask about the first publishing house in Lebanon, Marie
-Curie's early research, the number of Kuwaiti National Assembly members, the
-founder of the Habsburg dynasty, and when Amazon began offering cloud-computing
-services. Positive documents are Arabic Wikipedia passages containing the
-corresponding facts.
+| Query | Positive document |
+| --- | --- |
+| ما هي اول دار للنشر في لبنان ؟ [30 chars] | لبنان ويشتهر لبنان بدور النشر التي تصدر الكتب المتنوعة العربية منها والمترجمة من لغات أخرى. وأول دار للنشر في لبنان أنشئت بهدف النشر والتوزيع والتأليف هي دار العلم للملايين في سنة 1945، وكان معظم المشتغلين في إنتاج الكتاب قبل ذلك إما أصحاب مطابع أو أصحاب مكتبات ولم يكونوا متخصصين بالنشر. ويوجد لدى نقابة الناشرين في لبنان حوالي 600 ناشر مسجل لديها ولكن عدد الفاعلين لا يتجاوز ال 100 ناشر أبرزهم دار النهار وشركة المطبوعات ودار المنشورات الحقوقية صادر ودار الفارابي ودار كنعان ودار الحلبي للمنشورات الحقوقية. وتُصدر هذه الدور حوالي 5000 عنوان جديد سنوياً. كما أنشأ الناشرون اللبنانيون دور نشر في أوروبا مثل "دار الريس"، وفي الدول العربية مثل "مكتبة خياط". اختارت منظمة اليونسكو مدينة بيروت عاصمة للكتاب العالمي لسنة 2009. [722 chars] |
+| ما أول أبحاث ماري سكوودوفسكا كوري؟ [34 chars] | ماري كوري خلال الحرب العالمية الأولى، أسست أول مراكز إشعاعية عسكرية. ورغم حصولها على الجنسية الفرنسية، لم تفقد ماري سكوودوفسكا كوري إحساسها بهويتها البولندية، فقد علمت بناتها اللغة البولندية، واصطحبتهم في زيارات لبولندا. كما أطلقت على أول عنصر كيميائي اكتشفته اسم البولونيوم، الذي عزلته للمرة الأولى عام 1898، نسبة إلى بلدها الأصل. وخلال الحرب العالمية الأولى أصبحت عضوًا في منظمة بولندا الحرة. كما أسست معهدًا مخصصًا للعلاج بالراديوم في مدينة وارسو سنة 1932 (يسمى حاليًا معهد ماريا سكوودوفسكا كوري للأورام)، والذي ترأسته شقيقتها الطبيبة برونسوافا. [549 chars] |
+| كم عدد أعضاء مجلس الأمة الكويتي؟ [32 chars] | سياسة الكويت لدى مجلس الأمة 65 عضو، 50 عضو منهم منتخبين لفترة تستمر لأربعة سنوات، ويكون الوزراء في الحكومة أعضاء في البرلمان، وبالرغم من أن الأمير لديه الأمر الأخير في جميع قضايا الدولة، إلا أن مجلس الأمة لديه سلطة كبيرة في صنع القرار، ومنها البدء في التشريعات وإستجواب الوزراء وطرح الثقة في الوزراء، فعلى سبيل المثال، في مايو 1999 أقر الأمير عدد من القرارات مثل إعطاء المرأة الحقوق السياسية ومزيد من التحرر التجاري وإعطاء الجنسية لمن يستحق، ولكن البرلمان عندما عاد رفض جميع تلك القرارات. [489 chars] |
 
 ### Public Sources
 
@@ -166,10 +166,10 @@ corresponding facts.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

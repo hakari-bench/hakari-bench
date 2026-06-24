@@ -62,9 +62,11 @@ A model targeting this task should focus on short-query semantic matching and an
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on MS MARCO, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| hội chứng suy nghĩ lặp lại là gì [32 chars] | Hội chứng nhai lại. Hội chứng nhai lại, còn được gọi là Merycism, là một loại rối loạn ăn uống không được xác định cụ thể nào khác, gây ra việc trào ngược thức ăn. Mặc dù nó không được xác định là một rối loạn ăn uống cụ thể trong DSM-IV, một số tiêu chí đã được nêu ra để chẩn đoán rối loạn này. [296 chars] |
+| ai đã hát bài here i go again [29 chars] | Đối với các mục đích khác, xem Here I Go Again (phân định). Here I Go Again là một bài hát của ban nhạc rock người Anh Whitesnake. Ban đầu được phát hành trong album năm 1982 của họ, Saints & Sinners, bài hát đã được thu âm lại cho album tựa đề của họ năm 1987, Whitesnake. Bài hát đã được thu âm lại một lần nữa trong năm đó với phiên bản trộn radio mới. [355 chars] |
+| ai là người mà cameron boyce đóng trong liv và maddie [53 chars] | Chuẩn bị cho những tiếng cười nghiêng ngả, các bạn ơi. Trong một đoạn clip độc quyền của tập phim ngày 19 tháng 4 của Liv & Maddie có tên “Prom-A-Rooney.” Rõ ràng rồi. Trong đoạn clip hài hước này, chúng ta thấy ngôi sao Jessie Cameron Boyce nhảy sang một chương trình Disney khác để gặp Maddie (Shelby Wulfert). Nhân vật của anh ấy thì, ừm, lập dị! [349 chars] |
 
 ### Source Reference Table
 

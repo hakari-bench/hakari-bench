@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 5
       }
     },
-    "references": [
-      {
-        "title": "FiQA 2018",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA 2018",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Quali tipi di rendimenti sta indicando Vanguard?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dalla pagina di Vanguard - Questo sembrava il più semplice da trovare, poiché i dati S&P sono facilmente reperibili. Utilizzo MoneyChimp per verificare - che conferma che la pagina di Vanguard offre il CAGR, non la media aritmetica. Nota: Vanguard afferma 'Per i rendimenti del mercato azionario statunitense, utilizziamo lo Standard & Poor's 90 dal 1926 al 3 marzo 1957,' mentre MoneyChimp utilizza i dati dal sito del vincitore del Premio Nobel, Robert Shiller.",
+          "full_chars": 463,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Quali sono le implicazioni fiscali del lavoro autonomo?",
+          "full_chars": 55,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Se hai reddito negli Stati Uniti, dovrai pagare le tasse sul reddito negli Stati Uniti, a meno che non ci sia un accordo tra il tuo paese e gli Stati Uniti che stabilisce diversamente.",
+          "full_chars": 184,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "Cosa si intende per volume alto o basso?",
+          "full_chars": 40,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Il volume giornaliero viene solitamente confrontato con il volume medio giornaliero degli ultimi 50 giorni per un'azione. Un volume elevato è generalmente considerato pari a 2 o più volte il volume medio giornaliero degli ultimi 50 giorni per quell'azione; tuttavia, alcuni trader potrebbero fissare il criterio a 3 o 4 volte il volume medio giornaliero (ADV) per confermare un particolare schema o evento. Il volume viene confrontato con l'ADV dell'azione stessa, poiché confrontarlo con il volume di altre azioni sarebbe come paragonare mele con pere, dato che diverse aziende hanno un numero diverso di azioni totali disponibili, diversi livelli di liquidità e diversi livelli di volatilità, che possono tutti contribuire ai volumi scambiati ogni giorno.",
+          "full_chars": 757,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

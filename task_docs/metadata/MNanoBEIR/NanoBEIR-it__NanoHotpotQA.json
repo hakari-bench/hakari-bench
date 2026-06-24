@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
-        "url": "https://arxiv.org/abs/1809.09600",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-it",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "In quale sitcom televisiva Penny Rae Bridges ha recitato insieme a quale altro attore?",
+          "full_chars": 86,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (nata il 29 luglio 1990) è un'attrice americana. Ha recitato in \"For Your Love\", \"Family Law\", \"Boy Meets World\" e \"The Parent 'Hood\". È famosa per il suo ruolo in \"Half & Half\", nel ruolo della giovane Mona.",
+          "full_chars": 226,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "Chi ha donato a Kaganoi Shigemochi una spada forgiata dal fondatore della scuola Muramasa?",
+          "full_chars": 90,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 agosto 1600) fu un samurai giapponese durante il periodo Azuchi-Momoyama, al servizio del clan Oda. Governava il castello di Kaganoi. Durante la battaglia di Komaki e Nagakute, Shigemochi combatté sotto il padre Shigemune, che era al servizio delle forze di Oda Nobukatsu. Poco dopo, il castello di Kaganoi fu circondato dalle forze di Toyotomi Hideyoshi; Shigemune si arrese, e Shigemochi fu assunto da Hideyoshi come messaggero, ricevendo uno stipendio di 10.000 \"koku\". Possedeva inoltre una spada forgiata da Muramasa, che Hideyoshi gli conferì nel 1598.",
+          "full_chars": 596,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "Quale film è stato scritto e diretto da Joby Harold con la musica di Samuel Sim?",
+          "full_chars": 80,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim è un compositore di film e televisione. Ha ottenuto il primo riconoscimento con la colonna sonora premiata della serie drammatica della BBC \"Dunkirk\". Da allora ha composto la musica per una vasta gamma di produzioni cinematografiche e televisive, tra cui più recentemente la colonna sonora del film \"Awake\" per The Weinstein Company e la serie drammatica BBC/HBO \"House of Saddam\". La sua musica più recente e acclamata è la colonna sonora di Home Fires. Home Fires (Musiche della Serie Televisiva) è stato pubblicato il 6 maggio 2016 da Sony Classical Records.",
+          "full_chars": 573,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -145,20 +145,71 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_project_repository"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL corpus dataset",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MIRACL source queries and qrels",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "official_dataset_card"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "69260#0",
+        "document_id": "69260#0",
+        "query": {
+          "text": "ilé iṣẹ iroyin wo ni Eugenia Abu bá ṣiṣe?",
+          "full_chars": 41,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Eugenia Abu Eugenia Abu (bíi ni ọjọ́ mọ́kàndinlógún oṣù kẹwàá ọdún 1961) jẹ́ oniroyin, agbóhùnsáfẹ́fẹ́, akọ̀wé àti akéwì. Òun ni atọkun ètò ìròyìn tẹ́lẹ̀ fún Nigerian Television Authority (NTA) . Ó ṣe atọkun ètò lórí NTA fún ọdún mẹ́tàdínlọgbọn.",
+          "full_chars": 246,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "15512#0",
+        "document_id": "11643#0",
+        "query": {
+          "text": "Awon orile ede wo lo yika Austria?",
+          "full_chars": 34,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Austríà Austríà ( tabi ; ), lonibise bi Orileominira ile Austria (German: \"Republik Österreich\"), je orile-ede atimo ile to ni awon eniyan bi egbegberun 8.8 to wa ni Aringbongan Europe. O ni bode mo Orileominira Tseki ati Jemani ni ariawa, Slofakia ati Hungari ni ilaorun, Slofenia ati Italia ni gusu, ati Switsalandi ati Likstenstein ni iwoorun. Gbogbo agbegbe ile Austríà je be sini ojuojo ibe je onitutu ati alpini. Ori ile Austríà je oloke gan nitori pe awon Alpi po nibe; 32% ibe nikan ni won wa ni abe , be sin oke re togajulo je . Opo awon iyeolubugbe unso ede Jemani, to tun je ede onibise orile-ede ohun. Awon ede ibile onibise miran tun ni ede Kroatia, Hungari ati Slofenia.",
+          "full_chars": 685,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "11194#0",
+        "document_id": "11194#0",
+        "query": {
+          "text": "ẹgbẹ wo ni Huey Newton da silẹ?",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Huey P. Newton Huey Percy Newton (February 17, 1942 – August 22, 1989) je omo ile Amerika. Newton je oludasile ati olori egbe oselu Black Panther Party.",
+          "full_chars": 153,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

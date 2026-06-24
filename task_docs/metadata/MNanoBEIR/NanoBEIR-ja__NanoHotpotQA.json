@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
-        "url": "https://arxiv.org/abs/1809.09600",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+        "url": "https://arxiv.org/abs/1809.09600",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "Penny Rae Bridgesは、どの他の俳優と共演してテレビのシットコムに出演しましたか？",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ペニー・レイ・ブリッジズ（1990年7月29日生まれ）はアメリカの女優である。テレビ番組では、「フォア・ユア・ラブ」、「ファミリー・ロー」、「ボーイ・ミーツ・ワールド」、「ザ・ペアレント・フッド」などに出演している。彼女は「ハーフ＆ハーフ」で若いモナを演じた役で最も知られている。",
+          "full_chars": 140,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "誰が村正派を創設した人物が作った刀を加賀野井重持に授けたのか？",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "加賀井重望（かがのい しげもち、1561年 - 慶長5年8月27日（1600年8月27日））は、安土桃山時代の日本の武士で、織田氏に仕えた。加賀井城を治めた。小牧・長久手の戦いでは、父重宗の配下として織田信雄の軍勢に属して戦った。その後間もなく、加賀井城は豊臣秀吉の軍勢に包囲され、重宗は降伏。重望は秀吉に召し抱えられ、使者として仕え、1万石の知行を賜った。また、1598年に秀吉から名刀村正を下賜されている。",
+          "full_chars": 205,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "ジョビー・ハロルドが脚本と監督を担当し、サミュエル・シムが音楽を手掛けた映画はどれですか？",
+          "full_chars": 45,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "サミュエル・シムは、映画およびテレビの作曲家である。彼はBBCドラマシリーズ『ダンケルク』の受賞歴を持つ楽曲で初めて注目を集めた。以来、さまざまな映画やテレビ番組の音楽を手がけており、最近では、ザ・ワインスタイン・カンパニーの映画『目覚めの時』や、BBC／HBO共同制作のドラマシリーズ『サダムの一族』の音楽を担当した。彼の最新の称賛された作品は、テレビシリーズ『ホーム・ファイアーズ』のサウンドトラックである。『ホーム・ファイアーズ（テレビシリーズ音楽）』は2016年5月6日、ソニー・クラシカル・レコードから発売された。",
+          "full_chars": 262,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

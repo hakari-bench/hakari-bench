@@ -158,8 +158,59 @@
         "title": "PaDaS Lab Hugging Face organization",
         "url": "https://huggingface.co/PaDaS-Lab",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "365200",
+        "document_id": "177156",
+        "query": {
+          "text": "Wat is belangrijk bij adviseren?",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Zorg ervoor dat je weet hoe degene aan wie je advies geeft in elkaar steekt, zodat je je advies op de persoon of situatie kunt aanpassen. Ook is het belangrijk om je eigen mening op de achtergrond te houden.",
+          "full_chars": 207,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "144031",
+        "document_id": "62275",
+        "query": {
+          "text": "Wat is verschil tussen 2D-tekening en 3D-tekening van keukenontwerp?",
+          "full_chars": 68,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Een 2D-tekening is in feite een plattegrond. Met deze 2D tekening kan je goed kijken of je alle ruimte optimaal benut. Ook krijg je een duidelijk beeld van de indeling. Als je tevreden bent met het 2D keukenontwerp wordt er een 3D tekening gemaakt met behulp van ontwerpsoftware. Een 3D keukenontwerp is ontzettend realistisch en geeft echt een kijkje in de keuken.",
+          "full_chars": 365,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "107812",
+        "document_id": "120555",
+        "query": {
+          "text": "Hoe programmeer ik NFC-tags?",
+          "full_chars": 28,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dit doe je gemakkelijk met software op je NFC ondersteunende telefoon. Hier vind je meer informatie.",
+          "full_chars": 100,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

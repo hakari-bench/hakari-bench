@@ -165,6 +165,6 @@ Touche-style data.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | paper | https://arxiv.org/abs/2104.08663 |
-| NanoBEIR collection |  | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
-| MTEB benchmark |  | project | https://github.com/embeddings-benchmark/mteb |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| NanoBEIR collection |  | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |
+| MTEB benchmark |  | project | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |

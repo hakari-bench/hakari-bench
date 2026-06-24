@@ -109,36 +109,6 @@
       },
       "multi_positive_training": "single_positive"
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
-        "url": "https://doi.org/10.1145/2838931.2838934",
-        "year": 2015,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
-        "url": "https://aclanthology.org/2025.bucc-1.5/",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "clips/beir-nl-cqadupstack",
-        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Dutch",
       "source_urls": [
@@ -147,6 +117,86 @@
           "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "CQADupStack: A Benchmark Data Set for Community Question-Answering Research",
+        "url": "https://doi.org/10.1145/2838931.2838934",
+        "year": 2015,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language",
+        "url": "https://aclanthology.org/2025.bucc-1.5/",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "clips/beir-nl-cqadupstack",
+        "url": "https://huggingface.co/datasets/clips/beir-nl-cqadupstack",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "50755",
+        "document_id": "122689",
+        "query": {
+          "text": "Moet ik blijven investeren in datastructuren en algoritmes?",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe belangrijk is het leren van algoritmes voor programmeurs van hogere programmeertalen? **Mogelijk duplicaat:** > Hoe belangrijk is het bestuderen van algoritmes en theorie om een geweldige > programmeur te worden? Vandaag leerde ik het quicksort-algoritme. Ik betwijfel of ik ooit mijn eigen versie zal implementeren, aangezien C# zijn eigen ingebouwde sorteermethode heeft voor lijsten en arrays. Hoe belangrijk is het leren van algoritmes voor programmeurs van hogere programmeertalen? In mijn voorbeeld had ik geen voordeel van het kennen van het algoritme, maar was mijn voorbeeld misschien te triviaal om accuraat te zijn?",
+          "full_chars": 632,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "126965",
+        "document_id": "83716",
+        "query": {
+          "text": "Django leren aan de hand van voorbeelden",
+          "full_chars": 40,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Hoe begrijp ik het Django framework goed? Ik heb redelijke kennis van PHP, d.w.z. ik kan een framework pakken, de code lezen en als de documentatie adequaat is, begrijpen wat het doet. De belangrijkste reden hiervoor is dat PHP eigenlijk een zeer eenvoudige taal is die letterlijk gemaakt is voor webontwikkeling. Ik probeer nu een week Django te leren, ik kan er een basisapplicatie mee maken, maar er zijn gewoon te veel dingen die boven mijn pet gaan, d.w.z. die als magie lijken. De reden hiervoor is, denk ik, dat de hele interactie met de server onderdeel is van Django, terwijl dat in PHP allemaal door je server wordt afgehandeld. Ik wil meer lezen over dit onderdeel, d.w.z. welke onderwerpen moet ik behandelen om dit te 'begrijpen'. Suggesties voor boeken zijn ook welkom.",
+          "full_chars": 786,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "109279",
+        "document_id": "230934",
+        "query": {
+          "text": "Licentieverificatie en contact opnemen met de thuisserver",
+          "full_chars": 57,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Softwarelicentie veilig valideren Ik ontwikkel momenteel een product (in C#) dat gratis te downloaden is, maar een maandelijks abonnement vereist om na een specifieke proefperiode te kunnen gebruiken. Mijn bedoeling is dat de gebruiker een account registreert op onze website en deze opwaardeert met tegoed om de applicatie te gebruiken. Echter, ik loop als nieuwkomer in het licentievak tegen een aantal problemen aan: * Hoe wordt deze logica meestal geïmplementeerd? * Hoe verbind ik mijn C#-applicatie met de database van mijn website en haal ik de benodigde gegevens op (is de proefperiode verlopen, zo ja, heeft de gebruiker voldoende tegoed)? * Hoe zorg ik ervoor dat ik minstens 80% (of zo) beveiligd ben tegen aanvallers die een MITM-aanval zouden kunnen starten om de ontvangen pakketten te wijzigen en ongeautoriseerde toegang tot mijn programma te krijgen? * Zoals ik al gehoord heb, kan SSL garanderen dat mijn applicatie verbinding maakt met het juiste adres. Maar hoe maak ik zo'n verbi",
+          "full_chars": 1674,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

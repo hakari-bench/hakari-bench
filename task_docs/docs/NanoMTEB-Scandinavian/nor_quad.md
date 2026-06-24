@@ -70,11 +70,11 @@ For reranking, this task calls for cross-encoders or late-interaction models tha
 
 ## Example Data
 
-### Public Sources
-
-- Scandinavian Embedding Benchmarks paper: https://arxiv.org/abs/2406.02396
-- NorQuAD paper: https://aclanthology.org/2023.nodalida-1.17/
-- Source dataset card: https://huggingface.co/datasets/mteb/norquad_retrieval
+| Query | Positive document |
+| --- | --- |
+| Når ble euroen innført? [23 chars] | I 1999 [6 chars] |
+| Hvilken bok lyver flest briter om at de har lest? [49 chars] | «Bibelen» [9 chars] |
+| Hvilket land i Øst-Europa var det første til å få en ikke-kommunistisk statsminister? [85 chars] | 30 år uten Berlinmur Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. FOTO: GERARD MALLE/NTB SCANPIX Det heter at muren falt. Som om den tumlet over ende av utmattelse i kamp mot tidas tann. Men Berlinmuren falt ikke, den ble revet av mennesker som ikke lenger ville leve bak stengsler. Tida for kommunistiske dinosaurer var ute. Ungarere og polakker hadde samme høst vist vei. Polen hadde i august fått ikke-kommunistisk statsminister, den første i Øst-Europa på 40 år. Sovjetunionens nye leder Mikhail Gorbatsjov hadde skrudd termostaten opp i verden, og under DDR-regimets 40-årsjubileum tidlig i oktober 1989 hadde han gitt østtyskernes forhatte leder Erich Honecker dødskysset ved å si at «Livet straffer de som kommer for sent». Honecker hadde sovet i timen. Hendelsene i 1989 er blitt kalt slutten på historien. Slutten på den politiske og sosiokulturelle evolusjonen. Verden var på en måte i mål. Vestens måte å tenke på hadde vunnet fram. Tilbake s... [1,000 / 1,948 chars] |
 
 ### Source Reference Table
 

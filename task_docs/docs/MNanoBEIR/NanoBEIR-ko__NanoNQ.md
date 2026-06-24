@@ -105,11 +105,9 @@ coverage without losing semantic answer ordering.
 
 | Query | Positive document |
 | --- | --- |
-| 올해 파이널 포는 어디에서 열리나요? | 2018년 NCAA 디비전 I 남자 농구 토너먼트는 텍사스주 샌안토니오의 알라모돔에서 열린 챔피언십 경기를 끝으로 막을 내렸다. |
-| 『크리스마스 전날의 악몽』은 원래 디즈니 영화였나요? | 『크리스마스의 악몽』은 1982년 월트 디즈니 피처 애니메이션에서 일하던 팀 버튼이 쓴 시에서 비롯되었다. |
-| 왜 북쪽의 천사상이 거기에 있는가 | 고름리에 따르면, 천사의 의미는 광부들의 역사, 산업 시대에서 정보 시대로의 전환, 변화하는 희망과 두려움을 상징하는 것이었다. |
-| 3/5 타협안은 헌법의 어디에 처음 명시되어 있는가 | 3분의 5 타협은 미국 헌법 제1조 제2항 제3항에 명시되어 있다. |
-| 'Somebody's Watching Me'는 마이클 잭슨이 피처링한 로크웰이 부른 곡입니다. | "Somebody's Watching Me"는 미국 가수 록웰이 발표한 곡이며, 마이클 잭슨이 코러스 보컬로 참여했다. |
+| 올해 파이널 포는 어디에서 열리나요? [20 chars] | 2018년 NCAA 디비전 I 남자 농구 토너먼트는 2017–18시즌의 남자 전미대학체육협회(NCAA) 디비전 I 대학 농구 전국 챔피언을 가리기 위한 68개 팀이 참가하는 싱글 엘리미네이션 토너먼트였다. 제80회 대회는 2018년 3월 13일에 시작되어 4월 2일 텍사스주 샌안토니오의 알라모돔에서 열린 챔피언십 경기를 끝으로 막을 내렸다. [191 chars] |
+| 『크리스마스 전날의 악몽』은 원래 디즈니 영화였나요? [29 chars] | 『크리스마스의 악몽』은 1982년 월트 디즈니 피처 애니메이션에서 애니메이터로 일하던 시절, 팀 버튼이 쓴 시에서 비롯되었다. 같은 해 『빈센트』가 성공을 거두자, 월트 디즈니 스튜디오는 『크리스마스의 악몽』을 단편 영화나 30분 분량의 텔레비전 특집 프로그램으로 제작할지 검토하기 시작했다. 수년에 걸쳐 버튼은 이 프로젝트를 계속 떠올렸고, 1990년 드디어 디즈니와 개발 계약을 체결했다. 제작은 1991년 7월 샌프란시스코에서 시작되었으며, 스튜디오는 이 영화가 "아이들에게 너무 어둡고 무서울 수 있다"고 판단하여 터치스톤 픽처스 배너를 통해 영화를 개봉했다.[4] [320 chars] |
+| 왜 북쪽의 천사상이 거기에 있는가 [18 chars] | 고름리에 따르면, 천사의 의미는 세 가지였다. 첫째, 이 조각상이 세워진 장소 아래에서 석탄 광부들이 두 세기에 걸쳐 일했다는 것을 상징하는 것이었고, 둘째, 산업 시대에서 정보 시대로의 전환을 포착하는 것이며, 셋째, 우리 시대가 변화하는 희망과 두려움의 초점 역할을 하는 것이었다.[2] [162 chars] |
 
 ### Public Sources
 
@@ -123,7 +121,7 @@ coverage without losing semantic answer ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | https://aclanthology.org/Q19-1026/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -145,12 +145,11 @@ top-rank profile in the current diagnostics.
 
 ## Example Data
 
-Representative queries ask which event takes place on Sunday in Lower Saxony,
-why German store design is considered protectable, what properties a Mikronell
-cleaning cloth has, what made an author want to try a game, or what effects
-artificial intelligence may have on society. Positive documents are long German
-pages containing the answer-bearing paragraph among substantial surrounding
-content.
+| Query | Positive document |
+| --- | --- |
+| Welche Veranstaltung findet am Sonntag in Niedersachsen statt? [62 chars] | Wvormyks v 15 скачать. Radeberger SV Abt. Bogenschießen gegründet 0877 FIDE-Trainerkurs 0009 Ausbildung 0005 A-Trainer 0004 0017 Männer 0016 Männer 0015 Männer 0014 Männer 0013 Männer 0012 Männer 0011 Männer 0010 Männer 0009 Männer 0008 Männer 0007 Männer 0006 Männer 0005 Männer 0004 Männer 0003 Männer 0002 Männer 0999 Männer 0017 Frauen 0016 Frauen 0015 Frauen 0014 Frauen 0013 Frauen 0012 Frauen 0011 Frauen 0010 Frauen 0009 Frauen 0008 Frauen 0007 Frauen 0006 Frauen 0005 Frauen 0004 Frauen 0003 Frauen 0002 Frauen 0999 Frauen Größte Vereine 08.12.2016 Größte Vereine 0.7.2011 Größte Vereine 0.7.2009 Größte Vereine 0.1.2005 Größte Vereine 0.7.2004 Mannschafts-Europameisterschaft U18 0018 Mitgliederumfrage 0017 Frauen-Schachweltmeisterschaft 0017 05. Deutsche Ärztemeisterschaft Europäische Frauen-Einzelmeisterschaft 0017 GRENKE Chess Classic 0017 Bundesvereinskonferenz 0017 Bundeskongress 0017 Europäische Einzelmeisterschaft 0017 05. Sparkassen-Chess-Meeting Dortmund 0017 UKA German Maste... [1,000 / 24,762 chars] |
+| Warum wird das Design von deutschen Läden als schützenswert angesehen? [70 chars] | Kommentare zu: Apple kann sich Design seiner Geschäfte als Marke schützen lassen Der Computer-Konzern Apple kann sich das Design seiner Ladengeschäfte markenrechtlich schützen lassen. Das hat der Europäische Gerichtshof (EuGH) in einem Rechtsstreit klargestellt, den sich das Unternehmen mit dem deutschen Deutsche Patent- ... mehr... Design, Apple Store, Gebäude Bildquelle: Apple Design, Apple Store, Gebäude Apple [o1] Johnny Cache am 10.07.14 um 18:12 Uhr Mit "Design" meinen die jetzt aber doch wohl hoffentlich nicht das Layout der Filiale? Inzwischen traue ich allen Beteiligten so ziemlich alles zu. [re:1] Billkiller am 10.07.14 um 18:38 Uhr @Johnny Cache: Wenn ich mal einen Applestore mit dem örtlichen Mediamarkt vergleiche, bemerke ich einen deutlichen (!) Unterschied, was die räumliche Gestalt angeht. Apple hat schließlich auch Designer dafür engagiert und daher ist auch nur rechtens, sich dieses geistige Eigentum zu schützen! [re:1] koil am 10.07.14 um 18:45 Uhr @Billkiller: Bei M... [1,000 / 26,711 chars] |
+| Welche Eigenschaften hat das Mikronell Shine 2 Rainbow Reinigungstuch? [70 chars] | Mikronell Poliertuch Search Results \| Schmutzweg.de - der Schmutz weg Online Shop Sie befinden sich hier: Startseite » Mikronell Poliertuch Results for 'Mikronell Poliertuch' Suchergebnis 1 to 30 of 67 Erste \| Vorherige \| 1 \| 2 \| 3 \| Nächste \| Letzte Hausandgarten Reinigen Besenandwischsysteme Hausandgarten Reinigen Reinigungsgeräte Shine Poliertuch-set 4tlg. Glanz in Ihrer Hütte & Ihrem Auto Wenn Sie die Oberflächen im Haushalt, aber auch im Auto strahlend glänzend machen wollen, sind die Poliertücher von Mikronell erste Wahl. Das besonders weiche Poliertuch hilt Ihnen bei der fussel- und streifenfreien Politur. Dabei schonen Sie alle Oberflächen, da die Tücher nicht gekettelt sind. Mit & ohne Politur, aber immer bis 60° C maschinenwaschbar Die handliche Größe von 40 x 40 cm der Tücher macht sie fast schon zum Handschmeichler. Sie funktionieren ganz egal, ob Sie sie mit oder auch ohne handelsübliche Polituren verwenden. Und das Beste: Sie können Ihre neuen Putz-Lieblinge in der Maschi... [1,000 / 30,575 chars] |
 
 ### Public Sources
 
@@ -166,9 +165,9 @@ content.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

@@ -77,6 +77,24 @@ def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path
     },
     "text_stats_chars": {"query_mean": 17.5, "document_mean": 173.3871},
     "bm25": {"ndcg_at_10": 0.6600634301, "hit_at_10": 0.935, "source": "dataset_candidate_subset"},
+    "examples": [
+      {
+        "query_id": "q1",
+        "document_id": "d1",
+        "query": {
+          "text": "検索クエリの例",
+          "full_chars": 8,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "This is a truncated positive document preview.",
+          "full_chars": 2200,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
     "candidate_subsets": {
       "bm25": {
         "config": "bm25",
@@ -134,7 +152,8 @@ def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path
         "url": "https://arxiv.org/abs/2210.09984",
         "year": 2022,
         "is_paper": true,
-        "doi": "10.48550/arXiv.2210.09984"
+        "doi": "10.48550/arXiv.2210.09984",
+        "source_confidence": "definitive_paper_link"
       }
     ]
   }
@@ -153,8 +172,103 @@ def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path
     assert "| Positive qrels | 373 |" in doc.markdown
     assert "| BM25 | `bm25` | 0.6601 | 0.9350 | 0.9705 | top-500 |" in doc.markdown
     assert "| Dense | `harrier_oss_v1_270m` | 0.7745 | 0.9150 | 0.9303 | top-500 |" in doc.markdown
+    assert "## Example Data" in doc.markdown
+    assert "| 検索クエリの例 [8 chars] | This is a truncated positive document preview.... [1,000 / 2,200 chars] |" in doc.markdown
     assert "- Nano dataset: [hakari-bench/NanoMIRACL](https://huggingface.co/datasets/hakari-bench/NanoMIRACL)" in doc.markdown
-    assert "| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |" in doc.markdown
+    assert (
+        "| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | "
+        "[https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |"
+    ) in doc.markdown
+    html = render_markdown_to_html(doc.markdown, base_url=doc.url)
+    assert '<a href="https://arxiv.org/abs/2210.09984" target="_blank" rel="noopener noreferrer">' in html
+
+
+def test_benchmark_docs_does_not_duplicate_existing_link_reference_sections(tmp_path: Path) -> None:
+    docs_dir = tmp_path / "task_docs" / "docs"
+    metadata_dir = tmp_path / "task_docs" / "metadata"
+    group_dir = docs_dir / "NanoMIRACL"
+    metadata_group_dir = metadata_dir / "NanoMIRACL"
+    group_dir.mkdir(parents=True)
+    metadata_group_dir.mkdir(parents=True)
+    (group_dir / "ja.md").write_text(
+        "\n".join(
+            [
+                "# NanoMIRACL / ja",
+                "",
+                "## Overview",
+                "",
+                "Japanese task overview.",
+                "",
+                "### Public Sources",
+                "",
+                "- [MIRACL paper](https://arxiv.org/abs/2210.09984); 2022.",
+                "",
+                "### Hugging Face Links",
+                "",
+                "- Nano dataset: [hakari-bench/NanoMIRACL](https://huggingface.co/datasets/hakari-bench/NanoMIRACL)",
+                "",
+                "### Source Reference Table",
+                "",
+                "| Title | Year | Type | URL |",
+                "| --- | ---: | --- | --- |",
+                "| MIRACL paper | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (metadata_group_dir / "ja.json").write_text(
+        """
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMIRACL",
+    "backing_dataset": "NanoMIRACL",
+    "dataset_id": "hakari-bench/NanoMIRACL",
+    "task_name": "ja",
+    "split_name": "ja",
+    "language": "ja",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoMIRACL/ja.md",
+    "source_research": {"primary_source_type": "task_paper", "paper_pdf_or_html_checked": true},
+    "counts": {"queries": 200, "documents": 10000, "positive_qrels": 373},
+    "positives_per_query": {"average": 1.865, "min": 1, "median": 1.0, "max": 8, "multi_positive_queries": 78},
+    "text_stats_chars": {"query_mean": 17.5, "document_mean": 173.3871},
+    "bm25": {"ndcg_at_10": 0.6600634301, "hit_at_10": 0.935, "source": "dataset_candidate_subset"},
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMIRACL",
+      "source_urls": [{"label": "MIRACL repository", "url": "https://github.com/project-miracl/miracl"}]
+    },
+    "references": [
+      {
+        "title": "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages",
+        "url": "https://arxiv.org/abs/2210.09984",
+        "year": 2022,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2210.09984",
+        "source_confidence": "definitive_paper_link"
+      }
+    ]
+  }
+}
+""".strip(),
+        encoding="utf-8",
+    )
+
+    docs = BenchmarkDocs(docs_dir, metadata_dir=metadata_dir)
+
+    doc = docs.task_doc(view_name="NanoMIRACL", metric_column="ja")
+
+    assert doc is not None
+    assert "## Dataset Information" in doc.markdown
+    assert "### Public Sources" not in doc.markdown
+    assert "### Hugging Face Links" not in doc.markdown
+    assert doc.markdown.count("### Source Reference Table") == 1
+    html = render_markdown_to_html(doc.markdown, base_url=doc.url)
+    assert "<h3>Public Sources</h3>" not in html
+    assert "<h3>Hugging Face Links</h3>" not in html
+    assert html.count("<h3>Source Reference Table</h3>") == 1
 
 
 def test_benchmark_docs_renders_group_metadata_summary_from_task_docs_json(tmp_path: Path) -> None:
@@ -229,20 +343,132 @@ def test_benchmark_docs_lists_group_docs_with_descriptions(tmp_path: Path) -> No
     docs_dir = tmp_path / "task_docs" / "docs"
     miracl_dir = docs_dir / "NanoMIRACL"
     coir_dir = docs_dir / "NanoCoIR"
+    mnanobeir_dir = docs_dir / "MNanoBEIR"
+    nanobeir_en_dir = docs_dir / "NanoBEIR-en"
+    longembed_dir = docs_dir / "NanoLongEmbed"
     empty_dir = docs_dir / "NoIndex"
     miracl_dir.mkdir(parents=True)
     coir_dir.mkdir()
+    mnanobeir_dir.mkdir()
+    nanobeir_en_dir.mkdir()
+    longembed_dir.mkdir()
     empty_dir.mkdir()
     (miracl_dir / "index.md").write_text("# NanoMIRACL\n\n## Overview\n\nMIRACL overview.\n", encoding="utf-8")
     (coir_dir / "index.md").write_text("# NanoCoIR\n\n## Overview\n\nCoIR overview.\n", encoding="utf-8")
+    (mnanobeir_dir / "index.md").write_text("# MNanoBEIR\n\n## Overview\n\nMNanoBEIR overview.\n", encoding="utf-8")
+    (nanobeir_en_dir / "index.md").write_text(
+        "# NanoBEIR-en\n\n## Overview\n\nEnglish BEIR overview.\n",
+        encoding="utf-8",
+    )
+    (longembed_dir / "index.md").write_text(
+        "# NanoLongEmbed\n\n## Overview\n\nLongEmbed overview.\n",
+        encoding="utf-8",
+    )
 
-    docs = BenchmarkDocs(docs_dir)
+    docs = BenchmarkDocs(docs_dir, group_names=["MNanoBEIR", "NanoLongEmbed", "NanoCoIR", "NanoMIRACL"])
 
     group_docs = docs.group_docs()
 
-    assert [doc.title for doc in group_docs] == ["NanoCoIR", "NanoMIRACL"]
-    assert [doc.url for doc in group_docs] == ["/docs/benchmark-tasks/NanoCoIR", "/docs/benchmark-tasks/NanoMIRACL"]
-    assert [doc.description for doc in group_docs] == ["CoIR overview.", "MIRACL overview."]
+    assert [doc.title for doc in group_docs] == ["MNanoBEIR", "NanoLongEmbed", "NanoCoIR", "NanoMIRACL"]
+    assert [doc.url for doc in group_docs] == [
+        "/docs/benchmark-tasks/MNanoBEIR",
+        "/docs/benchmark-tasks/NanoLongEmbed",
+        "/docs/benchmark-tasks/NanoCoIR",
+        "/docs/benchmark-tasks/NanoMIRACL",
+    ]
+    assert [doc.description for doc in group_docs] == [
+        "MNanoBEIR overview.",
+        "LongEmbed overview.",
+        "CoIR overview.",
+        "MIRACL overview.",
+    ]
+    assert docs.group_doc("NanoBEIR-en") is not None
+
+
+def test_render_markdown_keeps_indented_list_continuations_inside_items() -> None:
+    html = render_markdown_to_html(
+        "\n".join(
+            [
+                "## Task Families",
+                "",
+                "- **Legal retrieval:** `NanoIFIRAila` and `NanoIFIRFire` use long fact patterns",
+                "  or case summaries and retrieve relevant judgments or precedents.",
+                "- **Finance retrieval:** `NanoIFIRFiQA` retrieves personal-finance advice or",
+                "  answer passages.",
+                "",
+            ]
+        )
+    )
+
+    assert "<ul>\n<li>" in html
+    assert "<p>or case summaries" not in html
+    assert "<p>answer passages" not in html
+    assert "long fact patterns or case summaries" in html
+    assert "advice or answer passages" in html
+
+
+def test_benchmark_docs_prefers_example_data_over_representative_snippets(tmp_path: Path) -> None:
+    docs_dir = tmp_path / "task_docs" / "docs"
+    group_dir = docs_dir / "NanoTiny"
+    group_dir.mkdir(parents=True)
+    (group_dir / "alpha.md").write_text(
+        "\n".join(
+            [
+                "# NanoTiny / alpha",
+                "",
+                "## Overview",
+                "",
+                "Tiny overview.",
+                "",
+                "## Example Data",
+                "",
+                "| Query | Positive document |",
+                "| --- | --- |",
+                "| exact query | exact positive |",
+                "",
+                "### Source Reference Table",
+                "",
+                "| Title | Year | Type | URL |",
+                "| --- | ---: | --- | --- |",
+                "| Tiny source | 2026 | dataset | [https://example.com](https://example.com) |",
+                "",
+                "### Representative Snippets",
+                "",
+                "| Query | Positive document excerpt |",
+                "| --- | --- |",
+                "| summarized query | summarized positive |",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    docs = BenchmarkDocs(docs_dir)
+
+    doc = docs.task_doc(view_name="NanoTiny", metric_column="alpha")
+
+    assert doc is not None
+    assert "## Example Data" in doc.markdown
+    assert "### Source Reference Table" in doc.markdown
+    assert "### Representative Snippets" not in doc.markdown
+    assert "summarized query" not in doc.markdown
+
+
+def test_render_markdown_marks_example_tables() -> None:
+    html = render_markdown_to_html(
+        "\n".join(
+            [
+                "## Example Data",
+                "",
+                "| Query | Positive document |",
+                "| --- | --- |",
+                "| exact query | exact positive |",
+                "",
+            ]
+        )
+    )
+
+    assert '<table class="benchmark-doc-example-table">' in html
 
 
 def test_benchmark_docs_resolves_mnanobeir_task_key_documents(tmp_path: Path) -> None:
@@ -470,21 +696,62 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
     _write_task_results(db_path, [("model/a", "NanoMIRACL", "bench/a", "NanoMIRACL", "ja", "ja", "NanoMIRACL::ja", 0.90, 10, 12, 8192)])
     config_dir = tmp_path / "config"
     config_dir.mkdir()
-    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: NanoMIRACL\n", encoding="utf-8")
-    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMIRACL\n", encoding="utf-8")
+    (config_dir / "benchmarks.yaml").write_text(
+        "\n".join(
+            [
+                "benchmarks:",
+                "  - name: MNanoBEIR",
+                "  - name: NanoLongEmbed",
+                "  - name: NanoMIRACL",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "\n".join(
+            [
+                "name: Overall",
+                "label: Overall",
+                "benchmarks:",
+                "  - MNanoBEIR",
+                "  - NanoLongEmbed",
+                "  - NanoMIRACL",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
     docs_dir = tmp_path / "task_docs" / "docs"
-    group_dir = docs_dir / "NanoMIRACL"
-    group_dir.mkdir(parents=True)
-    (group_dir / "index.md").write_text("# NanoMIRACL\n\n## Overview\n\nMIRACL overview.\n", encoding="utf-8")
+    for group_name, overview in [
+        ("MNanoBEIR", "MNanoBEIR overview."),
+        ("NanoLongEmbed", "LongEmbed overview."),
+        ("NanoMIRACL", "MIRACL overview."),
+        ("NanoBEIR-en", "English BEIR overview."),
+    ]:
+        group_dir = docs_dir / group_name
+        group_dir.mkdir(parents=True)
+        (group_dir / "index.md").write_text(f"# {group_name}\n\n## Overview\n\n{overview}\n", encoding="utf-8")
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
 
     response = TestClient(app).get("/docs/benchmark-tasks")
 
     assert response.status_code == 200
     assert "Benchmark documentation" in response.text
+    assert ">Paper</h2>" in response.text
+    assert (
+        '<a class="underline underline-offset-2" href="http://arxiv.org/abs/2606.22778">'
+        "HAKARI-Bench: A Lightweight Benchmark for Comparing Retrieval Architectures and Efficiency Settings under Unified Conditions</a>"
+    ) in response.text
     assert '<a class="underline underline-offset-2" href="/">Top</a>' in response.text
     assert response.text.index(">Top</a>") < response.text.index(">Benchmark documentation</span>")
+    assert response.text.index(">Paper</h2>") < response.text.index(">Benchmark documentation</h1>")
+    assert response.text.index('href="/docs/benchmark-tasks/MNanoBEIR"') < response.text.index(
+        'href="/docs/benchmark-tasks/NanoLongEmbed"'
+    )
     assert 'class="doc-card-link doc-card-title font-semibold underline-offset-2 hover:underline" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
+    assert 'href="/docs/benchmark-tasks/NanoBEIR-en"' not in response.text
+    assert "LongEmbed overview." in response.text
     assert "MIRACL overview." in response.text
 
 
@@ -684,6 +951,65 @@ def test_leaderboard_renders_nanobeir_task_doc_triggers_for_short_task_keys(tmp_
     assert response.status_code == 200
     assert 'data-doc-title="MNanoBEIR / NanoBEIR-ja / NanoArguAna"' in response.text
     assert 'data-doc-url="/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna"' in response.text
+
+
+def test_leaderboard_status_modal_links_existing_task_docs_in_blank_tabs(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "NanoArguAna",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
+                0.90,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "NanoMissing",
+                "missing",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::missing",
+                0.80,
+                10,
+                12,
+                8192,
+            ),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: MNanoBEIR\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n", encoding="utf-8")
+    docs_dir = tmp_path / "task_docs" / "docs"
+    group_dir = docs_dir / "MNanoBEIR"
+    group_dir.mkdir(parents=True)
+    (group_dir / "NanoBEIR-ja__NanoArguAna.md").write_text(
+        "# MNanoBEIR / NanoBEIR-ja / NanoArguAna\n\n## Overview\n\nArguAna overview.\n",
+        encoding="utf-8",
+    )
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
+
+    response = TestClient(app).get("/leaderboard?view=MNanoBEIR")
+
+    assert response.status_code == 200
+    assert 'id="count-breakdown-modal"' in response.text
+    assert (
+        '<a class="count-breakdown-task-link underline underline-offset-2 hover:text-cyan-700" '
+        'href="/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna" '
+        'target="_blank" rel="noopener noreferrer">'
+    ) in response.text
+    assert "MNanoBEIR / NanoBEIR-ja / NanoArguAna" in response.text
+    assert "/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoMissing" not in response.text
 
 
 def test_leaderboard_custom_task_doc_trigger_links_resolve_to_existing_docs(tmp_path: Path) -> None:

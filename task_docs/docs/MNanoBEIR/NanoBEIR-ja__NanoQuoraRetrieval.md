@@ -110,11 +110,9 @@ be driven by duplicate-intent semantics.
 
 | Query | Positive document |
 | --- | --- |
-| 自分のジョークを笑っても大丈夫ですか？ | 自分のジョークで笑うのは変ですか？ |
-| 今までで最高の嘘は何ですか？ | 今までで最も巧妙に練り上げた嘘は何ですか？ |
-| なぜQuoraは頻繁に私のフィードにドナルド・トランプを貶めるような回答をおすすめするのですか？ | なぜクオラではドナルド・トランプに関する質問に対して、主観的で偏った回答しか見受けられるのでしょうか？ |
-| どうすれば身体的に強く鍛えられますか？ | どうすれば身体を強くできますか？ |
-| 量子衛星はどのように機能するのでしょうか？ | 量子衛星はどのように機能し、その主な用途にはどのようなものがあるでしょうか？ |
+| 自分のジョークを笑っても大丈夫ですか？ [19 chars] | 自分のジョークで笑うのは変ですか？ [17 chars] |
+| 今までで最高の嘘は何ですか？ [14 chars] | 今までで最も巧妙に練り上げた嘘は何ですか？ [21 chars] |
+| なぜQuoraは頻繁に私のフィードにドナルド・トランプを貶めるような回答をおすすめするのですか？ [48 chars] | なぜクオラではドナルド・トランプに関する質問に対して、主観的で偏った回答しか見受けられるのでしょうか？ [51 chars] |
 
 ### Public Sources
 
@@ -128,7 +126,7 @@ be driven by duplicate-intent semantics.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Quora Question Pairs | 2017 | dataset page | https://kaggle.com/competitions/quora-question-pairs |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Quora Question Pairs | 2017 | dataset page | [https://kaggle.com/competitions/quora-question-pairs](https://kaggle.com/competitions/quora-question-pairs) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

@@ -140,10 +140,61 @@
         "url": "https://huggingface.co/datasets/mteb/cqadupstack-gaming",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "68529",
+        "document_id": "71127",
+        "query": {
+          "text": "How can a monk tank effectively for a group?",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Monk skills suited for CC and tanking > **Possible Duplicate:** > How can a monk tank effectively for a group? When playing with my friends (who play ranged classes), I mostly end up tanking / crowd controlling with my monk. Are there any specific skills (and runes) that could help me do this?",
+          "full_chars": 298,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "130358",
+        "document_id": "20769",
+        "query": {
+          "text": "Portal 2 Offline Co-op on Mac",
+          "full_chars": 29,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Can we play Portal 2 co-op on one PC or Mac? Is there a way to play Portal 2 co-op on a single PC or Mac? If so, do we need two keyboards, or two mice, or what? Do we need to buy two copies of the game? Note: The _wireless_ XBox 360 controller does not work standalone out of the box on either an iMac or Windows 7 PC. It needs a receiver as well. I thought it would be Bluetooth, but no.",
+          "full_chars": 389,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "108399",
+        "document_id": "109143",
+        "query": {
+          "text": "What type of buildings offer what level of jobs?",
+          "full_chars": 48,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Who works in medium value commercial properties? I have some §§ (medium-wealth) buildings that are closed or closing due to a lack of workers. Yet, of my 10,652 §§ workers, 3,205 are unemployed and 152 are commuting out. This confuses me because I assumed §§ workers would work in §§ comercial buildings.",
+          "full_chars": 305,
+          "limit_chars": 1000,
+          "truncated": false
+        }
       }
     ],
     "source_dataset_id": "mteb/cqadupstack-gaming",
-    "source_task": "CQADupstackGamingRetrieval"
+    "source_task": "CQADupstackGamingRetrieval",
+    "example_count": 3
   }
 }

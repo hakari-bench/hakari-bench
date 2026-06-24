@@ -114,11 +114,9 @@ recall and an answer-aware reranker for final ordering.
 
 | Query | Positive document |
 | --- | --- |
-| O que é a síndrome da ruminação? | Síndrome de Ruminação, também conhecida como mericismo, é um tipo de transtorno alimentar que causa a regurgitação de alimentos... |
-| Quem cantou "Aqui vou eu de novo"? | "Here I Go Again" é uma música da banda britânica de rock Whitesnake... |
-| Quem Cameron Boyce interpreta em Liv e Maddie? | Em uma prévia exclusiva do episódio de "Liv & Maddie", vemos o astro de "Jessie", Cameron Boyce... |
-| Onde a maioria dos grandes desertos da Terra ocorre? | Os outros desertos da Terra estão fora das regiões polares. O maior é o Deserto do Saara... |
-| Qual é o significado de "tira" para um policial? | De acordo com os achados atuais, parece que "copper" precede "cop", usado como verbo ou substantivo para policial... |
+| O que é a síndrome da ruminação? [32 chars] | Síndrome de Ruminação. A síndrome de ruminação, também conhecida como mericismo, é um tipo de transtorno alimentar não especificado de outra forma que causa a regurgitação de alimentos. Embora não seja identificada como um transtorno alimentar específico no DSM-IV, certos parâmetros foram estabelecidos para diagnosticar o transtorno. [335 chars] |
+| Quem cantou "Aqui vou eu de novo"? [34 chars] | Para outros usos, veja Here I Go Again (desambiguação). "Here I Go Again" é uma música da banda britânica de rock Whitesnake. Originalmente lançada no álbum de 1982, Saints & Sinners, a canção foi regravada para o álbum homônimo de 1987, Whitesnake. A música foi regravada novamente naquele ano em uma nova versão de rádio. [323 chars] |
+| Quem Cameron Boyce interpreta em Liv e Maddie? [46 chars] | Prepare-se para muitas risadas, pessoal. Em uma prévia exclusiva do episódio de 19 de abril de "Liv & Maddie" chamado "Prom-A-Rooney." Obviamente. No clipe hilariante, vemos o astro de "Jessie," Cameron Boyce, aparecer em outro programa da Disney para encontrar Maddie (Shelby Wulfert). O personagem dele é, hum, excêntrico! [324 chars] |
 
 ### Public Sources
 
@@ -132,7 +130,7 @@ recall and an answer-aware reranker for final ordering.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MS MARCO: A Human Generated MAchine Reading COmprehension Dataset | 2016 | task paper | https://arxiv.org/abs/1611.09268 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| MS MARCO: A Human Generated MAchine Reading COmprehension Dataset | 2016 | task paper | [https://arxiv.org/abs/1611.09268](https://arxiv.org/abs/1611.09268) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

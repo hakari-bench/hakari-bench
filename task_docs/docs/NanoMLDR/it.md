@@ -133,11 +133,11 @@ BM25 recall but does not surpass BM25 top-rank quality.
 
 ## Example Data
 
-Representative queries ask about Georgian sentence structure with numerals and
-adjectives, negative traits in a new duke's behavior, tourist sites in
-Luxembourg that inspired Victor Hugo, CAD configuration or customization
-options, or the most famous wines of Monferrato. Positive documents are long
-Italian articles containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| Qual è la struttura delle frasi in georgiano riguardo l'uso dei numerali e degli aggettivi qualificativi? [105 chars] | La lingua georgiana (nome nativo ქართული ენა, kartuli ena) è la lingua più parlata della famiglia caucasica meridionale, di cui rappresenta la lingua franca, nonché l'unica lingua con una propria tradizione letteraria. È la lingua ufficiale della Georgia, dove conta all'incirca 3,9 milioni di parlanti nativi (l'83% della popolazione). Altre 3,5 milioni di persone la parlano all'estero (soprattutto in Turchia, Russia e Stati Uniti con piccole comunità in Iran ed Azerbaigian). Si tratta di una lingua agglutinante (nella quale cioè gli elementi si combinano a formare le parole in sequenza lineare), come risulta evidente soprattutto nei verbi. Possiede una flessione nominale articolata in sette casi. Il sistema fonetico presenta suoni particolari, detti glottalizzati. Le parole georgiane possono avere serie consecutive molto lunghe di consonanti: fino a otto (ad esempio in gvprtskvni "ci sbucci"). Per la scrittura sono stati utilizzati nel tempo tre diversi alfabeti. L'attuale alfabeto geo... [1,000 / 27,139 chars] |
+| Quali caratteristiche negative emerse nel comportamento del nuovo Duca dopo aver preso il controllo del ducato? [111 chars] | Biografia L'unica erede del ducato Bianca Maria nacque nel castello di Settimo Pavese il 31 marzo del 1425, dalla nobildonna Agnese del Maino, forse dama di compagnia della sventurata Beatrice di Tenda, e dal duca Filippo Maria Visconti. Alla piccola venne dato il nome di Bianca, mutuato dalla nonna paterna di Filippo Maria, seguito dal nome Maria che era imposto per voto a tutti i discendenti di Gian Galeazzo Visconti. Le venne assegnata come balia Caterina Meravigli, (il cognome talvolta si trova nella forma Mirabiglia), appartenente a una famiglia di fidati cortigiani. Nonostante il padre desiderasse un figlio maschio, la nascita di una figlia non fu una completa delusione. Non avendo avuto figli dal primo matrimonio con Beatrice di Tenda, Filippo Maria aveva infatti presentato all'imperatore Sigismondo di Lussemburgo, di cui era vassallo, la richiesta di poter nominare suo successore un figlio naturale. Questa richiesta, inizialmente, fu rifiutata dalla corte imperiale ma, dopo con... [1,000 / 26,308 chars] |
+| Quali sono alcuni dei luoghi turistici più importanti del Granducato che hanno ispirato Victor Hugo? [100 chars] | Il Lussemburgo (), ufficialmente Granducato di Lussemburgo (; ; ), è uno Stato dell'Unione europea senza affaccio sul mare, confinante con Germania, Francia e Belgio. Membro fondatore dell'Unione europea, della NATO, del Benelux e delle Nazioni Unite, la sua capitale, l'omonima città di Lussemburgo, è sede di numerose istituzioni e agenzie europee oltre a essere uno snodo finanziario di primaria importanza. Storia L'anno 963 segna l'inizio della storia del Lussemburgo con uno scambio tra il conte Sigfrido di Lussemburgo e l'Abbazia di San Massimino a Treviri. Sui resti di un castellum romano sul Bock chiamato Lucilinburhuc (che significa "piccolo castello"), Sigfrido fa costruire un castello attorno al quale, nel corso dei secoli, si sviluppa una città-fortezza. Nel 1354 la contea del Lussemburgo viene elevata al rango di un ducato del Sacro Romano Impero. Con l'estinzione della dinastia dei Conti di Lussemburgo (1443) viene prima integrato nello Stato borgognone di Filippo il Buono e... [1,000 / 25,354 chars] |
 
 ### Public Sources
 
@@ -153,9 +153,9 @@ Italian articles containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

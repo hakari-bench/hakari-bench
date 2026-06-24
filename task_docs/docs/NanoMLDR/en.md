@@ -142,11 +142,11 @@ must be evaluated against the sparse baseline.
 
 ## Example Data
 
-Representative queries ask who the last person mentioned in a text was, one
-major limitation of PCR, what Ambassador Goldberg said about the U.S. view of
-Jordan, the time period of Roman stiffeners, or the first step in the USERec
-method of DNA recombination. Positive documents are long English articles
-containing the relevant paragraph.
+| Query | Positive document |
+| --- | --- |
+| Who was the last person mentioned in the text? [46 chars] | Chronological Classics was a French compact disc reissue label. Gilles Pétard, the original owner, intended to release the complete master takes of all jazz and swing recordings that were issued on 78 rpm. By the time the label suspended operations in July 2008, its scope had extended to LPs. Pétard also started the label R&B Classics to reissue postwar rhythm & blues recordings. An unaffiliated label, Neatworks, released alternate takes and misidentified master takes of jazz artists previously issued on Chronological Classics. In 1999, Chronological Classics issued a CD set that included tracks previously unavailable in the regular series and a bonus CD with corrected tracks from previous releases. The jazz series started with number 500 and includes the following albums: 500 – 599 24 Complementary Track (3 CDs) 99 The Classics Collection (The Classics Sampler) [VA 20 Tracks] 500 Ella Fitzgerald 1935–37 501 Jimmie Lunceford 1930–34 502 Chick Webb 1929–34 503 Count Basie 1936–38 504 Co... [1,000 / 31,958 chars] |
+| What is one major limitation of PCR? [36 chars] | Polymerase chain reaction (PCR) is a method widely used to rapidly make millions to billions of copies (complete copies or partial copies) of a specific DNA sample, allowing scientists to take a very small sample of DNA and amplify it (or a part of it) to a large enough amount to study in detail. PCR was invented in 1983 by the American biochemist Kary Mullis at Cetus Corporation; Mullis and biochemist Michael Smith, who had developed other essential ways of manipulating DNA, were jointly awarded the Nobel Prize in Chemistry in 1993. PCR is fundamental to many of the procedures used in genetic testing and research, including analysis of ancient samples of DNA and identification of infectious agents. Using PCR, copies of very small amounts of DNA sequences are exponentially amplified in a series of cycles of temperature changes. PCR is now a common and often indispensable technique used in medical laboratory research for a broad variety of applications including biomedical research and... [1,000 / 49,157 chars] |
+| What did Ambassador Goldberg say about the US view of Jordan? [61 chars] | United Nations Security Council Resolution 242 (S/RES/242) was adopted unanimously by the UN Security Council on November 22, 1967, in the aftermath of the Six-Day War. It was adopted under Chapter VI of the UN Charter. The resolution was sponsored by British ambassador Lord Caradon and was one of five drafts under consideration. The preamble refers to the "inadmissibility of the acquisition of territory by war and the need to work for a just and lasting peace in the Middle East in which every State in the area can live in security". Operative Paragraph One "Affirms that the fulfillment of Charter principles requires the establishment of a just and lasting peace in the Middle East which should include the application of both the following principles: (i) Withdrawal of Israeli armed forces from territories occupied in the recent conflict; (ii) Termination of all claims or states of belligerency and respect for and acknowledgment of the sovereignty, territorial integrity and political in... [1,000 / 44,540 chars] |
 
 ### Public Sources
 
@@ -162,9 +162,9 @@ containing the relevant paragraph.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | https://arxiv.org/abs/2402.03216 |
-| M3-Embedding ACL Anthology version | 2024 | paper | https://aclanthology.org/2024.findings-acl.137/ |
-| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | https://huggingface.co/datasets/Shitao/MLDR |
+| M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation | 2024 | benchmark paper | [https://arxiv.org/abs/2402.03216](https://arxiv.org/abs/2402.03216) |
+| M3-Embedding ACL Anthology version | 2024 | paper | [https://aclanthology.org/2024.findings-acl.137/](https://aclanthology.org/2024.findings-acl.137/) |
+| MLDR: Multilingual Long-Document Retrieval dataset | 2024 | dataset card | [https://huggingface.co/datasets/Shitao/MLDR](https://huggingface.co/datasets/Shitao/MLDR) |
 
 ### Representative Snippets
 

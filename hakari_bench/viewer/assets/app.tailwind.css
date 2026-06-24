@@ -488,7 +488,7 @@
     font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.75rem;
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
     padding-top: 1rem;
   }
 
@@ -496,7 +496,7 @@
     font-size: 1rem;
     font-weight: 600;
     line-height: 1.5rem;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
 
   .benchmark-doc p,
@@ -504,14 +504,32 @@
   .benchmark-doc table,
   .benchmark-doc blockquote,
   .benchmark-doc pre {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .benchmark-doc h2 + p,
+  .benchmark-doc h2 + ul,
+  .benchmark-doc h2 + table,
+  .benchmark-doc h2 + blockquote,
+  .benchmark-doc h2 + pre,
+  .benchmark-doc h3 + p,
+  .benchmark-doc h3 + ul,
+  .benchmark-doc h3 + table,
+  .benchmark-doc h3 + blockquote,
+  .benchmark-doc h3 + pre {
+    margin-top: 0.5rem;
   }
 
   .benchmark-doc p,
   .benchmark-doc li,
-  .benchmark-doc td,
+  .benchmark-doc td {
+    color: var(--hakari-text);
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
   .benchmark-doc blockquote {
-    color: var(--hakari-text-muted);
+    color: color-mix(in srgb, var(--hakari-text) 88%, var(--hakari-text-muted));
     font-size: 0.875rem;
     line-height: 1.55;
   }
@@ -572,7 +590,7 @@
     pointer-events: none;
     text-transform: none;
     transition: opacity 120ms ease-in-out;
-    white-space: normal;
+    white-space: pre-line;
   }
 
   .shadow-sm {
@@ -1175,6 +1193,11 @@
   overflow: hidden;
 }
 
+.benchmark-doc table.benchmark-doc-example-table td {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
 .benchmark-doc tbody tr:first-child td {
   background-color: var(--hakari-surface-muted);
   color: var(--hakari-text);
@@ -1191,7 +1214,7 @@
   border-radius: var(--hakari-radius-sm);
   background-color: var(--hakari-surface-faint);
   padding: 0.5rem 0.75rem;
-  color: var(--hakari-text-muted);
+  color: color-mix(in srgb, var(--hakari-text) 88%, var(--hakari-text-muted));
 }
 
 .benchmark-doc pre {
@@ -1225,6 +1248,16 @@
   background-color: var(--hakari-surface);
   color: var(--hakari-text);
   box-shadow: 0 1.5rem 3.5rem rgb(15 23 42 / 0.22);
+}
+
+.hakari-count-modal {
+  width: min(92vw, 48rem);
+  max-height: 92vh;
+}
+
+.hakari-count-modal .hakari-modal-body {
+  max-height: calc(92vh - 4rem);
+  overflow: auto;
 }
 
 :root.dark .hakari-modal {
@@ -1370,6 +1403,99 @@
   .toggle-chip {
     transition: none;
   }
+}
+
+/* --- Leaderboard plot ------------------------------------------------------ */
+
+.plot-controls select,
+.viewer-select {
+  border-radius: var(--hakari-radius-sm);
+  background-color: var(--hakari-control-bg);
+  color: var(--hakari-text);
+}
+
+.leaderboard-plot-shell {
+  border-radius: var(--hakari-radius-md);
+  border-color: var(--hakari-border);
+  background-color: var(--hakari-surface);
+}
+
+.leaderboard-plot {
+  display: block;
+  width: 100%;
+  min-width: 760px;
+  height: auto;
+  color: var(--hakari-text);
+}
+
+.leaderboard-plot-mobile-message {
+  display: none;
+  min-height: 12rem;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  color: var(--hakari-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .leaderboard-plot,
+  .leaderboard-plot-controls-region {
+    display: none;
+  }
+
+  .leaderboard-plot-mobile-message {
+    display: flex;
+  }
+}
+
+.plot-frame {
+  fill: var(--hakari-surface-faint);
+  stroke: var(--hakari-border);
+}
+
+.plot-grid-line {
+  stroke: color-mix(in srgb, var(--hakari-border) 72%, transparent);
+  stroke-width: 1;
+}
+
+.plot-axis-label {
+  fill: var(--hakari-text);
+  font-family: var(--hakari-font);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.plot-axis-tick {
+  fill: var(--hakari-text-muted);
+  font-family: var(--hakari-font);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.plot-legend-label {
+  dominant-baseline: middle;
+}
+
+.leaderboard-plot-point {
+  stroke: color-mix(in srgb, var(--hakari-text) 36%, transparent);
+  stroke-width: 1;
+  cursor: pointer;
+  transition: opacity 120ms ease, stroke-width 120ms ease;
+}
+
+.leaderboard-plot-point:hover,
+.leaderboard-plot-point:focus-visible {
+  opacity: 0.95;
+  outline: none;
+  stroke: var(--hakari-accent);
+  stroke-width: 2.5;
+}
+
+.leaderboard-plot-empty {
+  border-radius: var(--hakari-radius-md);
+  border-color: var(--hakari-border);
+  background-color: var(--hakari-surface);
 }
 
 /* --- Floating sticky column header (JS-driven, see viewer.js) -------------- */

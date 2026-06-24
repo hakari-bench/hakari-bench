@@ -5,11 +5,12 @@ source:
   revision: bfb1bc5d5a70be3c683dd190c82b0076d2dee8b5
 method: dense
 license:
-  id: unknown
-  label: unknown
-  type: unknown
-  commercial_use: unknown
-  source: unavailable
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/hotchpotch/bekko-embedding-small-beta-unir-v8
 links:
   huggingface: https://huggingface.co/hotchpotch/bekko-embedding-small-beta-unir-v8
 parameters:

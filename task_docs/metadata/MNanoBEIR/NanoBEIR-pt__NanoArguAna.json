@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "Argument Mining for Understanding Peer Reviews",
-        "url": "https://aclanthology.org/P18-1023/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Argument Mining for Understanding Peer Reviews",
+        "url": "https://aclanthology.org/P18-1023/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "O público é indiferente às reformas. É discutível se a reforma da Câmara dos Lordes deve ser uma prioridade máxima no atual clima econômico, sem falar se um governo de coalizão conseguiria iniciar e implementar tais medidas. As tentativas de reformar a Câmara dos Lordes têm sido adiadas repetidamente, mostrando as reservas da Câmara dos Comuns em relação às mudanças. Um sentimento que, sem dúvida, é refletido na opinião pública britânica, como demonstrado pelo resultado recente do voto alternati",
+          "full_chars": 566,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A campanha de voto alternativo não pode ser comparada a uma reforma do sistema político. Além disso, não se deve confundir um público mal informado devido à manipulação política com indiferença. Muitas vezes, os eleitores dizem que são indiferentes porque sentem que não podem mudar nada, que seu voto não vai contar. Uma reforma que assegure que os governantes sejam eleitos diretamente pelo povo ajudaria a combater esses sentimentos.",
+          "full_chars": 436,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "A expansão do Heathrow é vital para a economia. A expansão do Heathrow garantiria muitos empregos atuais e criaria novos. Atualmente, o Heathrow sustenta cerca de 250.000 empregos. Além disso, centenas de milhares de pessoas dependem do comércio turístico em Londres, que depende de boas conexões de transporte como o Heathrow. Perder competitividade em relação a outros aeroportos europeus não só poderia significar desperdiçar a oportunidade de criar novos empregos, mas também perder alguns dos qu",
+          "full_chars": 1228,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "A comunidade empresarial está longe de estar unida no suposto apoio a uma terceira pista. Pesquisas indicam que muitas empresas influentes, na verdade, não apoiam a expansão. Uma carta expressando preocupação foi assinada por Justin King, o Diretor Executivo da J Sainsbury, e James Murdoch, da BskyB. [1] Portanto, confundir a comunidade empresarial como uma única voz que defende a expansão é um equívoco. Devemos também lembrar, ao considerar alternativas à nova pista do Heathrow, como uma nova pista em outro aeroporto de Londres ou um aeroporto completamente novo, que essas alternativas provavelmente teriam um impacto econômico semelhante à expansão do Heathrow. Se o que importa são as conexões para atrair negócios e turistas, desde que a conexão seja com Londres, não importa qual aeroporto forneça a conexão. Pode até haver menos necessidade de o aeroporto ser um hub se o foco estiver nos benefícios para Londres. Como afirmou Bob Ayling, ex-Diretor Executivo da British Airways, o Heath",
+          "full_chars": 1369,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "As pessoas têm muitas opções, o que as deixa menos felizes. A publicidade faz com que muitas pessoas se sintam sobrecarregadas pela necessidade constante de decidir entre várias demandas de atenção – isso é conhecido como a tirania da escolha ou sobrecarga de escolha. Pesquisas recentes indicam que, em média, as pessoas são menos felizes do que há 30 anos – apesar de estarem melhor e terem muitas mais opções de coisas para gastar seu dinheiro. As afirmações dos anúncios se acumulam sobre as pess",
+          "full_chars": 975,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "As pessoas ficam infelizes porque não podem ter tudo, e não porque têm muitas opções e acham isso estressante. Na verdade, os anúncios desempenham um papel crucial ao garantir que o dinheiro que as pessoas têm seja gasto no produto mais adequado para elas. Se os anúncios não fossem permitidos, as pessoas gastariam dinheiro em um produto inicial, quando, dada a escolha, claramente optariam por outro. Uma meta-análise que incorporou pesquisas de 50 estudos independentes não encontrou nenhuma conexão significativa entre escolha e ansiedade, mas especulou que a variância nos estudos deixou aberta a possibilidade de que a sobrecarga de opções possa estar relacionada a certas pré-condições altamente específicas e ainda pouco compreendidas. 1 ^ Scheibehenne, Benjamin; Greifeneder, R. & Todd, P. M. (2010). 'Pode haver muitas opções? Uma revisão meta-analítica da sobrecarga de escolha.' Journal of Consumer Research 37: 409-425.",
+          "full_chars": 933,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

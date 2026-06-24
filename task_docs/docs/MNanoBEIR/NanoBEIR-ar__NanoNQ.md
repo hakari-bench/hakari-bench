@@ -163,11 +163,9 @@ should contain the requested answer evidence, not just the same entity.
 
 | Query | Positive document |
 | --- | --- |
-| أين تقام أربع النهائي هذا العام؟ (32 chars) | بطولة كرة السلة للرجال في القسم الأول من الاتحاد الوطني للرياضات الجامعية لعام 2018 كانت بطولة إقصاء فردي تضم 68 فريقًا لتحديد بطل كرة السلة الجامعية للرجال في القسم الأول للاتحاد الوطني للرياضات الجامعية للعام الدراسي 2017–1 ... [truncated 225 chars](349 chars) |
-| هل كان فيلم "ليلة مرعبة قبل عيد الميلاد" من إنتاج ديزني في البداية؟ (67 chars) | بدأ فكرة فيلم ليلة مرعبة في عيد الميلاد بقصيدة كتبها تيم بورتون في عام 1982، وهو يعمل كرسام متحرك في استوديوهات والت ديزني للرسوم المتحركة. بعد نجاح فيلم فينسنت في نفس العام، بدأت استوديوهات والت ديزني في التفكير في تطوير فيل ... [truncated 225 chars](556 chars) |
-| لماذا يوجد تمثال الملاك الشمالي هناك؟ (37 chars) | وفقًا لـ غورملي، كان لمعنى التمثال الملاك ثلاثة جوانب: أولاً، لإظهار أن تحت موقع بنائه عمل عمال المناجم على مدى قرنين؛ ثانيًا، لاستيعاب الانتقال من عصر صناعي إلى عصر المعلومات؛ وثالثًا، لأن يكون مركزًا لأملنا وخوفنا المتطور. (224 chars) |
-| أين تم ذكر تعويض الثلاثي الخامس في الدستور لأول مرة؟ (52 chars) | توجد اتفاقية الثلاثة أخماس في المادة الأولى، القسم الثاني، البند الثالث من دستور الولايات المتحدة الأمريكية، والتي تنص على: (123 chars) |
-| من يغني أغنية "أحد يراقبني" مع مايكل جاكسون (43 chars) | "Somebody's Watching Me" هي أغنية للمغني الأمريكي روكويل من ألبومه الأول Somebody's Watching Me (1984). أصدرت الأغنية كأغنية أولية وأغنية رئيسية من الألبوم في 14 يناير 1984 بواسطة موتاون. شارك فيها أعضاء سابقين من فرقة جاكسون ... [truncated 225 chars](300 chars) |
+| أين تقام أربع النهائي هذا العام؟ [32 chars] | بطولة كرة السلة للرجال في القسم الأول من الاتحاد الوطني للرياضات الجامعية لعام 2018 كانت بطولة إقصاء فردي تضم 68 فريقًا لتحديد بطل كرة السلة الجامعية للرجال في القسم الأول للاتحاد الوطني للرياضات الجامعية للعام الدراسي 2017–18. بدأت النسخة الثمانين من البطولة في 13 مارس 2018 وانتهت بمباراة النهائي في 2 أبريل في ملعب ألامودوم في سان أنطونيو، تكساس. [349 chars] |
+| هل كان فيلم "ليلة مرعبة قبل عيد الميلاد" من إنتاج ديزني في البداية؟ [67 chars] | بدأ فكرة فيلم ليلة مرعبة في عيد الميلاد بقصيدة كتبها تيم بورتون في عام 1982، وهو يعمل كرسام متحرك في استوديوهات والت ديزني للرسوم المتحركة. بعد نجاح فيلم فينسنت في نفس العام، بدأت استوديوهات والت ديزني في التفكير في تطوير فيلم ليلة مرعبة في عيد الميلاد إما كفيلم قصير أو برنامج تلفزيوني خاص لمدة 30 دقيقة. عبر السنوات، استمر بورتون في العودة إلى الفكرة، وفي عام 1990، أبرم صفقة تطوير مع ديزني. بدأت الإنتاج في يوليو 1991 في سان فرانسيسكو؛ أصدرت ديزني الفيلم تحت لواء شركة تاتشستون بيكتشرز لأن الاستوديو اعتقد أن الفيلم سيكون "مظلمة ومخيفة جدًا للأطفال".[4] [556 chars] |
+| لماذا يوجد تمثال الملاك الشمالي هناك؟ [37 chars] | وفقًا لـ غورملي، كان لمعنى التمثال الملاك ثلاثة جوانب: أولاً، لإظهار أن تحت موقع بنائه عمل عمال المناجم على مدى قرنين؛ ثانيًا، لاستيعاب الانتقال من عصر صناعي إلى عصر المعلومات؛ وثالثًا، لأن يكون مركزًا لأملنا وخوفنا المتطور. [224 chars] |
 
 ### Public Sources
 
@@ -186,8 +184,8 @@ should contain the requested answer evidence, not just the same entity.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | https://aclanthology.org/Q19-1026/ |
-| Google Research Natural Questions publication page |  | project page | https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Natural Questions: A Benchmark for Question Answering Research | 2019 | task paper | [https://aclanthology.org/Q19-1026/](https://aclanthology.org/Q19-1026/) |
+| Google Research Natural Questions publication page |  | project page | [https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/](https://research.google/pubs/natural-questions-a-benchmark-for-question-answering-research/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

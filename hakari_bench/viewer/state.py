@@ -17,6 +17,22 @@ from hakari_bench.viewer.variant_display import variant_display_flags_from_value
 QueryValue = str | list[str]
 QueryState = dict[str, QueryValue]
 
+RESULT_VIEW_VALUES = {"table", "chart"}
+PLOT_SCORE_FIELDS = {"borda_score", "macro_mean", "micro_mean"}
+PLOT_NONE_FIELD = "none"
+PLOT_AXIS_FIELDS = {
+    "active_parameters",
+    "active_parameters_linear",
+    "total_parameters",
+    "total_parameters_linear",
+    "max_seq_length",
+    "embedding_dim",
+    "quantization",
+    "sparse_query_dims",
+    "sparse_document_dims",
+}
+PLOT_ENCODING_FIELDS = {*PLOT_AXIS_FIELDS, PLOT_NONE_FIELD}
+
 
 @dataclass(frozen=True)
 class FilterState:
@@ -27,6 +43,7 @@ class FilterState:
     filters_active: bool = False
     dim_filters: tuple[str, ...] = ()
     quant_filters: tuple[str, ...] = ()
+    commercial_filters: tuple[str, ...] = ()
     model_type_filters: tuple[str, ...] = ()
     dtype_filters: tuple[str, ...] = ()
     attn_filters: tuple[str, ...] = ()
@@ -71,17 +88,19 @@ def normalize_query_state(
     filters: bool,
     dim_filter: list[str] | None,
     quant_filter: list[str] | None,
-    dtype_filter: list[str] | None,
-    attn_filter: list[str] | None,
-    prompt_filter: list[str] | None,
+    commercial_filter: list[str] | None = None,
+    dtype_filter: list[str] | None = None,
+    attn_filter: list[str] | None = None,
+    prompt_filter: list[str] | None = None,
     model_type_filter: list[str] | None = None,
     lang_filter: list[str] | None = None,
     bench: list[str] | None = None,
-    model_filter: str,
+    model_filter: str = "",
     rank_filtered: bool = False,
     task_scores: bool = False,
     task_z_scores: bool = False,
     task_ranks: bool = False,
+    other_columns: bool = False,
     task_filter: str = "",
     active_params_min: str = "",
     active_params_max: str = "",
@@ -92,6 +111,10 @@ def normalize_query_state(
     doc_len_min: str = "",
     doc_len_max: str = "",
     metric: str = "ndcg@10",
+    result_view: str = "table",
+    chart_y: str = "borda_score",
+    chart_x: str = "active_parameters",
+    chart_color: str = "embedding_dim",
 ) -> QueryState:
     view = _normalized_view_name(view)
     selected_benchmarks = _normalized_benchmark_values(bench, viewer_config)
@@ -107,6 +130,12 @@ def normalize_query_state(
         direction = "asc"
     if target not in {"all", "reranking", "reranking_without_safeguard"}:
         target = "all"
+    result_view = result_view if result_view in RESULT_VIEW_VALUES else "table"
+    chart_y = chart_y if chart_y in PLOT_SCORE_FIELDS else "borda_score"
+    chart_x = chart_x if chart_x in PLOT_AXIS_FIELDS else "active_parameters"
+    chart_color = chart_color if chart_color in PLOT_ENCODING_FIELDS else "embedding_dim"
+    if "quantization" in {chart_x, chart_color}:
+        quantization = True
     score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
     display_flags = variant_display_flags_from_values(
         variants=variants,
@@ -117,6 +146,14 @@ def normalize_query_state(
     )
     task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
+    if result_view != "table":
+        query["result_view"] = result_view
+    if chart_y != "borda_score":
+        query["chart_y"] = chart_y
+    if chart_x != "active_parameters":
+        query["chart_x"] = chart_x
+    if chart_color != "embedding_dim":
+        query["chart_color"] = chart_color
     empty_custom_scope = view == CUSTOM_SCOPE_NAME and not selected_benchmarks
     if view == CUSTOM_SCOPE_NAME and selected_benchmarks:
         query["bench"] = selected_benchmarks
@@ -134,6 +171,8 @@ def normalize_query_state(
         query["task_z_scores"] = "1"
     if task_ranks:
         query["task_ranks"] = "1"
+    if other_columns:
+        query["other_columns"] = "1"
     if display_flags.quantization:
         query["quantization"] = "1"
     if display_flags.truncate:
@@ -163,6 +202,7 @@ def normalize_query_state(
         query["filters"] = "1"
         query["dim_filter"] = _normalized_query_values(dim_filter)
         query["quant_filter"] = _normalized_query_values(quant_filter)
+        query["commercial_filter"] = _normalized_commercial_filter_values(commercial_filter)
         query["model_type_filter"] = _normalized_model_type_filter_values(model_type_filter)
         query["dtype_filter"] = _normalized_query_values(dtype_filter)
         query["attn_filter"] = _normalized_query_values(attn_filter)
@@ -210,6 +250,7 @@ def filter_state_from_query(query: QueryState) -> FilterState:
         filters_active=query.get("filters") == "1",
         dim_filters=tuple(query_values(query.get("dim_filter"))),
         quant_filters=tuple(query_values(query.get("quant_filter"))),
+        commercial_filters=tuple(query_values(query.get("commercial_filter"))),
         model_type_filters=tuple(query_values(query.get("model_type_filter"))),
         dtype_filters=tuple(query_values(query.get("dtype_filter"))),
         attn_filters=tuple(query_values(query.get("attn_filter"))),
@@ -253,6 +294,8 @@ def state_payload(
         query_payload["task_z_scores"] = "0"
     if result.show_task_ranks:
         query_payload["task_ranks"] = "1"
+    if result.show_other_columns:
+        query_payload["other_columns"] = "1"
     if result.include_quantization_variants:
         query_payload["quantization"] = "1"
     if result.include_truncate_variants:
@@ -273,6 +316,7 @@ def state_payload(
         query_payload["filters"] = "1"
         query_payload["dim_filter"] = list(filter_state.dim_filters)
         query_payload["quant_filter"] = list(filter_state.quant_filters)
+        query_payload["commercial_filter"] = list(filter_state.commercial_filters)
         query_payload["model_type_filter"] = list(filter_state.model_type_filters)
         query_payload["dtype_filter"] = list(filter_state.dtype_filters)
         query_payload["attn_filter"] = list(filter_state.attn_filters)
@@ -307,6 +351,7 @@ def active_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, st
     fields.append(("filters", "1"))
     fields.extend(("dim_filter", value) for value in filter_state.dim_filters)
     fields.extend(("quant_filter", value) for value in filter_state.quant_filters)
+    fields.extend(("commercial_filter", value) for value in filter_state.commercial_filters)
     fields.extend(("model_type_filter", value) for value in filter_state.model_type_filters)
     fields.extend(("dtype_filter", value) for value in filter_state.dtype_filters)
     fields.extend(("attn_filter", value) for value in filter_state.attn_filters)
@@ -363,7 +408,12 @@ def _normalized_benchmark_values(values: list[str] | None, viewer_config: Viewer
 
 
 def _normalized_model_type_filter_values(values: list[str] | None) -> list[str]:
-    allowed = {"dense", "sparse", "late-interaction", "reranker"}
+    allowed = {"dense", "bm25", "sparse", "late-interaction", "reranker"}
+    return [value for value in _normalized_query_values(values) if value in allowed]
+
+
+def _normalized_commercial_filter_values(values: list[str] | None) -> list[str]:
+    allowed = {"commercial", "non_commercial", "not_applicable", "unknown"}
     return [value for value in _normalized_query_values(values) if value in allowed]
 
 

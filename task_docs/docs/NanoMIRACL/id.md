@@ -151,11 +151,11 @@ evidence specificity.
 
 ## Example Data
 
-Representative queries ask how many characters can fit in an Indonesian SMS
-context, where the printing press was first created, what Acta Sanctorum is,
-what audio frequency means, or where James Hepburn died. Positive documents are
-Indonesian Wikipedia passages containing the relevant numeric, historical,
-definition, technical, or biographical evidence.
+| Query | Positive document |
+| --- | --- |
+| berapakah kadar oxigen yang dibutuhkan manusia untuk bernapas? [62 chars] | Karbon dioksida Walaupun tubuh memerlukan oksigen untuk metabolisme, kadar oksigen yang rendah tidak akan menstimulasi pernapasan. Sebaliknya pernapasan distimulasi oleh kadar karbon dioksida yang tinggi. Akibatnya, bernapas pada udara bertekanan rendah atau campuran gas tanpa oksigen (seperti nitrogen murni) dapat menyebabkan kehilangan kesadaran. Hal ini sangatlah berbahaya bagi pilot tempur. Ini juga adalah alasan mengapa penumpang pesawat diinstruksikan untuk memakai masker oksigen ke dirinya sendiri terlebih dahulu sebelum membantu orang lain ketika tekanan kabin berkurang, jika tidak maka terjadi risiko tidak sadarkan diri. [638 chars] |
+| Apa penyebab kematian Mgr. Arnold Verstraelen ? [47 chars] | Vampir Cerita vampir telah dikaitkan dengan kematian yang disebabkan oleh penyakit yang misterius dan tidak diketahui, biasanya yang terjadi dalam suatu keluarga atau komunitas kecil. Epidemi jelas terjadi dalam kasus Peter Plogojowitz dan Arnold Paole, dan bahkan dalam kasus Mercy Brown serta dalam kepercayaan vampir di New England, yaitu ketika suatu penyakit tertentu, tuberkulosis, diasosiasikan dengan munuculnya vampirisme. Seperti juga penyakit pes yang menyebabkan rusaknya jaringan paru-paru sehingga darah mengalir di bibir. [537 chars] |
+| kapankah Romusha terjadi di indonesia? [38 chars] | Romusa Romusha (労務者 "rōmusha": "buruh", "pekerja") adalah panggilan bagi orang-orang Indonesia yang dipekerjakan secara paksa pada dari tahun 1942 hingga 1945. Kebanyakan "romusha" adalah petani, dan sejak Oktober 1943 pihak Jepang mewajibkan para petani menjadi "romusha". Mereka dikirim untuk bekerja di berbagai tempat di Indonesia serta Asia Tenggara. Jumlah orang-orang yang menjadi "romusha" tidak diketahui pasti - perkiraan yang ada bervariasi dari 4 hingga 10 juta. [475 chars] |
 
 ### Public Sources
 
@@ -173,10 +173,10 @@ definition, technical, or biographical evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

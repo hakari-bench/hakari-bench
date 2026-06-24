@@ -172,12 +172,13 @@
     window.__hakariHideTooltip();
     tooltipPinned = false;
     tooltipTrigger = trigger;
+    const delay = trigger.dataset.tooltipDelay === "0" ? 0 : 1000;
     tooltipTimer = setTimeout(() => {
       tooltip.textContent = text;
       tooltip.hidden = false;
       tooltip.dataset.visible = "true";
       window.__hakariPositionTooltip(trigger);
-    }, 1000);
+    }, delay);
   };
 
   window.__hakariHideTooltip = () => {
@@ -196,17 +197,25 @@
     ["Language", "language_support_label"],
     ["Model type", "model_type"],
     ["Ranking label", "ranking_model_name"],
-    ["Variant", "embedding_variant_name"],
-    ["Dimensions", "embedding_dim"],
-    ["Quantization", "quantization"],
-    ["Base delta", "base_score_delta_percent"],
     ["Active params", "active_parameters"],
     ["Total params", "total_parameters"],
-    ["Max len", "max_seq_length"],
+    ["Max Tokens", "max_seq_length"],
+    ["Dimensions", "embedding_dim"],
+    ["Truncate dims", "truncate_dims"],
+  ];
+
+  const modelDetailFieldsAfterLinks = [
     ["DType", "dtype"],
     ["Attention", "attention"],
+    ["Query Prompt", "query_prompt"],
+    ["Query Prompt", "query_prompt_name"],
+    ["Doc Prompt", "document_prompt"],
+    ["Doc Prompt", "document_prompt_name"],
     ["Prompt", "prompt"],
     ["HF trust", "trust_remote_code"],
+    ["Variant", "embedding_variant_name"],
+    ["Quantization", "quantization"],
+    ["Base delta", "base_score_delta_percent"],
     ["Query len", "late_interaction_query_length"],
     ["Doc len", "late_interaction_document_length"],
     ["Query expansion", "late_interaction_query_expansion"],
@@ -217,6 +226,10 @@
 
   function formatModelDetailValue(value) {
     if (value === null || value === undefined || value === "") return "";
+    if (Array.isArray(value)) {
+      if (value.length === 0) return "";
+      return value.map((item) => formatModelDetailValue(item)).filter(Boolean).join(", ");
+    }
     if (typeof value === "boolean") return value ? "true" : "false";
     if (typeof value === "number") return value.toLocaleString();
     return String(value);
@@ -261,7 +274,8 @@
       appendModelDetailRow(list, "Hugging Face", createModelDetailLink(links.huggingface, repoId || "Model page"));
     }
     if (typeof links.github === "string" && links.github) {
-      appendModelDetailRow(list, "GitHub", createModelDetailLink(links.github, "Repository"));
+      const repoId = links.github.replace(/^https?:\/\/github\.com\//, "").replace(/\/+$/, "");
+      appendModelDetailRow(list, "GitHub", createModelDetailLink(links.github, repoId || links.github));
     }
     const papers = Array.isArray(links.papers) ? links.papers : [];
     if (papers.length === 0) return;
@@ -275,6 +289,12 @@
       dd.append(createModelDetailLink(paper.url, paper.title || paper.url));
     }
     if (dd.childElementCount > 0) list.append(dt, dd);
+  }
+
+  function appendModelDetailNotice(list, notice) {
+    const value = formatModelDetailValue(notice);
+    if (!value) return;
+    appendModelDetailRow(list, "Notice", document.createTextNode(value));
   }
 
   window.__hakariBindModelDetails = () => {
@@ -323,6 +343,33 @@
     });
 
     document.addEventListener("click", (event) => {
+      const trigger = closestElement(event.target, ".leaderboard-status-count-trigger");
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const modal = document.getElementById("count-breakdown-modal");
+      const title = document.getElementById("count-breakdown-title");
+      if (!modal) return;
+      const selectedSection = trigger.dataset.countBreakdownTrigger || "";
+      let activeTitle = "Result breakdown";
+      for (const section of document.querySelectorAll("[data-count-breakdown-section]")) {
+        const isActive = section.dataset.countBreakdownSection === selectedSection;
+        section.hidden = !isActive;
+        if (isActive) activeTitle = section.dataset.countBreakdownTitle || activeTitle;
+      }
+      if (title) title.textContent = activeTitle;
+      if (typeof modal.showModal === "function") modal.showModal();
+    });
+
+    document.addEventListener("click", (event) => {
+      const link = closestElement(event.target, ".count-breakdown-task-link");
+      if (!link || !link.href) return;
+      event.preventDefault();
+      event.stopPropagation();
+      window.open(link.href, "_blank", "noopener,noreferrer");
+    });
+
+    document.addEventListener("click", (event) => {
       const trigger = closestElement(event.target, ".model-detail-trigger");
       if (!trigger) return;
       const modal = document.getElementById("model-detail-modal");
@@ -351,11 +398,31 @@
       }
       appendModelDetailLicense(list, metadata.license);
       appendModelDetailLinks(list, metadata.links);
+      const renderedLabels = new Set();
+      for (const [label, key] of modelDetailFieldsAfterLinks) {
+        const rawValue = metadata[key];
+        const value = shouldShowUnknownModelDetailValue(key, rawValue) ? "Unknown" : formatModelDetailValue(rawValue);
+        if (!value || renderedLabels.has(label)) continue;
+        renderedLabels.add(label);
+        const dt = document.createElement("dt");
+        dt.className = "font-medium text-zinc-600";
+        dt.textContent = label;
+        const dd = document.createElement("dd");
+        dd.className = "break-all font-mono text-zinc-900";
+        dd.textContent = value;
+        list.append(dt, dd);
+      }
+      appendModelDetailNotice(list, metadata.notice);
       if (typeof modal.showModal === "function") modal.showModal();
     });
 
     document.addEventListener("click", (event) => {
       const modal = event.target && event.target.id === "model-detail-modal" ? event.target : null;
+      if (modal) modal.close();
+    });
+
+    document.addEventListener("click", (event) => {
+      const modal = event.target && event.target.id === "count-breakdown-modal" ? event.target : null;
       if (modal) modal.close();
     });
 
@@ -417,6 +484,7 @@
       if (closestElement(event.target, "a, button, summary, input, select, textarea")) return;
       const trigger = closestElement(event.target, "[data-tooltip]");
       if (!trigger) return;
+      if (trigger.dataset.tooltipHoverOnly === "true") return;
       event.preventDefault();
       event.stopPropagation();
       showTooltipNow(trigger);

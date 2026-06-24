@@ -62,19 +62,19 @@ Models should handle Finnish morphology, compounds, legal terminology, and exact
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Mikä EU:n neuvoa-antava elin ilmoitti tervetulleeksi työnantajien ja työntekijöiden sopimuksen sisällyttää vuoden 2006 merityön yleissopimus yhteisön lainsäädäntöön? [165 chars] | Tiedonannossa korostetaan inhimillisten tekijöiden merkitystä meriklusterin yhteydessä. ETSK on tyytyväinen työmarkkinaosapuolten (ETF:n ja ECSA:n) tekemään sopimukseen siitä, että vuonna 2006 tehdyn, merityön normeja koskevan ILO:n yleissopimuksen määräyksiä sisällytetään yhteisön lainsäädäntöön. Komitea toivoo, että merityön normit, jotka takaavat tasapuoliset toimintamahdollisuudet kaikille merenkulkijoille, pantaisiin yleissopimuksen mukaisesti mahdollisimman nopeasti täytäntöön maailmanlaajuisesti. Yhtä tärkeää on se, että jäsenvaltiot ratifioivat kalastusalan kansainväliset välineet, kuten kalastusalusten työoloja koskevan ILO:n yleissopimuksen vuodelta 2007. [673 chars] |
+| Mikä sääntelykehys salli viranomaisten nimetä yrityksiä dominoiviksi noin 25 prosentin markkinaosuuden ja asiakasyhteyksien sekä rahoitusvoiman perusteella? [156 chars] | Vuoden 1998 sääntelyjärjestelmässä ennakkosääntelyn kohteena olevat telealan markkina-alueet määriteltiin asianomaisissa direktiiveissä, mutta niiden määrittelyssä ei sovellettu kilpailuoikeuden periaatteita. Näillä vuoden 1998 sääntelyjärjestelmän mukaisesti määritellyillä alueilla kansallisilla sääntelyviranomaisilla oli valta nimetä yritys huomattavan markkinavoiman (EU:n lainsäädännössä samasta asiasta käytetty myös nimitystä merkittävä markkina-asema) yritykseksi, jos yrityksellä oli 25 prosentin markkinaosuus. Tästä markkinaosuusedellytyksestä voitiin kuitenkin poiketa seuraaviin tekijöihin liittyvistä syistä: yrityksen kyky vaikuttaa markkinoihin, yrityksen liikevaihto markkinoiden kokoon verrattuna, se, missä määrin yritys hallitsee jakelukanavia loppukäyttäjille ja millaiset rahoitusmahdollisuudet sillä on käytettävissään, sekä yrityksen kokemus tuotteiden ja palvelujen tarjonnasta kyseisillä markkinoilla. [928 chars] |
+| Mikä ehdotettu valittavissa oleva mittaristo tukee kansallisen ammatillisen koulutuksen laatua eroten neuvoston 25. toukokuuta 2007 päätelmiistä? [145 chars] | Liitteessä II ehdotettujen viiteindikaattoreiden tarkoituksena on tukea ammatillisen koulutuksen järjestelmien ja/tai järjestäjien arviointia ja laadun parantamista kansallisen lainsäädännön ja käytännön mukaisesti ja toimia työkalulaatikkona, josta eri käyttäjät voivat poimia oman laadunvarmistusjärjestelmänsä vaatimuksiin parhaiten soveltuvat indikaattorit. Ne olisi luonteensa ja tarkoituksensa puolesta erotettava niistä indikaattoreista ja viitearvoista, joihin viitataan neuvoston 25. toukokuuta 2007 antamissa päätelmissä Lissabonissa asetettujen koulutusalan tavoitteiden edistymisen seurantaan tarkoitettujen indikaattoreiden ja viitearvojen yhdenmukaisesta luettelosta. [681 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

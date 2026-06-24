@@ -89,36 +89,6 @@
         "rows_with_101_candidates": 9
       }
     },
-    "references": [
-      {
-        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
-        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -127,6 +97,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "NFCorpus: A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Zdrav čokoladni milkshake",
+          "full_chars": 25,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cilj Ispitati odnos između unosa trešanja i rizika od ponovljenih napada gihta kod osoba sa gihtom. Metode Sproveli smo studiju preseka slučajeva kako bismo ispitali povezanost niza pretpostavljenih faktora rizika s ponovljenim napadima gihta. Osobe sa gihtom su prospektivno regrutovane i praćene onlajn tokom jedne godine. Učesnici su bili upitani o sledećim informacijama prilikom doživljavanja napada gihta: datum početka napada gihta, simptomi i znaci, lekovi (uključujući lekove protiv gihta) i potencijalni faktori rizika (uključujući dnevni unos trešanja i ekstrakta trešanja) tokom dvodnevnog perioda pre napada gihta. Procenili smo iste informacije o izloženosti tokom dvodnevnih kontrolnih perioda. Procenili smo rizik od ponovljenih napada gihta povezanih s unosom trešanja koristeći uslovnu logističku regresiju. Rezultati Naša studija je uključila 633 osobe sa gihtom. Unos trešanja tokom dvodnevnog perioda bio je povezan s 35% nižim rizikom od napada gihta u poređenju s neunosom (mul",
+          "full_chars": 1596,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "medicinska etika",
+          "full_chars": 16,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "POZADINA: Jedan od glavnih problema u kontroli holesterola u krvi putem dijetetskih mera čini se potreba za poboljšanjem pridržavanja pacijenata preporukama. CILJEVI: Ispitati brojna pitanja u vezi s preprekama i motivatorima za pridržavanje holesterol-snižavajuće dijete. METODE: Anketirali smo francuske lekare opšte prakse o njihovim dijetetskim postupcima za pacijente sa hiperholesterolemijom i ispitali stavove njihovih pacijenata prema takvom pristupu. REZULTATI: Analizirali smo 234 lična upitnika lekara i 356 upitnika za samoopservaciju pacijenata. Razlozi pacijenata za nepoštovanje propisane dijete uključivali su: 'već imaju zadovoljavajuće prehrambene navike' (34,7%), 'nespremnost da trpe nutricionističku deprivaciju' (33,3%), 'poteškoće u usklađivanju dijete sa porodičnim životom' (27,8%) i 'uzimanje lekova za snižavanje holesterola' (22,2%). Uprkos opštenito dobrom razumevanju preporuka lekara od strane pacijenata, primećene su određene razlike između njihovih izjava. Dok su le",
+          "full_chars": 1853,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "grah",
+          "full_chars": 4,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tokom proteklih 20 godina, rastući interes za biohemiju, ishranu i farmakologiju L-arginina doveo je do opsežnih studija koje istražuju njegovu nutritivnu i terapeutsku ulogu u lečenju i prevenciji metaboličkih poremećaja kod ljudi. Sve brojniji dokazi pokazuju da dodatak L-arginina ishrani smanjuje gojaznost kod genetski gojaznih pacova, pacova sa gojaznošću izazvanom ishranom, tovnih svinja i gojaznih ljudi sa dijabetesom tipa 2. Mehanizmi odgovorni za blagotvorne efekte L-arginina verovatno su složeni, ali u konačnici uključuju promenu ravnoteže unosa i potrošnje energije u korist gubitka masti ili smanjenog rasta belog masnog tkiva. Nedavne studije ukazuju da dodatak L-arginina podstiče biogenezu mitohondrija i razvoj smedeg masnog tkiva, verovatno kroz pojačanu sintezu ćelijskih signalnih molekula (npr. azot monoksida, ugljen monoksida, poliamina, cGMP i cAMP) kao i povećanu ekspresiju gena koji podstiču oksidaciju energetskih supstrata u celom telu (npr. glukoze i masnih kiselina",
+          "full_chars": 1179,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

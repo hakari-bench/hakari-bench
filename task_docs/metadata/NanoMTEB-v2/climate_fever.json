@@ -140,10 +140,61 @@
         "url": "https://huggingface.co/datasets/mteb/ClimateFEVER_test_top_250_only_w_correct-v2",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "633",
+        "document_id": "Paleocene–Eocene_Thermal_Maximum",
+        "query": {
+          "text": "Currently, sea-level rise does not seem to depend on ocean temperature, and certainly not on CO2.",
+          "full_chars": 97,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Paleocene–Eocene Thermal Maximum The Paleocene -- Eocene Thermal Maximum ( PETM ) , alternatively ( ETM1 ) , and formerly known as the `` Initial Eocene '' or '' '' was a time period with more than 8 ° C warmer global average temperature than today . This climate event began at the time boundary between the Paleocene and Eocene geological epochs . The exact age and duration of the event is uncertain but it is estimated to have occurred around 55.5 million years ago . The associated period of massive carbon injection into the atmosphere has been estimated to have lasted no longer than 20,000 years . The entire warm period lasted for about 200,000 years . Global temperatures increased by 5 -- 8 ° C . The carbon dioxide was likely released in two pulses , the first lasting less than 2,000 years . Such a repeated carbon release is in line with current global warming . A main difference is that during the Paleocene -- Eocene Thermal Maximum , the planet was essentially ice-free . The onset",
+          "full_chars": 2549,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "194",
+        "document_id": "Greenhouse_gas",
+        "query": {
+          "text": "The main greenhouse gas is water vapour[…]",
+          "full_chars": 42,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Greenhouse gas A greenhouse gas ( abbrev . GHG ) is a gas in an atmosphere that absorbs and emits radiation within the thermal infrared range . This process is the fundamental cause of the greenhouse effect . The primary greenhouse gases in Earth 's atmosphere are water vapor , carbon dioxide , methane , nitrous oxide , and ozone . Without greenhouse gases , the average temperature of Earth 's surface would be about -18 ° C , rather than the present average of 15 ° C . In the Solar System , the atmospheres of Venus , Mars and Titan also contain gases that cause a greenhouse effect . Human activities since the beginning of the Industrial Revolution ( taken as the year 1750 ) have produced a 40 % increase in the atmospheric concentration of carbon dioxide , from 280 ppm in 1750 to 406 ppm in early 2017 . This increase has occurred despite the uptake of a large portion of the emissions by various natural `` sinks '' involved in the carbon cycle . Anthropogenic carbon dioxide emissions ( i",
+          "full_chars": 1706,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "Deforestation",
+        "query": {
+          "text": "the warming is not nearly as great as the climate change computer models have predicted.",
+          "full_chars": 88,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Deforestation Deforestation , clearance or clearing is the removal of a forest or stand of trees where the land is thereafter converted to a non-forest use . Examples of deforestation include conversion of forestland to farms , ranches , or urban use . The most concentrated deforestation occurs in tropical rainforests . About 30 % of Earth 's land surface is covered by forests . Deforestation occurs for multiple reasons : trees are cut down to be used for building or sold as fuel , ( sometimes in the form of charcoal or timber ) , while cleared land is used as pasture for livestock and plantation . The removal of trees without sufficient reforestation has resulted in damage to habitat , biodiversity loss and aridity . It has adverse impacts on biosequestration of atmospheric carbon dioxide . Deforestation has also been used in war to deprive the enemy of vital resources and cover for its forces . Modern examples of this were the use of Agent Orange by the British military in Malaya dur",
+          "full_chars": 2080,
+          "limit_chars": 1000,
+          "truncated": true
+        }
       }
     ],
     "source_dataset_id": "mteb/ClimateFEVER_test_top_250_only_w_correct-v2",
-    "source_task": "ClimateFEVERHardNegatives"
+    "source_task": "ClimateFEVERHardNegatives",
+    "example_count": 3
   }
 }

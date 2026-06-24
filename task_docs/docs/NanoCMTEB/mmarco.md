@@ -68,9 +68,11 @@ The task is useful for evaluating multilingual retrieval models on Chinese MS MA
 
 ## Example Data
 
-### Public Sources
-
-The task is based on mMARCO and appears in the C-MTEB/C-Pack Chinese retrieval benchmark family.
+| Query | Positive document |
+| --- | --- |
+| 黑死病对欧洲文化的影响 [11 chars] | 继续阅读以了解他们的发现。在接下来的几个世纪里，黑死病在欧洲偶尔抬头。但到了 1352 年，它基本上已经放松了控制。欧洲人口受到重创，这对经济产生了影响。劳动力被摧毁——农场被废弃，建筑物倒塌。劳动力短缺，劳动力价格飞涨，商品成本上升。 [118 chars] |
+| adh 的增加会导致肾脏 ________ 重吸收水分，从而产生 _______ 尿液。 [44 chars] | 抗利尿激素 (ADH) 和肾功能。 ADH 的主要作用是通过增加重新吸收到血液中的水量来限制尿液中丢失的水量。 [55 chars] |
+| 拒绝漂亮女人和鬼魂的女演员 [13 chars] | 莫莉·林沃德拒绝了《漂亮女人》中薇薇安的角色和《鬼魂》中莫莉的角色等。她还获得了《尖叫》中的一个角色，但她拒绝了，因为她已经 20 岁了，不想扮演青少年角色。 [79 chars] |
 
 ### Source Reference Table
 

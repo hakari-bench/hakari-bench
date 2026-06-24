@@ -62,21 +62,20 @@ Models should represent troubleshooting intent, device context, Android componen
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), task paper.
-- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/), VN-MTEB paper.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), benchmark paper.
-- [GreenNode/cqadupstack-android-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Ghi chú Markdown với Dropbox đồng bộ [36 chars] | syncing markup/lời chú thích trên dropbox? Xin chào tôi muốn có chức năng sau: * Đặt một tập tin vào Dropbox (html, wordformat) - mà tôi chỉnh sửa từ máy tính của tôi * ứng dụng Android để truy cập tập tin đó (ngắn đường trên màn hình chính), hiển thị html/word-format + chỉnh sửa bất kỳ ý tưởng nào? Hiện tại tôi đang sử dụng một tập tin văn bản mà tôi có thể chỉnh sửa với trình soạn thảo mặc định của Android, nhưng đánh dấu sẽ tốt hơn :) Cảm ơn [449 chars] |
+| Tin nhắn SMS được lưu trữ ở đâu trên hệ thống file? [51 chars] | Android đường dẫn tin nhắn SMS Tôi không thể tìm đường dẫn đến các tệp cơ sở dữ liệu tin nhắn SMS trên hệ điều hành android. Đường dẫn chính xác cho các tệp cơ sở dữ liệu tin nhắn SMS là gì? Tôi đã thử những giá trị này và chúng không đúng: /data/data/com.jb.gosms/databases/gommssms.db /data/data/com.android.providers.telephony/databases/mmssms.db [368 chars] |
+| Dòng video từ PC đến Android? [29 chars] | Cách phát trực tuyến các video do tôi sở hữu đến một thiết bị Android? > **Có thể trùng lặp:** > Có một ứng dụng truyền tải đa phương tiện DLNA cho Android không? > Truyền tải video từ PC đến Android? Tôi đã từng là người dùng iPhone/iPad. Tôi đang cân nhắc mua một chiếc Kindle Fire hoặc Nook Color. Tôi thực sự muốn có khả năng truyền tải video từ kho phim khổng lồ mà tôi đã lưu trữ sẵn. Tôi đã từng sử dụng Boxee và Airplayit cho PC/iPad/iPhone.... Có phần mềm nào tương tự như vậy dành cho Android hay tôi sẽ phải mã hóa và chuyển đổi chúng? [551 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | https://doi.org/10.1145/2838931.2838934 |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| GreenNode/cqadupstack-android-vn |  | dataset card | https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| GreenNode/cqadupstack-android-vn |  | dataset card | [https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-android-vn) |
 
 ### Representative Snippets
 

@@ -146,8 +146,59 @@
         "title": "MTEB project repository",
         "url": "https://github.com/embeddings-benchmark/mteb",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "75191",
+        "document_id": "75191",
+        "query": {
+          "text": "Warmtebeeldcamera's",
+          "full_chars": 19,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Warmtebeeldcamera TSWarmtebeeldcamera OvDten behoeve van de veiligheidsregio's Noord- en Oost Gelderland, IJsselland en Twente.",
+          "full_chars": 127,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "120764",
+        "document_id": "120764",
+        "query": {
+          "text": "Nieuwbouw van een vrijstaand gebouw voor dienstverlenende en adminstratieve functies.",
+          "full_chars": 85,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lot 4: Liften voor bouwen van een nieuwbouw voor dienstverlening van geestelijke gezondheid en bijhorende administratie.",
+          "full_chars": 120,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "104580",
+        "document_id": "104580",
+        "query": {
+          "text": "Toegangscontrolesysteem",
+          "full_chars": 23,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Het leveren en installeren van online draadloos toegangscontrolesystemen.",
+          "full_chars": 73,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -62,17 +62,18 @@ Models should learn event sequence compatibility over short text. Hard negatives
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [HellaSwag: Can a Machine Really Finish Your Sentence?](https://arxiv.org/abs/1905.07830), source task paper.
+| Query | Positive document |
+| --- | --- |
+| A man dressed in yellow and black winter clothes ice fishes on a a frozen lake. The man [87 chars] | is reeling in a fish for a long time. [37 chars] |
+| A group of people are in a house. A man is mopping the floor with a mop. Another boy [84 chars] | attempts to walk through where he is mopping. [45 chars] |
+| A man is in the gym in tight he bends over picks up a weight over his head and drops it back down. He walks back and loosens up before walking back up and doing it again adding more weight. He [192 chars] | does this multiple times adding more and more weight to the rack. [65 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| HellaSwag: Can a Machine Really Finish Your Sentence? | 2019 | arXiv paper | https://arxiv.org/abs/1905.07830 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| HellaSwag: Can a Machine Really Finish Your Sentence? | 2019 | arXiv paper | [https://arxiv.org/abs/1905.07830](https://arxiv.org/abs/1905.07830) |
 
 ### Representative Snippets
 

@@ -107,20 +107,74 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "CodeSearchNet Challenge: Evaluating the State of Semantic Code Search",
         "url": "https://arxiv.org/abs/1909.09436",
         "year": 2019,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "OctoPack: Instruction Tuning Code Large Language Models",
         "url": "https://arxiv.org/abs/2308.07124",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "humanevalpack-q-66",
+        "document_id": "humanevalpack-d-66",
+        "query": {
+          "text": "Finish the following code based on the docstring: def digitSum(s): \"\"\"Task Write a function that takes a string as input and returns the sum of the upper characters only' ASCII codes. Examples: digitSum(\"\") => 0 digitSum(\"abAB\") => 131 digitSum(\"abcCd\") => 67 digitSum(\"helloE\") => 69 digitSum(\"woArBld\") => 131 digitSum(\"aAaaaXa\") => 153 \"\"\"",
+          "full_chars": 412,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "if s == \"\": return 0 return sum(ord(char) if char.isupper() else 0 for char in s)",
+          "full_chars": 85,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "humanevalpack-q-123",
+        "document_id": "humanevalpack-d-123",
+        "query": {
+          "text": "Finish the following code based on the docstring: def get_odd_collatz(n): \"\"\" Given a positive integer n, return a sorted list that has the odd numbers in collatz sequence. The Collatz conjecture is a conjecture in mathematics that concerns a sequence defined as follows: start with any positive integer n. Then each term is obtained from the previous term as follows: if the previous term is even, the next term is one half of the previous term. If the previous term is odd, the next term is 3 times",
+          "full_chars": 892,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "if n%2==0: odd_collatz = [] else: odd_collatz = [n] while n > 1: if n % 2 == 0: n = n/2 else: n = n*3 + 1 if n%2 == 1: odd_collatz.append(int(n)) return sorted(odd_collatz)",
+          "full_chars": 275,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "humanevalpack-q-103",
+        "document_id": "humanevalpack-d-103",
+        "query": {
+          "text": "Finish the following code based on the docstring: def rounded_avg(n, m): \"\"\"You are given two positive integers n and m, and your task is to compute the average of the integers from n through m (including n and m). Round the answer to the nearest integer and convert that to binary. If n is greater than m, return -1. Example: rounded_avg(1, 5) => \"0b11\" rounded_avg(7, 5) => -1 rounded_avg(10, 20) => \"0b1111\" rounded_avg(20, 33) => \"0b11010\" \"\"\"",
+          "full_chars": 489,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "if m < n: return -1 summation = 0 for i in range(n, m+1): summation += i return bin(round(summation/(m - n + 1)))",
+          "full_chars": 141,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

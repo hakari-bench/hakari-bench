@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-vi",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Bộ chuyển đổi tăng áp đa mức DC-DC mới",
+          "full_chars": 38,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tóm tắt: Các bộ chuyển đổi nguồn điện đa mức đang nổi lên như một loại tùy chọn bộ chuyển đổi năng lượng mới cho các ứng dụng công suất cao. Các bộ chuyển đổi nguồn điện đa mức thường tổng hợp sóng điện áp bậc thang từ nhiều mức điện áp của tụ điện một chiều. Một trong những hạn chế lớn của các bộ chuyển đổi đa mức là sự mất cân bằng điện áp giữa các mức khác nhau. Các kỹ thuật để cân bằng điện áp giữa các mức khác nhau thường liên quan đến việc kẹp điện áp hoặc kiểm soát sạc tụ điện. Có nhiều cách để thực hiện cân bằng điện áp trong các bộ chuyển đổi đa mức. Không xem xét các bộ chuyển đổi liên kết từ tính truyền thống, bài báo này trình bày ba bộ chuyển đổi nguồn điện đa mức mới được phát triển gần đây: 1) kẹp diode, 2) tụ điện bay, và 3) bộ biến tần nối tiếp với các nguồn điện một chiều riêng biệt. Nguyên lý hoạt động, đặc điểm, ràng buộc và ứng dụng tiềm năng của các bộ chuyển đổi này sẽ được thảo luận.",
+          "full_chars": 920,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Học Lĩnh Vực Ngẫu Nhiên Markov Gauss Thưa Nhanh Dựa Trên Phân Tích Cholesky",
+          "full_chars": 75,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Văn bản đã được dịch:",
+          "full_chars": 21,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Tổng hợp kết cấu sử dụng mạng nơ-ron tích chập",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Trong công trình này, chúng tôi nghiên cứu ảnh hưởng của độ sâu của mạng nơ-ron tích chập đến độ chính xác của nó trong bối cảnh nhận diện hình ảnh quy mô lớn. Đóng góp chính của chúng tôi là một đánh giá kỹ lưỡng về các mạng có độ sâu tăng dần, cho thấy rằng một cải thiện đáng kể so với các cấu hình trước đó có thể đạt được bằng cách đẩy độ sâu lên 16–19 lớp trọng số. Những phát hiện này là cơ sở cho bài nộp của chúng tôi trong Cuộc thi ImageNet 2014, nơi đội của chúng tôi đã giành được vị trí thứ nhất và thứ hai trong các hạng mục định vị và phân loại tương ứng. Chúng tôi cũng chỉ ra rằng các biểu diễn của chúng tôi tổng quát tốt cho các tập dữ liệu khác, nơi chúng đạt được kết quả tốt nhất trong lĩnh vực. Quan trọng là, chúng tôi đã công khai hai mô hình ConvNet hoạt động tốt nhất của mình để tạo điều kiện cho nghiên cứu thêm về việc sử dụng các biểu diễn hình ảnh sâu trong thị giác máy tính.",
+          "full_chars": 908,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

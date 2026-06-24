@@ -129,11 +129,11 @@ improvement opportunity is top-rank ordering among already strong candidates.
 
 ## Example Data
 
-Representative queries ask about the genetic origins of bean varieties in
-Portugal, the effect of establishing the Pudong special economic zone on
-Shanghai, lynx habitat preferences, the significance of Aconcagua under the
-Inca Empire, and acceptable daily intake for aspartame. Positive documents are
-native-language Wikipedia-style passages containing the answer.
+| Query | Positive document |
+| --- | --- |
+| Quais são as origens genéticas das variedades de feijão típicas de Portugal? [76 chars] | Com base num estudo publicado na US National Library of Medicine National Institutes of Health, em 2017, as variedades de feijão típicas de Portugal exibem proximidade genética com as variedades próprias dos Andes, pelo que se depreende que os feijões que se vieram a fixar e a usar mais comummente em Portugal terão sido aqueles que provieram originalmente dessa região da América do Sul. [389 chars] |
+| Jaký vliv mělo zřízení zvláštní hospodářské zóny Pchu-tung na rozvoj Šanghaje? [78 chars] | Od 27. května 1949 je Šanghaj pod komunistickou vládou. Třebaže po roce 1949 přesídlila řada západních firem do Hongkongu, který tak vystřídal Šanghaj v roli obchodní metropole Dálného východu, výsadní hospodářské postavení Šanghaje v rámci Číny zůstalo neotřeseno. I dnes je, nepočítáme-li Hongkong, regionem se suverénně nejvyšším HDP na hlavu v ČLR. Zatímco v 60. až 80. letech město spíše stagnovalo, velký rozmach přišel po zřízení zvláštní hospodářské zóny Pchu-tung v roce 1990, kde vyrostly velkolepé mrakodrapy a nové mezinárodní letiště. Velkým problémem zůstává těžko kontrolovatelný příliv přistěhovalců z venkovských oblastí, především z provincií An‑chuej, Ťiang‑su a Če‑ťiang. [691 chars] |
+| Какви местообитания предпочита рисът? [37 chars] | Рисът е представителят на семейство Коткови, който обитава най-разнообразни хабитати от всичките му представители. Предпочита тъмни гори, тайга, планински, хвойнови и широколистни гори с гъст подлес, лесостеп и лесотундра. По северните склонове на Хималаите достигат на надморска височина от 2500 метра, където е характерна алпийска тундра и скалисти райони, а в района на Тибетското плато местообитанията имат пустинен характер. Обикновено тези райони са обитавани от Lynx lynx isabellinus, който е единствения подвид пригоден за живот в по-открити пространства. Въпреки че е потайно животно рисът не се страхува от човека. Той може да обитава и вторично залесени гори и сечища, а в години през които гладува е възможно да влезе в села и дори големи градове. [759 chars] |
 
 ### Public Sources
 
@@ -148,9 +148,9 @@ native-language Wikipedia-style passages containing the answer.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| mteb/WikipediaRetrievalMultilingual | 2024 | dataset card | https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual |
-| ellamind/wikipedia-2023-11-retrieval-multilingual-queries | 2024 | dataset card | https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
+| mteb/WikipediaRetrievalMultilingual | 2024 | dataset card | [https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual](https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual) |
+| ellamind/wikipedia-2023-11-retrieval-multilingual-queries | 2024 | dataset card | [https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries](https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
 
 ### Representative Snippets
 

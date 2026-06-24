@@ -85,28 +85,6 @@
         "rows_with_101_candidates": 6
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Towards Leaving No Indic Language Behind",
-        "url": "https://arxiv.org/abs/2212.05409",
-        "year": 2023,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/IndicQARetrieval",
-        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "ai4bharat/IndicQA",
-        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoIndicQA",
       "source_urls": [
@@ -115,6 +93,78 @@
           "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Towards Leaving No Indic Language Behind",
+        "url": "https://arxiv.org/abs/2212.05409",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/IndicQARetrieval",
+        "url": "https://huggingface.co/datasets/mteb/IndicQARetrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "ai4bharat/IndicQA",
+        "url": "https://huggingface.co/datasets/ai4bharat/IndicQA",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "df105183c561b67f8b7bea155345f4852d70648e10726c41f68c1e6d096937f5",
+        "document_id": "50459b6cd0554d69d0308376ff29e4162116a0a34b10eef025a9ee68aa59e2c5",
+        "query": {
+          "text": "દિલ્હીમાં ચોમાસાના પવનો આવવાની તારીખ કઈ છે?",
+          "full_chars": 43,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": ")થી 48 °C (118 °F) જેટલાં રહે છે. તેનું વાર્ષિક સરેરાશ તાપમાન 25° સે. (77° ફે. ) છે; તેનું માસિક સરેરાશ તાપમાન 13°સે. થી 32°સે. (56° ફે. થી 90° ફે.",
+          "full_chars": 147,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "29ccca2aa54b381314d62a40aedde17394d1d7e7635473b853c4ebd0f60ade63",
+        "document_id": "4d4522cab07756466d3c92c9291dfea27c4564397b238f21cfbedad84a7ec0c5",
+        "query": {
+          "text": "ક્યાં શહેરને \"માન્ચેસ્ટર ઓફ ધ ઇસ્ટ\" તરીકે પણ ઓળખવામાં આવતું હતું?",
+          "full_chars": 65,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "અંગ્રજોના શાસનકાળ દરમિયાન અમદાવાદ એક મુખ્ય નગર બની ગયું. અહીં તેમણે કોર્ટ, નગરપાલિકા વગેરે સ્થાપ્યાં. કાપડની મિલોને કારણે અમદાવાદ 'પૂર્વનું માંચેસ્ટર' પણ કહેવાતું હતું. મે ૧૯૬૦થી નવા બનેલા ગુજરાત રાજ્યનું પાટનગર બન્યુ. ગાંધીનગર નવું પાટનગર બનવા છતાં અમદાવાદની મહત્તા એવી જ રહી છે. ૧૯૭૪માં એલ. ડી. કોલેજ ઓફ એન્જિનિયરિંગના છાત્રાલયના ભોજનાલયમાં દરમાં ૨૦%નો વધારો થતા તેનો વિરોધ શરૂ થયો, જે નવનિર્માણ આંદોલનમાં પરિણમ્યો અને ભારતના ઈતિહાસમાં સૌપ્રથમ (અને માત્ર એકવાર) ચૂંટાયેલા મુખ્યમંત્રી - ચીમનભાઈ પટેલે આંદોલનને કારણે રાજીનામું આપવું પડ્યું.",
+          "full_chars": 540,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "061f559bfa27eb70bf8f96f06083879d226833c6cb882331135368c2b9a013a6",
+        "document_id": "8dcbbdc8dbe54e5f5db93af34455147438e83312ca357bcf70e3554dc72f2cdb",
+        "query": {
+          "text": "અન્ય મધ્યયુગીન શાસકોની જેમ કોણ એક મહાન સામ્રાજ્યવાદી હતા?",
+          "full_chars": 57,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "અન્ય મધ્યયુગીન શાસકોની જેમ અકબર પણ એક મહાન સામ્રાજ્યવાદી હતો. અને તેને પોતાનુ રાજ્ય ઉત્તરે અફઘાનિસ્તાન કાશ્મીરની દક્ષિણે મૈસુર સુધી તથા પશ્ચિમે ગુજરાતની પુર્વમાં બંગાળ સુધી ફેલાવવાની મહત્વાકાંક્ષા હતી. આ આશયથી અકબરે ૧૫૬૨ થી ૧૬૦૫ સુધીમાં અનેક લડાઈઓ કરી અને તેમા મોટાભાગની જીતો મેળવીને ભારતભરમા પોતાના સમ્રાજ્યનો વિસ્તાર કર્યો તથા ભારતને એકતા પણ આપી. અકબરનાં મોટાભાગના યુદ્ધો ખુબજ ઝડપી તથા આક્રમક હોવા છતા મટાભાગે ઉદારતાનો અંશ હતો. અકબરે ૧૫૬૨ થી ૧૬૦૧ સુધીમા અનુક્રમે માળવા, જબલપુર પાસેનુ ગોંદવાના, રણથંભેર, કાલિંજર, ચિતોડ (મેવાડ), જોધપુર, ગુજરાત, બંગાળ, કાબુલ, કાશ્મિર, સિંઘ, કટ્દહાર, અહમદનગર જીતી લીધા ગોંડવાનામાં વીર નારાયણે મુઘલોને સખત લડાઈ આપીને શહીદી વહોરી. અકબરે ફક્ત૯ દિવસમાં ૯૬૫ કિ. મી. ની મજલ કાપીને ગુજરાતના અંતિમ સુલતાન મુઝફ્ફ્રશાહ ત્રીજાને આખરી પરાજય આપીને ગુજરાતને મુઘલ સામ્રાજ્યમાં સમાવી લીધું. આનાથી મુઘલ સમ્રાજ્યને બંદરનો લાભ મળતા તેના વ્યાપાર-વાણિજ્યનો વિકાસ થયો. સ 1567માં ચિતૌડગઢ પર હુમલો કરીંને ચિતૌડ જીતી લીધું આં યુદ્ધ માં અકબરે 30,000 જેટલા નિર્દોષ ચિત્તોડ વાસીઓ નો વધ કરવી તેની",
+          "full_chars": 1639,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

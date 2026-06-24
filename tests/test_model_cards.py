@@ -141,6 +141,35 @@ def test_collect_model_cards_from_results_excludes_bekko_and_bm25(tmp_path: Path
     assert cards["BAAI/bge-m3"]["target"] == {"datasets": ["hakari-bench/NanoBEIR-en"]}
 
 
+def test_collect_model_cards_from_results_excludes_noop_truncate_dimension(tmp_path: Path) -> None:
+    _write_result(
+        tmp_path / "hotchpotch__bekko-embedding-v1-a8m" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
+        model={
+            "method": "dense",
+            "id": "hotchpotch/bekko-embedding-v1-a8m",
+            "source": {"type": "huggingface", "name": "hotchpotch/bekko-embedding-v1-a8m"},
+        },
+        embedding_evaluations=[
+            {"name": "base", "embedding_dimensions": {"dim": 384}},
+            {
+                "name": "truncate_dim_384",
+                "transform": {"steps": [{"type": "truncate", "parameters": {"dim": 384}}]},
+            },
+            {
+                "name": "truncate_dim_256",
+                "transform": {"steps": [{"type": "truncate", "parameters": {"dim": 256}}]},
+            },
+        ],
+    )
+
+    cards = model_cards.collect_model_cards_from_results(
+        tmp_path,
+        exclude_model_substrings=[],
+    )
+
+    assert cards["hotchpotch/bekko-embedding-v1-a8m"]["embedding"]["truncate_dims"] == [256]
+
+
 def test_collect_model_cards_from_results_preserves_existing_notes(tmp_path: Path) -> None:
     _write_result(
         tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-en" / "arguana.json",
@@ -164,6 +193,99 @@ def test_collect_model_cards_from_results_preserves_existing_notes(tmp_path: Pat
 
     assert cards["jinaai/jina-embeddings-v3"]["parameters"]["active"] == 6
     assert cards["jinaai/jina-embeddings-v3"]["notes"] == ["manual correction"]
+
+
+def test_collect_model_cards_from_results_infers_prompt_settings(tmp_path: Path) -> None:
+    _write_result(
+        tmp_path / "intfloat__multilingual-e5-small" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        model={
+            "method": "dense",
+            "id": "intfloat/multilingual-e5-small",
+            "source": {"type": "huggingface", "name": "intfloat/multilingual-e5-small"},
+        },
+        config={
+            "query_prompt": "query: ",
+            "document_prompt": "passage: ",
+            "query_prompt_name": None,
+            "document_prompt_name": None,
+            "query_encode_task": None,
+            "document_encode_task": None,
+        },
+    )
+
+    cards = model_cards.collect_model_cards_from_results(tmp_path)
+
+    assert cards["intfloat/multilingual-e5-small"]["prompts"] == {
+        "query_prompt": "query: ",
+        "document_prompt": "passage: ",
+    }
+
+
+def test_collect_model_cards_from_results_infers_late_interaction_settings(tmp_path: Path) -> None:
+    _write_result(
+        tmp_path / "lightonai__ColBERT-Zero" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        model={
+            "method": "late-interaction",
+            "id": "lightonai/ColBERT-Zero",
+            "source": {"type": "huggingface", "name": "lightonai/ColBERT-Zero"},
+        },
+        config={
+            "query_prompt_name": "query",
+            "document_prompt_name": "document",
+            "late_interaction": {
+                "scoring": "exact_maxsim",
+                "query_length": 39,
+                "document_length": 519,
+                "query_prefix": "[Q] ",
+                "document_prefix": "[D] ",
+                "attend_to_expansion_tokens": False,
+            },
+        },
+    )
+
+    cards = model_cards.collect_model_cards_from_results(tmp_path)
+
+    card = cards["lightonai/ColBERT-Zero"]
+    assert card["prompts"] == {
+        "query_prompt_name": "query",
+        "document_prompt_name": "document",
+    }
+    assert card["late_interaction"] == {
+        "scoring": "maxsim",
+        "query_length": 39,
+        "document_length": 519,
+        "query_prefix": "[Q] ",
+        "document_prefix": "[D] ",
+        "attend_to_expansion_tokens": False,
+    }
+
+
+def test_collect_model_cards_from_results_keeps_existing_reviewed_prompt_settings(tmp_path: Path) -> None:
+    _write_result(
+        tmp_path / "Qwen__Qwen3-Embedding-0.6B" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        model={
+            "method": "dense",
+            "id": "Qwen/Qwen3-Embedding-0.6B",
+            "source": {"type": "huggingface", "name": "Qwen/Qwen3-Embedding-0.6B"},
+        },
+        config={
+            "query_prompt": "Instruct: ",
+            "document_prompt": "",
+        },
+    )
+    existing_cards = {
+        "Qwen/Qwen3-Embedding-0.6B": {
+            "id": "Qwen/Qwen3-Embedding-0.6B",
+            "prompts": {
+                "query_prompt_name": "query",
+                "document_prompt_name": "document",
+            },
+        }
+    }
+
+    cards = model_cards.collect_model_cards_from_results(tmp_path, existing_cards=existing_cards)
+
+    assert cards["Qwen/Qwen3-Embedding-0.6B"]["prompts"] == existing_cards["Qwen/Qwen3-Embedding-0.6B"]["prompts"]
 
 
 def test_collect_model_cards_from_results_reads_each_json_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -272,6 +394,12 @@ def test_write_evaluation_model_card_uses_model_output_directory(tmp_path: Path)
         collection=[],
         split=[],
         dataset_revision=None,
+        query_prompt="query: ",
+        corpus_prompt="passage: ",
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        query_task=None,
+        corpus_task=None,
         embedding_variants=[
             {
                 "name": "truncate_dim_768",
@@ -291,8 +419,58 @@ def test_write_evaluation_model_card_uses_model_output_directory(tmp_path: Path)
     output_path = model_cards.write_evaluation_model_card(args=args, model_metadata=metadata)
 
     assert output_path == tmp_path / "BAAI__bge-m3" / "BAAI__bge-m3.yaml"
-    assert yaml.safe_load(output_path.read_text(encoding="utf-8"))["target"] == {
-        "datasets": ["hakari-bench/NanoBEIR-en"]
+    payload = yaml.safe_load(output_path.read_text(encoding="utf-8"))
+    assert payload["target"] == {"datasets": ["hakari-bench/NanoBEIR-en"]}
+    assert payload["prompts"] == {
+        "query_prompt": "query: ",
+        "document_prompt": "passage: ",
+    }
+
+
+def test_write_evaluation_model_card_preserves_late_interaction_args(tmp_path: Path) -> None:
+    args = argparse.Namespace(
+        output_dir=str(tmp_path),
+        model_id="lightonai/ColBERT-Zero",
+        dataset=["hakari-bench/NanoBEIR-en"],
+        collection=[],
+        split=[],
+        dataset_revision=None,
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name="query",
+        corpus_prompt_name="document",
+        query_task=None,
+        corpus_task=None,
+        embedding_variants=[],
+        late_interaction_query_prefix="[Q] ",
+        late_interaction_document_prefix="[D] ",
+        late_interaction_query_length=39,
+        late_interaction_document_length=519,
+        late_interaction_do_query_expansion=False,
+        late_interaction_attend_to_expansion_tokens=False,
+    )
+    metadata = {
+        "method": "late-interaction",
+        "id": "lightonai/ColBERT-Zero",
+        "source": {"type": "huggingface", "name": "lightonai/ColBERT-Zero"},
+        "total_parameters": 10,
+    }
+
+    output_path = model_cards.write_evaluation_model_card(args=args, model_metadata=metadata)
+
+    payload = yaml.safe_load(output_path.read_text(encoding="utf-8"))
+    assert payload["prompts"] == {
+        "query_prompt_name": "query",
+        "document_prompt_name": "document",
+    }
+    assert payload["late_interaction"] == {
+        "scoring": "maxsim",
+        "query_prefix": "[Q] ",
+        "document_prefix": "[D] ",
+        "query_length": 39,
+        "document_length": 519,
+        "do_query_expansion": False,
+        "attend_to_expansion_tokens": False,
     }
 
 
@@ -371,7 +549,6 @@ def test_static_model_cards_cover_latest_leaderboard_models() -> None:
         "Qwen/Qwen3-Reranker-0.6B": "reranker",
         "answerdotai/answerai-colbert-small-v1": "late-interaction",
         "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1": "reranker",
-        "hotchpotch/bekko-embedding-pico-beta-unir-v9-QAT-ftQAT": "dense",
         "hotchpotch/bekko-embedding-small-beta-unir-v8": "dense",
         "hotchpotch/japanese-reranker-xsmall-v2": "reranker",
         "ibm-granite/granite-embedding-30m-sparse": "sparse",
@@ -457,11 +634,12 @@ def test_static_model_cards_include_license_metadata() -> None:
     assert cards["google/embeddinggemma-300m"]["license"]["type"] == "proprietary"
     assert cards["google/embeddinggemma-300m"]["license"]["commercial_use"] == "permitted_with_terms"
     assert cards["bm25"]["license"] == {
-        "id": "not_applicable",
-        "label": "Not applicable - Okapi BM25 algorithmic baseline",
-        "type": "algorithm",
-        "commercial_use": "not_applicable",
-        "source": "internal_baseline",
+        "id": "mit",
+        "label": "MIT",
+        "type": "permissive",
+        "commercial_use": "allowed",
+        "source": "bm25s_github_repository",
+        "source_url": "https://github.com/xhluca/bm25s",
     }
 
 
@@ -589,11 +767,56 @@ def test_static_qwen3_embedding_4b_card_matches_official_embedding_metadata() ->
     ]
 
 
+def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+    known_base_dims = {
+        "KaLM-Embedding/KaLM-embedding-multilingual-mini-instruct-v2.5": 896,
+        "Qwen/Qwen3-Embedding-0.6B": 1024,
+        "Qwen/Qwen3-Embedding-4B": 2560,
+        "Snowflake/snowflake-arctic-embed-l-v2.0": 1024,
+        "google/embeddinggemma-300m": 768,
+        "hotchpotch/bekko-embedding-small-beta-unir-v8": 384,
+        "hotchpotch/bekko-embedding-v1-a8m": 384,
+        "ibm-granite/granite-embedding-311m-multilingual-r2": 768,
+        "jinaai/jina-embeddings-v3": 1024,
+        "jinaai/jina-embeddings-v5-text-nano": 768,
+        "jinaai/jina-embeddings-v5-text-small": 1024,
+        "mixedbread-ai/mxbai-embed-xsmall-v1": 384,
+        "nomic-ai/nomic-embed-text-v1.5": 768,
+        "nomic-ai/nomic-embed-text-v2-moe": 768,
+        "openai/text-embedding-3-large": 3072,
+        "openai/text-embedding-3-small": 1536,
+        "sentence-transformers/static-similarity-mrl-multilingual-v1": 1024,
+    }
+
+    truncate_cards = {
+        model_id: card
+        for model_id, card in cards.items()
+        if isinstance(card.get("embedding"), dict) and card["embedding"].get("truncate_dims")
+    }
+    assert set(truncate_cards) == set(known_base_dims)
+    for model_id, card in truncate_cards.items():
+        truncate_dims = card["embedding"]["truncate_dims"]
+        assert all(dim < known_base_dims[model_id] for dim in truncate_dims), model_id
+
+
+def test_openai_static_model_cards_include_evaluation_notice() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+    notice = (
+        "Max tokens is 8,192, but HAKARI evaluates this model with max tokens "
+        "set to 8,100 for calibration."
+    )
+
+    assert cards["openai/text-embedding-3-small"]["notice"] == notice
+    assert cards["openai/text-embedding-3-large"]["notice"] == notice
+
+
 def _write_result(
     path: Path,
     *,
     model: dict[str, object],
     embedding_evaluations: list[dict[str, object]] | None = None,
+    config: dict[str, object] | None = None,
     dataset_id: str = "hakari-bench/NanoBEIR-en",
     score: float = 0.5,
 ) -> None:
@@ -603,6 +826,7 @@ def _write_result(
             {
                 "model": model,
                 "target": {"dataset_id": dataset_id},
+                "config": config or {},
                 "evaluation": {
                     "aggregate_metric": "ndcg@10",
                     "aggregate_metric_value": score,

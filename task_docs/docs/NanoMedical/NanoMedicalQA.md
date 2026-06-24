@@ -62,17 +62,18 @@ Models should learn both disease matching and answer-type discrimination. Hard n
 
 ## Example Data
 
-### Public Sources
-
-- [A question-entailment approach to question answering](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4), 2019.
-- [DOI record](https://doi.org/10.1186/s12859-019-3119-4).
+| Query | Positive document |
+| --- | --- |
+| What are the symptoms of Nocardiosis ? [38 chars] | The symptoms of nocardiosis vary depending on which part of your body is affected. Nocardiosis infection most commonly occurs in the lung. If your lungs are infected, you can experience: - Fever - Weight loss - Night sweats - Cough - Chest pain - Pneumonia When lung infections occur, the infection commonly spreads to the brain. If your central nervous system (brain and spinal cord) is infected, you can experience: - Headache - Weakness - Confusion - Seizures (sudden, abnormal electrical activity in the brain) Skin infections can occur when open wounds or cuts come into contact with contaminated soil. If your skin is affected, you can experience: - Ulcers - Nodules sometimes draining and spreading along lymph nodes [823 chars] |
+| What are the treatments for Parasites - Babesiosis ? [52 chars] | Effective treatments are available. People who do not have any symptoms or signs of babesiosis usually do not need to be treated. Before considering treatment, the first step is to make sure the diagnosis is correct. For more information, people should talk to their health care provider. More on: Resources for Health Professionals: Treatment [358 chars] |
+| How to diagnose Parasites - Zoonotic Hookworm ? [47 chars] | Cutaneous larva migrans (CLM) is a clinical diagnosis based on the presence of the characteristic signs and symptoms, and exposure history to zoonotic hookworm. For example, the diagnosis can be made based on finding red, raised tracks in the skin that are very itchy. This is usually found on the feet or lower part of the legs on persons who have recently traveled to tropical areas and spent time at the beach. There is no blood test for zoonotic hookworm infection. Persons who think they have CLM should consult their health care provider for accurate diagnosis. [567 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A question-entailment approach to question answering | 2019 | BMC Bioinformatics article | https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4 |
-| A question-entailment approach to question answering | 2019 | DOI | https://doi.org/10.1186/s12859-019-3119-4 |
+| A question-entailment approach to question answering | 2019 | BMC Bioinformatics article | [https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4) |
+| A question-entailment approach to question answering | 2019 | DOI | [https://doi.org/10.1186/s12859-019-3119-4](https://doi.org/10.1186/s12859-019-3119-4) |
 
 ### Representative Snippets
 

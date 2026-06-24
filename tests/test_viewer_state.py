@@ -50,7 +50,8 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         filters=True,
         dim_filter=["384", ""],
         quant_filter=["int8"],
-        model_type_filter=["sparse", "reranker"],
+        commercial_filter=["commercial", "non_commercial", "unknown"],
+        model_type_filter=["bm25", "sparse", "reranker"],
         dtype_filter=["bf16"],
         attn_filter=[],
         prompt_filter=None,
@@ -69,7 +70,8 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "filters": "1",
         "dim_filter": ["384"],
         "quant_filter": ["int8"],
-        "model_type_filter": ["sparse", "reranker"],
+        "commercial_filter": ["commercial", "non_commercial", "unknown"],
+        "model_type_filter": ["bm25", "sparse", "reranker"],
         "dtype_filter": ["bf16"],
         "attn_filter": [],
         "prompt_filter": [],
@@ -104,6 +106,63 @@ def test_legacy_variants_query_enables_all_variant_flags() -> None:
     assert query["truncate"] == "1"
     assert query["rescore"] == "1"
     assert query["other_variant"] == "1"
+
+
+def test_chart_none_encoding_is_allowed_for_color_only() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        result_view="chart",
+        chart_x="none",
+        chart_color="none",
+    )
+
+    assert query["result_view"] == "chart"
+    assert "chart_x" not in query
+    assert query["chart_color"] == "none"
+
+
+def test_chart_linear_parameter_axis_is_preserved_in_query_state() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="BenchA",
+        sort="borda_rank",
+        direction="asc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+        result_view="chart",
+        chart_x="active_parameters_linear",
+        chart_color="total_parameters_linear",
+    )
+
+    assert query["chart_x"] == "active_parameters_linear"
+    assert query["chart_color"] == "total_parameters_linear"
 
 
 def test_task_filter_enables_task_score_columns() -> None:
@@ -340,10 +399,12 @@ def test_task_ranks_force_task_score_columns() -> None:
         prompt_filter=None,
         model_filter="",
         task_ranks=True,
+        other_columns=True,
     )
 
     assert query["task_scores"] == "1"
     assert query["task_ranks"] == "1"
+    assert query["other_columns"] == "1"
 
 
 def test_task_length_filters_are_normalized_into_filter_state() -> None:
@@ -455,6 +516,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         include_quantization_variants=True,
         show_task_z_scores=True,
         show_task_ranks=True,
+        show_other_columns=True,
         include_rescore_variants=True,
         score_groups=[],
         metric_columns=[],
@@ -471,6 +533,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
             filters_active=True,
             dim_filters=("768",),
             quant_filters=("binary",),
+            commercial_filters=("commercial",),
             model_type_filters=("sparse",),
         ),
     )
@@ -483,12 +546,14 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "rescore": "1",
         "task_z_scores": "1",
         "task_ranks": "1",
+        "other_columns": "1",
         "model_filter": "jina",
         "task_filter": "fever",
         "rank_filtered": "1",
         "filters": "1",
         "dim_filter": ["768"],
         "quant_filter": ["binary"],
+        "commercial_filter": ["commercial"],
         "model_type_filter": ["sparse"],
         "dtype_filter": [],
         "attn_filter": [],

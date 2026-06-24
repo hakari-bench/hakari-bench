@@ -62,21 +62,20 @@ Models should learn to connect user problems to documentation concepts rather th
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/Bioinformatics dataset card](https://huggingface.co/datasets/R2MED/Bioinformatics).
+| Query | Positive document |
+| --- | --- |
+| Compare alignment quality of multiple sequencing runs aligned against the same reference genome/nI have run Oxford Nanopore Technologies' MinION sequencing on the same DNA sample using three flowcells, each aligned against the same reference genome (E.coli K12 MG1655) using both BWA MEM and GraphMap and stored as BAM files. How can I quantitatively and efficiently analyse the quality of alignment (percentage identity, insertion rate, deletion rate) of each of these files? [476 chars] | Qualimap Evaluating next generation sequencing alignment data What is it? Qualimap 2 is a platform-independent application written in Java and R that provides both a Graphical User Inteface (GUI) and a command-line interface to facilitate the quality control of alignment sequencing data and its derivatives like feature counts. Supported types of experiments include: Whole-genome sequencing Whole-exome sequencing RNA-seq (speical mode available) ChIP-seq How does it work? Qualimap examines sequencing alignment data in SAM/BAM files according to the features of the mapped reads and provides an overall view of the data that helps to the detect biases in the sequencing and/or mapping of the data and eases decision-making for further analysis. Starting from version 2.0 Qualimap provides multi-sample comparison of alignment and counts data. Features [871 chars] |
+| Can I index a compressed FASTA file using STAR?/nI am using STAR to align RNA-seq reads to a reference genome. Before the alignment, I need to generate an index of the reference genome. I use the following code to generate the index successfully: STAR --runThreadN 8 --runMode genomeGenerate --genomeDir output/index/star --genomeFastaFiles ref.fa --sjdbGTFfile ref.gtf --sjdbOverhang 100 This works fine. However, I would like to keep my reference genome compressed to save disk space. So I am tryin... [500 / 1,258 chars] | 3.5.6 Process Substitution Process substitution allows a process’s input or output to be referred to using a filename. It takes the form of <(list) or >(list) The process list is run asynchronously, and its input or output appears as a filename. This filename is passed as an argument to the current command as the result of the expansion. If the >(list) form is used, writing to the file will provide input for list. If the <(list) form is used, the file passed as an argument should be read to obtain the output of list. Note that no space may appear between the < or > and the left parenthesis, otherwise the construct would be interpreted as a redirection. [669 chars] |
+| How to manipulate a reference FASTA or bam to include variants from a VCF?/nI have some software which takes fastas as the input. I need to include SNVs and InDels from a VCF into the reference hg38 and then use this. The problem is, I don't know of an algorithmically sound way to do this. Are there any existing software packages which could do this efficiently? Is it easier to output a FASTA, or a bam (and then convert to a FASTA)? What about if I wanted to do the same with a bedpe of germline... [500 / 520 chars] | 6.3.3.11. vcf2bed The vcf2bed script converts 1-based, closed [start, end] Variant Call Format v4.2 (VCF) to sorted, 0-based, half-open [start-1, start) extended BED data. Note Note that this script converts from [start, end] to [start-1, start). Unless the --snvs, --insertions or --deletions options are added, we perform the equivalent of a single-base insertion to make BED output that is guaranteed to work with BEDOPS, regardless of what the actual variant may be, to allow operations to be performed. The converted output contains additional columns which allow reconstruction of the original VCF data and associated variant parameters. For convenience, we also offer vcf2starch, which performs the extra step of creating a Starch-formatted archive. 6.3.3.11.1. Dependencies The vcf2bed script requires convert2bed. The vcf2starch script requires starch. [870 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/Bioinformatics | 2025 | dataset card | https://huggingface.co/datasets/R2MED/Bioinformatics |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/Bioinformatics | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/Bioinformatics](https://huggingface.co/datasets/R2MED/Bioinformatics) |
 
 ### Representative Snippets
 

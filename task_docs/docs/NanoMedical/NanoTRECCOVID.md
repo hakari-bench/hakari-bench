@@ -62,17 +62,18 @@ Models should combine exact biomedical term handling with semantic information-n
 
 ## Example Data
 
-### Public Sources
-
-- [Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID](https://arxiv.org/abs/2104.09632), 2021.
-- [TREC-COVID data archive](https://ir.nist.gov/trec-covid/).
+| Query | Positive document |
+| --- | --- |
+| what evidence is there for dexamethasone as a treatment for COVID-19? [69 chars] | The Combination of Tocilizumab and Methylprednisolone Along With Initial Lung Recruitment Strategy in Coronavirus Disease 2019 Patients Requiring Mechanical Ventilation: A Series of 21 Consecutive Cases OBJECTIVE: To describe the outcomes with use of a combination of tocilizumab and methylprednisolone administered around the time of endotracheal intubation in patients with confirmed coronavirus disease 2019-associated hypoxemic respiratory failure requiring mechanical ventilation. DATA SOURCES: Retrospective chart review. STUDY SELECTION/DATA EXTRACTION: Twenty-one consecutive patients with confirmed coronavirus disease 2019-associated hypoxemic respiratory failure requiring mechanical ventilation. Initial ventilator parameters were positive end-expiratory pressure 14 cm H(2)o and target plateau pressure 29 cm H(2)o to maximize lung recruitment. Methylprednisolone (125 mg every 6hr for 24 hr with tapering to 60 mg every 12 hr) was administered shortly after patients were intubated (med... [1,000 / 1,756 chars] |
+| how long does coronavirus remain stable on surfaces? [53 chars] | Body fluids may contribute to human-to-human transmission of severe acute respiratory syndrome coronavirus 2: evidence and practical experience BACKGROUND: In December 2019, an unbelievable outbreak of pneumonia associated with coronavirus was reported in the city of Wuhan, Hubei Province. This virus was called severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2). Although much effort has been spent on clarifying the transmission route of SARS-CoV-2, but, very little evidence is available regarding the relationship between human body fluids and transmission of SARS-CoV-2 virus. Considerable evidence from hospital in Wuhan indicates that strict rules to avoid occupational exposure to patients’ body fluids in healthcare settings, particularly among every medical staff, limited person-to-person transmission of nosocomial infections by direct or indirect contact. CONCLUSION: We tried to provide important information for understanding the possible transmission routes of SARS-CoV-2 v... [1,000 / 1,171 chars] |
+| has social distancing had an impact on slowing the spread of COVID-19? [70 chars] | Increased Detection coupled with Social Distancing and Health Capacity Planning Reduce the Burden of COVID-19 Cases and Fatalities: A Proof of Concept Study using a Stochastic Computational Simulation Model Objective: In absence of any vaccine, the Corona Virus Disease 2019 (COVID-19) pandemic is being contained through a non-pharmaceutical measure termed Social Distancing (SD). However, whether SD alone is enough to flatten the epidemic curve is debatable. Using a Stochastic Computational Simulation Model, we investigated the impact of increasing SD, hospital beds and COVID-19 detection rates in preventing COVID-19 cases and fatalities. Research Design and Methods: The Stochastic Simulation Model was built using the EpiModel package in R. As a proof of concept study, we ran the simulation on Kasaragod, the most affected district in Kerala. We added 3 compartments to the SEIR model to obtain a SEIQHRF (Susceptible-Exposed-Infectious-Quarantined-Hospitalised-Recovered-Fatal) model. Resu... [1,000 / 1,575 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | https://arxiv.org/abs/2104.09632 |
-| TREC-COVID data archive | 2020 | benchmark archive | https://ir.nist.gov/trec-covid/ |
+| Searching for Scientific Evidence in a Pandemic: An Overview of TREC-COVID | 2021 | arXiv paper | [https://arxiv.org/abs/2104.09632](https://arxiv.org/abs/2104.09632) |
+| TREC-COVID data archive | 2020 | benchmark archive | [https://ir.nist.gov/trec-covid/](https://ir.nist.gov/trec-covid/) |
 
 ### Representative Snippets
 

@@ -147,7 +147,7 @@ the reasoning bridge rather than producing generic symptom-passage similarity.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | benchmark paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED source datasets | 2025 | dataset collection | https://huggingface.co/R2MED |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | benchmark paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED source datasets | 2025 | dataset collection | [https://huggingface.co/R2MED](https://huggingface.co/R2MED) |

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "Novi DC-DC višestepeni pojačavački pretvarač",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Apstrakt Višenaponski pretvarači sa više nivoa postaju nova vrsta opcija za pretvarače snage u primenama velike snage. Višenaponski pretvarači tipično sintetizuju stepenasti naponski talas iz nekoliko nivoa napona istosmernih kondenzatora. Jedno od glavnih ograničenja višenivo pretvarača je neravnoteža napona između različitih nivoa. Tehnike za balansiranje napona između različitih nivoa obično uključuju stezanje napona ili kontrolu punjenja kondenzatora. Postoji nekoliko načina za postizanje naponske ravnoteže u višenivo pretvaračima. Bez razmatranja tradicionalnih magnetski spregnutih pretvarača, ovaj rad predstavlja tri nedavno razvijena višenaponska pretvarača: 1) diodno-vezani, 2) leteći kondenzatori i 3) kaskadni pretvarači sa odvojenim istosmernim izvorima. Biće razmotreni princip rada, karakteristike, ograničenja i potencijalne primene ovih pretvarača.",
+          "full_chars": 872,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Brzo Učenje Retkih Gaussovih Markovljevih Slučajnih Polja Bazirano na Čoleskijevoj Faktorizaciji",
+          "full_chars": 96,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Poštovani korisniče, Zahvaljujem vam se što ste me kontaktirali. Kao veštačka inteligencija, moja osnovna svrha je pružanje informacija i pomoći u različitim oblastima. Nažalost, trenutno nemam pristup spoljnim bazama podataka ili internetu, tako da ne mogu da vam pružim najnovije informacije ili pristup aktuelnim sadržajima. Međutim, imam opsežnu internu bazu znanja koja obuhvata širok spektar tema do mog poslednjeg ažuriranja. Radovaću na tome da vam pružim najtačnije i najkorisnije informacije na osnovu dostupnih podataka. Molim vas da postavite svoje pitanje ili opišete svoj zahtev, i biće mi zadovoljstvo da vam pomognem na najbolji mogući način. Srdačno, Vaš AI asistent",
+          "full_chars": 687,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "Sinteza teksture korišćenjem konvolucionih neuronskih mreža",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "U ovom radu istražujemo uticaj dubine konvolucione mreže na njenu tačnost u okruženju za prepoznavanje slika velikih razmera. Naš glavni doprinos je temeljna evaluacija mreža sve veće dubine, koja pokazuje da se značajno poboljšanje u odnosu na prethodne konfiguracije može postići povedanjem dubine na 16–19 slojeva težina. Ovi nalazi bili su osnova našeg prijavnog rada za ImageNet Challenge 2014, gde je naš tim osigurao prvo i drugo mesto u kategorijama za lokalizaciju i klasifikaciju respektivno. Takođe pokazujemo da se naše reprezentacije dobro generalizuju na druge skupove podataka, gde postižu vrhunske rezultate. Što je posebno važno, naša dva najbolja modela konvolucione mreže učinili smo javno dostupnim kako bismo olakšali dalja istraživanja upotrebe dubokih vizuelnih reprezentacija u računarskom vidu.",
+          "full_chars": 819,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -157,8 +157,59 @@
         "title": "MTEB project repository",
         "url": "https://github.com/embeddings-benchmark/mteb",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q20231101.nl_61528_11",
+        "document_id": "20231101.nl_61528_11",
+        "query": {
+          "text": "Wat is een \"mandiel\" en wie dragen het?",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "De druzenvrouwen dragen een \"mandiel\" (transparante losse witte sluier) vooral in het bijzijn van religieuze personen. Zij worden in alle aspecten als gelijkwaardig aan de mannen beschouwd. Het is hen mogelijk deel te hebben aan de \"Raad van de Oudsten\".",
+          "full_chars": 254,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q20231101.nl_13589_10",
+        "document_id": "20231101.nl_13589_10",
+        "query": {
+          "text": "Wat zijn de voorwaarden voor het uitvoeren van een t-toets bij twee steekproeven?",
+          "full_chars": 81,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "In het geval van twee steekproeven dienen beide steekproeven uit een normale verdeling te komen. De twee steekproeven moeten óf onafhankelijk van elkaar zijn, óf zogenaamd gepaard zijn. In het geval van twee onafhankelijke steekproeven dienen bij toepassing van de standaard t-toets de beide populaties dezelfde variantie te hebben. Wanneer beide populaties een verschillende variantie",
+          "full_chars": 385,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q20231101.nl_10854_9",
+        "document_id": "20231101.nl_10854_9",
+        "query": {
+          "text": "Welke methoden worden genoemd voor pijnbestrijding bij pancreatitis?",
+          "full_chars": 68,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pijnbestrijding via orale inname van pijnstillers, de (tijdelijke) verbranding -door alcohol- van de zenuwen rond het pancreas, een geïmplanteerde morfinepomp.",
+          "full_chars": 159,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 10
       }
     },
-    "references": [
-      {
-        "title": "FiQA: Financial Opinion Mining and Question Answering",
-        "url": "https://doi.org/10.1145/3184558.3192301",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-sr",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "FiQA: Financial Opinion Mining and Question Answering",
+        "url": "https://doi.org/10.1145/3184558.3192301",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "7377",
+        "document_id": "579557",
+        "query": {
+          "text": "Koje vrste prinosa Vanguard navodi?",
+          "full_chars": 35,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"Sa stranice Vanguard - Ovo se činilo najlakšim jer je S&P podatke lako pronaći. Koristim MoneyChimp da dobijem - što potvrđuje da Vanguardova stranica nudi CAGR, a ne aritmetički prosek. Napomena: Vanguard navodi 'Za prinose američkog tržišta akcija, koristimo Standard & Poor's 90 od 1926. do 3. marta 1957.', dok Chimp koristi podatke sa sajta dobitnika Nobelove nagrade, Robert Shillera.\"",
+          "full_chars": 392,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1783",
+        "document_id": "332314",
+        "query": {
+          "text": "Poreske implikacije freelancinga",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ako imate prihode u SAD-u, dugovaćete porez na prihod SAD-u, osim ako postoji sporazum sa vašom zemljom koji kaže drugačije.",
+          "full_chars": 124,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10414",
+        "document_id": "79807",
+        "query": {
+          "text": "Šta se smatra visokim ili niskim kada je reč o jačini zvuka?",
+          "full_chars": 60,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dnevni volumen se obično upoređuje sa prosečnim dnevnim volumenom u poslednjih 50 dana za određenu akciju. Visok volumen se obično smatra kada je dva ili više puta veći od prosečnog dnevnog volumena te akcije u poslednjih 50 dana, međutim neki trgovci mogu postaviti kriterijum na 3x ili 4x ADV-a kao potvrdu određenog obrasca ili događaja. Volumen se upoređuje sa ADV-om same akcije, jer bi upoređivanje sa volumenom drugih akcija bilo kao da upoređujete jabuke i narandže, budući da različite kompanije imaju različit ukupan broj dostupnih akcija, različite nivoe likvidnosti i različite nivoe volatilnosti, što sve može uticati na dnevno trgovanje volumenom.",
+          "full_chars": 661,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

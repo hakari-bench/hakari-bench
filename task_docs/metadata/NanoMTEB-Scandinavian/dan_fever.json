@@ -134,15 +134,66 @@
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "strombergnlp/danfever",
         "url": "https://huggingface.co/datasets/strombergnlp/danfever",
         "year": 2021,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q576",
+        "document_id": "C574",
+        "query": {
+          "text": "Albummet Blood Mountain har en sammenhængde historie og et gennemgående tema.",
+          "full_chars": 77,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Blood Mountain er et konceptalbum af heavy metal-gruppen Mastodon. Det er Mastodons tredje studiealbum og blev udgivet i september 2006. Som det foregående album Leviathan er Blood Mountain et konceptalbum med en sammenhængende historie og et gennemgående tema.",
+          "full_chars": 261,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q193",
+        "document_id": "C191",
+        "query": {
+          "text": "Den almindelige perlebusk får perleformede knopper og derefter hvide blomster på dens busk.",
+          "full_chars": 91,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Almindelig perlebusk (\"Exochorda racemosa\") er en mellemstor, løvfældende busk med en opret vækst og iøjnefaldende klaser af hvide, perleformede knopper og senere hvide blomster. Busken er fuldt hårdfør og bruges som prydbusk i haverne.",
+          "full_chars": 236,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q12",
+        "document_id": "C13",
+        "query": {
+          "text": ".my er det malaysiske topdomæne.",
+          "full_chars": 32,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": ".my er et nationalt topdomæne der er reserveret til Malaysia.",
+          "full_chars": 61,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

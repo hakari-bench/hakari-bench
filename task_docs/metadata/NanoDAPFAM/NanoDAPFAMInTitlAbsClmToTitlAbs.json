@@ -133,15 +133,66 @@
         "url": "https://doi.org/10.1016/j.array.2026.100720",
         "year": 2026,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "datalyes/DAPFAM_patent",
         "url": "https://huggingface.co/datasets/datalyes/DAPFAM_patent",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "157-957-371-093-061",
+        "document_id": "009-475-855-682-016",
+        "query": {
+          "text": "snow removal equipment with automatic walking function the invention relates to snow removal equipment with an automatic walking function. the snow removal equipment comprises a walking module, a working module and a control module, wherein the walking module drives a snow removal machine to move; the working module comprises a working motor and a snow throwing mechanism driven by the working motor, and the snow throwing mechanism collects and throws out snows and occluded foreign substances on",
+          "full_chars": 6075,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "multifunctional device for clearing snow an apparatus and method for clearing an accumulation of matter from a surface that includes a blade configured to collect matter upon movement of the apparatus and means to shift the collected matter and distribute it laterally from the apparatus. the apparatus may include a plurality of helically arranged ribbons adjacent the blade formed such that the radial distance from a central axis decreases away from a center portion of the blade. a sealed rotor chamber may also include a rotor with blades that are adjustable in a radial direction or flared in both first and second rotational directions.",
+          "full_chars": 643,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "023-695-812-348-685",
+        "document_id": "149-377-257-211-73X",
+        "query": {
+          "text": "apparatus for indication of at least one subsurface barrier characteristic and methods of use a containment system for use adjacent to a selected region of a subterranean formation and comprising a plurality of laterally interlocked casing strings. at least one electrically conductive element is disposed along at least a portion of a casing string and is used for performing electrical time domain reflectometry. at least one protective element may be positioned between portions of adjacent casing",
+          "full_chars": 11428,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "method of confirming position of drain material left and apparatus for confirming same in drain engineering method a method and apparatus is provided to embed paper drain material in water-laden soil by means of a mandrel driven into the soil by power means. the paper drain material is intermittently treated with a substance detectable by a signal emitted electronic sensing means secured to the lower end of the mandrel. when the paper drain is believed to be in place, the mandrel is withdrawn. during mandrel withdrawal, as each sensing means passes by each detectable substance, the signal from the sensing means is modulated, thereby indicating that the paper drain is embedded in place and the mandrel has disengaged from the paper drain. if the paper drain adheres to the mandrel and is being withdrawn with the mandrel, no modulated signal will be generated, thereby indicating that the paper drain is not properly anchored in the soil. by varying the physical properties of the detectable",
+          "full_chars": 1162,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "006-841-719-520-934",
+        "document_id": "026-420-956-132-089",
+        "query": {
+          "text": "an article including identification for use in an electrically heated smoking system. there is provided an electrically heated smoking system (101) for receiving a smoking article (115) or cleaning article (205) configured for use with the smoking system (101). the system comprises a cavity (111) for at least partially receiving the smoking article (115) or cleaning article (205). the smoking article includes identification information printed thereon. the cleaning article includes identificatio",
+          "full_chars": 5076,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "apparatus for generating aerosol from an aerosolisable medium, an article of aerosolisable medium and a method of determining a parameter of an article to provide an apparatus that heats an aerosolizable medium to volatilize at least one component of the aerosolizable medium, without burning or combusting the aerosolizable medium.solution: an apparatus 100 comprises: a housing; a chamber 112 for receiving an article 102 comprising an aerosolizable medium and including a marker; and a controller 116. the controller is configured to receive: a first input indicative of a rate of movement of the article, received in use, in the chamber; and a second input indicative of a parameter of the article. at least the second input is determined based on the marker.selected drawing: figure 3",
+          "full_chars": 789,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

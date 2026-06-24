@@ -144,7 +144,7 @@
         "title": "HotpotQA official site",
         "url": "https://hotpotqa.github.io/",
         "is_paper": false,
-        "source_confidence": "definitive_project_page"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
@@ -152,7 +152,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -160,15 +160,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0bc185542993d6555ec29",
+        "document_id": "2609020",
+        "query": {
+          "text": "¿Con qué otro actor participó Penny Rae Bridges en una sitcom de televisión?",
+          "full_chars": 76,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Penny Rae Bridges (nacida el 29 de julio de 1990) es una actriz estadounidense. Su trabajo en televisión incluye papeles en \"For Your Love\", \"Family Law\", \"Boy Meets World\" y \"The Parent 'Hood\". Es más conocida por su papel en \"Half & Half\", interpretando a la joven Mona.",
+          "full_chars": 272,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a7ccb3655429909bec7680b",
+        "document_id": "16494827",
+        "query": {
+          "text": "¿Quién otorgó a Kaganoi Shigemochi una espada fabricada por el fundador de la escuela Muramasa?",
+          "full_chars": 95,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kaganoi Shigemochi (加賀井 重望, 1561 – 27 de agosto de 1600) fue un samurái japonés del período Azuchi-Momoyama que sirvió al clan Oda. Gobernó el Castillo Kaganoi. Durante la Batalla de Komaki y Nagakute, Shigemochi luchó bajo las órdenes de su padre, Shigemune, quien estaba adscrito a las fuerzas de Oda Nobukatsu. Poco después, el Castillo Kaganoi fue rodeado por las tropas de Toyotomi Hideyoshi; Shigemune se rindió, y Shigemochi fue empleado por Hideyoshi como mensajero, recibiendo un estipendio de 10,000 'koku'. También poseía una espada forjada por Muramasa, que Hideyoshi le otorgó en 1598.",
+          "full_chars": 598,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a738fe855429908901be2fb",
+        "document_id": "17279901",
+        "query": {
+          "text": "¿Qué película fue escrita y dirigida por Joby Harold y tiene música de Samuel Sim?",
+          "full_chars": 82,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Samuel Sim es un compositor de cine y televisión. Alcanzó reconocimiento con su premiada banda sonora para la serie dramática de la BBC \"Dunkirk\". Desde entonces, ha compuesto la música para una amplia variedad de producciones cinematográficas y televisivas, más recientemente la película \"Awake\" para The Weinstein Company y la serie dramática de la BBC/HBO \"House of Saddam\". Su música más reciente y reconocida es la banda sonora de \"Home Fires\". \"Home Fires (Música de la Serie de Televisión)\" fue lanzado el 6 de mayo de 2016 por Sony Classical Records.",
+          "full_chars": 558,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

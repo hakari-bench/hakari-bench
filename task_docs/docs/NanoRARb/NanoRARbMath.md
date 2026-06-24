@@ -62,21 +62,20 @@ Models should learn to align a mathematical problem with the correct derivation 
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [Training Verifiers to Solve Math Word Problems](https://arxiv.org/abs/2110.14168), GSM8K source reference.
-- [Measuring Mathematical Problem Solving With the MATH Dataset](https://arxiv.org/abs/2103.03874), MATH source reference.
-- [MetaMath: Bootstrap Your Own Mathematical Questions for Large Language Models](https://arxiv.org/abs/2309.12284), expanded math-data reference.
+| Query | Positive document |
+| --- | --- |
+| Problem: Let $ABC$ be a triangle with $\angle A = 45^\circ$. Let $P$ be a point on side $\overline{BC}$ with $PB = 3$ and $PC = 5$. Let $O$ be the circumcenter of triangle $ABC$. Determine the length $OP$. [205 chars] | Using the extended Sine law, we find the circumradius of $ABC$ to be $R = \frac{BC}{2\sin A} = 4\sqrt 2$. [asy] unitsize(0.8 cm); pair A, B, C, O, P; A = (0,0); B = (2,2); C = (5,0); P = interp(B,C,3/8); O = circumcenter(A,B,C); draw(A--B--C--cycle); draw(circumcircle(A,B,C)); draw(O--P); label("$A$", A, W); label("$B$", B, N); label("$C$", C, E); dot("$O$", O, S); dot("$P$", P, NE); [/asy] By considering the power of point $P$, we find that $R^2 - OP^2 = PB \cdot PC = 15$. So $OP = \sqrt{R^2 - 15} = \sqrt{ 16 \cdot 2 - 15} = \boxed{\sqrt{17}}$. [557 chars] |
+| Problem: Find the matrix that corresponds to rotating about the origin by an angle of $45^\circ$ clockwise. [107 chars] | The transformation that rotates about the origin by an angle of $45^\circ$ clockwise takes $\begin{pmatrix} 1 \\ 0 \end{pmatrix}$ to $\begin{pmatrix} 1/\sqrt{2} \\ -1/\sqrt{2} \end{pmatrix}$ and $\begin{pmatrix} 0 \\ 1 \end{pmatrix}$ to $\begin{pmatrix} 1/\sqrt{2} \\ 1/\sqrt{2} \end{pmatrix},$ so the matrix is \[\boxed{\begin{pmatrix} 1/\sqrt{2} & 1/\sqrt{2} \\ -1/\sqrt{2} & 1/\sqrt{2} \end{pmatrix}}.\] [406 chars] |
+| Problem: Compute $\sin^{-1} (\sin 3) + \sin^{-1} (\sin 4) + \sin^{-1} (\sin 5).$ All functions are in radians. [111 chars] | Since $\sin (\pi - 3) = \sin 3$ and $-\frac{\pi}{2} \le \pi - 3 \le \frac{\pi}{2},$ \[\sin^{-1} (\sin 3) = \pi - 3.\]Since $\sin (\pi - 4) = \sin 4$ and $-\frac{\pi}{2} \le \pi - 4 \le \frac{\pi}{2},$ \[\sin^{-1} (\sin 4) = \pi - 4.\]Since $\sin (5 - 2 \pi) = \sin 5$ and $-\frac{\pi}{2} \le 5 - 2 \pi \le \frac{\pi}{2},$ \[\sin^{-1} (\sin 5) = 5 - 2 \pi.\]Therefore, \[\sin^{-1} (\sin 3) + \sin^{-1} (\sin 4) + \sin^{-1} (\sin 5) = (\pi - 3) + (\pi - 4) + (5 - 2 \pi) = \boxed{-2}.\] [484 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| Training Verifiers to Solve Math Word Problems | 2021 | arXiv paper | https://arxiv.org/abs/2110.14168 |
-| Measuring Mathematical Problem Solving With the MATH Dataset | 2021 | arXiv paper | https://arxiv.org/abs/2103.03874 |
-| MetaMath: Bootstrap Your Own Mathematical Questions for Large Language Models | 2023 | arXiv paper | https://arxiv.org/abs/2309.12284 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| Training Verifiers to Solve Math Word Problems | 2021 | arXiv paper | [https://arxiv.org/abs/2110.14168](https://arxiv.org/abs/2110.14168) |
+| Measuring Mathematical Problem Solving With the MATH Dataset | 2021 | arXiv paper | [https://arxiv.org/abs/2103.03874](https://arxiv.org/abs/2103.03874) |
+| MetaMath: Bootstrap Your Own Mathematical Questions for Large Language Models | 2023 | arXiv paper | [https://arxiv.org/abs/2309.12284](https://arxiv.org/abs/2309.12284) |
 
 ### Representative Snippets
 

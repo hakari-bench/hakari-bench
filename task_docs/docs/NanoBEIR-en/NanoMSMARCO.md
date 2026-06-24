@@ -62,9 +62,11 @@ A model targeting this task should improve answer-bearing passage ranking for sh
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on MS MARCO, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| what is rumination syndrome [27 chars] | Rumination Syndrome. Rumination syndrome, also called Merycism, is a type of eating disorder not otherwise specified that causes the regurgitation of food. Even though it is not identified as a specific eating disorder in the DSM-IV, certain parameters have been outlined for diagnosing the disorder. [300 chars] |
+| who sang here i go again [24 chars] | For other uses, see Here I Go Again (disambiguation). Here I Go Again is a song by British rock band Whitesnake. Originally released on their 1982 album, Saints & Sinners, the song was re-recorded for their eponymous 1987 album Whitesnake. The song was re-recorded again that year in a new radio-mix version. [308 chars] |
+| who does cameron boyce play in liv and maddie [45 chars] | Get ready for some serious LOLs, you guys. In an EXCLUSIVE sneak peek at the Apr. 19 episode of Liv & Maddie called “Prom-A-Rooney.” Obviously. In the hilarious clip, we see Jessie star Cameron Boyce hop over to a different Disney show to meet Maddie (Shelby Wulfert). His character is, um, eccentric! [301 chars] |
 
 ### Source Reference Table
 

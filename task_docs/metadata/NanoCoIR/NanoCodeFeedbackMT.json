@@ -145,6 +145,57 @@
         "is_paper": true,
         "source_confidence": "definitive_paper_link"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q53270",
+        "document_id": "c53270",
+        "query": {
+          "text": "'user': Write a SQL query to list customers who have placed orders for more than $100 in the past month and have made at least 3 orders. Additionally, the query should exclude customers who have placed orders for less than $50 in the past week and have made more than 5 orders in total. The query should be optimized to run efficiently on a large database with millions of rows in the orders table., 'assistant': To optimize the SQL query for efficiency, we can utilize subqueries and aggregation fun",
+          "full_chars": 3249,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "To adhere to standard SQL formatting, keywords are written in uppercase, while database, table, and column names in lowercase. Indentation is used to show the structure of SQL statements clearly, and each sub-clause should begin on a new line. To improve the performance of the subquery, we can minimize the records needed to be scanned. If we had an index on the `order_date` field, it would significantly improve the performance. Below is the updated, formatted SQL query conforming to these guidelines and additional optimizations. ```sql /* Main Select Query: It chooses customer_ids from the orders' table placed in the past MONTH */ SELECT customer_id FROM orders WHERE order_date >= DATE_SUB(NOW(), INTERVAL 1 MONTH) /* Getting all orders placed in the past MONTH */ GROUP BY customer_id /* Group the results by Customer IDs */ HAVING COUNT(DISTINCT order_id) >= 3 /* Ensuring a customer has made at least 3 orders */ AND SUM(order_amount) > 100 /* Ensuring the total order amount is over $100",
+          "full_chars": 2115,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q53135",
+        "document_id": "c53135",
+        "query": {
+          "text": "'user': Design a programming function that integrates underscores in place of spaces that separate words ending with punctuation symbols in a provided text string. This function should be proficient at handling multiple punctuation marks and a variety of sentence structures, including but not limited to intricate sentences, compound sentences, and compound-complex sentences. Furthermore, the function should manage nested punctuation and disregard punctuation enclosed within parentheses or quotes",
+          "full_chars": 2357,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The function `underscore_punctuation` has been successfully defined without any syntactical errors. Now we can use this function to replace spaces with underscores in string words, ending with punctuation, while preserving spaces in HTML tags, URLs, and markdown syntax. Additionally, it has been designed to handle multiple languages, including non-Latin scripts, and preserves emojis in the text. Do you have a specific string you would like to pass into this function to verify its functionality? If not, I can create a sample string to do the testing.",
+          "full_chars": 557,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q53113",
+        "document_id": "c53113",
+        "query": {
+          "text": "'user': A divisor $d$ of a number $n$ is deemed unitary if it possesses the characteristic $\\gcd(d, n/d) = 1$. For instance, the unitary divisors of $4! = 24$ are $1, 3, 8$ and $24$, and the summation of their squares is $1^2 + 3^2 + 8^2 + 24^2 = 650$. We can define a function $S(n)$ to denote the sum of the squares of the unitary divisors of $n$. Hence, $S(4!)=650$. Your task is to compute $S(100\\,000\\,000!)$ under modulo $1\\,000\\,000\\,009$, considering the complexity of the factorial operation",
+          "full_chars": 7649,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "I apologize for any confusion caused earlier. Calculating $S(100,000,000!)$ directly is not feasible due to the size of the numbers involved. In mathematics, problems like this often require a deep understanding of number theory, including concepts like prime factors, modular arithmetic, Euler's Totient Function, etc. Unfortunately, it's beyond the capabilities of this AI model to devise such a complex solution on the fly. For such a complex task, human intervention is needed. It's recommended to consult with a mathematician or a computer scientist experienced in number theory and advanced mathematical algorithms to get an efficient solution for this problem. If you have a specific Python implementation with you, I can help review the code or explain it to you.",
+          "full_chars": 777,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

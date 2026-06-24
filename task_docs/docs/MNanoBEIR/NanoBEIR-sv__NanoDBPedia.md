@@ -62,9 +62,11 @@ A model targeting this task should combine exact entity-name precision with sema
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on DBpedia Entity Retrieval, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Fitzgerald bilmuseet Chambersburg, PA [37 chars] | Fitzgerald Auto Malls är en familjeägd och driven bilhandelskedja som grundades 1966, med sin första plats öppnad i Bethesda, Maryland. År 2014 rankades Fitzgerald Auto Malls som nummer 59 på listan över de "Topp 125 Bilhandelsgrupperna" i USA, som publiceras årligen av Automotive News. Fitzgeralds försäljningsställen förekommer fem gånger på WardsAuto e-Dealer 100 2013, på plats 8, 25, 30, 43 och 98. [404 chars] |
+| Samling av noveller från 1994 av Alice Munro är tillgänglig [59 chars] | Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, född Laidlaw /ˈleɪdlɔː/; född 10 juli 1931) är en kanadensisk författare. Munros verk har beskrivits som att ha förändrat novellens struktur, särskilt i dess tendens att röra sig framåt och bakåt i tiden. Hennes berättelser har sagt att "mer att avslöja än att visa upp." Munros fiktion spelar sig ofta i hennes hemort Huron County i sydvästra Ontario. Hennes berättelser utforskar mänskliga komplexiteter i en enkel och klar prosa. [470 chars] |
+| Galloromansk arkitektur i Paris [31 chars] | Konst i Paris är en artikel om konstkultur och historia i Paris, Frankrikes huvudstad. Under århundraden har Paris lockat konstnärer från hela världen, som kommit till staden för att utbilda sig och finna inspiration från dess konstnärliga resurser och gallerier. Som ett resultat har Paris förvärvat ett rykte som 'Konstens stad'. [331 chars] |
 
 ### Source Reference Table
 

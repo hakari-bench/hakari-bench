@@ -135,15 +135,66 @@
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/XPQARetrieval",
         "url": "https://huggingface.co/datasets/mteb/XPQARetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C455",
+        "query": {
+          "text": "what is the width of a module?",
+          "full_chars": 30,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "La largeur d'un module est de 4,21 inch.",
+          "full_chars": 40,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C509",
+        "query": {
+          "text": "for the color do you have white ones as in the photo?",
+          "full_chars": 53,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Non. La couleur disponible est violet et gris.",
+          "full_chars": 46,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C1020",
+        "query": {
+          "text": "hello, does this spray make hair greasy? thank you.",
+          "full_chars": 51,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Oui. Un client dit que cela rend ses cheveux un peu huileux.",
+          "full_chars": 60,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

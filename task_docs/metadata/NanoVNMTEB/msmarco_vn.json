@@ -171,8 +171,59 @@
         "title": "MS MARCO official page",
         "url": "https://microsoft.github.io/msmarco/",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "1100875",
+        "document_id": "7114492",
+        "query": {
+          "text": "Tác dụng của việc sử dụng pedialyte",
+          "full_chars": 35,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Ngoài ra, nếu bạn đang hướng đến việc giảm cân thì lượng calo trong Pedialyte và nước tăng lực sẽ có thể làm mất tác dụng của những bài tập vừa phải. Tuy nhiên, bù nước bằng một loại thức uống như Pedialyte cho phép cơ thể tái tạo và giữ chất lỏng cũng như các khoáng chất thiết yếu lâu hơn so với nước lọc. Điểm cuối cùng: hãy cố gắng để chọn nước là lựa chọn số 1 của bạn về vấn đề cung cấp nước. Nhưng Pedialyte có thể mang lại lợi ích nếu bạn cảm thấy đặc biệt mất nước sau khi chạy đường dài hoặc thời tiết nóng nực. Nếu bạn nghĩ rằng mình sẽ được hưởng lợi từ việc bổ sung khoáng chất, DeRaad nói rằng nó có khả năng tự pha chế tại nhà theo hướng dẫn của Tổ chức Y tế Thế giới (World Health Organization).",
+          "full_chars": 711,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1086976",
+        "document_id": "7105825",
+        "query": {
+          "text": "hiệu ứng lâu dài của ô nhiễm không khí tác động lên con người là gì?",
+          "full_chars": 68,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Khó thở, ho, đau ngực và khó thở. ï§ Ho ra nhiều hơn hoặc nặng hơn. ï§ Tăng nguy cơ bị bệnh tim mạch. Ngoài ra, tiếp xúc lâu dài với ô nhiễm không khí có thể gây ung thư và làm tổn thương hệ miễn dịch, thần kinh, sinh sản và hô hấp.",
+          "full_chars": 234,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "1086014",
+        "document_id": "7113831",
+        "query": {
+          "text": "Quá trình tế bào nào đòi hỏi năng lượng",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Có nhiều hơn nữa, những cái này chỉ là một vài ví dụ! [ATP (adenosine triphosphate) được dùng cho việc chuyển năng lượng trong tế bào nhưng nó không phải là hợp chất duy nhất được sử dụng. NTP, ADP, GTP & UTP để nêu ra một vài cái tên.] Các quá trình tế bào cần năng lượng. Ồm... bất cứ quá trình nào của tế bào sử dụng ATP (hoặc NTP/NTP khác) sẽ trả lời câu hỏi này. Ví dụ như sao chép DNA, phiên mã gen, tổng hợp protein, sinh tổng hợp axit béo--để nêu ra một vài cái tên.",
+          "full_chars": 474,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

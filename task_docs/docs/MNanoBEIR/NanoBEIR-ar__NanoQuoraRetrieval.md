@@ -165,11 +165,9 @@ related questions.
 
 | Query | Positive document |
 | --- | --- |
-| هل من الجيد أن يضحك الشخص على نكاته الخاصة؟ (43 chars) | هل من الغريب أن أضحك على نكتي الخاصة؟ (37 chars) |
-| ما هو أفضل كذبة اخترعتها في حياتك؟ (34 chars) | ما هي أكبر كذبة اخترعتها في حياتك؟ (34 chars) |
-| لماذا يقترح موقع كورا باستمرار إجابات تهاجم دونالد ترامب في محتوى صفحتي؟ (72 chars) | لماذا تبدو إجابات موقع كورا حول أسئلة عن دونالد ترامب موضوعية ومتحيزة؟ (70 chars) |
-| كيف يمكنني أن أصبح قويًا جسديًا؟ (32 chars) | كيف أصبح قويًا جسديًا؟ (22 chars) |
-| كيف يعمل قمر صناعي كمي؟ (23 chars) | كيف يعمل قمر صناعي كمي؟ وما هي بعض الأغراض الرئيسية له؟ (55 chars) |
+| هل من الجيد أن يضحك الشخص على نكاته الخاصة؟ [43 chars] | هل من الغريب أن أضحك على نكتي الخاصة؟ [37 chars] |
+| ما هو أفضل كذبة اخترعتها في حياتك؟ [34 chars] | ما هي أكبر كذبة اخترعتها في حياتك؟ [34 chars] |
+| لماذا يقترح موقع كورا باستمرار إجابات تهاجم دونالد ترامب في محتوى صفحتي؟ [72 chars] | لماذا تبدو إجابات موقع كورا حول أسئلة عن دونالد ترامب موضوعية ومتحيزة؟ [70 chars] |
 
 ### Public Sources
 
@@ -187,7 +185,7 @@ related questions.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Quora Question Pairs | 2017 | dataset | https://kaggle.com/competitions/quora-question-pairs |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | https://arxiv.org/abs/2104.08663 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| Quora Question Pairs | 2017 | dataset | [https://kaggle.com/competitions/quora-question-pairs](https://kaggle.com/competitions/quora-question-pairs) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | benchmark paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| NanoBEIR: Smaller BEIR dataset subsets | 2024 | dataset collection | [https://huggingface.co/collections/zeta-alpha-ai/nanobeir](https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

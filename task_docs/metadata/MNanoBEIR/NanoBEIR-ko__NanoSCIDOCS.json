@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ko",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "신형 DC-DC 다단계 부스트 컨버터",
+          "full_chars": 20,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "초록다단계 전압원 변환기는 고출력 응용 분야를 위한 새로운 유형의 전력 변환기 옵션으로 등장하고 있다. 다단계 전압원 변환기는 일반적으로 여러 단계의 직류 콘덴서 전압을 이용하여 계단형 전압 파형을 생성한다. 다단계 변환기의 주요 제한 사항 중 하나는 서로 다른 단계들 사이의 전압 불균형이다. 서로 다른 단계들 사이의 전압을 균형 잡기 위한 기술은 일반적으로 전압 클램핑 또는 콘덴서 충전 제어를 포함한다. 다단계 변환기에서 전압 균형을 구현하는 여러 가지 방법이 존재한다. 기존의 자기 결합 변환기는 고려하지 않고, 본 논문에서는 최근 개발된 세 가지 다단계 전압원 변환기를 제시한다. 1) 다이오드 클램프 방식, 2) 플라잉 콘덴서 방식, 3) 독립된 직류 전원을 가진 캐스케이드 인버터 방식. 이러한 변환기들의 동작 원리, 특징, 제약 사항 및 잠재적 응용 분야에 대해 논의할 것이다.",
+          "full_chars": 443,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "촐레스키 분해를 기반으로 한 빠른 희소 가우시안 마르코프 임의장 학습",
+          "full_chars": 38,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "",
+          "full_chars": 0,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "합성곱 신경망을 이용한 텍스처 생성",
+          "full_chars": 19,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "본 연구에서는 대규모 이미지 인식 환경에서 합성곱 네트워크의 깊이가 정확도에 미치는 영향을 조사한다. 우리의 주요 기여는 깊이를 점차 증가시킨 네트워크에 대한 철저한 평가로, 기존 최고 수준의 구성 대비 16~19개의 가중치 층까지 깊이를 확장함으로써 상당한 성능 향상을 달성할 수 있음을 보여준다. 이러한 발견은 우리 팀이 ImageNet Challenge 2014에 참가한 기반이 되었으며, 이 대회에서 우리 팀은 위치 추적 부문에서 1위, 분류 부문에서 2위를 차지하였다. 또한, 제안한 표현 방식이 다른 데이터셋에도 잘 일반화되어 최고 수준의 성과를 달성함을 보여준다. 특히 주목할 점은, 컴퓨터 비전 분야에서 깊은 시각적 표현의 활용에 대한 후속 연구를 촉진하기 위해 성능이 가장 우수한 두 개의 합성곱 네트워크 모델을 공개했다는 점이다.",
+          "full_chars": 418,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

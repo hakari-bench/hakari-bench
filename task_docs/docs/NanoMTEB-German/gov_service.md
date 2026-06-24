@@ -134,20 +134,19 @@ avoiding overly broad service matching.
 
 ## Example Data
 
-### Public Sources
-
-- [it-at-m/LHM-Dienstleistungen-QA](https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Was bietet die Abteilung Ferienangebote/Familienpass für die Betreuer:innen an? [79 chars] | Betreuer-innen für Ferienangebote Betreuer*innen für Ferienangebote Du hast Freude im Umgang mit Kindern und Jugendlichen, bist mindestens 18 Jahre alt und suchst einen sinnvollen Ferienjob? Dann melde dich bei uns! Wir, der Fachbereich Ferienangebote/Familienpass, organisieren Ferienprogramme für Kinder und Jugendliche im Alter von fünf bis 17 Jahren. Für folgende Ferienprojekte suchen wir deine Unterstützung: - Ferienfreizeiten in den Sommerferien, ein- oder zweiwöchig im In- und Ausland - Eintägige Erlebnisreisen in den Sommerferien zu spannenden Ausflugszielen in München und ganz Bayern - Kinder-Zirkus-Attraktionen im Zirkus Simsala Weitere Infos sowie die aktuellen Programmhefte findest du bei den jeweiligen Angeboten. Deine Aufgaben: - pädagogische Betreuung von Kindern und Jugendlichen, mit und ohne besonderem Unterstützungsbedarf oder Beeinträchtigung, - partizipative Mitgestaltung der Ferienprojekte im Team Unser Angebot: - Teilnahme an einem Grundlagenseminar - kostenlose Tei... [1,000 / 1,283 chars] |
+| Was kostet die Heilpraktikerprüfung? [36 chars] | Allgemeine Heilpraktikererlaubnis kertätigkeit in München: Wenn Ihr amtlicher Wohnsitz nicht im Stadtgebiet München liegt, legen Sie Ihren Mietvertrag, Anstellungsvertrag oder andere Dokumente bei, die Ihre heilkundliche Tätigkeit in München nachweisen. Von den folgenden Unterlagen benötigen Sie eine amtlich beglaubigte Kopie. Bei persönlicher Antragstellung vor Ort genügt eine einfache Kopie mit Vorlage des Originals. - Bildungsnachweis: Hauptschulabschlusszeugnis bzw. gleich- oder höherwertige Bildungsnachweise. - Ausweisdokument: Personalausweis oder Reisepass. Wenn Sie nicht über eine EU-Staatsangehörigkeit verfügen, legen Sie zusätzlich Ihre Aufenthalts- und Arbeitserlaubnis bei. Dauer & Kosten Bearbeitungszeit Spätestens ca. 6 Monate nach Anmeldeschluss zur Antragstellung ist das Prüfungsverfahren organisations- und ablaufbedingt im Regelfall beendet. Gebührenrahmen Im Fall des Bestehens der schriftlichen Prüfung erhalten Sie erst nach der mündlichen Prüfung eine Zahlungsaufforde... [1,000 / 1,243 chars] |
+| Wo muss ich anrufen, wenn ich Fragen zum Thema Ferienangebote habe? [67 chars] | Betreuer-innen für Ferienangebote leitungen und Fachkräfte - eine faire Aufwandsentschädigung, sowie freie Unterkunft und Verpflegung - Tätigkeitsnachweis über dein ehrenamtliches Engagement Benötigte Unterlagen Hast Du Interesse? Dann schicke bitte Dein Motivationsschreiben mit Lebenslauf und dem Zeitraum, in dem Du bei uns mitmachen möchtest, per Mail mit dem Betreff „Bewerbung“ an bewerbung.ferien.soz@muenchen.de Wir freuen uns auf dich! Links & Downloads Plakat A4 - Betreuer*innen gesucht Übersicht der Ferienangebote für Familien Landeshauptstadt München Sozialreferat Ferienangebote/Familienpass Telefon - +49 89 233-33815 - +49 89 233-33816 Internet - E-Mail schreiben Post Landeshauptstadt München Sozialreferat Ferienangebote/Familienpass Meindlstraße 16 81373 München Adresse Meindlstraße 16 81373 München Öffnungszeiten Montag 9 bis 12 Uhr und 13 bis 16 Uhr Dienstag 9 bis 12 Uhr und 13 bis 16 Uhr Mittwoch 9 bis Schlagworte: Freude im Umgang; sinnvollen Ferienjob; Kindern und Jugend... [1,000 / 1,108 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| it-at-m/LHM-Dienstleistungen-QA | 2022 | Dataset card | https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA |
-| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | https://arxiv.org/abs/2210.07316 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Paper | https://arxiv.org/abs/2502.13595 |
+| it-at-m/LHM-Dienstleistungen-QA | 2022 | Dataset card | [https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA](https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA) |
+| MTEB: Massive Text Embedding Benchmark | 2023 | Paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
 
 ### Representative Snippets
 

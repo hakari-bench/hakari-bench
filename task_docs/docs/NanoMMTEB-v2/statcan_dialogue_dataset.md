@@ -131,11 +131,11 @@ likely from dense retrieval plus a table-aware reranker.
 
 ## Example Data
 
-Representative conversations ask for provincial GDP, real GDP, growth and
-inflation; race or ethnicity by province and sex; counts of sports-specialized
-shops in Canada; annual inflation for 2019; and health data for a specific
-Indigenous community. Positive documents are StatCan table metadata records
-that satisfy the statistical need.
+| Query | Positive document |
+| --- | --- |
+| [{'content': 'Bonjour,', 'role': 'user'}, {'content': "J'aimerais connaître le moyen de trouver le PIB nominal par habitant d'une province, son PIB réel, son taux de croissance économique ainsi que son taux d'inflation. Je ne parvient pas à les trouver.", 'role': 'user'}, {'content': 'Merci', 'role': 'user'}, {'content': 'Veuillez lire ci-dessous :', 'role': 'operator'}, {'content': 'PIB provincial 36-10-0402-01 (https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=3610040201&request_locale=fr)... [500 / 523 chars] | Titre: Produit intérieur brut (PIB) aux prix de base, par industries, provinces et territoires Période: 1997-01-01 to 2020-01-01 Dimensions: Géographie, Valeur, Système de classification des industries de l'Amérique du Nord (SCIAN) Sujet: Comptes Ã©conomiques Enquête: Produit intÃ©rieur brut par industrie - Provinces et territoires (annuel) Fréquence: Annuelle Géographie: ID: 1, Parent: None, Name: Terre-Neuve-et-Labrador ID: 2, Parent: None, Name: Île-du-Prince-Édouard ID: 3, Parent: None, Name: Nouvelle-Écosse ID: 4, Parent: None, Name: Nouveau-Brunswick ID: 5, Parent: None, Name: Québec ID: 6, Parent: None, Name: Ontario ID: 7, Parent: None, Name: Manitoba ID: 8, Parent: None, Name: Saskatchewan ID: 9, Parent: None, Name: Alberta ID: 10, Parent: None, Name: Colombie-Britannique ID: 11, Parent: None, Name: Yukon ID: 12, Parent: None, Name: Territoires du Nord-Ouest ID: 13, Parent: None, Name: Nunavut Valeur: ID: 1, Parent: None, Name: Dollars courants ID: 2, Parent: None, Name: Dolla... [1,000 / 26,426 chars] |
+| [{'content': "Hi, I'm having trouble finding data (custom table) that has race/ethnicity by province and sex", 'role': 'user'}, {'content': 'using 2016 census data', 'role': 'user'}, {'content': 'Hello, my name is Jeremie. I believe we would have a highlight table for visible minority (instead of race) and by ethnic origin. Let me get that for you.', 'role': 'operator'}, {'content': "I see the visible minority group, but I also need Aboriginal status, and read about the 'population group' but ca... [500 / 1,238 chars] | Title: Persons with and without disabilities aged 15 years and over, by age group and sex, Canada, provinces and territories Date range: 2017-01-01 to 2017-01-01 Dimensions: Geography, Age group, Sex, Disability, Estimates Subject: Health Survey: Canadian Survey on Disability Frequency: Every 5 years Geography: ID: 1, Parent: None, Name: Canada ID: 2, Parent: 1, Name: Atlantic provinces ID: 3, Parent: 2, Name: Newfoundland and Labrador ID: 4, Parent: 2, Name: Prince Edward Island ID: 5, Parent: 2, Name: Nova Scotia ID: 6, Parent: 2, Name: New Brunswick ID: 7, Parent: 1, Name: Quebec ID: 8, Parent: 1, Name: Ontario ID: 9, Parent: 1, Name: Prairie provinces ID: 10, Parent: 9, Name: Manitoba ID: 11, Parent: 9, Name: Saskatchewan ID: 12, Parent: 9, Name: Alberta ID: 13, Parent: 1, Name: British Columbia ID: 14, Parent: 1, Name: Territories ID: 15, Parent: 14, Name: Yukon ID: 16, Parent: 14, Name: Northwest Territories ID: 17, Parent: 14, Name: Nunavut Age group: ID: 1, Parent: None, Name:... [1,000 / 1,709 chars] |
+| [{'content': 'hello', 'role': 'user'}, {'content': 'how many shops specialized in sports are there in canada ?', 'role': 'user'}, {'content': 'Hello, my name is Jimmy N., how may I help you?', 'role': 'operator'}] [213 chars] | Title: Canadian Business Counts, with employees, June 2019 Date range: 2019-01-01 to 2019-01-01 Dimensions: Geography, Employment size, North American Industry Classification System (NAICS) Subject: Business performance and ownership Survey: Business Register Frequency: Semi-annual Geography: ID: 1, Parent: None, Name: Canada ID: 2, Parent: 1, Name: Newfoundland and Labrador ID: 3, Parent: 1, Name: Prince Edward Island ID: 4, Parent: 1, Name: Nova Scotia ID: 5, Parent: 1, Name: New Brunswick ID: 6, Parent: 1, Name: Quebec ID: 7, Parent: 1, Name: Ontario ID: 8, Parent: 1, Name: Manitoba ID: 9, Parent: 1, Name: Saskatchewan ID: 10, Parent: 1, Name: Alberta ID: 11, Parent: 1, Name: British Columbia ID: 12, Parent: 1, Name: Yukon ID: 13, Parent: 1, Name: Northwest Territories ID: 14, Parent: 1, Name: Nunavut Employment size: ID: 1, Parent: None, Name: Total, with employees ID: 2, Parent: 1, Name: 1 to 4 employees ID: 3, Parent: 1, Name: 5 to 9 employees ID: 4, Parent: 1, Name: 10 to 19 emp... [1,000 / 87,780 chars] |
 
 ### Public Sources
 
@@ -150,9 +150,9 @@ that satisfy the statistical need.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| A Dataset for Retrieving Data Tables through Conversations with Genuine Intents | 2023 | task paper | https://arxiv.org/abs/2304.01412 |
-| StatCan Dialogue Dataset project page | 2023 | project page | https://mcgill-nlp.github.io/statcan-dialogue-dataset/ |
-| mteb/StatcanDialogueDatasetRetrieval | 2024 | dataset card | https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval |
+| A Dataset for Retrieving Data Tables through Conversations with Genuine Intents | 2023 | task paper | [https://arxiv.org/abs/2304.01412](https://arxiv.org/abs/2304.01412) |
+| StatCan Dialogue Dataset project page | 2023 | project page | [https://mcgill-nlp.github.io/statcan-dialogue-dataset/](https://mcgill-nlp.github.io/statcan-dialogue-dataset/) |
+| mteb/StatcanDialogueDatasetRetrieval | 2024 | dataset card | [https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval](https://huggingface.co/datasets/mteb/StatcanDialogueDatasetRetrieval) |
 
 ### Representative Snippets
 

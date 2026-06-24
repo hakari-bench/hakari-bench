@@ -62,21 +62,20 @@ Models should learn to identify the management decision latent in a case and ret
 
 ## Example Data
 
-### Public Sources
-
-- [R2MED: A Benchmark for Reasoning-Driven Medical Retrieval](https://arxiv.org/abs/2505.14558), benchmark paper.
-- [R2MED project page](https://r2med.github.io/).
-- [R2MED GitHub repository](https://github.com/R2MED/R2MED).
-- [R2MED/PMC-Treatment dataset card](https://huggingface.co/datasets/R2MED/PMC-Treatment).
+| Query | Positive document |
+| --- | --- |
+| Case Summary: - **Patient Demographics:** 43-year-old male - **Chief Complaint:** Unexplained edema of the eyelids and lower limbs - **History of Present Illness:** Progressive edema without hematuria. Proteinuria measured at 4446.7 mg/g by urine protein-creatinine ratio. Serum creatinine was elevated at 126 μmol/L. Elevated serum free kappa and lambda light chains with a normal ratio. Diagnosed with nephrotic syndrome after clinical evaluation. - **Past Medical History:** No detailed past medic... [500 / 2,067 chars] | Daratumumab is an antibody against CD38 used for plasma cell depletion in relapsed or refractory multiple myeloma (MM). It mediates depletion of plasma cells, which overexpress CD38, through a wide range of mechanisms including complement- and antibody-mediated cytotoxicity, Fcy receptor-dependent apoptosis, and modulating immune cell composition [11]. Zand et al. conducted the first clinical trial to explore daratumumab as a treatment in PGNMID, including in treatment-naive disease. Of the 10 PGNMID patients who received daratumumab, 4 entered complete remission (urine protein creatinine ratio < 500 mg/day and eGFR decline < 15%), and 6 had partial remission (at least 50% reduction in baseline proteinuria and eGFR decline < 30%) by 12 months after treatment. Three patients relapsed with partial response after re-initiation of daratumumab. Most patients had obvious reduction in proteinuria by one month after their inaugural infusion [12]. [952 chars] |
+| Case Summary: - Patient Demographics: 43-year-old male - Chief Complaint: Long-standing therapy-resistant hypertension refractory to maximal medical therapy with symptoms including agitation, headaches, chest pain, sweating, and epistaxis, mandated frequent hospitalizations for intravenous therapy due to hypertensive crises. - History of Present Illness: Hypertension since age 18 progressively worsened over the years despite increasing pharmacological interventions. Currently on a 9-component ma... [500 / 1,404 chars] | While the observed 24 hours systolic ambulatory BD reduction at 6-months follow-up in contemporary trials such as SPYRAL ON MED is generally considered to be modest (−1.9 mmHg),6 it seems that the observed treatment effect in our patient was much more pronounced. Previous studies showed that the density of orthosympathetic nerves increases progressively with increasing distance from the ostium. Additionally, in a percutaneous approach the nerves that are located at the outer border of the vessel may be incompletely targeted. Therefore, it seems plausible that a surgical approach would result in more profound and more complete orthosympathetic denervation.5 [664 chars] |
+| Case Summary: - **Patient Demographics:** 2-day-old male neonate - **Chief Complaint:** Central cyanosis and poor breastfeeding following birth - **History of Present Illness:** - Neonate presented with central cyanosis and poor feeding shortly after birth. - Diagnosed with Taussig Bing anomaly (TBA) combined with pulmonary artery and pulmonary valve stenosis through investigations including electrocardiogram, chest X-rays, and echocardiography by 3 months of age. - Temporary palliative Blalock-... [500 / 2,145 chars] | Helen B. Taussig and Richard J. Bing were the first to describe a rare cyanotic congenital heart defect known as the Taussig-Bing anomaly (TBA) in 1949, that includes a non-restrictive subpulmonary ventricular septal defect (VSD) and a double outlet right ventricle (DORV) [8]. TBA is the third most prevalent type of DORV [8]. TBA is characterized by a bilateral conus and the absence of pulmonary-mitral fibrous continuity, distinguishing it from a transposition of the great arteries (TGA) with VSD [8]. TBA is a complex cardiac anomaly; in addition to its primary features, it may be associated with malformations involving the aortic arch, coronary arteries, right ventricle, and subaortic area [2]. A clinical symptom of TBA is cyanosis caused by hypoxia due to a small volume of blood flowing from the left ventricle through the aorta [1]. Increasing pulmonary blood flow, early onset of pulmonary vascular disease, pulmonary hypertension, and heart failure are complications of left-to-right... [1,000 / 2,503 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | https://arxiv.org/abs/2505.14558 |
-| R2MED project page | 2025 | project page | https://r2med.github.io/ |
-| R2MED GitHub repository | 2025 | source repository | https://github.com/R2MED/R2MED |
-| R2MED/PMC-Treatment | 2025 | dataset card | https://huggingface.co/datasets/R2MED/PMC-Treatment |
+| R2MED: A Benchmark for Reasoning-Driven Medical Retrieval | 2025 | arXiv paper | [https://arxiv.org/abs/2505.14558](https://arxiv.org/abs/2505.14558) |
+| R2MED project page | 2025 | project page | [https://r2med.github.io/](https://r2med.github.io/) |
+| R2MED GitHub repository | 2025 | source repository | [https://github.com/R2MED/R2MED](https://github.com/R2MED/R2MED) |
+| R2MED/PMC-Treatment | 2025 | dataset card | [https://huggingface.co/datasets/R2MED/PMC-Treatment](https://huggingface.co/datasets/R2MED/PMC-Treatment) |
 
 ### Representative Snippets
 

@@ -155,5 +155,5 @@ upstream evaluation splits should be audited carefully before use in training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | paper | https://arxiv.org/abs/2502.13595 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | paper | https://arxiv.org/abs/2210.07316 |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |

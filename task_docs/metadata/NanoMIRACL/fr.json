@@ -141,20 +141,71 @@
         "title": "MIRACL GitHub repository",
         "url": "https://github.com/project-miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl-corpus",
         "url": "https://huggingface.co/datasets/miracl/miracl-corpus",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "miracl/miracl",
         "url": "https://huggingface.co/datasets/miracl/miracl",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "6693107#0",
+        "document_id": "65606#10",
+        "query": {
+          "text": "Qu’est-ce qu’un cardinal fait?",
+          "full_chars": 30,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cardinal (religion) En fait, la nomination de cardinaux est une indication politique sur le pontificat en cours et la future élection, les cardinaux étant chargés d'élire le pape. Dans l'histoire, elle a aussi été une manière d'honorer les cadets de grandes familles royales ou nobles et de récompenser des proches. Cet état de fait était désigné sous le nom de népotisme, du latin \"nepos\", le neveu. Le pape choisissait un de ses neveux qu'il créait cardinal afin de faire entrer sa parenté dans la « carrière » ecclésiastique.",
+          "full_chars": 529,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "12233027#0",
+        "document_id": "3945229#31",
+        "query": {
+          "text": "Comment s’appelle la femme de Pablo Picasso?",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Pablo Picasso Son fils Paulo naît le . Durant l'été, il s'installe avec Olga et Paulo à Fontainebleau. Il y peint les \"Femmes à la fontaine\" (Paris, musée Picasso et New York, ) et \"Les Trois Musiciens\" (New York, et Philadelphie ). Cette même année, le musée de Grenoble obtient du peintre le premier tableau pour exposition dans une collection publique française (\"Femme lisant\"), représentant sa femme Olga Khokhlova. En , lors d'un séjour à Dinard sur la côte nord de la Bretagne, il peint \"Deux femmes courant sur la plage\" (\"La Course\", Paris, Musée Picasso). Puis, en décembre, il réalise le décor pour L'\"Antigone\" de Cocteau, créée par Charles Dullin au théâtre de l'Atelier. En 1923, il fait un nouveau séjour estival sur la Côte d'Azur, au cap d'Antibes, et peint \"La Flûte de Pan\" (Paris, Musée Picasso). Pendant l'été 1924, il séjourne à la villa La Vigie à Juan-les-Pins (Côte d'Azur), il fait son \"Carnet de dessins abstraits\" et peint \"Paul en arlequin\" (Paris, musée Picasso).",
+          "full_chars": 994,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10753261#0",
+        "document_id": "46291#7",
+        "query": {
+          "text": "Qu’est-ce que c’est un référendum?",
+          "full_chars": 34,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Référendum Le référendum appartient au domaine du droit : on ne peut décider par référendum que des lois. Dans les régimes de démocratie représentative, des parlementaires discutent et amendent les lois. Le référendum, selon les conceptions du juriste Raymond Carré de Malberg, a pour objet de limiter et de contrôler ce pouvoir. Si , il est sain que le compromis que les parlementaires ont trouvé entre les divers intérêts et opinions soit soumis au corps électoral. La place du référendum dans la hiérarchie des pouvoirs pose un problème pratique. Les lois sont soumises à un contrôle de conformité à la Constitution, qui notamment protège les minorités. Comment le référendum se place-t-il par rapport à cette norme ?",
+          "full_chars": 721,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

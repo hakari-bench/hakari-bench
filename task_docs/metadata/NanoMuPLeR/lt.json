@@ -86,28 +86,6 @@
         "rows_with_101_candidates": 3
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
-        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "An overview of the European Union's highly multilingual parallel corpora",
-        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
-        "year": 2014,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "DGT-Acquis",
-        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMuPLeR",
       "source_urls": [
@@ -116,6 +94,78 @@
           "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "MuPLeR: Multilingual Parallel Legal Retrieval",
+        "url": "https://huggingface.co/datasets/mteb/MuPLeR-retrieval",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "An overview of the European Union's highly multilingual parallel corpora",
+        "url": "https://link.springer.com/article/10.1007/s10579-014-9277-0",
+        "year": 2014,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "DGT-Acquis",
+        "url": "https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d0921aa0-561e-4531-86b9-f3a2d7662db1",
+        "document_id": "5133",
+        "query": {
+          "text": "Kada turėjo įsigalioti harmonizuotas minimalus €380 už 1 kubinį metrą akcizas gazoliui ir benzinui?",
+          "full_chars": 99,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Šiuo pasiūlymu iš dalies keičiama Direktyva 2003/96/EB (EMD) dėl gazolio, naudojamo kaip degalai, apmokestinimo tvarkos, kuri taikoma visose Europos Sąjungos šalyse. Praktiškai šiuo pasiūlymu numatoma pamažu didinti minimalų gazolio akcizo tarifą, kad būtų galima šiuos tarifus suvienodinti (direktyvoje naudojamas terminas koordinavimas) su benzino akcizais: 380 EUR 1000 litrų abiejų degalų rūšių nuo 2014 m. sausio 1 d. Galutinis įgyvendinimo terminas valstybėms narėms, kurioms nesuteikti pereinamieji laikotarpiai, buvo pratęstas.",
+          "full_chars": 535,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "2a1f4cc4-5eb3-4807-be42-7d57e3386847",
+        "document_id": "3897",
+        "query": {
+          "text": "Kuris mokestis už ES vidaus importą vis dar buvo taikomas septynių valstybių narių: dviem ≤0,5%, vienai 0,6%, keturioms 1%?",
+          "full_chars": 123,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dauguma ES 25 valstybių narių laikėsi Tarybos 1985 m. rekomendacijos ir visiškai panaikino mokestį; šiuo metu jį taiko tik septynios valstybės narės: Lenkija ir Portugalija taiko 0,5 proc. arba mažesnės normos mokestį, Kipras — 0,6 proc., o Graikija, Ispanija, Liuksemburgas ir Austrija visą jo normą — 1 proc. Tokia nevienoda tvarka trukdo sudaryti vienodas sąlygas Europos įmonėms, o tai yra viena išankstinių sąlygų, užtikrinančių tinkamą bendrosios rinkos veikimą. Tiesa, mokesčių srityje yra nemažai ir kitų skirtumų bei kliūčių, tačiau tai neturėtų būti priežastis atsisakyti panaikinti šį mokestį visiems laikams.",
+          "full_chars": 620,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "04ff491d-a4b1-4e2c-bb95-d94bbf1cf9d5",
+        "document_id": "8404",
+        "query": {
+          "text": "Kokia valdymo struktūra buvo siūloma trumpalaikiam visų narių metrologijos mokslinių tyrimų bandomajam projektui, kurio terminas būtų apribotas iki 2013 m.?",
+          "full_chars": 156,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Apibendrinant, EESRK mano, kad būtų tikslingiau nuspręsti įgyvendinti bandomąjį Europos metrologijos mokslinių tyrimų (EMMT) projektą, kurio terminas būtų apribotas iki 2013 m., remiantis i MERA Plus, ir parengiamuosiuose pasiūlymuose dėl 2014–2020 m. Aštuntosios bendrosios MTTP programos išnagrinėti galimybę vykdyti tikrą, nuolatinę Bendrijos programą, kurioje būtų nustatyti aiškūs ir laiko išbandyti mechanizmai. Tokiai programai, kurią visų valstybių narių ir asocijuotųjų šalių labui vadovautų Komisija, turėtų būti numatytas valdymo komitetas bei konsultacinis komitetas ir sudarytos sąlygos plataus masto konsultacijų procesui su labiausiai pramonės poreikiai suinteresuotais subjektais, kurie nustatytų veiklos kryptis ir ją stebėtų.",
+          "full_chars": 743,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

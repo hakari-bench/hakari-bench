@@ -70,12 +70,11 @@ For reranker development, this task rewards models that compare a short problem 
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-tex-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Tex-PL
+| Query | Positive document |
+| --- | --- |
+| BibLaTeX: bibliografia główna i drugorzędna [43 chars] | biblatex: drukowanie oddzielnych bibliografii Używam `biblatex` i mam to ustawione tak: W moim pliku bib mam 3 rodzaje wpisów, online, broszura i książka. A w mojej pracy dyplomowej chcę je wydrukować osobno w następujący sposób: \printbibliography[heading=subbibliography,title={Książki},type=book, nottype=url, nottype=booklet, nottype=online] \printbibliography[heading=subbibliography,title= {Strony internetowe},type=online, nottype=book, nottype=booklet, nottype=url] \printbibliography[heading=subbibliography,title={Różne},type=booklet] Z jakiegoś powodu to nie zadziała, nadal umieszcza strony internetowe, na których powinny być książki. I wzajemnie. Broszura jednak działa, pokazuje tam tylko moje wpisy do broszury. Niedawno zacząłem używać `biblatex`, więc to może być głupie pytanie. [797 chars] |
+| Jak mogę przyspieszyć kompilację dokumentu z wieloma obrazami? [62 chars] | Pomiń przetwarzanie wszystkich obrazów Próbuję zrobić szkic, zmuszając LaTeX do ignorowania wszystkich obrazów. Jak mam powiedzieć LaTeX, aby pominął wszystkie nazwy plików obrazów (w poleceniu `\includegraphics`) i po prostu wstawił puste pole? Problem z opcjami `[draft]` polega na tym, że nadal wymaga to, abym wszystkie obrazy znajdowały się w folderze, w którym znajdują się moje pliki `.tex`. [398 chars] |
+| Puste linie w wyrównanym środowisku [35 chars] | Błąd w wyrównaniu środowiska - niekontrolowany argument? > **Possible Duplicate:** > Puste linie w środowisku wyrównania \documentclass[12pt,a4paper]{article} \usepackage[wersja=3]{mhchem} \usepackage{siunitx} \begin{document} \begin{align*} \ce{K_a} & = \frac{\ce{[H3O+][A^-]}}{\ce{[HA]}} \\ \end{align*} \end{document} podaje argument Runaway? \ce {K_a} & = \frac {\ce {[H3O+][A^-]}}{\ce {[HA]}} \\ ! Akapit zakończył się przed ukończeniem \align*. <do przeczytania ponownie> \par l.8 ? [488 chars] |
 
 ### Source Reference Table
 

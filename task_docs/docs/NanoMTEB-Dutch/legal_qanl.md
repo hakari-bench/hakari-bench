@@ -150,21 +150,20 @@ pool for that decision.
 
 ## Example Data
 
-### Public Sources
-
-- [Retrieval-Augmented Generation for Long-form Question Answering in Dutch](https://aclanthology.org/2024.nllp-1.12/), 2024.
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [clips/mteb-nl-legalqa-pr](https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr), source dataset card.
-- [MTEB project repository](https://github.com/embeddings-benchmark/mteb).
+| Query | Positive document |
+| --- | --- |
+| Wanneer wordt een vergunning voor ruimtevaartactiviteiten geweigerd? [68 chars] | Wet ruimtevaartactiviteiten, Hoofdstuk2, Vergunningen, Paragraaf2, Artikel6, Aanvraag vergunning, Artikel 6 een vergunning wordt geweigerd indien: de naleving van een verdrag of een bindend besluit van een volkenrechtelijke organisatie dit vordert; feiten of omstandigheden er naar het oordeel van onze minister op duiden dat de veiligheid van personen en goederen, de bescherming van het milieu in de ruimte, de bescherming van de openbare orde of de veiligheid van de staat door het verlenen van de vergunning in gevaar kunnen worden gebracht; verlening daarvan in strijd zou zijn met bij of krachtens deze wet gestelde regels. een vergunning kan door onze minister worden geweigerd indien: een eerder verleende vergunning is ingetrokken wegens overtreding van bij of krachtens deze wet gestelde regels dan wel van de aan de vergunning verbonden voorschriften; de aanvrager niet heeft voldaan aan op hem rustende verplichtingen, voortvloeiend uit een eerder verleende vergunning; de aanvraag of de... [1,000 / 1,073 chars] |
+| Wanneer kan het bezwaarschrift worden ingediend voor een WOB (wet openbaarheid van bestuur) verzoek? [100 chars] | Wet openbaarheid van bestuur, HoofdstukVI, Overige bepalingen, Artikel15a, Artikel 15a in afwijking van artikel 7:1, eerste lid, onderdeel f, van de algemene wet bestuursrecht kan degene aan wie het recht is toegekend beroep bij de bestuursrechter in te stellen tegen het niet tijdig nemen van een besluit op grond van deze wet, alvorens beroep in te stellen bezwaar maken. het bezwaarschrift kan worden ingediend zodra het bestuursorgaan in gebreke is tijdig een besluit te nemen. artikel 6:12, eerste en vierde lid, van de algemene wet bestuursrecht is van overeenkomstige toepassing. artikel 6:20 van de algemene wet bestuursrecht is van overeenkomstige toepassing, met dien verstande dat de in het eerste lid van dat artikel bedoelde verplichting niet geldt gedurende de periode dat het bezwaar aanhangig is. de vergoeding van kosten op grond van artikel 7:15, tweede lid, van de algemene wet bestuursrecht blijft achterwege, indien: de indiener van het bezwaarschrift, gelet op de omvang van het... [1,000 / 1,048 chars] |
+| Wanneer kan een ontheffing volgens de opiumwet worden ingetrokken? [66 chars] | Opiumwet, Artikel8e, Artikel 8e een ontheffing kan worden ingetrokken: indien de houder van de ontheffing handelt in strijd met een bij of krachtens deze wet gesteld voorschrift; in het geval en onder de voorwaarden, bedoeld in artikel 3 van de wet bevordering integriteitsbeoordelingen door het openbaar bestuur. met het oog op toepassing van het eerste lid, onder b, kan het bureau bevordering integriteitsbeoordelingen, bedoeld in artikel 8 van de in het eerste lid, onder b, genoemde wet, om een advies als bedoeld in artikel 9 van die wet worden gevraagd. [560 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Retrieval-Augmented Generation for Long-form Question Answering in Dutch | 2024 | ACL paper | https://aclanthology.org/2024.nllp-1.12/ |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| clips/mteb-nl-legalqa-pr |  | dataset card | https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| Retrieval-Augmented Generation for Long-form Question Answering in Dutch | 2024 | ACL paper | [https://aclanthology.org/2024.nllp-1.12/](https://aclanthology.org/2024.nllp-1.12/) |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| clips/mteb-nl-legalqa-pr |  | dataset card | [https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr](https://huggingface.co/datasets/clips/mteb-nl-legalqa-pr) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

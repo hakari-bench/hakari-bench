@@ -146,22 +146,73 @@
         "url": "https://r2med.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED GitHub repository",
         "url": "https://github.com/R2MED/R2MED",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "R2MED/Bioinformatics",
         "url": "https://huggingface.co/datasets/R2MED/Bioinformatics",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "19",
+        "document_id": "Qualimap_0",
+        "query": {
+          "text": "Compare alignment quality of multiple sequencing runs aligned against the same reference genome/nI have run Oxford Nanopore Technologies' MinION sequencing on the same DNA sample using three flowcells, each aligned against the same reference genome (E.coli K12 MG1655) using both BWA MEM and GraphMap and stored as BAM files. How can I quantitatively and efficiently analyse the quality of alignment (percentage identity, insertion rate, deletion rate) of each of these files?",
+          "full_chars": 476,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Qualimap Evaluating next generation sequencing alignment data What is it? Qualimap 2 is a platform-independent application written in Java and R that provides both a Graphical User Inteface (GUI) and a command-line interface to facilitate the quality control of alignment sequencing data and its derivatives like feature counts. Supported types of experiments include: Whole-genome sequencing Whole-exome sequencing RNA-seq (speical mode available) ChIP-seq How does it work? Qualimap examines sequencing alignment data in SAM/BAM files according to the features of the mapped reads and provides an overall view of the data that helps to the detect biases in the sequencing and/or mapping of the data and eases decision-making for further analysis. Starting from version 2.0 Qualimap provides multi-sample comparison of alignment and counts data. Features",
+          "full_chars": 871,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "102",
+        "document_id": "Process_Substitution_0",
+        "query": {
+          "text": "Can I index a compressed FASTA file using STAR?/nI am using STAR to align RNA-seq reads to a reference genome. Before the alignment, I need to generate an index of the reference genome. I use the following code to generate the index successfully: STAR --runThreadN 8 --runMode genomeGenerate --genomeDir output/index/star --genomeFastaFiles ref.fa --sjdbGTFfile ref.gtf --sjdbOverhang 100 This works fine. However, I would like to keep my reference genome compressed to save disk space. So I am tryin",
+          "full_chars": 1258,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "3.5.6 Process Substitution Process substitution allows a process’s input or output to be referred to using a filename. It takes the form of <(list) or >(list) The process list is run asynchronously, and its input or output appears as a filename. This filename is passed as an argument to the current command as the result of the expansion. If the >(list) form is used, writing to the file will provide input for list. If the <(list) form is used, the file passed as an argument should be read to obtain the output of list. Note that no space may appear between the < or > and the left parenthesis, otherwise the construct would be interpreted as a redirection.",
+          "full_chars": 669,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "41",
+        "document_id": "Vcf2Bed_0",
+        "query": {
+          "text": "How to manipulate a reference FASTA or bam to include variants from a VCF?/nI have some software which takes fastas as the input. I need to include SNVs and InDels from a VCF into the reference hg38 and then use this. The problem is, I don't know of an algorithmically sound way to do this. Are there any existing software packages which could do this efficiently? Is it easier to output a FASTA, or a bam (and then convert to a FASTA)? What about if I wanted to do the same with a bedpe of germline",
+          "full_chars": 520,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "6.3.3.11. vcf2bed The vcf2bed script converts 1-based, closed [start, end] Variant Call Format v4.2 (VCF) to sorted, 0-based, half-open [start-1, start) extended BED data. Note Note that this script converts from [start, end] to [start-1, start). Unless the --snvs, --insertions or --deletions options are added, we perform the equivalent of a single-base insertion to make BED output that is guaranteed to work with BEDOPS, regardless of what the actual variant may be, to allow operations to be performed. The converted output contains additional columns which allow reconstruction of the original VCF data and associated variant parameters. For convenience, we also offer vcf2starch, which performs the extra step of creating a Starch-formatted archive. 6.3.3.11.1. Dependencies The vcf2bed script requires convert2bed. The vcf2starch script requires starch.",
+          "full_chars": 870,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

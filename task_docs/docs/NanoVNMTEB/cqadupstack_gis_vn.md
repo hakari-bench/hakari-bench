@@ -62,21 +62,20 @@ Models should encode geospatial operation type, software context, file format, c
 
 ## Example Data
 
-### Public Sources
-
-- [CQADupStack: A Benchmark Data Set for Community Question-Answering Research](https://doi.org/10.1145/2838931.2838934), task paper.
-- [VN-MTEB: Vietnamese Massive Text Embedding Benchmark](https://aclanthology.org/2026.findings-eacl.86/), VN-MTEB paper.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), benchmark paper.
-- [GreenNode/cqadupstack-gis-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Tải nhiều tập tin shapefile vào PostGIS [39 chars] | lô hàng tải shp vào postgis > **Có thể trùng lặp:** > Tải khối nhiều tập tin hình dạng vào PostGIS Liệu có khả năng tải khối tập tin shp vào postgis. Hiện tại tôi đang thử nghiệm với postgis, qgis và geoserver (như một máy chủ arcgis tiềm năng, thay thế arcmap và arcsde) và muốn tôi có thể chạy một tập tin lô (tôi đoán) sẽ tải lên một số tập tin shp (xuất khẩu từ arcsde) ghi đè các tập tin shapfile / bảng hiện có trong postgis. Về hiệu ứng postgis sẽ là một cơ sở dữ liệu nô lệ (cho thời gian hiện tại). Med [515 chars] |
+| Có công cụ nào có thể lấy lại hệ tọa độ được dùng để tạo ra một shapefile khi file prj bị thiếu không? [102 chars] | Xác định hệ tọa độ của Shapefile khi chưa biết? Tôi có một Shapefile nhưng hệ tọa độ của nó là Unknown, và không có tệp *.prj. Làm thế nào tôi có thể xác định được bây giờ? Có công cụ nào có thể giúp đỡ không? [210 chars] |
+| .tif và .tfw sang GeoTIFF [25 chars] | tfw tif to GeoTiff Làm thế nào để kết hợp một tệp .tif với một tệp .tfw để tạo GeoTiff? Có rất nhiều câu trả lời cho tôi sử dụng gdal, nhưng tôi không có ý tưởng. Vì vậy có ai có thể cung cấp một ví dụ từng bước về cách thực hiện điều này không? [246 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | https://doi.org/10.1145/2838931.2838934 |
-| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | https://aclanthology.org/2026.findings-eacl.86/ |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| GreenNode/cqadupstack-gis-vn |  | dataset card | https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn |
+| CQADupStack: A Benchmark Data Set for Community Question-Answering Research | 2015 | ACM paper | [https://doi.org/10.1145/2838931.2838934](https://doi.org/10.1145/2838931.2838934) |
+| VN-MTEB: Vietnamese Massive Text Embedding Benchmark | 2026 | ACL paper | [https://aclanthology.org/2026.findings-eacl.86/](https://aclanthology.org/2026.findings-eacl.86/) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| GreenNode/cqadupstack-gis-vn |  | dataset card | [https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn](https://huggingface.co/datasets/GreenNode/cqadupstack-gis-vn) |
 
 ### Representative Snippets
 

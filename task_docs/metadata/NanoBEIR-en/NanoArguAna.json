@@ -142,8 +142,59 @@
         "title": "mteb/arguana",
         "url": "https://huggingface.co/datasets/mteb/arguana",
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test-politics-gvhbhlsbr-con04a",
+        "document_id": "test-politics-gvhbhlsbr-con04b",
+        "query": {
+          "text": "The public is apathetic to reform. Whether or not reform of the House of Lords should be a top priority in the current economic climate is debateable, let alone whether or not a coalition government would be able to initiate and drive through such measures. Attempts to reform the House of Lords have been delayed time and time again, demonstrating the House of Commons’ reservations on change. [1] A feeling that is no doubt echoed in popular British opinion – as demonstrated by the recent outcome",
+          "full_chars": 799,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The AV campaign cannot be compared to reform to the House of Lords, furthermore one should not mistake a misinformed public due to political spin, with apathy. Often voters express that they are apathetic because they feel that they can’t change anything, that there vote won’t count: reform that ensures the people running the country are directly elected by the people would help to counter these feelings.",
+          "full_chars": 408,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test-economy-egecegphw-pro02a",
+        "document_id": "test-economy-egecegphw-pro02b",
+        "query": {
+          "text": "The expansion of Heathrow is vital for the economy Expanding Heathrow would ensure many current jobs as well as creating new ones. Currently, Heathrow supports around 250,000 jobs. [1] Added to this many hundreds of thousands more are dependent upon the tourist trade in London which relies on good transport links like Heathrow. Loosing competitiveness in front of other European airports not only could imply wasting the possibility to create new jobs, but lose some of those that already exist. Ex",
+          "full_chars": 1421,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "The business community is far from united in its supposed support of a third run-way. Surveys suggest that many influential businesses in fact do not support expansion. A letter expressing concern was signed by Justin King the Chief Executive of J Sainsbury and BskyB’s James Murdoch. [1] Therefore to conflate the business community as one voice calling for expansion is misguided. We should also remember, when considering the alternatives to Heathrow’s new run-way such as a new runway at another London airport or a completely new airport, that these would likely have a similar economic impact as the Heathrow expansion would. If it is the connections that matter to bring in business and tourists then so long as the connection is with London it does not matter which airport the connection is from. There may even be less need for the airport to be a hub airport if we are focused on benefits to London as Bob Ayling, former British Airways Chief Executive stated Heathrow should be focused on",
+          "full_chars": 1330,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "test-culture-mthbah-pro02a",
+        "document_id": "test-culture-mthbah-pro02b",
+        "query": {
+          "text": "People are given too much choice, which makes them less happy. Advertising leads to many people being overwhelmed by the endless need to decide between competing demands on their attention – this is known as the tyranny of choice or choice overload. Recent research suggests that people are on average less happy than they were 30 years ago - despite being better off and having much more choice of things to spend their money on1. The claims of adverts crowd in on people, raising expectations about",
+          "full_chars": 1031,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "People are unhappy because they can't have everything, not because they are given too much choice and find it stressful. In fact, advertisements play a crucial role in ensuring that what money people have, they spend on the most appropriate product for themselves. If advertisements were not permitted, people would waste money on an initial product when, given the choice, they clearly would go for another. A meta-analysis incorporating research from 50 independent studies found no meaningful connection between choice and anxiety, but speculated that the variance in the studies left open the possibility that choice overload could be tied to certain highly specific and as yet poorly understood pre-conditions1. 1 ^ Scheibehenne, Benjamin; Greifeneder, R. &amp; Todd, P. M. (2010). \"Can There Ever be Too Many Options? A Meta-Analytic Review of Choice Overload\" . Journal of Consumer Research 37: 409-425.",
+          "full_chars": 912,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

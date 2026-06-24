@@ -86,29 +86,6 @@
         "rows_with_101_candidates": 26
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "WWW18 Open Challenge: Financial Opinion Mining and Question Answering",
-        "url": "https://research.universityofgalway.ie/en/publications/www18-open-challenge-financial-opinion-mining-and-question-answer/",
-        "year": 2018,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "FiQA 2018 challenge site",
-        "url": "https://sites.google.com/view/fiqa/",
-        "year": 2018,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "mteb/FiQA-PL",
-        "url": "https://huggingface.co/datasets/mteb/FiQA-PL",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-Polish",
       "source_urls": [
@@ -117,6 +94,79 @@
           "url": "https://huggingface.co/datasets/mteb/FiQA-PL"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "WWW18 Open Challenge: Financial Opinion Mining and Question Answering",
+        "url": "https://research.universityofgalway.ie/en/publications/www18-open-challenge-financial-opinion-mining-and-question-answer/",
+        "year": 2018,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "FiQA 2018 challenge site",
+        "url": "https://sites.google.com/view/fiqa/",
+        "year": 2018,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "mteb/FiQA-PL",
+        "url": "https://huggingface.co/datasets/mteb/FiQA-PL",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "8247",
+        "document_id": "42521",
+        "query": {
+          "text": "Podatek od akcji lub ETF",
+          "full_chars": 24,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "„Jeśli sprzedajesz akcje bez wypłat, Twój zysk podlega opodatkowaniu zgodnie z § 1001. Ale nie wszystkie zrealizowane zyski zostaną uznane za podlegające opodatkowaniu. A niektóre zyski, które prawdopodobnie nie zostaną zrealizowane, zostaną uznane za podlegające opodatkowaniu. aktywa kapitałowe dla inwestorów, którzy będą generować zyski kapitałowe zgodnie z §1(h), ale dealerzy, handlowcy i hedgingowcy będą traktowani inaczej.Jeśli jesteś inwestorem i posiadałeś akcje przez rok lub dłużej, możesz uzyskaj korzystne stawki zysku kapitałowego (np. 20% zamiast 39,6%). Jeśli składnik aktywów był przechowywany krótkoterminowo, krócej niż rok, wówczas Twój podatek będzie generalnie obliczany według wyższych zwykłych stawek dochodu. Pojawia się również problem podatek od inwestycji netto zgodnie z §1411. Unikam wielu wyjątków, kwalifikacji i permutacji tych zasad. Jeśli otrzymujesz dywidendę §316 z akcji, to jest to dochód §61. Dywidendy kwalifikowane są zwykłym dochodem, ale generalnie będą",
+          "full_chars": 2122,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2316",
+        "document_id": "482343",
+        "query": {
+          "text": "Jaki kurs wymiany stosuje El Al przy przeliczaniu kwoty płatności końcowej na szekle?",
+          "full_chars": 85,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "„Stawka za „czeki i przelewy” jest ustalana przez każdy bank wielokrotnie w ciągu dnia w oparciu o rynek. Jest to przeciwieństwo stawki za „gotówkę/banknoty”, również ustalaną przez każdy bank, a „„stawka reprezentatywna”” (שער היציג) ustalona przez Bank Izraela. Stawki te można znaleźć na stronach internetowych większości banków. Oto Bank Hapoalim i Bank Leumi. Pytanie brzmi, który kurs banku zostanie zastosowany. Może to być bank, który wydał Twoją kartę, bank El Ala lub firmę obsługującą karty kredytowe (np. Poalim w przypadku Isracard lub Leumi w przypadku CAL). Będziesz musiał zadzwonić do El Al w celu weryfikacji, ale ponieważ są to stawki rynkowe, nie powinny być zbyt różne.\"",
+          "full_chars": 691,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "10547",
+        "document_id": "571306",
+        "query": {
+          "text": "Ile brokerzy płacą za wymianę za transakcję?",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Nie ma jednej odpowiedzi na to pytanie, ale są pewne ogólniki. Większość giełd rozróżnia pasywną i agresywną stronę handlu. Uczestnik pasywny to zlecenie, które znajdowało się na rynku w momencie transakcji. Jest to zlecenie, które na podstawie jego ceny nie było wówczas możliwe do wykonania i dlatego trafia do księgi zleceń. Na przykład, jestem gotów sprzedać 100 akcji po 9,98 USD, ale nikt nie chce ich teraz kupić, więc pozostaje to otwarte zlecenie na giełdzie. Wtedy ktoś się zjawia i jest gotów zapłacić moją cenę (tutaj pomijam wiele szczegółów). Więc agresywnie wycofują moje zamówienie, albo publikując ofertę rynkową, albo konkretnie, że chcą kupić 100 akcji po 9,98 USD lub po wyższej cenie. Większość giełd faktycznie daje mi, jako pasywnemu (tj. zapewniającemu płynność) inwestorowi, niewielki rabat, podczas gdy druga osoba jest obciążana kilkoma ułamkami centa. Google znalazł szczegóły dotyczące NYSEArca, a większość innych giełd również podaje swoje opłaty do wiadomości publiczn",
+          "full_chars": 1211,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

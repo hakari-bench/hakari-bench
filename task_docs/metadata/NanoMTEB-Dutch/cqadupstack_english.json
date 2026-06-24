@@ -158,9 +158,59 @@
         "url": "https://arxiv.org/abs/2104.08663",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
     ],
-    "example_count": 5
+    "examples": [
+      {
+        "query_id": "74161",
+        "document_id": "17992",
+        "query": {
+          "text": "Het algemene 'het",
+          "full_chars": 17,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Waar verwijst 'het' naar in dit voorbeeld? **Mogelijk duplicaat:** > Het regent. Wat dan? 'Het regent.' Waar verwijst 'het' naar? Ik weet dat sommige mensen 'het weer' zouden zeggen, maar je zou niet zeggen: 'Het weer regent.' Maar je zou wel zeggen: Hoe is het weer? Het regent.' Beetje verwarrend.",
+          "full_chars": 301,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "130587",
+        "document_id": "33975",
+        "query": {
+          "text": "Hoe moet je een bereik van getallen met een koppelteken interpunctiëren?",
+          "full_chars": 72,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Wat is het verschil tussen - en -- in een zin? **Mogelijke dubbel:** > Wanneer moet ik een em-dash, een en-dash en een koppelteken gebruiken? Wanneer plaats ik een - in een zin? Is het een sterkere komma? Met een langere pauze?",
+          "full_chars": 229,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "112956",
+        "document_id": "59307",
+        "query": {
+          "text": "Kiezen tussen \"experimenteren met\" en \"waarmee te experimenteren",
+          "full_chars": 64,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Waar moet het voorzetsel van \"goedkeuren\" staan? **Mogelijke dubbel:** > Wanneer is het gepast om een zin met een voorzetsel te eindigen? In dit antwoord schreef ik > [Je kunt het gebruiken] om foto's te maken van een film in een bioscoop, waarvan > de bioscoopmedewerkers waarschijnlijk geen goedkeuring zouden geven. maar ik weet niet zeker of het beter zou zijn > [Je kunt het gebruiken] om foto's te maken van een film in een bioscoop, waaraan de bioscoopmedewerkers waarschijnlijk geen goedkeuring zouden geven. Ik vond deze pagina, maar ik kan nog steeds niet vinden op welk voorbeeld het betrekking heeft. (... op welk voorbeeld het betrekking heeft?)",
+          "full_chars": 660,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

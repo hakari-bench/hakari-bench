@@ -70,12 +70,11 @@ For reranker development, this task rewards models that can compare short querie
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-mathematica-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Mathematica-PL
+| Query | Positive document |
+| --- | --- |
+| DeleteDuplicatesBy nie działa tak, jak się spodziewałem. Czy czegoś mi brakuje? [79 chars] | Szybsza alternatywa dla DeleteDuplicates do usuwania elementów z listy Mam listę w tym stylu data={{a1,b1,c1,d1,e1,f1}, {a2,b2,c2,d2,e2,f2}} Muszę usunąć wszystkie elementy, w których znajduje się `b1` równa się „b2” i tak dalej. Muszę tylko przetestować b. Lista, której używam, zawiera ponad 15000 elementów. Użyłem `DeleteDuplicates`: DeleteDuplicates[data, {_, #1, _, _, _, _} == {_, #2, _, _, _, _} &] Wiem, że ta metoda daje poprawny wynik ponieważ przetestowałem to na niewielkiej ilości danych. Ale na liście zawierającej ponad 15 000 elementów po 20 minutach bez powodzenia. Czy istnieje bardziej wydajna metoda? [621 chars] |
+| Czy można zmienić kolor fabuły w programie Show? [48 chars] | Edytuj wykres/grafikę po narysowaniu. Czasami wpadam w sytuację, gdy istnieją obiekty graficzne (głównie wykresy), których rysowanie zajmuje trochę czasu. Dobra praktyka sugerowałaby, że całą ocenę przeprowadzasz poza „Plotką” lub jakąkolwiek inną funkcją kreślenia, ale czasami zapomina się lub jest to proces rysowania, który zajmuje dużo czasu. Więc **pytanie** brzmi, czy można zmienić takie rzeczy jak czcionka `PlotLabel`, `PlotStyle` lub inne ściśle estetyczne właściwości fabuły bez pytania Mathematica o przeliczenie wszystkich punktów. [545 chars] |
+| Uzyskaj wzór na interpolację wielomianową [41 chars] | Określ funkcje na podstawie punktów danych Czy Mathematica może rozwiązać dla f(x,y) = 0 takie, że {x,y} zawiera `{{0,0.5}, {1,0.5}, {0.6,0.8}, {0.4,0.2}} `? Czy musimy najpierw określić f(x,y) ? Dziękuję Ci [207 chars] |
 
 ### Source Reference Table
 

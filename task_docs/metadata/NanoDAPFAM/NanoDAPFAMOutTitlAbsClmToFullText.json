@@ -133,15 +133,66 @@
         "url": "https://doi.org/10.1016/j.array.2026.100720",
         "year": 2026,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "datalyes/DAPFAM_patent",
         "url": "https://huggingface.co/datasets/datalyes/DAPFAM_patent",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "156-982-593-034-540",
+        "document_id": "071-966-823-342-038",
+        "query": {
+          "text": "bicycle handlebar grip a bicycle handlebar grip contains a plastic inner shell having a tubular shape and an outer surface; a fiber layer having an inner surface and an outer surface and includes a plurality of fibers interweaving with each other and a plurality of weaving gaps located between the fibers; a plastic layer enclosed around the outer surface of the fiber layer and combined with the fiber layer integrally and including a holding portion coated on the outer surface of the fiber layer,",
+          "full_chars": 2588,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "durable flexible membrane and method of making same a flexible membrane having a valuable combination of desirable properties is composed of a generally heavy, dense supporting and reinforcing reticulated base fabric constituted of thick, generally loose bundles of multiple continuous filaments arranged in a mechanically interengated reticular array having an overall weight within the range of about 3-12 oz/yd.sup.2 the continuous filaments being of a synthetic polymer having good dimensional stability and high resistance to heat and light; and a solidified base coating composition completely impregnating the interstices of the base fabric and as forming a continuous coating along the opposite sides thereof, the composition having as essential ingredients a pvc resin and a plasticizer therefor in the amount of 35-75% of the resin of a trimellitate ester which exhibits high resistance to separation from the resin and imparts to the coating high flexibility at temperatures at least as lo",
+          "full_chars": 28042,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "022-349-089-066-313",
+        "document_id": "136-907-585-136-939",
+        "query": {
+          "text": "method for improving belt press dewatering a method for increasing the removal of a higher fraction of liquid from the press cake in any belt press is described. specifically, the invention incorporates a series of rollers that create multiple pinch points to compress the solid fraction while removing liquid. after each pinch point, the solid material is allowed to separate from the belt, fall by gravity, and repack so that more liquid can be released at each successive pinch point than is possi",
+          "full_chars": 4605,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "artificial human anti-factor b antibody problem to be solved: to provide novel engineered forms of a monoclonal antibody and antigen-binding fragments thereof that bind complement protein factor b and selectively inhibit the alternative complement pathway.solution: artificial human anti-factor b antibodies or antigen-binding fragments thereof are derived from murine monoclonal antibody 1379 \"mab1379\", which selectively binds factor b in the third short consensus repeat (\"scr\") domain and prevents formation of the c3bbb complex. 1. a humaneered anti-factor b antibody or antigen-binding fragment thereof that selectively binds to factor b within the third short consensus repeat (“scr”) domain and prevents formation of the c3bbb complex, wherein the antibody comprises a v κ -region polypeptide comprising the amino acid sequence of seq id no: 16 and a v h -region polypeptide comprising the amino acid sequence of seq id no: 35. 2. the humaneered anti-factor b antibody or antigen-binding frag",
+          "full_chars": 108109,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "005-819-825-326-847",
+        "document_id": "131-939-954-950-835",
+        "query": {
+          "text": "stitch distribution control system for tufting machines a stitch distribution control system for a tufting machine for controlling placement of yarns being fed to the needles of the tufting machine by yarn feed mechanisms to form a desired pattern. a backing material is fed through the tufting machine at an increased stitch rate as the needles are shifted according to calculated pattern steps. a series of loopers or hooks engage and pick loops of yarns from the needles. the yarn feed mechanisms",
+          "full_chars": 5968,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "method and apparatus for measuring direction or position of weft yarn of fabric the measurement of the pick or stitches course position in continuously moved fabrics involves examining at least one gap-shaped segment in a top illumination or transillumination. the width of the segment is small and its legnth long in comparison to the thickness of the picks. the brightness value inside the segment is divided into two stages or areas (light, dark). those sections within the segment, in which the value is continuously associated with one stage, are determined. the number or total length of the sections of s stage is determined or, alternatively the speed at which the sections of a stage move in the segment is determined and the drafting angle of the pick is deduced from this value. 1. a process for measuring the draft angle .alpha. of a weft thread in a travelling textile sheet which comprises: (a) intercepting light transmitted or reflected from a long narrow field of the travelling text",
+          "full_chars": 24253,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

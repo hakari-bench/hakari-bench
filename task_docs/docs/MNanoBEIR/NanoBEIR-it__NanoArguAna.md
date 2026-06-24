@@ -48,13 +48,11 @@ Strong models should improve stance-sensitive long-passage ranking while preserv
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Il pubblico è indifferente alle riforme. Se la riforma della Camera dei Lord dovrebbe essere una priorità assoluta... | La campagna AV non può essere paragonata a una riforma del sistema elettorale... |
-| L'espansione di Heathrow è cruciale per l'economia. L'espansione di Heathrow garantirebbe molti posti di lavoro... | La comunità imprenditoriale è lungi dall'essere unita nel suo presunto sostegno a una terza pista... |
-| Le persone hanno troppe scelte, il che le rende meno felici. | Le persone sono infelici perché non possono avere tutto, non perché hanno troppe scelte e si sentono stressate... |
-| Gli attacchi informatici sono spesso perpetrati da attori non statali, come ciberterroristi o hacktivisti... | In caso di attacco da parte di attori non statali, molti esperti di diritto internazionale concordano sul fatto che lo Stato possa reagire... |
-| La religione promuove la certezza della fede, rendendo facile l'uso dell'odio ispirato divinamente per giustificare azioni violente. | Nessuno viene indotto a compiere atti di violenza dalle parole di un altro; è una loro scelta farlo... |
+| Query | Positive document |
+| --- | --- |
+| Il pubblico è indifferente alle riforme. Se la riforma della Camera dei Lord dovrebbe essere una priorità assoluta nel clima economico attuale è discutibile, figuriamoci se un governo di coalizione sarebbe in grado di avviare e implementare tali misure. I tentativi di riformare la Camera dei Lord sono stati rinviati più volte, dimostrando le riserve della Camera dei Comuni riguardo al cambiamento. Un sentimento che senza dubbio rispecchia l'opinione pubblica britannica – come dimostrato dall'esi... [500 / 612 chars] | La campagna AV non può essere paragonata a una riforma del sistema elettorale. Inoltre, non si deve confondere un pubblico disinformato a causa della propaganda politica con l'apatia. Spesso gli elettori esprimono apatia perché sentono di non poter cambiare nulla, che il loro voto non conta: una riforma che garantisce che chi governa il paese sia direttamente eletto dal popolo aiuterebbe a contrastare questi sentimenti. [423 chars] |
+| L'espansione di Heathrow è cruciale per l'economia. L'espansione di Heathrow garantirebbe molti posti di lavoro attuali e ne creerebbe di nuovi. Attualmente, Heathrow sostiene circa 250.000 posti di lavoro. A questo si aggiungono centinaia di migliaia di persone che dipendono dal turismo a Londra, che a sua volta dipende da buone connessioni di trasporto come Heathrow. Perder competitività rispetto ad altri aeroporti europei non solo comporterebbe la perdita dell'opportunità di creare nuovi post... [500 / 1,317 chars] | La comunità imprenditoriale è lungi dall'essere unita nel suo presunto sostegno a una terza pista. I sondaggi suggeriscono che molte aziende influenti, in realtà, non sostengono l'espansione. Una lettera che esprime preoccupazione è stata firmata da Justin King, amministratore delegato di J Sainsbury, e da James Murdoch di BskyB. È quindi fuorviante considerare la comunità imprenditoriale come una sola voce che chiede l'espansione. Dobbiamo anche ricordare, quando si considerano le alternative alla nuova pista di Heathrow, come una nuova pista in un altro aeroporto di Londra o un aeroporto completamente nuovo, che queste avrebbero probabilmente un impatto economico simile all'espansione di Heathrow. Se ciò che conta sono le connessioni per attrarre affari e turisti, allora non importa da quale aeroporto provenga la connessione, purché sia con Londra. Potrebbe esserci addirittura meno bisogno che l'aeroporto sia un hub se ci concentriamo sui benefici per Londra, come ha dichiarato Bob A... [1,000 / 1,238 chars] |
+| Le persone hanno troppe scelte, il che le rende meno felici. La pubblicità porta molte persone a sentirsi sopraffatte dalla necessità infinita di scegliere tra richieste concorrenti della loro attenzione – un fenomeno noto come la tirannia della scelta o sovraccarico di scelta. Ricerche recenti suggeriscono che, in media, le persone sono meno felici di quanto non lo fossero 30 anni fa, nonostante stiano meglio e abbiano molte più scelte su come spendere i loro soldi. Le affermazioni delle pubbli... [500 / 1,005 chars] | Le persone sono infelici perché non possono avere tutto, non perché hanno troppe scelte e si sentono stressate. In realtà, la pubblicità svolge un ruolo cruciale nel garantire che le persone spendano i loro soldi per il prodotto più adatto a loro. Se la pubblicità non fosse permessa, le persone sprecerebbero i loro soldi su un prodotto iniziale, mentre, avendo la scelta, opterebbero chiaramente per un altro. Una meta-analisi che ha incorporato ricerche di 50 studi indipendenti non ha trovato alcuna connessione significativa tra scelta e ansia, ma ha ipotizzato che la varianza negli studi lasciasse aperta la possibilità che il sovraccarico di scelta potesse essere legato a determinate condizioni preesistenti altamente specifiche e ancora poco comprese. Scheibehenne, Benjamin; Greifeneder, R. & Todd, P. M. (2010). 'Può mai esserci troppa scelta? Una revisione meta-analitica del sovraccarico di scelta'. Journal of Consumer Research 37: 409-425. [955 chars] |
 
 ## Public Sources
 
@@ -67,7 +65,7 @@ Strong models should improve stance-sensitive long-passage ranking while preserv
 
 | Label | URL |
 |---|---|
-| ArguAna paper | https://aclanthology.org/P18-1023/ |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| ArguAna paper (https://aclanthology.org/P18-1023/) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

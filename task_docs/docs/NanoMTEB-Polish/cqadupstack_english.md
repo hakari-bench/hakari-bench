@@ -70,12 +70,11 @@ Sparse systems may benefit from better tokenization of quoted English fragments 
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-english-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-English-PL
+| Query | Positive document |
+| --- | --- |
+| Ogólne „to” [11 chars] | Do czego odnosi się „to” w „pada deszcz”? Chciałem pozostawić tytuł pytania bez zmian, aby nie odrywać się od zabawy `:)`. W każdym razie > pada deszcz. Co pada? Czy to niebo? Chmury? Pogoda? Deszcz? Co to jest"? Jakieś spostrzeżenia historyczne dotyczące oświadczenia? [269 chars] |
+| Jak przebić zakres dzielonych liczb? [36 chars] | Kiedy powinienem używać pauzy, pauzy i łącznika? Generalnie wiem, jak używać myślnika, ale kiedy powinienem użyć en-dash zamiast em-myślnika, a kiedy powinienem użyć myślnika zamiast em-myślnika? [195 chars] |
+| Wybieranie między „z czym eksperymentować” a „z czym eksperymentować” [69 chars] | Kiedy należy kończyć zdanie przyimkiem? Jak wielu innych, często kończę zdanie przyimkiem. Tak, wzdrygam się. Zwykle przepisuję zdanie, ale czasami (w e-mailach) po prostu z tym żyję. _Do_ _z_... wiesz kim jesteś. Czy powinienem dalej walczyć na tym, czy jest to w porządku w niektórych okolicznościach? [303 chars] |
 
 ### Source Reference Table
 

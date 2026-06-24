@@ -144,4 +144,4 @@ important before training.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| CoIR: A Comprehensive Benchmark for Code Information Retrieval Models | 2024 | paper | https://arxiv.org/abs/2407.02883 |
+| CoIR: A Comprehensive Benchmark for Code Information Retrieval Models | 2024 | paper | [https://arxiv.org/abs/2407.02883](https://arxiv.org/abs/2407.02883) |

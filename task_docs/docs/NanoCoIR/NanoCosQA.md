@@ -70,9 +70,11 @@ A strong model should not require polished requirements. It should interpret inc
 
 ## Example Data
 
-### Public Sources
-
-NanoCosQA is documented through CoIR and the CoSQA paper. The CoIR-Retrieval/cosqa dataset card is the source-specific public reference for the retrieval adaptation.
+| Query | Positive document |
+| --- | --- |
+| token to id python [18 chars] | def strids2ids(tokens: Iterable[str]) -> List[int]: """ Returns sequence of integer ids given a sequence of string ids. :param tokens: List of integer tokens. :return: List of word ids. """ return list(map(int, tokens)) [244 chars] |
+| python 3 tkinter open file dialog [33 chars] | def askopenfilename(**kwargs): """Return file name(s) from Tkinter's file open dialog.""" try: from Tkinter import Tk import tkFileDialog as filedialog except ImportError: from tkinter import Tk, filedialog root = Tk() root.withdraw() root.update() filenames = filedialog.askopenfilename(**kwargs) root.destroy() return filenames [389 chars] |
+| python calc page align [22 chars] | def page_align_content_length(length): # type: (int) -> int """Compute page boundary alignment :param int length: content length :rtype: int :return: aligned byte boundary """ mod = length % _PAGEBLOB_BOUNDARY if mod != 0: return length + (_PAGEBLOB_BOUNDARY - mod) return length [323 chars] |
 
 ### Source Reference Table
 

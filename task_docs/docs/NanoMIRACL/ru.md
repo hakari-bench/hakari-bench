@@ -152,12 +152,11 @@ coverage.
 
 ## Example Data
 
-Representative queries ask whom the Sapsan train is named after, when Timofey
-Mozgov became an Orlando Magic player, whether Babylon was a center of
-Alexander the Great's empire, how Nicholas II died, or where the first brick
-church in Rus was built. Positive documents are Russian Wikipedia passages
-containing the requested naming, biographical, historical, death, or location
-evidence.
+| Query | Positive document |
+| --- | --- |
+| В честь кого назван ЭВС «Сапсан»? [33 chars] | Сапсан (электропоезд) ЭВС «Сапсан» ("Velaro RUS") — высокоскоростные электропоезда из семейства электропоездов Velaro производства компании Siemens, приобретённые ОАО «РЖД» для эксплуатации на российских скоростных железных дорогах. Брендовое название получили в честь сокола-сапсана "(Falco peregrinus)". Электропоезда серии ЭВС1 — постоянного тока, ЭВС2 — двойного питания. Разработаны компанией Siemens специально для России. [429 chars] |
+| Когда Тимофе́й Па́влович Мозго́в стал игроком команды НБА «Орландо Мэджик»? [75 chars] | Мозгов, Тимофей Павлович Тимофе́й Па́влович Мозго́в (16 июля 1986, Ленинград) — российский профессиональный баскетболист, выступающий за команду НБА «Орландо Мэджик». Играет на позиции центрового. Первые шаги в баскетболе Мозгов сделал в Санкт-Петербурге, затем в связи с переездом семьи продолжил заниматься баскетболом на юге России. Первым профессиональным клубом Тимофея был подмосковный «Химки». В 2010 году начал свою карьеру в НБА. В сезоне 2015/2016 в составе «Кливленд Кавальерс», вместе с одноклубником Александром Кауном, стал первым россиянином — чемпионом НБА. [574 chars] |
+| Вавилон был центром держави Александра Македонского? [52 chars] | История Вавилона В октябре 331 г до н. э. Александр Македонский торжественно вступил в Вавилон, принёс жертву Белу и был провозглашён "«царём Вавилона и четырёх сторон света»". Македонское войско пребывало в городе около месяца, после чего продолжило продвижение на восток. Александр распорядился начать работы по восстановлению местных храмов; в частности, было принято решение о реставрации Эсагилы. По приказу царя, верхняя часть зиккурата Этеменанки были снесена, и легендарная башня начала перестраиваться. Стремясь подчеркнуть особую роль города, царь разрешил чеканить здесь серебряную монету. Мазей сохранил должность сатрапа; после его смерти в 328 г. до н. э. сатрапом стал Стамен (Дитамен). Окончательно разгромив Персидскую державу и подчинив ахеменидские владения в Средней Азии, македоняне совершили поход в Северо-Восточную Индию; в 323 г. до н. э. Александр вернулся в Вавилон, который он решил сделать своей столицей. С целью подготовки кампании по завоеванию Аравии, возле города бы... [1,000 / 1,161 chars] |
 
 ### Public Sources
 
@@ -175,10 +174,10 @@ evidence.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

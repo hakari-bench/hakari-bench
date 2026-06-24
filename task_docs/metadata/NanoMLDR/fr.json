@@ -130,8 +130,59 @@
         "url": "https://huggingface.co/datasets/Shitao/MLDR",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q-fr-22",
+        "document_id": "doc-fr-176",
+        "query": {
+          "text": "Quels sont les résultats des huitièmes de finale de la Coupe de France et de la Coupe UEFA ?",
+          "full_chars": 92,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cette page concerne l'actualité sportive du mois de . Mardi mars Football : surprises à l'occasion des huitièmes de finale de la Coupe de France. Clermont Foot, modeste seizième en Ligue 2, sort l'Olympique lyonnais, leader de Ligue 1, aux tirs au but après un match nul 1-1 arraché dans les arrêts de jeu par Sylvain Wiltord. Nîmes Olympique (National) poursuit également sa route en éliminant un troisième sociétaire de Ligue 1 : OGC Nice. Le score est sans appel, 4-0! Troisième match au programme ce soir : Sedan (L1) élimine logiquement l'US Quevilly (CFA) par 2-0. Le match US Boulogne - FC Nantes est reporté en raisons des mauvaises conditions météo. Suite du programme demain avec notamment le choc Auxerre – Paris Saint-Germain. Mercredi 2 mars Football : suite des huitièmes de finale de la Coupe de France. Monaco élimine Rennes (0-1 après prolongation) et Sochaux s'impose logiquement à Albi (0-3). Surprise à Lille avec la victoire du sociétaire de Ligue 2, Grenoble : 1-3! Le choc Auxe",
+          "full_chars": 24419,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-fr-1052",
+        "document_id": "doc-fr-7530",
+        "query": {
+          "text": "Quel est le lien entre les personnages Xavier et Magnéto et les figures historiques de Martin Luther King et Malcolm X dans le projet proposé par Bryan Singer et Tom DeSanto à la Fox en 1998?",
+          "full_chars": 191,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "X-Men est un film américain réalisé par Bryan Singer, sorti en 2000. C'est le premier film de la série X-Men mettant en scène les personnages de la série de comics X-Men de Marvel Comics, créés par le scénariste Stan Lee et le dessinateur Jack Kirby. Le film marque le début de la saga cinématographique X-Men. Résumé Pologne, 1944. Un groupe de prisonniers juifs est conduit vers un camp nazi où une sinistre sélection met d'un côté un jeune adolescent et de l'autre le restant de sa famille. Comprenant leur funeste destin, le garçon, agissant par instinct, veut rejoindre ses parents mais les gardes ne peuvent l'emmener, son corps étant bloqué par l'attraction magnétique qui le lie aux portes du camp de la mort. Ce n'est qu'une fois assommé que le garçon est emmené alors que ses proches sont exterminés. Des années plus tard, aux États-Unis, un vieil homme quitte en colère une assemblée où le sénateur Robert Kelly prône une loi pour l'identification et l'enfermement des mutants dont l'exist",
+          "full_chars": 22611,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q-fr-484",
+        "document_id": "doc-fr-3681",
+        "query": {
+          "text": "Quel est le temps de traversée entre Ouistreham et Portsmouth en utilisant la ligne de ferry de Brittany Ferries ?",
+          "full_chars": 114,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Le port de Caen-Ouistreham est un port de commerce, un port passager et un port de plaisance français s'étendant sur le canal de Caen à la mer depuis l'embouchure de l'Orne à Ouistreham jusqu'à la ville de Caen, dans le département du Calvados et la région Normandie. Il reste aussi un port de pêche artisanale et côtière. Histoire Du Moyen Âge à l'époque moderne Au , un vicus se constitue sur les bords de l'Odon à l'emplacement de l'actuelle abbaye aux Hommes. Des fouilles menées dans les années 1970 ont montré qu'après l'échec d'une première tentative pour stabiliser les berges de la rivière un canal a été creusé d'est en ouest à travers le bourg. Ce canal avait pour but d'assainir le terrain, mais il est probable que les berges aménagées de ce canal tenaient également lieu d'installations portuaires sommaires. Le cabotage jusqu'à l'Orne assuré par des barques à fond plat devaient permettre l'échange de produits locaux. Les différents bourgs dispersés dans la vallée de l'Orne connaisse",
+          "full_chars": 22300,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

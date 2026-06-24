@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Towards Benchmarking and Improving the Temporal Reasoning Capability of Large Language Models",
         "url": "https://arxiv.org/abs/2306.08952",
         "year": 2023,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "TR2-q-66",
+        "document_id": "TR2-d-65",
+        "query": {
+          "text": "Which position did Patricia de Lille hold in Sep, 2015?",
+          "full_chars": 55,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "mayor of Cape Town",
+          "full_chars": 18,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR2-q-123",
+        "document_id": "TR2-d-123",
+        "query": {
+          "text": "Which position did Lord Douglas Gordon-Hallyburton hold in Oct, 1833?",
+          "full_chars": 69,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Member of the 11th Parliament of the United Kingdom",
+          "full_chars": 51,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "TR2-q-103",
+        "document_id": "TR2-d-103",
+        "query": {
+          "text": "Who was the head of Russia in Jul, 1999?",
+          "full_chars": 40,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sergei Stepashin",
+          "full_chars": 16,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -70,9 +70,11 @@ For reranking, useful signals include title quality, snippet intent match, and r
 
 ## Example Data
 
-### Public Sources
-
-This task is documented through the FaMTEB paper, the `MCINext/persian-web-document-retrieval` dataset card, and an IEEE source reference. MTEB provides the broader retrieval evaluation framework.
+| Query | Positive document |
+| --- | --- |
+| فیلم سینمایی۳۵۶ روز بدون‌سانسور [31 chars] | دانلود فیلم 365 روز 1 (بدون سانسور) - فیلو دانلود فیلم 365 روز 1 (بدون سانسور) تیزر مووی [89 chars] |
+| کلیپ عاشفانه [12 chars] | آپارات \| کافه کلیپ عاشقانه [27 chars] |
+| واکینگ دد قسمت ۲۲ فصل ۱۱ [24 chars] | سریال مردگان متحرک :: فصل 11 قسمت 22 :: زیرنویس فارسی دانلود فصل یازدهم مجموعه واکینگ دِد(The Walking Dead - مردگان متحرک) با زیرنویس فارسی و کیفیت فول اچ دی 1080p Full HD \| رده سنی: 15+ سال \| محصول: امریکا \| ژانر:درام، وحشت، ماجراجویی \| IMDb خلاصه: سریال مردگان متحرک (The Walking Dead) یکی از محبوب‌ترین مجموعه‌های تاریخ تلویزیون است. این مجموعه در طول ۱۰ فصل قبلی‌اش با فراز و نشیب‌های بسیاری همراه بوده و هم‌اکنون با فصل یازدهم، می‌خواهد تجربه تازه‌ای را برای مخاطبان رقم بزند آخرین فصل از مجموعه تلویزیونی مردگان متحرک است که شامل ۲۴ قسمت خواهد بود و در طول سالهای ۲۰۲۱ و ۲۰۲۲ پخش خواهد شد. [596 chars] |
 
 ### Source Reference Table
 

@@ -167,13 +167,13 @@ category, or answer family.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | https://arxiv.org/abs/2210.07316 |
-| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | source task paper | https://arxiv.org/abs/2210.01613 |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2023 | source task paper | https://arxiv.org/abs/2210.09984 |
-| A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources | 2019 | source task paper | https://doi.org/10.1007/978-3-030-15719-7_19 |
-| Spanish Passage Retrieval dataset page |  | project page | https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/ |
-| xPQA: Cross-Lingual Product Question Answering across 12 Languages | 2023 | source task paper | https://arxiv.org/abs/2305.09249 |
-| mteb/MintakaRetrieval |  | dataset card | https://huggingface.co/datasets/mteb/MintakaRetrieval |
-| mteb/MIRACLRetrievalHardNegatives |  | dataset card | https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives |
-| mteb/SpanishPassageRetrievalS2P |  | dataset card | https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P |
-| mteb/XPQARetrieval |  | dataset card | https://huggingface.co/datasets/mteb/XPQARetrieval |
+| MTEB: Massive Text Embedding Benchmark | 2023 | benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
+| Mintaka: A Complex, Natural, and Multilingual Dataset for End-to-End Question Answering | 2022 | source task paper | [https://arxiv.org/abs/2210.01613](https://arxiv.org/abs/2210.01613) |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2023 | source task paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| A Test Collection for Passage Retrieval Evaluation of Spanish Health-Related Resources | 2019 | source task paper | [https://doi.org/10.1007/978-3-030-15719-7_19](https://doi.org/10.1007/978-3-030-15719-7_19) |
+| Spanish Passage Retrieval dataset page |  | project page | [https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/](https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/) |
+| xPQA: Cross-Lingual Product Question Answering across 12 Languages | 2023 | source task paper | [https://arxiv.org/abs/2305.09249](https://arxiv.org/abs/2305.09249) |
+| mteb/MintakaRetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MintakaRetrieval](https://huggingface.co/datasets/mteb/MintakaRetrieval) |
+| mteb/MIRACLRetrievalHardNegatives |  | dataset card | [https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives](https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives) |
+| mteb/SpanishPassageRetrievalS2P |  | dataset card | [https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P](https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2P) |
+| mteb/XPQARetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/XPQARetrieval](https://huggingface.co/datasets/mteb/XPQARetrieval) |

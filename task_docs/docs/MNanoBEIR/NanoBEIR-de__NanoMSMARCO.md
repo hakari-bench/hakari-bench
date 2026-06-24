@@ -48,13 +48,11 @@ A strong model for this task should combine robust German query understanding wi
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Was ist das Ruminationssyndrom? | Ruminationssyndrom, auch Merykismus genannt, ist eine nicht näher bezeichnete Essstörung, die das Erbrechen von Nahrung verursacht... |
-| Wer hat den Song "Here I Go Again" gesungen? | Here I Go Again ist ein Lied der britischen Rockband Whitesnake. Ursprünglich erschien das Lied 1982 auf ihrem Album Saints & Sinners... |
-| Wen spielt Cameron Boyce in Liv und Maddie? | Bereitet euch auf ordentlich Lacher vor, Leute. In einem exklusiven Vorab-Blick auf die Folge von Liv & Maddie... |
-| Wo liegen die meisten großen Wüsten der Erde? | Die übrigen Wüsten der Erde liegen außerhalb der Polargebiete. Die größte ist die Sahara, eine subtropische Wüste in Nordafrika. |
-| Was bedeutet "copper" für einen Polizisten? | Aufgrund der aktuellen Erkenntnisse scheint es, dass 'Bulle' älter ist als 'cop', das entweder als Verb im Sinne von 'festnehmen'... |
+| Query | Positive document |
+| --- | --- |
+| Was ist das Ruminationssyndrom? [31 chars] | Ruminationssyndrom, auch Merykismus genannt, ist eine nicht näher bezeichnete Essstörung, die das Erbrechen von Nahrung verursacht. Obwohl es im DSM-IV nicht als spezifische Essstörung identifiziert wird, wurden bestimmte Kriterien für die Diagnose der Störung festgelegt. [272 chars] |
+| Wer hat den Song "Here I Go Again" gesungen? [44 chars] | Für andere Verwendungen siehe Here I Go Again (Bedeutungsübersicht). Here I Go Again ist ein Lied der britischen Rockband Whitesnake. Ursprünglich erschien das Lied 1982 auf ihrem Album Saints & Sinners. Für das gleichnamige Album Whitesnake aus dem Jahr 1987 wurde es neu aufgenommen. Im selben Jahr wurde das Lied erneut in einer neuen Radio-Mix-Version aufgenommen. [368 chars] |
+| Wen spielt Cameron Boyce in Liv und Maddie? [43 chars] | Bereitet euch auf ordentlich Lacher vor, Leute. In einem exklusiven Vorab-Blick auf die Folge vom 19. April von Liv & Maddie mit dem Titel „Prom-A-Rooney.“ Natürlich. Im lustigen Clip sehen wir den Jessie-Star Cameron Boyce in eine andere Disney-Serie wechseln, um Maddie (Shelby Wulfert) zu treffen. Seine Figur ist, ähm, ziemlich exzentrisch! [344 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ A strong model for this task should combine robust German query understanding wi
 
 | Label | URL |
 |---|---|
-| MS MARCO paper | https://arxiv.org/abs/1611.09268 |
-| MS MARCO dataset site | https://microsoft.github.io/msmarco/Datasets.html |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| MS MARCO paper (https://arxiv.org/abs/1611.09268) |
+| MS MARCO dataset site (https://microsoft.github.io/msmarco/Datasets.html) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

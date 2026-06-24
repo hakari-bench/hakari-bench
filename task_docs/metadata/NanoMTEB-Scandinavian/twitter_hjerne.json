@@ -134,29 +134,80 @@
         "url": "https://sorenmulli.github.io/thesis/thesis.pdf",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "thesis_source"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "The Scandinavian Embedding Benchmarks",
         "url": "https://arxiv.org/abs/2406.02396",
         "year": 2024,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "sorenmulli/da-hashtag-twitterhjerne",
         "url": "https://huggingface.co/datasets/sorenmulli/da-hashtag-twitterhjerne",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/TwitterHjerneRetrieval",
         "url": "https://huggingface.co/datasets/mteb/TwitterHjerneRetrieval",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "150",
+        "document_id": "151",
+        "query": {
+          "text": "Hej #Twitterhjerne & twitterfolkens (- eller X'ere, whatever 😊) Er der nogen der kan fortælle mig hvor jeg kan købe IKKE-danske kartofler? Hverken Rema1000, Netto, Kvickly ell SuperBrugsen sælger andet end danske. (Jeg ønsker ikke at spise det hjerneskadende pesticid Reglone)",
+          "full_chars": 278,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Økologiske er vel ok?",
+          "full_chars": 21,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "112",
+        "document_id": "113",
+        "query": {
+          "text": "Hvis I betaler for medieovervågning på arbejdet - hvem bruger I så, og er I tilfredse? #dkmedier #dkbiz #twitterhjerne",
+          "full_chars": 118,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Infomedia - og mnjah",
+          "full_chars": 20,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "231",
+        "document_id": "232",
+        "query": {
+          "text": "Er der andre der døjer med samme problem som mig, min controller til ps5 lader maks 1 streg om natten. Hver gang jeg sidder og spiller disconneter den hele tiden, jeg har ikke gjort noget ved den. Den havde det allerede 1 uge efter jeg fik konsollen.",
+          "full_chars": 250,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Du skal bare indlevere den, hvor du har købt, så får du en ny",
+          "full_chars": 61,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

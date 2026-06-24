@@ -70,9 +70,11 @@ For reranking research, NanoCodeSearchNetCCR is a good case where lexical candid
 
 ## Example Data
 
-### Public Sources
-
-NanoCodeSearchNetCCR is documented through CoIR and the CodeSearchNet Challenge paper. The CoIR-Retrieval CodeSearchNet-ccr dataset card is the source-specific public reference for prefix-continuation retrieval.
+| Query | Positive document |
+| --- | --- |
+| def _get_field(self, field_name, default=None): """ Fetches a field from extras, and returns it. This is some Airflow magic. The grpc hook type adds custom UI elements to the hook page, which allow admins to specify scopes, credential pem files, etc. They get formatted as shown below. """ [337 chars] | GrpcHook._get_field full_field_name = 'extra__grpc__{}'.format(field_name) if full_field_name in self.extras: return self.extras[full_field_name] else: return default [206 chars] |
+| func (in *inflights) freeTo(to uint64) { if in.count == 0 \|\| to < in.buffer[in.start] { // out of the left side of the window return } idx := in.start var i int for i = 0; i < in.count; i++ { if to < in.buffer[idx] { // found the first large inflight break } // increase index and maybe rotate size := in.size if idx++; idx >= size { idx [364 chars] | freeTo -= size } } // free i inflights and set new start index in.count -= i in.start = idx if in.count == 0 { // inflights is empty, reset the start index so that we don't grow the // buffer unnecessarily. in.start = 0 } } [237 chars] |
+| func NewCertPool(CAFiles []string) (*x509.CertPool, error) { certPool := x509.NewCertPool() for _, CAFile := range CAFiles { pemByte, err := ioutil.ReadFile(CAFile) if err != nil { return nil, err } for { var block *pem.Block block, pemByte = pem.Decode(pemByte) if block == nil { [304 chars] | NewCertPool break } cert, err := x509.ParseCertificate(block.Bytes) if err != nil { return nil, err } certPool.AddCert(cert) } } return certPool, nil } [176 chars] |
 
 ### Source Reference Table
 

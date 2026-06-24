@@ -62,19 +62,19 @@ This task benefits from retrieval models that combine Thai question understandin
 
 ## Example Data
 
-### Public Sources
-
-- [MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering](https://arxiv.org/abs/2007.15207), 2020.
-- [apple/ml-mkqa](https://github.com/apple/ml-mkqa), source repository.
-- [mteb/MKQARetrieval](https://huggingface.co/datasets/mteb/MKQARetrieval), MTEB dataset card.
+| Query | Positive document |
+| --- | --- |
+| อายุจำกัดสำหรับลูกเสือหญิงคือเท่าไหร่ [37 chars] | 5.0 18.0 ปี [11 chars] |
+| ใครเป็นผู้เล่นเบสหนึ่งของแยงกีส์ [32 chars] | Edwin Encarnación [17 chars] |
+| เมืองแอลบูเคอร์คีในรัฐนิวเม็กซิโกมีประชากรเท่าไหร่ [50 chars] | 558545.0 [8 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering | 2020 | paper | https://arxiv.org/abs/2007.15207 |
-| apple/ml-mkqa | 2020 | repository | https://github.com/apple/ml-mkqa |
-| mteb/MKQARetrieval |  | dataset card | https://huggingface.co/datasets/mteb/MKQARetrieval |
+| MKQA: A Linguistically Diverse Benchmark for Multilingual Open Domain Question Answering | 2020 | paper | [https://arxiv.org/abs/2007.15207](https://arxiv.org/abs/2007.15207) |
+| apple/ml-mkqa | 2020 | repository | [https://github.com/apple/ml-mkqa](https://github.com/apple/ml-mkqa) |
+| mteb/MKQARetrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MKQARetrieval](https://huggingface.co/datasets/mteb/MKQARetrieval) |
 
 ### Representative Snippets
 

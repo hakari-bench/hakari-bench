@@ -70,11 +70,11 @@ For evaluation, this split is a strong test of cross-lingual answer-snippet retr
 
 ## Example Data
 
-### Public Sources
-
-- xPQA paper: https://arxiv.org/abs/2305.09249
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- Source task dataset card: https://huggingface.co/datasets/mteb/XPQARetrieval
+| Query | Positive document |
+| --- | --- |
+| do you have anything that holds at 0 and 90 degrees and doesn't turn on its own? [80 chars] | Sí. Un cliente ha dicho que soporta la televisión a 0 y 90 grados. [66 chars] |
+| what type of restraint do you have? [35 chars] | Un cliente ha dicho que utilizó ganchos con tiras. [50 chars] |
+| can it be used to wash my face? [31 chars] | Sí. Son utilizables para cualquier parte del cuerpo. [52 chars] |
 
 ### Source Reference Table
 

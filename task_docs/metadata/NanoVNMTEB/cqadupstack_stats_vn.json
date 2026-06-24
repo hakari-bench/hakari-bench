@@ -162,6 +162,57 @@
         "is_paper": false,
         "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "87601",
+        "document_id": "87599",
+        "query": {
+          "text": "Thử nghiệm này có ý nghĩa gì?",
+          "full_chars": 29,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Tôi giải thích kết quả của bài kiểm tra căn đơn vị như thế nào? Dickey-Fuller kiểm tra đơn vị gốc Số lượng quan sát = 21 ---------- Dickey-Fuller can thiệp Kiểm tra 1% Quan trọng 5% Quan trọng 10% Quan trọng Thống kê Giá trị Giá trị Giá trị ------------------------------------------------------------------------------ Z(t) -14.272 -4.380 -3.600 -3.240 ------------------------------------------------------------------------------ MacKinnon ước tính p-giá trị cho Z(t) = 0.0000 ------------------------------------------------------------------------------ D.TotalS | Coef. Std. Err. t P>|t| [95% Giới hạn tin cậy] -------------+---------------------------------------------------------------- TotalS | L1. | -.9774459 .0684873 -14.27 0.000 -1.121332 -.8335593 _trend | .4713369 .0326362 14.44 0.000 .4027708 .539903 _cons | 48.50135 3.370879 14.39 0.000 41.41939 55.5833 ------------------------------------------------------------------------------ Cụ thể: Liệu có được phép có một giá trị p bằng",
+          "full_chars": 1506,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1850",
+        "document_id": "66956",
+        "query": {
+          "text": "Sự khác biệt giữa Cohen's d và Hedges' g trong các số liệu thống kê về kích thước tác động",
+          "full_chars": 90,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sự khác biệt giữa Hedges' g và Cohen's d là gì? Tôi đã đọc http://www.polyu.edu.hk/mm/effectsizefaqs/effect_size_equations2.html và sự khác biệt duy nhất tôi có thể tìm thấy giữa hai phương pháp này là giá trị sai số chuẩn kết hợp của chúng hơi khác nhau một chút nhưng tôi không hiểu việc thay đổi các giá trị này nhằm mục đích cải thiện độ chính xác của ước lượng kích thước hiệu ứng như thế nào. Sự khác biệt trong sai số chuẩn là như sau ($SD_{pooled}$ là sai số chuẩn kết hợp cho d của Cohen và $SD^{*}_{pooled}$ là cho g của Hedges): $SD_{pooled}=\\sqrt{\\frac{n_1 SD_1^2+n_2 SD_2^2}{n_1+n_2-2}}$ $SD^{*}_{pooled}=\\sqrt{\\frac{(n_1-1)SD_1^2+(n_2-1)SD_2^2}{n_1+n_2-2}}$",
+          "full_chars": 672,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "105545",
+        "document_id": "16921",
+        "query": {
+          "text": "$\\chi^2$ goodness of fit - cách tính giá trị mong đợi khi $\\exists$ các tham số không biết",
+          "full_chars": 90,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Cách hiểu về bậc tự do là gì? Từ Wikipedia, có ba cách giải thích về bậc tự do của một thống kê: > Trong thống kê, số bậc tự do là số lượng các giá trị trong **tính toán cuối cùng** của một thống kê mà **tự do để thay đổi**. > > Ước tính các tham số thống kê có thể dựa trên số lượng thông tin hoặc dữ liệu khác nhau. Số lượng **các mảnh thông tin độc lập** được đưa vào ước tính của một tham số được gọi là bậc tự do (df). Thông thường, bậc tự do của ước tính của một tham số bằng **số lượng điểm độc lập được đưa vào ước tính** trừ đi **số lượng tham số được sử dụng như các bước trung gian trong việc ước tính chính tham số** (mà, trong phương sai mẫu, là một, vì trung bình mẫu là bước trung gian duy nhất). > > Toán học, bậc tự do là **bề rộng của miền của một véc-tơ ngẫu nhiên**, hoặc bản chất là **số lượng các thành phần \"tự do\": bao nhiêu thành phần cần phải biết trước khi xác định hoàn toàn vectơ**. Các từ in đậm là những điều tôi không hiểu rõ. Nếu có thể, một số công thức toán học sẽ",
+          "full_chars": 1087,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

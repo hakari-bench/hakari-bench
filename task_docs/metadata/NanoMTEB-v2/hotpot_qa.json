@@ -140,10 +140,61 @@
         "url": "https://huggingface.co/datasets/mteb/HotpotQA_test_top_250_only_w_correct-v2",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "5ae0132d55429925eb1afc00",
+        "document_id": "18207527",
+        "query": {
+          "text": "The Soul of Buddha is a 1918 American silent romance film shot in a borough that is the western terminus of what?",
+          "full_chars": 114,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Soul of Buddha The Soul of Buddha is a 1918 American silent romance film directed by J. Gordon Edwards and starring Theda Bara, who also wrote the film's story. The film was produced by Fox Film Corporation and shot at the Fox Studio in Fort Lee, New Jersey.",
+          "full_chars": 263,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a7a8a9c554299042af8f666",
+        "document_id": "16758393",
+        "query": {
+          "text": "The lamp used in many lighthouses is similiar to this type of lamp patented in 1780 by Aimé Argand?",
+          "full_chars": 99,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Lewis lamp The Lewis lamp is a type of light fixture used in lighthouses. It was invented by Winslow Lewis who patented the design in 1810. The primary marketing point of the Lewis lamp was that it used less than half the oil of the prior oil lamps which they replaced. The lamp used a similar design to an Argand lamp, adding a parabolic reflector behind the lamp and a magnifying lens made from 4 in green bottle glass in front of the lamp. A similar variant using a parabolic reflector was created by the inventor of the Argand lamp, Aimé Argand. While the Argand variant became widely used by European lighthouses, the Lewis lamp design was selected by the United States for use in American lighthouses.",
+          "full_chars": 708,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "5a73977d554299623ed4ac08",
+        "document_id": "4140268",
+        "query": {
+          "text": "What is the shared country of ancestry between Art Laboe and Scout Tufankjian?",
+          "full_chars": 78,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Art Laboe Art Laboe (born Arthur Egnoian on August 7, 1925) is an Armenian American disc jockey, songwriter, record producer, and radio station owner, generally credited with coining the term \"Oldies But Goodies\".",
+          "full_chars": 214,
+          "limit_chars": 1000,
+          "truncated": false
+        }
       }
     ],
     "source_dataset_id": "mteb/HotpotQA_test_top_250_only_w_correct-v2",
-    "source_task": "HotpotQAHardNegatives"
+    "source_task": "HotpotQAHardNegatives",
+    "example_count": 3
   }
 }

@@ -141,21 +141,20 @@ on evidence-aware ranking.
 
 ## Example Data
 
-### Public Sources
-
-- [Fact or Fiction: Verifying Scientific Claims](https://arxiv.org/abs/2004.14974), 2020.
-- [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://arxiv.org/abs/2104.08663), 2021.
-- [BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language](https://aclanthology.org/2025.bucc-1.5/), 2025.
-- [clips/beir-nl-scifact](https://huggingface.co/datasets/clips/beir-nl-scifact), source dataset card.
+| Query | Positive document |
+| --- | --- |
+| Metastatische colorectale kanker behandeld met enkelvoudige fluoropyrimidinen resulteerde in verminderde werkzaamheid en lagere kwaliteit van leven in vergelijking met oxaliplatine-gebaseerde chemotherapie bij oudere patiënten. [227 chars] | Chemotherapieopties bij oudere en kwetsbare patiënten met metastatische colorectale kanker (MRC FOCUS2): een open-label, gerandomiseerde factorieel onderzoek ACHTERGROND Oudere en kwetsbare patiënten met kanker, hoewel vaak behandeld met chemotherapie, zijn ondervertegenwoordigd in klinische studies. We hebben FOCUS2 ontworpen om chemotherapieopties met gereduceerde dosering te onderzoeken en om objectieve voorspellers van de uitkomst bij kwetsbare patiënten met gevorderde colorectale kanker te zoeken. METHODEN We voerden een open, 2 × 2 factorieel onderzoek uit in 61 Britse centra voor patiënten met eerder onbehandelde gevorderde colorectale kanker die niet geschikt werden geacht voor chemotherapie met volledige dosis. Na een uitgebreide gezondheidsbeoordeling (CHA) werden patiënten gerandomiseerd door minimalisatie aan: 48-uurs intraveneus fluorouracil met levofolinate (groep A); oxaliplatine en fluorouracil (groep B); capecitabine (groep C); of oxaliplatine en capecitabine (groep D)... [1,000 / 3,389 chars] |
+| CRP is geen voorspeller van postoperatieve mortaliteit na een coronaire arteriële bypass graft (CABG) operatie. [111 chars] | Beoordeling van de kosteneffectiviteit van het gebruik van prognostische biomarkers met beslissingsmodellen: een casestudy naar prioritering van patiënten in afwachting van coronaire bypass-chirurgie DOEL De effectiviteit en kosteneffectiviteit bepalen van het gebruik van informatie van circulerende biomarkers om het prioriteringsproces te informeren van patiënten met stabiele angina pectoris die wachten op een coronaire bypass-operatie. ONTWERP Beslissingsanalytisch model dat vier prioriteitsstrategieën zonder biomarkers vergelijkt (geen formele prioritering, twee urgentiescores en een risico-score) en drie strategieën gebaseerd op een risico-score met biomarkers: een routinematig beoordeelde biomarker (geschatte glomerulaire filtratiesnelheid), een nieuwe biomarker (C-reactief proteïne) of beide. De volgorde waarin een coronaire bypass-operatie in een cohort van patiënten werd uitgevoerd, werd bepaald door elke prioriteitsstrategie, en de gemiddelde levenslange kosten en kwaliteitsge... [1,000 / 3,250 chars] |
+| Arginine 90 in p150n is belangrijk voor de interactie met EB1. [62 chars] | Structurele basis voor de activatie van microtubulusassemblage door het EB1 en p150Glued complex. Plus-eind trackende eiwitten, zoals EB1 en het dyneïne/dynactine complex, reguleren microtubulusdynamiek. Aangenomen wordt dat deze eiwitten microtubuli stabiliseren door een plus-eind complex te vormen aan de groeiende uiteinden van microtubuli, met slecht gedefinieerde mechanismen. Hier rapporteren we de kristalstructuur van twee componenten van het plus-eind complex, het carboxy-terminale dimerisatiedomein van EB1 en het microtubulusbindende (CAP-Gly) domein van de dynactine-subeenheid p150Glued. Elk molecuul van het EB1 dimeer bevat twee helixen die een geconserveerd vier-helix bundel vormen, terwijl het ook p150Glued bindingsplaatsen in zijn flexibele staartregio verschaft. Door kristallografie, NMR en mutatieanalyses te combineren, onthullen onze studies de kritische interagerende elementen van zowel EB1 als p150Glued, waarvan mutatie de microtubuluspolymerisatie-activiteit verandert... [1,000 / 1,328 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | https://arxiv.org/abs/2004.14974 |
-| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | https://arxiv.org/abs/2104.08663 |
-| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | https://aclanthology.org/2025.bucc-1.5/ |
-| clips/beir-nl-scifact |  | dataset card | https://huggingface.co/datasets/clips/beir-nl-scifact |
+| Fact or Fiction: Verifying Scientific Claims | 2020 | arXiv paper | [https://arxiv.org/abs/2004.14974](https://arxiv.org/abs/2004.14974) |
+| BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models | 2021 | arXiv paper | [https://arxiv.org/abs/2104.08663](https://arxiv.org/abs/2104.08663) |
+| BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language | 2025 | ACL paper | [https://aclanthology.org/2025.bucc-1.5/](https://aclanthology.org/2025.bucc-1.5/) |
+| clips/beir-nl-scifact |  | dataset card | [https://huggingface.co/datasets/clips/beir-nl-scifact](https://huggingface.co/datasets/clips/beir-nl-scifact) |
 
 ### Representative Snippets
 

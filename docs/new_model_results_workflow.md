@@ -123,10 +123,13 @@ check:
 - `method`.
 - `embedding.truncate_dims`: numeric list for documented dense truncate
   dimensions, or `null` when the model should not be treated as
-  truncation-compatible.
+  truncation-compatible. Exclude the model's native output dimension because it
+  duplicates the base result.
 - `runtime`: dtype, attention implementation, backend, max sequence length,
   trust-remote-code flags, and similarity function.
-- `prompts`: prompt names, prompt text, or encode tasks required by the model.
+- `prompts`: Sentence Transformers prompt names when the model config provides
+  reviewed retrieval prompts, or explicit query/document prompt text or encode
+  tasks when prompt names are unavailable or unsuitable for the backend.
 - `late_interaction`: ColBERT-specific prefixes, token lengths, expansion, and
   scoring fields when relevant.
 - `language_support`: display metadata for the leaderboard when enough evidence
@@ -137,6 +140,13 @@ check:
 If `runtime.trust_remote_code: true`, the card must also set
 `runtime.remote_code_approved: true` and use a full 40-character reviewed
 Hugging Face commit SHA in `source.revision`.
+
+The reviewed card is the reusable evaluation manifest for model-specific
+options. After it records prompts, truncate dimensions, runtime choices, and
+late-interaction settings, prefer `evaluate from-model-card` so repeated smoke,
+full, and resume runs use the same settings. Keep benchmark-protocol controls
+such as `--candidate-ranking`, `--rerank-top-k`, `--batch-size`, `--device`,
+and `--results-dir` on the command line.
 
 Result PRs to `hakari-bench/results` should normally contain only `.json.xz`
 files. Add or update `config/model_cards/*.yaml` in the GitHub code repository

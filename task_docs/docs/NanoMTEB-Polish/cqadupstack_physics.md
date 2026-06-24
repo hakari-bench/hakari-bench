@@ -70,12 +70,11 @@ For evaluation, nDCG@10 should be used to judge direct search quality, while rec
 
 ## Example Data
 
-### Public Sources
-
-- CQADupStack original paper: https://ir.webis.de/anthology/2015.adcs_conference-2015.3/
-- MTEB benchmark paper: https://arxiv.org/abs/2210.07316
-- CLARIN-KNEXT Polish dataset card: https://huggingface.co/datasets/clarin-knext/cqadupstack-physics-pl
-- Source task dataset card: https://huggingface.co/datasets/mteb/CQADupstack-Physics-PL
+| Query | Positive document |
+| --- | --- |
+| Jak równanie Schroedingera jest równaniem falowym? [50 chars] | związek między równaniem Schrodingera a równaniem falowym Zawsze byłem zdezorientowany związkiem między równaniem Schrödingera a równaniem falowym. $$ i\hbar \frac{\partial \psi}{\partial t} = - \frac{\hbar^2}{2m} \nabla^2+ U \psi \hspace{0.25in}\text{-vs -}\hspace{0.25in}\nabla^2 E = \frac{1}{c^2}\frac{\partial^2 E}{\partial^2 t} $$ Ze względu na pierwszą pochodną Schrödingera równanie wygląda bardziej jak równanie ciepła. Niektóre wyprowadzenia równania Schrodingera zaczynają się od dualizmu falowo-cząsteczkowego dla światła i dowodzą, że materia również powinna wykazywać to zjawisko. W niektórych notatkach Fermiego została ona wyprowadzona przez porównanie zasady najmniejszego czasu Fermata $\delta \int n \;ds = 0 $ i zasady najmniejszego działania Maupertuisa $\delta \int 2T(t) \; dt = 0 zł. Czy to kiedykolwiek zostało wyjaśnione? Jak możemy bardziej ilościowo zobaczyć ideę fali materii? * * * Podsumowując, próbuję zrozumieć, dlaczego równanie fal elektromagnetycznych jest hiperbol... [1,000 / 1,059 chars] |
+| Pomiary technologii aktywnej redukcji szumów [44 chars] | Maksymalne opóźnienie efektywnej aktywnej redukcji szumów? Aktywna redukcja szumów redukuje niechciany dźwięk, wysyłając odwróconą fazę oryginalnej fazy: ![Aktywna redukcja szumów](http://i.stack.imgur.com/0jSp8.png) (Źródło: Wikipedia) Teoretycznie wydaje się to logiczne ja. Jednak w rzeczywistości eliminacja szumów musi być tworzona przez jakiś system sprzętowy lub programowy (np. słuchawki z aktywną redukcją szumów), co wymaga czasu. Zakładam więc, że anty-hałas jest zawsze opóźniony do oryginalnego dźwięku: ![Aktywna redukcja szumów z opóźnieniem](http://i.stack.imgur.com/XBMyk.png) Moje pytania: * Ile (w milisekundach) lub cokolwiek) jest _maksymalnym_ opóźnieniem, które jest „dozwolone” dla aktywnej redukcji szumów, tak aby słuchacz hałasu + antyhałas nadal zauważał efekt? * Czy „dozwolone” opóźnienie zależy od tego, jaki hałas ma zostać skasowany (np. jazda samochodem, ludzie mówiący, muzyka)? [913 chars] |
+| Czy ciągłe modele matematyczne dyskretnych zjawisk fizycznych są bałaganiarskie z powodu rozłączenia między „ciągłym” i „nieciągłym”? [133 chars] | Jaki jest „dyskretny” odpowiednik mechaniki „ciągłej”? Gdybym chciał zbadać podejście matematyki dyskretnej do mechaniki kontinuum, do jakich podręczników powinienem się zajrzeć? Przypuszczam, że gotową odpowiedzią na to pytanie może być: „obliczeniowa mechanika kontinuum”, ale zwykle podręczniki poruszające taki temat koncentrują się zwykle na zastosowaniu analizy numerycznej do teorii ciągłych (tj. baza jest ciągła), natomiast chciałbym wiedzieć, czy istnieje traktowanie tematu, które buduje się z podstawy, która jest dyskretna. [536 chars] |
 
 ### Source Reference Table
 

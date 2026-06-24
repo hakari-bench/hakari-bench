@@ -62,19 +62,19 @@ Models should preserve Greek morphology, legal terminology, article references, 
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Ποια διάταξη της Ένωσης απαιτεί τη συνεκτίμηση απασχόλησης, κοινωνικής προστασίας, καταπολέμησης αποκλεισμού και εκπαίδευσης, κατάρτισης και προστασίας υγείας; [159 chars] | Τούτο συμβαίνει, παραδείγματος χάρη, στην περίπτωση της κοινωνικής πολιτικής, με την ενσωμάτωση μιας γενικής διάταξης (η οποία καλείται κοινωνική ρήτρα) σύμφωνα με την οποία η Ένωση οφείλει, κατά τον καθορισμό και την εφαρμογή των πολιτικών της, να συνεκτιμά τις απαιτήσεις που συνδέονται με την προαγωγή υψηλού επιπέδου απασχόλησης, με τη διασφάλιση της κατάλληλης κοινωνικής προστασίας, με την καταπολέμηση του κοινωνικού αποκλεισμού και με την εγγύηση υψηλού επιπέδου εκπαίδευσης, κατάρτισης και προστασίας της ανθρώπινης υγείας. Το ίδιο συμβαίνει και όσον αφορά την αναγνώριση του ρόλου των υπηρεσιών κοινής ωφελείας για την προώθηση της κοινωνικής και εδαφικής συνοχής ή, όπως ήδη αναφέρεται στη Συνθήκη, για τη συνεκτίμηση της περιβαλλοντικής διάστασης και των απαιτήσεων περί προστασίας των καταναλωτών. [810 chars] |
+| Ποια εταιρεία προμηθεύει 25% της ηπειρωτικής ζήτησης κινητήρων οικιακών συσκευών και στοχεύει 10% μερίδιο μηχανισμών καθίσματος έως 2006; [137 chars] | Βάσει των σημερινών πληροφοριών, η Επιτροπή αμφιβάλλει επίσης για το κατά πόσον δεν θα υπάρξουν στρεβλώσεις στον ανταγωνισμό και για το κατά πόσον η ενίσχυση περιορίζεται στο ελάχιστο αναγκαίο. Π.χ., οι κοινοποιηθείσες πληροφορίες δεν παρέχουν τη δυνατότητα σαφούς καθορισμού της σχετικής αγοράς. Επιπλέον, η κατάσταση του ανταγωνισμού και οι προοπτικές εξέλιξης των αγορών των κινητήρων οικιακών ηλεκτρικών συσκευών (όπου η Euromoteurs παράγει το 25 % της ευρωπαϊκής παραγωγής) και για τους μηχανισμούς ρύθμισης καθίσματος (όπου η Euromoteurs προβλέπει παραγωγή του 10 % της ευρωπαϊκής κατανάλωσης για το 2006) δεν είναι γνωστά. [629 chars] |
+| Ποιο όργανο πρότεινε να αναπτυχθεί πλαίσιο εσωτερικού κοινοτικού ελέγχου για τον αποτελεσματικό έλεγχο του κοινοτικού προϋπολογισμού; [133 chars] | Στη γνωμοδότησή του αριθ. 2/2004 το Συνέδριο τονίζει την ανάγκη για αποδοτικό και αποτελεσματικό έλεγχο επί του κοινοτικού προϋπολογισμού σε όλα τα επίπεδα διοίκησης. Κρίνει ότι υπάρχει περιθώριο βελτίωσης του σχεδιασμού των ελεγκτικών συστημάτων, με τον καθορισμό σαφών και συνεκτικών στόχων και αρμοδιοτήτων, την εξασφάλιση αποτελεσματικού συντονισμού, την παροχή στοιχείων για το κόστος και τα οφέλη τους και την εξασφάλιση συνεπούς εφαρμογής των απαιτήσεων. Το Συνέδριο προτείνει να αναπτυχθεί ένα πλαίσιο εσωτερικού κοινοτικού ελέγχου που θα διευκολύνει τον αποτελεσματικό έλεγχο του κοινοτικού προϋπολογισμού. Το πλαίσιο θα πρέπει να περιλαμβάνει κοινές αρχές και πρότυπα που θα χρησιμοποιούνται ως βάση για την ανάπτυξη νέων ή υφιστάμενων ελεγκτικών συστημάτων. [768 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

@@ -4,11 +4,12 @@ source:
   name: bm25
 method: bm25
 license:
-  id: not_applicable
-  label: Not applicable - Okapi BM25 algorithmic baseline
-  type: algorithm
-  commercial_use: not_applicable
-  source: internal_baseline
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: bm25s_github_repository
+  source_url: https://github.com/xhluca/bm25s
 parameters:
   total: 0
   trainable: 0

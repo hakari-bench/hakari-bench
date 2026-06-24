@@ -103,14 +103,67 @@
         "title": "RAR-b: Reasoning as Retrieval Benchmark",
         "url": "https://arxiv.org/abs/2404.06347",
         "year": 2024,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       },
       {
         "title": "Abductive Commonsense Reasoning",
         "url": "https://arxiv.org/abs/1908.05739",
         "year": 2019,
-        "is_paper": true
+        "is_paper": true,
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "alpha-q-66",
+        "document_id": "alpha-d-133",
+        "query": {
+          "text": "Start: Scott has felt increasingly unhappy in his last few Year's in New York. End: Driving out of New York, Scott feels both relieved and nostalgic.",
+          "full_chars": 149,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The daily grind, extreme traffic and rude city dwellers left Scott longing for small town living.",
+          "full_chars": 97,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "alpha-q-123",
+        "document_id": "alpha-d-246",
+        "query": {
+          "text": "Start: Joe's mother bugged him constantly to tie his shoelaces. End: As he lay at the bottom of the stairs he wished he'd listened.",
+          "full_chars": 131,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Joe tripped down the stairs with his shoes untied.",
+          "full_chars": 50,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "alpha-q-103",
+        "document_id": "alpha-d-207",
+        "query": {
+          "text": "Start: Alex was at target with his mom. End: He begged his mother to buy it until she gave in.",
+          "full_chars": 94,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Alex saw a game he really wanted.",
+          "full_chars": 33,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

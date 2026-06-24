@@ -89,42 +89,6 @@
         "rows_with_101_candidates": 7
       }
     },
-    "references": [
-      {
-        "title": "A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
-        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
-        "year": 2016,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NFCorpus project page",
-        "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-fr",
       "source_urls": [
@@ -133,6 +97,93 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "A Full-Text Learning to Rank Dataset for Medical Information Retrieval",
+        "url": "https://www.cl.uni-heidelberg.de/~riezler/publications/papers/ECIR2016.pdf",
+        "year": 2016,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NFCorpus project page",
+        "url": "https://www.cl.uni-heidelberg.de/statnlpgroup/nfcorpus/",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "PLAIN-3432",
+        "document_id": "MED-2274",
+        "query": {
+          "text": "Milkshakes au chocolat santé",
+          "full_chars": 28,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Objectif : Étudier la relation entre la consommation de cerises et le risque de crises de goutte récidivantes chez les personnes atteintes de goutte. Méthodes : Nous avons mené une étude cas-témoins appariés pour examiner les associations entre un ensemble de facteurs de risque présumés et les crises de goutte récidivantes. Des individus atteints de goutte ont été recrutés de manière prospective et suivis en ligne pendant un an. Les participants ont été interrogés sur les informations suivantes lors d'une crise de goutte : la date de début de la crise, les symptômes et signes, les médicaments (y compris les médicaments anti-goutte), et les facteurs de risque potentiels (y compris la consommation quotidienne de cerises et d'extrait de cerise) durant les 2 jours précédant la crise. Nous avons évalué les mêmes informations d'exposition sur des périodes de contrôle de 2 jours. Nous avons estimé le risque de crises de goutte récidivantes liées à la consommation de cerises en utilisant une r",
+          "full_chars": 2038,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1590",
+        "document_id": "MED-2527",
+        "query": {
+          "text": "éthique médicale",
+          "full_chars": 16,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "CONTEXTE : L'un des principaux défis dans la gestion du cholestérol sérique par l'intervention diététique semble être l'amélioration de l'adhésion des patients. OBJECTIFS : Explorer les nombreuses questions concernant les obstacles et les motivations à l'adhésion à un régime hypocholestérolémiant. MÉTHODES : Nous avons enquêté sur les pratiques diététiques des médecins généralistes français pour les patients atteints d'hypercholestérolémie, et examiné les attitudes de leurs patients envers une telle approche. RÉSULTATS : Nous avons analysé 234 questionnaires personnels de médecins et 356 auto-questionnaires de patients. Les raisons invoquées par les patients pour ne pas suivre le régime prescrit incluaient : « déjà avoir des habitudes alimentaires satisfaisantes » (34,7 %), « refus de subir une privation nutritionnelle » (33,3 %), « difficultés à concilier un régime avec la vie de famille » (27,8 %) et « prise de médicaments hypocholestérolémiants » (22,2 %). Malgré une compréhension g",
+          "full_chars": 2144,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "PLAIN-1161",
+        "document_id": "MED-4281",
+        "query": {
+          "text": "fèves",
+          "full_chars": 5,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Au cours des 20 dernières années, l'intérêt croissant pour la biochimie, la nutrition et la pharmacologie de la L-arginine a conduit à des études approfondies visant à explorer ses rôles nutritionnels et thérapeutiques dans le traitement et la prévention des troubles métaboliques humains. Des preuves émergentes montrent que la supplémentation en L-arginine alimentaire réduit l'adiposité chez les rats génétiquement obèses, les rats obèses par le régime alimentaire, les porcs en finition et les sujets humains obèses atteints de diabète de type 2. Les mécanismes responsables des effets bénéfiques de la L-arginine sont probablement complexes, mais impliquent finalement la modification de l'équilibre entre l'apport et la dépense énergétique en faveur de la perte de graisse ou de la réduction de la croissance du tissu adipeux blanc. Des études récentes indiquent que la supplémentation en L-arginine stimule la biogenèse mitochondriale et le développement du tissu adipeux brun, possiblement pa",
+          "full_chars": 1531,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

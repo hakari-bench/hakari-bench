@@ -130,10 +130,11 @@ weighting or multilingual lexical expansion.
 
 ## Example Data
 
-Representative queries ask what is not an accurate tip for playing accordion in
-several languages, or which MySpace feature helps students with reading
-difficulties. Positive documents are short passages that explicitly support the
-answer, sometimes in a different script or language variant from the query.
+| Query | Positive document |
+| --- | --- |
+| Vad är enligt avsnittet inte ett bra knep för att spela dragspel? [65 chars] | Se till att din hand är så avslappnad som möjligt medan du fortfarande träffar alla noter korrekt. Försök också att inte göra många överflödiga rörelser med fingrarna. På det här sättet tröttar du ut dig själv så lite som möjligt. Kom ihåg att det inte finns något behov av att slå tangenterna med mycket kraft för extra volym som på ett piano. Med ett dragspel använder du bälgen med mer tryck eller högre hastighet för att få högre volym. [440 chars] |
+| وفقاً للفقرة، ما الذي لا يُعتبر نصيحة دقيقة للعزف الناجح على الأكورديون؟ [72 chars] | Make sure your hand is as relaxed as possible while still hitting all the notes correctly - also try not to make much extraneous motion with your fingers. This way, you will tire yourself out as little as possible. Remember there's no need to hit the keys with a lot of force for extra volume like on the piano. On the accordion, to get extra volume, you use the bellows with more pressure or speed. [399 chars] |
+| According to the passage, what would not be considered an accurate tip for successfully playing the accordion? [110 chars] | تأكد من استرخاء يدك قدر الإمكان مع الاستمرار في ضرب كل النغمات بشكل صحيح - حاول كذلك عدم القيام بحركاتٍ غريبةٍ بأصابعك. لن تبذل مجهوداً كبيراً إذا اتبعت تلك الطريقة. ضع نصب عينيك أنه ليس عليك الضغط على مفاتيح الأكورديون بقوةٍ كبيرةٍ لتحصل على مستوى صوتٍ أعلى كما في البيانو. في الأكورديون، للحصول على صوت أعلى إضافي، يمكنك استخدام المنفاخ بمزيد من الضغط أو السرعة. [364 chars] |
 
 ### Public Sources
 
@@ -149,9 +150,9 @@ answer, sometimes in a different script or language variant from the query.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2024 | task paper | https://arxiv.org/abs/2308.16884 |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | https://arxiv.org/abs/2502.13595 |
-| mteb/belebele | 2024 | dataset card | https://huggingface.co/datasets/mteb/belebele |
+| The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants | 2024 | task paper | [https://arxiv.org/abs/2308.16884](https://arxiv.org/abs/2308.16884) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| mteb/belebele | 2024 | dataset card | [https://huggingface.co/datasets/mteb/belebele](https://huggingface.co/datasets/mteb/belebele) |
 
 ### Representative Snippets
 

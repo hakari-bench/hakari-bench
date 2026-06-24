@@ -135,15 +135,66 @@
         "url": "https://arxiv.org/abs/2210.07316",
         "year": 2023,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "mteb/XPQARetrieval",
         "url": "https://huggingface.co/datasets/mteb/XPQARetrieval",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "Q66",
+        "document_id": "C198",
+        "query": {
+          "text": "do you have anything that holds at 0 and 90 degrees and doesn't turn on its own?",
+          "full_chars": 80,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sí. Un cliente ha dicho que soporta la televisión a 0 y 90 grados.",
+          "full_chars": 66,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q123",
+        "document_id": "C62",
+        "query": {
+          "text": "what type of restraint do you have?",
+          "full_chars": 35,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Un cliente ha dicho que utilizó ganchos con tiras.",
+          "full_chars": 50,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Q103",
+        "document_id": "C1830",
+        "query": {
+          "text": "can it be used to wash my face?",
+          "full_chars": 31,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Sí. Son utilizables para cualquier parte del cuerpo.",
+          "full_chars": 52,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

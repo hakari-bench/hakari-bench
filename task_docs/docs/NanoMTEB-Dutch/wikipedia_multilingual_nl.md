@@ -134,21 +134,20 @@ retrieval currently provides the strongest top order.
 
 ## Example Data
 
-### Public Sources
-
-- [MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch](https://arxiv.org/abs/2509.12340), 2025.
-- [ellamind/wikipedia-2023-11-retrieval-multilingual-queries](https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries), source query dataset.
-- [mteb/WikipediaRetrievalMultilingual](https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual), source dataset card.
-- [MTEB project repository](https://github.com/embeddings-benchmark/mteb).
+| Query | Positive document |
+| --- | --- |
+| Wat is een "mandiel" en wie dragen het? [39 chars] | De druzenvrouwen dragen een "mandiel" (transparante losse witte sluier) vooral in het bijzijn van religieuze personen. Zij worden in alle aspecten als gelijkwaardig aan de mannen beschouwd. Het is hen mogelijk deel te hebben aan de "Raad van de Oudsten". [254 chars] |
+| Wat zijn de voorwaarden voor het uitvoeren van een t-toets bij twee steekproeven? [81 chars] | In het geval van twee steekproeven dienen beide steekproeven uit een normale verdeling te komen. De twee steekproeven moeten óf onafhankelijk van elkaar zijn, óf zogenaamd gepaard zijn. In het geval van twee onafhankelijke steekproeven dienen bij toepassing van de standaard t-toets de beide populaties dezelfde variantie te hebben. Wanneer beide populaties een verschillende variantie [385 chars] |
+| Welke methoden worden genoemd voor pijnbestrijding bij pancreatitis? [68 chars] | Pijnbestrijding via orale inname van pijnstillers, de (tijdelijke) verbranding -door alcohol- van de zenuwen rond het pancreas, een geïmplanteerde morfinepomp. [159 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | https://arxiv.org/abs/2509.12340 |
-| ellamind/wikipedia-2023-11-retrieval-multilingual-queries |  | dataset card | https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries |
-| mteb/WikipediaRetrievalMultilingual |  | dataset card | https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual |
-| MTEB project repository |  | repository | https://github.com/embeddings-benchmark/mteb |
+| MTEB-NL and E5-NL: Embedding Benchmark and Models for Dutch | 2025 | arXiv paper | [https://arxiv.org/abs/2509.12340](https://arxiv.org/abs/2509.12340) |
+| ellamind/wikipedia-2023-11-retrieval-multilingual-queries |  | dataset card | [https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries](https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries) |
+| mteb/WikipediaRetrievalMultilingual |  | dataset card | [https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual](https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual) |
+| MTEB project repository |  | repository | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |
 
 ### Representative Snippets
 

@@ -137,8 +137,59 @@
         "url": "https://huggingface.co/datasets/gretelai/synthetic_text_to_sql",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "q100164",
+        "document_id": "c100164",
+        "query": {
+          "text": "What is the difference in average permit cost between high-rise and low-rise buildings in British Columbia in 2021?",
+          "full_chars": 115,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "SELECT AVG(permit_cost) - LAG(AVG(permit_cost)) OVER (PARTITION BY province ORDER BY EXTRACT(YEAR FROM issue_date)) FROM permit_cost_comparison WHERE province = 'British Columbia' AND building_type IN ('High-rise', 'Low-rise') AND issue_date BETWEEN '2021-01-01' AND '2021-12-31';",
+          "full_chars": 280,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q100029",
+        "document_id": "c100029",
+        "query": {
+          "text": "What is the total amount of aid provided by each government, for community development projects in Southeast Asia, in the last 10 years, and the average duration of the projects?",
+          "full_chars": 178,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "SELECT government.name as government, SUM(aid) as total_aid, AVG(DATEDIFF(end_date, start_date) / 365) as avg_project_duration FROM community_development_projects JOIN government ON community_development_projects.government_id = government.government_id WHERE government.region = 'Southeast Asia' AND community_development_projects.start_date >= DATE_SUB(CURRENT_DATE, INTERVAL 10 YEAR) GROUP BY government.name;",
+          "full_chars": 412,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q100007",
+        "document_id": "c100007",
+        "query": {
+          "text": "Find the difference in the number of trees between the tree species with the highest and lowest carbon sequestration rates in the private_lands schema.",
+          "full_chars": 151,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "SELECT species_high.species AS high_species, species_low.species AS low_species, species_high.sequestration_rate - species_low.sequestration_rate AS difference FROM (SELECT species, MAX(sequestration_rate) AS sequestration_rate FROM private_lands.carbon_sequestration GROUP BY species) AS species_high FULL OUTER JOIN (SELECT species, MIN(sequestration_rate) AS sequestration_rate FROM private_lands.carbon_sequestration GROUP BY species) AS species_low ON species_high.sequestration_rate = species_low.sequestration_rate;",
+          "full_chars": 522,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

@@ -154,15 +154,66 @@
         "url": "https://github.com/mehrzadshm/built-bench-paper",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "MTEB BuiltBenchReranking",
         "url": "https://huggingface.co/datasets/mteb/BuiltBenchReranking",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "test_query98",
+        "document_id": "apositive_test_query98_00000",
+        "query": {
+          "text": "Nail (Mechanical Fastener type). A thin pointed piece of metal that is hammered into materials as a fastener.",
+          "full_chars": 109,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Corrugated fasteners are a type of nail-like product that belong to the fastener category, which is part of the larger group of structural and general products. These fasteners are specifically designed for strong, interlocking connections in wood and similar materials.",
+          "full_chars": 270,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_query128",
+        "document_id": "apositive_test_query128_00000",
+        "query": {
+          "text": "Electric Cooker (Electric Appliance Type). An electrical appliance that has the primary function of cooking food (including oven, hob, grill).",
+          "full_chars": 142,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Commercial electric grills are a type of commercial cooking device categorized as equipment. They are part of the wider array of products that include signage, sanitary fittings, and other furnishings and equipment (ff&e). These grills are designed for professional kitchen environments.",
+          "full_chars": 287,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "test_query107",
+        "document_id": "apositive_test_query107_00000",
+        "query": {
+          "text": "Expansion Joint Device (Discrete Accessory Type). Assembly connection element between construction elements to allow for thermic differential expansions.",
+          "full_chars": 153,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Chloroprene and copper expansion joints are components that belong to the trim products category, specifically within the wider group of covering and finishing products. These expansion joints are designed to accommodate movement and provide durability. These products are essential for ensuring the structural integrity and longevity of various building assemblies.",
+          "full_chars": 366,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

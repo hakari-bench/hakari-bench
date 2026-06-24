@@ -48,13 +48,11 @@ Strong models should improve citation-style relatedness and scientific document 
 
 ## Example Data
 
-| Query | Positive Document |
-|---|---|
-| Nouveau convertisseur élévateur multiniveau CC-CC | Les convertisseurs de tension à sources multiples sont en train d'émerger comme une nouvelle génération d'options de convertisseurs de puissance... |
-| Apprentissage accéléré des champs aléatoires de Markov gaussiens creux basé sur la décomposition de Cholesky | Sure, please provide the English document text that you need translated into French. |
-| Synthèse de textures par réseaux de neurones convolutifs | Dans ce travail, nous examinons l'impact de la profondeur des réseaux convolutifs sur leur précision... |
-| Antenne annulaire plane à large bande avec polarisation circulaire pour un système RFID | Dans cet article, une technique d'alimentation à bande horizontale sinueuse est proposée... |
-| Conception d'un moniteur cardiaque numérique avancé en utilisant des composants électroniques de base | Dans cet article, nous présentons la conception et le développement d'un nouveau dispositif intégré pour mesurer la fréquence cardiaque... |
+| Query | Positive document |
+| --- | --- |
+| Nouveau convertisseur élévateur multiniveau CC-CC [49 chars] | Les convertisseurs de tension à sources multiples sont en train d'émerger comme une nouvelle génération d'options de convertisseurs de puissance pour les applications à haute puissance. Les convertisseurs de tension à sources multiples synthétisent généralement une onde de tension en escalier à partir de plusieurs niveaux de tensions de condensateurs en courant continu. L'une des principales limitations des convertisseurs à niveaux multiples est le déséquilibre de tension entre les différents niveaux. Les techniques pour équilibrer la tension entre les différents niveaux impliquent généralement le clampage de tension ou le contrôle de la charge des condensateurs. Il existe plusieurs façons de mettre en œuvre l'équilibre de tension dans les convertisseurs à niveaux multiples. Sans considérer les convertisseurs traditionnels à couplage magnétique, cet article présente trois convertisseurs de tension à sources multiples récemment développés : 1) les convertisseurs à diodes de clampage, 2)... [1,000 / 1,262 chars] |
+| Apprentissage accéléré des champs aléatoires de Markov gaussiens creux basé sur la décomposition de Cholesky [108 chars] | Sure, please provide the English document text that you need translated into French. [84 chars] |
+| Synthèse de textures par réseaux de neurones convolutifs [56 chars] | Dans ce travail, nous examinons l'impact de la profondeur des réseaux convolutifs sur leur précision dans le contexte de la reconnaissance d'images à grande échelle. Notre principale contribution est une évaluation approfondie de réseaux de profondeur croissante, qui montre qu'une amélioration significative par rapport aux configurations de l'état de l'art peut être obtenue en augmentant la profondeur à 16–19 couches de poids. Ces résultats ont servi de base à notre soumission au concours ImageNet 2014, où notre équipe a remporté les première et deuxième places dans les catégories de localisation et de classification, respectivement. Nous démontrons également que nos représentations généralisent bien à d'autres ensembles de données, où nous obtenons des résultats à la pointe de la technologie. De plus, nous avons rendu publics nos deux meilleurs modèles de réseaux convolutifs (ConvNet) pour faciliter les recherches futures sur l'utilisation des représentations visuelles profondes en vi... [1,000 / 1,020 chars] |
 
 ## Public Sources
 
@@ -68,8 +66,8 @@ Strong models should improve citation-style relatedness and scientific document 
 
 | Label | URL |
 |---|---|
-| SPECTER paper | https://arxiv.org/abs/2004.07180 |
-| SCIDOCS repository | https://github.com/allenai/scidocs |
-| BEIR benchmark | https://github.com/beir-cellar/beir |
-| MMTEB benchmark | https://arxiv.org/abs/2502.13595 |
-| NanoBEIR dataset | https://huggingface.co/collections/zeta-alpha-ai/nanobeir |
+| SPECTER paper (https://arxiv.org/abs/2004.07180) |
+| SCIDOCS repository (https://github.com/allenai/scidocs) |
+| BEIR benchmark (https://github.com/beir-cellar/beir) |
+| MMTEB benchmark (https://arxiv.org/abs/2502.13595) |
+| NanoBEIR dataset (https://huggingface.co/collections/zeta-alpha-ai/nanobeir) |

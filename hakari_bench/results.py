@@ -487,6 +487,7 @@ def _slim_reranking_evaluation(value: Any) -> dict[str, Any]:
         "best_distance",
         "best_score_name",
         "candidate_coverage",
+        "candidate_order",
         "safeguard",
     )
     payload = {key: value[key] for key in keep_keys if key in value}

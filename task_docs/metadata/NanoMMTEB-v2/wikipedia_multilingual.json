@@ -128,22 +128,73 @@
         "url": "https://arxiv.org/abs/2502.13595",
         "year": 2025,
         "is_paper": true,
-        "source_confidence": "benchmark_paper_link"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "mteb/WikipediaRetrievalMultilingual",
         "url": "https://huggingface.co/datasets/mteb/WikipediaRetrievalMultilingual",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "url": "https://huggingface.co/datasets/ellamind/wikipedia-2023-11-retrieval-multilingual-queries",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "wikipedia-multilingual__pt::q::q20231101.pt_6302003_4",
+        "document_id": "wikipedia-multilingual__pt::d::20231101.pt_6302003_4",
+        "query": {
+          "text": "Quais são as origens genéticas das variedades de feijão típicas de Portugal?",
+          "full_chars": 76,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Com base num estudo publicado na US National Library of Medicine National Institutes of Health, em 2017, as variedades de feijão típicas de Portugal exibem proximidade genética com as variedades próprias dos Andes, pelo que se depreende que os feijões que se vieram a fixar e a usar mais comummente em Portugal terão sido aqueles que provieram originalmente dessa região da América do Sul.",
+          "full_chars": 389,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "wikipedia-multilingual__cs::q::q20231101.cs_12984_5",
+        "document_id": "wikipedia-multilingual__cs::d::20231101.cs_12984_5",
+        "query": {
+          "text": "Jaký vliv mělo zřízení zvláštní hospodářské zóny Pchu-tung na rozvoj Šanghaje?",
+          "full_chars": 78,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Od 27. května 1949 je Šanghaj pod komunistickou vládou. Třebaže po roce 1949 přesídlila řada západních firem do Hongkongu, který tak vystřídal Šanghaj v roli obchodní metropole Dálného východu, výsadní hospodářské postavení Šanghaje v rámci Číny zůstalo neotřeseno. I dnes je, nepočítáme-li Hongkong, regionem se suverénně nejvyšším HDP na hlavu v ČLR. Zatímco v 60. až 80. letech město spíše stagnovalo, velký rozmach přišel po zřízení zvláštní hospodářské zóny Pchu-tung v roce 1990, kde vyrostly velkolepé mrakodrapy a nové mezinárodní letiště. Velkým problémem zůstává těžko kontrolovatelný příliv přistěhovalců z venkovských oblastí, především z provincií An‑chuej, Ťiang‑su a Če‑ťiang.",
+          "full_chars": 691,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "wikipedia-multilingual__bg::q::q20231101.bg_30684_28",
+        "document_id": "wikipedia-multilingual__bg::d::20231101.bg_30684_28",
+        "query": {
+          "text": "Какви местообитания предпочита рисът?",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Рисът е представителят на семейство Коткови, който обитава най-разнообразни хабитати от всичките му представители. Предпочита тъмни гори, тайга, планински, хвойнови и широколистни гори с гъст подлес, лесостеп и лесотундра. По северните склонове на Хималаите достигат на надморска височина от 2500 метра, където е характерна алпийска тундра и скалисти райони, а в района на Тибетското плато местообитанията имат пустинен характер. Обикновено тези райони са обитавани от Lynx lynx isabellinus, който е единствения подвид пригоден за живот в по-открити пространства. Въпреки че е потайно животно рисът не се страхува от човека. Той може да обитава и вторично залесени гори и сечища, а в години през които гладува е възможно да влезе в села и дори големи градове.",
+          "full_chars": 759,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

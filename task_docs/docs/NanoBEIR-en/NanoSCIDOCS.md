@@ -62,9 +62,11 @@ A model targeting this task should optimize for document-level scientific relate
 
 ## Example Data
 
-### Public Sources
-
-The original task is connected to SCIDOCS and SPECTER, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact English dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Novel DC-DC Multilevel Boost Converter [38 chars] | AbstructMultilevel voltage source converters are emerging as a new breed of power converter options for high-power applications. The multilevel voltage source converters typically synthesize the staircase voltage wave from several levels of dc capacitor voltages. One of the major limitations of the multilevel converters is the voltage unbalance between different levels. The techniques to balance the voltage between different levels normally involve voltage clamping or capacitor charge control. There are several ways of implementing voltage balance in multilevel converters. Without considering the traditional magnetic coupled converters, this paper presents three recently developed multilevel voltage source converters: 1) diode-clamp, 2) flyingcapacitors, and 3) cascaded-inverters with separate dc sources. The operating principle, features, constraints, and potential applications of these converters will be discussed. [930 chars] |
+| Fast Sparse Gaussian Markov Random Fields Learning Based on Cholesky Factorization [82 chars] |  [0 chars] |
+| Texture Synthesis Using Convolutional Neural Networks [53 chars] | In this work we investigate the effect of the convolutional n etwork depth on its accuracy in the large-scale image recognition setting. Our main contribution is a thorough evaluation of networks of increasing depth, which shows that a significant improvement on the prior-art configurations can be achi eved by pushing the depth to 16–19 weight layers. These findings were the basis of our ImageNet Challenge 2014 submission, where our team secured the first a nd he second places in the localisation and classification tracks respec tively. We also show that our representations generalise well to other datasets, whe re t y achieve the stateof-the-art results. Importantly, we have made our two bestp rforming ConvNet models publicly available to facilitate further research o n the use of deep visual representations in computer vision. [840 chars] |
 
 ### Source Reference Table
 

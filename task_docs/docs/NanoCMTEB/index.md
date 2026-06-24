@@ -144,6 +144,6 @@ keywords but fail the true intent.
 
 | Source | Year | Type | URL |
 | --- | ---: | --- | --- |
-| C-Pack: Packaged Resources To Advance General Chinese Embedding | 2023 | paper | https://arxiv.org/abs/2309.07597 |
-| C-MTEB benchmark |  | project | https://github.com/FlagOpen/FlagEmbedding/tree/master/C_MTEB |
-| MTEB benchmark |  | project | https://github.com/embeddings-benchmark/mteb |
+| C-Pack: Packaged Resources To Advance General Chinese Embedding | 2023 | paper | [https://arxiv.org/abs/2309.07597](https://arxiv.org/abs/2309.07597) |
+| C-MTEB benchmark |  | project | [https://github.com/FlagOpen/FlagEmbedding/tree/master/C_MTEB](https://github.com/FlagOpen/FlagEmbedding/tree/master/C_MTEB) |
+| MTEB benchmark |  | project | [https://github.com/embeddings-benchmark/mteb](https://github.com/embeddings-benchmark/mteb) |

@@ -70,12 +70,11 @@ For downstream use, S2S is a good benchmark for answer-passage retrieval in cons
 
 ## Example Data
 
-### Public Sources
-
-- Spanish Passage Retrieval dataset page: https://mklab.iti.gr/results/spanish-passage-retrieval-dataset/
-- Spanish Passage Retrieval dataset card: https://huggingface.co/datasets/jinaai/spanish_passage_retrieval
-- S2S task dataset card: https://huggingface.co/datasets/mteb/SpanishPassageRetrievalS2S
-- ECIR paper DOI: https://doi.org/10.1007/978-3-030-15719-7_19
+| Query | Positive document |
+| --- | --- |
+| ¿Cuáles son los beneficios de la leche materna? [47 chars] | En la misma se reconoce que la lactancia materna es el mejor modo de proporcionar al recién nacido los nutrientes que necesita durante los primeros meses de vida. [162 chars] |
+| ¿Cuándo debo introducir alimentos complementarios aparte de la lactancia materna? [81 chars] | Durante los primeros 6 meses de vida el bebé solamente necesita tomar leche materna. Es recomendable utilizar la edad corregida para comenzar a introducir el resto de alimentos, individualizando según las necesidades. No es conveniente introducir alimentación complementaria antes de los 4 meses de edad corregida. [314 chars] |
+| ¿Tendría que darle el pecho a mi bebé siempre que me lo pida? [61 chars] | Durante el primer mes de vida, su recién nacido debería alimentarse entre ocho y 12 veces al día. [97 chars] |
 
 ### Source Reference Table
 

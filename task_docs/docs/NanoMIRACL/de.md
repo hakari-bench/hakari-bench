@@ -162,12 +162,11 @@ profile shows that lexical evidence still improves candidate coverage.
 
 ## Example Data
 
-Representative queries ask which mechanisms help computers understand human
-language, when TikTok was founded, what makes Southeast Asia attractive for
-tourists, what the smallest particle in the universe is, or why some German
-products have high quality. Positive documents are German Wikipedia passages
-that contain the requested definition, date, location, explanation, or factual
-relation.
+| Query | Positive document |
+| --- | --- |
+| Welche Mechanismen helfen Computern, menschliche Sprache zu verstehen? [70 chars] | Wissen Ein anderes Anwendungsfeld sind Dialogsysteme, die in der Mensch-Computer-Interaktion eingesetzt werden und die Kommunikation eines Menschen mit einem Computer mittels natürlicher Sprache ermöglichen sollen. So simulierte etwa das bereits 1966 von Joseph Weizenbaum programmierte ELIZA das Gespräch mit einem Psychotherapeuten. Auf Aussagen der Art „Ich habe ein Problem mit meinem Vater.“ reagierte das Programm mit dem Satz „Erzählen Sie mir mehr von Ihrer Familie.“ Eine derartige Reaktion wurde möglich durch die semantische Verknüpfung von Begriffen wie „Vater“ und „Familie“. Mittlerweile werden auch Programme geschrieben, die das Ziel haben, eine allgemeine, kontextunabhängige Kommunikation zu ermöglichen. Die Idee eines solchen Programms geht auf den Turing-Test zurück, der 1950 von Alan Turing formuliert wurde. Nach Turing sollte man von „denkenden Maschinen“ genau dann reden, wenn Computer in der Kommunikation nicht von Menschen zu unterscheiden seien. Real existierende Dialo... [1,000 / 1,585 chars] |
+| In welchem Jahr wurde TikTok gegründet? [39 chars] | TikTok "Douyin" wurde im September 2016 von Zhang Yiming, dem Gründer von ByteDance, ins Leben gerufen. Im Januar 2017 erhielt das Unternehmen mehrere Millionen Renminbi von der Toutiao-Gruppe, um die Plattform weiter auszubauen. Im September 2017 begann die Expansion auf den indonesischen Markt. [298 chars] |
+| Was macht Südostasien attraktiv für Touristen? [46 chars] | Krabi (Stadt) Krabi ist eines der attraktivsten Reiseziele in Süd-Thailand. Die Andamanensee im Westen, an der zahllose natürliche Attraktionen liegen, ist beeindruckend. Dazu gehören die weißen Sandstrände, steil aufsteigende hohe Felsen, faszinierende Korallenriffe, zahlreiche größere und kleinere Inseln sowie Wälder mit Höhlen und Wasserfällen. [350 chars] |
 
 ### Public Sources
 
@@ -185,10 +184,10 @@ relation.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | https://arxiv.org/abs/2210.09984 |
-| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | https://aclanthology.org/2023.tacl-1.63/ |
-| MIRACL GitHub repository |  | project repository | https://github.com/project-miracl/miracl |
-| miracl/miracl-corpus |  | dataset card | https://huggingface.co/datasets/miracl/miracl-corpus |
+| Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages | 2022 | paper | [https://arxiv.org/abs/2210.09984](https://arxiv.org/abs/2210.09984) |
+| MIRACL: A Multilingual Retrieval Dataset Covering 18 Diverse Languages | 2023 | paper | [https://aclanthology.org/2023.tacl-1.63/](https://aclanthology.org/2023.tacl-1.63/) |
+| MIRACL GitHub repository |  | project repository | [https://github.com/project-miracl/miracl](https://github.com/project-miracl/miracl) |
+| miracl/miracl-corpus |  | dataset card | [https://huggingface.co/datasets/miracl/miracl-corpus](https://huggingface.co/datasets/miracl/miracl-corpus) |
 
 ### Representative Snippets
 

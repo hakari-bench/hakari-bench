@@ -121,20 +121,19 @@ passage details.
 
 ## Example Data
 
-### Public Sources
-
-- [EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval)
-- [MMTEB: Massive Multilingual Text Embedding Benchmark](https://arxiv.org/abs/2502.13595)
-- [MTEB: Massive Text Embedding Benchmark](https://arxiv.org/abs/2210.07316)
-- [hakari-bench/NanoMTEB-Misc](https://huggingface.co/datasets/hakari-bench/NanoMTEB-Misc)
+| Query | Positive document |
+| --- | --- |
+| Mikä on tietosuojavaltuutetun perustelu sille, että tietojen tallentamistoimenpiteiden tarkempi tutkiminen on perusteltua? [122 chars] | Tietosuojavaltuutettu myöntää, että käytettävissä on vähemmän tietoja, jos käytössä on tietojen tallentamisen kaltainen järjestelmä laajemman tietojen säilyttämisjärjestelmän sijasta. Tietojen tallentaminen on kuitenkin vähemmän yksityisyyteen puuttuva väline juuri siksi, että se on kohdennetumpi laajuutensa ja niiden ihmisten määrän osalta, joihin sen vaikutus kohdistuu. Arvioinnissa ei tulisi keskittyä pelkästään saatavilla oleviin tietoihin vaan myös molempien järjestelmien avulla saatuihin erilaisiin tuloksiin. Tietosuojavaltuutettu pitää tämän toimenpiteen tarkempaa tutkimista perusteltuna ja välttämättömänä. Se voitaisiin toteuttaa tulevina kuukausina tehtävän vaikutusten arvioinnin aikana. [705 chars] |
+| Mikä rooli Eurooppalaisella viljelykasvien rinnakkaiselon toimistolla (ECo B) on kansallisten toimenpiteiden kehittämisessä muuntogeenisten organismien tahattoman esiintymisen estämiseksi tavanomaisen ja luonnonmukaisen tuotannon viljelykasvien seassa? [252 chars] | COEX-NET-työryhmän kautta tapahtuvaa koordinointia ja Eurooppalaisen viljelykasvien rinnakkaiselon toimiston (ECo B) kautta annettavaa teknistä neuvontaa on tarkoitus jatkaa. ECo B pitää ajan tasalla olevaa luetteloa toimenpiteistä sekä luetteloa viljelyteknisistä, luontaisista sekä eri viljelykasveille ominaisista tekijöistä, jotka olisi otettava huomioon kehiteltäessä kansallisia toimenpiteitä muuntogeenisten organismien tahattoman esiintymisen välttämiseksi tavanomaisen ja luonnonmukaisen tuotannon viljelykasvien seassa. Jäsenvaltioiden olisi edelleen annettava panoksensa ECo Bin tekniseen työhön. [607 chars] |
+| Miten ehdotus direktiiviksi yhdistää raskaana olevien ja imettävien äitien terveyden ja turvallisuuden työllisyyteen ja uramahdollisuuksiin? [140 chars] | Käsillä olevan ehdotuksen pääasiallinen oikeusperusta on raskaana olevien ja imettävien äitien terveys ja turvallisuus. Terveys- ja turvallisuuskysymyksillä on kuitenkin looginen yhteys i) lasten oikeuteen asianmukaiseen hoitoon, ii) perhe- ja työelämän yhteensovittamiseen sekä iii) työllisyyteen ja uramahdollisuuksiin. Lisäksi Euroopan demografinen tilanne edellyttää syntyvyyden kasvua kannustavaa ja tukevaa politiikkaa. Ehdotetussa direktiivissä käsitellyt kysymykset eivät ole erillisiä. Ne on nähtävä osana monitahoista kokonaisuutta, kuten suosituksissa todetaan. [572 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| EuroPIRQ-retrieval | 2025 | Dataset card | https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval |
-| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | https://arxiv.org/abs/2502.13595 |
-| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | https://arxiv.org/abs/2210.07316 |
+| EuroPIRQ-retrieval | 2025 | Dataset card | [https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval](https://huggingface.co/datasets/eherra/EuroPIRQ-retrieval) |
+| MMTEB: Massive Multilingual Text Embedding Benchmark | 2025 | Benchmark paper | [https://arxiv.org/abs/2502.13595](https://arxiv.org/abs/2502.13595) |
+| MTEB: Massive Text Embedding Benchmark | 2022 | Benchmark paper | [https://arxiv.org/abs/2210.07316](https://arxiv.org/abs/2210.07316) |
 
 ### Representative Snippets
 

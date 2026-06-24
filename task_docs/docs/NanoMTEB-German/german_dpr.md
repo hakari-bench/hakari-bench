@@ -135,21 +135,19 @@ Wikipedia contexts.
 
 ## Example Data
 
-### Public Sources
-
-- [GermanQuAD and GermanDPR](https://arxiv.org/abs/2104.12741)
-- [ACL Anthology record](https://aclanthology.org/2021.mrqa-1.4/)
-- [mteb/GermanDPR](https://huggingface.co/datasets/mteb/GermanDPR)
-- [deepset/germandpr](https://huggingface.co/datasets/deepset/germandpr)
-- [hakari-bench/NanoMTEB-German](https://huggingface.co/datasets/hakari-bench/NanoMTEB-German)
+| Query | Positive document |
+| --- | --- |
+| Seit wann gibt es in Iowa keine Todesstrafe mehr? [49 chars] | Todesstrafe_in_den_Vereinigten_Staaten In der Geschichte Iowas gab es 46 Hinrichtungen, davon 43 wegen Mord und drei wegen Vergewaltigung. Alle Getöteten waren Männer. 1872 wurde die Todesstrafe erstmals abgeschafft, aber bereits 1878 wieder eingeführt. 1965 kam es zur endgültigen Abschaffung. Der republikanische Gouverneur Terry E. Branstad machte sich zwar 1994 im Wahlkampf für eine erneute Wiedereinführung stark, konnte aber letztlich keinen entsprechenden Gesetzentwurf durch die beiden Kammern der Iowa General Assembly bringen. [538 chars] |
+| Welche Personen sitzen im akademischen Senat? [45 chars] | Universität An der Spitze einer Universität steht ein Rektor oder Präsident, der in der Regel selbst ein Universitätsprofessor ist. Er wird üblicherweise unterstützt von mehreren Prorektoren beziehungsweise Vizepräsidenten, mit besonderen Zuständigkeiten wie für Lehre oder Forschung. Die traditionellen Anreden Magnifizenz für den Rektor bzw. Spektabilitäten für die Prorektoren und Dekane sind heute nicht mehr üblich. Der Leiter der Verwaltung wird in der Regel Kanzler genannt. Ein Kanzler einer Universität ist in der Regel ein Jurist oder ein Verwaltungsfachmann. Als wichtigstes Entscheidungsgremium fungiert der Senat, in dem Professoren, wissenschaftliche und nichtwissenschaftliche Mitarbeiter sowie teilweise auch Studenten ihren Sitz haben. Für die Vertretung von Hochschulen gegenüber Politik und Öffentlichkeit gibt es auf Bundesebene die Hochschulrektorenkonferenz (HRK), für die Zusammenarbeit der Hochschulen auf Landesebene die Landesrektorenkonferenz (LRK). Dort wird die Universit... [1,000 / 1,042 chars] |
+| Für welche Geräte konnte USB 1.0 auch als Stromzufuhr eingesetzt werden? [73 chars] | Universal_Serial_Bus Schon mit USB 1.0 war eine Stromversorgung angeschlossener Geräte über die USB-Kabelverbindungen möglich. Allerdings war die maximale Leistung nur für Geräte mit geringem Strombedarf (wie Maus oder Tastatur) ausreichend, für die meisten Festplatten aber nicht. Mitunter werden daher USB-Ports außerhalb der spezifizierten Leistungsgrenzen betrieben. Insbesondere eine kurzzeitige Überlastung eines USB-Ports, die etwa beim Anlaufen von Festplatten auftritt, bleibt in der Praxis meist folgenlos. Um die bei der Stromversorgung auftretenden Probleme zu lösen, wurden mit höheren Versionen der USB-Spezifikation erweiterte Möglichkeiten der Spannungsversorgung geschaffen, siehe folgende Tabelle. Dabei stieg die maximale Leistung auf bis zu 100 Watt, ausreichend beispielsweise für das Laden eines Notebooks. USB 1.0 / 1.1 (Low-Powered-Port) USB-BC 1.2 (USB Battery Charging) [896 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | https://arxiv.org/abs/2104.12741 |
-| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | https://aclanthology.org/2021.mrqa-1.4/ |
-| mteb/GermanDPR | 2025 | Dataset card | https://huggingface.co/datasets/mteb/GermanDPR |
+| GermanQuAD and GermanDPR: Improving Non-English Question Answering and Passage Retrieval | 2021 | Paper | [https://arxiv.org/abs/2104.12741](https://arxiv.org/abs/2104.12741) |
+| GermanQuAD and GermanDPR ACL Anthology record | 2021 | Proceedings paper | [https://aclanthology.org/2021.mrqa-1.4/](https://aclanthology.org/2021.mrqa-1.4/) |
+| mteb/GermanDPR | 2025 | Dataset card | [https://huggingface.co/datasets/mteb/GermanDPR](https://huggingface.co/datasets/mteb/GermanDPR) |
 
 ### Representative Snippets
 

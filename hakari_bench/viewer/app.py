@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
 import csv
 from datetime import datetime, timezone
@@ -8,6 +8,7 @@ from functools import lru_cache
 import hashlib
 from html import escape
 from io import StringIO
+import json
 import math
 import os
 from pathlib import Path
@@ -15,6 +16,7 @@ import re
 from typing import Iterable, Sequence, TypedDict, cast
 from urllib.parse import quote, urlencode
 
+import duckdb
 from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.config import (
@@ -48,10 +50,14 @@ from hakari_bench.viewer.model_display import (
     render_model_detail_modal,
     render_model_name_cell,
 )
-from hakari_bench.viewer.model_types import model_type_filter_key
+from hakari_bench.viewer.model_types import is_bm25_model, model_type_filter_key
 from hakari_bench.viewer.observability import timed_operation
 from hakari_bench.viewer.state import (
     FilterState,
+    PLOT_AXIS_FIELDS,
+    PLOT_ENCODING_FIELDS,
+    PLOT_NONE_FIELD,
+    PLOT_SCORE_FIELDS,
     QueryState,
     active_filter_hidden_fields,
     filter_state_from_query,
@@ -65,6 +71,7 @@ from hakari_bench.viewer.state import (
 )
 from hakari_bench.viewer.store import DuckDbSyncStatus, LocalDuckDbStore
 from hakari_bench.viewer.summary import ViewerSummary
+from hakari_bench.viewer.sql import table_columns, table_exists
 from hakari_bench.viewer.variant_display import (
     is_sparse_dims_variant_name,
     variant_category,
@@ -81,6 +88,7 @@ SECURITY_HEADERS = {
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
 }
+FOOTER_QUERY_TABLES = {"meta_database"}
 Z_SCORE_BUCKET_CLASSES = (
     "task-z-neutral",
     "task-z-pos-025",
@@ -136,6 +144,7 @@ _ICON_PATHS = {
     ),
     "braces": '<path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2 2 2 0 0 1-2-2V7a2 2 0 0 0-2-2h-1"/>',
     "calendar-days": '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/>',
+    "chart-scatter": '<path d="M3 3v18h18"/><circle cx="7.5" cy="7.5" r="1"/><circle cx="18.5" cy="5.5" r="1"/><circle cx="11.5" cy="13.5" r="1"/><circle cx="17.5" cy="17.5" r="1"/>',
     "chevron-right": '<path d="m9 18 6-6-6-6"/>',
     "circle-help": (
         '<circle cx="12" cy="12" r="10"/>'
@@ -183,6 +192,7 @@ _ICON_PATHS = {
     "ruler": '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
     "rotate-ccw": '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
     "scan-eye": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="1"/><path d="M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0"/>',
+    "shield-check": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
     "search": '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
     "shapes": '<path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>',
     "sun": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
@@ -226,7 +236,11 @@ def create_app(
     resolved_docs_metadata_dir = docs_metadata_dir
     if resolved_docs_metadata_dir is None and docs_dir == Path("task_docs/docs"):
         resolved_docs_metadata_dir = Path("task_docs/metadata")
-    benchmark_docs = BenchmarkDocs(docs_dir, metadata_dir=resolved_docs_metadata_dir)
+    benchmark_docs = BenchmarkDocs(
+        docs_dir,
+        metadata_dir=resolved_docs_metadata_dir,
+        group_names=viewer_config.benchmark_names,
+    )
 
     @asynccontextmanager
     async def lifespan(_app: object) -> AsyncIterator[None]:
@@ -315,9 +329,11 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -335,6 +351,10 @@ def create_app(
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
         doc_len_max: str = Query(default=""),
+        result_view: str = Query(default="table", pattern="^(table|chart)$"),
+        chart_y: str = Query(default="borda_score"),
+        chart_x: str = Query(default="active_parameters"),
+        chart_color: str = Query(default="embedding_dim"),
     ) -> str:
         with timed_operation("viewer.http.request", route="index") as request_timing:
             store.start_background_sync()
@@ -355,9 +375,11 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -375,6 +397,10 @@ def create_app(
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
+                result_view=result_view,
+                chart_y=chart_y,
+                chart_x=chart_x,
+                chart_color=chart_color,
             )
             if not task_z_scores:
                 initial_query["task_z_scores"] = "0"
@@ -420,11 +446,13 @@ def create_app(
             show_task_scores=state_query.get("task_scores") == "1",
             show_task_z_scores=state_query.get("task_z_scores") == "1",
             show_task_ranks=state_query.get("task_ranks") == "1",
+            show_other_columns=state_query.get("other_columns") == "1",
             rank_filtered=filter_state.rank_filtered,
             model_filter=filter_state.model_filter,
             task_filter=filter_state.task_filter,
             dim_filters=filter_state.dim_filters if filter_state.filters_active else (),
             quant_filters=filter_state.quant_filters if filter_state.filters_active else (),
+            commercial_filters=filter_state.commercial_filters if filter_state.filters_active else (),
             model_type_filters=filter_state.model_type_filters if filter_state.filters_active else (),
             dtype_filters=filter_state.dtype_filters if filter_state.filters_active else (),
             attn_filters=filter_state.attn_filters if filter_state.filters_active else (),
@@ -458,9 +486,11 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -478,6 +508,10 @@ def create_app(
         query_len_max: str = Query(default=""),
         doc_len_min: str = Query(default=""),
         doc_len_max: str = Query(default=""),
+        result_view: str = Query(default="table", pattern="^(table|chart)$"),
+        chart_y: str = Query(default="borda_score"),
+        chart_x: str = Query(default="active_parameters"),
+        chart_color: str = Query(default="embedding_dim"),
     ) -> HTMLResponse:
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
             state_query = normalize_query_state(
@@ -497,9 +531,11 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -517,6 +553,10 @@ def create_app(
                 query_len_max=query_len_max,
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
+                result_view=result_view,
+                chart_y=chart_y,
+                chart_x=chart_x,
+                chart_color=chart_color,
             )
             sync_status = store.start_background_sync()
             if _duckdb_sync_blocks_leaderboard(store, sync_status):
@@ -528,7 +568,18 @@ def create_app(
                 )
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
-                content = render_leaderboard(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)
+                content = render_leaderboard(
+                    result=result,
+                    sort=sort,
+                    direction=direction,
+                    filter_state=filter_state,
+                    benchmark_docs=benchmark_docs,
+                    result_view=query_string(state_query.get("result_view", "table")),
+                    plot_y=query_string(state_query.get("chart_y", "borda_score")),
+                    plot_x=query_string(state_query.get("chart_x", "active_parameters")),
+                    plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
+                )
+                content = f"{content}\n{_render_footer_update(store=store)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
             request_timing["view"] = result.view_name
             request_timing["leaderboard_row_count"] = len(result.rows)
@@ -551,9 +602,11 @@ def create_app(
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
+        other_columns: bool = Query(default=False),
         filters: bool = Query(default=False),
         dim_filter: list[str] | None = Query(default=None),
         quant_filter: list[str] | None = Query(default=None),
+        commercial_filter: list[str] | None = Query(default=None),
         model_type_filter: list[str] | None = Query(default=None),
         dtype_filter: list[str] | None = Query(default=None),
         attn_filter: list[str] | None = Query(default=None),
@@ -591,9 +644,11 @@ def create_app(
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
+                other_columns=other_columns,
                 filters=filters,
                 dim_filter=dim_filter,
                 quant_filter=quant_filter,
+                commercial_filter=commercial_filter,
                 model_type_filter=model_type_filter,
                 dtype_filter=dtype_filter,
                 attn_filter=attn_filter,
@@ -630,9 +685,11 @@ def create_app(
 def _duckdb_sync_blocks_leaderboard(store: LocalDuckDbStore, status: DuckDbSyncStatus) -> bool:
     if store.location.hf_source is None and store.location.source_path is None:
         return False
+    if store.path.exists():
+        return False
     if status.state == "error":
-        return not store.path.exists()
-    return status.active or not store.path.exists()
+        return True
+    return status.active
 
 
 def _safe_duckdb_sync_next_url(next_url: str) -> str:
@@ -704,8 +761,10 @@ def render_page(
     <header class="mb-2">
       <div class="flex items-center justify-between gap-3">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
-          {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
-          <span>HAKARI-Bench leaderboard</span>
+          <a id="hakari-home-link" href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
+            {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
+            <span>HAKARI-Bench leaderboard</span>
+          </a>
         </h1>
         {header_actions}
       </div>
@@ -886,7 +945,7 @@ def _docs_page_chrome() -> DocsPageChrome:
     )
 
 
-def _render_page_footer(*, latest_update: str, database_label: str) -> str:
+def _render_page_footer(*, latest_update: str, database_label: str, swap_oob: bool = False) -> str:
     meta_items = []
     if latest_update:
         meta_items.append(
@@ -902,17 +961,51 @@ def _render_page_footer(*, latest_update: str, database_label: str) -> str:
       <div class="flex min-w-0 flex-col gap-1 sm:items-end">
         {meta}
       </div>"""
-    return f"""<footer class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">
+    oob_attr = ' hx-swap-oob="outerHTML"' if swap_oob else ""
+    return f"""<footer id="hakari-page-footer" class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6"{oob_attr}>
     <div class="flex min-w-0 justify-end">
       {meta}
     </div>
   </footer>"""
 
 
+def _render_footer_update(*, store: LocalDuckDbStore) -> str:
+    return _render_page_footer(
+        latest_update=_fetch_database_latest_update_label(store.path),
+        database_label=_database_footer_label(store),
+        swap_oob=True,
+    )
+
+
 def _database_footer_label(store: LocalDuckDbStore) -> str:
     if store.location.hf_source is not None:
         return f"database: remote / {_sha1_prefix(store.path)}"
     return f"database: local / {store.path}"
+
+
+def _fetch_database_latest_update_label(duckdb_path: Path) -> str:
+    if not duckdb_path.exists():
+        return ""
+    try:
+        with timed_operation("viewer.duckdb.connection", operation="fetch_footer_latest_update"):
+            con = duckdb.connect(str(duckdb_path), read_only=True)
+    except (duckdb.Error, OSError):
+        return ""
+    try:
+        if not table_exists(con, "meta_database", allowed_tables=FOOTER_QUERY_TABLES):
+            return ""
+        columns = table_columns(con, "meta_database", allowed_tables=FOOTER_QUERY_TABLES)
+        if "built_at_utc" not in columns:
+            return ""
+        with timed_operation("viewer.duckdb.query", operation="fetch_footer_latest_update") as timing:
+            row = con.execute("SELECT max(built_at_utc) FROM meta_database").fetchone()
+            timing["row_count"] = 1 if row is not None else 0
+    except duckdb.Error:
+        return ""
+    finally:
+        con.close()
+    value = row[0] if row is not None else None
+    return _latest_update_label(str(value) if value else None)
 
 
 def _sha1_prefix(path: Path, *, length: int = 12) -> str:
@@ -1094,19 +1187,54 @@ def render_leaderboard(
     direction: str,
     filter_state: FilterState | None = None,
     benchmark_docs: BenchmarkDocs | None = None,
+    result_view: str = "table",
+    plot_y: str = "borda_score",
+    plot_x: str = "active_parameters",
+    plot_size: str = "embedding_dim",
+    plot_color: str = "embedding_dim",
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = row_filter_context(result.rows, filter_state)
     shown_count = visible_row_count(result.rows, filter_context)
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
     mode_icon, mode_label = _score_target_display(result.score_target)
+    result_view = result_view if result_view in {"table", "chart"} else "table"
+    plot_state = _plot_state_query(
+        result_view=result_view,
+        plot_y=plot_y,
+        plot_x=plot_x,
+        plot_size=plot_size,
+        plot_color=plot_color,
+    )
+    data_surface = (
+        render_leaderboard_plot(
+            result=result,
+            filter_context=filter_context,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            plot_y=plot_y,
+            plot_x=plot_x,
+            plot_size=plot_size,
+            plot_color=plot_color,
+        )
+        if result_view == "chart"
+        else f"""
+  <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
+    <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
+      {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
+      {render_table_body(result=result, filter_context=filter_context)}
+    </table>
+  </div>"""
+    )
     return f"""
 <div>
-  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs)}
+  {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs, plot_state=plot_state)}
   <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
     <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+      {render_result_view_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, result_view=result_view, plot_y=plot_y, plot_x=plot_x, plot_size=plot_size, plot_color=plot_color)}
       <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
-        {_icon_svg("table-properties", class_name="hakari-icon control-heading-icon shrink-0")}
+        {_icon_svg("database", class_name="hakari-icon h-3.5 w-3.5 shrink-0")}
         <span>{escape(result.view_label)}</span>
       </span>
       <span class="text-zinc-400">/</span>
@@ -1115,7 +1243,7 @@ def render_leaderboard(
         <span>{escape(mode_label)}</span>
       </span>
       <span class="text-zinc-400">/</span>
-      <span>{shown_count} shown / {len(result.rows)} complete models / {result.expected_tasks} tasks</span>
+      {_render_status_count_buttons(result=result, shown_count=shown_count)}
     </div>
     <a class="inline-flex items-center gap-1 border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-800 underline-offset-2 hover:border-cyan-600 hover:text-cyan-700"
        href="{_csv_url(csv_query)}" aria-label="Download visible leaderboard as CSV">
@@ -1123,17 +1251,1079 @@ def render_leaderboard(
       <span>Download CSV</span>
     </a>
   </div>
-  <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
-    <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
-      {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
-      {render_table_body(result=result, filter_context=filter_context)}
-    </table>
-  </div>
+  {data_surface}
+  {_render_count_breakdown_modal(result=result, filter_context=filter_context, benchmark_docs=benchmark_docs)}
   {render_model_detail_modal()}
   {render_doc_summary_modal()}
   {render_help_summary_modal()}
 </div>
 """
+
+
+def _render_status_count_buttons(*, result: LeaderboardResult, shown_count: int) -> str:
+    return f"""
+      <span class="inline-flex items-center gap-1">
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="shown">{shown_count} shown</button>
+        <span class="text-zinc-400">/</span>
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="complete">{len(result.rows)} complete models</button>
+        <span class="text-zinc-400">/</span>
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="tasks">{result.expected_tasks} tasks</button>
+      </span>
+    """
+
+
+def _render_count_breakdown_modal(
+    *,
+    result: LeaderboardResult,
+    filter_context: FilterContext,
+    benchmark_docs: BenchmarkDocs | None,
+) -> str:
+    visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
+    model_views = model_cell_views(result.rows)
+    return f"""
+<dialog id="count-breakdown-modal" class="hakari-modal hakari-count-modal">
+  <form method="dialog">
+    <div class="hakari-modal-header">
+      <h3 class="hakari-modal-title">
+        {_icon_svg("activity", class_name="hakari-icon")}
+        <span id="count-breakdown-title">Result breakdown</span>
+      </h3>
+      <button type="submit" class="hakari-modal-close">Close</button>
+    </div>
+  </form>
+  <div class="hakari-modal-body">
+    <div class="grid gap-3">
+      {_render_count_breakdown_section(
+          section_id="count-breakdown-shown",
+          title="Visible rows",
+          count=len(visible_rows),
+          description="Rows currently visible after text, facet, and range filters.",
+          rows=visible_rows,
+          model_views=model_views,
+      )}
+      {_render_count_breakdown_section(
+          section_id="count-breakdown-complete",
+          title="Complete models",
+          count=len(result.rows),
+          description="Complete rows in the selected benchmark scope before row visibility filters.",
+          rows=result.rows,
+          model_views=model_views,
+      )}
+      {_render_task_breakdown_section(result=result, benchmark_docs=benchmark_docs)}
+    </div>
+  </div>
+</dialog>
+"""
+
+
+def _render_count_breakdown_section(
+    *,
+    section_id: str,
+    title: str,
+    count: int,
+    description: str,
+    rows: list[LeaderboardRow],
+    model_views: dict[str, ModelCellView],
+) -> str:
+    section_key = section_id.removeprefix("count-breakdown-")
+    return f"""
+      <section id="{section_id}" data-count-breakdown-section="{escape(section_key, quote=True)}" data-count-breakdown-title="{escape(title, quote=True)}" hidden class="pt-2">
+        <h4 class="font-semibold text-zinc-900">{escape(title)}: {count}</h4>
+        <p class="mt-1 text-sm text-zinc-600">{escape(description)}</p>
+        {_render_status_model_list(rows=rows, model_views=model_views)}
+      </section>
+    """
+
+
+def _render_status_model_list(*, rows: list[LeaderboardRow], model_views: dict[str, ModelCellView]) -> str:
+    if not rows:
+        return '<p class="mt-2 text-sm text-zinc-500">No models.</p>'
+    items = []
+    for row in rows:
+        model_view = model_views.get(row.model_name)
+        metadata = model_view.metadata if model_view is not None else {"model_name": row.model_name}
+        metadata_json = escape(json.dumps(metadata, ensure_ascii=False, separators=(",", ":")), quote=True)
+        items.append(
+            f"""<li class="border-t border-zinc-200 py-1">
+              <button type="button" class="model-detail-trigger break-all text-left font-mono text-sm underline underline-offset-2 hover:text-cyan-700"
+                      data-model-metadata="{metadata_json}">{escape(row.model_name)}</button>
+            </li>"""
+        )
+    return f"""<ul class="mt-2 max-h-72 overflow-auto">{''.join(items)}</ul>"""
+
+
+def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs: BenchmarkDocs | None) -> str:
+    task_items = []
+    for task in result.task_breakdowns:
+        doc = (
+            benchmark_docs.task_doc(view_name=result.view_name, metric_column=task.doc_key)
+            if benchmark_docs is not None
+            else None
+        )
+        label = doc.title if doc is not None else task.label
+        if doc is not None:
+            task_items.append(
+                f"""<li class="border-t border-zinc-200 py-1">
+                  <a class="count-breakdown-task-link underline underline-offset-2 hover:text-cyan-700" href="{escape(doc.url, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(label)}</a>
+                </li>"""
+            )
+        else:
+            task_items.append(
+                f"""<li class="border-t border-zinc-200 py-1 text-zinc-600">{escape(label)}</li>"""
+            )
+    task_body = (
+        f"""<ul class="mt-2 max-h-72 overflow-auto text-sm">{''.join(task_items)}</ul>"""
+        if task_items
+        else '<p class="mt-2 text-sm text-zinc-500">Task-level breakdown is unavailable for this precomputed summary.</p>'
+    )
+    return f"""
+      <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden class="pt-2">
+        <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
+        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected benchmark scope. Linked tasks have verified local documentation and open in a new tab.</p>
+        {task_body}
+      </section>
+    """
+
+
+PLOT_SCORE_OPTIONS = {
+    "borda_score": ("Borda Score", "Borda score"),
+    "macro_mean": ("Task Mean (Macro)", "Task Mean (Macro)"),
+    "micro_mean": ("Task Mean (Micro)", "Task Mean (Micro)"),
+}
+PLOT_AXIS_OPTIONS = {
+    "active_parameters": ("Active Params (log scale)", "Active params"),
+    "active_parameters_linear": ("Active Params", "Active params"),
+    "total_parameters": ("Total Params (log scale)", "Total params"),
+    "total_parameters_linear": ("Total Params", "Total params"),
+    "max_seq_length": ("Max Tokens", "Max tokens"),
+    "embedding_dim": ("Dims", "Embedding dim"),
+    "quantization": ("Quantization", "Quantization"),
+    "sparse_query_dims": ("Sparse Query Dims", "Sparse query dims"),
+    "sparse_document_dims": ("Sparse Doc Dims", "Sparse doc dims"),
+}
+PLOT_CHANNEL_OPTIONS = {PLOT_NONE_FIELD: ("None", "None"), **PLOT_AXIS_OPTIONS}
+PLOT_LOG_FIELDS = {
+    "active_parameters",
+    "total_parameters",
+    "max_seq_length",
+    "embedding_dim",
+    "sparse_query_dims",
+    "sparse_document_dims",
+}
+PLOT_POINT_RADIUS = 5.5
+PLOT_DIMENSION_GRID_STEP = 128.0
+PLOT_DIMENSION_COMPRESSED_MAX = 256.0
+PLOT_DIMENSION_COMPRESSED_FRACTION = 0.12
+PLOT_DIMENSION_DENSE_TICK_MAX = 1024.0
+PLOT_DIMENSION_HIGH_TICKS = (2048.0,)
+PLOT_LOG_ZERO_BUCKET_FRACTION = 0.07
+PLOT_COLOR_STOPS = ((79, 70, 229), (8, 145, 178), (245, 158, 11))
+
+
+class _PlotPoint(TypedDict):
+    row: LeaderboardRow
+    x: float | None
+    y: float | None
+    color: float | None
+    active_parameters: float | None
+    total_parameters: float | None
+    max_seq_length: float | None
+    x_label: str
+    y_label: str
+    color_label: str
+
+
+def render_result_view_tabs(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState | None = None,
+    result_view: str = "table",
+    plot_y: str = "borda_score",
+    plot_x: str = "active_parameters",
+    plot_size: str = "embedding_dim",
+    plot_color: str = "embedding_dim",
+) -> str:
+    filter_state = filter_state or FilterState()
+    result_view = result_view if result_view in {"table", "chart"} else "table"
+    buttons = []
+    for value, label, icon in [("table", "Table", "table-properties"), ("chart", "Chart", "chart-scatter")]:
+        active = result_view == value
+        query_payload = _plot_state_payload(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            result_view=value,
+            plot_y=plot_y,
+            plot_x=plot_x,
+            plot_size=plot_size,
+            plot_color=plot_color,
+        )
+        query = urlencode(query_payload, doseq=True)
+        buttons.append(
+            f"""<button type="button" role="tab" aria-selected="{str(active).lower()}" class="inline-flex items-center gap-1 border px-2 py-1 text-[0.8125rem] leading-tight {_control_button_classes(active=active)}"
+                  hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                  {_leaderboard_control_hx_attrs()}>{_icon_svg(icon, class_name="hakari-icon h-3.5 w-3.5 shrink-0")}<span>{escape(label)}</span></button>"""
+        )
+    return f"""
+      <span class="inline-flex items-center gap-1" role="tablist" aria-label="Result view">{''.join(buttons)}</span>
+"""
+
+
+def render_plot_controls(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_y: str,
+    plot_x: str,
+    plot_color: str,
+) -> str:
+    state_fields = _plot_state_fields(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        result_view="chart",
+    )
+    return f"""
+    <form id="plot-controls" class="plot-controls flex flex-wrap items-center justify-end gap-2 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700 shadow-sm"
+          hx-get="/leaderboard" hx-push-url="true"
+          {_leaderboard_control_hx_attrs()}
+          hx-trigger="change, submit">
+      {_hidden_inputs(state_fields)}
+      {_render_plot_select("chart_y", "Y axis", PLOT_SCORE_OPTIONS, _normalized_plot_score_field(plot_y))}
+      {_render_plot_select("chart_x", "X axis", PLOT_AXIS_OPTIONS, _normalized_plot_axis_field(plot_x))}
+      {_render_plot_select("chart_color", "Color", PLOT_CHANNEL_OPTIONS, _normalized_plot_channel_field(plot_color, default="embedding_dim"))}
+    </form>
+"""
+
+
+def _render_plot_select(name: str, label: str, options: dict[str, tuple[str, str]], selected: str) -> str:
+    option_html = "".join(
+        f'<option value="{escape(value)}"{" selected" if value == selected else ""}>{escape(option_label)}</option>'
+        for value, (option_label, _axis_label) in options.items()
+    )
+    return f"""
+      <label class="inline-flex items-center gap-1">
+        <span class="text-xs font-medium text-zinc-700">{escape(label)}</span>
+        <select name="{escape(name)}" class="viewer-select border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900">
+          {option_html}
+        </select>
+      </label>
+"""
+
+
+def _plot_state_payload(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    result_view: str,
+    plot_y: str,
+    plot_x: str,
+    plot_size: str,
+    plot_color: str,
+) -> QueryState:
+    payload = state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state)
+    if result_view != "table":
+        payload["result_view"] = result_view
+    plot_y = _normalized_plot_score_field(plot_y)
+    plot_x = _normalized_plot_axis_field(plot_x)
+    plot_color = _normalized_plot_channel_field(plot_color, default="embedding_dim")
+    if plot_y != "borda_score":
+        payload["chart_y"] = plot_y
+    if plot_x != "active_parameters":
+        payload["chart_x"] = plot_x
+    if plot_color != "embedding_dim":
+        payload["chart_color"] = plot_color
+    if "quantization" in {plot_x, plot_color}:
+        payload["quantization"] = "1"
+    return payload
+
+
+def _plot_state_fields(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    result_view: str,
+) -> list[tuple[str, str]]:
+    payload = state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state)
+    payload["result_view"] = result_view
+    fields: list[tuple[str, str]] = []
+    for key, value in payload.items():
+        if isinstance(value, list):
+            fields.extend((key, item) for item in value)
+        else:
+            fields.append((key, value))
+    return fields
+
+
+def _plot_state_query(
+    *,
+    result_view: str,
+    plot_y: str,
+    plot_x: str,
+    plot_size: str,
+    plot_color: str,
+) -> QueryState:
+    result_view = result_view if result_view in {"table", "chart"} else "table"
+    if result_view == "table":
+        return {}
+    plot_y = _normalized_plot_score_field(plot_y)
+    plot_x = _normalized_plot_axis_field(plot_x)
+    plot_color = _normalized_plot_channel_field(plot_color, default="embedding_dim")
+    payload: QueryState = {"result_view": "chart"}
+    if plot_y != "borda_score":
+        payload["chart_y"] = plot_y
+    if plot_x != "active_parameters":
+        payload["chart_x"] = plot_x
+    if plot_color != "embedding_dim":
+        payload["chart_color"] = plot_color
+    if "quantization" in {plot_x, plot_color}:
+        payload["quantization"] = "1"
+    return payload
+
+
+def _apply_plot_state(payload: QueryState, plot_state: QueryState | None) -> QueryState:
+    if not plot_state:
+        return payload
+    payload.update(plot_state)
+    return payload
+
+
+def _query_state_fields(payload: QueryState | None) -> list[tuple[str, str]]:
+    if not payload:
+        return []
+    fields: list[tuple[str, str]] = []
+    for key, value in payload.items():
+        if isinstance(value, list):
+            fields.extend((key, item) for item in value)
+        else:
+            fields.append((key, value))
+    return fields
+
+
+def render_leaderboard_plot(
+    *,
+    result: LeaderboardResult,
+    filter_context: FilterContext | None = None,
+    sort: str = "borda_score",
+    direction: str = "desc",
+    filter_state: FilterState | None = None,
+    plot_y: str = "borda_score",
+    plot_x: str = "active_parameters",
+    plot_size: str = "embedding_dim",
+    plot_color: str = "embedding_dim",
+) -> str:
+    filter_state = filter_state or FilterState()
+    filter_context = filter_context or row_filter_context(result.rows, filter_state)
+    y_field = _normalized_plot_score_field(plot_y)
+    x_field = _normalized_plot_axis_field(plot_x)
+    color_field = _normalized_plot_channel_field(plot_color, default="embedding_dim")
+    visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
+    sparse_embedding_dim = _average_dense_embedding_dim(visible_rows) or _average_dense_embedding_dim(result.rows)
+    max_active_parameters = _max_plot_active_parameters(visible_rows) or _max_plot_active_parameters(result.rows)
+    max_total_parameters = _max_plot_total_parameters(visible_rows) or _max_plot_total_parameters(result.rows)
+    max_seq_length = _max_plot_seq_length(visible_rows) or _max_plot_seq_length(result.rows)
+    points: list[_PlotPoint] = [
+        _plot_point_values(
+            row,
+            y_field=y_field,
+            x_field=x_field,
+            color_field=color_field,
+            sparse_embedding_dim=sparse_embedding_dim,
+            max_active_parameters=max_active_parameters,
+            max_total_parameters=max_total_parameters,
+            max_seq_length=max_seq_length,
+        )
+        for row in visible_rows
+    ]
+    points = [
+        point
+        for point in points
+        if _plot_point_has_required_values(
+            point,
+            x_field=x_field,
+            color_field=color_field,
+        )
+    ]
+    if not points:
+        return '<div class="leaderboard-plot-empty border border-zinc-200 bg-white px-3 py-5 text-center text-zinc-500">No plottable rows found.</div>'
+    width = 1100
+    height = 560
+    left = 82
+    right = 138
+    top = 26
+    bottom = 72
+    plot_width = width - left - right
+    plot_height = height - top - bottom
+    x_log = _plot_field_uses_log(x_field)
+    color_log = _plot_field_uses_log(color_field)
+    x_values = [
+        float(point["x"])
+        for point in points
+        if point["x"] is not None and (not x_log or float(point["x"]) > 0)
+    ]
+    y_values = [float(point["y"]) for point in points if point["y"] is not None]
+    color_values = [
+        float(point["color"])
+        for point in points
+        if point["color"] is not None and (not color_log or float(point["color"]) > 0)
+    ]
+    x_has_zero = x_log and any(point["x"] == 0 for point in points)
+    x_min, x_max = _plot_extent_for_field(x_values, field=x_field, log=x_log)
+    y_min, y_max = _plot_score_extent(y_values, y_field=y_field)
+    color_min, color_max = _plot_extent_for_field(color_values, field=color_field, log=color_log)
+    grid = _render_plot_grid(
+        left=left,
+        top=top,
+        plot_width=plot_width,
+        plot_height=plot_height,
+        x_min=x_min,
+        x_max=x_max,
+        y_min=y_min,
+        y_max=y_max,
+        x_log=x_log,
+        x_has_zero=x_has_zero,
+        x_label=PLOT_AXIS_OPTIONS[x_field][0],
+        y_label=PLOT_SCORE_OPTIONS[y_field][0],
+    )
+    circles = []
+    model_views = model_cell_views([point["row"] for point in points])
+    for point in points:
+        x_raw = point["x"]
+        y_raw = point["y"]
+        if x_raw is None or y_raw is None:
+            continue
+        x_value = float(x_raw)
+        if x_log and x_value < 0:
+            continue
+        y_value = float(y_raw)
+        cx = left + _plot_x_scale(
+            x_value,
+            min_value=x_min,
+            max_value=x_max,
+            log=x_log,
+            label=PLOT_AXIS_OPTIONS[x_field][0],
+            has_zero=x_has_zero,
+        ) * plot_width
+        cy = top + (1.0 - _plot_scale(y_value, min_value=y_min, max_value=y_max, log=False)) * plot_height
+        fill = _plot_color(point["color"], min_value=color_min, max_value=color_max, log=color_log)
+        tooltip = _plot_tooltip(point)
+        metadata = _plot_model_metadata(point["row"], model_views)
+        circles.append(
+            f"""<circle class="leaderboard-plot-point tooltip-trigger model-detail-trigger" cx="{cx:.2f}" cy="{cy:.2f}" r="{PLOT_POINT_RADIUS:.2f}" fill="{fill}" data-tooltip="{escape(tooltip, quote=True)}" data-tooltip-hover-only="true" data-tooltip-delay="0" data-model-metadata="{metadata}" tabindex="0" aria-label="{escape(tooltip, quote=True)}"></circle>"""
+        )
+    legend = (
+        ""
+        if color_field == PLOT_NONE_FIELD
+        else _render_plot_legend(
+            x=width - right + 42,
+            y=top + 16,
+            height=plot_height - 32,
+            label=PLOT_AXIS_OPTIONS[color_field][0],
+            min_value=color_min,
+            max_value=color_max,
+            field=color_field,
+        )
+    )
+    plot_controls = render_plot_controls(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        plot_y=y_field,
+        plot_x=x_field,
+        plot_color=color_field,
+    )
+    return f"""
+  <div class="leaderboard-plot-shell relative border border-zinc-200 bg-white p-2" data-testid="leaderboard-plot">
+    <div class="leaderboard-plot-controls-region" style="position:absolute;right:0.75rem;top:0.75rem;z-index:10;">{plot_controls}</div>
+    <div class="leaderboard-plot-mobile-message" role="status">Chart view is available only on wider screens.</div>
+    <svg class="leaderboard-plot" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(PLOT_SCORE_OPTIONS[y_field][0])} by {escape(PLOT_AXIS_OPTIONS[x_field][0])}">
+      {grid}
+      <g>{''.join(circles)}</g>
+      {legend}
+    </svg>
+  </div>
+"""
+
+
+def _plot_point_values(
+    row: LeaderboardRow,
+    *,
+    y_field: str,
+    x_field: str,
+    color_field: str,
+    sparse_embedding_dim: float | None,
+    max_active_parameters: float | None,
+    max_total_parameters: float | None,
+    max_seq_length: float | None,
+) -> _PlotPoint:
+    active_parameters = _plot_active_parameters(row, fallback=max_active_parameters)
+    total_parameters = _plot_total_parameters(row, fallback=max_total_parameters)
+    plot_max_seq_length = _plot_max_seq_length(row, fallback=max_seq_length)
+    return {
+        "row": row,
+        "x": _plot_axis_value(
+            row,
+            x_field,
+            sparse_embedding_dim=sparse_embedding_dim,
+            active_parameters=active_parameters,
+            total_parameters=total_parameters,
+            max_seq_length=plot_max_seq_length,
+        ),
+        "y": _plot_score_value(row, y_field),
+        "color": _plot_axis_value(
+            row,
+            color_field,
+            sparse_embedding_dim=sparse_embedding_dim,
+            active_parameters=active_parameters,
+            total_parameters=total_parameters,
+            max_seq_length=plot_max_seq_length,
+        ),
+        "active_parameters": active_parameters,
+        "total_parameters": total_parameters,
+        "max_seq_length": plot_max_seq_length,
+        "x_label": PLOT_AXIS_OPTIONS[x_field][1],
+        "y_label": PLOT_SCORE_OPTIONS[y_field][1],
+        "color_label": PLOT_CHANNEL_OPTIONS[color_field][1],
+    }
+
+
+def _plot_point_has_required_values(point: _PlotPoint, *, x_field: str, color_field: str) -> bool:
+    if point["x"] is None or point["y"] is None:
+        return False
+    if x_field == "max_seq_length" and point["x"] is None:
+        return False
+    if color_field == "max_seq_length" and point["color"] is None:
+        return False
+    return True
+
+
+def _plot_score_value(row: LeaderboardRow, field: str) -> float | None:
+    if field == "macro_mean":
+        return row.macro_mean
+    if field == "micro_mean":
+        return row.micro_mean
+    return row.borda_score
+
+
+def _plot_axis_value(
+    row: LeaderboardRow,
+    field: str,
+    *,
+    sparse_embedding_dim: float | None,
+    active_parameters: float | None,
+    total_parameters: float | None,
+    max_seq_length: float | None,
+) -> float | None:
+    if field in {"active_parameters", "active_parameters_linear"}:
+        return active_parameters
+    if field in {"total_parameters", "total_parameters_linear"}:
+        return total_parameters
+    if field == "max_seq_length":
+        return max_seq_length
+    if field == "embedding_dim":
+        if _is_sparse_or_bm25_row(row):
+            return sparse_embedding_dim
+        return float(row.embedding_dim) if row.embedding_dim is not None else None
+    if field == "quantization":
+        return float(_quantization_numeric_value(row.quantization))
+    if field == "sparse_query_dims":
+        return _sparse_dim_from_variant(row.embedding_variant_name, "query")
+    if field == "sparse_document_dims":
+        return _sparse_dim_from_variant(row.embedding_variant_name, "document")
+    if field == PLOT_NONE_FIELD:
+        return 1.0
+    return None
+
+
+def _plot_active_parameters(row: LeaderboardRow, *, fallback: float | None) -> float | None:
+    if _plot_unknown_params_as_zero(row):
+        return 0.0
+    if row.active_parameters is not None:
+        return float(row.active_parameters)
+    return fallback
+
+
+def _plot_total_parameters(row: LeaderboardRow, *, fallback: float | None) -> float | None:
+    if _plot_unknown_params_as_zero(row):
+        return 0.0
+    if row.total_parameters is not None:
+        return float(row.total_parameters)
+    return fallback
+
+
+def _plot_unknown_params_as_zero(row: LeaderboardRow) -> bool:
+    return _is_bm25_row(row) or _is_static_embedding_row(row)
+
+
+def _is_bm25_row(row: LeaderboardRow) -> bool:
+    return is_bm25_model(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+
+
+def _is_static_embedding_row(row: LeaderboardRow) -> bool:
+    model_name = (row.source_model_name or row.model_name).casefold()
+    return model_name.startswith("static-") or "/static-" in model_name or model_name.startswith("static/")
+
+
+def _max_plot_active_parameters(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.active_parameters)
+        for row in rows
+        if row.active_parameters is not None and not _plot_unknown_params_as_zero(row)
+    ]
+    if not values:
+        return None
+    return max(values)
+
+
+def _max_plot_total_parameters(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.total_parameters)
+        for row in rows
+        if row.total_parameters is not None and not _plot_unknown_params_as_zero(row)
+    ]
+    if not values:
+        return None
+    return max(values)
+
+
+def _plot_max_seq_length(row: LeaderboardRow, *, fallback: float | None) -> float | None:
+    if row.max_seq_length is not None:
+        return float(row.max_seq_length)
+    return fallback
+
+
+def _max_plot_seq_length(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [float(row.max_seq_length) for row in rows if row.max_seq_length is not None]
+    if not values:
+        return None
+    return max(values)
+
+
+def _quantization_numeric_value(quantization: str | None) -> int:
+    if not quantization:
+        return 16
+    normalized = quantization.casefold()
+    if "binary" in normalized or normalized in {"bin", "ubinary"}:
+        return 1
+    if "int8" in normalized or "uint8" in normalized or "8" in normalized:
+        return 8
+    return 16
+
+
+def _average_dense_embedding_dim(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.embedding_dim)
+        for row in rows
+        if row.embedding_dim is not None and _uses_regular_embedding_dim_for_plot(row)
+    ]
+    if not values:
+        return None
+    return sum(values) / len(values)
+
+
+def _max_dense_embedding_dim(rows: Iterable[LeaderboardRow]) -> float | None:
+    values = [
+        float(row.embedding_dim)
+        for row in rows
+        if row.embedding_dim is not None and _uses_regular_embedding_dim_for_plot(row)
+    ]
+    if not values:
+        return None
+    return max(values)
+
+
+def _uses_regular_embedding_dim_for_plot(row: LeaderboardRow) -> bool:
+    return not _is_sparse_or_bm25_row(row) and not _is_late_interaction_row(row)
+
+
+def _is_sparse_or_bm25_row(row: LeaderboardRow) -> bool:
+    return model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) in {
+        "bm25",
+        "sparse",
+    }
+
+
+def _is_late_interaction_row(row: LeaderboardRow) -> bool:
+    return (
+        model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+        == "late-interaction"
+    )
+
+
+def _sparse_dim_from_variant(embedding_variant_name: str | None, side: str) -> float | None:
+    if not embedding_variant_name or not is_sparse_dims_variant_name(embedding_variant_name):
+        return None
+    normalized = embedding_variant_name.lower()
+    patterns = (
+        (rf"{side}[^0-9]*(\d+)", rf"{side[0]}[^0-9]*(\d+)"),
+        (r"query[^0-9]*(\d+)", r"q[^0-9]*(\d+)"),
+    ) if side == "query" else (
+        (r"document[^0-9]*(\d+)", r"doc[^0-9]*(\d+)", r"d[^0-9]*(\d+)"),
+    )
+    for group in patterns:
+        for pattern in group:
+            match = re.search(pattern, normalized)
+            if match:
+                return float(match.group(1))
+    match = re.search(r"(?:max_active_dims|max_dims)[^0-9]*(\d+)", normalized)
+    return float(match.group(1)) if match else None
+
+
+def _plot_field_uses_log(field: str) -> bool:
+    return field in PLOT_LOG_FIELDS
+
+
+def _plot_extent(
+    values: list[float],
+    *,
+    log: bool,
+    pad_fraction: float = 0.04,
+    nonnegative: bool = False,
+) -> tuple[float, float]:
+    values = [value for value in values if math.isfinite(value) and (not log or value > 0)]
+    if not values:
+        return (1.0, 10.0) if log else (0.0, 1.0)
+    minimum = min(values)
+    maximum = max(values)
+    if minimum == maximum:
+        if log:
+            return minimum / 2.0, maximum * 2.0
+        pad = abs(minimum) * 0.1 or 1.0
+        lower = minimum - pad
+        upper = maximum + pad
+    elif log:
+        lower = minimum
+        upper = maximum
+    else:
+        span = maximum - minimum
+        lower = minimum - span * pad_fraction
+        upper = maximum + span * pad_fraction
+    if nonnegative and not log:
+        lower = max(0.0, lower)
+    return lower, upper
+
+
+def _plot_extent_for_field(values: list[float], *, field: str, log: bool) -> tuple[float, float]:
+    if field == "quantization":
+        return 1.0, 16.0
+    if values:
+        return _plot_extent(values, log=log, nonnegative=True)
+    return (1.0, 10.0) if log else (0.0, 1.0)
+
+
+def _plot_score_extent(values: list[float], *, y_field: str) -> tuple[float, float]:
+    finite_values = [value for value in values if math.isfinite(value)]
+    if y_field == "borda_score":
+        return 0.0, 100.0
+    if not finite_values:
+        return 0.0, 1.0
+    minimum = min(finite_values)
+    maximum = max(finite_values)
+    return minimum, maximum
+
+
+def _plot_scale(value: float, *, min_value: float, max_value: float, log: bool) -> float:
+    if log:
+        value = math.log10(max(value, 1e-9))
+        min_value = math.log10(max(min_value, 1e-9))
+        max_value = math.log10(max(max_value, 1e-9))
+    if max_value == min_value:
+        return 0.5
+    return min(1.0, max(0.0, (value - min_value) / (max_value - min_value)))
+
+
+def _plot_x_scale(
+    value: float,
+    *,
+    min_value: float,
+    max_value: float,
+    log: bool,
+    label: str,
+    has_zero: bool = False,
+) -> float:
+    if label == "Dims":
+        return _plot_dimension_scale(value, max_value=max_value)
+    if has_zero and log:
+        if value <= 0:
+            return 0.0
+        scaled = _plot_scale(value, min_value=min_value, max_value=max_value, log=log)
+        return PLOT_LOG_ZERO_BUCKET_FRACTION + scaled * (1.0 - PLOT_LOG_ZERO_BUCKET_FRACTION)
+    return _plot_scale(value, min_value=min_value, max_value=max_value, log=log)
+
+
+def _plot_dimension_scale(value: float, *, max_value: float) -> float:
+    value = max(0.0, value)
+    max_value = max(value, max_value, PLOT_DIMENSION_COMPRESSED_MAX)
+    if max_value <= PLOT_DIMENSION_COMPRESSED_MAX:
+        return _plot_scale(value, min_value=0.0, max_value=max_value, log=False)
+    if value <= PLOT_DIMENSION_COMPRESSED_MAX:
+        return (value / PLOT_DIMENSION_COMPRESSED_MAX) * PLOT_DIMENSION_COMPRESSED_FRACTION
+    high_min = math.log10(PLOT_DIMENSION_COMPRESSED_MAX)
+    high_max = math.log10(max_value)
+    if math.isclose(high_min, high_max, rel_tol=1e-9, abs_tol=1e-9):
+        return PLOT_DIMENSION_COMPRESSED_FRACTION
+    high_scaled = (math.log10(value) - high_min) / (high_max - high_min)
+    return min(
+        1.0,
+        max(
+            0.0,
+            PLOT_DIMENSION_COMPRESSED_FRACTION + high_scaled * (1.0 - PLOT_DIMENSION_COMPRESSED_FRACTION),
+        ),
+    )
+
+
+def _plot_color(value: object, *, min_value: float, max_value: float, log: bool) -> str:
+    if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+        return "rgb(115 120 126 / 0.82)"
+    scaled = _plot_scale(float(value), min_value=min_value, max_value=max_value, log=log)
+    if scaled <= 0.5:
+        local = scaled * 2.0
+        start, end = PLOT_COLOR_STOPS[0], PLOT_COLOR_STOPS[1]
+    else:
+        local = (scaled - 0.5) * 2.0
+        start, end = PLOT_COLOR_STOPS[1], PLOT_COLOR_STOPS[2]
+    red = round(start[0] + (end[0] - start[0]) * local)
+    green = round(start[1] + (end[1] - start[1]) * local)
+    blue = round(start[2] + (end[2] - start[2]) * local)
+    alpha = 0.88 + scaled * 0.02
+    return f"rgb({red} {green} {blue} / {alpha:.2f})"
+
+
+def _render_plot_grid(
+    *,
+    left: int,
+    top: int,
+    plot_width: int,
+    plot_height: int,
+    x_min: float,
+    x_max: float,
+    y_min: float,
+    y_max: float,
+    x_log: bool,
+    x_has_zero: bool,
+    x_label: str,
+    y_label: str,
+) -> str:
+    x_ticks = _plot_x_ticks(x_min, x_max, log=x_log, label=x_label)
+    if x_has_zero:
+        x_ticks = [0.0, *x_ticks]
+    y_ticks = _plot_ticks(y_min, y_max, log=False)
+    parts = [f'<rect x="{left}" y="{top}" width="{plot_width}" height="{plot_height}" class="plot-frame"></rect>']
+    for tick in x_ticks:
+        x = left + _plot_x_scale(
+            tick,
+            min_value=x_min,
+            max_value=x_max,
+            log=x_log,
+            label=x_label,
+            has_zero=x_has_zero,
+        ) * plot_width
+        parts.append(f'<line x1="{x:.2f}" y1="{top}" x2="{x:.2f}" y2="{top + plot_height}" class="plot-grid-line"></line>')
+        tick_label = _fmt_plot_x_tick(tick, x_label, log=x_log)
+        parts.append(f'<text x="{x:.2f}" y="{top + plot_height + 24}" class="plot-axis-tick" text-anchor="middle">{escape(tick_label)}</text>')
+    for tick in y_ticks:
+        y = top + (1.0 - _plot_scale(tick, min_value=y_min, max_value=y_max, log=False)) * plot_height
+        parts.append(f'<line x1="{left}" y1="{y:.2f}" x2="{left + plot_width}" y2="{y:.2f}" class="plot-grid-line"></line>')
+        parts.append(f'<text x="{left - 12}" y="{y + 4:.2f}" class="plot-axis-tick" text-anchor="end">{escape(_fmt_plot_score_tick(tick))}</text>')
+    parts.append(f'<text x="{left + plot_width / 2:.2f}" y="{top + plot_height + 56}" class="plot-axis-label" text-anchor="middle">{escape(x_label)}</text>')
+    parts.append(f'<text x="24" y="{top + plot_height / 2:.2f}" class="plot-axis-label" text-anchor="middle" transform="rotate(-90 24 {top + plot_height / 2:.2f})">{escape(y_label)}</text>')
+    return "\n".join(parts)
+
+
+def _plot_ticks(min_value: float, max_value: float, *, log: bool) -> list[float]:
+    if log:
+        start = math.floor(math.log10(max(min_value, 1e-9)))
+        end = math.ceil(math.log10(max(max_value, 1e-9)))
+        ticks = []
+        for exponent in range(start, end + 1):
+            for multiplier in (1, 2, 5):
+                value = multiplier * (10 ** exponent)
+                if min_value <= value <= max_value:
+                    ticks.append(float(value))
+        return ticks or [min_value, max_value]
+    step_count = 5
+    return [min_value + (max_value - min_value) * index / step_count for index in range(step_count + 1)]
+
+
+def _plot_x_ticks(min_value: float, max_value: float, *, log: bool, label: str) -> list[float]:
+    if label == "Dims":
+        return _plot_dimension_ticks(min_value, max_value)
+    return _plot_ticks(min_value, max_value, log=log)
+
+
+def _plot_dimension_ticks(min_value: float, max_value: float) -> list[float]:
+    start = math.ceil(min_value / PLOT_DIMENSION_GRID_STEP) * PLOT_DIMENSION_GRID_STEP
+    dense_end = min(max_value, PLOT_DIMENSION_DENSE_TICK_MAX)
+    end = math.floor(dense_end / PLOT_DIMENSION_GRID_STEP) * PLOT_DIMENSION_GRID_STEP
+    ticks = []
+    value = start
+    while value <= end:
+        ticks.append(float(value))
+        value += PLOT_DIMENSION_GRID_STEP
+    for value in (*PLOT_DIMENSION_HIGH_TICKS, max_value):
+        if value > PLOT_DIMENSION_DENSE_TICK_MAX and min_value <= value <= max_value:
+            if not any(math.isclose(value, tick, rel_tol=1e-9, abs_tol=1e-9) for tick in ticks):
+                ticks.append(float(value))
+    return ticks or [min_value, max_value]
+
+
+def _render_plot_legend(*, x: int, y: int, height: int, label: str, min_value: float, max_value: float, field: str) -> str:
+    label_x = x + 84
+    label_y = y + height / 2
+    mid_value = _plot_legend_mid_value(min_value=min_value, max_value=max_value, field=field)
+    return f"""
+      <defs>
+        <linearGradient id="plot-color-gradient" x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0%" stop-color="#4f46e5"></stop>
+          <stop offset="50%" stop-color="#0891b2"></stop>
+          <stop offset="100%" stop-color="#f59e0b"></stop>
+        </linearGradient>
+      </defs>
+      <g class="plot-legend">
+        <text x="{label_x}" y="{label_y:.2f}" class="plot-axis-label plot-legend-label" text-anchor="middle" transform="rotate(-90 {label_x} {label_y:.2f})">{escape(label)}</text>
+        <rect x="{x}" y="{y}" width="18" height="{height}" fill="url(#plot-color-gradient)"></rect>
+        <text x="{x + 28}" y="{y + 5}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(max_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
+        <text x="{x + 28}" y="{y + height / 2 + 4:.2f}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(mid_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
+        <text x="{x + 28}" y="{y + height}" class="plot-axis-tick">{escape(_fmt_plot_axis_value(min_value, PLOT_AXIS_OPTIONS[field][0]))}</text>
+      </g>
+"""
+
+
+def _plot_legend_mid_value(*, min_value: float, max_value: float, field: str) -> float:
+    if field == "quantization":
+        return 8.0
+    if _plot_field_uses_log(field) and min_value > 0 and max_value > 0:
+        return math.sqrt(min_value * max_value)
+    return min_value + (max_value - min_value) / 2.0
+
+
+def _plot_tooltip(point: _PlotPoint) -> str:
+    row = point["row"]
+    lines = [row.model_name, f"Type: {_plot_model_type_label(row)}"]
+    if row.embedding_variant_name:
+        lines.append(f"Variant: {row.embedding_variant_name}")
+    lines.extend(
+        [
+            "",
+            f"Borda score: {_fmt_score(row.borda_score)}",
+            f"Mean (Micro): {_fmt_score(row.micro_mean)}",
+            f"Mean (Macro): {_fmt_score(row.macro_mean)}",
+            f"Rank: {_fmt_rank(row.borda_rank)}",
+            "",
+            f"Active params: {_plot_tooltip_active_parameters_label(row)}",
+            f"Total params: {_plot_tooltip_total_parameters_label(row)}",
+            f"Max tokens: {_fmt_int(row.max_seq_length)}",
+            f"{_plot_dimension_tooltip_label(row)}: {_plot_embedding_dim_label(row)}",
+            f"Quantization: {_plot_quantization_label(row.quantization)}",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def _plot_model_metadata(row: LeaderboardRow, model_views: dict[str, ModelCellView]) -> str:
+    model_view = model_views.get(row.model_name)
+    metadata = model_view.metadata if model_view is not None else {"model_name": row.model_name}
+    return escape(json.dumps(metadata, ensure_ascii=False, separators=(",", ":")), quote=True)
+
+
+def _plot_model_type_label(row: LeaderboardRow) -> str:
+    if _is_bm25_row(row):
+        return "BM25"
+    model_type_key = model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type)
+    return {
+        "dense": "Dense",
+        "sparse": "Sparse",
+        "late-interaction": "Late interaction",
+        "reranker": "Reranker",
+    }.get(model_type_key, "Dense")
+
+
+def _fmt_plot_axis_value(value: float, label: str) -> str:
+    if "Params" in label:
+        return _fmt_params(int(value))
+    if "Tokens" in label:
+        return _fmt_max_len(int(value))
+    if "Quantization" in label:
+        return f"{value:g}"
+    if value >= 1000:
+        return f"{int(value):,}"
+    return f"{value:.2f}".rstrip("0").rstrip(".")
+
+
+def _fmt_plot_x_tick(value: float, label: str, *, log: bool) -> str:
+    if log and "Params" in label:
+        multiplier = _plot_log_tick_multiplier(value)
+        if multiplier in {2, 5}:
+            return str(multiplier)
+    return _fmt_plot_axis_value(value, label)
+
+
+def _plot_log_tick_multiplier(value: float) -> int | None:
+    if value <= 0 or not math.isfinite(value):
+        return None
+    exponent = math.floor(math.log10(value))
+    multiplier = value / (10**exponent)
+    for candidate in (1, 2, 5):
+        if math.isclose(multiplier, candidate, rel_tol=1e-9, abs_tol=1e-9):
+            return candidate
+    return None
+
+
+def _fmt_plot_score_tick(value: float) -> str:
+    return f"{value:.0f}" if abs(value) >= 10 else f"{value:.2f}".rstrip("0").rstrip(".")
+
+
+def _fmt_int(value: int | None) -> str:
+    return "Unknown" if value is None else f"{value:,}"
+
+
+def _plot_tooltip_active_parameters_label(row: LeaderboardRow) -> str:
+    if _plot_unknown_params_as_zero(row):
+        return "0"
+    return _fmt_int(row.active_parameters)
+
+
+def _plot_tooltip_total_parameters_label(row: LeaderboardRow) -> str:
+    if _plot_unknown_params_as_zero(row):
+        return "0"
+    return _fmt_int(row.total_parameters)
+
+
+def _plot_embedding_dim_label(row: LeaderboardRow) -> str:
+    if _is_sparse_or_bm25_row(row):
+        return "sparse"
+    return _fmt_int(row.embedding_dim)
+
+
+def _plot_dimension_tooltip_label(row: LeaderboardRow) -> str:
+    return "Token dim" if _is_late_interaction_row(row) else "Embedding dim"
+
+
+def _plot_quantization_label(quantization: str | None) -> str:
+    return quantization or "none"
+
+
+def _normalized_plot_score_field(value: str) -> str:
+    return value if value in PLOT_SCORE_FIELDS else "borda_score"
+
+
+def _normalized_plot_axis_field(value: str) -> str:
+    return value if value in PLOT_AXIS_FIELDS else "active_parameters"
+
+
+def _normalized_plot_channel_field(value: str, *, default: str) -> str:
+    return value if value in PLOT_ENCODING_FIELDS else default
 
 
 def _score_target_display(score_target: str) -> tuple[str, str]:
@@ -1150,6 +2340,7 @@ def render_tabs(
     filter_state: FilterState | None = None,
     filter_context: FilterContext | None = None,
     benchmark_docs: BenchmarkDocs | None = None,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
@@ -1165,7 +2356,10 @@ def render_tabs(
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         doc = benchmark_docs.group_doc(view_name) if benchmark_docs is not None else None
         group = _view_group(view_name)
         sort_key = _view_group_sort_key(view_name=view_name, fallback=index)
@@ -1177,6 +2371,7 @@ def render_tabs(
                 direction=tab_direction,
                 filter_state=filter_state,
             )
+            query_payload = _apply_plot_state(query_payload, plot_state)
             query_payload.pop("group", None)
             query = urlencode(query_payload, doseq=True)
             grouped_buttons[group].append(
@@ -1200,6 +2395,7 @@ def render_tabs(
             filter_state=filter_state,
             available_views=available_views,
         )
+        query_payload = _apply_plot_state(query_payload, plot_state)
         if view_name == "MNanoBEIR":
             if result.view_name != "MNanoBEIR":
                 for offset, selection_key, label in [
@@ -1216,6 +2412,7 @@ def render_tabs(
                         filter_state=filter_state,
                         available_views=available_views,
                     )
+                    selection_query_payload = _apply_plot_state(selection_query_payload, plot_state)
                     selection_query = urlencode(selection_query_payload, doseq=True)
                     selection_active = _benchmark_selection_active(result=result, selection_key=selection_key)
                     grouped_buttons[group].append(
@@ -1243,6 +2440,7 @@ def render_tabs(
                     direction=tab_direction,
                     filter_state=filter_state,
                 )
+                group_query_payload = _apply_plot_state(group_query_payload, plot_state)
                 group_query_payload["view"] = view_name
                 group_query_payload.pop("bench", None)
                 group_query_payload["group"] = score_group
@@ -1299,9 +2497,9 @@ def render_tabs(
       <div class="grid gap-1.5">
         <div class="border border-zinc-200 bg-white p-1.5">
           <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-            {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-            {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-            {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state)}
+            {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+            {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+            {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
           </div>
         </div>
         <div class="grid gap-1.5">
@@ -1315,10 +2513,10 @@ def render_tabs(
             <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
           </div>
-          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True)}
+          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True, plot_state=plot_state)}
         </div>
-        {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state)}
-        {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context)}
+        {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+        {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, plot_state=plot_state)}
       </div>
     </nav>
     """
@@ -1576,7 +2774,14 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
     )
 
 
-def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+def _render_score_aggregation_group(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None = None,
+) -> str:
     if not result.is_overall:
         return ""
     buttons = []
@@ -1585,7 +2790,10 @@ def _render_score_aggregation_group(*, result: LeaderboardResult, sort: str, dir
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         if score == "micro":
             query_payload.pop("score", None)
         else:
@@ -1627,7 +2835,14 @@ def _render_benchmark_group(*, label: str, description: str, buttons: list[str],
             """
 
 
-def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+def _render_target_group(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None = None,
+) -> str:
     target_options = [
         ("all", "Retrieval", "search"),
         ("reranking", "Reranking", "list-ordered"),
@@ -1638,7 +2853,10 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         if target == "all":
             query_payload.pop("target", None)
         else:
@@ -1657,7 +2875,10 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
         safeguard_enabled = result.score_target == "reranking"
         toggle_target = "reranking_without_safeguard" if safeguard_enabled else "reranking"
         checked_attr = " checked" if safeguard_enabled else ""
-        query_payload = state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state),
+            plot_state,
+        )
         query_payload["target"] = toggle_target
         query = urlencode(query_payload, doseq=True)
         safeguard_help = _render_help_tooltip(
@@ -1682,14 +2903,21 @@ def _render_target_group(*, result: LeaderboardResult, sort: str, direction: str
               {_render_help_tooltip(
                   "Evaluation mode",
                   "Switches the leaderboard between retrieval runs and reranking runs.",
-                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, sparse/BM25, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows cross-encoder reranker results on a shared candidate set. Use Reranking when you want to compare how rerankers reorder candidates rather than how retrievers search the full corpus.",
+                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, BM25, sparse, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows cross-encoder reranker results on a shared candidate set. Use Reranking when you want to compare how rerankers reorder candidates rather than how retrievers search the full corpus.",
               )}
               {safeguard_toggle}
             </div>
             """
 
 
-def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str, filter_state: FilterState) -> str:
+def _render_metric_group(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None = None,
+) -> str:
     if len(result.available_score_metrics) <= 1:
         return ""
     buttons = []
@@ -1698,7 +2926,10 @@ def _render_metric_group(*, result: LeaderboardResult, sort: str, direction: str
         classes = _control_button_classes(active=active)
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
-        query_payload = state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state)
+        query_payload = _apply_plot_state(
+            state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
+            plot_state,
+        )
         if metric == "ndcg@10":
             query_payload.pop("metric", None)
         else:
@@ -1791,6 +3022,7 @@ def render_language_pages(
     direction: str,
     filter_state: FilterState | None = None,
     embedded: bool = False,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     if not result.available_languages:
@@ -1803,6 +3035,7 @@ def render_language_pages(
             sort=sort,
             direction=direction,
             filter_state=filter_state,
+            plot_state=plot_state,
         )
     ]
     visible_options = result.available_languages[:8]
@@ -1814,6 +3047,7 @@ def render_language_pages(
             sort=sort,
             direction=direction,
             filter_state=filter_state,
+            plot_state=plot_state,
         )
         for option in visible_options
     )
@@ -1826,6 +3060,7 @@ def render_language_pages(
                 sort=sort,
                 direction=direction,
                 filter_state=filter_state,
+                plot_state=plot_state,
             )
             for option in more_options
         )
@@ -1869,16 +3104,20 @@ def _language_page_button(
     sort: str,
     direction: str,
     filter_state: FilterState,
+    plot_state: QueryState | None = None,
 ) -> str:
     language_filters = () if option is None else (option.code,)
     active = result.selected_languages == language_filters
     label = "All languages" if option is None else f"{option.label} {option.task_count}"
     classes = _control_button_classes(active=active)
-    query_payload = state_payload(
-        result=result,
-        sort=sort,
-        direction=direction,
-        filter_state=_filter_state_with_languages(filter_state, language_filters),
+    query_payload = _apply_plot_state(
+        state_payload(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=_filter_state_with_languages(filter_state, language_filters),
+        ),
+        plot_state,
     )
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
@@ -1895,6 +3134,7 @@ def _filter_state_with_languages(filter_state: FilterState, language_filters: tu
         filters_active=filter_state.filters_active,
         dim_filters=filter_state.dim_filters,
         quant_filters=filter_state.quant_filters,
+        commercial_filters=filter_state.commercial_filters,
         model_type_filters=filter_state.model_type_filters,
         dtype_filters=filter_state.dtype_filters,
         attn_filters=filter_state.attn_filters,
@@ -1923,6 +3163,7 @@ def render_display_controls(
     sort: str,
     direction: str,
     filter_state: FilterState | None = None,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     quantization_checked = " checked" if result.include_quantization_variants else ""
@@ -1932,6 +3173,7 @@ def render_display_controls(
     task_scores_checked = " checked" if result.show_task_scores else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     task_ranks_checked = " checked" if result.show_task_ranks else ""
+    other_columns_checked = " checked" if result.show_other_columns else ""
     state_fields = [
         ("view", result.view_name),
         ("sort", sort),
@@ -1944,7 +3186,9 @@ def render_display_controls(
         state_fields.append(("metric", result.selected_score_metric))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
+    state_fields.extend(_query_state_fields(plot_state))
     sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
+    variant_filter_fields = _variant_filter_hidden_fields(filter_state)
     variant_hidden_fields = _active_variant_hidden_fields(result)
     task_score_hidden_fields = []
     if result.show_task_scores:
@@ -1955,8 +3199,10 @@ def render_display_controls(
         task_score_hidden_fields.append(("task_z_scores", "0"))
     if result.show_task_ranks:
         task_score_hidden_fields.append(("task_ranks", "1"))
+    if result.show_other_columns:
+        task_score_hidden_fields.append(("other_columns", "1"))
     column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
-    variant_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + task_score_hidden_fields)
+    variant_hidden_html = _hidden_inputs(state_fields + variant_filter_fields + task_score_hidden_fields)
     return f"""
     <div class="grid gap-1.5 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
       <form id="column-controls" class="border border-zinc-200 bg-white p-1.5"
@@ -1986,6 +3232,10 @@ def render_display_controls(
             <input type="hidden" name="task_ranks" value="0">
             <input type="checkbox" name="task_ranks" value="1"{task_ranks_checked}>
             <span>Task ranks</span>
+          </label>
+          <label class="toggle-chip">
+            <input type="checkbox" name="other_columns" value="1"{other_columns_checked}>
+            <span>Others</span>
           </label>
         </div>
       </form>
@@ -2032,6 +3282,7 @@ def render_controls(
     direction: str,
     filter_state: FilterState | None = None,
     filter_context: FilterContext | None = None,
+    plot_state: QueryState | None = None,
 ) -> str:
     filter_state = filter_state or FilterState()
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
@@ -2048,6 +3299,7 @@ def render_controls(
         state_fields.append(("metric", result.selected_score_metric))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
+    state_fields.extend(_query_state_fields(plot_state))
     variant_hidden_fields = _active_variant_hidden_fields(result)
     task_score_hidden_fields = []
     if result.show_task_scores:
@@ -2067,12 +3319,14 @@ def render_controls(
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
+    commercial_options = filter_context.commercial_options
     dtype_options = filter_context.dtype_options
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
     model_type_options = filter_context.model_type_options
     selected_dims = filter_context.selected_dims
     selected_quants = filter_context.selected_quants
+    selected_commercial = filter_context.selected_commercial
     selected_dtypes = filter_context.selected_dtypes
     selected_attn = filter_context.selected_attn
     selected_prompts = filter_context.selected_prompts
@@ -2088,6 +3342,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(value for value, _ in dim_options),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2106,6 +3361,7 @@ def render_controls(
             filters_active=True,
             dim_filters=(FILTER_NONE_VALUE,),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2124,6 +3380,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(value for value, _ in quant_options),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2142,6 +3399,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=(FILTER_NONE_VALUE,),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2160,6 +3418,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(value for value, _ in dtype_options),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2178,6 +3437,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=(FILTER_NONE_VALUE,),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2196,6 +3456,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(value for value, _ in attn_options),
@@ -2214,6 +3475,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=(FILTER_NONE_VALUE,),
@@ -2232,6 +3494,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2250,6 +3513,7 @@ def render_controls(
             filters_active=True,
             dim_filters=tuple(filter_context.ordered_selected_dims()),
             quant_filters=tuple(filter_context.ordered_selected_quants()),
+            commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
             dtype_filters=tuple(filter_context.ordered_selected_dtypes()),
             attn_filters=tuple(filter_context.ordered_selected_attn()),
@@ -2257,6 +3521,19 @@ def render_controls(
             **_task_length_filter_kwargs(filter_state),
         ),
     )
+    for query_payload in (
+        dim_all_query,
+        dim_none_query,
+        quant_all_query,
+        quant_none_query,
+        dtype_all_query,
+        dtype_none_query,
+        attn_all_query,
+        attn_none_query,
+        prompt_all_query,
+        prompt_none_query,
+    ):
+        _apply_plot_state(query_payload, plot_state)
     refine_results_open = (
         bool(filter_state.model_filter.strip())
         or bool(filter_state.task_filter.strip())
@@ -2274,11 +3551,11 @@ def render_controls(
           <span class="inline-flex items-center gap-1.5">
             <span class="details-chevron inline-flex h-4 w-4 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
             <span class="inline-flex items-center gap-1">
-              {_control_label(icon="filter", text="Refine results")}
+              {_control_label(icon="filter", text="Filter results")}
               {_render_help_tooltip(
-                  "Refine results",
+                  "Filter results",
                   "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
-                  "Refine results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
+                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
               )}
             </span>
           </span>
@@ -2334,6 +3611,15 @@ def render_controls(
               {_render_parameter_filter_inputs(filter_state)}
               {_render_task_length_filter_inputs(filter_state)}
               <div class="flex flex-wrap items-center gap-2">
+                {_control_label(icon="shield-check", text="License filters")}
+                {_render_help_tooltip(
+                    "License filters",
+                    "Filters rows by whether model-card license metadata permits commercial use.",
+                    "Commercial use groups license metadata from model cards. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where commercial-use classification does not apply. Unknown keeps rows without reviewed commercial-use metadata.",
+                )}
+                {_render_commercial_filter_controls(options=commercial_options, selected_values=selected_commercial)}
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="cpu", text="Run metadata")}
                 {_render_help_tooltip(
                     "Run metadata filters",
@@ -2352,7 +3638,7 @@ def render_controls(
                   {_render_help_tooltip(
                       "Recalculate ranks from filters",
                       "Recomputes ranking numbers using only the currently filtered result set.",
-                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Refine results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
+                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Filter results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
                   )}
                 </label>
               </div>
@@ -2376,6 +3662,17 @@ def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, 
     if result.include_other_variants:
         fields.append(("other_variant", "1"))
     return fields
+
+
+def _variant_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
+    reset_facet_state = FilterState(
+        model_filter=filter_state.model_filter,
+        task_filter=filter_state.task_filter,
+        language_filters=filter_state.language_filters,
+        filters_active=False,
+        **_task_length_filter_kwargs(filter_state),
+    )
+    return active_filter_hidden_fields(reset_facet_state) + _text_filter_hidden_fields(reset_facet_state)
 
 
 def _selected_benchmark_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
@@ -2419,7 +3716,7 @@ def _render_model_type_controls(
           {_render_help_tooltip(
               "Model family",
               "Filters rows by the retrieval or reranking family recorded for each model result.",
-              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. Sparse / BM25 rows use lexical or sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
+              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
           )}
         </span>
         {''.join(checkboxes)}
@@ -2427,9 +3724,34 @@ def _render_model_type_controls(
     """
 
 
+def _render_commercial_filter_controls(
+    *,
+    options: list[tuple[str, str]],
+    selected_values: set[str],
+) -> str:
+    if not options:
+        return ""
+    checkboxes = []
+    for value, label in options:
+        checked = " checked" if value in selected_values else ""
+        checkboxes.append(
+            f"""<label class="inline-flex items-center gap-1.5">
+              <input type="checkbox" name="commercial_filter" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
+              <span>{escape(label)}</span>
+            </label>"""
+        )
+    return f"""
+      <fieldset id="commercial-use-controls" class="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <input type="hidden" name="commercial_filter" value="{FILTER_NONE_VALUE}">
+        <span class="inline-flex items-center gap-1 font-medium text-zinc-800">Commercial use</span>
+        {''.join(checkboxes)}
+      </fieldset>
+    """
+
+
 def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_class = "text-cyan-700" if filter_state.has_parameter_filters else ""
@@ -2576,7 +3898,7 @@ def render_table_head(
         [
             ("active_parameters", "Active Params", "asc", "right", False, ""),
             ("total_parameters", "Total Params", "asc", "right", False, ""),
-            ("max_seq_length", "Max Len", "desc", "right", False, ""),
+            ("max_seq_length", "Max Tokens", "desc", "right", False, ""),
             ("embedding_dim", "Dims", "desc", "right", False, ""),
         ]
     )
@@ -2584,13 +3906,29 @@ def render_table_head(
         columns.append(("quantization", "Quant", "asc", "left", False, ""))
     if _show_base_delta_column(result):
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
+    if result.show_other_columns:
+        columns.extend(
+            [
+                ("license", "License", "", "left", False, ""),
+                ("model_type", "Model Type", "", "left", False, ""),
+            ]
+        )
     heads = []
     for key, label, default_direction, align, is_metric, full_metric_name in columns:
         align = "left"
-        next_direction = _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
-        indicator = _render_sort_indicator(active=sort == key, direction=direction)
-        query_payload = state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
-        query = urlencode(query_payload, doseq=True)
+        sortable = bool(default_direction)
+        next_direction = (
+            _next_direction(key=key, sort=sort, direction=direction, default_direction=default_direction)
+            if sortable
+            else ""
+        )
+        indicator = _render_sort_indicator(active=sort == key, direction=direction) if sortable else ""
+        query_payload = (
+            state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
+            if sortable
+            else {}
+        )
+        query = urlencode(query_payload, doseq=True) if sortable else ""
         justify = "justify-end" if align == "right" else "justify-start"
         text_align = "text-right" if align == "right" else "text-left"
         th_spacing = f"{_metric_column_width_class(result)} px-1 normal-case" if is_metric else "px-2 uppercase"
@@ -2639,12 +3977,18 @@ def render_table_head(
                  </span>"""
         else:
             label_markup = escape(label)
-            header_content = f"""
+            if sortable:
+                header_content = f"""
                  <button type="button" class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          {_leaderboard_control_hx_attrs()}>
                    <span class="{label_class}"{label_attrs}>{label_markup}</span>{indicator}
                  </button>"""
+            else:
+                header_content = f"""
+                 <span class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left">
+                   <span class="{label_class}"{label_attrs}>{label_markup}</span>
+                 </span>"""
         heads.append(
             f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 {text_align} {th_spacing} {sticky}">
                  {header_content}
@@ -2697,6 +4041,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_row_embedding_dim(row)}</td>
               {_render_quantization_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
+              {_render_other_columns(result=result, model_view=model_views[row.model_name])}
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
@@ -2711,6 +4056,8 @@ def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
         column_count += 1
     if _show_base_delta_column(result):
         column_count += 1
+    if result.show_other_columns:
+        column_count += 2
     return column_count
 
 
@@ -2777,7 +4124,7 @@ def _csv_headers(*, result: LeaderboardResult, metric_headers: dict[str, str]) -
             "Model Type Key",
             "Active Params",
             "Total Params",
-            "Max Sequence Length",
+            "Max Tokens",
             "Embedding Dims",
             "Original Embedding Dims",
             "Truncated Embedding Dims",
@@ -2812,7 +4159,7 @@ def _csv_metric_headers(*, result: LeaderboardResult, metric_labels: dict[str, s
         "Model Type Key",
         "Active Params",
         "Total Params",
-        "Max Sequence Length",
+        "Max Tokens",
         "Embedding Dims",
         "Original Embedding Dims",
         "Truncated Embedding Dims",
@@ -2868,7 +4215,7 @@ def _csv_record_for_row(
         "Model Type Key": metadata.get("model_type_key"),
         "Active Params": metadata.get("active_parameters"),
         "Total Params": metadata.get("total_parameters"),
-        "Max Sequence Length": metadata.get("max_seq_length"),
+        "Max Tokens": metadata.get("max_seq_length"),
         "Embedding Dims": metadata.get("embedding_dim"),
         "Original Embedding Dims": metadata.get("original_embedding_dim"),
         "Truncated Embedding Dims": metadata.get("truncated_embedding_dim"),
@@ -3063,6 +4410,31 @@ def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow)
     return f"""<td class="px-2 py-1 text-left">{escape(row.quantization or "")}</td>"""
 
 
+def _render_other_columns(*, result: LeaderboardResult, model_view: ModelCellView) -> str:
+    if not result.show_other_columns:
+        return ""
+    metadata = model_view.metadata
+    license_label, license_tooltip = _license_table_labels(metadata.get("license"))
+    model_type_label, model_type_tooltip = _model_type_table_labels(metadata)
+    return _render_short_metadata_cell(license_label, license_tooltip) + _render_short_metadata_cell(
+        model_type_label,
+        model_type_tooltip,
+    )
+
+
+def _render_short_metadata_cell(label: str, tooltip: str) -> str:
+    tooltip_class = " tooltip-trigger tooltip-delay cursor-pointer" if tooltip and tooltip != label else ""
+    tooltip_attrs = (
+        f' data-tooltip="{escape(tooltip, quote=True)}" aria-label="{escape(tooltip, quote=True)}"'
+        if tooltip
+        else ""
+    )
+    return (
+        f'<td class="max-w-[7rem] truncate whitespace-nowrap px-2 py-1 text-left{tooltip_class}"{tooltip_attrs}>'
+        f"{escape(label)}</td>"
+    )
+
+
 def _show_base_delta_column(result: LeaderboardResult) -> bool:
     return (
         result.include_quantization_variants
@@ -3231,7 +4603,7 @@ def _fmt_params(value: int | None) -> str:
 
 def _fmt_max_len(value: int | None) -> str:
     if value is None:
-        return ""
+        return "None"
     if value >= 1_024:
         thousands = math.floor(value / 1_024 + 0.5)
         return f"{thousands}K"
@@ -3239,13 +4611,64 @@ def _fmt_max_len(value: int | None) -> str:
 
 
 def _fmt_embedding_dim(value: int | None) -> str:
-    return "" if value is None else f"{value:,}"
+    return "Unknown" if value is None else f"{value:,}"
 
 
 def _fmt_row_embedding_dim(row: LeaderboardRow) -> str:
-    if model_type_filter_key(model_name=row.source_model_name or row.model_name, model_type=row.model_type) == "sparse":
-        return ""
+    if _is_sparse_or_bm25_row(row):
+        return "sparse"
     return _fmt_embedding_dim(row.embedding_dim)
+
+
+def _fmt_license(value: object) -> str:
+    return _license_table_labels(value)[1]
+
+
+def _license_table_labels(value: object) -> tuple[str, str]:
+    if not isinstance(value, Mapping):
+        return "", ""
+    license_metadata = cast(Mapping[str, object], value)
+    label = license_metadata.get("label") or license_metadata.get("id")
+    full_label = str(label) if label else ""
+    license_id = str(license_metadata.get("id") or "").strip().casefold()
+    normalized_label = full_label.strip().casefold()
+    short_labels = {
+        "apache-2.0": "Apache",
+        "mit": "MIT",
+        "cc-by-nc-4.0": "CC BY-NC",
+        "cc-by-nc-sa-4.0": "CC BY-NC",
+        "openai-service-terms": "OpenAI",
+        "gemma": "Gemma",
+        "lfm1.0": "LFM",
+    }
+    label_prefixes = {
+        "apache 2.0": "Apache",
+        "cc by-nc 4.0": "CC BY-NC",
+        "cc by-nc-sa 4.0": "CC BY-NC",
+        "openai service terms": "OpenAI",
+        "gemma terms": "Gemma",
+        "lfm open license": "LFM",
+    }
+    short_label = short_labels.get(license_id)
+    if short_label is None:
+        short_label = next(
+            (short for prefix, short in label_prefixes.items() if normalized_label.startswith(prefix)),
+            full_label,
+        )
+    return short_label, full_label
+
+
+def _model_type_table_labels(metadata: Mapping[str, object]) -> tuple[str, str]:
+    full_label = str(metadata.get("model_type") or "")
+    key = str(metadata.get("model_type_key") or "").casefold()
+    short_labels = {
+        "dense": "Dense",
+        "sparse": "Sparse",
+        "bm25": "BM25",
+        "reranker": "Reranker",
+        "late-interaction": "Late int.",
+    }
+    return short_labels.get(key, full_label), full_label
 
 
 def _fmt_percent_delta(value: float | None) -> str:

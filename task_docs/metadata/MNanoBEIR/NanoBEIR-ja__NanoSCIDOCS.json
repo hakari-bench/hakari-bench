@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 1
       }
     },
-    "references": [
-      {
-        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
-        "url": "https://arxiv.org/abs/2004.07180",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-ja",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SPECTER: Document-level Representation Learning using Citation-informed Transformers",
+        "url": "https://arxiv.org/abs/2004.07180",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d212691257354c201a32729b997ede447e498640",
+        "document_id": "3939607e665159002391082cd4a8952374d6bd99",
+        "query": {
+          "text": "新規DC-DC多レベルブーストコンバータ",
+          "full_chars": 20,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "アブストラクト マルチレベル電圧源コンバータは、大電力用途向けの新しいタイプの電力変換装置として登場している。マルチレベル電圧源コンバータは、通常、複数段階の直流コンデンサ電圧を用いて階段状の電圧波形を合成する。マルチレベルコンバータの主な制限の一つは、異なるレベル間での電圧の不均衡である。異なるレベル間の電圧を平衡にする技術は、通常、電圧クランプまたはコンデンサの電荷制御を含む。マルチレベルコンバータにおいて電圧バランスを実現する方法にはいくつかの方式がある。従来の磁気結合型コンバータを考慮せずに、本論文では最近開発された3種類のマルチレベル電圧源コンバータについて述べる。1）ダイオードクランプ型、2）フライングコンデンサ型、3）個別の直流電源を持つカスケードインバータ型である。これらのコンバータの動作原理、特徴、制約、および潜在的な応用について議論する。",
+          "full_chars": 386,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "2a8bcf35e6b5b3910eea160b3a1fb3e6bcb3966e",
+        "document_id": "04f39720b9b20f8ab990228ae3fe4f473e750fe3",
+        "query": {
+          "text": "Cholesky分解に基づく高速スパースガウスマルコフ確率場の学習",
+          "full_chars": 33,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "（空の入力のため、翻訳なし）",
+          "full_chars": 14,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "063c6ae786c34d3722c6d9060df6339e246bbc3b",
+        "document_id": "061356704ec86334dbbc073985375fe13cd39088",
+        "query": {
+          "text": "畳み込みニューラルネットワークを用いたテクスチャ合成",
+          "full_chars": 26,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "本研究では、大規模画像認識の設定において、畳み込みネットワークの深さがその精度に与える影響を調査する。我々の主な貢献は、深さを増加させたネットワークを徹底的に評価したことであり、従来の構成に対して、重み付き層を16～19層まで深くすることで、著しい性能向上が達成できることを示している。これらの知見は、ImageNet Challenge 2014への我々の提出の基礎となり、その際、我々のチームは位置特定および分類の部門でそれぞれ第1位および第2位を獲得した。また、我々の表現は他のデータセットに対しても良好に汎化し、そこで最先端の結果を達成していることも示している。特に重要なのは、コンピュータビジョンにおける深層視覚表現の利用に関するさらなる研究を促進するため、性能が最も高かった2つのConvNetモデルを一般に公開した点である。",
+          "full_chars": 369,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

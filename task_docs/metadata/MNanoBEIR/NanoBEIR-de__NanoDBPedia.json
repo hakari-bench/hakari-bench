@@ -143,7 +143,7 @@
         "year": 2021,
         "is_paper": true,
         "doi": "10.48550/arXiv.2104.08663",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
@@ -151,15 +151,66 @@
         "year": 2025,
         "is_paper": true,
         "doi": "10.48550/arXiv.2502.13595",
-        "source_confidence": "benchmark_context_paper"
+        "source_confidence": "definitive_paper_link"
       },
       {
         "title": "NanoBEIR: Smaller BEIR dataset subsets",
         "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "dataset_collection"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "SemSearch_ES-32",
+        "document_id": "<dbpedia:Fitzgerald_Auto_Malls>",
+        "query": {
+          "text": "Fitzgerald Autohaus in Chambersburg, PA",
+          "full_chars": 39,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Fitzgerald Auto Malls ist ein familiengeführtes und -betriebenes Autohaus, das 1966 gegründet wurde und seine erste Filiale in Bethesda, Maryland, eröffnete. Stand 2014 belegte Fitzgerald Auto Malls Platz 59 auf der Liste der \"Top 125 Autohändlergruppen\" in den USA, die jährlich von Automotive News veröffentlicht wird. Fitzgerald-Händlerfilialen tauchen fünfmal in der WardsAuto e-Dealer 100 von 2013 auf, auf den Plätzen 8, 25, 30, 43 und 98.",
+          "full_chars": 445,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2012319",
+        "document_id": "<dbpedia:Alice_Munro>",
+        "query": {
+          "text": "Ist die Kurzgeschichtensammlung von Alice Munro aus dem Jahr 1994 verfügbar?",
+          "full_chars": 76,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Alice Ann Munro (/ˈælɨs ˌæn mʌnˈroʊ/, geb. Laidlaw /ˈleɪdlɔː/; geboren 10. Juli 1931) ist eine kanadische Autorin. Munros Werk wird beschrieben, die Struktur von Kurzgeschichten neu definiert zu haben, insbesondere durch ihre Tendenz, vorwärts und rückwärts in der Zeit zu springen. Ihre Geschichten werden als \"mehr zu enthüllen als zu präsentieren, mehr zu zeigen als zu verkünden\" beschrieben. Munros Fiktion spielt meist in ihrem Heimatbezirk Huron County in Südwest-Ontario. Ihre Geschichten erforschen menschliche Komplexitäten in einem klaren und direkten Schreibstil.",
+          "full_chars": 575,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "INEX_LD-2010019",
+        "document_id": "<dbpedia:Art_in_Paris>",
+        "query": {
+          "text": "Gallorömische Architektur in Paris",
+          "full_chars": 34,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Kunst in Paris ist ein Artikel über die Kunstkultur und -geschichte in Paris, der Hauptstadt Frankreichs. Seit Jahrhunderten hat Paris Künstler aus aller Welt angezogen, die in die Stadt kommen, um sich weiterzubilden und Inspiration in seinen künstlerischen Ressourcen und Galerien zu finden. Daher hat sich Paris den Ruf als 'Stadt der Kunst' erworben.",
+          "full_chars": 354,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

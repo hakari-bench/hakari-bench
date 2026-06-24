@@ -152,15 +152,66 @@
         "url": "https://code-rag-bench.github.io/",
         "year": 2025,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "code-rag-bench/library-documentation",
         "url": "https://huggingface.co/datasets/code-rag-bench/library-documentation",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "6",
+        "document_id": "doc_6",
+        "query": {
+          "text": "tf.autodiff.ForwardAccumulator Computes Jacobian-vector products (\"JVP\"s) using forward-mode autodiff.",
+          "full_chars": 102,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "tf.autodiff.ForwardAccumulator( primals, tangents ) Compare to tf.GradientTape which computes vector-Jacobian products (\"VJP\"s) using reverse-mode autodiff (backprop). Reverse mode is more attractive when computing gradients of a scalar-valued function with respect to many inputs (e.g. a neural network with many parameters and a scalar loss). Forward mode works best on functions with many outputs and few inputs. Since it does not hold on to intermediate activations, it is much more memory efficient than backprop where it is applicable. Consider a simple linear regression: x = tf.constant([[2.0, 3.0], [1.0, 4.0]]) dense = tf.keras.layers.Dense(1) dense.build([None, 2]) with tf.autodiff.ForwardAccumulator( primals=dense.kernel, tangents=tf.constant([[1.], [0.]])) as acc: loss = tf.reduce_sum((dense(x) - tf.constant([1., -1.])) ** 2.) acc.jvp(loss) <tf.Tensor: shape=(), dtype=float32, numpy=...> The example has two variables containing parameters, dense.kernel (2 parameters) and dense.bia",
+          "full_chars": 6087,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "doc_124",
+        "query": {
+          "text": "tf.compat.v1.data.experimental.RandomDataset A Dataset of pseudorandom values. Inherits From: Dataset, Dataset",
+          "full_chars": 110,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "tf.compat.v1.data.experimental.RandomDataset( seed=None ) Attributes element_spec The type specification of an element of this dataset. dataset = tf.data.Dataset.from_tensor_slices([1, 2, 3]) dataset.element_spec TensorSpec(shape=(), dtype=tf.int32, name=None) output_classes Returns the class of each component of an element of this dataset. (deprecated) Warning: THIS FUNCTION IS DEPRECATED. It will be removed in a future version. Instructions for updating: Use tf.compat.v1.data.get_output_classes(dataset). output_shapes Returns the shape of each component of an element of this dataset. (deprecated)Warning: THIS FUNCTION IS DEPRECATED. It will be removed in a future version. Instructions for updating: Use tf.compat.v1.data.get_output_shapes(dataset). output_types Returns the type of each component of an element of this dataset. (deprecated)Warning: THIS FUNCTION IS DEPRECATED. It will be removed in a future version. Instructions for updating: Use tf.compat.v1.data.get_output_types(datas",
+          "full_chars": 55309,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "104",
+        "document_id": "doc_104",
+        "query": {
+          "text": "tf.compat.v1.confusion_matrix Computes the confusion matrix from predictions and labels. View aliases Compat aliases for migration",
+          "full_chars": 132,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "See Migration guide for more details. tf.compat.v1.math.confusion_matrix tf.compat.v1.confusion_matrix( labels, predictions, num_classes=None, dtype=tf.dtypes.int32, name=None, weights=None ) The matrix columns represent the prediction labels and the rows represent the real labels. The confusion matrix is always a 2-D array of shape [n, n], where n is the number of valid labels for a given classification task. Both prediction and labels must be 1-D arrays of the same shape in order for this function to work. If num_classes is None, then num_classes will be set to one plus the maximum value in either predictions or labels. Class labels are expected to start at 0. For example, if num_classes is 3, then the possible labels would be [0, 1, 2]. If weights is not None, then each prediction contributes its corresponding weight to the total value of the confusion matrix cell. For example: tf.math.confusion_matrix([1, 2, 4], [2, 2, 4]) ==> [[0 0 0 0 0] [0 0 1 0 0] [0 0 1 0 0] [0 0 0 0 0] [0 0 0",
+          "full_chars": 1943,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

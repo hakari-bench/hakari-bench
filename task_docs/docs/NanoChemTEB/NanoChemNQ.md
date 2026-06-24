@@ -68,9 +68,11 @@ Because the Nano split is small, this task should be interpreted as a focused di
 
 ## Example Data
 
-### Public Sources
-
-The task is based on ChemTEB's chemistry-filtered Natural Questions retrieval setting.
+| Query | Positive document |
+| --- | --- |
+| the reciprocal lattice of an fcc crystal is [43 chars] | Reciprocal lattice The reciprocal lattice to an FCC lattice is the body-centered cubic (BCC) lattice. [101 chars] |
+| suffix applied to the end of the name of enzymes [48 chars] | -ase The suffix -ase is used in biochemistry to form names of enzymes. The most common way to name enzymes is to add this suffix onto the end of the substrate, e.g. an enzyme that breaks down peroxides may be called peroxidase; the enzyme that produces telomeres is called telomerase. Sometimes enzymes are named for the function they perform, rather than substrate, e.g. the enzyme that polymerizes (assembles) DNA into strands is called polymerase; see also reverse transcriptase. [482 chars] |
+| what is the breakdown product formed when one phosphate group is removed from atp [81 chars] | ATP hydrolysis ATP hydrolysis is the reaction by which chemical energy that has been stored in the high-energy phosphoanhydride bonds in adenosine triphosphate (ATP) is released, for example in muscles, by producing work in the form of mechanical energy. The product is adenosine diphosphate (ADP) and an inorganic phosphate, orthophosphate (Pi). ADP can be further hydrolyzed to give energy, adenosine monophosphate (AMP), and another orthophosphate (Pi).[1] ATP hydrolysis is the final link between the energy derived from food or sunlight and useful work such as muscle contraction, the establishment of electrochemical gradients across membranes, and biosynthetic processes necessary to maintain life. [705 chars] |
 
 ### Source Reference Table
 

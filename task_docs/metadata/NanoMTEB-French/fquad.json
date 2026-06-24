@@ -135,15 +135,66 @@
         "url": "https://arxiv.org/abs/2109.13209",
         "year": 2021,
         "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       },
       {
         "title": "manu/fquad2_test",
         "url": "https://huggingface.co/datasets/manu/fquad2_test",
         "year": 2024,
         "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
+        "source_confidence": "probably_correct"
       }
-    ]
+    ],
+    "examples": [
+      {
+        "query_id": "66",
+        "document_id": "pierre-lambert-de-la-motte_2_36",
+        "query": {
+          "text": "Quand est-ce que Pierre Lambert est proche des Jésuites ?",
+          "full_chars": 57,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "pierre-lambert-de-la-motte_2_36 La spiritualité de Pierre Lambert de La Motte évolue tout au long de sa vie. Il est marqué par son époque et principalement par le centralisme issue de l'Église post tridentine, qui conduit à la codification de bon nombre d'actes de piété, mais aussi par le rigorisme naissant du XVIIe siècle, avec une recherche de l'austérité. Les deux écoles de spiritualité qui le marquent sont celle des Jésuites dont il est très proche quand il travaille à Rouen, mais aussi ce qui deviendra l'École française de spiritualité, qui recherche l'imitation du Christ, et le rôle important donné à la sanctification des prêtres. Ces sources de la formation spirituelle de Pierre Lambert le marquent profondément, même si des évolutions sont visibles au cours de sa vie.",
+          "full_chars": 786,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "sadi-carnot-(physicien)_12_8",
+        "query": {
+          "text": "Comment se nomme le frère de Carnot ?",
+          "full_chars": 37,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "sadi-carnot-(physicien)_12_8 Parmi ses écrits posthumes, un manuscrit intitulé Recherche d’une formule propre à représenter la puissance motrice de la vapeur d’eau, rédigé entre novembre 1819 et mars 1827 mais probablement après les Réflexions, fut conservé. Dans celui-ci il ébauchait la première loi de la thermodynamique, en tentant de préciser le lien entre travail et chaleur. Cette note fut finalement publiée en 1878, c’est-à-dire trop tardivement pour pouvoir influer sur le développement de la science, par Hippolyte Carnot, dans un volume édité en hommage à son frère dans lequel il inséra une « Notice biographique sur Sadi Carnot ». C’est sans doute au printemps 1832 que Sadi découvre le principe de l’équivalence et qu’il reprend, dans de brèves notes, les conclusions d’un long mémoire, qui fut finalement détruit par Hippolyte. Ces notes, publiées également en 1878, indiquent qu’il avait alors renoncé à la théorie du calorique qui imprégnait encore son essai de 1824, et au sujet de",
+          "full_chars": 1382,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "casablanca-(film)_7_9",
+        "query": {
+          "text": "Pour quoi sont réputés les deux frères engagés par Wallis ?",
+          "full_chars": 59,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "casablanca-(film)_7_9 Ce sont Julius J. et Philip G. Epstein qui sont engagés par Wallis pour adapter la pièce au grand écran. Réputés pour leur esprit ironique, les deux frères introduisent plusieurs personnages secondaires hauts en couleurs ainsi que des dialogues donnant un ton fascinant aux conversations entre les protagonistes du film. Malgré leur empreinte sur le film, les Epstein quittent rapidement le projet pour se consacrer à la série de films de propagande commandés par le Gouvernement américain et réalisés pour la plupart par Frank Capra, Why We Fight. À ce moment de la production, le scénario en est arrêté au flashback, ce qui représente à peu près la moitié du film, et ne possède pas de fil narratif évident.",
+          "full_chars": 732,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

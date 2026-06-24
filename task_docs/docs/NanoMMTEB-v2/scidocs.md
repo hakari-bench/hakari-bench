@@ -128,10 +128,11 @@ reranking.
 
 ## Example Data
 
-Representative queries include paper titles about mining log files, improving
-search result comprehension, content delivery algorithms, architectural
-experience, and gravity compensation for robots with elastic joints. Positive
-documents are related scientific title/abstract records.
+| Query | Positive document |
+| --- | --- |
+| An integrated framework on mining logs files for computing system management [76 chars] | Machine learning in automated text categorization The automated categorization (or classification) of texts into predefined categories has witnessed a booming interest in the last 10 years, due to the increased availability of documents in digital form and the ensuing need to organize them. In the research community the dominant approach to this problem is based on machine learning techniques: a general inductive process automatically builds a classifier by learning, from a set of preclassified documents, the characteristics of the categories. The advantages of this approach over the knowledge engineering approach (consisting in the manual definition of a classifier by domain experts) are a very good effectiveness, considerable savings in terms of expert labor power, and straightforward portability to different domains. This survey discusses the main approaches to text categorization that fall within the machine learning paradigm. We will discuss in detail issues pertaining to three di... [1,000 / 1,103 chars] |
+| Topic-Relevance Map: Visualization for Improving Search Result Comprehension [76 chars] | Designing for Exploratory Search on Touch Devices Exploratory search confront users with challenges in expressing search intents as the current search interfaces require investigating result listings to identify search directions, iterative typing, and reformulating queries. We present the design of Exploration Wall, a touch-based search user interface that allows incremental exploration and sense-making of large information spaces by combining entity search, flexible use of result entities as query parameters, and spatial configuration of search streams that are visualized for interaction. Entities can be flexibly reused to modify and create new search streams, and manipulated to inspect their relationships with other entities. Data comprising of task-based experiments comparing Exploration Wall with conventional search user interface indicate that Exploration Wall achieves significantly improved recall for exploratory search tasks while preserving precision. Subjective feedback suppo... [1,000 / 1,194 chars] |
+| Algorithmic Nuggets in Content Delivery [39 chars] | Consistent Hashing and Random Trees: Distributed Caching Protocols for Relieving Hot Spots on the World Wide Web We describe a family of caching protocols for distrib-uted networks that can be used to decrease or eliminate the occurrence of hot spots in the network. Our protocols are particularly designed for use with very large networks such as the Internet, where delays caused by hot spots can be severe, and where it is not feasible for every server to have complete information about the current state of the entire network. The protocols are easy to implement using existing network protocols such as TCP/fF’,and require very little overhead. The protocols work with local control, make efficient use of existing resources, and scale gracefully as the network grows. Our caching protocols are based on a special kind of hashing that we call consistent hashing. Roughly speaking, a consistent hash function is one which changes nr.inimaflyas the range of the function changes. Through the deve... [1,000 / 1,323 chars] |
 
 ### Public Sources
 
@@ -146,9 +147,9 @@ documents are related scientific title/abstract records.
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | https://arxiv.org/abs/2004.07180 |
-| SCIDOCS project page | 2020 | project page | https://allenai.org/data/scidocs |
-| mteb/scidocs | 2024 | dataset card | https://huggingface.co/datasets/mteb/scidocs |
+| SPECTER: Document-level Representation Learning using Citation-informed Transformers | 2020 | task paper | [https://arxiv.org/abs/2004.07180](https://arxiv.org/abs/2004.07180) |
+| SCIDOCS project page | 2020 | project page | [https://allenai.org/data/scidocs](https://allenai.org/data/scidocs) |
+| mteb/scidocs | 2024 | dataset card | [https://huggingface.co/datasets/mteb/scidocs](https://huggingface.co/datasets/mteb/scidocs) |
 
 ### Representative Snippets
 

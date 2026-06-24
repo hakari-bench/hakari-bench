@@ -62,9 +62,11 @@ A model targeting this task should improve domain-specific answer matching. Spar
 
 ## Example Data
 
-### Public Sources
-
-The original task is based on FiQA, with BEIR providing the retrieval benchmark framing and NanoBEIR providing the compact multilingual dataset packaging.
+| Query | Positive document |
+| --- | --- |
+| Loại lợi suất nào mà Vanguard đang báo giá? [43 chars] | "Từ trang Vanguard - Đây có vẻ là cái dễ nhất vì dữ liệu S&P dễ tìm. Tôi sử dụng MoneyChimp để lấy - điều này xác nhận rằng trang của Vanguard đang cung cấp CAGR, không phải Trung bình số học. Lưu ý: Vanguard tuyên bố ""Đối với lợi nhuận thị trường chứng khoán Mỹ, chúng tôi sử dụng Standard & Poor's 90 từ năm 1926 đến ngày 3 tháng 3 năm 1957,"" trong khi Chimp sử dụng dữ liệu từ trang của người đoạt giải Nobel, Robert Shiller." [431 chars] |
+| Các tác động thuế của việc làm tự do ở Hoa Kỳ [45 chars] | Nếu bạn có thu nhập ở Mỹ, bạn sẽ phải nộp thuế thu nhập Mỹ trên số thu nhập đó, trừ khi có hiệp định với quốc gia của bạn quy định khác. [136 chars] |
+| Cái gì được coi là cao hoặc thấp khi nói về âm lượng? [53 chars] | Khối lượng giao dịch hàng ngày thường được so sánh với khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của một cổ phiếu. Khối lượng cao thường được coi là gấp 2 lần hoặc hơn khối lượng giao dịch trung bình hàng ngày trong 50 ngày qua của cổ phiếu đó, tuy nhiên một số nhà giao dịch có thể đặt tiêu chí là gấp 3 hoặc 4 lần khối lượng giao dịch trung bình để xác nhận một mẫu hình hoặc sự kiện cụ thể. Khối lượng được so sánh với khối lượng giao dịch trung bình của chính cổ phiếu đó, vì việc so sánh với khối lượng của các cổ phiếu khác sẽ giống như so sánh táo với cam, vì các công ty khác nhau sẽ có số lượng cổ phiếu tổng cộng khác nhau, các mức độ thanh khoản khác nhau và các mức độ biến động khác nhau, tất cả đều có thể góp phần vào khối lượng giao dịch hàng ngày. [782 chars] |
 
 ### Source Reference Table
 

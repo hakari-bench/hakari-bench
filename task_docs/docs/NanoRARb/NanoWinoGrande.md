@@ -62,17 +62,18 @@ Models should learn to jointly encode the blank sentence and candidate referent.
 
 ## Example Data
 
-### Public Sources
-
-- [RAR-b: Reasoning as Retrieval Benchmark](https://arxiv.org/abs/2404.06347), benchmark paper.
-- [WinoGrande: An Adversarial Winograd Schema Challenge at Scale](https://arxiv.org/abs/1907.10641), source task paper.
+| Query | Positive document |
+| --- | --- |
+| Sentence: Mary wanted to get another piercing in her ear, but the _ was much too tiny.. [87 chars] | ear [3 chars] |
+| Sentence: She counted her calories for her diet and found she needed more so she ate a brownie instead of an apple since the _ has fewer.. [138 chars] | apple [5 chars] |
+| Sentence: The game of chess was easy to play for Angela but not Rebecca because _ had a analytical mind.. [105 chars] | Angela [6 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | https://arxiv.org/abs/2404.06347 |
-| WinoGrande: An Adversarial Winograd Schema Challenge at Scale | 2019 | arXiv paper | https://arxiv.org/abs/1907.10641 |
+| RAR-b: Reasoning as Retrieval Benchmark | 2024 | arXiv paper | [https://arxiv.org/abs/2404.06347](https://arxiv.org/abs/2404.06347) |
+| WinoGrande: An Adversarial Winograd Schema Challenge at Scale | 2019 | arXiv paper | [https://arxiv.org/abs/1907.10641](https://arxiv.org/abs/1907.10641) |
 
 ### Representative Snippets
 

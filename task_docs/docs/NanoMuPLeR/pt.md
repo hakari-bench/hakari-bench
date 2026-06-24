@@ -62,19 +62,19 @@ Portuguese legal retrieval models should preserve exact legal names, percentages
 
 ## Example Data
 
-### Public Sources
-
-- [mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval), source dataset card.
-- [An overview of the European Union's highly multilingual parallel corpora](https://link.springer.com/article/10.1007/s10579-014-9277-0), DGT-Acquis source reference.
-- [DGT-Acquis](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en), European Commission source-corpus page.
+| Query | Positive document |
+| --- | --- |
+| Por que auxílio público escasso deve ser proporcional, dirigido a regiões desfavorecidas e justificado apesar de maior distorção da concorrência? [145 chars] | Os auxílios regionais só podem ser eficazes se forem utilizados com parcimónia e de forma proporcional e se se concentrarem nas regiões mais desfavorecidas da União Europeia. Em especial, os limites máximos admissíveis devem reflectir a gravidade relativa dos problemas que afectam o desenvolvimento das regiões em causa. Além disso, as vantagens dos auxílios em termos de desenvolvimento de uma região desfavorecida devem ser superiores às distorções da concorrência provocadas. O peso atribuído às vantagens dos auxílios é susceptível de variar consoante a derrogação aplicada, podendo aceitar-se uma distorção mais significativa no caso das regiões mais desfavorecidas abrangidas pelo n.o 3, alínea a), do artigo 87.o do que no caso das regiões abrangidas pela alínea c) do mesmo número. [790 chars] |
+| Que intenção sinalizam comentários que estendem concessão a empresas com volume de negócios intracomunitário abaixo de seis dígitos em euros? [141 chars] | Cabe notar, por outro lado, que a Comissão refere as pequenas e médias empresas, quando os documentos oficiais e, em particular, os protocolos de adesão evocam apenas as pequenas empresas: trata-se de um indício evidente da vontade de minimizar a importância da autorização e de a estender, na prática, a empresas de dimensão muito diferente. A proposta de directiva evita aprofundar a questão da classificação, limitando-se a falar de sujeitos passivos com um volume de negócios intracomunitário que não exceda 100000 euros. A vontade de estender o benefício da isenção a todas as empresas, independentemente da sua dimensão, é, pois, evidente. [645 chars] |
+| Qual modelo analítico de 1983 é criticado por presumir benefícios uniformes a comerciantes, compradores e vendedores não reativos nos pagamentos? [145 chars] | O modelo específico subjacente às CIM da Master Card foi elaborado por William Baxter em 1983. Contudo, este modelo padece de limitações importantes por considerar que a procura dos consumidores e dos comerciantes é um dado adquirido e que nenhum deles reage estrategicamente às eventuais acções do outro. O modelo Baxter também se baseia no pressuposto irrealista de que não se verifica qualquer variação dos benefícios para os comerciantes que aceitam cartões, ou seja, pressupõe que os comerciantes são um universo homogéneo. Por último, os resultados do modelo Baxter baseiam-se no pressuposto irrealista de que a actividade bancária em questão é exercida em condições de concorrência perfeita. [698 chars] |
 
 ### Source Reference Table
 
 | Title | Year | Type | URL |
 | --- | ---: | --- | --- |
-| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | https://huggingface.co/datasets/mteb/MuPLeR-retrieval |
-| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | https://link.springer.com/article/10.1007/s10579-014-9277-0 |
-| DGT-Acquis |  | source corpus | https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en |
+| MuPLeR: Multilingual Parallel Legal Retrieval |  | dataset card | [https://huggingface.co/datasets/mteb/MuPLeR-retrieval](https://huggingface.co/datasets/mteb/MuPLeR-retrieval) |
+| An overview of the European Union's highly multilingual parallel corpora | 2014 | source paper | [https://link.springer.com/article/10.1007/s10579-014-9277-0](https://link.springer.com/article/10.1007/s10579-014-9277-0) |
+| DGT-Acquis |  | source corpus | [https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en](https://joint-research-centre.ec.europa.eu/language-technology-resources/dgt-acquis_en) |
 
 ### Representative Snippets
 

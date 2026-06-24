@@ -85,36 +85,6 @@
         "rows_with_101_candidates": 4
       }
     },
-    "references": [
-      {
-        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
-        "url": "https://arxiv.org/abs/2004.14974",
-        "year": 2020,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
-        "url": "https://arxiv.org/abs/2104.08663",
-        "year": 2021,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
-        "url": "https://arxiv.org/abs/2502.13595",
-        "year": 2025,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "NanoBEIR: Smaller BEIR dataset subsets",
-        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-pt",
       "source_urls": [
@@ -123,6 +93,87 @@
           "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "SciFact: Fact or Fiction: Verifying Scientific Claims",
+        "url": "https://arxiv.org/abs/2004.14974",
+        "year": 2020,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MMTEB: Massive Multilingual Text Embedding Benchmark",
+        "url": "https://arxiv.org/abs/2502.13595",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "NanoBEIR: Smaller BEIR dataset subsets",
+        "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "723",
+        "document_id": "5531479",
+        "query": {
+          "text": "Ly49Q controla a migração de neutrófilos para locais de inflamação regulando as funções das rafts de membrana.",
+          "full_chars": 110,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Neutrófilos sofrem polarização e movimento direcionado rapidamente para infiltrar os locais de infecção e inflamação. Aqui, mostramos que um receptor inibitório MHC I, Ly49Q, foi essencial para a polarização rápida e a infiltração tecidual dos neutrófilos. Durante o estado de equilíbrio, Ly49Q inibiu a adesão dos neutrófilos impedindo a formação de complexos focais, provavelmente inibindo as quinases Src e PI3. No entanto, na presença de estímulos inflamatórios, Ly49Q mediou a polarização rápida e a infiltração tecidual dos neutrófilos de maneira dependente do domínio ITIM. Essas funções opostas parecem ser mediadas pelo uso distinto das fosfatases efetoras SHP-1 e SHP-2. A polarização e a migração dependentes de Ly49Q foram afetadas pela regulação das funções dos rafts de membrana por Ly49Q. Proponemos que Ly49Q é crucial para a transição dos neutrófilos para sua morfologia polarizada e migração rápida durante a inflamação, através da regulação espaço-temporal dos rafts de membrana e",
+          "full_chars": 1050,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "124",
+        "document_id": "4883040",
+        "query": {
+          "text": "Terapia antirretroviral reduz as taxas de tuberculose em diferentes níveis de contagem de CD4.",
+          "full_chars": 94,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "CONTEXTO A infecção pelo vírus da imunodeficiência humana (HIV) é o principal fator de risco para o desenvolvimento da tuberculose e tem impulsionado seu ressurgimento, especialmente na África subsaariana. Em 2010, estimava-se que havia 1,1 milhão de novos casos de tuberculose entre os 34 milhões de pessoas vivendo com HIV no mundo. A terapia antirretroviral tem um potencial significativo para prevenir a tuberculose associada ao HIV. Realizamos uma revisão sistemática de estudos que analisaram o impacto da terapia antirretroviral na incidência de tuberculose em adultos com infecção por HIV. MÉTODOS E RESULTADOS Foram realizadas buscas sistemáticas nas bases de dados PubMed, Embase, African Index Medicus, LILACS e registros de ensaios clínicos. Foram incluídos ensaios clínicos randomizados, estudos de coorte prospectivos e estudos de coorte retrospectivos que compararam a incidência de tuberculose pelo status de terapia antirretroviral em adultos infectados pelo HIV por um período media",
+          "full_chars": 2345,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1021",
+        "document_id": "9433958",
+        "query": {
+          "text": "Aumento rápido e expressão basal aumentada de genes induzidos por interferon reduzem a sobrevivência de neurônios de células granulares infectados pelo vírus do Nilo Ocidental.",
+          "full_chars": 176,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Embora a suscetibilidade dos neurônios do cérebro à infecção microbiana seja um grande determinante do resultado clínico, pouco se sabe sobre os fatores moleculares que governam essa vulnerabilidade. Aqui, mostramos que dois tipos de neurônios de diferentes regiões cerebrais apresentaram permissividade diferencial à replicação de vários vírus de RNA de fita positiva. Neurônios de células granulares do cerebelo e neurônios corticais do córtex cerebral possuem programas imunológicos inatos únicos que conferem suscetibilidade diferencial à infecção viral ex vivo e in vivo. Ao transduzir neurônios corticais com genes que eram expressos mais altamente em neurônios de células granulares, identificamos três genes estimulados por interferon (ISGs; Ifi27, Irg1 e Rsad2 (também conhecido como Viperin)) que mediaram os efeitos antivirais contra diferentes vírus neurotrópicos. Além disso, descobrimos que o estado epigenético e a regulação mediada por microRNA (miRNA) dos ISGs correlacionam-se com u",
+          "full_chars": 1256,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
   }
 }

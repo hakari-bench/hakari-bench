@@ -85,29 +85,6 @@
         "rows_with_101_candidates": 0
       }
     },
-    "example_count": 5,
-    "references": [
-      {
-        "title": "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages",
-        "url": "https://arxiv.org/abs/2210.09984",
-        "year": 2022,
-        "is_paper": true,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "MIRACL project page",
-        "url": "http://miracl.ai/",
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      },
-      {
-        "title": "sbintuitions/JMTEB",
-        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
-        "year": 2024,
-        "is_paper": false,
-        "source_confidence": "migrated_from_legacy_docs"
-      }
-    ],
     "links": {
       "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoJMTEB-v2",
       "source_urls": [
@@ -116,6 +93,79 @@
           "url": "https://huggingface.co/datasets/mteb/MIRACLRetrieval"
         }
       ]
-    }
+    },
+    "references": [
+      {
+        "title": "Making a MIRACL: Multilingual Information Retrieval Across a Continuum of Languages",
+        "url": "https://arxiv.org/abs/2210.09984",
+        "year": 2022,
+        "is_paper": true,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "MIRACL project page",
+        "url": "http://miracl.ai/",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      },
+      {
+        "title": "sbintuitions/JMTEB",
+        "url": "https://huggingface.co/datasets/sbintuitions/JMTEB",
+        "year": 2024,
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "66",
+        "document_id": "25194#9",
+        "query": {
+          "text": "神戸港が開港したのはいつ",
+          "full_chars": 12,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "神戸港: 「神戸」は当時、開港場一帯の村の名前でしかなかったが、公文書には、開港直後の1868年（慶応4年、明治元年）には「神戸港」の名称がすでに現れている。やがて外国人の手によって居留地ができ始め、西洋文化の入り口として発展して「神戸」の名が著名になっていった。1872年（明治5年）、和田岬に和田岬灯台が設置されて1892年（明治25年）に勅令により、旧生田川（現フラワーロード）河口から和田岬までの全体が「神戸港」となる。",
+          "full_chars": 214,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "123",
+        "document_id": "766930#2",
+        "query": {
+          "text": "レーシングドライバーになるには免許が必要ですか？",
+          "full_chars": 24,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "モータースポーツライセンス: 世界的に通用する国際ライセンスの発行は以下の団体が行っている。下記団体が開催する競技に参戦するためには、これらの団体が発行したライセンスが必要となる。ただし発給申請自体は、傘下の国内ライセンスの発行団体を通じて行えることが多い。日本の法律ではモータースポーツを行うのに資格は必要ないが、参加するモータースポーツ主催の団体（FIAやJAF等）が発行するモータースポーツライセンスが必要になる。日本国内でのみ通用する国内ライセンスは以下の団体が発行している。公益法人が発行するもの（公的資格）と一般社団法人や株式会社が発行したもの（民間資格）がある。国内Bライセンス取得後、1回の公認競技会完走記録認定後（JAF指定の用紙に主催者側のJAF指定様式の完走認定印を捺印してもらう）に国内Aライセンスの講習資格が得られ、指定講習会で座学及び実技、試験に合格すると国内Aライセンスが取得できる。その後はレースまたはレース以外の競技を24か月以内に指定回数の完走認定証明を受け、証明書を添付の上JAFに対し上位取得申請を行うことで国際Cもしくは国際Rライセンスが取得できる。国際C級ライセンスの場合は所定の競技会の完走実績により、国際B級ライセンスに飛び級も可能である（国内格式のJAF指定レース選手権に限る）",
+          "full_chars": 564,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "103",
+        "document_id": "16751#0",
+        "query": {
+          "text": "ウェールズはどこの国に属する？",
+          "full_chars": 15,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ウェールズ: ウェールズ（、 カムリ）は、グレートブリテンおよび北アイルランド連合王国（イギリス）を構成する4つの「国（イギリスのカントリー）」（country）のひとつである。ウェールズはグレートブリテン島の南西に位置し、南にブリストル海峡、東にイングランド、西と北にはアイリッシュ海が存在する。",
+          "full_chars": 149,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "example_count": 3
   }
 }
