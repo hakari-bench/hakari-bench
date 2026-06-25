@@ -787,6 +787,7 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "openai/text-embedding-3-large": 3072,
         "openai/text-embedding-3-small": 1536,
         "sentence-transformers/static-similarity-mrl-multilingual-v1": 1024,
+        "voyageai/voyage-4-nano": 2048,
     }
 
     truncate_cards = {

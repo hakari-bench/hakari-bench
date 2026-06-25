@@ -1,0 +1,120 @@
+id: voyageai/voyage-4-nano
+source:
+  type: huggingface
+  name: voyageai/voyage-4-nano
+  revision_requested: 67fabc9bef010dabc5f6024aa1b1b6b93410426f
+  revision: 67fabc9bef010dabc5f6024aa1b1b6b93410426f
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/voyageai/voyage-4-nano
+links:
+  huggingface: https://huggingface.co/voyageai/voyage-4-nano
+parameters:
+  total: 346451968
+  trainable: 346451968
+  input_embedding: 155582464
+  active: 190869504
+embedding:
+  output_dimension: 2048
+  mrl_support: true
+  pooling: mean
+  normalize: true
+  include_prompt: true
+  truncate_dims:
+  - 256
+  - 512
+  - 1024
+runtime:
+  max_seq_length: 32768
+  dtype: bf16
+  trust_remote_code: true
+  remote_code_approved: true
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    english_score: 0.648
+    non_english_mean_score: 0.686
+    high_non_english_score_threshold: 0.6
+    high_non_english_language_count: 13
+    high_non_english_family_count: 10
+    evaluated_language_count: 20
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoVNMTEB
+notes:
+- The Hugging Face model card documents Matryoshka support for 2048, 1024, 512,
+  and 256 dimensions; HAKARI stores 1024, 512, and 256 as truncation variants
+  because 2048 is the native base output dimension.
+- The Hugging Face model card documents QAT support for float32, signed and
+  unsigned 8-bit integer, and binary precision outputs. HAKARI dense evaluation
+  records int8, binary, and rescore variants separately from this static card.
+- >-
+  The SentenceTransformers prompt registry defines query as "Represent the query
+  for retrieving supporting documents: " and document as "Represent the
+  document for retrieval: ". This card uses the query and document prompt names
+  so from-model-card evaluation applies the same registry entries.
