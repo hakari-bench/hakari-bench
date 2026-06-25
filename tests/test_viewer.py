@@ -1377,7 +1377,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "hover:border-cyan-600" not in doc_trigger_html
     assert 'data-icon="circle-help"' not in doc_trigger_html
     assert "full-corpus retrieval results" in response.text
-    assert "shared candidate set" in response.text
+    assert "reranking_hybrid candidate set" in response.text
+    assert "candidate-order baseline" in response.text
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6

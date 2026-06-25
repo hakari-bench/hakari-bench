@@ -2903,7 +2903,7 @@ def _render_target_group(
               {_render_help_tooltip(
                   "Evaluation mode",
                   "Switches the leaderboard between retrieval runs and reranking runs.",
-                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, BM25, sparse, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows cross-encoder reranker results on a shared candidate set. Use Reranking when you want to compare how rerankers reorder candidates rather than how retrievers search the full corpus.",
+                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, BM25, sparse, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows materialized rerank scores on the reranking_hybrid candidate set. The candidate set is built from RRF over BM25 and dense candidate rankings, with an optional safeguard positive. Use Reranking to compare how models reorder that fixed hybrid candidate pool. BM25 appears as a candidate-order baseline, not as a cross-encoder reranker.",
               )}
               {safeguard_toggle}
             </div>
