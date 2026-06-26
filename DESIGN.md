@@ -99,11 +99,12 @@ components:
       baselines can be compared or hidden independently from learned sparse
       retrievers. License filters include commercial-use buckets derived from
       model-card license metadata; BM25 rows follow the bm25s MIT license and
-      appear in the commercial bucket. Commercial-use license filters are shown
-      as inline checkboxes, matching Model family rather than hidden inside a
-      secondary disclosure. Filter results is expanded by default because it is
-      a primary refinement surface, and Efficiency filters expose expanded Dims
-      and Quantization controls directly without nested disclosure widgets.
+      appear in the commercial bucket. License filters show the bucket
+      checkboxes directly, matching Model family rather than adding a redundant
+      subheading or hiding them inside a secondary disclosure. Filter results is
+      expanded by default because it is a primary refinement surface, and
+      Efficiency filters expose expanded Dims and Quantization controls directly
+      without nested disclosure widgets.
       Dims uses min/max numeric bounds in the form `input <= dims <= input`;
       an empty maximum means over/no upper bound. Quantization uses checkboxes
       with Original, int8, binary, and any additional recorded formats selected

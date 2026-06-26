@@ -3175,7 +3175,7 @@ def test_filter_results_includes_commercial_license_filter() -> None:
     assert 'name="commercial_filter" value="not_applicable"' in controls
     assert 'id="commercial-use-controls"' in controls
     assert 'data-filter-detail="commercial_filter"' not in controls
-    assert "Commercial use" in controls
+    assert "Commercial use" not in controls
     assert [row.model_name for row in result.rows if filter_context.is_visible(row)] == [
         "org/apache-model",
         "bm25",
@@ -4243,6 +4243,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-dim-bound-input="max"' in response.text
     assert 'placeholder="32"' in response.text
     assert 'placeholder="over"' in response.text
+    assert "Min dim</span>" in response.text
+    assert "Max dim</span>" in response.text
     assert "delay:700ms" not in response.text
     assert "<script>" not in response.text
     assert "htmx:afterSwap" not in response.text

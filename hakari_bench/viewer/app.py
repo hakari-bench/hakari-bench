@@ -3684,8 +3684,8 @@ def render_controls(
                 {_control_label(icon="shield-check", text="License filters")}
                 {_render_help_tooltip(
                     "License filters",
-                    "Filters rows by whether model-card license metadata permits commercial use.",
-                    "Commercial use groups license metadata from model cards. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where commercial-use classification does not apply. Unknown keeps rows without reviewed commercial-use metadata.",
+                    "Filters rows by reviewed license-use buckets.",
+                    "License buckets are derived from model-card metadata. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where this classification does not apply. Unknown keeps rows without reviewed license metadata.",
                 )}
                 {_render_commercial_filter_controls(options=commercial_options, selected_values=selected_commercial)}
               </div>
@@ -3813,7 +3813,6 @@ def _render_commercial_filter_controls(
     return f"""
       <fieldset id="commercial-use-controls" class="flex flex-wrap items-center gap-x-4 gap-y-2">
         <input type="hidden" name="commercial_filter" value="{FILTER_NONE_VALUE}">
-        <span class="inline-flex items-center gap-1 font-medium text-zinc-800">Commercial use</span>
         {''.join(checkboxes)}
       </fieldset>
     """
@@ -4584,20 +4583,26 @@ def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
         </div>
         <div class="filter-detail-body p-2">
           <div id="dim-filter-range-hidden" data-dim-range-hidden>{hidden_inputs}</div>
-          <div class="dim-bounds-filter flex flex-wrap items-center gap-1.5">
-            <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="32"
-                   aria-label="Minimum embedding dimensions"
-                   list="{datalist_id}" class="{input_class}"
-                   data-dim-bound-input="min"
-                   data-dim-bound-hidden-target="dim-filter-range-hidden">
-            <span class="text-xs text-zinc-500">&lt;=</span>
-            <span class="text-xs font-medium text-zinc-700">dims</span>
-            <span class="text-xs text-zinc-500">&lt;=</span>
-            <input type="number" min="0" step="1" value="{escape(max_value)}" placeholder="over"
-                   aria-label="Maximum embedding dimensions"
-                   list="{datalist_id}" class="{input_class}"
-                   data-dim-bound-input="max"
-                   data-dim-bound-hidden-target="dim-filter-range-hidden">
+          <div class="dim-bounds-filter flex flex-wrap items-end gap-1.5">
+            <label class="grid gap-1">
+              <span class="text-xs text-zinc-500">Min dim</span>
+              <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="32"
+                     aria-label="Minimum embedding dimensions"
+                     list="{datalist_id}" class="{input_class}"
+                     data-dim-bound-input="min"
+                     data-dim-bound-hidden-target="dim-filter-range-hidden">
+            </label>
+            <span class="pb-1.5 text-xs text-zinc-500">&lt;=</span>
+            <span class="pb-1.5 text-xs font-medium text-zinc-700">dims</span>
+            <span class="pb-1.5 text-xs text-zinc-500">&lt;=</span>
+            <label class="grid gap-1">
+              <span class="text-xs text-zinc-500">Max dim</span>
+              <input type="number" min="0" step="1" value="{escape(max_value)}" placeholder="over"
+                     aria-label="Maximum embedding dimensions"
+                     list="{datalist_id}" class="{input_class}"
+                     data-dim-bound-input="max"
+                     data-dim-bound-hidden-target="dim-filter-range-hidden">
+            </label>
             <datalist id="{datalist_id}">{datalist_options}</datalist>
           </div>
         </div>
