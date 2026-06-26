@@ -119,7 +119,7 @@ components:
       theme toggle) and loads viewer.js so theme choice persists. Article sits on a
       surface card; tables get a header row, light row striping, and a rounded
       border; inline code reads as a subtle chip. The index lists groups as a
-      two-column grid of clickable cards with three-line clamped summaries.
+      compact single-column list of clickable rows without summaries.
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
@@ -372,9 +372,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Render documentation tables with a distinct header row, light row striping, and
   a rounded border so dense metadata stays scannable. Inline code should read as a
   subtle bordered chip, and code blocks use the faint code background.
-- The docs index is a two-column grid of clickable cards. Clamp group summaries
-  to a few lines so the index stays short and comparable; the full text lives on
-  the group page.
+- The docs index is a compact single-column list of clickable rows. Do not show
+  summaries on the index; keep longer explanations on the group pages so the
+  index stays fast to scan.
 
 ## Leaderboard Table
 

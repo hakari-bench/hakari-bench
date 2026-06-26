@@ -224,9 +224,8 @@ def render_markdown_page(*, doc: BenchmarkDoc, chrome: DocsPageChrome) -> str:
 
 def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) -> str:
     items = "\n".join(
-        f"""<li class="doc-card px-4 py-3.5">
-          <a class="doc-card-link doc-card-title font-semibold underline-offset-2 hover:underline" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
-          <p class="doc-card-description mt-1.5 text-sm leading-snug">{escape(doc.description)}</p>
+        f"""<li class="doc-list-item">
+          <a class="doc-list-link font-semibold underline-offset-2 hover:underline" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
         </li>"""
         for doc in docs
     )
@@ -245,9 +244,8 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) 
     </section>
     <header class="mb-4">
       <h1 class="text-lg font-semibold text-zinc-950">Benchmark documentation</h1>
-      <p class="mt-1 text-sm text-zinc-600">Dataset and benchmark task group descriptions used by the leaderboard viewer.</p>
     </header>
-    <ul class="doc-card-grid">
+    <ul class="doc-list">
       {items}
     </ul>"""
     return _render_docs_document(chrome=chrome, title="Benchmark documentation - HAKARI-Bench docs", body_html=body)
