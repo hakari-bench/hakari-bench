@@ -1110,6 +1110,7 @@ def render_help_summary_modal() -> str:
   <div class="hakari-modal-body">
     <p id="help-summary-short" class="hakari-modal-lead text-sm"></p>
     <p id="help-summary-details" class="hakari-modal-text text-sm"></p>
+    <div id="help-summary-table-container" class="mt-3 overflow-x-auto" hidden></div>
   </div>
 </dialog>
 """
@@ -1124,14 +1125,26 @@ def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
                   aria-label="{escape(label, quote=True)}">{_icon_svg("book-open")}</button>"""
 
 
-def _render_help_tooltip(title: str, summary: str | None = None, details: str | None = None) -> str:
+def _render_help_tooltip(
+    title: str,
+    summary: str | None = None,
+    details: str | None = None,
+    *,
+    table_rows: list[dict[str, str]] | None = None,
+) -> str:
     summary = summary or _first_sentence(title)
     details = details or title
+    table_attr = (
+        f' data-help-table="{escape(json.dumps(table_rows, separators=(",", ":")), quote=True)}"'
+        if table_rows
+        else ""
+    )
     return f"""<button type="button"
                     class="help-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
                     data-help-title="{escape(title, quote=True)}"
                     data-help-summary="{escape(summary, quote=True)}"
                     data-help-details="{escape(details, quote=True)}"
+                    {table_attr}
                     aria-label="{escape(title, quote=True)}">{_icon_svg("circle-help")}</button>"""
 
 
@@ -3019,6 +3032,69 @@ def _control_button_classes(*, active: bool) -> str:
     )
 
 
+_LANGUAGE_FULL_NAMES = {
+    "ar": "Arabic",
+    "bn": "Bengali",
+    "da": "Danish",
+    "de": "German",
+    "en": "English",
+    "es": "Spanish",
+    "fa": "Persian",
+    "fi": "Finnish",
+    "fr": "French",
+    "hi": "Hindi",
+    "id": "Indonesian",
+    "it": "Italian",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "nl": "Dutch",
+    "no": "Norwegian",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "sv": "Swedish",
+    "sw": "Swahili",
+    "te": "Telugu",
+    "th": "Thai",
+    "vi": "Vietnamese",
+    "yo": "Yoruba",
+    "zh": "Chinese",
+}
+
+
+def _task_facet_help_table_rows(options: Sequence[LanguageOption]) -> list[dict[str, str]]:
+    rows = []
+    for option in options:
+        if option.code.startswith("category:"):
+            rows.append(
+                {
+                    "code": option.code,
+                    "name": _task_category_facet_full_name(option.code),
+                    "tasks": f"{option.task_count:,}",
+                }
+            )
+            continue
+        rows.append(
+            {
+                "code": option.code.upper(),
+                "name": _language_full_name(option.code),
+                "tasks": f"{option.task_count:,}",
+            }
+        )
+    return rows
+
+
+def _language_full_name(code: str) -> str:
+    normalized = code.casefold()
+    return _LANGUAGE_FULL_NAMES.get(normalized, code.upper() if 2 <= len(code) <= 3 else code)
+
+
+def _task_category_facet_full_name(code: str) -> str:
+    category = code.removeprefix("category:")
+    labels = {"code": "Code tasks"}
+    return labels.get(category, category.replace("_", " ").title())
+
+
 def render_language_pages(
     *,
     result: LeaderboardResult,
@@ -3093,6 +3169,7 @@ def render_language_pages(
               "Task facets",
               "Filters tasks inside the selected benchmark scope by language or category.",
               "Task facets narrows the tasks that are included after you choose a benchmark scope.\n\nFor multilingual suites such as MNanoBEIR, each language page filters the task set to one language-specific slice, such as Japanese or German. Code filters to tasks whose metadata category is code. The All languages button removes that task facet filter.\n\nThis is different from Benchmark scope: scope chooses the benchmark family, while Task facets filters the tasks inside that family.",
+              table_rows=_task_facet_help_table_rows(result.available_languages),
           )}
         </span>
         {''.join(buttons)}

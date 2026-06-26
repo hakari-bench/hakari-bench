@@ -465,6 +465,23 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 ("BenchPrimary", "BenchPrimary-ja", "TaskC", "BenchPrimary::TaskC"),
             ],
         )
+        con.execute(
+            """
+            CREATE TABLE dataset_metadata (
+                benchmark VARCHAR,
+                task_key VARCHAR,
+                category VARCHAR
+            )
+            """
+        )
+        con.executemany(
+            "INSERT INTO dataset_metadata VALUES (?, ?, ?)",
+            [
+                ("BenchA", "BenchA::TaskA", "code"),
+                ("BenchA", "BenchA::IgnoredTask", "code"),
+                ("BenchPrimary", "BenchPrimary::TaskC", "natural_language"),
+            ],
+        )
     finally:
         con.close()
     config = ViewerConfig(
@@ -523,6 +540,7 @@ runtime:
     assert reranking_result.rows[1].mean_score == 42.0
     assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
         ("en", "EN", 8),
+        ("category:code", "Code", 1),
         ("ar", "AR", 3),
         ("ja", "Japanese", 3),
     ]
@@ -1063,6 +1081,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
+    assert "renderHelpSummaryTable" in viewer_js_response.text
+    assert "trigger.dataset.helpTable" in viewer_js_response.text
     assert ".leaderboard-status-count-trigger" in viewer_js_response.text
     assert 'document.getElementById("count-breakdown-modal")' in viewer_js_response.text
     assert 'document.getElementById("count-breakdown-title")' in viewer_js_response.text
@@ -3755,6 +3775,24 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
         rows.append(("model/a", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.50 + index / 100, 10, 12, 8192))
         rows.append(("model/b", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.40 + index / 100, 20, 24, 4096))
         metadata_rows.append(("BenchA", "bench/a", "BenchA", lang, task_key, task_key, lang, [lang]))
+    rows.append(("model/a", "BenchA", "bench/a", "BenchA", "code", "task-code", "task-code", 0.70, 10, 12, 8192))
+    rows.append(("model/b", "BenchA", "bench/a", "BenchA", "code", "task-code", "task-code", 0.60, 20, 24, 4096))
+    metadata_rows.append(
+        (
+            "BenchA",
+            "bench/a",
+            "BenchA",
+            "code",
+            "task-code",
+            "task-code",
+            "en",
+            ["en"],
+            [],
+            None,
+            None,
+            "code",
+        )
+    )
     _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
     config_dir = tmp_path / "config"
     config_dir.mkdir()
@@ -3770,6 +3808,14 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "max-h-72" in response.text
     assert "language-more-summary flex cursor-pointer list-none items-center gap-1.5" in response.text
     assert "More languages" in response.text
+    assert "Code 1" in response.text
+    assert response.text.index("Code 1") < response.text.index("More languages")
+    assert 'id="help-summary-table-container"' in response.text
+    assert "data-help-table=" in response.text
+    assert "&quot;code&quot;:&quot;JA&quot;" in response.text
+    assert "&quot;name&quot;:&quot;Japanese&quot;" in response.text
+    assert "&quot;code&quot;:&quot;category:code&quot;" in response.text
+    assert "&quot;name&quot;:&quot;Code tasks&quot;" in response.text
     assert 'data-language-page="ja"' in response.text
     assert (
         'hx-push-url="/?view=BenchA&amp;sort=borda_score&amp;direction=desc&amp;group=task'
@@ -5447,8 +5493,8 @@ benchmarks:
     en_result = service.get_leaderboard("MNanoBEIR", language_filters=("en",))
 
     assert [(option.code, option.task_count) for option in result.available_languages] == [
-        ("de", 2),
         ("en", 2),
+        ("de", 2),
         ("ja", 2),
     ]
     assert en_result.selected_languages == ("en",)

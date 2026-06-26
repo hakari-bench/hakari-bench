@@ -328,10 +328,12 @@
       const heading = document.getElementById("help-summary-heading");
       const summary = document.getElementById("help-summary-short");
       const details = document.getElementById("help-summary-details");
-      if (!modal || !heading || !summary || !details) return;
+      const tableContainer = document.getElementById("help-summary-table-container");
+      if (!modal || !heading || !summary || !details || !tableContainer) return;
       heading.textContent = trigger.dataset.helpTitle || "";
       summary.textContent = trigger.dataset.helpSummary || "";
       details.textContent = trigger.dataset.helpDetails || "";
+      renderHelpSummaryTable(tableContainer, trigger.dataset.helpTable || "");
       if (typeof modal.showModal === "function") modal.showModal();
     });
 
@@ -590,6 +592,49 @@
   document.addEventListener("htmx:afterSwap", (event) => {
     if (event.target && event.target.id === "leaderboard-panel") window.__hakariInitStickyHeader();
   });
+
+  function renderHelpSummaryTable(container, tableJson) {
+    container.replaceChildren();
+    container.hidden = true;
+    if (!tableJson) return;
+
+    let rows = [];
+    try {
+      rows = JSON.parse(tableJson);
+    } catch (_error) {
+      return;
+    }
+    if (!Array.isArray(rows) || rows.length === 0) return;
+
+    const table = document.createElement("table");
+    table.className = "w-full border-collapse text-sm";
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    ["Facet", "Full name", "Tasks"].forEach((label) => {
+      const th = document.createElement("th");
+      th.scope = "col";
+      th.className = "border-t px-2 py-1 text-left font-semibold text-zinc-800";
+      th.textContent = label;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      ["code", "name", "tasks"].forEach((key) => {
+        const td = document.createElement("td");
+        td.className = "border-t px-2 py-1 text-left text-zinc-700";
+        td.textContent = row && row[key] != null ? String(row[key]) : "";
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    container.appendChild(table);
+    container.hidden = false;
+  }
 
   window.__hakariApplyHashQueryState();
   window.__hakariBindThemeToggle();
