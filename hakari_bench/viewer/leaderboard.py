@@ -2406,7 +2406,7 @@ def _filter_rows_by_facets(
     return [
         row
         for row in rows
-        if (not selected_dims or _dim_bucket(row.embedding_dim) in selected_dims)
+        if (not selected_dims or _dim_filter_matches(row.embedding_dim, dim_filters))
         and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
         and (
             not selected_commercial
@@ -2437,6 +2437,57 @@ def _dim_bucket(value: int | None) -> str:
     if value >= 1025:
         return "1025+"
     return str(value)
+
+
+def _dim_filter_matches(value: int | None, dim_filters: tuple[str, ...]) -> bool:
+    if "__none_selected__" in dim_filters:
+        return False
+    bucket = _dim_bucket(value)
+    exact_filters = [selected for selected in dim_filters if not selected.startswith("gte:") and not selected.startswith("lte:")]
+    if bucket in exact_filters:
+        return True
+    min_bounds = [
+        bound
+        for selected in dim_filters
+        if selected.startswith("gte:")
+        for bound in [_dim_filter_bound(selected, "gte:")]
+        if bound is not None
+    ]
+    max_bounds = [
+        bound
+        for selected in dim_filters
+        if selected.startswith("lte:")
+        for bound in [_dim_filter_bound(selected, "lte:")]
+        if bound is not None
+    ]
+    if not min_bounds and not max_bounds:
+        return False
+    if value is None:
+        return False
+    if min_bounds and value < max(min_bounds):
+        return False
+    if max_bounds and value > min(max_bounds):
+        return False
+    return True
+
+
+def _dim_filter_value_matches(*, value: int | None, bucket: str, selected_value: str) -> bool:
+    if selected_value == bucket:
+        return True
+    if selected_value.startswith("gte:"):
+        bound = _dim_filter_bound(selected_value, "gte:")
+        return value is not None and bound is not None and value >= bound
+    if not selected_value.startswith("lte:"):
+        return False
+    bound = _dim_filter_bound(selected_value, "lte:")
+    return value is not None and bound is not None and value <= bound
+
+
+def _dim_filter_bound(value: str, prefix: str) -> int | None:
+    try:
+        return int(value.removeprefix(prefix))
+    except ValueError:
+        return None
 
 
 def _quant_bucket(value: str | None) -> str:

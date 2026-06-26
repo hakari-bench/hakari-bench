@@ -904,7 +904,9 @@ By default, `model_filter` only hides rendered model rows,
 filters such as model type, dimensions, quantization, dtype, attention
 implementation, and prompt mode only hide rendered model rows. Model type
 filters use `dense`, `bm25`, `sparse`, `late-interaction`, and `reranker`; BM25
-is a separate lexical-baseline bucket.
+is a separate lexical-baseline bucket. Dimension filters accept exact legacy
+bucket values such as `768` and `1025+`, and the current Dims bound inputs emit
+minimum and maximum bounds such as `dim_filter=gte:128` and `dim_filter=lte:768`.
 Parameter filter query parameters `active_params_min`, `active_params_max`,
 `total_params_min`, and `total_params_max` are interpreted in millions of
 parameters and filter rows using `active_parameters` and `total_parameters`.
@@ -1108,10 +1110,11 @@ resolved DuckDB path, file `mtime_ns`, file size, benchmark tuple, target, and
 variant flags. When `rank_filtered=1`, the refinement facet filters for
 embedding dimension, quantization, model type, dtype, attention implementation,
 and prompt bucket are also pushed into the DuckDB `WHERE` clause before rows are
-fetched. The Python facet filter still runs after loading as a final consistency
-guard, but the SQL pushdown keeps variant-heavy views from materializing
-unneeded task rows. Parameter and task length filters are applied in Python
-before completeness and ranking, regardless of `rank_filtered`. This lets
+fetched. Dimension pushdown supports both exact bucket values and `gte:N` /
+`lte:N` dimension bounds. The Python facet filter still runs after loading as a
+final consistency guard, but the SQL pushdown keeps variant-heavy views from
+materializing unneeded task rows. Parameter and task length filters are applied
+in Python before completeness and ranking, regardless of `rank_filtered`. This lets
 repeated HTMX requests reuse the expensive DuckDB read and row-to-`TaskScore`
 conversion while still invalidating automatically when a new DuckDB file is
 downloaded or otherwise modified. The cache emits `viewer.leaderboard.cache` log
@@ -1843,8 +1846,10 @@ not just `model_name`.
 
 ### 8. Variant Facet Values
 
-For dimension and quantization filter UI, compute options from the same
-view/variant population used by the leaderboard:
+For dimension and quantization filter UI, use the same view/variant population
+used by the leaderboard. The current viewer renders dimension filtering as
+numeric min/max bound inputs in the form `input <= dims <= input`; legacy exact
+bucket values remain accepted by the query API.
 
 ```sql
 SELECT DISTINCT

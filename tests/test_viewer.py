@@ -4132,7 +4132,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     default_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert default_response.status_code == 200
-    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white">' in default_response.text
+    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white" open>' in default_response.text
     assert "Advanced filters" not in default_response.text
     assert 'id="facet-filters"' not in default_response.text
 
@@ -4164,7 +4164,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'refine-results-summary flex cursor-pointer list-none items-center justify-between gap-2 p-2' in response.text
     assert 'data-icon="chevron-right"' in response.text
     assert "Advanced filters" not in response.text
-    assert "Efficiency filters" in response.text
+    assert "Efficiency filters" not in response.text
     assert "Run metadata" in response.text
     assert 'data-filter-detail="dim_filter"' in response.text
     assert 'data-filter-icon="ruler"' in response.text
@@ -4173,17 +4173,20 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="commercial-use-controls"' in response.text
     assert 'data-filter-detail="commercial_filter"' not in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
-    assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800"' in response.text
+    assert 'details class="filter-detail bg-zinc-50" data-filter-detail="dim_filter"' not in response.text
+    assert 'details class="filter-detail bg-zinc-50" data-filter-detail="quant_filter"' not in response.text
+    assert 'div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter"' in response.text
+    assert 'div class="filter-detail bg-zinc-50" data-filter-detail="quant_filter"' in response.text
     assert "grid-cols-2" in response.text
     assert "sm:grid-cols-3" in response.text
-    assert response.text.count(">All</button>") == 5
-    assert response.text.count(">None</button>") == 5
+    assert response.text.count(">All</button>") == 3
+    assert response.text.count(">None</button>") == 3
     assert 'id="column-controls"' in response.text
     assert 'id="variant-controls"' in response.text
     assert 'id="filter-controls"' in response.text
     assert 'id="facet-filters"' not in response.text
     assert 'from:input[type=' not in response.text
-    assert 'hx-trigger="change, submit"' in response.text
+    assert 'hx-trigger="change, submit, input changed delay:300ms from:.dim-bound-input"' in response.text
     assert 'hx-include="#display-controls"' not in response.text
     assert 'data-icon="list-filter"' not in response.text
     assert ">Dims</span>" in response.text
@@ -4200,7 +4203,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "When Recalculate ranks from filters is enabled, it also changes the ranked model population" in response.text
     assert ">Task</span>" in response.text
     assert 'id="task-filter-input" type="search" name="task_filter"' in response.text
-    assert 'name="query_len_min" value=""\n               class="viewer-text-input' in response.text
+    assert 'name="query_len_min" value=""' in response.text
+    assert 'aria-label="Query length minimum"' in response.text
     assert ">Task name</span>" not in response.text
     assert "Filters task columns and task rows by benchmark" in response.text
     assert "arguana fever keeps task columns or task rows whose identifiers contain arguana or fever" in response.text
@@ -4234,13 +4238,20 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-hidden="true"' in response.text
     assert "Dims" in response.text
     assert "Quantization" in response.text
+    assert 'class="dim-bound-input viewer-text-input' in response.text
+    assert 'data-dim-bound-input="min"' in response.text
+    assert 'data-dim-bound-input="max"' in response.text
+    assert 'placeholder="32"' in response.text
+    assert 'placeholder="over"' in response.text
     assert "delay:700ms" not in response.text
     assert "<script>" not in response.text
     assert "htmx:afterSwap" not in response.text
     assert "window.__hakariRestoreModelFilterFocus" not in response.text
-    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in response.text
     assert 'name="dim_filter" value="256" class="h-4 w-4 accent-cyan-700" checked' not in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quant_filter" value="int8" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quant_filter" value="binary" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
     base_head = render_table_head(result=base_result, sort="borda_score", direction="asc")
     quantization_head = render_table_head(result=quantization_result, sort="borda_score", direction="asc")
@@ -4265,24 +4276,38 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     facet_response = TestClient(app).get(
         "/leaderboard?view=BenchA&quantization=1&truncate=1&other_variant=1"
-        "&filters=1&dim_filter=768&dim_filter=1025%2B&quant_filter=uint8"
+        "&filters=1&dim_filter=lte%3A768&quant_filter=uint8"
     )
 
     assert facet_response.status_code == 200
     assert 'name="other_variant" value="1" checked' in facet_response.text
-    assert 'name="dim_filter" value="768" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="dim_filter" value="lte:768"' in facet_response.text
+    assert 'value="768" placeholder="over"' in facet_response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
-    assert "1025~ dims" in facet_response.text
     assert 'name="quant_filter" value="uint8" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
-    assert "dim_filter=768" in facet_response.text
-    assert "dim_filter=1025%2B" in facet_response.text
+    assert "dim_filter=lte%3A768" in facet_response.text
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
 
+    range_facet_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&truncate=1"
+        "&filters=1&dim_filter=gte%3A384&dim_filter=lte%3A768&quant_filter=__none__&rank_filtered=1"
+    )
+
+    assert range_facet_response.status_code == 200
+    assert 'name="dim_filter" value="gte:384"' in range_facet_response.text
+    assert 'name="dim_filter" value="lte:768"' in range_facet_response.text
+    assert 'value="384" placeholder="32"' in range_facet_response.text
+    assert 'value="768" placeholder="over"' in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims)&quot;" in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (512 dims)&quot;" in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (384 dims)&quot;" in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (256 dims, int8)&quot;" not in range_facet_response.text
+
     ranked_facet_response = TestClient(app).get(
         "/leaderboard?view=BenchA&quantization=1&truncate=1"
-        "&filters=1&dim_filter=384&quant_filter=__none__&rank_filtered=1"
+        "&filters=1&dim_filter=lte%3A384&quant_filter=__none__&rank_filtered=1"
     )
 
     assert ranked_facet_response.status_code == 200
@@ -4292,7 +4317,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-hidden="true"' not in ranked_facet_response.text
 
     explicit_truncate_off_response = TestClient(app).get(
-        "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
+        "/leaderboard?view=BenchA&filters=1&dim_filter=lte%3A384&quant_filter=__none__"
     )
 
     assert explicit_truncate_off_response.status_code == 200
@@ -4300,7 +4325,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "384 dims" not in explicit_truncate_off_response.text
 
     explicit_quantization_off_response = TestClient(app).get(
-        "/leaderboard?view=BenchA&filters=1&dim_filter=768&quant_filter=uint8"
+        "/leaderboard?view=BenchA&filters=1&dim_filter=lte%3A768&quant_filter=uint8"
     )
 
     assert explicit_quantization_off_response.status_code == 200
@@ -6593,8 +6618,9 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     assert response.status_code == 200
     assert "Task string length" not in response.text
     assert ">Length</span>" in response.text
-    assert "Query length ≤" in response.text
-    assert "Document length ≤" in response.text
+    assert "Query length</span>" in response.text
+    assert "Document length</span>" in response.text
+    assert "&lt;=" in response.text
     assert 'data-help-title="Length filters"' in response.text
     assert "Length filters operate at the task level using average text length metadata" in response.text
     assert "Tasks without length metadata are excluded when any bound is set." in response.text
@@ -6635,15 +6661,15 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert response.text.index(">Params</span>") < response.text.index(">Length</span>")
-    assert "Active Params ≤" in response.text
-    assert "Total Params ≤" in response.text
+    assert "Active Params</span>" in response.text
+    assert "Total Params</span>" in response.text
+    assert "M &lt;=" in response.text
     assert 'data-help-title="Parameter filters"' in response.text
     assert "using parameter metadata measured in millions of parameters" in response.text
     assert "at most 100M active parameters" in response.text
     assert 'name="active_params_max" value="100"' in response.text
     params_filter_section = response.text.split(">Length</span>", 1)[0]
     assert params_filter_section.count("viewer-text-input w-20") >= 4
-    assert "viewer-text-input w-24" not in params_filter_section
     assert "model/small" in response.text
     assert "model/large" not in response.text
 

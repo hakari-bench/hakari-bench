@@ -508,6 +508,59 @@
   );
   window.addEventListener("resize", window.__hakariHideTooltip);
 
+  function parseOptionalNonNegativeInteger(value) {
+    const trimmed = String(value || "").trim();
+    if (trimmed === "") return null;
+    const parsed = Number.parseInt(trimmed, 10);
+    if (!Number.isFinite(parsed)) return null;
+    return Math.max(0, parsed);
+  }
+
+  function syncDimBoundControl(input) {
+    if (!input || !input.dataset || !input.dataset.dimBoundInput) return;
+    const container = input.closest(".dim-bounds-filter");
+    if (!container) return;
+    const minInput = container.querySelector("[data-dim-bound-input='min']");
+    const maxInput = container.querySelector("[data-dim-bound-input='max']");
+    if (!minInput || !maxInput) return;
+    let minValue = parseOptionalNonNegativeInteger(minInput.value);
+    let maxValue = parseOptionalNonNegativeInteger(maxInput.value);
+    if (minValue !== null) minInput.value = String(minValue);
+    if (maxValue !== null) maxInput.value = String(maxValue);
+    if (minValue !== null && maxValue !== null && minValue > maxValue) {
+      if (input.dataset.dimBoundInput === "min") {
+        maxValue = minValue;
+        maxInput.value = String(maxValue);
+      } else {
+        minValue = maxValue;
+        minInput.value = String(minValue);
+      }
+    }
+
+    const hiddenContainer = document.getElementById(input.dataset.dimBoundHiddenTarget || "");
+    if (!hiddenContainer) return;
+    hiddenContainer.replaceChildren();
+    const hiddenValues = [];
+    if (minValue !== null && minValue > 32) hiddenValues.push(`gte:${minValue}`);
+    if (maxValue !== null) hiddenValues.push(`lte:${maxValue}`);
+    for (const value of hiddenValues) {
+      const hidden = document.createElement("input");
+      hidden.type = "hidden";
+      hidden.name = "dim_filter";
+      hidden.value = value;
+      hiddenContainer.appendChild(hidden);
+    }
+  }
+
+  document.addEventListener(
+    "input",
+    (event) => {
+      const input = closestElement(event.target, "[data-dim-bound-input]");
+      if (input) syncDimBoundControl(input);
+    },
+    true,
+  );
+
   // Floating sticky column header. Horizontal scrolling lives inside the table's
   // overflow container, so CSS sticky cannot pin the header on page scroll; this
   // mirrors a copy of the header row at the viewport top instead, synced to the

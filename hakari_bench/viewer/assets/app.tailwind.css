@@ -367,6 +367,10 @@
     color: var(--hakari-text-muted);
   }
 
+  .dim-bounds-filter {
+    width: min(34rem, 100%);
+  }
+
   .leaderboard-row:hover > td {
     background-color: color-mix(in srgb, var(--hakari-surface) 86%, var(--hakari-accent) 14%);
   }

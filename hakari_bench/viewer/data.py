@@ -776,7 +776,7 @@ def _facet_filter_sql(columns: set[str], filters: TaskResultFacetFilters | None)
         return "", []
     clauses: list[str] = []
     params: list[Any] = []
-    _append_filter_clause(clauses, params, expression=_dim_bucket_sql(columns), values=filters.dim_filters)
+    _append_dim_filter_clause(clauses, params, columns=columns, values=filters.dim_filters)
     _append_filter_clause(clauses, params, expression=_quant_bucket_sql(columns), values=filters.quant_filters)
     _append_filter_clause(
         clauses,
@@ -809,6 +809,59 @@ def _append_filter_clause(
     placeholders = ", ".join("?" for _ in values)
     clauses.append(f"{expression} IN ({placeholders})")
     params.extend(values)
+
+
+def _append_dim_filter_clause(
+    clauses: list[str],
+    params: list[Any],
+    *,
+    columns: set[str],
+    values: tuple[str, ...],
+) -> None:
+    if not values:
+        return
+    subclauses: list[str] = []
+    exact_values: list[str] = []
+    min_bounds: list[int] = []
+    max_bounds: list[int] = []
+    dim_value = _column_or_null(columns, "embedding_dim")
+    for value in values:
+        if value.startswith("gte:"):
+            try:
+                min_bounds.append(int(value.removeprefix("gte:")))
+            except ValueError:
+                exact_values.append(value)
+            continue
+        if value.startswith("lte:"):
+            try:
+                max_bounds.append(int(value.removeprefix("lte:")))
+            except ValueError:
+                exact_values.append(value)
+            continue
+        if value == "__none_selected__":
+            clauses.append("FALSE")
+            return
+        exact_values.append(value)
+    if min_bounds or max_bounds:
+        range_clauses = [f"{dim_value} IS NOT NULL"]
+        if min_bounds:
+            range_clauses.append(f"{dim_value} >= ?")
+            params.append(max(min_bounds))
+        if max_bounds:
+            range_clauses.append(f"{dim_value} <= ?")
+            params.append(min(max_bounds))
+        subclauses.append("(" + " AND ".join(range_clauses) + ")")
+    for value in exact_values:
+        if value == "__none_selected__":
+            clauses.append("FALSE")
+            return
+    if exact_values:
+        placeholders = ", ".join("?" for _ in exact_values)
+        subclauses.append(f"{_dim_bucket_sql(columns)} IN ({placeholders})")
+        params.extend(exact_values)
+    if not subclauses:
+        return
+    clauses.append("(" + " OR ".join(subclauses) + ")")
 
 
 def _dim_bucket_sql(columns: set[str]) -> str:

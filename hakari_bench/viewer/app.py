@@ -31,6 +31,9 @@ from hakari_bench.viewer.config import (
 )
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
+    DIM_FILTER_MIN_RANGE_PREFIX,
+    DIM_FILTER_POINT_VALUES,
+    DIM_FILTER_RANGE_PREFIX,
     FILTER_NONE_VALUE,
     FilterContext,
     row_filter_context,
@@ -3405,7 +3408,7 @@ def render_controls(
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
     model_type_options = filter_context.model_type_options
-    selected_dims = filter_context.selected_dims
+    selected_dim_filters = filter_state.dim_filters if filter_state.filters_active else ()
     selected_quants = filter_context.selected_quants
     selected_commercial = filter_context.selected_commercial
     selected_dtypes = filter_context.selected_dtypes
@@ -3459,7 +3462,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(value for value, _ in quant_options),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3478,7 +3481,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=(FILTER_NONE_VALUE,),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3497,7 +3500,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3516,7 +3519,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3535,7 +3538,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3554,7 +3557,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3573,7 +3576,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3592,7 +3595,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3615,15 +3618,7 @@ def render_controls(
         prompt_none_query,
     ):
         _apply_plot_state(query_payload, plot_state)
-    refine_results_open = (
-        bool(filter_state.model_filter.strip())
-        or bool(filter_state.task_filter.strip())
-        or filter_state.rank_filtered
-        or bool(filter_state.model_type_filters)
-        or filter_state.filters_active
-        or filter_state.has_parameter_filters
-        or filter_state.has_task_length_filters
-    )
+    refine_results_open = True
     refine_results_open_attr = " open" if refine_results_open else ""
     return f"""
     <div class="grid gap-2 text-[0.8125rem] text-zinc-700">
@@ -3644,7 +3639,7 @@ def render_controls(
         <form id="filter-controls" class="border-t border-zinc-200 p-2"
               hx-get="/leaderboard" hx-push-url="true"
               {_leaderboard_control_hx_attrs()}
-              hx-trigger="change, submit">
+              hx-trigger="change, submit, input changed delay:300ms from:.dim-bound-input">
           {filter_hidden_html}
         <div class="grid gap-2">
           <div class="min-w-0 space-y-2">
@@ -3680,14 +3675,8 @@ def render_controls(
           <div class="filter-panel min-w-0 bg-zinc-50 p-2">
             <div class="filter-panel-body space-y-2">
               <div class="flex flex-wrap items-center gap-2">
-                {_control_label(icon="git-branch", text="Efficiency filters")}
-                {_render_help_tooltip(
-                    "Efficiency filters",
-                    "Filters already-included variant rows by dimensions or quantization type.",
-                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Sparse pruning variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
-                )}
-                {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
-                {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
+                {_render_dim_filter_bounds(selected_filters=selected_dim_filters)}
+                {_render_quant_filter_checkboxes(options=quant_options, selected_values=selected_quants)}
               </div>
               {_render_parameter_filter_inputs(filter_state)}
               {_render_task_length_filter_inputs(filter_state)}
@@ -3846,29 +3835,25 @@ def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
             "Parameter filters operate at the model row level using parameter metadata measured in millions of parameters.\n\nActive Params bounds use active parameter counts. Total Params bounds use total parameter counts. For example, setting Active Params <= 100 keeps rows with at most 100M active parameters.\n\nRows without the selected parameter metadata are excluded when any bound for that parameter type is set. These range filters narrow the ranked model population immediately, even when Recalculate ranks from filters is off.",
         )}
       </span>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Active Params ≥</span>
+      <label class="inline-flex items-center gap-1 whitespace-nowrap">
         <input type="number" min="0" step="any" name="active_params_min" value="{escape(filter_state.active_params_min)}"
                aria-label="Active Params minimum in millions"
                class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Active Params ≤</span>
+        <span class="text-xs text-zinc-500">M &lt;=</span>
+        <span class="text-xs font-medium text-zinc-700">Active Params</span>
+        <span class="text-xs text-zinc-500">&lt;=</span>
         <input type="number" min="0" step="any" name="active_params_max" value="{escape(filter_state.active_params_max)}"
                aria-label="Active Params maximum in millions"
                class="{input_class}">
         <span class="text-xs text-zinc-500">M</span>
       </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Total Params ≥</span>
+      <label class="inline-flex items-center gap-1 whitespace-nowrap">
         <input type="number" min="0" step="any" name="total_params_min" value="{escape(filter_state.total_params_min)}"
                aria-label="Total Params minimum in millions"
                class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Total Params ≤</span>
+        <span class="text-xs text-zinc-500">M &lt;=</span>
+        <span class="text-xs font-medium text-zinc-700">Total Params</span>
+        <span class="text-xs text-zinc-500">&lt;=</span>
         <input type="number" min="0" step="any" name="total_params_max" value="{escape(filter_state.total_params_max)}"
                aria-label="Total Params maximum in millions"
                class="{input_class}">
@@ -3894,24 +3879,26 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
             "Length filters operate at the task level using average text length metadata measured in characters.\n\nQuery length bounds filter by the average query string length for a task. Document length bounds filter by the average document string length. For example, setting Document length <= 2000 keeps tasks whose documents are relatively short on average.\n\nTasks without length metadata are excluded when any bound is set. These range filters narrow the ranked task population immediately, even when Recalculate ranks from filters is off.",
         )}
       </span>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query length ≥</span>
+      <label class="inline-flex items-center gap-1 whitespace-nowrap">
         <input type="number" min="0" step="any" name="query_len_min" value="{escape(filter_state.query_len_min)}"
+               aria-label="Query length minimum"
                class="{input_class}">
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query length ≤</span>
+        <span class="text-xs text-zinc-500">&lt;=</span>
+        <span class="text-xs font-medium text-zinc-700">Query length</span>
+        <span class="text-xs text-zinc-500">&lt;=</span>
         <input type="number" min="0" step="any" name="query_len_max" value="{escape(filter_state.query_len_max)}"
+               aria-label="Query length maximum"
                class="{input_class}">
       </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Document length ≥</span>
+      <label class="inline-flex items-center gap-1 whitespace-nowrap">
         <input type="number" min="0" step="any" name="doc_len_min" value="{escape(filter_state.doc_len_min)}"
+               aria-label="Document length minimum"
                class="{input_class}">
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Document length ≤</span>
+        <span class="text-xs text-zinc-500">&lt;=</span>
+        <span class="text-xs font-medium text-zinc-700">Document length</span>
+        <span class="text-xs text-zinc-500">&lt;=</span>
         <input type="number" min="0" step="any" name="doc_len_max" value="{escape(filter_state.doc_len_max)}"
+               aria-label="Document length maximum"
                class="{input_class}">
       </label>
     </div>
@@ -4535,6 +4522,7 @@ def _render_filter_details(
     all_query: QueryState,
     none_query: QueryState,
     grid_class: str = "grid max-h-60 min-w-64 grid-cols-2 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-3",
+    open_by_default: bool = False,
 ) -> str:
     checkboxes = []
     for value, label in options:
@@ -4549,8 +4537,9 @@ def _render_filter_details(
     none_url = _leaderboard_url(urlencode(none_query, doseq=True))
     all_page_url = _page_url(all_query)
     none_page_url = _page_url(none_query)
+    open_attr = " open" if open_by_default else ""
     return f"""
-      <details class="filter-detail bg-zinc-50" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
+      <details class="filter-detail bg-zinc-50" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}"{open_attr}>
         <summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
           <span class="inline-flex items-center gap-1.5">
             <span class="details-chevron inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
@@ -4567,12 +4556,120 @@ def _render_filter_details(
                     hx-get="{none_url}" hx-push-url="{none_page_url}"
                     {_leaderboard_control_hx_attrs()}>None</button>
           </div>
+          <input type="hidden" name="{escape(name)}" value="{FILTER_NONE_VALUE}">
           <div class="{escape(grid_class)}">
             {''.join(checkboxes)}
           </div>
         </div>
       </details>
     """
+
+
+def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
+    min_value, max_value = _dim_filter_bound_input_values(selected_filters)
+    datalist_id = "dim-filter-bound-marks"
+    hidden_inputs = _dim_filter_hidden_inputs(selected_filters)
+    datalist_options = "".join(f"""<option value="{value}"></option>""" for value in DIM_FILTER_POINT_VALUES)
+    input_class = (
+        "dim-bound-input viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] "
+        "text-zinc-900 outline-none focus:border-cyan-700"
+    )
+    return f"""
+      <div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter" data-filter-icon="ruler">
+        <div class="filter-detail-summary flex items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
+          <span class="inline-flex items-center gap-1.5">
+            {_icon_svg("ruler", class_name="hakari-icon filter-detail-icon shrink-0")}
+            <span>Dims</span>
+          </span>
+        </div>
+        <div class="filter-detail-body p-2">
+          <div id="dim-filter-range-hidden" data-dim-range-hidden>{hidden_inputs}</div>
+          <div class="dim-bounds-filter flex flex-wrap items-center gap-1.5">
+            <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="32"
+                   aria-label="Minimum embedding dimensions"
+                   list="{datalist_id}" class="{input_class}"
+                   data-dim-bound-input="min"
+                   data-dim-bound-hidden-target="dim-filter-range-hidden">
+            <span class="text-xs text-zinc-500">&lt;=</span>
+            <span class="text-xs font-medium text-zinc-700">dims</span>
+            <span class="text-xs text-zinc-500">&lt;=</span>
+            <input type="number" min="0" step="1" value="{escape(max_value)}" placeholder="over"
+                   aria-label="Maximum embedding dimensions"
+                   list="{datalist_id}" class="{input_class}"
+                   data-dim-bound-input="max"
+                   data-dim-bound-hidden-target="dim-filter-range-hidden">
+            <datalist id="{datalist_id}">{datalist_options}</datalist>
+          </div>
+        </div>
+      </div>
+    """
+
+
+def _render_quant_filter_checkboxes(*, options: list[tuple[str, str]], selected_values: set[str]) -> str:
+    ordered_options = _ordered_quant_filter_options(options)
+    option_values = {value for value, _ in options}
+    all_available_selected = option_values.issubset(selected_values)
+    checkboxes = []
+    for value, label in ordered_options:
+        default_checked = value in {"__none__", "int8", "binary"} and value not in option_values and all_available_selected
+        checked = " checked" if value in selected_values or default_checked else ""
+        checkboxes.append(
+            f"""<label class="flex min-w-0 items-center gap-2 whitespace-nowrap px-1.5 py-0.5">
+              <input type="checkbox" name="quant_filter" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
+              <span>{escape(label)}</span>
+            </label>"""
+        )
+    return f"""
+      <div class="filter-detail bg-zinc-50" data-filter-detail="quant_filter" data-filter-icon="binary">
+        <div class="filter-detail-summary flex items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
+          <span class="inline-flex items-center gap-1.5">
+            {_icon_svg("binary", class_name="hakari-icon filter-detail-icon shrink-0")}
+            <span>Quantization</span>
+          </span>
+        </div>
+        <div class="filter-detail-body p-2">
+          <input type="hidden" name="quant_filter" value="{FILTER_NONE_VALUE}">
+          <div class="grid min-w-64 grid-cols-2 gap-x-2 gap-y-1 sm:grid-cols-3">
+            {''.join(checkboxes)}
+          </div>
+        </div>
+      </div>
+    """
+
+
+def _ordered_quant_filter_options(options: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    option_by_value = {value: label for value, label in options}
+    ordered = [
+        ("__none__", "Original"),
+        ("int8", option_by_value.get("int8", "int8")),
+        ("binary", option_by_value.get("binary", "binary")),
+    ]
+    ordered.extend((value, label) for value, label in options if value not in {value for value, _ in ordered})
+    return ordered
+
+
+def _dim_filter_bound_input_values(selected_filters: tuple[str, ...]) -> tuple[str, str]:
+    min_value = ""
+    max_value = ""
+    for selected in selected_filters:
+        if selected.startswith(DIM_FILTER_MIN_RANGE_PREFIX):
+            min_value = selected.removeprefix(DIM_FILTER_MIN_RANGE_PREFIX)
+        elif selected.startswith(DIM_FILTER_RANGE_PREFIX):
+            max_value = selected.removeprefix(DIM_FILTER_RANGE_PREFIX)
+        elif selected == "1025+":
+            min_value = "1025"
+        elif selected and selected != FILTER_NONE_VALUE:
+            min_value = selected
+            max_value = selected
+    return min_value, max_value
+
+
+def _dim_filter_hidden_inputs(selected_filters: tuple[str, ...]) -> str:
+    return "".join(
+        f"""<input type="hidden" name="dim_filter" value="{escape(value)}">"""
+        for value in selected_filters
+        if value
+    )
 
 
 def _hidden_inputs(fields: list[tuple[str, str]]) -> str:

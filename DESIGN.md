@@ -101,7 +101,13 @@ components:
       model-card license metadata; BM25 rows follow the bm25s MIT license and
       appear in the commercial bucket. Commercial-use license filters are shown
       as inline checkboxes, matching Model family rather than hidden inside a
-      secondary disclosure.
+      secondary disclosure. Filter results is expanded by default because it is
+      a primary refinement surface, and Efficiency filters expose expanded Dims
+      and Quantization controls directly without nested disclosure widgets.
+      Dims uses min/max numeric bounds in the form `input <= dims <= input`;
+      an empty maximum means over/no upper bound. Quantization uses checkboxes
+      with Original, int8, binary, and any additional recorded formats selected
+      by default.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.
