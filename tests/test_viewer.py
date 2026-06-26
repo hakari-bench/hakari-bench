@@ -1917,6 +1917,36 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
     assert "model/beta" not in html
 
 
+def test_leaderboard_plot_tooltip_uses_mean_score_when_overall_means_are_unavailable() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/alpha",
+                borda_score=100.0,
+                mean_score=0.75,
+                task_count=1,
+                active_parameters=10_000_000,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(result=result, plot_y="borda_score", plot_x="active_parameters")
+
+    assert "model/alpha\nType: Dense\n\nBorda score: 100.00\nMean score: 0.75\nRank: 1" in html
+    assert "Mean (Micro):" not in html
+    assert "Mean (Macro):" not in html
+
+
 def test_leaderboard_plot_uses_fixed_circle_size_and_optional_single_color() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
@@ -3754,6 +3784,62 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in response.text
 
 
+def test_task_facets_include_code_category_and_filter_tasks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for task_name, category, score_offset in [
+        ("natural-a", "natural_language", 0.01),
+        ("natural-b", "natural_language", 0.02),
+        ("code-a", "code", 0.03),
+    ]:
+        rows.append(("model/a", "BenchA", "bench/a", "BenchA", task_name, task_name, task_name, 0.50 + score_offset, 10, 12, 8192))
+        rows.append(("model/b", "BenchA", "bench/a", "BenchA", task_name, task_name, task_name, 0.40 + score_offset, 20, 24, 4096))
+        metadata_rows.append(
+            (
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                task_name,
+                task_name,
+                task_name,
+                "en",
+                ["en"],
+                [],
+                None,
+                None,
+                category,
+            )
+        )
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA")
+    assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
+        ("en", "EN", 3),
+        ("category:code", "Code", 1),
+    ]
+
+    filtered_result = service.get_leaderboard("BenchA", language_filters=("category:code",))
+    assert filtered_result.expected_tasks == 1
+    assert filtered_result.selected_languages == ("category:code",)
+    assert [row.task_count for row in filtered_result.rows] == [1, 1]
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA")
+    assert response.status_code == 200
+    assert "Code 1" in response.text
+    assert "lang_filter=category%3Acode" in response.text
+
+    filtered_response = TestClient(app).get("/leaderboard?view=BenchA&lang_filter=category%3Acode")
+    assert filtered_response.status_code == 200
+    assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in filtered_response.text
+
+
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -4065,6 +4151,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert ">Model name</span>" not in response.text
     assert "Filters leaderboard rows by model name." in response.text
     assert "jina bge keeps rows whose model name contains jina or bge" in response.text
+    assert "When Recalculate ranks from filters is enabled, it also changes the ranked model population" in response.text
     assert ">Task</span>" in response.text
     assert 'id="task-filter-input" type="search" name="task_filter"' in response.text
     assert 'name="query_len_min" value=""\n               class="viewer-text-input' in response.text
@@ -4073,7 +4160,10 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "arguana fever keeps task columns or task rows whose identifiers contain arguana or fever" in response.text
     assert "Short task names such as nq also work" in response.text
     assert "Recalculate ranks from filters" in response.text
-    assert "Borda ranks, mean ranks, and visible means are recalculated" in response.text
+    assert "Borda ranks, mean ranks, task counts, and visible means are recalculated" in response.text
+    assert "Params and Length range filters already narrow the ranked model or task population" in response.text
+    assert "These range filters narrow the ranked model population immediately" in response.text
+    assert "These range filters narrow the ranked task population immediately" in response.text
     assert "Apply text filters" not in response.text
     assert 'class="refine-results-actions flex flex-wrap items-center gap-2"' in response.text
     assert 'data-icon="sigma"' in response.text
@@ -7526,6 +7616,7 @@ def _write_task_results(
             "quantization VARCHAR",
             "query_mean_chars DOUBLE",
             "document_mean_chars DOUBLE",
+            "category VARCHAR",
         )
         con.execute(
             f"""
@@ -7543,6 +7634,7 @@ def _write_task_results(
                 primary_languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[2],
                 query_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[3],
                 document_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[4],
+                category=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None, None))[5],
             )
             for row in rows
         ]
@@ -7558,20 +7650,23 @@ def _write_task_results(
 
 def _metadata_by_task(
     rows: list[tuple],
-) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str], list[str], float | None, float | None]]:
+) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str], list[str], float | None, float | None, str | None]]:
     metadata = {}
     for row in rows:
         benchmark, dataset_id, _dataset_name, split_name, task_name, task_key, language, languages, *lengths = row
-        primary_languages = lengths[0] if len(lengths) >= 1 and isinstance(lengths[0], list) else []
-        length_offset = 1 if primary_languages else 0
+        has_primary_languages = len(lengths) >= 1 and isinstance(lengths[0], list)
+        primary_languages = lengths[0] if has_primary_languages else []
+        length_offset = 1 if has_primary_languages else 0
         query_mean_chars = lengths[length_offset] if len(lengths) >= length_offset + 1 else None
         document_mean_chars = lengths[length_offset + 1] if len(lengths) >= length_offset + 2 else None
+        category = lengths[length_offset + 2] if len(lengths) >= length_offset + 3 and isinstance(lengths[length_offset + 2], str) else None
         metadata[(benchmark, dataset_id, split_name, task_name, task_key)] = (
             language,
             languages,
             primary_languages,
             query_mean_chars,
             document_mean_chars,
+            category,
         )
     return metadata
 
@@ -7709,6 +7804,7 @@ def _viewer_task_result_row(
     primary_languages: list[str] | None = None,
     query_mean_chars: float | None = None,
     document_mean_chars: float | None = None,
+    category: str | None = None,
 ) -> tuple:
     base = row[:11]
     remaining = row[11:]
@@ -7779,6 +7875,7 @@ def _viewer_task_result_row(
         quantization,
         query_mean_chars,
         document_mean_chars,
+        category,
     )
 
 

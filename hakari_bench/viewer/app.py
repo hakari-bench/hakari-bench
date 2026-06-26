@@ -1297,7 +1297,7 @@ def _render_count_breakdown_modal(
           section_id="count-breakdown-shown",
           title="Visible rows",
           count=len(visible_rows),
-          description="Rows currently visible after text, facet, and range filters.",
+          description="Rows currently visible after the selected result set and all active text, facet, and range filters.",
           rows=visible_rows,
           model_views=model_views,
       )}
@@ -1305,7 +1305,7 @@ def _render_count_breakdown_modal(
           section_id="count-breakdown-complete",
           title="Complete models",
           count=len(result.rows),
-          description="Complete rows in the selected benchmark scope before row visibility filters.",
+          description="Complete rows for the selected evaluation mode, benchmark scope, task facets, variant display, and pre-ranking range filters before row visibility filters.",
           rows=result.rows,
           model_views=model_views,
       )}
@@ -1379,7 +1379,7 @@ def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs:
     return f"""
       <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden class="pt-2">
         <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
-        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected benchmark scope. Linked tasks have verified local documentation and open in a new tab.</p>
+        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected evaluation mode, benchmark scope, task facets, and task-length range filters. Linked tasks have verified local documentation and open in a new tab.</p>
         {task_body}
       </section>
     """
@@ -2213,12 +2213,16 @@ def _plot_tooltip(point: _PlotPoint) -> str:
     lines = [row.model_name, f"Type: {_plot_model_type_label(row)}"]
     if row.embedding_variant_name:
         lines.append(f"Variant: {row.embedding_variant_name}")
+    lines.extend(["", f"Borda score: {_fmt_score(row.borda_score)}"])
+    if row.micro_mean is not None or row.macro_mean is not None:
+        if row.micro_mean is not None:
+            lines.append(f"Mean (Micro): {_fmt_score(row.micro_mean)}")
+        if row.macro_mean is not None:
+            lines.append(f"Mean (Macro): {_fmt_score(row.macro_mean)}")
+    else:
+        lines.append(f"Mean score: {_fmt_score(row.mean_score)}")
     lines.extend(
         [
-            "",
-            f"Borda score: {_fmt_score(row.borda_score)}",
-            f"Mean (Micro): {_fmt_score(row.micro_mean)}",
-            f"Mean (Macro): {_fmt_score(row.macro_mean)}",
             f"Rank: {_fmt_rank(row.borda_rank)}",
             "",
             f"Active params: {_plot_tooltip_active_parameters_label(row)}",
@@ -2751,7 +2755,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         "Overall": (
             "Benchmark scope: Overall",
             "Shows every benchmark family available in the viewer.",
-            "Overall is the default and broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any language, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Micro when you want every raw task row to contribute equally, or Macro when you want each NanoSet to contribute equally.",
+            "Overall is the default and broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any task facet, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Micro when you want every raw task row to contribute equally, or Macro when you want each NanoSet to contribute equally.",
         ),
         "Overall (EN)": (
             "Benchmark scope: Overall (EN)",
@@ -2761,7 +2765,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
             "Clears every NanoSet selection.",
-            "Clear resets the page to empty Custom selection. No benchmark tasks are selected, Task facets return to All languages, and the leaderboard table shows no rows.\n\nClear is an action, not a selected scope state. After pressing it, the URL remains view=Custom with no bench parameters so the next NanoSet toggle starts from a clean custom set.",
+            "Clear resets the page to empty Custom selection. No benchmark tasks are selected, Task facets return to All languages/categories, and the leaderboard table shows no rows.\n\nClear is an action, not a selected scope state. After pressing it, the URL remains view=Custom with no bench parameters so the next NanoSet toggle starts from a clean custom set.",
         ),
     }
     return help_text.get(
@@ -2769,7 +2773,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         (
             f"Benchmark scope: {view_name}",
             f"Shows the {view_name} scope from the viewer configuration.",
-            "Benchmark scope chooses the tasks that are eligible for the leaderboard before row filters are applied.\n\nUse this control first when you want to compare models on a specific benchmark family, then refine the result with language, model, task, and variant filters.",
+            "Benchmark scope chooses the tasks that are eligible for the leaderboard before row filters are applied.\n\nUse this control first when you want to compare models on a specific benchmark family, then refine the result with task facets, model filters, task filters, and variant controls.",
         ),
     )
 
@@ -2884,7 +2888,7 @@ def _render_target_group(
         safeguard_help = _render_help_tooltip(
             "Safeguard positives",
             "Keeps reranking comparable by using the safeguarded hybrid candidate set.",
-            "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder the fixed reranking_hybrid candidate set.\n\nHybrid means RRF over BM25 and dense candidate rankings: BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them into the top-100 hybrid candidates for each query.\n\nWhen Safeguard positives is enabled, a query whose top-100 hybrid candidates contain no qrels-positive document gets an optional rank-101 safeguard positive appended. This keeps reranker scores from being dominated by candidate lists where the reranker had no relevant document to promote.\n\nTurn it off only when you intentionally want to inspect reranking on the raw hybrid top-100 without the appended safeguard positive.",
+            "This option applies only in Reranking mode. Reranking rows do not search the full corpus; they score or reorder the fixed reranking_hybrid candidate set.\n\nHybrid means RRF over BM25 and dense candidate rankings: BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them into the top-100 hybrid candidates for each query.\n\nWhen Safeguard positives is enabled, a query whose top-100 hybrid candidates contain no qrels-positive document gets an optional rank-101 safeguard positive appended. This keeps reranking scores from being dominated by candidate lists where the model had no relevant document to promote.\n\nTurn it off only when you intentionally want to inspect reranking on the raw hybrid top-100 without the appended safeguard positive.",
         )
         safeguard_toggle = f"""
                 <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
@@ -3087,8 +3091,8 @@ def render_language_pages(
           {_control_label(icon="languages", text="Task facets")}
           {_render_help_tooltip(
               "Task facets",
-              "Filters tasks inside the selected benchmark scope by language.",
-              "Task facets narrows the tasks that are included after you choose a benchmark scope.\n\nFor multilingual suites such as MNanoBEIR, each language page filters the task set to one language-specific slice, such as Japanese or German. The All languages button removes that language filter.\n\nThis is different from Benchmark scope: scope chooses the benchmark family, while Task facets filters the tasks inside that family.",
+              "Filters tasks inside the selected benchmark scope by language or category.",
+              "Task facets narrows the tasks that are included after you choose a benchmark scope.\n\nFor multilingual suites such as MNanoBEIR, each language page filters the task set to one language-specific slice, such as Japanese or German. Code filters to tasks whose metadata category is code. The All languages button removes that task facet filter.\n\nThis is different from Benchmark scope: scope chooses the benchmark family, while Task facets filters the tasks inside that family.",
           )}
         </span>
         {''.join(buttons)}
@@ -3215,7 +3219,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Table display",
               "Changes which columns and per-task annotations are visible.",
-              "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD overlays standardized task scores so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank alongside the standardized score.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
+              "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD adds standard-deviation deltas so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank, score, and standard-deviation delta together.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -3555,7 +3559,7 @@ def render_controls(
               {_render_help_tooltip(
                   "Filter results",
                   "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
-                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
+                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, text and facet filters keep rank context within the current evaluation mode, benchmark scope, task facets, and variant selection. Enable Recalculate ranks from filters when you want those filters to recompute ranks and means. Params and Length range filters always narrow the ranked model or task population when set.",
               )}
             </span>
           </span>
@@ -3577,7 +3581,7 @@ def render_controls(
                 {_render_help_tooltip(
                     "Model filter",
                     "Filters leaderboard rows by model name.",
-                    "Model filter searches the displayed model names and hides rows that do not match.\n\nYou can search for multiple model-name keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, jina bge keeps rows whose model name contains jina or bge.\n\nModel keywords under 3 characters are ignored to avoid accidental broad matches. This filter changes which model rows are visible. It does not change the selected benchmark scope or which task columns are available.",
+                    "Model filter searches the displayed model names and hides rows that do not match.\n\nYou can search for multiple model-name keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, jina bge keeps rows whose model name contains jina or bge.\n\nModel keywords under 3 characters are ignored to avoid accidental broad matches. By default this filter changes which model rows are visible. When Recalculate ranks from filters is enabled, it also changes the ranked model population. It does not change the selected benchmark scope or which task columns are available.",
                 )}
                 <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
@@ -3638,7 +3642,7 @@ def render_controls(
                   {_render_help_tooltip(
                       "Recalculate ranks from filters",
                       "Recomputes ranking numbers using only the currently filtered result set.",
-                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Filter results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
+                      "When this is enabled, Borda ranks, mean ranks, task counts, and visible means are recalculated after the active text, model-family, license, runtime, efficiency, and task filters are applied.\n\nParams and Length range filters already narrow the ranked model or task population whenever they are set.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family. Leave it off when you want text and facet filters to keep their rank context from the current evaluation mode, benchmark scope, task facets, and variant selection.",
                   )}
                 </label>
               </div>
@@ -3716,7 +3720,7 @@ def _render_model_type_controls(
           {_render_help_tooltip(
               "Model family",
               "Filters rows by the retrieval or reranking family recorded for each model result.",
-              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
+              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows are shown only in Reranking mode.\n\nReranking mode can also include dense or late-interaction candidate-rerank rows and the BM25 candidate-order baseline, so use this filter when you want to compare one family or hide families that are not relevant to the current analysis.",
           )}
         </span>
         {''.join(checkboxes)}
@@ -3762,7 +3766,7 @@ def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
         {_render_help_tooltip(
             "Parameter filters",
             "Filters model rows by active or total parameter count.",
-            "Parameter filters operate at the model row level using parameter metadata measured in millions of parameters.\n\nActive Params bounds use active parameter counts. Total Params bounds use total parameter counts. For example, setting Active Params <= 100 keeps rows with at most 100M active parameters.\n\nRows without the selected parameter metadata are excluded when any bound for that parameter type is set.",
+            "Parameter filters operate at the model row level using parameter metadata measured in millions of parameters.\n\nActive Params bounds use active parameter counts. Total Params bounds use total parameter counts. For example, setting Active Params <= 100 keeps rows with at most 100M active parameters.\n\nRows without the selected parameter metadata are excluded when any bound for that parameter type is set. These range filters narrow the ranked model population immediately, even when Recalculate ranks from filters is off.",
         )}
       </span>
       <label class="inline-flex items-center gap-1">
@@ -3810,7 +3814,7 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
         {_render_help_tooltip(
             "Length filters",
             "Filters tasks by average query and document string length.",
-            "Length filters operate at the task level using average text length metadata measured in characters.\n\nQuery length bounds filter by the average query string length for a task. Document length bounds filter by the average document string length. For example, setting Document length <= 2000 keeps tasks whose documents are relatively short on average.\n\nTasks without length metadata are excluded when any bound is set. Use this when you want to inspect short-query tasks, long-document tasks, or other length-sensitive behavior.",
+            "Length filters operate at the task level using average text length metadata measured in characters.\n\nQuery length bounds filter by the average query string length for a task. Document length bounds filter by the average document string length. For example, setting Document length <= 2000 keeps tasks whose documents are relatively short on average.\n\nTasks without length metadata are excluded when any bound is set. These range filters narrow the ranked task population immediately, even when Recalculate ranks from filters is off.",
         )}
       </span>
       <label class="inline-flex items-center gap-1">

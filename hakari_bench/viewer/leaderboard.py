@@ -45,6 +45,7 @@ from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_var
 SortDirection = Literal["asc", "desc"]
 ScoreTarget = Literal["all", "reranking", "reranking_without_safeguard"]
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
+TASK_CATEGORY_FACET_PREFIX = "category:"
 
 
 @dataclass(frozen=True)
@@ -98,6 +99,7 @@ class TaskScore:
     language: str | None = None
     languages: tuple[str, ...] = ()
     primary_languages: tuple[str, ...] = ()
+    category: str | None = None
     dtype: str | None = None
     attn_implementation: str | None = None
     prompt_summary: str | None = None
@@ -1507,6 +1509,7 @@ def _task_scores_from_records(
                     language=record.language,
                     languages=tuple(record.languages),
                     primary_languages=tuple(record.primary_languages),
+                    category=record.category,
                     active_parameters=record.active_parameters,
                     total_parameters=record.total_parameters,
                     max_seq_length=record.max_seq_length,
@@ -2162,17 +2165,31 @@ def _language_options(
     policy: LanguageFilterPolicy | None = None,
 ) -> list[LanguageOption]:
     task_keys_by_language: dict[str, set[str]] = defaultdict(set)
+    task_keys_by_category: dict[str, set[str]] = defaultdict(set)
     for row in rows:
         for language in _language_codes_for_row(
             row, mode=mode, allowed_languages=allowed_languages, policy=policy
         ):
             task_keys_by_language[language].add(row.task_key)
+        category_code = _task_category_facet_code(row.category)
+        if category_code is not None:
+            task_keys_by_category[category_code].add(row.task_key)
     return [
         LanguageOption(
             code=language, label=_language_label(language), task_count=len(task_keys)
         )
         for language, task_keys in sorted(
             task_keys_by_language.items(),
+            key=lambda item: (-len(item[1]), item[0]),
+        )
+    ] + [
+        LanguageOption(
+            code=category,
+            label=_task_category_label(category),
+            task_count=len(task_keys),
+        )
+        for category, task_keys in sorted(
+            task_keys_by_category.items(),
             key=lambda item: (-len(item[1]), item[0]),
         )
     ]
@@ -2201,7 +2218,20 @@ def _filter_rows_by_languages(
         row
         for row in rows
         if selected.intersection(_language_codes_for_row(row, mode=mode, policy=policy))
+        or _task_category_facet_code(row.category) in selected
     ]
+
+
+def _task_category_facet_code(category: str | None) -> str | None:
+    if category != "code":
+        return None
+    return f"{TASK_CATEGORY_FACET_PREFIX}{category}"
+
+
+def _task_category_label(category_facet_code: str) -> str:
+    category = category_facet_code.removeprefix(TASK_CATEGORY_FACET_PREFIX)
+    labels = {"code": "Code"}
+    return labels.get(category, category.replace("_", " ").title())
 
 
 def _filter_rows_by_model_terms(
