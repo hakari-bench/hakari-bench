@@ -4178,8 +4178,6 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'details class="filter-detail bg-zinc-50" data-filter-detail="quant_filter"' not in response.text
     assert 'div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter"' in response.text
     assert 'div class="filter-detail bg-zinc-50" data-filter-detail="quant_filter"' in response.text
-    assert "grid-cols-2" in response.text
-    assert "sm:grid-cols-3" in response.text
     assert response.text.count(">All</button>") == 3
     assert response.text.count(">None</button>") == 3
     assert 'id="column-controls"' in response.text
@@ -4213,8 +4211,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Recalculate ranks from filters" in response.text
     assert "Borda ranks, mean ranks, task counts, and visible means are recalculated" in response.text
     assert "Params and Length range filters already narrow the ranked model or task population" in response.text
-    assert "These range filters narrow the ranked model population immediately" in response.text
-    assert "These range filters narrow the ranked task population immediately" in response.text
+    assert "This range narrows the ranked model population immediately" in response.text
+    assert "This range narrows the ranked task population immediately" in response.text
     assert "Apply text filters" not in response.text
     assert 'class="refine-results-actions flex flex-wrap items-center gap-2"' in response.text
     assert 'data-icon="sigma"' in response.text
@@ -4242,10 +4240,10 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'class="dim-bound-input viewer-text-input' in response.text
     assert 'data-dim-bound-input="min"' in response.text
     assert 'data-dim-bound-input="max"' in response.text
-    assert 'placeholder="32"' in response.text
-    assert 'placeholder="over"' in response.text
-    assert "Min dim</span>" in response.text
-    assert "Max dim</span>" in response.text
+    assert 'placeholder="min"' in response.text
+    assert 'placeholder="max"' in response.text
+    assert "Min dim</span>" not in response.text
+    assert "Max dim</span>" not in response.text
     dim_datalist_match = re.search(r'<datalist id="dim-filter-bound-marks">(.*?)</datalist>', response.text)
     assert dim_datalist_match is not None
     assert dim_datalist_match.group(1).startswith('<option value="" label="none"></option>')
@@ -4301,7 +4299,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert facet_response.status_code == 200
     assert 'name="other_variant" value="1" checked' in facet_response.text
     assert 'name="dim_filter" value="lte:768"' in facet_response.text
-    assert 'value="768" placeholder="over"' in facet_response.text
+    assert 'value="768" placeholder="max"' in facet_response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
     assert 'name="quant_filter" value="uint8" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
@@ -4317,8 +4315,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert range_facet_response.status_code == 200
     assert 'name="dim_filter" value="gte:384"' in range_facet_response.text
     assert 'name="dim_filter" value="lte:768"' in range_facet_response.text
-    assert 'value="384" placeholder="32"' in range_facet_response.text
-    assert 'value="768" placeholder="over"' in range_facet_response.text
+    assert 'value="384" placeholder="min"' in range_facet_response.text
+    assert 'value="768" placeholder="max"' in range_facet_response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims)&quot;" in range_facet_response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (512 dims)&quot;" in range_facet_response.text
     assert "&quot;ranking_model_name&quot;:&quot;model/a (384 dims)&quot;" in range_facet_response.text
@@ -6636,13 +6634,13 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Task string length" not in response.text
-    assert ">Length</span>" in response.text
     assert "Query length</span>" in response.text
     assert "Document length</span>" in response.text
-    assert "&lt;=" in response.text
-    assert 'data-help-title="Length filters"' in response.text
-    assert "Length filters operate at the task level using average text length metadata" in response.text
-    assert "Tasks without length metadata are excluded when any bound is set." in response.text
+    assert ">Length</span>" not in response.text
+    assert 'data-help-title="Query length"' in response.text
+    assert 'data-help-title="Document length"' in response.text
+    assert "Query length bounds use task metadata measured in average characters per query." in response.text
+    assert "Document length bounds use task metadata measured in average characters per document." in response.text
     assert "Query string <=" not in response.text
     assert "Doc string <=" not in response.text
     assert 'name="query_len_max" value="1000"' in response.text
@@ -6679,15 +6677,18 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
     response = TestClient(app).get("/leaderboard?view=BenchA&filters=1&active_params_max=100")
 
     assert response.status_code == 200
-    assert response.text.index(">Params</span>") < response.text.index(">Length</span>")
-    assert "Active Params</span>" in response.text
-    assert "Total Params</span>" in response.text
-    assert "M &lt;=" in response.text
-    assert 'data-help-title="Parameter filters"' in response.text
-    assert "using parameter metadata measured in millions of parameters" in response.text
+    assert response.text.index("Active params (M)</span>") < response.text.index("Query length</span>")
+    assert "Active params (M)</span>" in response.text
+    assert "Total params (M)</span>" in response.text
+    assert ">Params</span>" not in response.text
+    assert ">Length</span>" not in response.text
+    assert 'data-help-title="Active params"' in response.text
+    assert 'data-help-title="Total params"' in response.text
+    assert "Active params is the parameter count considered active" in response.text
+    assert "Total params is the full model parameter count" in response.text
     assert "at most 100M active parameters" in response.text
     assert 'name="active_params_max" value="100"' in response.text
-    params_filter_section = response.text.split(">Length</span>", 1)[0]
+    params_filter_section = response.text.split("Query length</span>", 1)[0]
     assert params_filter_section.count("viewer-text-input w-20") >= 4
     assert "model/small" in response.text
     assert "model/large" not in response.text

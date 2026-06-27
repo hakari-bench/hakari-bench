@@ -106,12 +106,17 @@ components:
       facet, parameter, length, or rank-recalculation filter is active.
       Efficiency filters expose expanded Dims and Quantization controls directly
       without nested disclosure widgets whenever Filter results is open.
-      Dims uses min/max numeric bounds in the form `input <= dims <= input`;
-      an empty maximum means over/no upper bound, and the input suggestion list
+      Dims and Quantization sit on the same compact row as inline controls.
+      Dims uses explicit min/max numeric bounds in the form `Dims [min] - [max]`;
+      an empty maximum means no upper bound, and the input suggestion list
       starts with none as an empty-value option before the fixed 32, 64, 128,
       256, 384, 512, 768, 1024, 1536, 2048, and 2560 suggestions rather than
       changing with the visible rows. Quantization uses checkboxes with Original,
       int8, binary, and any additional recorded formats selected by default.
+      Params and Length do not use parent group labels; expose Active params (M),
+      Total params (M), Query length, and Document length as separate inline
+      range controls with their own icon and help trigger so the different axes
+      are visible without adding vertical section space.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.

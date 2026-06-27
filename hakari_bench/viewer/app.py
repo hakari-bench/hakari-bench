@@ -3678,8 +3678,12 @@ def render_controls(
                 {_render_dim_filter_bounds(selected_filters=selected_dim_filters)}
                 {_render_quant_filter_checkboxes(options=quant_options, selected_values=selected_quants)}
               </div>
-              {_render_parameter_filter_inputs(filter_state)}
-              {_render_task_length_filter_inputs(filter_state)}
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                {_render_parameter_filter_inputs(filter_state)}
+              </div>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                {_render_task_length_filter_inputs(filter_state)}
+              </div>
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="shield-check", text="License filters")}
                 {_render_help_tooltip(
@@ -3834,43 +3838,50 @@ def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
         "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
-    active_class = "text-cyan-700" if filter_state.has_parameter_filters else ""
-    return f"""
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="inline-flex items-center gap-1">
-        {_control_label(icon="cpu", text="Params", extra_class=active_class)}
-        {_render_help_tooltip(
-            "Parameter filters",
-            "Filters model rows by active or total parameter count.",
-            "Parameter filters operate at the model row level using parameter metadata measured in millions of parameters.\n\nActive Params bounds use active parameter counts. Total Params bounds use total parameter counts. For example, setting Active Params <= 100 keeps rows with at most 100M active parameters.\n\nRows without the selected parameter metadata are excluded when any bound for that parameter type is set. These range filters narrow the ranked model population immediately, even when Recalculate ranks from filters is off.",
-        )}
-      </span>
-      <label class="inline-flex items-center gap-1 whitespace-nowrap">
-        <input type="number" min="0" step="any" name="active_params_min" value="{escape(filter_state.active_params_min)}"
-               aria-label="Active Params minimum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M &lt;=</span>
-        <span class="text-xs font-medium text-zinc-700">Active Params</span>
-        <span class="text-xs text-zinc-500">&lt;=</span>
-        <input type="number" min="0" step="any" name="active_params_max" value="{escape(filter_state.active_params_max)}"
-               aria-label="Active Params maximum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-      <label class="inline-flex items-center gap-1 whitespace-nowrap">
-        <input type="number" min="0" step="any" name="total_params_min" value="{escape(filter_state.total_params_min)}"
-               aria-label="Total Params minimum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M &lt;=</span>
-        <span class="text-xs font-medium text-zinc-700">Total Params</span>
-        <span class="text-xs text-zinc-500">&lt;=</span>
-        <input type="number" min="0" step="any" name="total_params_max" value="{escape(filter_state.total_params_max)}"
-               aria-label="Total Params maximum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-    </div>
-    """
+    active_params_class = "text-cyan-700" if filter_state.active_params_min or filter_state.active_params_max else ""
+    total_params_class = "text-cyan-700" if filter_state.total_params_min or filter_state.total_params_max else ""
+    return (
+        _render_range_filter_control(
+            icon="cpu",
+            label="Active params (M)",
+            help_title="Active params",
+            help_summary="Filters model rows by active parameter count in millions.",
+            help_details=(
+                "Active params is the parameter count considered active for a model row, measured in millions. "
+                "For example, max 100 keeps rows with at most 100M active parameters.\n\n"
+                "Rows without active-parameter metadata are excluded when either bound is set. "
+                "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
+            ),
+            min_name="active_params_min",
+            min_value=filter_state.active_params_min,
+            min_aria_label="Active params minimum in millions",
+            max_name="active_params_max",
+            max_value=filter_state.active_params_max,
+            max_aria_label="Active params maximum in millions",
+            input_class=input_class,
+            extra_class=active_params_class,
+        )
+        + _render_range_filter_control(
+            icon="cpu",
+            label="Total params (M)",
+            help_title="Total params",
+            help_summary="Filters model rows by total parameter count in millions.",
+            help_details=(
+                "Total params is the full model parameter count recorded for a model row, measured in millions. "
+                "It can differ from active params for architectures or serving setups where not all parameters are active.\n\n"
+                "Rows without total-parameter metadata are excluded when either bound is set. "
+                "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
+            ),
+            min_name="total_params_min",
+            min_value=filter_state.total_params_min,
+            min_aria_label="Total params minimum in millions",
+            max_name="total_params_max",
+            max_value=filter_state.total_params_max,
+            max_aria_label="Total params maximum in millions",
+            input_class=input_class,
+            extra_class=total_params_class,
+        )
+    )
 
 
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
@@ -3878,40 +3889,84 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
         "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
-    active_class = "text-cyan-700" if filter_state.has_task_length_filters else ""
+    query_length_class = "text-cyan-700" if filter_state.query_len_min or filter_state.query_len_max else ""
+    document_length_class = "text-cyan-700" if filter_state.doc_len_min or filter_state.doc_len_max else ""
+    return (
+        _render_range_filter_control(
+            icon="ruler",
+            label="Query length",
+            help_title="Query length",
+            help_summary="Filters tasks by average query string length.",
+            help_details=(
+                "Query length bounds use task metadata measured in average characters per query. "
+                "For example, max 120 keeps tasks with relatively short queries.\n\n"
+                "Tasks without query-length metadata are excluded when either bound is set. "
+                "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
+            ),
+            min_name="query_len_min",
+            min_value=filter_state.query_len_min,
+            min_aria_label="Query length minimum",
+            max_name="query_len_max",
+            max_value=filter_state.query_len_max,
+            max_aria_label="Query length maximum",
+            input_class=input_class,
+            extra_class=query_length_class,
+        )
+        + _render_range_filter_control(
+            icon="ruler",
+            label="Document length",
+            help_title="Document length",
+            help_summary="Filters tasks by average document string length.",
+            help_details=(
+                "Document length bounds use task metadata measured in average characters per document. "
+                "For example, max 2000 keeps tasks whose documents are relatively short on average.\n\n"
+                "Tasks without document-length metadata are excluded when either bound is set. "
+                "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
+            ),
+            min_name="doc_len_min",
+            min_value=filter_state.doc_len_min,
+            min_aria_label="Document length minimum",
+            max_name="doc_len_max",
+            max_value=filter_state.doc_len_max,
+            max_aria_label="Document length maximum",
+            input_class=input_class,
+            extra_class=document_length_class,
+        )
+    )
+
+
+def _render_range_filter_control(
+    *,
+    icon: str,
+    label: str,
+    help_title: str,
+    help_summary: str,
+    help_details: str,
+    min_name: str,
+    min_value: str,
+    min_aria_label: str,
+    max_name: str,
+    max_value: str,
+    max_aria_label: str,
+    input_class: str,
+    extra_class: str = "",
+) -> str:
     return f"""
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="inline-flex items-center gap-1">
-        {_control_label(icon="ruler", text="Length", extra_class=active_class)}
-        {_render_help_tooltip(
-            "Length filters",
-            "Filters tasks by average query and document string length.",
-            "Length filters operate at the task level using average text length metadata measured in characters.\n\nQuery length bounds filter by the average query string length for a task. Document length bounds filter by the average document string length. For example, setting Document length <= 2000 keeps tasks whose documents are relatively short on average.\n\nTasks without length metadata are excluded when any bound is set. These range filters narrow the ranked task population immediately, even when Recalculate ranks from filters is off.",
-        )}
-      </span>
-      <label class="inline-flex items-center gap-1 whitespace-nowrap">
-        <input type="number" min="0" step="any" name="query_len_min" value="{escape(filter_state.query_len_min)}"
-               aria-label="Query length minimum"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">&lt;=</span>
-        <span class="text-xs font-medium text-zinc-700">Query length</span>
-        <span class="text-xs text-zinc-500">&lt;=</span>
-        <input type="number" min="0" step="any" name="query_len_max" value="{escape(filter_state.query_len_max)}"
-               aria-label="Query length maximum"
-               class="{input_class}">
-      </label>
-      <label class="inline-flex items-center gap-1 whitespace-nowrap">
-        <input type="number" min="0" step="any" name="doc_len_min" value="{escape(filter_state.doc_len_min)}"
-               aria-label="Document length minimum"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">&lt;=</span>
-        <span class="text-xs font-medium text-zinc-700">Document length</span>
-        <span class="text-xs text-zinc-500">&lt;=</span>
-        <input type="number" min="0" step="any" name="doc_len_max" value="{escape(filter_state.doc_len_max)}"
-               aria-label="Document length maximum"
-               class="{input_class}">
-      </label>
-    </div>
+      <div class="range-filter-control inline-flex min-w-0 items-center gap-1.5">
+        <span class="inline-flex items-center gap-1 whitespace-nowrap">
+          {_control_label(icon=icon, text=label, extra_class=extra_class)}
+          {_render_help_tooltip(help_title, help_summary, help_details)}
+        </span>
+        <span class="inline-flex items-center gap-1 whitespace-nowrap">
+          <input type="number" min="0" step="any" name="{escape(min_name)}" value="{escape(min_value)}"
+                 placeholder="min" aria-label="{escape(min_aria_label, quote=True)}"
+                 class="{input_class}">
+          <span class="text-xs text-zinc-500">-</span>
+          <input type="number" min="0" step="any" name="{escape(max_name)}" value="{escape(max_value)}"
+                 placeholder="max" aria-label="{escape(max_aria_label, quote=True)}"
+                 class="{input_class}">
+        </span>
+      </div>
     """
 
 
@@ -4583,41 +4638,36 @@ def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
         f"""<option value="{value}"></option>""" for value in DIM_FILTER_BOUND_SUGGESTIONS
     )
     input_class = (
-        "dim-bound-input viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] "
+        "dim-bound-input viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] "
         "text-zinc-900 outline-none focus:border-cyan-700"
     )
+    active_class = "text-cyan-700" if min_value or max_value else ""
     return f"""
       <div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter" data-filter-icon="ruler">
-        <div class="filter-detail-summary flex items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
-          <span class="inline-flex items-center gap-1.5">
-            {_icon_svg("ruler", class_name="hakari-icon filter-detail-icon shrink-0")}
-            <span>Dims</span>
-          </span>
-        </div>
-        <div class="filter-detail-body p-2">
+        <div class="filter-detail-body range-filter-control inline-flex min-w-0 items-center gap-1.5 p-1">
           <div id="dim-filter-range-hidden" data-dim-range-hidden>{hidden_inputs}</div>
-          <div class="dim-bounds-filter flex flex-wrap items-end gap-1.5">
-            <label class="grid gap-1">
-              <span class="text-xs text-zinc-500">Min dim</span>
-              <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="32"
-                     aria-label="Minimum embedding dimensions"
-                     list="{datalist_id}" class="{input_class}"
-                     data-dim-bound-input="min"
-                     data-dim-bound-hidden-target="dim-filter-range-hidden">
-            </label>
-            <span class="pb-1.5 text-xs text-zinc-500">&lt;=</span>
-            <span class="pb-1.5 text-xs font-medium text-zinc-700">dims</span>
-            <span class="pb-1.5 text-xs text-zinc-500">&lt;=</span>
-            <label class="grid gap-1">
-              <span class="text-xs text-zinc-500">Max dim</span>
-              <input type="number" min="0" step="1" value="{escape(max_value)}" placeholder="over"
-                     aria-label="Maximum embedding dimensions"
-                     list="{datalist_id}" class="{input_class}"
-                     data-dim-bound-input="max"
-                     data-dim-bound-hidden-target="dim-filter-range-hidden">
-            </label>
+          <span class="inline-flex items-center gap-1 whitespace-nowrap">
+            {_control_label(icon="ruler", text="Dims", extra_class=active_class)}
+            {_render_help_tooltip(
+                "Dims",
+                "Filters rows by embedding dimensions.",
+                "Dims filters dense embedding result rows by their recorded embedding dimension.\n\nMin and max are inclusive. An empty max means no upper bound. Rows without dimension metadata are excluded when either bound is set.",
+            )}
+          </span>
+          <span class="inline-flex items-center gap-1 whitespace-nowrap">
+            <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="min"
+                   aria-label="Minimum embedding dimensions"
+                   list="{datalist_id}" class="{input_class}"
+                   data-dim-bound-input="min"
+                   data-dim-bound-hidden-target="dim-filter-range-hidden">
+            <span class="text-xs text-zinc-500">-</span>
+            <input type="number" min="0" step="1" value="{escape(max_value)}" placeholder="max"
+                   aria-label="Maximum embedding dimensions"
+                   list="{datalist_id}" class="{input_class}"
+                   data-dim-bound-input="max"
+                   data-dim-bound-hidden-target="dim-filter-range-hidden">
             <datalist id="{datalist_id}">{datalist_options}</datalist>
-          </div>
+          </span>
         </div>
       </div>
     """
@@ -4639,15 +4689,17 @@ def _render_quant_filter_checkboxes(*, options: list[tuple[str, str]], selected_
         )
     return f"""
       <div class="filter-detail bg-zinc-50" data-filter-detail="quant_filter" data-filter-icon="binary">
-        <div class="filter-detail-summary flex items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
-          <span class="inline-flex items-center gap-1.5">
-            {_icon_svg("binary", class_name="hakari-icon filter-detail-icon shrink-0")}
-            <span>Quantization</span>
+        <div class="filter-detail-body inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 p-1">
+          <span class="inline-flex items-center gap-1 whitespace-nowrap">
+            {_control_label(icon="binary", text="Quantization")}
+            {_render_help_tooltip(
+                "Quantization",
+                "Filters rows by embedding numeric format.",
+                "Quantization filters base and compressed embedding result rows by recorded numeric format.\n\nOriginal keeps unquantized rows. int8 and binary keep compressed variants when those rows are included by the Efficiency variants controls.",
+            )}
           </span>
-        </div>
-        <div class="filter-detail-body p-2">
           <input type="hidden" name="quant_filter" value="{FILTER_NONE_VALUE}">
-          <div class="grid min-w-64 grid-cols-2 gap-x-2 gap-y-1 sm:grid-cols-3">
+          <div class="inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
             {''.join(checkboxes)}
           </div>
         </div>
