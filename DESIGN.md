@@ -107,13 +107,19 @@ components:
       Efficiency filters expose expanded Dims and Quantization controls directly
       without nested disclosure widgets whenever Filter results is open.
       Dims and Quantization sit on the same compact row as inline controls.
+      Efficiency variants toggles preserve the active Filter results state,
+      including Dims and Quantization selections, so toggling additional variant
+      rows does not clear visible filters.
       The main filter controls are arranged as two aligned flex lanes: left lane
       Model, Dims, Active params (M), and Query length; right lane Task,
       Quantization, Total params (M), and Document length.
       Dims uses explicit min/max numeric bounds in the form `Dims [min] - [max]`;
       an empty maximum means no upper bound, and Dims inputs do not use browser
-      datalist suggestions. Quantization uses checkboxes with Original, int8,
-      binary, and any additional recorded formats selected by default.
+      datalist suggestions. Dims, Params, and Length numeric inputs update their
+      pending hidden form values while typing, but only submit the filter when
+      the user presses Enter or otherwise submits the form. Quantization uses
+      checkboxes with Original, int8, binary, and any additional recorded formats
+      selected by default.
       Params and Length do not use parent group labels; expose Active params (M),
       Total params (M), Query length, and Document length as separate inline
       range controls with their own icon and help trigger so the different axes

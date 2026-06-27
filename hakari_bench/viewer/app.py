@@ -3637,7 +3637,7 @@ def render_controls(
               {_render_help_tooltip(
                   "Filter results",
                   "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
-                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, text and facet filters keep rank context within the current evaluation mode, benchmark scope, task facets, and variant selection. Enable Recalculate ranks from filters when you want those filters to recompute ranks and means. Params and Length range filters always narrow the ranked model or task population when set.",
+                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel, Task, Dims, Params, and Length text or numeric filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, text and facet filters keep rank context within the current evaluation mode, benchmark scope, task facets, and variant selection. Enable Recalculate ranks from filters when you want those filters to recompute ranks and means. Params and Length range filters narrow the ranked model or task population after they are submitted.",
               )}
             </span>
           </span>
@@ -3645,7 +3645,7 @@ def render_controls(
         <form id="filter-controls" class="border-t border-zinc-200 p-2"
               hx-get="/leaderboard" hx-push-url="true"
               {_leaderboard_control_hx_attrs()}
-              hx-trigger="change, submit, input changed delay:300ms from:.dim-bound-input">
+              hx-trigger="change from:input[type='checkbox'], submit">
           {filter_hidden_html}
         <div class="grid gap-2">
           <div class="min-w-0">
@@ -3756,14 +3756,7 @@ def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, 
 
 
 def _variant_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    reset_facet_state = FilterState(
-        model_filter=filter_state.model_filter,
-        task_filter=filter_state.task_filter,
-        language_filters=filter_state.language_filters,
-        filters_active=False,
-        **_task_length_filter_kwargs(filter_state),
-    )
-    return active_filter_hidden_fields(reset_facet_state) + _text_filter_hidden_fields(reset_facet_state)
+    return active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
 
 
 def _selected_benchmark_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:

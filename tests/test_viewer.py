@@ -1075,6 +1075,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariApplyHashQueryState" in viewer_js_response.text
     assert "window.__hakariSyncHashQueryStateToParent" in viewer_js_response.text
     assert "window.__hakariSetLeaderboardPending" in viewer_js_response.text
+    assert 'event.key !== "Enter"' in viewer_js_response.text
+    assert "#filter-controls input[type='search'], #filter-controls input[type='number']" in viewer_js_response.text
+    assert "form.requestSubmit()" in viewer_js_response.text
     assert "window.__hakariApplyTheme" in viewer_js_response.text
     assert "window.__hakariBindThemeToggle" in viewer_js_response.text
     assert "window.__hakariSyncThemeToggle" in viewer_js_response.text
@@ -2895,7 +2898,7 @@ def test_chart_state_is_preserved_in_display_and_filter_controls() -> None:
     assert "chart_x=total_parameters" in html
 
 
-def test_variant_controls_clear_facet_filters_but_keep_text_and_range_filters() -> None:
+def test_variant_controls_preserve_filter_results_state() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -2941,10 +2944,11 @@ def test_variant_controls_clear_facet_filters_but_keep_text_and_range_filters() 
 
     assert 'name="model_filter" value="jina"' in variant_form
     assert 'name="active_params_max" value="2000"' in variant_form
-    assert 'name="dim_filter"' not in variant_form
-    assert 'name="quant_filter"' not in variant_form
-    assert 'name="model_type_filter"' not in variant_form
-    assert 'name="dtype_filter"' not in variant_form
+    assert 'name="filters" value="1"' in variant_form
+    assert 'name="dim_filter" value="768"' in variant_form
+    assert 'name="quant_filter" value="__none__"' in variant_form
+    assert 'name="model_type_filter" value="dense"' in variant_form
+    assert 'name="dtype_filter" value="bf16"' in variant_form
     assert 'name="dim_filter" value="768"' in column_form
     assert 'name="quant_filter" value="__none__"' in column_form
 
@@ -4187,8 +4191,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="variant-controls"' in response.text
     assert 'id="filter-controls"' in response.text
     assert 'id="facet-filters"' not in response.text
-    assert 'from:input[type=' not in response.text
-    assert 'hx-trigger="change, submit, input changed delay:300ms from:.dim-bound-input"' in response.text
+    assert "input changed delay:300ms from:.dim-bound-input" not in response.text
+    assert "hx-trigger=\"change from:input[type='checkbox'], submit\"" in response.text
     assert 'hx-include="#display-controls"' not in response.text
     assert 'data-icon="list-filter"' not in response.text
     assert ">Dims</span>" in response.text

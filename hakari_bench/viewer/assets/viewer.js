@@ -445,6 +445,16 @@
       window.__hakariRestoreTaskFilterFocus = activeId === "task-filter-input";
     });
 
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" || event.isComposing) return;
+      const input = closestElement(event.target, "#filter-controls input[type='search'], #filter-controls input[type='number']");
+      if (!input) return;
+      const form = input.closest("form");
+      if (!form) return;
+      event.preventDefault();
+      form.requestSubmit();
+    });
+
     document.addEventListener("htmx:afterSwap", (event) => {
       if (
         !event.target ||
