@@ -4251,6 +4251,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Dims" in response.text
     assert "Quantization" in response.text
     assert "dim-bounds-filter" in response.text
+    assert "dim-bounds-filter range-filter-control inline-flex min-w-0 items-center gap-1.5 p-1" not in response.text
+    assert "filter-detail-body range-filter-control inline-flex min-h-[1.875rem]" in response.text
     assert 'id="dim-filter-range-hidden" class="hidden" data-dim-range-hidden' in response.text
     assert 'class="dim-bound-input viewer-text-input' in response.text
     assert 'data-dim-bound-input="min"' in response.text

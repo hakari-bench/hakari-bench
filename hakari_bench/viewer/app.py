@@ -4664,7 +4664,7 @@ def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
     active_class = "text-cyan-700" if min_value or max_value else ""
     return f"""
       <div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter" data-filter-icon="ruler">
-        <div class="filter-detail-body dim-bounds-filter range-filter-control inline-flex min-w-0 items-center gap-1.5 p-1">
+        <div class="filter-detail-body dim-bounds-filter range-filter-control inline-flex min-w-0 items-center gap-1.5">
           <div id="dim-filter-range-hidden" class="hidden" data-dim-range-hidden>{hidden_inputs}</div>
           <span class="inline-flex items-center gap-1 whitespace-nowrap">
             {_control_label(icon="ruler", text="Dims", extra_class=active_class)}
@@ -4708,7 +4708,7 @@ def _render_quant_filter_checkboxes(*, options: list[tuple[str, str]], selected_
         )
     return f"""
       <div class="filter-detail bg-zinc-50" data-filter-detail="quant_filter" data-filter-icon="binary">
-        <div class="filter-detail-body inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 p-1">
+        <div class="filter-detail-body range-filter-control inline-flex min-h-[1.875rem] min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
           <span class="inline-flex items-center gap-1 whitespace-nowrap">
             {_control_label(icon="binary", text="Quantization")}
             {_render_help_tooltip(
