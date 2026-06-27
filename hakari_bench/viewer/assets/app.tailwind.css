@@ -1132,6 +1132,10 @@
   color: var(--hakari-accent);
 }
 
+.page-footer-initial-loading {
+  border-top-color: transparent;
+}
+
 .doc-list {
   border: 1px solid var(--hakari-border);
   border-radius: var(--hakari-radius-lg);

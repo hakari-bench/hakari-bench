@@ -915,7 +915,8 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "Loading leaderboard..." in response.text
     assert 'id="hakari-global-tooltip"' in response.text
     assert 'role="tooltip"' in response.text
-    assert 'hx-indicator="#leaderboard-loading-toast"' in response.text
+    initial_panel_html = response.text.split('id="leaderboard-panel"', 1)[1].split("</section>", 1)[0]
+    assert 'hx-indicator="#leaderboard-loading-toast"' not in initial_panel_html
     assert 'hx-sync="#leaderboard-panel:replace"' in response.text
     assert "https://cdn.tailwindcss.com" not in response.text
     assert "https://unpkg.com/htmx.org" not in response.text
@@ -923,7 +924,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "<footer" in response.text
     assert (
         '<footer id="hakari-page-footer" '
-        'class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">'
+        'class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6 page-footer-initial-loading">'
     ) in response.text
     footer_html = response.text.split("<footer", 1)[1]
     assert "HAKARI-Bench leaderboard" not in footer_html
@@ -1028,6 +1029,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
     assert "background-color:color-mix(in srgb,var(--hakari-surface) 90%,transparent)" in css_response.text
     assert "padding:.75rem 1rem" in css_response.text
+    assert ".page-footer-initial-loading" in css_response.text
+    assert "border-top-color:transparent" in css_response.text
     assert ".loading-spinner" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
     assert "--hakari-radius-lg:8px" in css_response.text
@@ -4247,6 +4250,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-hidden="true"' in response.text
     assert "Dims" in response.text
     assert "Quantization" in response.text
+    assert "dim-bounds-filter" in response.text
+    assert 'id="dim-filter-range-hidden" class="hidden" data-dim-range-hidden' in response.text
     assert 'class="dim-bound-input viewer-text-input' in response.text
     assert 'data-dim-bound-input="min"' in response.text
     assert 'data-dim-bound-input="max"' in response.text
@@ -4254,22 +4259,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'placeholder="max"' in response.text
     assert "Min dim</span>" not in response.text
     assert "Max dim</span>" not in response.text
-    dim_datalist_match = re.search(r'<datalist id="dim-filter-bound-marks">(.*?)</datalist>', response.text)
-    assert dim_datalist_match is not None
-    assert dim_datalist_match.group(1).startswith('<option value="" label="none"></option>')
-    assert re.findall(r'<option value="([^"]+)"></option>', dim_datalist_match.group(1)) == [
-        "32",
-        "64",
-        "128",
-        "256",
-        "384",
-        "512",
-        "768",
-        "1024",
-        "1536",
-        "2048",
-        "2560",
-    ]
+    assert "dim-filter-bound-marks" not in response.text
+    assert "<datalist" not in response.text
+    assert 'list="dim-filter-bound-marks"' not in response.text
     assert "delay:700ms" not in response.text
     assert "<script>" not in response.text
     assert "htmx:afterSwap" not in response.text

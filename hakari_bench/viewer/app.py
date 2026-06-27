@@ -31,7 +31,6 @@ from hakari_bench.viewer.config import (
 )
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
-    DIM_FILTER_BOUND_SUGGESTIONS,
     DIM_FILTER_MIN_RANGE_PREFIX,
     DIM_FILTER_RANGE_PREFIX,
     FILTER_NONE_VALUE,
@@ -743,7 +742,7 @@ def render_page(
     htmx_url = _asset_url("htmx.min.js")
     viewer_js_url = _asset_url("viewer.js")
     latest_update = _latest_update_label(summary.latest_finished_at_utc if summary else None)
-    footer = _render_page_footer(latest_update=latest_update, database_label=database_label)
+    footer = _render_page_footer(latest_update=latest_update, database_label=database_label, initial_loading=True)
     header_actions = _render_header_actions()
     return f"""<!doctype html>
 <html lang="ja">
@@ -776,7 +775,7 @@ def render_page(
       id="leaderboard-panel"
       hx-get="{_leaderboard_url(query)}"
       hx-trigger="load"
-      {_leaderboard_request_hx_attrs()}
+      {_initial_leaderboard_request_hx_attrs()}
     >
       <div class="leaderboard-initial-loading border border-zinc-200 bg-white text-sm font-medium text-zinc-700" role="status" aria-live="polite" aria-atomic="true">
         <span class="loading-spinner" aria-hidden="true"></span>
@@ -803,6 +802,10 @@ def _asset_version(filename: str) -> str:
 
 def _leaderboard_request_hx_attrs() -> str:
     return 'hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-indicator="#leaderboard-loading-toast" hx-sync="#leaderboard-panel:replace"'
+
+
+def _initial_leaderboard_request_hx_attrs() -> str:
+    return 'hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-sync="#leaderboard-panel:replace"'
 
 
 def _leaderboard_control_hx_attrs() -> str:
@@ -948,7 +951,9 @@ def _docs_page_chrome() -> DocsPageChrome:
     )
 
 
-def _render_page_footer(*, latest_update: str, database_label: str, swap_oob: bool = False) -> str:
+def _render_page_footer(
+    *, latest_update: str, database_label: str, swap_oob: bool = False, initial_loading: bool = False
+) -> str:
     meta_items = []
     if latest_update:
         meta_items.append(
@@ -965,7 +970,8 @@ def _render_page_footer(*, latest_update: str, database_label: str, swap_oob: bo
         {meta}
       </div>"""
     oob_attr = ' hx-swap-oob="outerHTML"' if swap_oob else ""
-    return f"""<footer id="hakari-page-footer" class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6"{oob_attr}>
+    initial_class = " page-footer-initial-loading" if initial_loading else ""
+    return f"""<footer id="hakari-page-footer" class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6{initial_class}"{oob_attr}>
     <div class="flex min-w-0 justify-end">
       {meta}
     </div>
@@ -4650,11 +4656,7 @@ def _render_filter_details(
 
 def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
     min_value, max_value = _dim_filter_bound_input_values(selected_filters)
-    datalist_id = "dim-filter-bound-marks"
     hidden_inputs = _dim_filter_hidden_inputs(selected_filters)
-    datalist_options = """<option value="" label="none"></option>""" + "".join(
-        f"""<option value="{value}"></option>""" for value in DIM_FILTER_BOUND_SUGGESTIONS
-    )
     input_class = (
         "dim-bound-input viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] "
         "text-zinc-900 outline-none focus:border-cyan-700"
@@ -4662,8 +4664,8 @@ def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
     active_class = "text-cyan-700" if min_value or max_value else ""
     return f"""
       <div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter" data-filter-icon="ruler">
-        <div class="filter-detail-body range-filter-control inline-flex min-w-0 items-center gap-1.5 p-1">
-          <div id="dim-filter-range-hidden" data-dim-range-hidden>{hidden_inputs}</div>
+        <div class="filter-detail-body dim-bounds-filter range-filter-control inline-flex min-w-0 items-center gap-1.5 p-1">
+          <div id="dim-filter-range-hidden" class="hidden" data-dim-range-hidden>{hidden_inputs}</div>
           <span class="inline-flex items-center gap-1 whitespace-nowrap">
             {_control_label(icon="ruler", text="Dims", extra_class=active_class)}
             {_render_help_tooltip(
@@ -4675,16 +4677,15 @@ def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
           <span class="inline-flex items-center gap-1 whitespace-nowrap">
             <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="min"
                    aria-label="Minimum embedding dimensions"
-                   list="{datalist_id}" class="{input_class}"
+                   class="{input_class}"
                    data-dim-bound-input="min"
                    data-dim-bound-hidden-target="dim-filter-range-hidden">
             <span class="text-xs text-zinc-500">-</span>
             <input type="number" min="0" step="1" value="{escape(max_value)}" placeholder="max"
                    aria-label="Maximum embedding dimensions"
-                   list="{datalist_id}" class="{input_class}"
+                   class="{input_class}"
                    data-dim-bound-input="max"
                    data-dim-bound-hidden-target="dim-filter-range-hidden">
-            <datalist id="{datalist_id}">{datalist_options}</datalist>
           </span>
         </div>
       </div>

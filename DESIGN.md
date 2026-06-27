@@ -111,11 +111,9 @@ components:
       Model, Dims, Active params (M), and Query length; right lane Task,
       Quantization, Total params (M), and Document length.
       Dims uses explicit min/max numeric bounds in the form `Dims [min] - [max]`;
-      an empty maximum means no upper bound, and the input suggestion list
-      starts with none as an empty-value option before the fixed 32, 64, 128,
-      256, 384, 512, 768, 1024, 1536, 2048, and 2560 suggestions rather than
-      changing with the visible rows. Quantization uses checkboxes with Original,
-      int8, binary, and any additional recorded formats selected by default.
+      an empty maximum means no upper bound, and Dims inputs do not use browser
+      datalist suggestions. Quantization uses checkboxes with Original, int8,
+      binary, and any additional recorded formats selected by default.
       Params and Length do not use parent group labels; expose Active params (M),
       Total params (M), Query length, and Document length as separate inline
       range controls with their own icon and help trigger so the different axes
@@ -214,7 +212,9 @@ components:
     treatment: Numeric alignment and compact heat color; rank decoration is minimal.
   footer:
     purpose: Metadata such as latest update and database source.
-    treatment: Small, low-margin, no redundant product title.
+    treatment: Small, low-margin, no redundant product title. During the first
+      leaderboard load, keep the footer top border hidden so the centered loading
+      state remains visually quiet; the loaded footer may use the normal divider.
 ---
 
 # HAKARI-Bench Viewer Design
