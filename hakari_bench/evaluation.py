@@ -102,6 +102,7 @@ def load_ir_dataset(
     candidate_subset_name: str | None = None,
     revision: str | None = None,
     restrict_corpus_to_candidates: bool = False,
+    candidate_top_k: int | None = None,
 ) -> LoadedIrDataset:
     from datasets import load_dataset
 
@@ -109,6 +110,7 @@ def load_ir_dataset(
     queries_dataset = load_dataset(task.dataset_id, task.dataset.queries_config, split=task.split_name, **load_kwargs)
     qrels_dataset = load_dataset(task.dataset_id, task.dataset.qrels_config, split=task.split_name, **load_kwargs)
     candidates = _load_candidates(task, candidate_subset_name=candidate_subset_name, revision=revision)
+    candidates = _limit_candidates(candidates, candidate_top_k)
 
     candidate_corpus_ids: set[str] | None = None
     if restrict_corpus_to_candidates and candidates is not None:
@@ -139,6 +141,17 @@ def load_ir_dataset(
         candidates=candidates,
         evaluator_name=task.evaluator_name,
     )
+
+
+def _limit_candidates(
+    candidates: dict[str, list[str]] | None,
+    candidate_top_k: int | None,
+) -> dict[str, list[str]] | None:
+    if candidates is None or candidate_top_k is None:
+        return candidates
+    if candidate_top_k <= 0:
+        raise ValueError("candidate_top_k must be positive.")
+    return {query_id: corpus_ids[:candidate_top_k] for query_id, corpus_ids in candidates.items()}
 
 
 def _load_candidates(
