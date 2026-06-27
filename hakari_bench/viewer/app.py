@@ -31,8 +31,8 @@ from hakari_bench.viewer.config import (
 )
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
+    DIM_FILTER_BOUND_SUGGESTIONS,
     DIM_FILTER_MIN_RANGE_PREFIX,
-    DIM_FILTER_POINT_VALUES,
     DIM_FILTER_RANGE_PREFIX,
     FILTER_NONE_VALUE,
     FilterContext,
@@ -3618,7 +3618,7 @@ def render_controls(
         prompt_none_query,
     ):
         _apply_plot_state(query_payload, plot_state)
-    refine_results_open = True
+    refine_results_open = _filter_results_panel_should_open(filter_state)
     refine_results_open_attr = " open" if refine_results_open else ""
     return f"""
     <div class="grid gap-2 text-[0.8125rem] text-zinc-700">
@@ -3719,6 +3719,17 @@ def render_controls(
       </details>
     </div>
     """
+
+
+def _filter_results_panel_should_open(filter_state: FilterState) -> bool:
+    return bool(
+        filter_state.filters_active
+        or filter_state.model_filter
+        or filter_state.task_filter
+        or filter_state.rank_filtered
+        or filter_state.has_parameter_filters
+        or filter_state.has_task_length_filters
+    )
 
 
 def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
@@ -4568,7 +4579,9 @@ def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
     min_value, max_value = _dim_filter_bound_input_values(selected_filters)
     datalist_id = "dim-filter-bound-marks"
     hidden_inputs = _dim_filter_hidden_inputs(selected_filters)
-    datalist_options = "".join(f"""<option value="{value}"></option>""" for value in DIM_FILTER_POINT_VALUES)
+    datalist_options = """<option value="" label="none"></option>""" + "".join(
+        f"""<option value="{value}"></option>""" for value in DIM_FILTER_BOUND_SUGGESTIONS
+    )
     input_class = (
         "dim-bound-input viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] "
         "text-zinc-900 outline-none focus:border-cyan-700"

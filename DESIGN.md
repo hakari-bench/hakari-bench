@@ -102,13 +102,16 @@ components:
       appear in the commercial bucket. License filters show the bucket
       checkboxes directly, matching Model family rather than adding a redundant
       subheading or hiding them inside a secondary disclosure. Filter results is
-      expanded by default because it is a primary refinement surface, and
+      closed on the unfiltered initial view and opens automatically when a text,
+      facet, parameter, length, or rank-recalculation filter is active.
       Efficiency filters expose expanded Dims and Quantization controls directly
-      without nested disclosure widgets.
+      without nested disclosure widgets whenever Filter results is open.
       Dims uses min/max numeric bounds in the form `input <= dims <= input`;
-      an empty maximum means over/no upper bound. Quantization uses checkboxes
-      with Original, int8, binary, and any additional recorded formats selected
-      by default.
+      an empty maximum means over/no upper bound, and the input suggestion list
+      starts with none as an empty-value option before the fixed 32, 64, 128,
+      256, 384, 512, 768, 1024, 1536, 2048, and 2560 suggestions rather than
+      changing with the visible rows. Quantization uses checkboxes with Original,
+      int8, binary, and any additional recorded formats selected by default.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.

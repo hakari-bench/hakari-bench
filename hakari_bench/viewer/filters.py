@@ -11,7 +11,8 @@ from hakari_bench.viewer.text_match import active_filter_terms, text_matches_fil
 FILTER_NONE_VALUE = "__none_selected__"
 DIM_FILTER_RANGE_PREFIX = "lte:"
 DIM_FILTER_MIN_RANGE_PREFIX = "gte:"
-DIM_FILTER_POINT_VALUES = (32, 64, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560)
+DIM_FILTER_BOUND_SUGGESTIONS = (32, 64, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560)
+DIM_FILTER_POINT_VALUES = DIM_FILTER_BOUND_SUGGESTIONS
 FilterOption = tuple[str, str]
 
 

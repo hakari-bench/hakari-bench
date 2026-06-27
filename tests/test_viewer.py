@@ -4132,7 +4132,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     default_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert default_response.status_code == 200
-    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white" open>' in default_response.text
+    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white">' in default_response.text
+    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white" open>' not in default_response.text
     assert "Advanced filters" not in default_response.text
     assert 'id="facet-filters"' not in default_response.text
 
@@ -4245,6 +4246,22 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'placeholder="over"' in response.text
     assert "Min dim</span>" in response.text
     assert "Max dim</span>" in response.text
+    dim_datalist_match = re.search(r'<datalist id="dim-filter-bound-marks">(.*?)</datalist>', response.text)
+    assert dim_datalist_match is not None
+    assert dim_datalist_match.group(1).startswith('<option value="" label="none"></option>')
+    assert re.findall(r'<option value="([^"]+)"></option>', dim_datalist_match.group(1)) == [
+        "32",
+        "64",
+        "128",
+        "256",
+        "384",
+        "512",
+        "768",
+        "1024",
+        "1536",
+        "2048",
+        "2560",
+    ]
     assert "delay:700ms" not in response.text
     assert "<script>" not in response.text
     assert "htmx:afterSwap" not in response.text
