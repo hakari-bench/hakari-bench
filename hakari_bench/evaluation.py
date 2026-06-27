@@ -2387,6 +2387,8 @@ def _quantize_scalar_embeddings_torch(
     precision: QuantizationPrecision,
     ranges: torch.Tensor,
 ) -> torch.Tensor:
+    # Torch port of _quantize_scalar_embeddings; see that function's docstring
+    # for the sentence-transformers source and our zero-step/clip changes.
     starts = ranges[0, :]
     steps = (ranges[1, :] - ranges[0, :]) / 255
     steps = torch.where(steps == 0, torch.ones_like(steps), steps)
@@ -2424,6 +2426,23 @@ def _quantize_scalar_embeddings(
     precision: QuantizationPrecision,
     ranges: np.ndarray,
 ) -> np.ndarray:
+    """Per-dimension affine int8 scalar quantization.
+
+    The core formula (per-dimension ``starts``/``steps = (max - min) / 255`` and
+    the ``... / step - 128`` shift into signed int8) is adapted from
+    sentence-transformers' ``quantize_embeddings``:
+    https://github.com/huggingface/sentence-transformers/blob/6dc2cb57e5c680275e9e5fbf62bba0351f124385/sentence_transformers/util/quantization.py#L415-L435
+    (v5.4.1; huggingface/sentence-transformers, formerly UKPLab, Apache-2.0).
+
+    We re-implement it rather than calling the library, and add two deliberate
+    changes for strict, corpus-calibrated evaluation:
+      1. zero-step guard: ``np.where(steps == 0, 1, steps)`` avoids divide-by-zero
+         on constant dimensions (where max == min), which upstream does not handle.
+      2. clip-before-cast: ``np.clip(..., -128, 127)`` instead of upstream's bare
+         ``.astype(np.int8)``. Because queries are quantized with corpus-only
+         ranges, query outliers can fall outside [min, max]; a raw int8 cast would
+         wrap them, so we clamp into range first.
+    """
     starts = ranges[0, :]
     steps = (ranges[1, :] - ranges[0, :]) / 255
     steps = np.where(steps == 0, 1, steps)
