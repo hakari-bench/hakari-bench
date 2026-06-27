@@ -3642,12 +3642,16 @@ def render_controls(
               hx-trigger="change, submit, input changed delay:300ms from:.dim-bound-input">
           {filter_hidden_html}
         <div class="grid gap-2">
-          <div class="min-w-0 space-y-2">
+          <div class="min-w-0">
             {_render_model_type_controls(
                 options=model_type_options,
                 selected_values=selected_model_types,
             )}
-            <div class="flex flex-wrap items-center gap-3">
+          </div>
+          <div class="filter-panel min-w-0 bg-zinc-50 p-2">
+            <div class="filter-panel-body space-y-2">
+              <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <div class="flex min-w-64 flex-1 flex-col gap-2">
               <label class="flex min-w-64 flex-1 items-center gap-2">
                 <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model</span>
                 {_render_help_tooltip(
@@ -3659,6 +3663,11 @@ def render_controls(
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
+                  {_render_dim_filter_bounds(selected_filters=selected_dim_filters)}
+                  {_render_active_parameter_filter_input(filter_state)}
+                  {_render_query_length_filter_input(filter_state)}
+                </div>
+                <div class="flex min-w-64 flex-1 flex-col gap-2">
               <label class="flex min-w-64 flex-1 items-center gap-2">
                 <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task</span>
                 {_render_help_tooltip(
@@ -3670,19 +3679,10 @@ def render_controls(
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
-            </div>
-          </div>
-          <div class="filter-panel min-w-0 bg-zinc-50 p-2">
-            <div class="filter-panel-body space-y-2">
-              <div class="flex flex-wrap items-center gap-2">
-                {_render_dim_filter_bounds(selected_filters=selected_dim_filters)}
                 {_render_quant_filter_checkboxes(options=quant_options, selected_values=selected_quants)}
-              </div>
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-                {_render_parameter_filter_inputs(filter_state)}
-              </div>
-              <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-                {_render_task_length_filter_inputs(filter_state)}
+                  {_render_total_parameter_filter_input(filter_state)}
+                  {_render_document_length_filter_input(filter_state)}
+                </div>
               </div>
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="shield-check", text="License filters")}
@@ -3834,104 +3834,122 @@ def _render_commercial_filter_controls(
 
 
 def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
+    return _render_active_parameter_filter_input(filter_state) + _render_total_parameter_filter_input(filter_state)
+
+
+def _render_active_parameter_filter_input(filter_state: FilterState) -> str:
     input_class = (
         "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_params_class = "text-cyan-700" if filter_state.active_params_min or filter_state.active_params_max else ""
+    return _render_range_filter_control(
+        icon="cpu",
+        label="Active params (M)",
+        help_title="Active params",
+        help_summary="Filters model rows by active parameter count in millions.",
+        help_details=(
+            "Active params is the parameter count considered active for a model row, measured in millions. "
+            "For example, max 100 keeps rows with at most 100M active parameters.\n\n"
+            "Rows without active-parameter metadata are excluded when either bound is set. "
+            "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="active_params_min",
+        min_value=filter_state.active_params_min,
+        min_aria_label="Active params minimum in millions",
+        max_name="active_params_max",
+        max_value=filter_state.active_params_max,
+        max_aria_label="Active params maximum in millions",
+        input_class=input_class,
+        extra_class=active_params_class,
+    )
+
+
+def _render_total_parameter_filter_input(filter_state: FilterState) -> str:
+    input_class = (
+        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "focus:border-cyan-700"
+    )
     total_params_class = "text-cyan-700" if filter_state.total_params_min or filter_state.total_params_max else ""
-    return (
-        _render_range_filter_control(
-            icon="cpu",
-            label="Active params (M)",
-            help_title="Active params",
-            help_summary="Filters model rows by active parameter count in millions.",
-            help_details=(
-                "Active params is the parameter count considered active for a model row, measured in millions. "
-                "For example, max 100 keeps rows with at most 100M active parameters.\n\n"
-                "Rows without active-parameter metadata are excluded when either bound is set. "
-                "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
-            ),
-            min_name="active_params_min",
-            min_value=filter_state.active_params_min,
-            min_aria_label="Active params minimum in millions",
-            max_name="active_params_max",
-            max_value=filter_state.active_params_max,
-            max_aria_label="Active params maximum in millions",
-            input_class=input_class,
-            extra_class=active_params_class,
-        )
-        + _render_range_filter_control(
-            icon="cpu",
-            label="Total params (M)",
-            help_title="Total params",
-            help_summary="Filters model rows by total parameter count in millions.",
-            help_details=(
-                "Total params is the full model parameter count recorded for a model row, measured in millions. "
-                "It can differ from active params for architectures or serving setups where not all parameters are active.\n\n"
-                "Rows without total-parameter metadata are excluded when either bound is set. "
-                "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
-            ),
-            min_name="total_params_min",
-            min_value=filter_state.total_params_min,
-            min_aria_label="Total params minimum in millions",
-            max_name="total_params_max",
-            max_value=filter_state.total_params_max,
-            max_aria_label="Total params maximum in millions",
-            input_class=input_class,
-            extra_class=total_params_class,
-        )
+    return _render_range_filter_control(
+        icon="cpu",
+        label="Total params (M)",
+        help_title="Total params",
+        help_summary="Filters model rows by total parameter count in millions.",
+        help_details=(
+            "Total params is the full model parameter count recorded for a model row, measured in millions. "
+            "It can differ from active params for architectures or serving setups where not all parameters are active.\n\n"
+            "Rows without total-parameter metadata are excluded when either bound is set. "
+            "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="total_params_min",
+        min_value=filter_state.total_params_min,
+        min_aria_label="Total params minimum in millions",
+        max_name="total_params_max",
+        max_value=filter_state.total_params_max,
+        max_aria_label="Total params maximum in millions",
+        input_class=input_class,
+        extra_class=total_params_class,
     )
 
 
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
+    return _render_query_length_filter_input(filter_state) + _render_document_length_filter_input(filter_state)
+
+
+def _render_query_length_filter_input(filter_state: FilterState) -> str:
     input_class = (
         "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     query_length_class = "text-cyan-700" if filter_state.query_len_min or filter_state.query_len_max else ""
+    return _render_range_filter_control(
+        icon="ruler",
+        label="Query length",
+        help_title="Query length",
+        help_summary="Filters tasks by average query string length.",
+        help_details=(
+            "Query length bounds use task metadata measured in average characters per query. "
+            "For example, max 120 keeps tasks with relatively short queries.\n\n"
+            "Tasks without query-length metadata are excluded when either bound is set. "
+            "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="query_len_min",
+        min_value=filter_state.query_len_min,
+        min_aria_label="Query length minimum",
+        max_name="query_len_max",
+        max_value=filter_state.query_len_max,
+        max_aria_label="Query length maximum",
+        input_class=input_class,
+        extra_class=query_length_class,
+    )
+
+
+def _render_document_length_filter_input(filter_state: FilterState) -> str:
+    input_class = (
+        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "focus:border-cyan-700"
+    )
     document_length_class = "text-cyan-700" if filter_state.doc_len_min or filter_state.doc_len_max else ""
-    return (
-        _render_range_filter_control(
-            icon="ruler",
-            label="Query length",
-            help_title="Query length",
-            help_summary="Filters tasks by average query string length.",
-            help_details=(
-                "Query length bounds use task metadata measured in average characters per query. "
-                "For example, max 120 keeps tasks with relatively short queries.\n\n"
-                "Tasks without query-length metadata are excluded when either bound is set. "
-                "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
-            ),
-            min_name="query_len_min",
-            min_value=filter_state.query_len_min,
-            min_aria_label="Query length minimum",
-            max_name="query_len_max",
-            max_value=filter_state.query_len_max,
-            max_aria_label="Query length maximum",
-            input_class=input_class,
-            extra_class=query_length_class,
-        )
-        + _render_range_filter_control(
-            icon="ruler",
-            label="Document length",
-            help_title="Document length",
-            help_summary="Filters tasks by average document string length.",
-            help_details=(
-                "Document length bounds use task metadata measured in average characters per document. "
-                "For example, max 2000 keeps tasks whose documents are relatively short on average.\n\n"
-                "Tasks without document-length metadata are excluded when either bound is set. "
-                "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
-            ),
-            min_name="doc_len_min",
-            min_value=filter_state.doc_len_min,
-            min_aria_label="Document length minimum",
-            max_name="doc_len_max",
-            max_value=filter_state.doc_len_max,
-            max_aria_label="Document length maximum",
-            input_class=input_class,
-            extra_class=document_length_class,
-        )
+    return _render_range_filter_control(
+        icon="ruler",
+        label="Document length",
+        help_title="Document length",
+        help_summary="Filters tasks by average document string length.",
+        help_details=(
+            "Document length bounds use task metadata measured in average characters per document. "
+            "For example, max 2000 keeps tasks whose documents are relatively short on average.\n\n"
+            "Tasks without document-length metadata are excluded when either bound is set. "
+            "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="doc_len_min",
+        min_value=filter_state.doc_len_min,
+        min_aria_label="Document length minimum",
+        max_name="doc_len_max",
+        max_value=filter_state.doc_len_max,
+        max_aria_label="Document length maximum",
+        input_class=input_class,
+        extra_class=document_length_class,
     )
 
 

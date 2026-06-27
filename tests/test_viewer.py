@@ -4197,6 +4197,16 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="model-filter-input" type="search" name="model_filter" value="model/b"\n                       class="viewer-text-input' in response.text
     assert ">Model</span>" in response.text
     assert ">Model name</span>" not in response.text
+    assert (
+        response.text.index('id="model-filter-input"')
+        < response.text.index('data-filter-detail="dim_filter"')
+        < response.text.index('name="active_params_min"')
+        < response.text.index('name="query_len_min"')
+        < response.text.index('id="task-filter-input"')
+        < response.text.index('data-filter-detail="quant_filter"')
+        < response.text.index('name="total_params_min"')
+        < response.text.index('name="doc_len_min"')
+    )
     assert "Filters leaderboard rows by model name." in response.text
     assert "jina bge keeps rows whose model name contains jina or bge" in response.text
     assert "When Recalculate ranks from filters is enabled, it also changes the ranked model population" in response.text

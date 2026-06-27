@@ -107,6 +107,9 @@ components:
       Efficiency filters expose expanded Dims and Quantization controls directly
       without nested disclosure widgets whenever Filter results is open.
       Dims and Quantization sit on the same compact row as inline controls.
+      The main filter controls are arranged as two aligned flex lanes: left lane
+      Model, Dims, Active params (M), and Query length; right lane Task,
+      Quantization, Total params (M), and Document length.
       Dims uses explicit min/max numeric bounds in the form `Dims [min] - [max]`;
       an empty maximum means no upper bound, and the input suggestion list
       starts with none as an empty-value option before the fixed 32, 64, 128,
