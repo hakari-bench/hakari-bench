@@ -66,6 +66,24 @@ def test_api_leaderboard_csv_is_downloadable(tmp_path: Path) -> None:
     assert "model/a" in response.text
 
 
+def test_api_leaderboard_returns_filter_facets_and_total(tmp_path: Path) -> None:
+    client = _build_client(tmp_path)
+    payload = client.get("/api/leaderboard?view=Overall").json()
+    assert payload["total_row_count"] == 2
+    assert set(payload["filter_facets"]).issuperset(
+        {"dim", "quant", "commercial", "model_type", "dtype", "attn", "prompt"}
+    )
+    assert "model_type" in payload["filter_selected"]
+
+
+def test_api_leaderboard_model_text_filter_hides_rows(tmp_path: Path) -> None:
+    client = _build_client(tmp_path)
+    payload = client.get("/api/leaderboard?view=Overall&model_filter=model/a").json()
+    assert payload["total_row_count"] == 2
+    model_names = [row["model_name"] for row in payload["rows"]]
+    assert model_names == ["model/a"]
+
+
 def test_api_leaderboard_preserves_legacy_query_params(tmp_path: Path) -> None:
     client = _build_client(tmp_path)
     response = client.get("/api/leaderboard?view=BenchA&score=macro&metric=recall@10")

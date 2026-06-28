@@ -2,6 +2,7 @@ import { Database, Download, Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AppHeader } from './components/AppHeader';
 import { ConfigPanel } from './components/ConfigPanel';
+import { FilterPanel } from './components/FilterPanel';
 import { Footer } from './components/Footer';
 import { LeaderboardTable } from './components/LeaderboardTable';
 import {
@@ -69,7 +70,10 @@ function App() {
 
       <main>
         {config && result ? (
-          <ConfigPanel config={config} result={result} state={state} update={update} />
+          <div className="grid gap-1.5">
+            <ConfigPanel config={config} result={result} state={state} update={update} />
+            <FilterPanel result={result} state={state} update={update} />
+          </div>
         ) : null}
 
         <div className="flex items-center justify-between gap-2 py-2 text-[12px] text-muted-foreground">

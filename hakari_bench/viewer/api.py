@@ -15,6 +15,17 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from hakari_bench.viewer.config import CLEAR_SCOPE_NAME, ViewerConfig
+from hakari_bench.viewer.filters import (
+    FilterOption,
+    attn_filter_options,
+    commercial_filter_options,
+    dim_filter_options,
+    dtype_filter_options,
+    model_type_filter_options,
+    prompt_filter_options,
+    quant_filter_options,
+    row_filter_context,
+)
 from hakari_bench.viewer.results_builder import build_leaderboard_result
 from hakari_bench.viewer.state import QueryState, normalize_query_state
 from hakari_bench.viewer.store import LocalDuckDbStore
@@ -74,6 +85,10 @@ _STR_PARAMS = (
 
 def _as_bool(value: str | None) -> bool:
     return value is not None and value.strip().casefold() in _BOOL_TRUE
+
+
+def _facet_options(options: list[FilterOption]) -> list[dict[str, str]]:
+    return [{"value": value, "label": label} for value, label in options]
 
 
 def _query_state_from_request(request: Request, *, viewer_config: ViewerConfig) -> QueryState:
@@ -175,15 +190,43 @@ def create_api_router(
     def leaderboard(request: Request) -> JSONResponse:
         store.start_background_sync()
         state_query = _query_state_from_request(request, viewer_config=viewer_config)
-        result, sort, direction, _filter_state = build_leaderboard_result(
+        result, sort, direction, filter_state = build_leaderboard_result(
             duckdb_path=store.path,
             viewer_config=viewer_config,
             state_query=state_query,
         )
+        # Facet options come from the full scope rows so toggling never hides a
+        # bucket. Row visibility reuses the htmx render-time FilterContext so the
+        # dim/quant/license/model-type/dtype/attn/prompt/model-text filters match
+        # the legacy viewer exactly (these are applied at display time, not SQL).
+        all_rows = result.rows
+        context = row_filter_context(all_rows, filter_state)
+        visible_rows = [row for row in all_rows if context.is_visible(row)]
+
         payload = result.model_dump()
+        payload["rows"] = [row.model_dump() for row in visible_rows]
+        payload["total_row_count"] = len(all_rows)
         payload["effective_sort"] = sort
         payload["effective_direction"] = direction
         payload["query_state"] = state_query
+        payload["filter_facets"] = {
+            "dim": _facet_options(dim_filter_options(all_rows)),
+            "quant": _facet_options(quant_filter_options(all_rows)),
+            "commercial": _facet_options(commercial_filter_options(all_rows)),
+            "model_type": _facet_options(model_type_filter_options(all_rows)),
+            "dtype": _facet_options(dtype_filter_options(all_rows)),
+            "attn": _facet_options(attn_filter_options(all_rows)),
+            "prompt": _facet_options(prompt_filter_options(all_rows)),
+        }
+        payload["filter_selected"] = {
+            "dim": list(context.selected_dims),
+            "quant": context.ordered_selected_quants(),
+            "commercial": context.ordered_selected_commercial(),
+            "model_type": context.ordered_selected_model_types(),
+            "dtype": context.ordered_selected_dtypes(),
+            "attn": context.ordered_selected_attn(),
+            "prompt": context.ordered_selected_prompts(),
+        }
         return JSONResponse(payload)
 
     @router.get("/leaderboard.csv")

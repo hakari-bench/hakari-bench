@@ -65,6 +65,49 @@ export const sampleLeaderboard: LeaderboardResponse = {
   selected_benchmarks: [],
   effective_sort: 'borda_score',
   effective_direction: 'desc',
+  total_row_count: 5,
+  filter_facets: {
+    dim: [
+      { value: '768', label: '768 dims' },
+      { value: '1024', label: '1,024 dims' },
+      { value: '1025+', label: '1025~ dims' },
+    ],
+    quant: [
+      { value: '__none__', label: 'Original' },
+      { value: 'int8', label: 'int8' },
+      { value: 'binary', label: 'binary' },
+    ],
+    commercial: [
+      { value: 'commercial', label: 'Commercial' },
+      { value: 'non_commercial', label: 'Non-commercial' },
+    ],
+    model_type: [
+      { value: 'dense', label: 'Dense' },
+      { value: 'bm25', label: 'BM25' },
+      { value: 'sparse', label: 'Sparse' },
+    ],
+    dtype: [
+      { value: 'bf16', label: 'BF16' },
+      { value: 'fp32', label: 'FP32' },
+    ],
+    attn: [
+      { value: 'flash_attention_2', label: 'FA2' },
+      { value: 'sdpa', label: 'SDPA' },
+    ],
+    prompt: [
+      { value: 'explicit_prefixes', label: 'Explicit prefixes' },
+      { value: 'model_default', label: 'Model default' },
+    ],
+  },
+  filter_selected: {
+    dim: ['768', '1024', '1025+'],
+    quant: ['__none__', 'int8', 'binary'],
+    commercial: ['commercial', 'non_commercial'],
+    model_type: ['dense', 'bm25', 'sparse'],
+    dtype: ['bf16', 'fp32'],
+    attn: ['flash_attention_2', 'sdpa'],
+    prompt: ['explicit_prefixes', 'model_default'],
+  },
   rows: [
     row({ model_name: 'Qwen/Qwen3-Embedding-4B', borda_score: 93.51, macro_mean: 67.51, micro_mean: 64.77, active_parameters: 3633511936, total_parameters: 4021774336, max_seq_length: 32768, embedding_dim: 2560 }),
     row({ model_name: 'jinaai/jina-embeddings-v5-text-small', borda_score: 89.7, macro_mean: 64.6, micro_mean: 62.46, active_parameters: 521000000, total_parameters: 677000000, max_seq_length: 32768, embedding_dim: 1024 }),
