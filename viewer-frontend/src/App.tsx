@@ -1,6 +1,7 @@
-import { Database, Download, Search } from 'lucide-react';
+import { BarChart3, Database, Download, Search, Table2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AppHeader } from './components/AppHeader';
+import { Chart } from './components/Chart';
 import { ConfigPanel } from './components/ConfigPanel';
 import { FilterPanel } from './components/FilterPanel';
 import { Footer } from './components/Footer';
@@ -81,6 +82,24 @@ function App() {
 
         <div className="flex items-center justify-between gap-2 py-2 text-[12px] text-muted-foreground">
           <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5">
+              <button
+                type="button"
+                onClick={() => update({ resultView: 'table' })}
+                className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 ${state.resultView !== 'chart' ? 'bg-control-active text-accent' : 'text-muted-foreground hover:text-accent'}`}
+              >
+                <Table2 className="h-3.5 w-3.5" strokeWidth={1.75} />
+                Table
+              </button>
+              <button
+                type="button"
+                onClick={() => update({ resultView: 'chart' })}
+                className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 ${state.resultView === 'chart' ? 'bg-control-active text-accent' : 'text-muted-foreground hover:text-accent'}`}
+              >
+                <BarChart3 className="h-3.5 w-3.5" strokeWidth={1.75} />
+                Chart
+              </button>
+            </div>
             <span className="inline-flex items-center gap-1 text-foreground">
               <Database className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />
               {result?.view_label ?? state.view}
@@ -114,13 +133,17 @@ function App() {
 
         {result ? (
           <div className={loading ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
-            <LeaderboardTable
-              result={result}
-              sort={state.sort}
-              direction={state.direction}
-              onSort={onSort}
-              onSelectModel={setSelectedRow}
-            />
+            {state.resultView === 'chart' ? (
+              <Chart result={result} state={state} update={update} />
+            ) : (
+              <LeaderboardTable
+                result={result}
+                sort={state.sort}
+                direction={state.direction}
+                onSort={onSort}
+                onSelectModel={setSelectedRow}
+              />
+            )}
           </div>
         ) : (
           <div className="flex min-h-[400px] items-center justify-center text-[12px] text-faint-foreground">
