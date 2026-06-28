@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+
+/* Class-based dark mode: index.html toggles `.dark` on <html> before paint. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * HAKARI-Bench viewer design tokens. Source of truth: DESIGN.md.
+ * Light values on :root, dark overrides on .dark, both consumed through
+ * @theme inline so Tailwind utilities stay runtime-themeable.
+ */
+:root {
+  --background: #f7fdff;
+  --surface: #ffffff;
+  --surface-muted: #e0f1f5;
+  --surface-faint: #edf8fb;
+  --border: #a9ccd6;
+  --border-strong: #85bdcc;
+  --foreground: #243036;
+  --muted-foreground: #52626b;
+  --faint-foreground: #6f7f87;
+  --accent: #0077aa;
+  --accent-strong: #005f88;
+  --accent-soft: rgb(0 119 170 / 0.1);
+  --control: #e3f2f6;
+  --control-hover: #d5eaf0;
+  --control-active: #c3e0e9;
+  --warn: #fff6df;
+  --warn-foreground: #a96b00;
+  --danger: #ff5888;
+  --variant: #765aa8;
+}
+
+.dark {
+  --background: #202628;
+  --surface: #2b3133;
+  --surface-muted: #343d40;
+  --surface-faint: #252c2e;
+  --border: #435358;
+  --border-strong: #5b7880;
+  --foreground: #f1fbff;
+  --muted-foreground: #abb9bd;
+  --faint-foreground: #768589;
+  --accent: #00d0ff;
+  --accent-strong: #a8f0ff;
+  --accent-soft: rgb(0 208 255 / 0.11);
+  --control: #30383a;
+  --control-hover: #344044;
+  --control-active: #30454b;
+  --warn: rgb(239 208 106 / 0.11);
+  --warn-foreground: #efd06a;
+  --danger: #ff5888;
+  --variant: #b99cff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-faint: var(--surface-faint);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-faint-foreground: var(--faint-foreground);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-control: var(--control);
+  --color-control-hover: var(--control-hover);
+  --color-control-active: var(--control-active);
+  --color-warn: var(--warn);
+  --color-warn-foreground: var(--warn-foreground);
+  --color-danger: var(--danger);
+  --color-variant: var(--variant);
+
+  --font-mono:
+    'JetBrains Mono', 'Fira Code', 'SFMono-Regular', 'Cascadia Code', 'Roboto Mono',
+    'Noto Sans Mono', 'Yu Gothic UI', 'Meiryo', ui-monospace, monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tabular numerics for scores, ranks, params, dates. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
