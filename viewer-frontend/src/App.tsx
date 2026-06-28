@@ -1,6 +1,7 @@
 import { Database, Download, Search } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { AppHeader } from './components/AppHeader';
+import { ConfigPanel } from './components/ConfigPanel';
 import { Footer } from './components/Footer';
 import { LeaderboardTable } from './components/LeaderboardTable';
 import {
@@ -67,6 +68,10 @@ function App() {
       />
 
       <main>
+        {config && result ? (
+          <ConfigPanel config={config} result={result} state={state} update={update} />
+        ) : null}
+
         <div className="flex items-center justify-between gap-2 py-2 text-[12px] text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 text-foreground">

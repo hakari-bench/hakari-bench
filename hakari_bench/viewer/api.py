@@ -100,6 +100,35 @@ def _query_state_from_request(request: Request, *, viewer_config: ViewerConfig) 
     return normalize_query_state(**kwargs)
 
 
+def _scope_payload(viewer_config: ViewerConfig) -> dict[str, Any]:
+    """Benchmark scope buttons: presets plus ordered Nano suite toggles.
+
+    Mirrors the htmx render_tabs grouping/labels so the React controls match the
+    legacy viewer (e.g. NanoMMTEB-v2 -> "MMTEB-v2", MNanoBEIR -> two buttons).
+    """
+
+    from hakari_bench.viewer.app import _view_group_sort_key
+
+    presets = [
+        {"name": "Overall", "label": "Overall", "kind": "overall"},
+        {"name": "Overall (EN)", "label": "Overall (EN)", "kind": "overall"},
+        {"name": CLEAR_SCOPE_NAME, "label": CLEAR_SCOPE_NAME, "kind": "clear"},
+    ]
+    suites: list[dict[str, Any]] = []
+    for index, benchmark in enumerate(viewer_config.benchmarks):
+        base_sort = _view_group_sort_key(view_name=benchmark.name, fallback=index)
+        if benchmark.name == "MNanoBEIR":
+            suites.append({"label": "M-BEIR(task)", "selection_key": "MNanoBEIR:task_mean", "benchmark": "MNanoBEIR", "sort_key": base_sort * 10})
+            suites.append({"label": "M-BEIR(lang)", "selection_key": "MNanoBEIR:lang_mean", "benchmark": "MNanoBEIR", "sort_key": base_sort * 10 + 1})
+            continue
+        label = benchmark.display_label
+        if label.startswith("Nano"):
+            label = label.removeprefix("Nano")
+        suites.append({"label": label, "selection_key": benchmark.name, "benchmark": benchmark.name, "sort_key": base_sort * 10})
+    suites.sort(key=lambda item: item["sort_key"])
+    return {"presets": presets, "suites": suites}
+
+
 def _config_payload(*, store: LocalDuckDbStore, viewer_config: ViewerConfig) -> dict[str, Any]:
     from hakari_bench.viewer.app import _database_footer_label, _fetch_database_latest_update_label
 
@@ -109,6 +138,7 @@ def _config_payload(*, store: LocalDuckDbStore, viewer_config: ViewerConfig) -> 
             {"name": benchmark.name, "label": benchmark.display_label}
             for benchmark in viewer_config.benchmarks
         ],
+        "scope": _scope_payload(viewer_config),
         "clear_scope": CLEAR_SCOPE_NAME,
         "defaults": {
             "view": viewer_config.overall.name,
