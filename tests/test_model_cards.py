@@ -773,6 +773,7 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "KaLM-Embedding/KaLM-embedding-multilingual-mini-instruct-v2.5": 896,
         "Qwen/Qwen3-Embedding-0.6B": 1024,
         "Qwen/Qwen3-Embedding-4B": 2560,
+        "Qwen/Qwen3-Embedding-8B": 4096,
         "Snowflake/snowflake-arctic-embed-l-v2.0": 1024,
         "google/embeddinggemma-300m": 768,
         "hotchpotch/bekko-embedding-v1-a25m": 384,
