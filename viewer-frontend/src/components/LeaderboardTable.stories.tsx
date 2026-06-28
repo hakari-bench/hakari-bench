@@ -11,6 +11,26 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function LeaderboardTableDemo() {
+  const [sort, setSort] = useState('borda_score');
+  const [direction, setDirection] = useState<'asc' | 'desc'>('desc');
+  return (
+    <LeaderboardTable
+      result={sampleLeaderboard}
+      sort={sort}
+      direction={direction}
+      onSelectModel={() => {}}
+      onSort={(column) => {
+        if (column === sort) setDirection(direction === 'desc' ? 'asc' : 'desc');
+        else {
+          setSort(column);
+          setDirection(column === 'model_name' ? 'asc' : 'desc');
+        }
+      }}
+    />
+  );
+}
+
 export const Default: Story = {
   args: {
     result: sampleLeaderboard,
@@ -19,23 +39,5 @@ export const Default: Story = {
     onSort: () => {},
     onSelectModel: () => {},
   },
-  render: (args) => {
-    const [sort, setSort] = useState(args.sort);
-    const [direction, setDirection] = useState(args.direction);
-    return (
-      <LeaderboardTable
-        result={args.result}
-        sort={sort}
-        direction={direction}
-        onSelectModel={args.onSelectModel}
-        onSort={(column) => {
-          if (column === sort) setDirection(direction === 'desc' ? 'asc' : 'desc');
-          else {
-            setSort(column);
-            setDirection(column === 'model_name' ? 'asc' : 'desc');
-          }
-        }}
-      />
-    );
-  },
+  render: () => <LeaderboardTableDemo />,
 };

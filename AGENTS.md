@@ -148,6 +148,40 @@ under `config/datasets/`, and dataset collection definitions live under
 
 ## Leaderboard Viewer
 
+### Architecture
+
+- The viewer is a **FastAPI JSON API + compiled React static frontend**.
+  - Backend JSON API: `hakari_bench/viewer/api.py` (`/api/config`,
+    `/api/leaderboard`, `/api/leaderboard.csv`, `/api/sync-status`,
+    `/api/docs...`). It reuses `LeaderboardService` and returns the pydantic
+    `LeaderboardResult`. Row visibility (text/dim/quant/license/model-type/
+    dtype/attn/prompt) is applied with the render-time `FilterContext.is_visible`
+    so it matches the legacy viewer; facet options come from the full scope rows.
+  - Shared query→result mapping: `hakari_bench/viewer/results_builder.py`
+    (`build_leaderboard_result`). Keep the URL/query params in sync with
+    `viewer/state.py` and the frontend `viewer-frontend/src/lib/urlState.ts`.
+  - Frontend: `viewer-frontend/` — Bun + Vite + React 19 + TypeScript +
+    Tailwind v4 (+ Storybook, Vitest, Playwright). Design tokens live in
+    `viewer-frontend/src/index.css` (`@theme inline` + CSS variables); update
+    them with `@DESIGN.md`.
+  - Production serving: `hakari_bench/viewer/frontend.py` mounts the built SPA
+    (`viewer-frontend/dist`, `/static` base) and serves `index.html` for `/`
+    and `/docs`. `create_app(serve_frontend=True)` enables it; the CLI
+    `hakari-bench web` passes that. Tests use the default (`serve_frontend=False`),
+    which keeps the legacy htmx routes for their existing assertions.
+
+### Dev / build / test workflow (run inside `viewer-frontend/` with Bun)
+
+- Dev: `uv run hakari-bench web --duckdb-path <db>` for the API, and
+  `bun run dev` for the Vite HMR server (proxies `/api`; override the API target
+  with `VITE_API_TARGET`).
+- Build: `bun run build` (`tsc -b` typecheck + Vite build to `dist/`). Prod is
+  then served by `uv run hakari-bench web`.
+- Tests: `bun run test` (Vitest unit), `bun run test:stories` (headless
+  Storybook/Playwright), and backend `tests/test_viewer_api.py`.
+- Storybook: `bun run storybook` renders components on fixtures without FastAPI
+  (humans review the full UI here).
+
 - For leaderboard viewer design changes, read `@DESIGN.md` first and keep
   design-specific rules there.
 - When updating viewer UI design, check `@DESIGN.md` before editing and update
@@ -168,7 +202,8 @@ under `config/datasets/`, and dataset collection definitions live under
   `docs/duckdb_schema.md` in sync. Update it when DuckDB schema, viewer queries,
   leaderboard semantics, score grouping, variant handling, or required columns
   change.
-- The served stylesheet `hakari_bench/viewer/assets/app.css` is a compiled,
+- Legacy htmx only (the React frontend styles live in `viewer-frontend/`):
+  the served stylesheet `hakari_bench/viewer/assets/app.css` is a compiled,
   minified Tailwind output. Never hand-edit it. Edit the source
   `hakari_bench/viewer/assets/app.tailwind.css`, then rebuild and commit both:
 

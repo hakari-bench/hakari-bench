@@ -13,7 +13,10 @@ const dirname =
 // FastAPI JSON API target for the dev server. Override with VITE_API_TARGET.
 const apiTarget = process.env.VITE_API_TARGET ?? 'http://127.0.0.1:8000';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  // Production build is served by FastAPI under /static so its assets never
+  // collide with the legacy /assets mount. Dev keeps the root base.
+  base: command === 'build' ? '/static/' : '/',
   plugins: [react(), tailwindcss()],
   server: {
     proxy: {
@@ -55,4 +58,4 @@ export default defineConfig({
       },
     ],
   },
-});
+}));

@@ -12,20 +12,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function FilterPanelDemo({ initial }: { initial: ViewerState }) {
+  const [state, setState] = useState<ViewerState>(initial);
+  return (
+    <FilterPanel
+      result={sampleLeaderboard}
+      state={state}
+      update={(patch) => setState((prev) => ({ ...prev, ...patch }))}
+    />
+  );
+}
+
 export const Open: Story = {
   args: {
     result: sampleLeaderboard,
     state: { ...DEFAULT_STATE, filters: true },
     update: () => {},
   },
-  render: (args) => {
-    const [state, setState] = useState<ViewerState>(args.state);
-    return (
-      <FilterPanel
-        result={args.result}
-        state={state}
-        update={(patch) => setState((prev) => ({ ...prev, ...patch }))}
-      />
-    );
-  },
+  render: () => <FilterPanelDemo initial={{ ...DEFAULT_STATE, filters: true }} />,
 };

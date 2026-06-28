@@ -93,6 +93,44 @@ def test_api_leaderboard_preserves_legacy_query_params(tmp_path: Path) -> None:
     assert payload["score_aggregation"] == "macro"
 
 
+def test_serve_frontend_mounts_spa_over_html_routes(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192)],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8"
+    )
+    dist = tmp_path / "dist"
+    (dist / "assets").mkdir(parents=True)
+    (dist / "index.html").write_text("<!doctype html><title>React SPA</title>", encoding="utf-8")
+    (dist / "assets" / "app.js").write_text("export const x = 1;", encoding="utf-8")
+
+    app = create_app(
+        store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)),
+        config_dir=config_dir,
+        serve_frontend=True,
+        frontend_dist=dist,
+    )
+    client = TestClient(app)
+
+    root = client.get("/")
+    assert root.status_code == 200
+    assert "React SPA" in root.text
+    assert "unsafe-inline" in root.headers["content-security-policy"]
+    # SPA fallback for the docs route too.
+    assert "React SPA" in client.get("/docs/benchmark-tasks/anything").text
+    # Built assets are served under /static.
+    assert client.get("/static/assets/app.js").status_code == 200
+    # The JSON API still works alongside the SPA.
+    assert client.get("/api/config").status_code == 200
+
+
 def test_api_docs_index_and_group(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(

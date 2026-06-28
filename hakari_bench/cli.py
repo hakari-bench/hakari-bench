@@ -2181,7 +2181,7 @@ def run_web(args: argparse.Namespace) -> None:
         hf_dataset_revision=args.hf_dataset_revision,
     )
     store = LocalDuckDbStore(location)
-    app = create_app(store=store, config_dir=Path(args.viewer_config_dir))
+    app = create_app(store=store, config_dir=Path(args.viewer_config_dir), serve_frontend=True)
     print(f"Serving HAKARI-Bench viewer on http://{args.host}:{args.port}")
     print(f"Local DuckDB: {location.local_path}")
     if location.source_path is not None:

@@ -219,6 +219,8 @@ def create_app(
     config_dir: Path = Path("config/viewer"),
     docs_dir: Path = Path("task_docs/docs"),
     docs_metadata_dir: Path | None = None,
+    frontend_dist: Path | None = None,
+    serve_frontend: bool = False,
 ):
     from fastapi import FastAPI, Query
     from fastapi.middleware.gzip import GZipMiddleware
@@ -249,6 +251,13 @@ def create_app(
     app.include_router(
         create_api_router(store=store, viewer_config=viewer_config, benchmark_docs=benchmark_docs)
     )
+
+    if serve_frontend:
+        from hakari_bench.viewer.frontend import mount_frontend, resolve_frontend_dist
+
+        resolved_frontend = resolve_frontend_dist(frontend_dist)
+        if resolved_frontend is not None:
+            mount_frontend(app, resolved_frontend, frame_ancestors=_frame_ancestors())
 
     @app.middleware("http")
     async def security_headers(request, call_next):  # type: ignore[no-untyped-def]

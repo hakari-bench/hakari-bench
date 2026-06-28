@@ -234,6 +234,25 @@ who need to compare many models, tasks, languages, and efficiency variants at
 once. The design should make comparison faster, reduce ambiguity, and preserve
 trust in the numbers.
 
+## Implementation
+
+The viewer is built as a **FastAPI JSON API plus a compiled React static
+frontend** (`viewer-frontend/`: Bun + Vite + React 19 + TypeScript +
+Tailwind v4). The legacy htmx server-rendered viewer remains in `app.py` as a
+fallback but the React app is the product surface.
+
+- Design tokens in this file are the source of truth and are mirrored in
+  `viewer-frontend/src/index.css` via Tailwind v4 `@theme inline` + CSS
+  variables, with class-based dark mode applied before first paint. When tokens,
+  layout rules, or component behavior change here, update that file (and the
+  components) to match.
+- All UI state lives in the URL query params (mirrored to the hash and posted to
+  the Hugging Face Spaces parent), so any shareable URL fully restores the view.
+- Components are developed and reviewed in Storybook on fixtures, with no running
+  API required; keep stories current so the full UI can be checked offline.
+- Verify changes in the browser at 1280px in both themes (Vite dev server against
+  the API, or the production build served by `hakari-bench web`).
+
 ## Product Intent
 
 HAKARI-Bench compares retrieval and reranking systems across multilingual and

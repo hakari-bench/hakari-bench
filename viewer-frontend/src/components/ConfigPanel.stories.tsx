@@ -13,6 +13,18 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function ConfigPanelDemo({ initial }: { initial: ViewerState }) {
+  const [state, setState] = useState<ViewerState>(initial);
+  return (
+    <ConfigPanel
+      config={sampleConfig}
+      result={sampleLeaderboard}
+      state={state}
+      update={(patch) => setState((prev) => ({ ...prev, ...patch }))}
+    />
+  );
+}
+
 export const Default: Story = {
   args: {
     config: sampleConfig,
@@ -20,15 +32,5 @@ export const Default: Story = {
     state: DEFAULT_STATE,
     update: () => {},
   },
-  render: (args) => {
-    const [state, setState] = useState<ViewerState>(args.state);
-    return (
-      <ConfigPanel
-        config={args.config}
-        result={args.result}
-        state={state}
-        update={(patch) => setState((prev) => ({ ...prev, ...patch }))}
-      />
-    );
-  },
+  render: () => <ConfigPanelDemo initial={DEFAULT_STATE} />,
 };

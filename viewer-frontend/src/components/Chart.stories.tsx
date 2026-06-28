@@ -12,16 +12,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+function ChartDemo({ initial }: { initial: ViewerState }) {
+  const [state, setState] = useState<ViewerState>(initial);
+  return (
+    <Chart
+      result={sampleLeaderboard}
+      state={state}
+      update={(patch) => setState((prev) => ({ ...prev, ...patch }))}
+    />
+  );
+}
+
 export const Default: Story = {
   args: {
     result: sampleLeaderboard,
     state: { ...DEFAULT_STATE, resultView: 'chart' },
     update: () => {},
   },
-  render: (args) => {
-    const [state, setState] = useState<ViewerState>(args.state);
-    return (
-      <Chart result={args.result} state={state} update={(patch) => setState((prev) => ({ ...prev, ...patch }))} />
-    );
-  },
+  render: () => <ChartDemo initial={{ ...DEFAULT_STATE, resultView: 'chart' }} />,
 };
