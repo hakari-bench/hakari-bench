@@ -91,6 +91,24 @@ def _facet_options(options: list[FilterOption]) -> list[dict[str, str]]:
     return [{"value": value, "label": label} for value, label in options]
 
 
+def _docs_document_response(benchmark_docs, *, benchmark: str, task: str | None = None) -> JSONResponse:
+    from fastapi import HTTPException
+
+    from hakari_bench.viewer.docs import render_markdown_to_html
+
+    doc = benchmark_docs.route_doc(benchmark=benchmark, task=task) if benchmark_docs is not None else None
+    if doc is None:
+        raise HTTPException(status_code=404, detail="Benchmark documentation not found.")
+    return JSONResponse(
+        {
+            "title": doc.title,
+            "description": doc.description,
+            "url": doc.url,
+            "html": render_markdown_to_html(doc.markdown, base_url=doc.url),
+        }
+    )
+
+
 def _query_state_from_request(request: Request, *, viewer_config: ViewerConfig) -> QueryState:
     """Map raw request query params onto :func:`normalize_query_state` kwargs."""
 
@@ -179,8 +197,29 @@ def create_api_router(
     *,
     store: LocalDuckDbStore,
     viewer_config: ViewerConfig,
+    benchmark_docs=None,
 ) -> APIRouter:
     router = APIRouter(prefix="/api")
+
+    @router.get("/docs")
+    def docs_index() -> JSONResponse:
+        groups = benchmark_docs.group_docs() if benchmark_docs is not None else []
+        return JSONResponse(
+            {
+                "groups": [
+                    {"title": doc.title, "description": doc.description, "url": doc.url}
+                    for doc in groups
+                ]
+            }
+        )
+
+    @router.get("/docs/benchmark-tasks/{benchmark}")
+    def docs_group(benchmark: str) -> JSONResponse:
+        return _docs_document_response(benchmark_docs, benchmark=benchmark)
+
+    @router.get("/docs/benchmark-tasks/{benchmark}/{task}")
+    def docs_task(benchmark: str, task: str) -> JSONResponse:
+        return _docs_document_response(benchmark_docs, benchmark=benchmark, task=task)
 
     @router.get("/config")
     def config() -> JSONResponse:

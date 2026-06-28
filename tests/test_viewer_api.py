@@ -91,3 +91,37 @@ def test_api_leaderboard_preserves_legacy_query_params(tmp_path: Path) -> None:
     payload = response.json()
     assert payload["view_name"] == "BenchA"
     assert payload["score_aggregation"] == "macro"
+
+
+def test_api_docs_index_and_group(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192)],
+        dataset_metadata_rows=[("BenchA", "bench/a", "BenchA", "a1", "a1", "a1", "en", ["en"])],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8"
+    )
+    docs_dir = tmp_path / "docs"
+    (docs_dir / "BenchA").mkdir(parents=True)
+    (docs_dir / "BenchA" / "index.md").write_text("# BenchA\n\nOverview text.\n", encoding="utf-8")
+
+    app = create_app(
+        store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)),
+        config_dir=config_dir,
+        docs_dir=docs_dir,
+    )
+    client = TestClient(app)
+
+    index = client.get("/api/docs").json()
+    assert any(group["title"] == "BenchA" for group in index["groups"])
+
+    group = client.get("/api/docs/benchmark-tasks/BenchA").json()
+    assert group["title"] == "BenchA"
+    assert "Overview text." in group["html"]
+
+    assert client.get("/api/docs/benchmark-tasks/Missing").status_code == 404

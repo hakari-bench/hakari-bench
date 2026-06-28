@@ -246,7 +246,9 @@ def create_app(
 
     from hakari_bench.viewer.api import create_api_router
 
-    app.include_router(create_api_router(store=store, viewer_config=viewer_config))
+    app.include_router(
+        create_api_router(store=store, viewer_config=viewer_config, benchmark_docs=benchmark_docs)
+    )
 
     @app.middleware("http")
     async def security_headers(request, call_next):  # type: ignore[no-untyped-def]
