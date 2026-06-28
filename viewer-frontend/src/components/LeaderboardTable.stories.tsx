@@ -17,6 +17,7 @@ export const Default: Story = {
     sort: 'borda_score',
     direction: 'desc',
     onSort: () => {},
+    onSelectModel: () => {},
   },
   render: (args) => {
     const [sort, setSort] = useState(args.sort);
@@ -26,6 +27,7 @@ export const Default: Story = {
         result={args.result}
         sort={sort}
         direction={direction}
+        onSelectModel={args.onSelectModel}
         onSort={(column) => {
           if (column === sort) setDirection(direction === 'desc' ? 'asc' : 'desc');
           else {

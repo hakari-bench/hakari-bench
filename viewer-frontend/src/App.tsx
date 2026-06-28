@@ -5,11 +5,13 @@ import { ConfigPanel } from './components/ConfigPanel';
 import { FilterPanel } from './components/FilterPanel';
 import { Footer } from './components/Footer';
 import { LeaderboardTable } from './components/LeaderboardTable';
+import { ModelDetailsModal } from './components/ModelDetailsModal';
 import {
   fetchConfig,
   fetchLeaderboard,
   leaderboardCsvUrl,
   type LeaderboardResponse,
+  type LeaderboardRow,
   type ViewerConfigResponse,
 } from './lib/api';
 import { useViewerState } from './lib/urlState';
@@ -20,6 +22,7 @@ function App() {
   const [result, setResult] = useState<LeaderboardResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedRow, setSelectedRow] = useState<LeaderboardRow | null>(null);
   const requestId = useRef(0);
 
   useEffect(() => {
@@ -116,6 +119,7 @@ function App() {
               sort={state.sort}
               direction={state.direction}
               onSort={onSort}
+              onSelectModel={setSelectedRow}
             />
           </div>
         ) : (
@@ -129,6 +133,8 @@ function App() {
         latestUpdate={config?.footer.latest_update ?? ''}
         databaseLabel={config?.footer.database_label ?? ''}
       />
+
+      <ModelDetailsModal row={selectedRow} onClose={() => setSelectedRow(null)} />
     </div>
   );
 }
