@@ -91,6 +91,17 @@ def test_tei_backend_allows_prompt_and_truncate_dim_overrides() -> None:
     assert http.requests[1]["payload"] == {"model": "Qwen/Qwen3-Embedding-4B", "input": ["d"]}
 
 
+def test_tei_backend_allows_similarity_override() -> None:
+    model = TeiEmbeddingBackend(
+        endpoint="http://tei.test",
+        model="perplexity-ai/pplx-embed-v1-4B",
+        similarity_fn_name="cosine",
+    )
+
+    assert model.similarity_fn_name == "cosine"
+    assert model.metadata()["similarity_fn_name"] == "cosine"
+
+
 def test_load_model_requires_endpoint_and_dense_model_type() -> None:
     with pytest.raises(ValueError, match="endpoint"):
         load_model(ModelLoadConfig(model_name_or_path="Qwen/Qwen3-Embedding-4B", model_loader_kwargs={}))

@@ -1,0 +1,137 @@
+id: perplexity-ai/pplx-embed-v1-4B
+source:
+  type: huggingface
+  name: perplexity-ai/pplx-embed-v1-4B
+  revision: 06456497a00540a582918fe8dcd3a5eabb207772
+method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/perplexity-ai/pplx-embed-v1-4B
+links:
+  huggingface: https://huggingface.co/perplexity-ai/pplx-embed-v1-4B
+  papers:
+  - title: Diffusion-Pretrained Dense and Contextual Embeddings
+    url: https://arxiv.org/abs/2602.11151
+parameters:
+  total: 4022468096
+  trainable: 4022468096
+  input_embedding: 388956160
+  active: 3633511936
+embedding:
+  output_dimension: 2560
+  mrl_support: true
+  pooling: mean
+  normalize: false
+  include_prompt: false
+  quantization:
+  - int8
+  - binary
+  truncate_dims:
+  - 32
+  - 64
+  - 128
+  - 256
+  - 512
+  - 768
+  - 1024
+  - 1536
+  - 2048
+runtime:
+  max_seq_length: 32768
+  dtype: float32
+  trust_remote_code: true
+  remote_code_approved: true
+  attn_implementation: sdpa
+  backend_library: text-embeddings-inference
+  backend_version: 1.9.3
+  backend_image: ghcr.io/huggingface/text-embeddings-inference:120-1.9
+  max_batch_tokens: 8192
+  similarity_fn_name: cosine
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    official_language_tag: multilingual
+    evaluated_language_count: 1
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoVNMTEB
+notice: The model supports 32K context, but this evaluation used 8K inference
+  because of TEI memory constraints. As a result, long-token tasks that require
+  32K context may not reflect the model's full intended performance.
+notes:
+- The Hugging Face model card documents 2560-dimensional embeddings, 32K
+  context, Matryoshka support, INT8/BINARY quantization support, no required
+  instruction prompt, and mean pooling.
+- The absence of a prompts section is intentional. The model README marks
+  Instruction as "No" and says users can embed text directly without choosing
+  or maintaining an instruction prefix. When using the example TEI custom
+  backend, disable its Qwen3 default prompt names for this model.
+- >-
+  No official truncation-dimension list is published beyond MRL support and the
+  2560-dimensional output. HAKARI evaluates the same sub-full prefix dimensions
+  used for other 2560-dimensional MRL embeddings: 2048, 1536, 1024, 768, 512,
+  256, 128, 64, and 32.
+- TEI v1.9.2+ is required for this model family. On the tested Blackwell
+  system, TEI's Pplx1 backend accepted only float32 precision; float16 startup
+  failed with "Pplx1 is only supported in fp32 precision."
+- TEI 32K warmup failed with CUDA out-of-memory on the tested 96 GiB Blackwell
+  GPUs. The reviewed Docker deployment therefore used
+  --max-batch-tokens 8192.

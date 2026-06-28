@@ -786,6 +786,7 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "nomic-ai/nomic-embed-text-v2-moe": 768,
         "openai/text-embedding-3-large": 3072,
         "openai/text-embedding-3-small": 1536,
+        "perplexity-ai/pplx-embed-v1-4B": 2560,
         "sentence-transformers/static-similarity-mrl-multilingual-v1": 1024,
         "voyageai/voyage-4-nano": 2048,
     }
@@ -810,6 +811,23 @@ def test_openai_static_model_cards_include_evaluation_notice() -> None:
 
     assert cards["openai/text-embedding-3-small"]["notice"] == notice
     assert cards["openai/text-embedding-3-large"]["notice"] == notice
+
+
+def test_static_pplx_embed_v1_4b_card_records_tei_8k_notice() -> None:
+    card = model_cards.load_model_cards(Path("config/model_cards"))["perplexity-ai/pplx-embed-v1-4B"]
+
+    assert card["runtime"]["max_seq_length"] == 32768
+    assert card["runtime"]["max_batch_tokens"] == 8192
+    assert card["runtime"]["dtype"] == "float32"
+    assert card["runtime"]["backend_library"] == "text-embeddings-inference"
+    assert card["embedding"]["output_dimension"] == 2560
+    assert card["embedding"]["mrl_support"] is True
+    assert card["embedding"]["pooling"] == "mean"
+    assert card["embedding"]["normalize"] is False
+    assert card["embedding"]["include_prompt"] is False
+    assert "prompts" not in card
+    assert "32K context" in card["notice"]
+    assert "8K inference" in card["notice"]
 
 
 def _write_result(

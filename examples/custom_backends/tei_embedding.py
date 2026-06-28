@@ -43,13 +43,17 @@ class TeiEmbeddingBackend:
         timeout: float = 120.0,
         api_key: str | None = None,
         http: _HttpClient | None = None,
+        similarity_fn_name: str = "dot",
     ) -> None:
         if not endpoint:
             raise ValueError("TEI endpoint is required.")
         if not model:
             raise ValueError("TEI model is required.")
+        if not similarity_fn_name:
+            raise ValueError("similarity_fn_name is required.")
         self.endpoint = endpoint.rstrip("/")
         self.model = model
+        self.similarity_fn_name = similarity_fn_name
         self.prompts = dict(prompts or DEFAULT_QWEN3_PROMPTS)
         self.query_prompt = query_prompt
         self.document_prompt = document_prompt
@@ -116,6 +120,7 @@ class TeiEmbeddingBackend:
             "prompts": self.prompts,
             "query_prompt_name": self.query_prompt_name,
             "document_prompt_name": self.document_prompt_name,
+            "similarity_fn_name": self.similarity_fn_name,
             "timeout": self.timeout,
         }
 
