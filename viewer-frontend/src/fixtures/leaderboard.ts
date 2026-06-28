@@ -84,6 +84,9 @@ export const sampleLeaderboard: LeaderboardResponse = {
   selected_benchmarks: [],
   effective_sort: 'borda_score',
   effective_direction: 'desc',
+  metric_columns_meta: {},
+  task_breakdown_docs: {},
+  all_rows: [],
   total_row_count: 5,
   filter_facets: {
     dim: [
@@ -135,3 +138,5 @@ export const sampleLeaderboard: LeaderboardResponse = {
     row({ model_name: 'bm25', borda_score: 43.9, macro_mean: 50.12, micro_mean: 47.74, active_parameters: 0, total_parameters: 0, max_seq_length: null, embedding_dim: null, model_type: 'bm25' }),
   ],
 };
+
+sampleLeaderboard.all_rows = sampleLeaderboard.rows;

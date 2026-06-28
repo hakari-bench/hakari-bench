@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppHeader } from './components/AppHeader';
 import { DocsPage } from './components/DocsPage';
 import { Footer } from './components/Footer';
+import { ViewerModalsProvider } from './components/ViewerModals';
 import { fetchConfig, type ViewerConfigResponse } from './lib/api';
 
 /** Standalone docs shell: shares the leaderboard chrome (header, theme, footer). */
@@ -24,7 +25,9 @@ export function DocsApp() {
         githubUrl={config?.links.github ?? 'https://github.com/hakari-bench/hakari-bench'}
         docsUrl={config?.links.docs ?? '/docs/'}
       />
-      <DocsPage path={window.location.pathname} />
+      <ViewerModalsProvider result={null}>
+        <DocsPage path={window.location.pathname} />
+      </ViewerModalsProvider>
       <Footer
         latestUpdate={config?.footer.latest_update ?? ''}
         databaseLabel={config?.footer.database_label ?? ''}

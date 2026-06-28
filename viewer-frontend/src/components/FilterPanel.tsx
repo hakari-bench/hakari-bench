@@ -4,6 +4,7 @@ import type { FilterFacetKey, LeaderboardResponse } from '../lib/api';
 import { cn } from '../lib/cn';
 import type { ViewerState } from '../lib/urlState';
 import { ToggleChip } from '../ui/controls';
+import { HelpIcon } from './ViewerModals';
 
 interface FilterPanelProps {
   result: LeaderboardResponse;
@@ -94,8 +95,13 @@ function TextInput({
   );
 }
 
-function Label({ children }: { children: ReactNode }) {
-  return <span className="text-[11px] font-semibold text-muted-foreground">{children}</span>;
+function Label({ children, help }: { children: ReactNode; help?: string }) {
+  return (
+    <span className="inline-flex items-center gap-0.5 text-[11px] font-semibold text-muted-foreground">
+      {children}
+      {help ? <HelpIcon id={help} /> : null}
+    </span>
+  );
 }
 
 export function FilterPanel({ result, state, update }: FilterPanelProps) {
@@ -130,10 +136,10 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
     update({ dimFilter: next, filters: true });
   };
 
-  const facetGroup = (facet: Exclude<FilterFacetKey, 'dim'>, label: string) =>
+  const facetGroup = (facet: Exclude<FilterFacetKey, 'dim'>, label: string, help?: string) =>
     facets[facet].length ? (
       <div className="flex flex-wrap items-center gap-1.5">
-        <Label>{label}</Label>
+        <Label help={help}>{label}</Label>
         {facets[facet].map((option) => (
           <ToggleChip
             key={option.value}
@@ -151,24 +157,27 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
 
   return (
     <section className="rounded-lg border border-border bg-surface p-1.5 text-[12px]">
-      <button
-        type="button"
-        onClick={() => setOpen((value) => !value)}
-        className="flex w-full items-center gap-1.5 rounded-md px-1 py-1 text-left text-muted-foreground hover:text-accent"
-      >
-        {open ? (
-          <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.75} />
-        ) : (
-          <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} />
-        )}
-        <Filter className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />
-        <span className="font-semibold text-foreground">Filter results</span>
-        {shownCount !== totalCount ? (
-          <span className="tnum text-faint-foreground">
-            {shownCount} / {totalCount}
-          </span>
-        ) : null}
-      </button>
+      <div className="flex items-center gap-1.5 px-1 py-1">
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          className="flex items-center gap-1.5 text-left text-muted-foreground hover:text-accent"
+        >
+          {open ? (
+            <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.75} />
+          ) : (
+            <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} />
+          )}
+          <Filter className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />
+          <span className="font-semibold text-foreground">Filter results</span>
+          {shownCount !== totalCount ? (
+            <span className="tnum text-faint-foreground">
+              {shownCount} / {totalCount}
+            </span>
+          ) : null}
+        </button>
+        <HelpIcon id="filter_results" />
+      </div>
 
       {open ? (
         <div className="mt-1.5 grid gap-2 border-t border-border/60 pt-2">
@@ -176,7 +185,7 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
             {/* Left lane: Model, Dims, Active params, Query length */}
             <div className="grid gap-2">
               <div className="flex items-center gap-1.5">
-                <Label>Model</Label>
+                <Label help="model_filter">Model</Label>
                 <TextInput
                   value={state.modelFilter}
                   placeholder="jina bge…"
@@ -184,7 +193,7 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                <Label>Dims</Label>
+                <Label help="dims">Dims</Label>
                 <NumericInput
                   value={dimBound(state.dimFilter, 'gte:')}
                   placeholder="min"
@@ -198,7 +207,7 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                <Label>Active params (M)</Label>
+                <Label help="active_params">Active params (M)</Label>
                 <NumericInput
                   value={state.activeParamsMin}
                   placeholder="min"
@@ -212,7 +221,7 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                <Label>Query length</Label>
+                <Label help="query_length">Query length</Label>
                 <NumericInput
                   value={state.queryLenMin}
                   placeholder="min"
@@ -230,16 +239,16 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
             {/* Right lane: Task, Quantization, Total params, Document length */}
             <div className="grid gap-2">
               <div className="flex items-center gap-1.5">
-                <Label>Task</Label>
+                <Label help="task_filter">Task</Label>
                 <TextInput
                   value={state.taskFilter}
                   placeholder="nq miracl…"
                   onCommit={(value) => update({ taskFilter: value })}
                 />
               </div>
-              {facetGroup('quant', 'Quantization')}
+              {facetGroup('quant', 'Quantization', 'quantization')}
               <div className="flex items-center gap-1.5">
-                <Label>Total params (M)</Label>
+                <Label help="total_params">Total params (M)</Label>
                 <NumericInput
                   value={state.totalParamsMin}
                   placeholder="min"
@@ -253,7 +262,7 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                <Label>Document length</Label>
+                <Label help="document_length">Document length</Label>
                 <NumericInput
                   value={state.docLenMin}
                   placeholder="min"
@@ -271,11 +280,11 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
 
           {/* Buckets: license, model type, dtype, attn, prompt */}
           <div className="grid gap-1.5 border-t border-border/60 pt-2">
-            {facetGroup('commercial', 'License')}
-            {facetGroup('model_type', 'Model type')}
-            {facetGroup('dtype', 'Dtype')}
-            {facetGroup('attn', 'Attention')}
-            {facetGroup('prompt', 'Prompt')}
+            {facetGroup('commercial', 'License', 'license')}
+            {facetGroup('model_type', 'Model type', 'model_family')}
+            {facetGroup('dtype', 'Dtype', 'run_metadata')}
+            {facetGroup('attn', 'Attention', 'run_metadata')}
+            {facetGroup('prompt', 'Prompt', 'run_metadata')}
           </div>
 
           <div className="flex items-center gap-1.5 border-t border-border/60 pt-2">
@@ -285,6 +294,7 @@ export function FilterPanel({ result, state, update }: FilterPanelProps) {
             >
               Recalculate ranks among filtered rows
             </ToggleChip>
+            <HelpIcon id="rank_filtered" />
           </div>
         </div>
       ) : null}

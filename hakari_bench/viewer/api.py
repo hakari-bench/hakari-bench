@@ -91,6 +91,49 @@ def _facet_options(options: list[FilterOption]) -> list[dict[str, str]]:
     return [{"value": value, "label": label} for value, label in options]
 
 
+def _metric_columns_meta(result, benchmark_docs) -> dict[str, Any]:
+    """Per task-column metadata: two-line label, hover tooltip, and doc link."""
+
+    from hakari_bench.viewer.app import (
+        _metric_column_header_parts,
+        _metric_column_labels,
+        _metric_column_tooltip,
+    )
+
+    labels = _metric_column_labels(
+        result.metric_columns,
+        overrides=result.metric_column_labels,
+        parent_label=result.view_name,
+    )
+    meta: dict[str, Any] = {}
+    for column in result.metric_columns:
+        label = labels[column]
+        top, bottom = _metric_column_header_parts(label)
+        doc = (
+            benchmark_docs.task_doc(view_name=result.view_name, metric_column=column)
+            if benchmark_docs is not None
+            else None
+        )
+        meta[column] = {
+            "label": label,
+            "lines": [part for part in (top, bottom) if part],
+            "tooltip": _metric_column_tooltip(label=label, full_metric_name=column, result=result),
+            "doc": _doc_dict(doc),
+        }
+    return meta
+
+
+def _task_breakdown_docs(result, benchmark_docs) -> dict[str, Any]:
+    if benchmark_docs is None:
+        return {}
+    docs: dict[str, Any] = {}
+    for breakdown in result.task_breakdowns:
+        doc = benchmark_docs.task_doc(view_name=result.view_name, metric_column=breakdown.doc_key)
+        if doc is not None:
+            docs[breakdown.key] = {"title": doc.title, "url": doc.url}
+    return docs
+
+
 def _docs_document_response(benchmark_docs, *, benchmark: str, task: str | None = None) -> JSONResponse:
     from fastapi import HTTPException
 
@@ -133,7 +176,13 @@ def _query_state_from_request(request: Request, *, viewer_config: ViewerConfig) 
     return normalize_query_state(**kwargs)
 
 
-def _scope_payload(viewer_config: ViewerConfig) -> dict[str, Any]:
+def _doc_dict(doc) -> dict[str, str] | None:
+    if doc is None:
+        return None
+    return {"title": doc.title, "description": doc.description, "url": doc.url}
+
+
+def _scope_payload(viewer_config: ViewerConfig, benchmark_docs) -> dict[str, Any]:
     """Benchmark scope buttons: presets plus ordered Nano suite toggles.
 
     Mirrors the htmx render_tabs grouping/labels so the React controls match the
@@ -142,27 +191,31 @@ def _scope_payload(viewer_config: ViewerConfig) -> dict[str, Any]:
 
     from hakari_bench.viewer.app import _view_group_sort_key
 
+    def suite_doc(name: str) -> dict[str, str] | None:
+        return _doc_dict(benchmark_docs.group_doc(name)) if benchmark_docs is not None else None
+
     presets = [
-        {"name": "Overall", "label": "Overall", "kind": "overall"},
-        {"name": "Overall (EN)", "label": "Overall (EN)", "kind": "overall"},
-        {"name": CLEAR_SCOPE_NAME, "label": CLEAR_SCOPE_NAME, "kind": "clear"},
+        {"name": "Overall", "label": "Overall", "kind": "overall", "help": "scope_overall"},
+        {"name": "Overall (EN)", "label": "Overall (EN)", "kind": "overall", "help": "scope_overall_en"},
+        {"name": CLEAR_SCOPE_NAME, "label": CLEAR_SCOPE_NAME, "kind": "clear", "help": "scope_clear"},
     ]
     suites: list[dict[str, Any]] = []
     for index, benchmark in enumerate(viewer_config.benchmarks):
         base_sort = _view_group_sort_key(view_name=benchmark.name, fallback=index)
         if benchmark.name == "MNanoBEIR":
-            suites.append({"label": "M-BEIR(task)", "selection_key": "MNanoBEIR:task_mean", "benchmark": "MNanoBEIR", "sort_key": base_sort * 10})
-            suites.append({"label": "M-BEIR(lang)", "selection_key": "MNanoBEIR:lang_mean", "benchmark": "MNanoBEIR", "sort_key": base_sort * 10 + 1})
+            doc = suite_doc("MNanoBEIR")
+            suites.append({"label": "M-BEIR(task)", "selection_key": "MNanoBEIR:task_mean", "benchmark": "MNanoBEIR", "sort_key": base_sort * 10, "doc": doc, "help": "mnanobeir_task"})
+            suites.append({"label": "M-BEIR(lang)", "selection_key": "MNanoBEIR:lang_mean", "benchmark": "MNanoBEIR", "sort_key": base_sort * 10 + 1, "doc": doc, "help": "mnanobeir_lang"})
             continue
         label = benchmark.display_label
         if label.startswith("Nano"):
             label = label.removeprefix("Nano")
-        suites.append({"label": label, "selection_key": benchmark.name, "benchmark": benchmark.name, "sort_key": base_sort * 10})
+        suites.append({"label": label, "selection_key": benchmark.name, "benchmark": benchmark.name, "sort_key": base_sort * 10, "doc": suite_doc(benchmark.name)})
     suites.sort(key=lambda item: item["sort_key"])
     return {"presets": presets, "suites": suites}
 
 
-def _config_payload(*, store: LocalDuckDbStore, viewer_config: ViewerConfig) -> dict[str, Any]:
+def _config_payload(*, store: LocalDuckDbStore, viewer_config: ViewerConfig, benchmark_docs=None) -> dict[str, Any]:
     from hakari_bench.viewer.app import _database_footer_label, _fetch_database_latest_update_label
 
     return {
@@ -171,7 +224,7 @@ def _config_payload(*, store: LocalDuckDbStore, viewer_config: ViewerConfig) -> 
             {"name": benchmark.name, "label": benchmark.display_label}
             for benchmark in viewer_config.benchmarks
         ],
-        "scope": _scope_payload(viewer_config),
+        "scope": _scope_payload(viewer_config, benchmark_docs),
         "clear_scope": CLEAR_SCOPE_NAME,
         "defaults": {
             "view": viewer_config.overall.name,
@@ -223,7 +276,9 @@ def create_api_router(
 
     @router.get("/config")
     def config() -> JSONResponse:
-        return JSONResponse(_config_payload(store=store, viewer_config=viewer_config))
+        return JSONResponse(
+            _config_payload(store=store, viewer_config=viewer_config, benchmark_docs=benchmark_docs)
+        )
 
     @router.get("/leaderboard")
     def leaderboard(request: Request) -> JSONResponse:
@@ -244,10 +299,13 @@ def create_api_router(
 
         payload = result.model_dump()
         payload["rows"] = [row.model_dump() for row in visible_rows]
+        payload["all_rows"] = [row.model_dump() for row in all_rows]
         payload["total_row_count"] = len(all_rows)
         payload["effective_sort"] = sort
         payload["effective_direction"] = direction
         payload["query_state"] = state_query
+        payload["metric_columns_meta"] = _metric_columns_meta(result, benchmark_docs)
+        payload["task_breakdown_docs"] = _task_breakdown_docs(result, benchmark_docs)
         payload["filter_facets"] = {
             "dim": _facet_options(dim_filter_options(all_rows)),
             "quant": _facet_options(quant_filter_options(all_rows)),

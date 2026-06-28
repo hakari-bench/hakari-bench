@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowUp, BookOpen } from 'lucide-react';
 import { useMemo } from 'react';
 import type { LeaderboardResponse, LeaderboardRow } from '../lib/api';
 import { cn } from '../lib/cn';
@@ -10,6 +10,7 @@ import {
   formatMaxLen,
   formatParams,
   formatScore,
+  shortLicenseLabel,
   shortModelTypeLabel,
 } from '../lib/format';
 
@@ -19,6 +20,7 @@ interface LeaderboardTableProps {
   direction: 'asc' | 'desc';
   onSort: (column: string) => void;
   onSelectModel: (row: LeaderboardRow) => void;
+  onOpenDoc?: (doc: { title: string; description: string; url: string }) => void;
 }
 
 type Align = 'left' | 'right';
@@ -77,8 +79,16 @@ function ScoreText({
   );
 }
 
-export function LeaderboardTable({ result, sort, direction, onSort, onSelectModel }: LeaderboardTableProps) {
+export function LeaderboardTable({
+  result,
+  sort,
+  direction,
+  onSort,
+  onSelectModel,
+  onOpenDoc,
+}: LeaderboardTableProps) {
   const rows = result.rows;
+  const metricMeta = result.metric_columns_meta ?? {};
   const showZ = result.show_task_z_scores;
   const showRank = result.show_task_ranks;
   const maxBorda = rows.reduce((max, r) => Math.max(max, r.borda_score), 0);
@@ -112,7 +122,7 @@ export function LeaderboardTable({ result, sort, direction, onSort, onSelectMode
       cols.push({ key: 'quantization', label: 'Quant', sortable: true, align: 'left', kind: 'plain', render: (r) => r.quantization ?? '—' });
     }
     if (result.show_other_columns) {
-      cols.push({ key: 'license', label: 'License', sortable: false, align: 'left', kind: 'plain', render: (r) => r.license?.label ?? '—' });
+      cols.push({ key: 'license', label: 'License', sortable: false, align: 'left', kind: 'plain', render: (r) => shortLicenseLabel(r.license) });
       cols.push({ key: 'model_type', label: 'Model Type', sortable: false, align: 'left', kind: 'plain', render: (r) => shortModelTypeLabel(r.model_type) });
     }
     return cols;
@@ -166,21 +176,48 @@ export function LeaderboardTable({ result, sort, direction, onSort, onSelectMode
               Model Name
               <SortIcon active={sort === 'model_name'} direction={direction} />
             </th>
-            {columns.map((col) => (
-              <th
-                key={col.key}
-                className={cn(
-                  'whitespace-nowrap px-3 py-1.5 font-normal',
-                  col.align === 'right' ? 'text-right' : 'text-left',
-                  col.sortable ? 'cursor-pointer hover:text-accent' : '',
-                )}
-                onClick={col.sortable ? () => onSort(col.key) : undefined}
-                title={col.label}
-              >
-                {col.label}
-                {col.sortable ? <SortIcon active={sort === col.key} direction={direction} /> : null}
-              </th>
-            ))}
+            {columns.map((col) => {
+              const meta = col.kind === 'metric' && col.metricKey ? metricMeta[col.metricKey] : undefined;
+              const lines = meta?.lines?.length ? meta.lines : [col.label];
+              return (
+                <th
+                  key={col.key}
+                  data-tooltip={meta?.tooltip}
+                  className={cn(
+                    'px-3 py-1.5 align-bottom font-normal',
+                    col.align === 'right' ? 'text-right' : 'text-left',
+                  )}
+                >
+                  <span className="inline-flex items-start gap-0.5">
+                    <button
+                      type="button"
+                      onClick={col.sortable ? () => onSort(col.key) : undefined}
+                      className={cn(
+                        'text-left font-normal',
+                        col.sortable ? 'cursor-pointer hover:text-accent' : 'cursor-default',
+                      )}
+                    >
+                      {lines.map((line, index) => (
+                        <span key={line + index} className="block leading-tight">
+                          {line}
+                        </span>
+                      ))}
+                      {col.sortable ? <SortIcon active={sort === col.key} direction={direction} /> : null}
+                    </button>
+                    {meta?.doc && onOpenDoc ? (
+                      <button
+                        type="button"
+                        aria-label={`${meta.doc.title} documentation`}
+                        onClick={() => onOpenDoc(meta.doc!)}
+                        className="mt-0.5 inline-flex h-3 w-3 items-center justify-center text-faint-foreground hover:text-accent"
+                      >
+                        <BookOpen className="h-3 w-3" strokeWidth={1.75} />
+                      </button>
+                    ) : null}
+                  </span>
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
@@ -214,14 +251,20 @@ export function LeaderboardTable({ result, sort, direction, onSort, onSelectMode
                 </td>
                 {columns.map((col) => {
                   if (col.kind === 'plain') {
+                    const tooltip =
+                      col.key === 'license'
+                        ? (row.license?.label ?? undefined)
+                        : col.key === 'model_type'
+                          ? (row.model_type ?? undefined)
+                          : undefined;
                     return (
                       <td
                         key={col.key}
+                        data-tooltip={tooltip}
                         className={cn(
                           'whitespace-nowrap px-3 py-1 tnum text-muted-foreground group-hover:bg-surface-faint',
                           col.align === 'right' ? 'text-right' : 'text-left',
                         )}
-                        title={col.key === 'license' ? (row.license?.label ?? undefined) : undefined}
                       >
                         {col.render ? col.render(row) : ''}
                       </td>

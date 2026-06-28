@@ -4,6 +4,7 @@ import type { LeaderboardResponse, ViewerConfigResponse } from '../lib/api';
 import { scoreMetricLabel } from '../lib/format';
 import type { ViewerState } from '../lib/urlState';
 import { ControlChip, ControlLabel, ToggleChip } from '../ui/controls';
+import { DocIcon, HelpIcon } from './ViewerModals';
 
 interface ConfigPanelProps {
   config: ViewerConfigResponse;
@@ -95,6 +96,7 @@ export function ConfigPanel({ config, result, state, update }: ConfigPanelProps)
           >
             Reranking
           </ControlChip>
+          <HelpIcon id="mode" />
         </div>
         <div className="flex items-center gap-1">
           <ControlLabel icon={<Sigma className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />}>
@@ -106,12 +108,14 @@ export function ConfigPanel({ config, result, state, update }: ConfigPanelProps)
           <ControlChip active={state.score === 'macro'} onClick={() => update({ score: 'macro' })}>
             Macro
           </ControlChip>
+          <HelpIcon id="score" />
         </div>
         {result.available_score_metrics.length > 1 ? (
           <div className="flex flex-wrap items-center gap-1">
             <ControlLabel icon={<BarChart3 className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />}>
               Metric
             </ControlLabel>
+            <HelpIcon id="metric" />
             {result.available_score_metrics.map((metric) => (
               <ControlChip
                 key={metric}
@@ -133,26 +137,28 @@ export function ConfigPanel({ config, result, state, update }: ConfigPanelProps)
           </ControlLabel>
           <div className="flex flex-wrap gap-1.5">
             {config.scope.presets.map((preset) => (
-              <ControlChip
-                key={preset.name}
-                active={presetActive(preset.name)}
-                onClick={() => onPreset(preset.name)}
-              >
-                {preset.label}
-              </ControlChip>
+              <span key={preset.name} className="inline-flex items-center gap-1">
+                <ControlChip active={presetActive(preset.name)} onClick={() => onPreset(preset.name)}>
+                  {preset.label}
+                </ControlChip>
+                {preset.help ? <HelpIcon id={preset.help} /> : null}
+              </span>
             ))}
           </div>
         </div>
         <div className="mb-1.5 border-t border-border/60" aria-hidden />
         <div className="flex min-w-0 flex-wrap gap-1.5">
           {config.scope.suites.map((suite) => (
-            <ControlChip
-              key={suite.selection_key}
-              active={suiteActive(suite.selection_key)}
-              onClick={() => onToggleSuite(suite.selection_key)}
-            >
-              {suite.label}
-            </ControlChip>
+            <span key={suite.selection_key} className="inline-flex items-center gap-1">
+              <ControlChip
+                active={suiteActive(suite.selection_key)}
+                onClick={() => onToggleSuite(suite.selection_key)}
+              >
+                {suite.label}
+              </ControlChip>
+              {suite.help ? <HelpIcon id={suite.help} /> : null}
+              {suite.doc ? <DocIcon doc={suite.doc} label={`${suite.label} documentation`} /> : null}
+            </span>
           ))}
         </div>
       </div>
@@ -163,6 +169,7 @@ export function ConfigPanel({ config, result, state, update }: ConfigPanelProps)
           <ControlLabel icon={<Languages className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />}>
             Task facets
           </ControlLabel>
+          <HelpIcon id="task_facets" />
           <ControlChip
             active={state.langFilter.length === 0}
             onClick={() => update({ langFilter: [] })}
@@ -192,6 +199,7 @@ export function ConfigPanel({ config, result, state, update }: ConfigPanelProps)
           <ControlLabel icon={<Table2 className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />}>
             Table display
           </ControlLabel>
+          <HelpIcon id="table_display" />
           <ToggleChip checked={state.taskScores} onChange={(v) => update({ taskScores: v })}>
             Task columns
           </ToggleChip>
@@ -209,6 +217,7 @@ export function ConfigPanel({ config, result, state, update }: ConfigPanelProps)
           <ControlLabel icon={<Layers className="h-3.5 w-3.5 text-accent" strokeWidth={1.75} />}>
             Efficiency variants
           </ControlLabel>
+          <HelpIcon id="efficiency_variants" />
           <ToggleChip checked={state.truncate} onChange={(v) => update({ truncate: v })}>
             Dims
           </ToggleChip>
