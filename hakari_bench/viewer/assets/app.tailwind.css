@@ -367,6 +367,10 @@
     color: var(--hakari-text-muted);
   }
 
+  .dim-bounds-filter {
+    width: min(34rem, 100%);
+  }
+
   .leaderboard-row:hover > td {
     background-color: color-mix(in srgb, var(--hakari-surface) 86%, var(--hakari-accent) 14%);
   }
@@ -1128,58 +1132,34 @@
   color: var(--hakari-accent);
 }
 
-.doc-card-grid {
-  display: grid;
-  gap: 0.625rem;
-  grid-template-columns: 1fr;
+.page-footer-initial-loading {
+  border-top-color: transparent;
 }
 
-@media (min-width: 768px) {
-  .doc-card-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.doc-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--hakari-surface);
+.doc-list {
   border: 1px solid var(--hakari-border);
   border-radius: var(--hakari-radius-lg);
-  transition:
-    border-color 140ms ease,
-    background-color 140ms ease;
-}
-
-.doc-card:hover {
-  border-color: var(--hakari-accent-border);
-  background-color: color-mix(in srgb, var(--hakari-surface) 92%, var(--hakari-accent) 8%);
-}
-
-.doc-card-title {
-  color: var(--hakari-accent);
-}
-
-.doc-card:hover .doc-card-title {
-  color: var(--hakari-accent-strong);
-}
-
-/* Stretch the title link across the whole card so the card is clickable. */
-.doc-card-link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-}
-
-.doc-card-description {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  background-color: var(--hakari-surface);
   overflow: hidden;
-  color: var(--hakari-text-muted);
+}
+
+.doc-list-item + .doc-list-item {
+  border-top: 1px solid color-mix(in srgb, var(--hakari-border) 72%, transparent);
+}
+
+.doc-list-link {
+  display: block;
+  padding: 0.625rem 0.875rem;
+  color: var(--hakari-accent);
+  line-height: 1.25;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.doc-list-link:hover {
+  background-color: color-mix(in srgb, var(--hakari-surface) 92%, var(--hakari-accent) 8%);
+  color: var(--hakari-accent-strong);
 }
 
 /* --- Documentation article ------------------------------------------- */

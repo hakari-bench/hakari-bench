@@ -1,8 +1,8 @@
-id: hotchpotch/bekko-embedding-small-beta-unir-v8
+id: hotchpotch/bekko-embedding-v1-a25m
 source:
   type: huggingface
-  name: hotchpotch/bekko-embedding-small-beta-unir-v8
-  revision: bfb1bc5d5a70be3c683dd190c82b0076d2dee8b5
+  name: hotchpotch/bekko-embedding-v1-a25m
+  revision: f2e4e3555fd9452984578ce112e72ee64e25ddd8
 method: dense
 license:
   id: mit
@@ -10,9 +10,9 @@ license:
   type: permissive
   commercial_use: allowed
   source: huggingface_model_card
-  source_url: https://huggingface.co/hotchpotch/bekko-embedding-small-beta-unir-v8
+  source_url: https://huggingface.co/hotchpotch/bekko-embedding-v1-a25m
 links:
-  huggingface: https://huggingface.co/hotchpotch/bekko-embedding-small-beta-unir-v8
+  huggingface: https://huggingface.co/hotchpotch/bekko-embedding-v1-a25m
 parameters:
   total: 123234432
   input_embedding: 98304000
@@ -31,7 +31,7 @@ runtime:
   similarity_fn_name: cosine
 prompts:
   query_prompt_name: query
-  document_prompt_name: document
+  document_prompt_name: passage
 language_support:
   category: multilingual
   evidence:

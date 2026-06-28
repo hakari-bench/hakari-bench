@@ -749,10 +749,10 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
     assert response.text.index('href="/docs/benchmark-tasks/MNanoBEIR"') < response.text.index(
         'href="/docs/benchmark-tasks/NanoLongEmbed"'
     )
-    assert 'class="doc-card-link doc-card-title font-semibold underline-offset-2 hover:underline" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
+    assert 'class="doc-list-link font-semibold underline-offset-2 hover:underline" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
     assert 'href="/docs/benchmark-tasks/NanoBEIR-en"' not in response.text
-    assert "LongEmbed overview." in response.text
-    assert "MIRACL overview." in response.text
+    assert "LongEmbed overview." not in response.text
+    assert "MIRACL overview." not in response.text
 
 
 def test_docs_root_redirects_to_benchmark_docs_until_docs_home_exists(tmp_path: Path) -> None:

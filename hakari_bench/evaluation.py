@@ -102,6 +102,7 @@ def load_ir_dataset(
     candidate_subset_name: str | None = None,
     revision: str | None = None,
     restrict_corpus_to_candidates: bool = False,
+    candidate_top_k: int | None = None,
 ) -> LoadedIrDataset:
     from datasets import load_dataset
 
@@ -109,6 +110,7 @@ def load_ir_dataset(
     queries_dataset = load_dataset(task.dataset_id, task.dataset.queries_config, split=task.split_name, **load_kwargs)
     qrels_dataset = load_dataset(task.dataset_id, task.dataset.qrels_config, split=task.split_name, **load_kwargs)
     candidates = _load_candidates(task, candidate_subset_name=candidate_subset_name, revision=revision)
+    candidates = _limit_candidates(candidates, candidate_top_k)
 
     candidate_corpus_ids: set[str] | None = None
     if restrict_corpus_to_candidates and candidates is not None:
@@ -139,6 +141,17 @@ def load_ir_dataset(
         candidates=candidates,
         evaluator_name=task.evaluator_name,
     )
+
+
+def _limit_candidates(
+    candidates: dict[str, list[str]] | None,
+    candidate_top_k: int | None,
+) -> dict[str, list[str]] | None:
+    if candidates is None or candidate_top_k is None:
+        return candidates
+    if candidate_top_k <= 0:
+        raise ValueError("candidate_top_k must be positive.")
+    return {query_id: corpus_ids[:candidate_top_k] for query_id, corpus_ids in candidates.items()}
 
 
 def _load_candidates(
@@ -2387,6 +2400,8 @@ def _quantize_scalar_embeddings_torch(
     precision: QuantizationPrecision,
     ranges: torch.Tensor,
 ) -> torch.Tensor:
+    # Torch port of _quantize_scalar_embeddings; see that function's docstring
+    # for the sentence-transformers source and our zero-step/clip changes.
     starts = ranges[0, :]
     steps = (ranges[1, :] - ranges[0, :]) / 255
     steps = torch.where(steps == 0, torch.ones_like(steps), steps)
@@ -2424,6 +2439,23 @@ def _quantize_scalar_embeddings(
     precision: QuantizationPrecision,
     ranges: np.ndarray,
 ) -> np.ndarray:
+    """Per-dimension affine int8 scalar quantization.
+
+    The core formula (per-dimension ``starts``/``steps = (max - min) / 255`` and
+    the ``... / step - 128`` shift into signed int8) is adapted from
+    sentence-transformers' ``quantize_embeddings``:
+    https://github.com/huggingface/sentence-transformers/blob/6dc2cb57e5c680275e9e5fbf62bba0351f124385/sentence_transformers/util/quantization.py#L415-L435
+    (v5.4.1; huggingface/sentence-transformers, formerly UKPLab, Apache-2.0).
+
+    We re-implement it rather than calling the library, and add two deliberate
+    changes for strict, corpus-calibrated evaluation:
+      1. zero-step guard: ``np.where(steps == 0, 1, steps)`` avoids divide-by-zero
+         on constant dimensions (where max == min), which upstream does not handle.
+      2. clip-before-cast: ``np.clip(..., -128, 127)`` instead of upstream's bare
+         ``.astype(np.int8)``. Because queries are quantized with corpus-only
+         ranges, query outliers can fall outside [min, max]; a raw int8 cast would
+         wrap them, so we clamp into range first.
+    """
     starts = ranges[0, :]
     steps = (ranges[1, :] - ranges[0, :]) / 255
     steps = np.where(steps == 0, 1, steps)

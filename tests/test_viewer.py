@@ -465,6 +465,23 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 ("BenchPrimary", "BenchPrimary-ja", "TaskC", "BenchPrimary::TaskC"),
             ],
         )
+        con.execute(
+            """
+            CREATE TABLE dataset_metadata (
+                benchmark VARCHAR,
+                task_key VARCHAR,
+                category VARCHAR
+            )
+            """
+        )
+        con.executemany(
+            "INSERT INTO dataset_metadata VALUES (?, ?, ?)",
+            [
+                ("BenchA", "BenchA::TaskA", "code"),
+                ("BenchA", "BenchA::IgnoredTask", "code"),
+                ("BenchPrimary", "BenchPrimary::TaskC", "natural_language"),
+            ],
+        )
     finally:
         con.close()
     config = ViewerConfig(
@@ -523,6 +540,7 @@ runtime:
     assert reranking_result.rows[1].mean_score == 42.0
     assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
         ("en", "EN", 8),
+        ("category:code", "Code", 1),
         ("ar", "AR", 3),
         ("ja", "Japanese", 3),
     ]
@@ -897,7 +915,8 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "Loading leaderboard..." in response.text
     assert 'id="hakari-global-tooltip"' in response.text
     assert 'role="tooltip"' in response.text
-    assert 'hx-indicator="#leaderboard-loading-toast"' in response.text
+    initial_panel_html = response.text.split('id="leaderboard-panel"', 1)[1].split("</section>", 1)[0]
+    assert 'hx-indicator="#leaderboard-loading-toast"' not in initial_panel_html
     assert 'hx-sync="#leaderboard-panel:replace"' in response.text
     assert "https://cdn.tailwindcss.com" not in response.text
     assert "https://unpkg.com/htmx.org" not in response.text
@@ -905,7 +924,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "<footer" in response.text
     assert (
         '<footer id="hakari-page-footer" '
-        'class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6">'
+        'class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6 page-footer-initial-loading">'
     ) in response.text
     footer_html = response.text.split("<footer", 1)[1]
     assert "HAKARI-Bench leaderboard" not in footer_html
@@ -1010,6 +1029,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-loading-toast.htmx-request" in css_response.text
     assert "background-color:color-mix(in srgb,var(--hakari-surface) 90%,transparent)" in css_response.text
     assert "padding:.75rem 1rem" in css_response.text
+    assert ".page-footer-initial-loading" in css_response.text
+    assert "border-top-color:transparent" in css_response.text
     assert ".loading-spinner" in css_response.text
     assert "hakari-leaderboard-spin" in css_response.text
     assert "--hakari-radius-lg:8px" in css_response.text
@@ -1054,6 +1075,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariApplyHashQueryState" in viewer_js_response.text
     assert "window.__hakariSyncHashQueryStateToParent" in viewer_js_response.text
     assert "window.__hakariSetLeaderboardPending" in viewer_js_response.text
+    assert 'event.key !== "Enter"' in viewer_js_response.text
+    assert "#filter-controls input[type='search'], #filter-controls input[type='number']" in viewer_js_response.text
+    assert "form.requestSubmit()" in viewer_js_response.text
     assert "window.__hakariApplyTheme" in viewer_js_response.text
     assert "window.__hakariBindThemeToggle" in viewer_js_response.text
     assert "window.__hakariSyncThemeToggle" in viewer_js_response.text
@@ -1063,6 +1087,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
     assert "renderCompactModelTooltip" not in viewer_js_response.text
     assert "window.__hakariBindModelDetails" in viewer_js_response.text
+    assert "renderHelpSummaryTable" in viewer_js_response.text
+    assert "trigger.dataset.helpTable" in viewer_js_response.text
     assert ".leaderboard-status-count-trigger" in viewer_js_response.text
     assert 'document.getElementById("count-breakdown-modal")' in viewer_js_response.text
     assert 'document.getElementById("count-breakdown-title")' in viewer_js_response.text
@@ -1377,7 +1403,8 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "hover:border-cyan-600" not in doc_trigger_html
     assert 'data-icon="circle-help"' not in doc_trigger_html
     assert "full-corpus retrieval results" in response.text
-    assert "shared candidate set" in response.text
+    assert "reranking_hybrid candidate set" in response.text
+    assert "candidate-order baseline" in response.text
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
@@ -1914,6 +1941,36 @@ def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
     assert "Quantization: none" in html
     assert "Quantization: orig" not in html
     assert "model/beta" not in html
+
+
+def test_leaderboard_plot_tooltip_uses_mean_score_when_overall_means_are_unavailable() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/alpha",
+                borda_score=100.0,
+                mean_score=0.75,
+                task_count=1,
+                active_parameters=10_000_000,
+            ),
+        ],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "Bench A"},
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_leaderboard_plot(result=result, plot_y="borda_score", plot_x="active_parameters")
+
+    assert "model/alpha\nType: Dense\n\nBorda score: 100.00\nMean score: 0.75\nRank: 1" in html
+    assert "Mean (Micro):" not in html
+    assert "Mean (Macro):" not in html
 
 
 def test_leaderboard_plot_uses_fixed_circle_size_and_optional_single_color() -> None:
@@ -2841,7 +2898,7 @@ def test_chart_state_is_preserved_in_display_and_filter_controls() -> None:
     assert "chart_x=total_parameters" in html
 
 
-def test_variant_controls_clear_facet_filters_but_keep_text_and_range_filters() -> None:
+def test_variant_controls_preserve_filter_results_state() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -2887,10 +2944,11 @@ def test_variant_controls_clear_facet_filters_but_keep_text_and_range_filters() 
 
     assert 'name="model_filter" value="jina"' in variant_form
     assert 'name="active_params_max" value="2000"' in variant_form
-    assert 'name="dim_filter"' not in variant_form
-    assert 'name="quant_filter"' not in variant_form
-    assert 'name="model_type_filter"' not in variant_form
-    assert 'name="dtype_filter"' not in variant_form
+    assert 'name="filters" value="1"' in variant_form
+    assert 'name="dim_filter" value="768"' in variant_form
+    assert 'name="quant_filter" value="__none__"' in variant_form
+    assert 'name="model_type_filter" value="dense"' in variant_form
+    assert 'name="dtype_filter" value="bf16"' in variant_form
     assert 'name="dim_filter" value="768"' in column_form
     assert 'name="quant_filter" value="__none__"' in column_form
 
@@ -3124,7 +3182,7 @@ def test_filter_results_includes_commercial_license_filter() -> None:
     assert 'name="commercial_filter" value="not_applicable"' in controls
     assert 'id="commercial-use-controls"' in controls
     assert 'data-filter-detail="commercial_filter"' not in controls
-    assert "Commercial use" in controls
+    assert "Commercial use" not in controls
     assert [row.model_name for row in result.rows if filter_context.is_visible(row)] == [
         "org/apache-model",
         "bm25",
@@ -3724,6 +3782,24 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
         rows.append(("model/a", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.50 + index / 100, 10, 12, 8192))
         rows.append(("model/b", "BenchA", "bench/a", "BenchA", lang, task_key, task_key, 0.40 + index / 100, 20, 24, 4096))
         metadata_rows.append(("BenchA", "bench/a", "BenchA", lang, task_key, task_key, lang, [lang]))
+    rows.append(("model/a", "BenchA", "bench/a", "BenchA", "code", "task-code", "task-code", 0.70, 10, 12, 8192))
+    rows.append(("model/b", "BenchA", "bench/a", "BenchA", "code", "task-code", "task-code", 0.60, 20, 24, 4096))
+    metadata_rows.append(
+        (
+            "BenchA",
+            "bench/a",
+            "BenchA",
+            "code",
+            "task-code",
+            "task-code",
+            "en",
+            ["en"],
+            [],
+            None,
+            None,
+            "code",
+        )
+    )
     _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
     config_dir = tmp_path / "config"
     config_dir.mkdir()
@@ -3739,6 +3815,14 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "max-h-72" in response.text
     assert "language-more-summary flex cursor-pointer list-none items-center gap-1.5" in response.text
     assert "More languages" in response.text
+    assert "Code 1" in response.text
+    assert response.text.index("Code 1") < response.text.index("More languages")
+    assert 'id="help-summary-table-container"' in response.text
+    assert "data-help-table=" in response.text
+    assert "&quot;code&quot;:&quot;JA&quot;" in response.text
+    assert "&quot;name&quot;:&quot;Japanese&quot;" in response.text
+    assert "&quot;code&quot;:&quot;category:code&quot;" in response.text
+    assert "&quot;name&quot;:&quot;Code tasks&quot;" in response.text
     assert 'data-language-page="ja"' in response.text
     assert (
         'hx-push-url="/?view=BenchA&amp;sort=borda_score&amp;direction=desc&amp;group=task'
@@ -3751,6 +3835,62 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert 'data-count-breakdown-trigger="shown">2 shown</button>' in response.text
     assert 'data-count-breakdown-trigger="complete">2 complete models</button>' in response.text
     assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in response.text
+
+
+def test_task_facets_include_code_category_and_filter_tasks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    rows = []
+    metadata_rows = []
+    for task_name, category, score_offset in [
+        ("natural-a", "natural_language", 0.01),
+        ("natural-b", "natural_language", 0.02),
+        ("code-a", "code", 0.03),
+    ]:
+        rows.append(("model/a", "BenchA", "bench/a", "BenchA", task_name, task_name, task_name, 0.50 + score_offset, 10, 12, 8192))
+        rows.append(("model/b", "BenchA", "bench/a", "BenchA", task_name, task_name, task_name, 0.40 + score_offset, 20, 24, 4096))
+        metadata_rows.append(
+            (
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                task_name,
+                task_name,
+                task_name,
+                "en",
+                ["en"],
+                [],
+                None,
+                None,
+                category,
+            )
+        )
+    _write_task_results(db_path, rows, dataset_metadata_rows=metadata_rows)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+    result = service.get_leaderboard("BenchA")
+    assert [(option.code, option.label, option.task_count) for option in result.available_languages] == [
+        ("en", "EN", 3),
+        ("category:code", "Code", 1),
+    ]
+
+    filtered_result = service.get_leaderboard("BenchA", language_filters=("category:code",))
+    assert filtered_result.expected_tasks == 1
+    assert filtered_result.selected_languages == ("category:code",)
+    assert [row.task_count for row in filtered_result.rows] == [1, 1]
+
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=BenchA")
+    assert response.status_code == 200
+    assert "Code 1" in response.text
+    assert "lang_filter=category%3Acode" in response.text
+
+    filtered_response = TestClient(app).get("/leaderboard?view=BenchA&lang_filter=category%3Acode")
+    assert filtered_response.status_code == 200
+    assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in filtered_response.text
 
 
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
@@ -4000,6 +4140,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     default_response = TestClient(app).get("/leaderboard?view=BenchA")
     assert default_response.status_code == 200
     assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white">' in default_response.text
+    assert '<details id="filter-controls-panel" class="border border-zinc-200 bg-white" open>' not in default_response.text
     assert "Advanced filters" not in default_response.text
     assert 'id="facet-filters"' not in default_response.text
 
@@ -4031,7 +4172,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'refine-results-summary flex cursor-pointer list-none items-center justify-between gap-2 p-2' in response.text
     assert 'data-icon="chevron-right"' in response.text
     assert "Advanced filters" not in response.text
-    assert "Efficiency filters" in response.text
+    assert "Efficiency filters" not in response.text
     assert "Run metadata" in response.text
     assert 'data-filter-detail="dim_filter"' in response.text
     assert 'data-filter-icon="ruler"' in response.text
@@ -4040,17 +4181,18 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="commercial-use-controls"' in response.text
     assert 'data-filter-detail="commercial_filter"' not in response.text
     assert 'data-filter-detail="model_type_filter"' not in response.text
-    assert 'summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800"' in response.text
-    assert "grid-cols-2" in response.text
-    assert "sm:grid-cols-3" in response.text
-    assert response.text.count(">All</button>") == 5
-    assert response.text.count(">None</button>") == 5
+    assert 'details class="filter-detail bg-zinc-50" data-filter-detail="dim_filter"' not in response.text
+    assert 'details class="filter-detail bg-zinc-50" data-filter-detail="quant_filter"' not in response.text
+    assert 'div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter"' in response.text
+    assert 'div class="filter-detail bg-zinc-50" data-filter-detail="quant_filter"' in response.text
+    assert response.text.count(">All</button>") == 3
+    assert response.text.count(">None</button>") == 3
     assert 'id="column-controls"' in response.text
     assert 'id="variant-controls"' in response.text
     assert 'id="filter-controls"' in response.text
     assert 'id="facet-filters"' not in response.text
-    assert 'from:input[type=' not in response.text
-    assert 'hx-trigger="change, submit"' in response.text
+    assert "input changed delay:300ms from:.dim-bound-input" not in response.text
+    assert "hx-trigger=\"change from:input[type='checkbox'], submit\"" in response.text
     assert 'hx-include="#display-controls"' not in response.text
     assert 'data-icon="list-filter"' not in response.text
     assert ">Dims</span>" in response.text
@@ -4062,17 +4204,32 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="model-filter-input" type="search" name="model_filter" value="model/b"\n                       class="viewer-text-input' in response.text
     assert ">Model</span>" in response.text
     assert ">Model name</span>" not in response.text
+    assert (
+        response.text.index('id="model-filter-input"')
+        < response.text.index('data-filter-detail="dim_filter"')
+        < response.text.index('name="active_params_min"')
+        < response.text.index('name="query_len_min"')
+        < response.text.index('id="task-filter-input"')
+        < response.text.index('data-filter-detail="quant_filter"')
+        < response.text.index('name="total_params_min"')
+        < response.text.index('name="doc_len_min"')
+    )
     assert "Filters leaderboard rows by model name." in response.text
     assert "jina bge keeps rows whose model name contains jina or bge" in response.text
+    assert "When Recalculate ranks from filters is enabled, it also changes the ranked model population" in response.text
     assert ">Task</span>" in response.text
     assert 'id="task-filter-input" type="search" name="task_filter"' in response.text
-    assert 'name="query_len_min" value=""\n               class="viewer-text-input' in response.text
+    assert 'name="query_len_min" value=""' in response.text
+    assert 'aria-label="Query length minimum"' in response.text
     assert ">Task name</span>" not in response.text
     assert "Filters task columns and task rows by benchmark" in response.text
     assert "arguana fever keeps task columns or task rows whose identifiers contain arguana or fever" in response.text
     assert "Short task names such as nq also work" in response.text
     assert "Recalculate ranks from filters" in response.text
-    assert "Borda ranks, mean ranks, and visible means are recalculated" in response.text
+    assert "Borda ranks, mean ranks, task counts, and visible means are recalculated" in response.text
+    assert "Params and Length range filters already narrow the ranked model or task population" in response.text
+    assert "This range narrows the ranked model population immediately" in response.text
+    assert "This range narrows the ranked task population immediately" in response.text
     assert "Apply text filters" not in response.text
     assert 'class="refine-results-actions flex flex-wrap items-center gap-2"' in response.text
     assert 'data-icon="sigma"' in response.text
@@ -4097,13 +4254,29 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-hidden="true"' in response.text
     assert "Dims" in response.text
     assert "Quantization" in response.text
+    assert "dim-bounds-filter" in response.text
+    assert "dim-bounds-filter range-filter-control inline-flex min-w-0 items-center gap-1.5 p-1" not in response.text
+    assert "filter-detail-body range-filter-control inline-flex min-h-[1.875rem]" in response.text
+    assert 'id="dim-filter-range-hidden" class="hidden" data-dim-range-hidden' in response.text
+    assert 'class="dim-bound-input viewer-text-input' in response.text
+    assert 'data-dim-bound-input="min"' in response.text
+    assert 'data-dim-bound-input="max"' in response.text
+    assert 'placeholder="min"' in response.text
+    assert 'placeholder="max"' in response.text
+    assert "Min dim</span>" not in response.text
+    assert "Max dim</span>" not in response.text
+    assert "dim-filter-bound-marks" not in response.text
+    assert "<datalist" not in response.text
+    assert 'list="dim-filter-bound-marks"' not in response.text
     assert "delay:700ms" not in response.text
     assert "<script>" not in response.text
     assert "htmx:afterSwap" not in response.text
     assert "window.__hakariRestoreModelFilterFocus" not in response.text
-    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in response.text
     assert 'name="dim_filter" value="256" class="h-4 w-4 accent-cyan-700" checked' not in response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quant_filter" value="int8" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'name="quant_filter" value="binary" class="h-4 w-4 accent-cyan-700" checked' in response.text
 
     base_head = render_table_head(result=base_result, sort="borda_score", direction="asc")
     quantization_head = render_table_head(result=quantization_result, sort="borda_score", direction="asc")
@@ -4128,24 +4301,38 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     facet_response = TestClient(app).get(
         "/leaderboard?view=BenchA&quantization=1&truncate=1&other_variant=1"
-        "&filters=1&dim_filter=768&dim_filter=1025%2B&quant_filter=uint8"
+        "&filters=1&dim_filter=lte%3A768&quant_filter=uint8"
     )
 
     assert facet_response.status_code == 200
     assert 'name="other_variant" value="1" checked' in facet_response.text
-    assert 'name="dim_filter" value="768" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
+    assert 'name="dim_filter" value="lte:768"' in facet_response.text
+    assert 'value="768" placeholder="max"' in facet_response.text
     assert 'name="dim_filter" value="512" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
-    assert "1025~ dims" in facet_response.text
     assert 'name="quant_filter" value="uint8" class="h-4 w-4 accent-cyan-700" checked' in facet_response.text
     assert 'name="quant_filter" value="__none__" class="h-4 w-4 accent-cyan-700" checked' not in facet_response.text
-    assert "dim_filter=768" in facet_response.text
-    assert "dim_filter=1025%2B" in facet_response.text
+    assert "dim_filter=lte%3A768" in facet_response.text
     assert "quant_filter=uint8" in facet_response.text
     assert 'data-filter-hidden="true"' in facet_response.text
 
+    range_facet_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&truncate=1"
+        "&filters=1&dim_filter=gte%3A384&dim_filter=lte%3A768&quant_filter=__none__&rank_filtered=1"
+    )
+
+    assert range_facet_response.status_code == 200
+    assert 'name="dim_filter" value="gte:384"' in range_facet_response.text
+    assert 'name="dim_filter" value="lte:768"' in range_facet_response.text
+    assert 'value="384" placeholder="min"' in range_facet_response.text
+    assert 'value="768" placeholder="max"' in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (768 dims)&quot;" in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (512 dims)&quot;" in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (384 dims)&quot;" in range_facet_response.text
+    assert "&quot;ranking_model_name&quot;:&quot;model/a (256 dims, int8)&quot;" not in range_facet_response.text
+
     ranked_facet_response = TestClient(app).get(
         "/leaderboard?view=BenchA&quantization=1&truncate=1"
-        "&filters=1&dim_filter=384&quant_filter=__none__&rank_filtered=1"
+        "&filters=1&dim_filter=lte%3A384&quant_filter=__none__&rank_filtered=1"
     )
 
     assert ranked_facet_response.status_code == 200
@@ -4155,7 +4342,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-filter-hidden="true"' not in ranked_facet_response.text
 
     explicit_truncate_off_response = TestClient(app).get(
-        "/leaderboard?view=BenchA&filters=1&dim_filter=384&quant_filter=__none__"
+        "/leaderboard?view=BenchA&filters=1&dim_filter=lte%3A384&quant_filter=__none__"
     )
 
     assert explicit_truncate_off_response.status_code == 200
@@ -4163,7 +4350,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "384 dims" not in explicit_truncate_off_response.text
 
     explicit_quantization_off_response = TestClient(app).get(
-        "/leaderboard?view=BenchA&filters=1&dim_filter=768&quant_filter=uint8"
+        "/leaderboard?view=BenchA&filters=1&dim_filter=lte%3A768&quant_filter=uint8"
     )
 
     assert explicit_quantization_off_response.status_code == 200
@@ -5356,8 +5543,8 @@ benchmarks:
     en_result = service.get_leaderboard("MNanoBEIR", language_filters=("en",))
 
     assert [(option.code, option.task_count) for option in result.available_languages] == [
-        ("de", 2),
         ("en", 2),
+        ("de", 2),
         ("ja", 2),
     ]
     assert en_result.selected_languages == ("en",)
@@ -6455,12 +6642,13 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Task string length" not in response.text
-    assert ">Length</span>" in response.text
-    assert "Query length ≤" in response.text
-    assert "Document length ≤" in response.text
-    assert 'data-help-title="Length filters"' in response.text
-    assert "Length filters operate at the task level using average text length metadata" in response.text
-    assert "Tasks without length metadata are excluded when any bound is set." in response.text
+    assert "Query length</span>" in response.text
+    assert "Document length</span>" in response.text
+    assert ">Length</span>" not in response.text
+    assert 'data-help-title="Query length"' in response.text
+    assert 'data-help-title="Document length"' in response.text
+    assert "Query length bounds use task metadata measured in average characters per query." in response.text
+    assert "Document length bounds use task metadata measured in average characters per document." in response.text
     assert "Query string <=" not in response.text
     assert "Doc string <=" not in response.text
     assert 'name="query_len_max" value="1000"' in response.text
@@ -6497,16 +6685,19 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
     response = TestClient(app).get("/leaderboard?view=BenchA&filters=1&active_params_max=100")
 
     assert response.status_code == 200
-    assert response.text.index(">Params</span>") < response.text.index(">Length</span>")
-    assert "Active Params ≤" in response.text
-    assert "Total Params ≤" in response.text
-    assert 'data-help-title="Parameter filters"' in response.text
-    assert "using parameter metadata measured in millions of parameters" in response.text
+    assert response.text.index("Active params (M)</span>") < response.text.index("Query length</span>")
+    assert "Active params (M)</span>" in response.text
+    assert "Total params (M)</span>" in response.text
+    assert ">Params</span>" not in response.text
+    assert ">Length</span>" not in response.text
+    assert 'data-help-title="Active params"' in response.text
+    assert 'data-help-title="Total params"' in response.text
+    assert "Active params is the parameter count considered active" in response.text
+    assert "Total params is the full model parameter count" in response.text
     assert "at most 100M active parameters" in response.text
     assert 'name="active_params_max" value="100"' in response.text
-    params_filter_section = response.text.split(">Length</span>", 1)[0]
+    params_filter_section = response.text.split("Query length</span>", 1)[0]
     assert params_filter_section.count("viewer-text-input w-20") >= 4
-    assert "viewer-text-input w-24" not in params_filter_section
     assert "model/small" in response.text
     assert "model/large" not in response.text
 
@@ -7525,6 +7716,7 @@ def _write_task_results(
             "quantization VARCHAR",
             "query_mean_chars DOUBLE",
             "document_mean_chars DOUBLE",
+            "category VARCHAR",
         )
         con.execute(
             f"""
@@ -7542,6 +7734,7 @@ def _write_task_results(
                 primary_languages=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[2],
                 query_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[3],
                 document_mean_chars=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None))[4],
+                category=metadata_by_task.get((row[1], row[2], row[4], row[5], row[6]), (None, [], [], None, None, None))[5],
             )
             for row in rows
         ]
@@ -7557,20 +7750,23 @@ def _write_task_results(
 
 def _metadata_by_task(
     rows: list[tuple],
-) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str], list[str], float | None, float | None]]:
+) -> dict[tuple[str, str, str, str, str], tuple[str | None, list[str], list[str], float | None, float | None, str | None]]:
     metadata = {}
     for row in rows:
         benchmark, dataset_id, _dataset_name, split_name, task_name, task_key, language, languages, *lengths = row
-        primary_languages = lengths[0] if len(lengths) >= 1 and isinstance(lengths[0], list) else []
-        length_offset = 1 if primary_languages else 0
+        has_primary_languages = len(lengths) >= 1 and isinstance(lengths[0], list)
+        primary_languages = lengths[0] if has_primary_languages else []
+        length_offset = 1 if has_primary_languages else 0
         query_mean_chars = lengths[length_offset] if len(lengths) >= length_offset + 1 else None
         document_mean_chars = lengths[length_offset + 1] if len(lengths) >= length_offset + 2 else None
+        category = lengths[length_offset + 2] if len(lengths) >= length_offset + 3 and isinstance(lengths[length_offset + 2], str) else None
         metadata[(benchmark, dataset_id, split_name, task_name, task_key)] = (
             language,
             languages,
             primary_languages,
             query_mean_chars,
             document_mean_chars,
+            category,
         )
     return metadata
 
@@ -7708,6 +7904,7 @@ def _viewer_task_result_row(
     primary_languages: list[str] | None = None,
     query_mean_chars: float | None = None,
     document_mean_chars: float | None = None,
+    category: str | None = None,
 ) -> tuple:
     base = row[:11]
     remaining = row[11:]
@@ -7778,6 +7975,7 @@ def _viewer_task_result_row(
         quantization,
         query_mean_chars,
         document_mean_chars,
+        category,
     )
 
 

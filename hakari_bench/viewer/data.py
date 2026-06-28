@@ -80,6 +80,7 @@ class TaskResultRecord(BaseModel):
     language: str | None = None
     languages: list[str] = Field(default_factory=list)
     primary_languages: list[str] = Field(default_factory=list)
+    category: str | None = None
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
@@ -136,6 +137,7 @@ class TaskResultRow:
     language: str | None = None
     languages: tuple[str, ...] = ()
     primary_languages: tuple[str, ...] = ()
+    category: str | None = None
     active_parameters: int | None = None
     total_parameters: int | None = None
     max_seq_length: int | None = None
@@ -329,7 +331,7 @@ class TaskResultsRepository:
             late_document_prefix_expr = _column_or_null(columns, "late_interaction_document_prefix")
             late_query_expansion_expr = _column_or_null(columns, "late_interaction_query_expansion")
             late_attend_expansion_expr = _column_or_null(columns, "late_interaction_attend_to_expansion_tokens")
-            query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_text_length_sql(
+            category_expr, query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_metadata_sql(
                 viewer_columns=columns,
                 metadata_columns=metadata_columns,
             )
@@ -359,7 +361,7 @@ class TaskResultsRepository:
             rerank_metric_filter = (
                 f"""
                   AND (
-                    contains(lower(dm.metric_name), '{rerank_metric_marker}')
+                    contains(lower(metric.metric_name), '{rerank_metric_marker}')
                     OR NOT EXISTS (
                         SELECT 1
                         FROM fact_metric_score AS ms2
@@ -377,7 +379,7 @@ class TaskResultsRepository:
                   )
                 """
                 if score_target != "all"
-                else f"AND NOT contains(lower(dm.metric_name), '{rerank_metric_marker}')"
+                else f"AND NOT contains(lower(metric.metric_name), '{rerank_metric_marker}')"
             )
             facet_filter, facet_params = _facet_filter_sql(columns, facet_filters)
             query = f"""
@@ -394,6 +396,7 @@ class TaskResultsRepository:
                     {language_expr} AS language,
                     {languages_expr} AS languages,
                     {primary_languages_expr} AS primary_languages,
+                    {category_expr} AS category,
                     tr.active_parameters,
                     tr.total_parameters,
                     tr.max_seq_length,
@@ -426,14 +429,14 @@ class TaskResultsRepository:
                  AND ms.result_path = tr.result_path
                  AND ms.score_target = tr.score_target
                  AND ms.embedding_variant_name IS NOT DISTINCT FROM {variant_name_expr}
-                JOIN dim_metric AS dm
-                  ON dm.metric_id = ms.metric_id
+                JOIN dim_metric AS metric
+                  ON metric.metric_id = ms.metric_id
                 {metadata_join}
                 WHERE tr.benchmark IN ({placeholders})
                   AND tr.score_target = ?
                   AND ms.metric_value IS NOT NULL
-                  AND dm.metric_family = ?
-                  AND dm.cutoff = ?
+                  AND metric.metric_family = ?
+                  AND metric.cutoff = ?
                   AND {variant_name_expr} IS NULL
                   {facet_filter}
                   {rerank_metric_filter}
@@ -521,7 +524,7 @@ class TaskResultsRepository:
             late_document_prefix_expr = _column_or_null(columns, "late_interaction_document_prefix")
             late_query_expansion_expr = _column_or_null(columns, "late_interaction_query_expansion")
             late_attend_expansion_expr = _column_or_null(columns, "late_interaction_attend_to_expansion_tokens")
-            query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_text_length_sql(
+            category_expr, query_mean_chars_expr, document_mean_chars_expr, metadata_join = _task_metadata_sql(
                 viewer_columns=columns,
                 metadata_columns=metadata_columns,
             )
@@ -547,6 +550,7 @@ class TaskResultsRepository:
                     {language_expr} AS language,
                     {languages_expr} AS languages,
                     {primary_languages_expr} AS primary_languages,
+                    {category_expr} AS category,
                     tr.active_parameters,
                     tr.total_parameters,
                     tr.max_seq_length,
@@ -637,6 +641,7 @@ def _task_result_row(field_names: list[str], row: tuple[Any, ...]) -> TaskResult
         language=payload["language"] if isinstance(payload["language"], str) else None,
         languages=tuple(payload["languages"]),
         primary_languages=tuple(payload["primary_languages"]),
+        category=payload["category"] if isinstance(payload.get("category"), str) else None,
         active_parameters=_int_payload_value(payload.get("active_parameters")),
         total_parameters=_int_payload_value(payload.get("total_parameters")),
         max_seq_length=_int_payload_value(payload.get("max_seq_length")),
@@ -696,25 +701,47 @@ def _float_payload_value(value: Any) -> float | None:
     return float(value) if isinstance(value, int | float) else None
 
 
-def _task_text_length_sql(*, viewer_columns: set[str], metadata_columns: set[str]) -> tuple[str, str, str]:
-    if {"query_mean_chars", "document_mean_chars"}.issubset(viewer_columns):
-        return (
-            qualified_column("tr", "query_mean_chars", allowed_columns=viewer_columns),
-            qualified_column("tr", "document_mean_chars", allowed_columns=viewer_columns),
-            "",
+def _task_metadata_sql(*, viewer_columns: set[str], metadata_columns: set[str]) -> tuple[str, str, str, str]:
+    can_join_metadata = {"benchmark", "dataset_id", "task_key"}.issubset(metadata_columns)
+    needs_metadata = (
+        (
+            "category" not in viewer_columns
+            and "category" in metadata_columns
+            and can_join_metadata
         )
-    if {"query_mean_chars", "document_mean_chars", "benchmark", "dataset_id", "task_key"}.issubset(metadata_columns):
-        return (
-            qualified_column("dm", "query_mean_chars", allowed_columns=metadata_columns),
-            qualified_column("dm", "document_mean_chars", allowed_columns=metadata_columns),
-            """
+        or (
+            not {"query_mean_chars", "document_mean_chars"}.issubset(viewer_columns)
+            and {"query_mean_chars", "document_mean_chars"}.issubset(metadata_columns)
+            and can_join_metadata
+        )
+    )
+    metadata_join = (
+        """
                 LEFT JOIN dataset_metadata AS dm
                   ON dm.benchmark = tr.benchmark
                  AND dm.dataset_id = tr.dataset_id
                  AND dm.task_key = tr.task_key
-            """,
-        )
-    return "NULL", "NULL", ""
+            """
+        if needs_metadata
+        else ""
+    )
+    category_expr = (
+        qualified_column("tr", "category", allowed_columns=viewer_columns)
+        if "category" in viewer_columns
+        else qualified_column("dm", "category", allowed_columns=metadata_columns)
+        if needs_metadata and "category" in metadata_columns
+        else "NULL"
+    )
+    if {"query_mean_chars", "document_mean_chars"}.issubset(viewer_columns):
+        query_mean_chars_expr = qualified_column("tr", "query_mean_chars", allowed_columns=viewer_columns)
+        document_mean_chars_expr = qualified_column("tr", "document_mean_chars", allowed_columns=viewer_columns)
+    elif needs_metadata and {"query_mean_chars", "document_mean_chars"}.issubset(metadata_columns):
+        query_mean_chars_expr = qualified_column("dm", "query_mean_chars", allowed_columns=metadata_columns)
+        document_mean_chars_expr = qualified_column("dm", "document_mean_chars", allowed_columns=metadata_columns)
+    else:
+        query_mean_chars_expr = "NULL"
+        document_mean_chars_expr = "NULL"
+    return category_expr, query_mean_chars_expr, document_mean_chars_expr, metadata_join
 
 
 def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
@@ -749,7 +776,7 @@ def _facet_filter_sql(columns: set[str], filters: TaskResultFacetFilters | None)
         return "", []
     clauses: list[str] = []
     params: list[Any] = []
-    _append_filter_clause(clauses, params, expression=_dim_bucket_sql(columns), values=filters.dim_filters)
+    _append_dim_filter_clause(clauses, params, columns=columns, values=filters.dim_filters)
     _append_filter_clause(clauses, params, expression=_quant_bucket_sql(columns), values=filters.quant_filters)
     _append_filter_clause(
         clauses,
@@ -782,6 +809,59 @@ def _append_filter_clause(
     placeholders = ", ".join("?" for _ in values)
     clauses.append(f"{expression} IN ({placeholders})")
     params.extend(values)
+
+
+def _append_dim_filter_clause(
+    clauses: list[str],
+    params: list[Any],
+    *,
+    columns: set[str],
+    values: tuple[str, ...],
+) -> None:
+    if not values:
+        return
+    subclauses: list[str] = []
+    exact_values: list[str] = []
+    min_bounds: list[int] = []
+    max_bounds: list[int] = []
+    dim_value = _column_or_null(columns, "embedding_dim")
+    for value in values:
+        if value.startswith("gte:"):
+            try:
+                min_bounds.append(int(value.removeprefix("gte:")))
+            except ValueError:
+                exact_values.append(value)
+            continue
+        if value.startswith("lte:"):
+            try:
+                max_bounds.append(int(value.removeprefix("lte:")))
+            except ValueError:
+                exact_values.append(value)
+            continue
+        if value == "__none_selected__":
+            clauses.append("FALSE")
+            return
+        exact_values.append(value)
+    if min_bounds or max_bounds:
+        range_clauses = [f"{dim_value} IS NOT NULL"]
+        if min_bounds:
+            range_clauses.append(f"{dim_value} >= ?")
+            params.append(max(min_bounds))
+        if max_bounds:
+            range_clauses.append(f"{dim_value} <= ?")
+            params.append(min(max_bounds))
+        subclauses.append("(" + " AND ".join(range_clauses) + ")")
+    for value in exact_values:
+        if value == "__none_selected__":
+            clauses.append("FALSE")
+            return
+    if exact_values:
+        placeholders = ", ".join("?" for _ in exact_values)
+        subclauses.append(f"{_dim_bucket_sql(columns)} IN ({placeholders})")
+        params.extend(exact_values)
+    if not subclauses:
+        return
+    clauses.append("(" + " OR ".join(subclauses) + ")")
 
 
 def _dim_bucket_sql(columns: set[str]) -> str:

@@ -160,6 +160,9 @@ class _HakariNanoBaseEvaluator(BaseEvaluator):
         corpus_policy: CorpusPolicy,
         metrics: Sequence[str],
         write_csv: bool,
+        cache_datasets: bool,
+        restrict_corpus_to_candidates: bool,
+        candidate_top_k: int | None,
     ) -> None:
         super().__init__()
         self.name = name
@@ -181,19 +184,42 @@ class _HakariNanoBaseEvaluator(BaseEvaluator):
         self.corpus_policy = corpus_policy
         self.write_csv = write_csv
         self.tasks = resolve_hakari_nano_targets(targets)
+        self.cache_datasets = cache_datasets
+        self.restrict_corpus_to_candidates = restrict_corpus_to_candidates
+        self.candidate_top_k = candidate_top_k
+        self._dataset_cache: dict[tuple[str, str, str | None, str | None, int | None, int, str, bool, int | None], LoadedIrDataset] = {}
 
     def _load_dataset(self, task: EvalTask) -> LoadedIrDataset:
+        cache_key = (
+            task.dataset_id,
+            task.split_name,
+            self.candidate_ranking,
+            self.dataset_revision,
+            self.query_limit,
+            self.query_sample_seed,
+            self.corpus_policy,
+            self.restrict_corpus_to_candidates,
+            self.candidate_top_k,
+        )
+        if self.cache_datasets and cache_key in self._dataset_cache:
+            return self._dataset_cache[cache_key]
         dataset = load_ir_dataset(
             task,
             candidate_subset_name=self.candidate_ranking,
             revision=self.dataset_revision,
+            restrict_corpus_to_candidates=self.restrict_corpus_to_candidates,
+            candidate_top_k=self.candidate_top_k,
         )
-        return sample_ir_dataset(
+        dataset = _limit_loaded_dataset_candidates(dataset, self.candidate_top_k)
+        sampled = sample_ir_dataset(
             dataset,
             query_limit=self.query_limit,
             query_sample_seed=self.query_sample_seed,
             corpus_policy=self.corpus_policy,
         )
+        if self.cache_datasets:
+            self._dataset_cache[cache_key] = sampled
+        return sampled
 
     def _finalize(
         self,
@@ -238,6 +264,9 @@ class _HakariNanoBaseEvaluator(BaseEvaluator):
             "query_sample_seed": self.query_sample_seed,
             "corpus_policy": self.corpus_policy,
             "metrics": list(self.metric_suffixes),
+            "cache_datasets": self.cache_datasets,
+            "restrict_corpus_to_candidates": self.restrict_corpus_to_candidates,
+            "candidate_top_k": self.candidate_top_k,
         }
 
 
@@ -286,6 +315,7 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
         retrieval_score_device: str = "auto",
         rerank_top_k: int | None = DEFAULT_RERANK_TOP_K,
         write_csv: bool = False,
+        cache_datasets: bool = True,
     ) -> None:
         super().__init__(
             targets=targets,
@@ -301,6 +331,11 @@ class HakariNanoEmbeddingEvaluator(_HakariNanoBaseEvaluator):
             corpus_policy=corpus_policy,
             metrics=metrics,
             write_csv=write_csv,
+            cache_datasets=cache_datasets,
+            restrict_corpus_to_candidates=corpus_policy == "sampled_candidates" and candidate_ranking is not None,
+            candidate_top_k=(
+                rerank_top_k if corpus_policy == "sampled_candidates" and candidate_ranking is not None else None
+            ),
         )
         self.query_prompt = query_prompt
         self.document_prompt = document_prompt
@@ -383,6 +418,7 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
         rerank_top_k: int | None = DEFAULT_RERANK_TOP_K,
         inference_kwargs: dict[str, Any] | None = None,
         write_csv: bool = False,
+        cache_datasets: bool = True,
     ) -> None:
         self.rerank_top_k = rerank_top_k
         evaluator_name = name or f"HakariNano_R{rerank_top_k if rerank_top_k is not None else 'all'}"
@@ -400,6 +436,9 @@ class HakariNanoRerankerEvaluator(_HakariNanoBaseEvaluator):
             corpus_policy=corpus_policy,
             metrics=metrics,
             write_csv=write_csv,
+            cache_datasets=cache_datasets,
+            restrict_corpus_to_candidates=True,
+            candidate_top_k=rerank_top_k,
         )
         self.inference_kwargs = dict(inference_kwargs or {})
 
@@ -474,6 +513,9 @@ class HakariNanoBM25Evaluator(_HakariNanoBaseEvaluator):
             corpus_policy=corpus_policy,
             metrics=metrics,
             write_csv=write_csv,
+            cache_datasets=True,
+            restrict_corpus_to_candidates=False,
+            candidate_top_k=None,
         )
         self.bm25_source = bm25_source
         self.bm25_config = BM25Config(
@@ -551,6 +593,23 @@ def _stable_sample_query_ids(
         for query_id in query_ids
     ]
     return {query_id for _score, query_id in sorted(scored)[:query_limit]}
+
+
+def _limit_loaded_dataset_candidates(
+    dataset: LoadedIrDataset,
+    candidate_top_k: int | None,
+) -> LoadedIrDataset:
+    if dataset.candidates is None or candidate_top_k is None:
+        return dataset
+    if candidate_top_k <= 0:
+        raise ValueError("candidate_top_k must be positive.")
+    return LoadedIrDataset(
+        queries=dataset.queries,
+        corpus=dataset.corpus,
+        qrels=dataset.qrels,
+        candidates={query_id: corpus_ids[:candidate_top_k] for query_id, corpus_ids in dataset.candidates.items()},
+        evaluator_name=dataset.evaluator_name,
+    )
 
 
 def _aggregate_metrics(metrics: list[dict[str, float]], *, metric_suffixes: Sequence[str]) -> dict[str, float]:

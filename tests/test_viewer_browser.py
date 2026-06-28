@@ -335,7 +335,19 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert "border-cyan-700" in (ar_button.get_attribute("class") or "")
 
                 page.get_by_role("button", name="RTEB").click()
-                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.wait_for_function(
+                    """() => {
+                        const labels = Array.from(document.querySelectorAll("[data-doc-label-group='benchmark']"));
+                        const label = labels.find((el) => el.textContent.trim().includes("RTEB"));
+                        if (label) {
+                            return label.className.includes("border-cyan-700");
+                        }
+                        const buttons = Array.from(document.querySelectorAll("button"));
+                        const button = buttons.find((el) => el.textContent.trim() === "RTEB");
+                        return Boolean(button && button.className.includes("border-cyan-700"));
+                    }""",
+                    timeout=15_000,
+                )
                 nano_rteb_button = page.get_by_role("button", name="RTEB")
                 nano_rteb_label = nano_rteb_button.locator("xpath=ancestor::*[@data-doc-label-group='benchmark']").first
                 active_classes = nano_rteb_label.get_attribute("class") if nano_rteb_label.count() else nano_rteb_button.get_attribute("class")

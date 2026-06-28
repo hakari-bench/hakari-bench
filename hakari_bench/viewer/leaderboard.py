@@ -45,6 +45,7 @@ from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_var
 SortDirection = Literal["asc", "desc"]
 ScoreTarget = Literal["all", "reranking", "reranking_without_safeguard"]
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
+TASK_CATEGORY_FACET_PREFIX = "category:"
 
 
 @dataclass(frozen=True)
@@ -98,6 +99,7 @@ class TaskScore:
     language: str | None = None
     languages: tuple[str, ...] = ()
     primary_languages: tuple[str, ...] = ()
+    category: str | None = None
     dtype: str | None = None
     attn_implementation: str | None = None
     prompt_summary: str | None = None
@@ -448,6 +450,13 @@ class LeaderboardService:
                 )
                 if precomputed is not None:
                     rows, expected_tasks, available_languages = precomputed
+                    available_languages = _with_precomputed_category_options(
+                        duckdb_path=self.duckdb_path,
+                        benchmarks=benchmarks,
+                        score_target=score_target,
+                        options=available_languages,
+                        config=self.config,
+                    )
                     rows = _with_model_card_parameters_for_leaderboard_rows(
                         rows, self.model_card_parameters
                     )
@@ -1383,6 +1392,96 @@ def _precomputed_mean_score(
     return stored_mean_score
 
 
+def _with_precomputed_category_options(
+    *,
+    duckdb_path: Path,
+    benchmarks: Sequence[str],
+    score_target: ScoreTarget,
+    options: list[LanguageOption],
+    config: ViewerConfig,
+) -> list[LanguageOption]:
+    existing_codes = {option.code for option in options}
+    if TASK_CATEGORY_FACET_PREFIX + "code" in existing_codes:
+        return _sorted_task_facet_options(options)
+    code_task_count = _precomputed_code_task_count(
+        duckdb_path=duckdb_path,
+        benchmarks=benchmarks,
+        score_target=score_target,
+        config=config,
+    )
+    if code_task_count <= 0:
+        return options
+    return _sorted_task_facet_options([
+        *options,
+        LanguageOption(
+            code=TASK_CATEGORY_FACET_PREFIX + "code",
+            label="Code",
+            task_count=code_task_count,
+        ),
+    ])
+
+
+def _precomputed_code_task_count(
+    *,
+    duckdb_path: Path,
+    benchmarks: Sequence[str],
+    score_target: ScoreTarget,
+    config: ViewerConfig,
+) -> int:
+    if not duckdb_path.exists() or not benchmarks:
+        return 0
+    con = duckdb.connect(str(duckdb_path), read_only=True)
+    try:
+        if not _table_exists(con, "viewer_task_results"):
+            return 0
+        columns = _table_columns(con, "viewer_task_results")
+        metadata_columns = _table_columns(con, "dataset_metadata") if _table_exists(con, "dataset_metadata") else set()
+        if "category" in columns:
+            category_expr = "tr.category"
+            metadata_join = ""
+        elif {"category", "benchmark", "task_key"}.issubset(metadata_columns):
+            category_expr = "dm.category"
+            join_parts = ["dm.benchmark = tr.benchmark", "dm.task_key = tr.task_key"]
+            if "dataset_id" in columns and "dataset_id" in metadata_columns:
+                join_parts.append("dm.dataset_id = tr.dataset_id")
+            metadata_join = "LEFT JOIN dataset_metadata AS dm ON " + " AND ".join(join_parts)
+        else:
+            return 0
+        if not {"benchmark", "task_key"}.issubset(columns):
+            return 0
+        task_name_expr = "tr.task_name" if "task_name" in columns else "tr.task_key"
+        conditions = [f"tr.benchmark IN ({', '.join('?' for _ in benchmarks)})", f"{category_expr} = 'code'"]
+        params: list[Any] = list(benchmarks)
+        if "score_target" in columns:
+            conditions.append("tr.score_target = ?")
+            params.append(score_target)
+        if "score" in columns:
+            conditions.append("tr.score IS NOT NULL")
+        rows = con.execute(
+            f"""
+            SELECT DISTINCT tr.benchmark, {task_name_expr} AS task_name, tr.task_key
+            FROM viewer_task_results AS tr
+            {metadata_join}
+            WHERE {' AND '.join(conditions)}
+            """,
+            params,
+        ).fetchall()
+    finally:
+        con.close()
+    excluded_by_benchmark = {
+        benchmark.name: set(benchmark.excluded_tasks)
+        for benchmark in config.benchmarks
+        if benchmark.excluded_tasks
+    }
+    task_keys = {
+        str(task_key)
+        for benchmark, task_name, task_key in rows
+        if str(task_name) not in excluded_by_benchmark.get(str(benchmark), set())
+        and str(task_key) not in excluded_by_benchmark.get(str(benchmark), set())
+    }
+    return len(task_keys)
+
+
 def _duckdb_cache_identity(duckdb_path: Path) -> tuple[str, int, int]:
     resolved_path = duckdb_path.resolve()
     try:
@@ -1507,6 +1606,7 @@ def _task_scores_from_records(
                     language=record.language,
                     languages=tuple(record.languages),
                     primary_languages=tuple(record.primary_languages),
+                    category=record.category,
                     active_parameters=record.active_parameters,
                     total_parameters=record.total_parameters,
                     max_seq_length=record.max_seq_length,
@@ -2162,12 +2262,16 @@ def _language_options(
     policy: LanguageFilterPolicy | None = None,
 ) -> list[LanguageOption]:
     task_keys_by_language: dict[str, set[str]] = defaultdict(set)
+    task_keys_by_category: dict[str, set[str]] = defaultdict(set)
     for row in rows:
         for language in _language_codes_for_row(
             row, mode=mode, allowed_languages=allowed_languages, policy=policy
         ):
             task_keys_by_language[language].add(row.task_key)
-    return [
+        category_code = _task_category_facet_code(row.category)
+        if category_code is not None:
+            task_keys_by_category[category_code].add(row.task_key)
+    options = [
         LanguageOption(
             code=language, label=_language_label(language), task_count=len(task_keys)
         )
@@ -2175,7 +2279,32 @@ def _language_options(
             task_keys_by_language.items(),
             key=lambda item: (-len(item[1]), item[0]),
         )
+    ] + [
+        LanguageOption(
+            code=category,
+            label=_task_category_label(category),
+            task_count=len(task_keys),
+        )
+        for category, task_keys in sorted(
+            task_keys_by_category.items(),
+            key=lambda item: (-len(item[1]), item[0]),
+        )
     ]
+    return _sorted_task_facet_options(options)
+
+
+def _sorted_task_facet_options(options: list[LanguageOption]) -> list[LanguageOption]:
+    return sorted(
+        options,
+        key=lambda option: _task_facet_sort_key(option.code, option.label, option.task_count),
+    )
+
+
+def _task_facet_sort_key(code: str, label: str, task_count: int) -> tuple[int, int, str, str]:
+    fixed_order = {"en": 0, TASK_CATEGORY_FACET_PREFIX + "code": 1}
+    if code in fixed_order:
+        return (0, fixed_order[code], "", code)
+    return (1, -task_count, label.casefold(), code)
 
 
 def _selected_languages(
@@ -2201,7 +2330,20 @@ def _filter_rows_by_languages(
         row
         for row in rows
         if selected.intersection(_language_codes_for_row(row, mode=mode, policy=policy))
+        or _task_category_facet_code(row.category) in selected
     ]
+
+
+def _task_category_facet_code(category: str | None) -> str | None:
+    if category != "code":
+        return None
+    return f"{TASK_CATEGORY_FACET_PREFIX}{category}"
+
+
+def _task_category_label(category_facet_code: str) -> str:
+    category = category_facet_code.removeprefix(TASK_CATEGORY_FACET_PREFIX)
+    labels = {"code": "Code"}
+    return labels.get(category, category.replace("_", " ").title())
 
 
 def _filter_rows_by_model_terms(
@@ -2264,7 +2406,7 @@ def _filter_rows_by_facets(
     return [
         row
         for row in rows
-        if (not selected_dims or _dim_bucket(row.embedding_dim) in selected_dims)
+        if (not selected_dims or _dim_filter_matches(row.embedding_dim, dim_filters))
         and (not selected_quants or _quant_bucket(row.quantization) in selected_quants)
         and (
             not selected_commercial
@@ -2295,6 +2437,57 @@ def _dim_bucket(value: int | None) -> str:
     if value >= 1025:
         return "1025+"
     return str(value)
+
+
+def _dim_filter_matches(value: int | None, dim_filters: tuple[str, ...]) -> bool:
+    if "__none_selected__" in dim_filters:
+        return False
+    bucket = _dim_bucket(value)
+    exact_filters = [selected for selected in dim_filters if not selected.startswith("gte:") and not selected.startswith("lte:")]
+    if bucket in exact_filters:
+        return True
+    min_bounds = [
+        bound
+        for selected in dim_filters
+        if selected.startswith("gte:")
+        for bound in [_dim_filter_bound(selected, "gte:")]
+        if bound is not None
+    ]
+    max_bounds = [
+        bound
+        for selected in dim_filters
+        if selected.startswith("lte:")
+        for bound in [_dim_filter_bound(selected, "lte:")]
+        if bound is not None
+    ]
+    if not min_bounds and not max_bounds:
+        return False
+    if value is None:
+        return False
+    if min_bounds and value < max(min_bounds):
+        return False
+    if max_bounds and value > min(max_bounds):
+        return False
+    return True
+
+
+def _dim_filter_value_matches(*, value: int | None, bucket: str, selected_value: str) -> bool:
+    if selected_value == bucket:
+        return True
+    if selected_value.startswith("gte:"):
+        bound = _dim_filter_bound(selected_value, "gte:")
+        return value is not None and bound is not None and value >= bound
+    if not selected_value.startswith("lte:"):
+        return False
+    bound = _dim_filter_bound(selected_value, "lte:")
+    return value is not None and bound is not None and value <= bound
+
+
+def _dim_filter_bound(value: str, prefix: str) -> int | None:
+    try:
+        return int(value.removeprefix(prefix))
+    except ValueError:
+        return None
 
 
 def _quant_bucket(value: str | None) -> str:

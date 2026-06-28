@@ -124,6 +124,92 @@ def test_embedding_evaluator_returns_st_compatible_metrics(monkeypatch) -> None:
     assert any(key.startswith("ToyData_test_") for key in results)
 
 
+def test_embedding_evaluator_restricts_and_trims_sampled_candidate_corpus(monkeypatch) -> None:
+    task = _toy_task()
+    calls: list[dict[str, object]] = []
+
+    def fake_load_ir_dataset(*_args: object, **kwargs: object) -> LoadedIrDataset:
+        calls.append(dict(kwargs))
+        return _toy_dataset()
+
+    monkeypatch.setattr(
+        "hakari_bench.sentence_transformers.evaluators.load_ir_dataset",
+        fake_load_ir_dataset,
+    )
+
+    evaluator = HakariNanoEmbeddingEvaluator(
+        targets=[HakariNanoTarget(dataset="ToyData", tasks=[task])],
+        corpus_policy="sampled_candidates",
+        rerank_top_k=1,
+    )
+
+    dataset = evaluator._load_dataset(task)
+
+    assert calls == [
+        {
+            "candidate_subset_name": "reranking_hybrid",
+            "revision": None,
+            "restrict_corpus_to_candidates": True,
+            "candidate_top_k": 1,
+        }
+    ]
+    assert dataset.candidates == {"q1": ["d4"], "q2": ["d2"], "q3": ["d3"]}
+    assert set(dataset.corpus) == {"d1", "d2", "d3", "d4"}
+
+
+def test_embedding_evaluator_caches_sampled_datasets_by_default(monkeypatch) -> None:
+    task = _toy_task()
+    call_count = 0
+
+    def fake_load_ir_dataset(*_args: object, **_kwargs: object) -> LoadedIrDataset:
+        nonlocal call_count
+        call_count += 1
+        return _toy_dataset()
+
+    monkeypatch.setattr(
+        "hakari_bench.sentence_transformers.evaluators.load_ir_dataset",
+        fake_load_ir_dataset,
+    )
+
+    evaluator = HakariNanoEmbeddingEvaluator(
+        targets=[HakariNanoTarget(dataset="ToyData", tasks=[task])],
+        corpus_policy="sampled_candidates",
+    )
+
+    first = evaluator._load_dataset(task)
+    second = evaluator._load_dataset(task)
+
+    assert first is second
+    assert call_count == 1
+
+
+def test_embedding_evaluator_can_disable_dataset_cache(monkeypatch) -> None:
+    task = _toy_task()
+    call_count = 0
+
+    def fake_load_ir_dataset(*_args: object, **_kwargs: object) -> LoadedIrDataset:
+        nonlocal call_count
+        call_count += 1
+        return _toy_dataset()
+
+    monkeypatch.setattr(
+        "hakari_bench.sentence_transformers.evaluators.load_ir_dataset",
+        fake_load_ir_dataset,
+    )
+
+    evaluator = HakariNanoEmbeddingEvaluator(
+        targets=[HakariNanoTarget(dataset="ToyData", tasks=[task])],
+        corpus_policy="sampled_candidates",
+        cache_datasets=False,
+    )
+
+    first = evaluator._load_dataset(task)
+    second = evaluator._load_dataset(task)
+
+    assert first is not second
+    assert call_count == 2
+
+
 def test_reranker_evaluator_uses_bm25_candidates(monkeypatch) -> None:
     task = _toy_task()
     monkeypatch.setattr(

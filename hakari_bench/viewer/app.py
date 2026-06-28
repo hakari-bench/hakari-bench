@@ -31,6 +31,8 @@ from hakari_bench.viewer.config import (
 )
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome, render_docs_index_page, render_markdown_page
 from hakari_bench.viewer.filters import (
+    DIM_FILTER_MIN_RANGE_PREFIX,
+    DIM_FILTER_RANGE_PREFIX,
     FILTER_NONE_VALUE,
     FilterContext,
     row_filter_context,
@@ -740,7 +742,7 @@ def render_page(
     htmx_url = _asset_url("htmx.min.js")
     viewer_js_url = _asset_url("viewer.js")
     latest_update = _latest_update_label(summary.latest_finished_at_utc if summary else None)
-    footer = _render_page_footer(latest_update=latest_update, database_label=database_label)
+    footer = _render_page_footer(latest_update=latest_update, database_label=database_label, initial_loading=True)
     header_actions = _render_header_actions()
     return f"""<!doctype html>
 <html lang="ja">
@@ -773,7 +775,7 @@ def render_page(
       id="leaderboard-panel"
       hx-get="{_leaderboard_url(query)}"
       hx-trigger="load"
-      {_leaderboard_request_hx_attrs()}
+      {_initial_leaderboard_request_hx_attrs()}
     >
       <div class="leaderboard-initial-loading border border-zinc-200 bg-white text-sm font-medium text-zinc-700" role="status" aria-live="polite" aria-atomic="true">
         <span class="loading-spinner" aria-hidden="true"></span>
@@ -800,6 +802,10 @@ def _asset_version(filename: str) -> str:
 
 def _leaderboard_request_hx_attrs() -> str:
     return 'hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-indicator="#leaderboard-loading-toast" hx-sync="#leaderboard-panel:replace"'
+
+
+def _initial_leaderboard_request_hx_attrs() -> str:
+    return 'hx-target="#leaderboard-panel" hx-swap="innerHTML" hx-sync="#leaderboard-panel:replace"'
 
 
 def _leaderboard_control_hx_attrs() -> str:
@@ -945,7 +951,9 @@ def _docs_page_chrome() -> DocsPageChrome:
     )
 
 
-def _render_page_footer(*, latest_update: str, database_label: str, swap_oob: bool = False) -> str:
+def _render_page_footer(
+    *, latest_update: str, database_label: str, swap_oob: bool = False, initial_loading: bool = False
+) -> str:
     meta_items = []
     if latest_update:
         meta_items.append(
@@ -962,7 +970,8 @@ def _render_page_footer(*, latest_update: str, database_label: str, swap_oob: bo
         {meta}
       </div>"""
     oob_attr = ' hx-swap-oob="outerHTML"' if swap_oob else ""
-    return f"""<footer id="hakari-page-footer" class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6"{oob_attr}>
+    initial_class = " page-footer-initial-loading" if initial_loading else ""
+    return f"""<footer id="hakari-page-footer" class="mx-auto max-w-[1600px] border-t border-zinc-200 px-4 py-2 text-[11px] text-zinc-500 sm:px-6{initial_class}"{oob_attr}>
     <div class="flex min-w-0 justify-end">
       {meta}
     </div>
@@ -1110,6 +1119,7 @@ def render_help_summary_modal() -> str:
   <div class="hakari-modal-body">
     <p id="help-summary-short" class="hakari-modal-lead text-sm"></p>
     <p id="help-summary-details" class="hakari-modal-text text-sm"></p>
+    <div id="help-summary-table-container" class="mt-3 overflow-x-auto" hidden></div>
   </div>
 </dialog>
 """
@@ -1124,14 +1134,26 @@ def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
                   aria-label="{escape(label, quote=True)}">{_icon_svg("book-open")}</button>"""
 
 
-def _render_help_tooltip(title: str, summary: str | None = None, details: str | None = None) -> str:
+def _render_help_tooltip(
+    title: str,
+    summary: str | None = None,
+    details: str | None = None,
+    *,
+    table_rows: list[dict[str, str]] | None = None,
+) -> str:
     summary = summary or _first_sentence(title)
     details = details or title
+    table_attr = (
+        f' data-help-table="{escape(json.dumps(table_rows, separators=(",", ":")), quote=True)}"'
+        if table_rows
+        else ""
+    )
     return f"""<button type="button"
                     class="help-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
                     data-help-title="{escape(title, quote=True)}"
                     data-help-summary="{escape(summary, quote=True)}"
                     data-help-details="{escape(details, quote=True)}"
+                    {table_attr}
                     aria-label="{escape(title, quote=True)}">{_icon_svg("circle-help")}</button>"""
 
 
@@ -1297,7 +1319,7 @@ def _render_count_breakdown_modal(
           section_id="count-breakdown-shown",
           title="Visible rows",
           count=len(visible_rows),
-          description="Rows currently visible after text, facet, and range filters.",
+          description="Rows currently visible after the selected result set and all active text, facet, and range filters.",
           rows=visible_rows,
           model_views=model_views,
       )}
@@ -1305,7 +1327,7 @@ def _render_count_breakdown_modal(
           section_id="count-breakdown-complete",
           title="Complete models",
           count=len(result.rows),
-          description="Complete rows in the selected benchmark scope before row visibility filters.",
+          description="Complete rows for the selected evaluation mode, benchmark scope, task facets, variant display, and pre-ranking range filters before row visibility filters.",
           rows=result.rows,
           model_views=model_views,
       )}
@@ -1379,7 +1401,7 @@ def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs:
     return f"""
       <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden class="pt-2">
         <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
-        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected benchmark scope. Linked tasks have verified local documentation and open in a new tab.</p>
+        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected evaluation mode, benchmark scope, task facets, and task-length range filters. Linked tasks have verified local documentation and open in a new tab.</p>
         {task_body}
       </section>
     """
@@ -2213,12 +2235,16 @@ def _plot_tooltip(point: _PlotPoint) -> str:
     lines = [row.model_name, f"Type: {_plot_model_type_label(row)}"]
     if row.embedding_variant_name:
         lines.append(f"Variant: {row.embedding_variant_name}")
+    lines.extend(["", f"Borda score: {_fmt_score(row.borda_score)}"])
+    if row.micro_mean is not None or row.macro_mean is not None:
+        if row.micro_mean is not None:
+            lines.append(f"Mean (Micro): {_fmt_score(row.micro_mean)}")
+        if row.macro_mean is not None:
+            lines.append(f"Mean (Macro): {_fmt_score(row.macro_mean)}")
+    else:
+        lines.append(f"Mean score: {_fmt_score(row.mean_score)}")
     lines.extend(
         [
-            "",
-            f"Borda score: {_fmt_score(row.borda_score)}",
-            f"Mean (Micro): {_fmt_score(row.micro_mean)}",
-            f"Mean (Macro): {_fmt_score(row.macro_mean)}",
             f"Rank: {_fmt_rank(row.borda_rank)}",
             "",
             f"Active params: {_plot_tooltip_active_parameters_label(row)}",
@@ -2751,7 +2777,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         "Overall": (
             "Benchmark scope: Overall",
             "Shows every benchmark family available in the viewer.",
-            "Overall is the default and broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any language, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Micro when you want every raw task row to contribute equally, or Macro when you want each NanoSet to contribute equally.",
+            "Overall is the default and broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any task facet, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Micro when you want every raw task row to contribute equally, or Macro when you want each NanoSet to contribute equally.",
         ),
         "Overall (EN)": (
             "Benchmark scope: Overall (EN)",
@@ -2761,7 +2787,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         CLEAR_SCOPE_NAME: (
             "Benchmark scope: Clear",
             "Clears every NanoSet selection.",
-            "Clear resets the page to empty Custom selection. No benchmark tasks are selected, Task facets return to All languages, and the leaderboard table shows no rows.\n\nClear is an action, not a selected scope state. After pressing it, the URL remains view=Custom with no bench parameters so the next NanoSet toggle starts from a clean custom set.",
+            "Clear resets the page to empty Custom selection. No benchmark tasks are selected, Task facets return to All languages/categories, and the leaderboard table shows no rows.\n\nClear is an action, not a selected scope state. After pressing it, the URL remains view=Custom with no bench parameters so the next NanoSet toggle starts from a clean custom set.",
         ),
     }
     return help_text.get(
@@ -2769,7 +2795,7 @@ def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
         (
             f"Benchmark scope: {view_name}",
             f"Shows the {view_name} scope from the viewer configuration.",
-            "Benchmark scope chooses the tasks that are eligible for the leaderboard before row filters are applied.\n\nUse this control first when you want to compare models on a specific benchmark family, then refine the result with language, model, task, and variant filters.",
+            "Benchmark scope chooses the tasks that are eligible for the leaderboard before row filters are applied.\n\nUse this control first when you want to compare models on a specific benchmark family, then refine the result with task facets, model filters, task filters, and variant controls.",
         ),
     )
 
@@ -2884,7 +2910,7 @@ def _render_target_group(
         safeguard_help = _render_help_tooltip(
             "Safeguard positives",
             "Keeps reranking comparable by using the safeguarded hybrid candidate set.",
-            "This option applies only in Reranking mode. Rerankers do not search the full corpus; they reorder the fixed reranking_hybrid candidate set.\n\nHybrid means RRF over BM25 and dense candidate rankings: BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them into the top-100 hybrid candidates for each query.\n\nWhen Safeguard positives is enabled, a query whose top-100 hybrid candidates contain no qrels-positive document gets an optional rank-101 safeguard positive appended. This keeps reranker scores from being dominated by candidate lists where the reranker had no relevant document to promote.\n\nTurn it off only when you intentionally want to inspect reranking on the raw hybrid top-100 without the appended safeguard positive.",
+            "This option applies only in Reranking mode. Reranking rows do not search the full corpus; they score or reorder the fixed reranking_hybrid candidate set.\n\nHybrid means RRF over BM25 and dense candidate rankings: BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them into the top-100 hybrid candidates for each query.\n\nWhen Safeguard positives is enabled, a query whose top-100 hybrid candidates contain no qrels-positive document gets an optional rank-101 safeguard positive appended. This keeps reranking scores from being dominated by candidate lists where the model had no relevant document to promote.\n\nTurn it off only when you intentionally want to inspect reranking on the raw hybrid top-100 without the appended safeguard positive.",
         )
         safeguard_toggle = f"""
                 <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
@@ -2903,7 +2929,7 @@ def _render_target_group(
               {_render_help_tooltip(
                   "Evaluation mode",
                   "Switches the leaderboard between retrieval runs and reranking runs.",
-                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, BM25, sparse, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows cross-encoder reranker results on a shared candidate set. Use Reranking when you want to compare how rerankers reorder candidates rather than how retrievers search the full corpus.",
+                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, BM25, sparse, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows materialized rerank scores on the reranking_hybrid candidate set. The candidate set is built from RRF over BM25 and dense candidate rankings, with an optional safeguard positive. Use Reranking to compare how models reorder that fixed hybrid candidate pool. BM25 appears as a candidate-order baseline, not as a cross-encoder reranker.",
               )}
               {safeguard_toggle}
             </div>
@@ -3015,6 +3041,69 @@ def _control_button_classes(*, active: bool) -> str:
     )
 
 
+_LANGUAGE_FULL_NAMES = {
+    "ar": "Arabic",
+    "bn": "Bengali",
+    "da": "Danish",
+    "de": "German",
+    "en": "English",
+    "es": "Spanish",
+    "fa": "Persian",
+    "fi": "Finnish",
+    "fr": "French",
+    "hi": "Hindi",
+    "id": "Indonesian",
+    "it": "Italian",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "nl": "Dutch",
+    "no": "Norwegian",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "sv": "Swedish",
+    "sw": "Swahili",
+    "te": "Telugu",
+    "th": "Thai",
+    "vi": "Vietnamese",
+    "yo": "Yoruba",
+    "zh": "Chinese",
+}
+
+
+def _task_facet_help_table_rows(options: Sequence[LanguageOption]) -> list[dict[str, str]]:
+    rows = []
+    for option in options:
+        if option.code.startswith("category:"):
+            rows.append(
+                {
+                    "code": option.code,
+                    "name": _task_category_facet_full_name(option.code),
+                    "tasks": f"{option.task_count:,}",
+                }
+            )
+            continue
+        rows.append(
+            {
+                "code": option.code.upper(),
+                "name": _language_full_name(option.code),
+                "tasks": f"{option.task_count:,}",
+            }
+        )
+    return rows
+
+
+def _language_full_name(code: str) -> str:
+    normalized = code.casefold()
+    return _LANGUAGE_FULL_NAMES.get(normalized, code.upper() if 2 <= len(code) <= 3 else code)
+
+
+def _task_category_facet_full_name(code: str) -> str:
+    category = code.removeprefix("category:")
+    labels = {"code": "Code tasks"}
+    return labels.get(category, category.replace("_", " ").title())
+
+
 def render_language_pages(
     *,
     result: LeaderboardResult,
@@ -3087,8 +3176,9 @@ def render_language_pages(
           {_control_label(icon="languages", text="Task facets")}
           {_render_help_tooltip(
               "Task facets",
-              "Filters tasks inside the selected benchmark scope by language.",
-              "Task facets narrows the tasks that are included after you choose a benchmark scope.\n\nFor multilingual suites such as MNanoBEIR, each language page filters the task set to one language-specific slice, such as Japanese or German. The All languages button removes that language filter.\n\nThis is different from Benchmark scope: scope chooses the benchmark family, while Task facets filters the tasks inside that family.",
+              "Filters tasks inside the selected benchmark scope by language or category.",
+              "Task facets narrows the tasks that are included after you choose a benchmark scope.\n\nFor multilingual suites such as MNanoBEIR, each language page filters the task set to one language-specific slice, such as Japanese or German. Code filters to tasks whose metadata category is code. The All languages button removes that task facet filter.\n\nThis is different from Benchmark scope: scope chooses the benchmark family, while Task facets filters the tasks inside that family.",
+              table_rows=_task_facet_help_table_rows(result.available_languages),
           )}
         </span>
         {''.join(buttons)}
@@ -3215,7 +3305,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Table display",
               "Changes which columns and per-task annotations are visible.",
-              "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD overlays standardized task scores so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank alongside the standardized score.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
+              "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD adds standard-deviation deltas so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank, score, and standard-deviation delta together.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -3324,7 +3414,7 @@ def render_controls(
     attn_options = filter_context.attn_options
     prompt_options = filter_context.prompt_options
     model_type_options = filter_context.model_type_options
-    selected_dims = filter_context.selected_dims
+    selected_dim_filters = filter_state.dim_filters if filter_state.filters_active else ()
     selected_quants = filter_context.selected_quants
     selected_commercial = filter_context.selected_commercial
     selected_dtypes = filter_context.selected_dtypes
@@ -3378,7 +3468,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(value for value, _ in quant_options),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3397,7 +3487,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=(FILTER_NONE_VALUE,),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3416,7 +3506,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3435,7 +3525,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3454,7 +3544,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3473,7 +3563,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3492,7 +3582,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3511,7 +3601,7 @@ def render_controls(
             task_filter=filter_state.task_filter,
             language_filters=filter_state.language_filters,
             filters_active=True,
-            dim_filters=tuple(filter_context.ordered_selected_dims()),
+            dim_filters=selected_dim_filters,
             quant_filters=tuple(filter_context.ordered_selected_quants()),
             commercial_filters=tuple(filter_context.ordered_selected_commercial()),
             model_type_filters=tuple(filter_context.ordered_selected_model_types()),
@@ -3534,15 +3624,7 @@ def render_controls(
         prompt_none_query,
     ):
         _apply_plot_state(query_payload, plot_state)
-    refine_results_open = (
-        bool(filter_state.model_filter.strip())
-        or bool(filter_state.task_filter.strip())
-        or filter_state.rank_filtered
-        or bool(filter_state.model_type_filters)
-        or filter_state.filters_active
-        or filter_state.has_parameter_filters
-        or filter_state.has_task_length_filters
-    )
+    refine_results_open = _filter_results_panel_should_open(filter_state)
     refine_results_open_attr = " open" if refine_results_open else ""
     return f"""
     <div class="grid gap-2 text-[0.8125rem] text-zinc-700">
@@ -3555,7 +3637,7 @@ def render_controls(
               {_render_help_tooltip(
                   "Filter results",
                   "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
-                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel and Task text filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, ranks keep their original global context. Enable Recalculate ranks from filters when you want ranks and means to be recomputed from only the filtered results.",
+                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel, Task, Dims, Params, and Length text or numeric filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, text and facet filters keep rank context within the current evaluation mode, benchmark scope, task facets, and variant selection. Enable Recalculate ranks from filters when you want those filters to recompute ranks and means. Params and Length range filters narrow the ranked model or task population after they are submitted.",
               )}
             </span>
           </span>
@@ -3563,26 +3645,35 @@ def render_controls(
         <form id="filter-controls" class="border-t border-zinc-200 p-2"
               hx-get="/leaderboard" hx-push-url="true"
               {_leaderboard_control_hx_attrs()}
-              hx-trigger="change, submit">
+              hx-trigger="change from:input[type='checkbox'], submit">
           {filter_hidden_html}
         <div class="grid gap-2">
-          <div class="min-w-0 space-y-2">
+          <div class="min-w-0">
             {_render_model_type_controls(
                 options=model_type_options,
                 selected_values=selected_model_types,
             )}
-            <div class="flex flex-wrap items-center gap-3">
+          </div>
+          <div class="filter-panel min-w-0 bg-zinc-50 p-2">
+            <div class="filter-panel-body space-y-2">
+              <div class="flex flex-wrap gap-x-6 gap-y-2">
+                <div class="flex min-w-64 flex-1 flex-col gap-2">
               <label class="flex min-w-64 flex-1 items-center gap-2">
                 <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model</span>
                 {_render_help_tooltip(
                     "Model filter",
                     "Filters leaderboard rows by model name.",
-                    "Model filter searches the displayed model names and hides rows that do not match.\n\nYou can search for multiple model-name keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, jina bge keeps rows whose model name contains jina or bge.\n\nModel keywords under 3 characters are ignored to avoid accidental broad matches. This filter changes which model rows are visible. It does not change the selected benchmark scope or which task columns are available.",
+                    "Model filter searches the displayed model names and hides rows that do not match.\n\nYou can search for multiple model-name keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, jina bge keeps rows whose model name contains jina or bge.\n\nModel keywords under 3 characters are ignored to avoid accidental broad matches. By default this filter changes which model rows are visible. When Recalculate ranks from filters is enabled, it also changes the ranked model population. It does not change the selected benchmark scope or which task columns are available.",
                 )}
                 <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
+                  {_render_dim_filter_bounds(selected_filters=selected_dim_filters)}
+                  {_render_active_parameter_filter_input(filter_state)}
+                  {_render_query_length_filter_input(filter_state)}
+                </div>
+                <div class="flex min-w-64 flex-1 flex-col gap-2">
               <label class="flex min-w-64 flex-1 items-center gap-2">
                 <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task</span>
                 {_render_help_tooltip(
@@ -3594,28 +3685,17 @@ def render_controls(
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
               </label>
-            </div>
-          </div>
-          <div class="filter-panel min-w-0 bg-zinc-50 p-2">
-            <div class="filter-panel-body space-y-2">
-              <div class="flex flex-wrap items-center gap-2">
-                {_control_label(icon="git-branch", text="Efficiency filters")}
-                {_render_help_tooltip(
-                    "Efficiency filters",
-                    "Filters already-included variant rows by dimensions or quantization type.",
-                    "Efficiency filters only operate on rows that are already present in the table.\n\nFirst use Efficiency variants to include Dims, Quantization, Rescore, or Sparse pruning variant rows. Then use Dims to keep specific embedding sizes, or Quantization to keep formats such as int8 or binary.\n\nThis is useful when a variant category is too broad and you want to compare a smaller set of compression settings.",
-                )}
-                {_render_filter_details(name="dim_filter", summary="Dims", icon="ruler", options=dim_options, selected_values=selected_dims, all_query=dim_all_query, none_query=dim_none_query)}
-                {_render_filter_details(name="quant_filter", summary="Quantization", icon="binary", options=quant_options, selected_values=selected_quants, all_query=quant_all_query, none_query=quant_none_query)}
+                {_render_quant_filter_checkboxes(options=quant_options, selected_values=selected_quants)}
+                  {_render_total_parameter_filter_input(filter_state)}
+                  {_render_document_length_filter_input(filter_state)}
+                </div>
               </div>
-              {_render_parameter_filter_inputs(filter_state)}
-              {_render_task_length_filter_inputs(filter_state)}
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="shield-check", text="License filters")}
                 {_render_help_tooltip(
                     "License filters",
-                    "Filters rows by whether model-card license metadata permits commercial use.",
-                    "Commercial use groups license metadata from model cards. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where commercial-use classification does not apply. Unknown keeps rows without reviewed commercial-use metadata.",
+                    "Filters rows by reviewed license-use buckets.",
+                    "License buckets are derived from model-card metadata. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where this classification does not apply. Unknown keeps rows without reviewed license metadata.",
                 )}
                 {_render_commercial_filter_controls(options=commercial_options, selected_values=selected_commercial)}
               </div>
@@ -3638,7 +3718,7 @@ def render_controls(
                   {_render_help_tooltip(
                       "Recalculate ranks from filters",
                       "Recomputes ranking numbers using only the currently filtered result set.",
-                      "When this is enabled, Borda ranks, mean ranks, and visible means are recalculated after model, task, language, variant, and Filter results filters are applied.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family.\n\nLeave it off when you want filtered rows to keep their original leaderboard rank context.",
+                      "When this is enabled, Borda ranks, mean ranks, task counts, and visible means are recalculated after the active text, model-family, license, runtime, efficiency, and task filters are applied.\n\nParams and Length range filters already narrow the ranked model or task population whenever they are set.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family. Leave it off when you want text and facet filters to keep their rank context from the current evaluation mode, benchmark scope, task facets, and variant selection.",
                   )}
                 </label>
               </div>
@@ -3649,6 +3729,17 @@ def render_controls(
       </details>
     </div>
     """
+
+
+def _filter_results_panel_should_open(filter_state: FilterState) -> bool:
+    return bool(
+        filter_state.filters_active
+        or filter_state.model_filter
+        or filter_state.task_filter
+        or filter_state.rank_filtered
+        or filter_state.has_parameter_filters
+        or filter_state.has_task_length_filters
+    )
 
 
 def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
@@ -3665,14 +3756,7 @@ def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, 
 
 
 def _variant_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    reset_facet_state = FilterState(
-        model_filter=filter_state.model_filter,
-        task_filter=filter_state.task_filter,
-        language_filters=filter_state.language_filters,
-        filters_active=False,
-        **_task_length_filter_kwargs(filter_state),
-    )
-    return active_filter_hidden_fields(reset_facet_state) + _text_filter_hidden_fields(reset_facet_state)
+    return active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
 
 
 def _selected_benchmark_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
@@ -3716,7 +3800,7 @@ def _render_model_type_controls(
           {_render_help_tooltip(
               "Model family",
               "Filters rows by the retrieval or reranking family recorded for each model result.",
-              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows appear when Evaluation mode is set to Reranking.\n\nUse this filter when you want to compare models within one retrieval family or hide families that are not relevant to the current analysis.",
+              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows are shown only in Reranking mode.\n\nReranking mode can also include dense or late-interaction candidate-rerank rows and the BM25 candidate-order baseline, so use this filter when you want to compare one family or hide families that are not relevant to the current analysis.",
           )}
         </span>
         {''.join(checkboxes)}
@@ -3743,97 +3827,163 @@ def _render_commercial_filter_controls(
     return f"""
       <fieldset id="commercial-use-controls" class="flex flex-wrap items-center gap-x-4 gap-y-2">
         <input type="hidden" name="commercial_filter" value="{FILTER_NONE_VALUE}">
-        <span class="inline-flex items-center gap-1 font-medium text-zinc-800">Commercial use</span>
         {''.join(checkboxes)}
       </fieldset>
     """
 
 
 def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
+    return _render_active_parameter_filter_input(filter_state) + _render_total_parameter_filter_input(filter_state)
+
+
+def _render_active_parameter_filter_input(filter_state: FilterState) -> str:
     input_class = (
         "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
-    active_class = "text-cyan-700" if filter_state.has_parameter_filters else ""
-    return f"""
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="inline-flex items-center gap-1">
-        {_control_label(icon="cpu", text="Params", extra_class=active_class)}
-        {_render_help_tooltip(
-            "Parameter filters",
-            "Filters model rows by active or total parameter count.",
-            "Parameter filters operate at the model row level using parameter metadata measured in millions of parameters.\n\nActive Params bounds use active parameter counts. Total Params bounds use total parameter counts. For example, setting Active Params <= 100 keeps rows with at most 100M active parameters.\n\nRows without the selected parameter metadata are excluded when any bound for that parameter type is set.",
-        )}
-      </span>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Active Params ≥</span>
-        <input type="number" min="0" step="any" name="active_params_min" value="{escape(filter_state.active_params_min)}"
-               aria-label="Active Params minimum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Active Params ≤</span>
-        <input type="number" min="0" step="any" name="active_params_max" value="{escape(filter_state.active_params_max)}"
-               aria-label="Active Params maximum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Total Params ≥</span>
-        <input type="number" min="0" step="any" name="total_params_min" value="{escape(filter_state.total_params_min)}"
-               aria-label="Total Params minimum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Total Params ≤</span>
-        <input type="number" min="0" step="any" name="total_params_max" value="{escape(filter_state.total_params_max)}"
-               aria-label="Total Params maximum in millions"
-               class="{input_class}">
-        <span class="text-xs text-zinc-500">M</span>
-      </label>
-    </div>
-    """
+    active_params_class = "text-cyan-700" if filter_state.active_params_min or filter_state.active_params_max else ""
+    return _render_range_filter_control(
+        icon="cpu",
+        label="Active params (M)",
+        help_title="Active params",
+        help_summary="Filters model rows by active parameter count in millions.",
+        help_details=(
+            "Active params is the parameter count considered active for a model row, measured in millions. "
+            "For example, max 100 keeps rows with at most 100M active parameters.\n\n"
+            "Rows without active-parameter metadata are excluded when either bound is set. "
+            "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="active_params_min",
+        min_value=filter_state.active_params_min,
+        min_aria_label="Active params minimum in millions",
+        max_name="active_params_max",
+        max_value=filter_state.active_params_max,
+        max_aria_label="Active params maximum in millions",
+        input_class=input_class,
+        extra_class=active_params_class,
+    )
+
+
+def _render_total_parameter_filter_input(filter_state: FilterState) -> str:
+    input_class = (
+        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "focus:border-cyan-700"
+    )
+    total_params_class = "text-cyan-700" if filter_state.total_params_min or filter_state.total_params_max else ""
+    return _render_range_filter_control(
+        icon="cpu",
+        label="Total params (M)",
+        help_title="Total params",
+        help_summary="Filters model rows by total parameter count in millions.",
+        help_details=(
+            "Total params is the full model parameter count recorded for a model row, measured in millions. "
+            "It can differ from active params for architectures or serving setups where not all parameters are active.\n\n"
+            "Rows without total-parameter metadata are excluded when either bound is set. "
+            "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="total_params_min",
+        min_value=filter_state.total_params_min,
+        min_aria_label="Total params minimum in millions",
+        max_name="total_params_max",
+        max_value=filter_state.total_params_max,
+        max_aria_label="Total params maximum in millions",
+        input_class=input_class,
+        extra_class=total_params_class,
+    )
 
 
 def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
+    return _render_query_length_filter_input(filter_state) + _render_document_length_filter_input(filter_state)
+
+
+def _render_query_length_filter_input(filter_state: FilterState) -> str:
     input_class = (
         "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
-    active_class = "text-cyan-700" if filter_state.has_task_length_filters else ""
+    query_length_class = "text-cyan-700" if filter_state.query_len_min or filter_state.query_len_max else ""
+    return _render_range_filter_control(
+        icon="ruler",
+        label="Query length",
+        help_title="Query length",
+        help_summary="Filters tasks by average query string length.",
+        help_details=(
+            "Query length bounds use task metadata measured in average characters per query. "
+            "For example, max 120 keeps tasks with relatively short queries.\n\n"
+            "Tasks without query-length metadata are excluded when either bound is set. "
+            "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="query_len_min",
+        min_value=filter_state.query_len_min,
+        min_aria_label="Query length minimum",
+        max_name="query_len_max",
+        max_value=filter_state.query_len_max,
+        max_aria_label="Query length maximum",
+        input_class=input_class,
+        extra_class=query_length_class,
+    )
+
+
+def _render_document_length_filter_input(filter_state: FilterState) -> str:
+    input_class = (
+        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "focus:border-cyan-700"
+    )
+    document_length_class = "text-cyan-700" if filter_state.doc_len_min or filter_state.doc_len_max else ""
+    return _render_range_filter_control(
+        icon="ruler",
+        label="Document length",
+        help_title="Document length",
+        help_summary="Filters tasks by average document string length.",
+        help_details=(
+            "Document length bounds use task metadata measured in average characters per document. "
+            "For example, max 2000 keeps tasks whose documents are relatively short on average.\n\n"
+            "Tasks without document-length metadata are excluded when either bound is set. "
+            "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
+        ),
+        min_name="doc_len_min",
+        min_value=filter_state.doc_len_min,
+        min_aria_label="Document length minimum",
+        max_name="doc_len_max",
+        max_value=filter_state.doc_len_max,
+        max_aria_label="Document length maximum",
+        input_class=input_class,
+        extra_class=document_length_class,
+    )
+
+
+def _render_range_filter_control(
+    *,
+    icon: str,
+    label: str,
+    help_title: str,
+    help_summary: str,
+    help_details: str,
+    min_name: str,
+    min_value: str,
+    min_aria_label: str,
+    max_name: str,
+    max_value: str,
+    max_aria_label: str,
+    input_class: str,
+    extra_class: str = "",
+) -> str:
     return f"""
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="inline-flex items-center gap-1">
-        {_control_label(icon="ruler", text="Length", extra_class=active_class)}
-        {_render_help_tooltip(
-            "Length filters",
-            "Filters tasks by average query and document string length.",
-            "Length filters operate at the task level using average text length metadata measured in characters.\n\nQuery length bounds filter by the average query string length for a task. Document length bounds filter by the average document string length. For example, setting Document length <= 2000 keeps tasks whose documents are relatively short on average.\n\nTasks without length metadata are excluded when any bound is set. Use this when you want to inspect short-query tasks, long-document tasks, or other length-sensitive behavior.",
-        )}
-      </span>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query length ≥</span>
-        <input type="number" min="0" step="any" name="query_len_min" value="{escape(filter_state.query_len_min)}"
-               class="{input_class}">
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Query length ≤</span>
-        <input type="number" min="0" step="any" name="query_len_max" value="{escape(filter_state.query_len_max)}"
-               class="{input_class}">
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Document length ≥</span>
-        <input type="number" min="0" step="any" name="doc_len_min" value="{escape(filter_state.doc_len_min)}"
-               class="{input_class}">
-      </label>
-      <label class="inline-flex items-center gap-1">
-        <span class="text-xs font-medium text-zinc-700">Document length ≤</span>
-        <input type="number" min="0" step="any" name="doc_len_max" value="{escape(filter_state.doc_len_max)}"
-               class="{input_class}">
-      </label>
-    </div>
+      <div class="range-filter-control inline-flex min-w-0 items-center gap-1.5">
+        <span class="inline-flex items-center gap-1 whitespace-nowrap">
+          {_control_label(icon=icon, text=label, extra_class=extra_class)}
+          {_render_help_tooltip(help_title, help_summary, help_details)}
+        </span>
+        <span class="inline-flex items-center gap-1 whitespace-nowrap">
+          <input type="number" min="0" step="any" name="{escape(min_name)}" value="{escape(min_value)}"
+                 placeholder="min" aria-label="{escape(min_aria_label, quote=True)}"
+                 class="{input_class}">
+          <span class="text-xs text-zinc-500">-</span>
+          <input type="number" min="0" step="any" name="{escape(max_name)}" value="{escape(max_value)}"
+                 placeholder="max" aria-label="{escape(max_aria_label, quote=True)}"
+                 class="{input_class}">
+        </span>
+      </div>
     """
 
 
@@ -4454,6 +4604,7 @@ def _render_filter_details(
     all_query: QueryState,
     none_query: QueryState,
     grid_class: str = "grid max-h-60 min-w-64 grid-cols-2 gap-x-2 gap-y-1 overflow-auto sm:grid-cols-3",
+    open_by_default: bool = False,
 ) -> str:
     checkboxes = []
     for value, label in options:
@@ -4468,8 +4619,9 @@ def _render_filter_details(
     none_url = _leaderboard_url(urlencode(none_query, doseq=True))
     all_page_url = _page_url(all_query)
     none_page_url = _page_url(none_query)
+    open_attr = " open" if open_by_default else ""
     return f"""
-      <details class="filter-detail bg-zinc-50" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}">
+      <details class="filter-detail bg-zinc-50" data-filter-detail="{escape(name, quote=True)}" data-filter-icon="{escape(icon, quote=True)}"{open_attr}>
         <summary class="filter-detail-summary flex cursor-pointer list-none items-center px-2 py-1 text-[0.8125rem] font-medium text-zinc-800">
           <span class="inline-flex items-center gap-1.5">
             <span class="details-chevron inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
@@ -4486,12 +4638,120 @@ def _render_filter_details(
                     hx-get="{none_url}" hx-push-url="{none_page_url}"
                     {_leaderboard_control_hx_attrs()}>None</button>
           </div>
+          <input type="hidden" name="{escape(name)}" value="{FILTER_NONE_VALUE}">
           <div class="{escape(grid_class)}">
             {''.join(checkboxes)}
           </div>
         </div>
       </details>
     """
+
+
+def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
+    min_value, max_value = _dim_filter_bound_input_values(selected_filters)
+    hidden_inputs = _dim_filter_hidden_inputs(selected_filters)
+    input_class = (
+        "dim-bound-input viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] "
+        "text-zinc-900 outline-none focus:border-cyan-700"
+    )
+    active_class = "text-cyan-700" if min_value or max_value else ""
+    return f"""
+      <div class="filter-detail bg-zinc-50" data-filter-detail="dim_filter" data-filter-icon="ruler">
+        <div class="filter-detail-body dim-bounds-filter range-filter-control inline-flex min-w-0 items-center gap-1.5">
+          <div id="dim-filter-range-hidden" class="hidden" data-dim-range-hidden>{hidden_inputs}</div>
+          <span class="inline-flex items-center gap-1 whitespace-nowrap">
+            {_control_label(icon="ruler", text="Dims", extra_class=active_class)}
+            {_render_help_tooltip(
+                "Dims",
+                "Filters rows by embedding dimensions.",
+                "Dims filters dense embedding result rows by their recorded embedding dimension.\n\nMin and max are inclusive. An empty max means no upper bound. Rows without dimension metadata are excluded when either bound is set.",
+            )}
+          </span>
+          <span class="inline-flex items-center gap-1 whitespace-nowrap">
+            <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="min"
+                   aria-label="Minimum embedding dimensions"
+                   class="{input_class}"
+                   data-dim-bound-input="min"
+                   data-dim-bound-hidden-target="dim-filter-range-hidden">
+            <span class="text-xs text-zinc-500">-</span>
+            <input type="number" min="0" step="1" value="{escape(max_value)}" placeholder="max"
+                   aria-label="Maximum embedding dimensions"
+                   class="{input_class}"
+                   data-dim-bound-input="max"
+                   data-dim-bound-hidden-target="dim-filter-range-hidden">
+          </span>
+        </div>
+      </div>
+    """
+
+
+def _render_quant_filter_checkboxes(*, options: list[tuple[str, str]], selected_values: set[str]) -> str:
+    ordered_options = _ordered_quant_filter_options(options)
+    option_values = {value for value, _ in options}
+    all_available_selected = option_values.issubset(selected_values)
+    checkboxes = []
+    for value, label in ordered_options:
+        default_checked = value in {"__none__", "int8", "binary"} and value not in option_values and all_available_selected
+        checked = " checked" if value in selected_values or default_checked else ""
+        checkboxes.append(
+            f"""<label class="flex min-w-0 items-center gap-2 whitespace-nowrap px-1.5 py-0.5">
+              <input type="checkbox" name="quant_filter" value="{escape(value)}" class="h-4 w-4 accent-cyan-700"{checked}>
+              <span>{escape(label)}</span>
+            </label>"""
+        )
+    return f"""
+      <div class="filter-detail bg-zinc-50" data-filter-detail="quant_filter" data-filter-icon="binary">
+        <div class="filter-detail-body range-filter-control inline-flex min-h-[1.875rem] min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <span class="inline-flex items-center gap-1 whitespace-nowrap">
+            {_control_label(icon="binary", text="Quantization")}
+            {_render_help_tooltip(
+                "Quantization",
+                "Filters rows by embedding numeric format.",
+                "Quantization filters base and compressed embedding result rows by recorded numeric format.\n\nOriginal keeps unquantized rows. int8 and binary keep compressed variants when those rows are included by the Efficiency variants controls.",
+            )}
+          </span>
+          <input type="hidden" name="quant_filter" value="{FILTER_NONE_VALUE}">
+          <div class="inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+            {''.join(checkboxes)}
+          </div>
+        </div>
+      </div>
+    """
+
+
+def _ordered_quant_filter_options(options: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    option_by_value = {value: label for value, label in options}
+    ordered = [
+        ("__none__", "Original"),
+        ("int8", option_by_value.get("int8", "int8")),
+        ("binary", option_by_value.get("binary", "binary")),
+    ]
+    ordered.extend((value, label) for value, label in options if value not in {value for value, _ in ordered})
+    return ordered
+
+
+def _dim_filter_bound_input_values(selected_filters: tuple[str, ...]) -> tuple[str, str]:
+    min_value = ""
+    max_value = ""
+    for selected in selected_filters:
+        if selected.startswith(DIM_FILTER_MIN_RANGE_PREFIX):
+            min_value = selected.removeprefix(DIM_FILTER_MIN_RANGE_PREFIX)
+        elif selected.startswith(DIM_FILTER_RANGE_PREFIX):
+            max_value = selected.removeprefix(DIM_FILTER_RANGE_PREFIX)
+        elif selected == "1025+":
+            min_value = "1025"
+        elif selected and selected != FILTER_NONE_VALUE:
+            min_value = selected
+            max_value = selected
+    return min_value, max_value
+
+
+def _dim_filter_hidden_inputs(selected_filters: tuple[str, ...]) -> str:
+    return "".join(
+        f"""<input type="hidden" name="dim_filter" value="{escape(value)}">"""
+        for value in selected_filters
+        if value
+    )
 
 
 def _hidden_inputs(fields: list[tuple[str, str]]) -> str:

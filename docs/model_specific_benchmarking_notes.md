@@ -257,6 +257,7 @@ Applies to:
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR`
 - `hotchpotch/bekko-embedding-pico-beta-unir-v9-GOR-pt`
 - `hotchpotch/bekko-embedding-v1-a8m`
+- `hotchpotch/bekko-embedding-v1-a25m`
 
 Use the stored Sentence Transformers retrieval prompt names:
 
@@ -299,6 +300,9 @@ Truncation notes:
   values `256,128,64` below its 384-dimensional base embeddings. Use
   Transformers 4.x with Flash Attention 2 and batch size 16 unless a newer
   validation supersedes the model card.
+- `hotchpotch/bekko-embedding-v1-a25m` documents base dim 384 and supported
+  Matryoshka dims `256,128,64`; use the same prompt text and runtime settings
+  as `hotchpotch/bekko-embedding-small-beta-unir-v8`.
 
 ## Jina Embeddings v5
 

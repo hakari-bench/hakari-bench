@@ -99,9 +99,31 @@ components:
       baselines can be compared or hidden independently from learned sparse
       retrievers. License filters include commercial-use buckets derived from
       model-card license metadata; BM25 rows follow the bm25s MIT license and
-      appear in the commercial bucket. Commercial-use license filters are shown
-      as inline checkboxes, matching Model family rather than hidden inside a
-      secondary disclosure.
+      appear in the commercial bucket. License filters show the bucket
+      checkboxes directly, matching Model family rather than adding a redundant
+      subheading or hiding them inside a secondary disclosure. Filter results is
+      closed on the unfiltered initial view and opens automatically when a text,
+      facet, parameter, length, or rank-recalculation filter is active.
+      Efficiency filters expose expanded Dims and Quantization controls directly
+      without nested disclosure widgets whenever Filter results is open.
+      Dims and Quantization sit on the same compact row as inline controls.
+      Efficiency variants toggles preserve the active Filter results state,
+      including Dims and Quantization selections, so toggling additional variant
+      rows does not clear visible filters.
+      The main filter controls are arranged as two aligned flex lanes: left lane
+      Model, Dims, Active params (M), and Query length; right lane Task,
+      Quantization, Total params (M), and Document length.
+      Dims uses explicit min/max numeric bounds in the form `Dims [min] - [max]`;
+      an empty maximum means no upper bound, and Dims inputs do not use browser
+      datalist suggestions. Dims, Params, and Length numeric inputs update their
+      pending hidden form values while typing, but only submit the filter when
+      the user presses Enter or otherwise submits the form. Quantization uses
+      checkboxes with Original, int8, binary, and any additional recorded formats
+      selected by default.
+      Params and Length do not use parent group labels; expose Active params (M),
+      Total params (M), Query length, and Document length as separate inline
+      range controls with their own icon and help trigger so the different axes
+      are visible without adding vertical section space.
   control-button:
     purpose: Any clickable selection chip, including mode, scope, metric, language,
       and advanced filter disclosure controls.
@@ -119,7 +141,7 @@ components:
       theme toggle) and loads viewer.js so theme choice persists. Article sits on a
       surface card; tables get a header row, light row striping, and a rounded
       border; inline code reads as a subtle chip. The index lists groups as a
-      two-column grid of clickable cards with three-line clamped summaries.
+      compact single-column list of clickable rows without summaries.
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
@@ -196,7 +218,9 @@ components:
     treatment: Numeric alignment and compact heat color; rank decoration is minimal.
   footer:
     purpose: Metadata such as latest update and database source.
-    treatment: Small, low-margin, no redundant product title.
+    treatment: Small, low-margin, no redundant product title. During the first
+      leaderboard load, keep the footer top border hidden so the centered loading
+      state remains visually quiet; the loaded footer may use the normal divider.
 ---
 
 # HAKARI-Bench Viewer Design
@@ -372,9 +396,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Render documentation tables with a distinct header row, light row striping, and
   a rounded border so dense metadata stays scannable. Inline code should read as a
   subtle bordered chip, and code blocks use the faint code background.
-- The docs index is a two-column grid of clickable cards. Clamp group summaries
-  to a few lines so the index stays short and comparable; the full text lives on
-  the group page.
+- The docs index is a compact single-column list of clickable rows. Do not show
+  summaries on the index; keep longer explanations on the group pages so the
+  index stays fast to scan.
 
 ## Leaderboard Table
 

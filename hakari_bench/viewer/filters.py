@@ -9,6 +9,10 @@ from hakari_bench.viewer.text_match import active_filter_terms, text_matches_fil
 
 
 FILTER_NONE_VALUE = "__none_selected__"
+DIM_FILTER_RANGE_PREFIX = "lte:"
+DIM_FILTER_MIN_RANGE_PREFIX = "gte:"
+DIM_FILTER_BOUND_SUGGESTIONS = (32, 64, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560)
+DIM_FILTER_POINT_VALUES = DIM_FILTER_BOUND_SUGGESTIONS
 FilterOption = tuple[str, str]
 
 
@@ -22,6 +26,7 @@ class FilterContext:
     prompt_options: list[FilterOption] = field(default_factory=list)
     model_type_options: list[FilterOption] = field(default_factory=list)
     selected_dims: set[str] = field(default_factory=set)
+    selected_dim_filters: tuple[str, ...] = ()
     selected_quants: set[str] = field(default_factory=set)
     selected_commercial: set[str] = field(default_factory=set)
     selected_dtypes: set[str] = field(default_factory=set)
@@ -33,7 +38,7 @@ class FilterContext:
     def is_visible(self, row: LeaderboardRow) -> bool:
         return not (
             bool(self.model_filter_terms and not model_name_matches_filter_terms(row.model_name, self.model_filter_terms))
-            or dim_bucket(row.embedding_dim) not in self.selected_dims
+            or not dim_filter_matches(row.embedding_dim, self.selected_dims, self.selected_dim_filters)
             or quant_bucket(row.quantization) not in self.selected_quants
             or commercial_bucket(row.license) not in self.selected_commercial
             or dtype_bucket(row.dtype) not in self.selected_dtypes
@@ -43,6 +48,8 @@ class FilterContext:
         )
 
     def ordered_selected_dims(self) -> list[str]:
+        if self.selected_dim_filters:
+            return list(self.selected_dim_filters)
         return ordered_selected_values(self.dim_options, self.selected_dims)
 
     def ordered_selected_quants(self) -> list[str]:
@@ -80,11 +87,12 @@ def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) ->
         attn_options=attn_options,
         prompt_options=prompt_options,
         model_type_options=model_type_options,
-        selected_dims=selected_filter_values(
+        selected_dims=selected_dim_filter_values(
             options=dim_options,
             selected=filter_state.dim_filters,
             filters_active=filter_state.filters_active,
         ),
+        selected_dim_filters=filter_state.dim_filters if filter_state.filters_active else (),
         selected_quants=selected_filter_values(
             options=quant_options,
             selected=filter_state.quant_filters,
@@ -211,8 +219,108 @@ def selected_filter_values(
     return {value for value in selected if value in available}
 
 
+def selected_dim_filter_values(
+    *,
+    options: list[FilterOption],
+    selected: tuple[str, ...],
+    filters_active: bool,
+) -> set[str]:
+    available = {value for value, _ in options}
+    if not filters_active:
+        return available
+    if not selected:
+        return available
+    exact_values = {value for value in selected if value in available}
+    range_values = {
+        value
+        for value in available
+        if any(dim_filter_bucket_matches(value, selected_value) for selected_value in selected)
+    }
+    return exact_values | range_values
+
+
 def ordered_selected_values(options: list[FilterOption], selected_values: set[str]) -> list[str]:
     return [value for value, _ in options if value in selected_values]
+
+
+def dim_filter_matches(value: int | None, selected_values: set[str], selected_filters: tuple[str, ...] = ()) -> bool:
+    if not selected_values:
+        return False
+    if selected_filters:
+        return _dim_filter_values_match(value=value, selected_filters=selected_filters)
+    return dim_bucket(value) in selected_values
+
+
+def _dim_filter_values_match(*, value: int | None, selected_filters: tuple[str, ...]) -> bool:
+    if FILTER_NONE_VALUE in selected_filters:
+        return False
+    bucket = dim_bucket(value)
+    exact_filters = [
+        selected
+        for selected in selected_filters
+        if not selected.startswith(DIM_FILTER_MIN_RANGE_PREFIX) and not selected.startswith(DIM_FILTER_RANGE_PREFIX)
+    ]
+    if bucket in exact_filters:
+        return True
+    min_bounds = [
+        bound
+        for selected in selected_filters
+        if selected.startswith(DIM_FILTER_MIN_RANGE_PREFIX)
+        for bound in [_dim_filter_bound(selected, prefix=DIM_FILTER_MIN_RANGE_PREFIX)]
+        if bound is not None
+    ]
+    max_bounds = [
+        bound
+        for selected in selected_filters
+        if selected.startswith(DIM_FILTER_RANGE_PREFIX)
+        for bound in [_dim_filter_bound(selected, prefix=DIM_FILTER_RANGE_PREFIX)]
+        if bound is not None
+    ]
+    if not min_bounds and not max_bounds:
+        return False
+    if value is None:
+        return False
+    if min_bounds and value < max(min_bounds):
+        return False
+    if max_bounds and value > min(max_bounds):
+        return False
+    return True
+
+
+def _dim_filter_value_matches(*, value: int | None, bucket: str, selected_value: str) -> bool:
+    if selected_value == bucket:
+        return True
+    if selected_value.startswith(DIM_FILTER_MIN_RANGE_PREFIX):
+        bound = _dim_filter_bound(selected_value, prefix=DIM_FILTER_MIN_RANGE_PREFIX)
+        return value is not None and bound is not None and value >= bound
+    if not selected_value.startswith(DIM_FILTER_RANGE_PREFIX):
+        return False
+    bound = _dim_filter_bound(selected_value, prefix=DIM_FILTER_RANGE_PREFIX)
+    return value is not None and bound is not None and value <= bound
+
+
+def dim_filter_bucket_matches(bucket: str, selected_value: str) -> bool:
+    if selected_value == bucket:
+        return True
+    if selected_value.startswith(DIM_FILTER_MIN_RANGE_PREFIX):
+        bound = _dim_filter_bound(selected_value, prefix=DIM_FILTER_MIN_RANGE_PREFIX)
+        if bound is None:
+            return False
+        if bucket == "__unknown__":
+            return False
+        if bucket == "1025+":
+            return True
+        return int(bucket) >= bound
+    if not selected_value.startswith(DIM_FILTER_RANGE_PREFIX):
+        return False
+    bound = _dim_filter_bound(selected_value, prefix=DIM_FILTER_RANGE_PREFIX)
+    if bound is None:
+        return False
+    if bucket == "__unknown__":
+        return False
+    if bucket == "1025+":
+        return bound >= 1025
+    return int(bucket) <= bound
 
 
 def dim_bucket(value: int | None) -> str:
@@ -237,6 +345,14 @@ def dim_bucket_sort_key(bucket: str) -> tuple[int, int]:
     if bucket == "1025+":
         return (0, 1025)
     return (0, int(bucket))
+
+
+def _dim_filter_bound(value: str, *, prefix: str) -> int | None:
+    raw_bound = value.removeprefix(prefix)
+    try:
+        return int(raw_bound)
+    except ValueError:
+        return None
 
 
 def quant_bucket(value: str | None) -> str:

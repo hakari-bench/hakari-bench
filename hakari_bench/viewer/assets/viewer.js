@@ -328,10 +328,12 @@
       const heading = document.getElementById("help-summary-heading");
       const summary = document.getElementById("help-summary-short");
       const details = document.getElementById("help-summary-details");
-      if (!modal || !heading || !summary || !details) return;
+      const tableContainer = document.getElementById("help-summary-table-container");
+      if (!modal || !heading || !summary || !details || !tableContainer) return;
       heading.textContent = trigger.dataset.helpTitle || "";
       summary.textContent = trigger.dataset.helpSummary || "";
       details.textContent = trigger.dataset.helpDetails || "";
+      renderHelpSummaryTable(tableContainer, trigger.dataset.helpTable || "");
       if (typeof modal.showModal === "function") modal.showModal();
     });
 
@@ -443,6 +445,16 @@
       window.__hakariRestoreTaskFilterFocus = activeId === "task-filter-input";
     });
 
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" || event.isComposing) return;
+      const input = closestElement(event.target, "#filter-controls input[type='search'], #filter-controls input[type='number']");
+      if (!input) return;
+      const form = input.closest("form");
+      if (!form) return;
+      event.preventDefault();
+      form.requestSubmit();
+    });
+
     document.addEventListener("htmx:afterSwap", (event) => {
       if (
         !event.target ||
@@ -505,6 +517,59 @@
     true,
   );
   window.addEventListener("resize", window.__hakariHideTooltip);
+
+  function parseOptionalNonNegativeInteger(value) {
+    const trimmed = String(value || "").trim();
+    if (trimmed === "") return null;
+    const parsed = Number.parseInt(trimmed, 10);
+    if (!Number.isFinite(parsed)) return null;
+    return Math.max(0, parsed);
+  }
+
+  function syncDimBoundControl(input) {
+    if (!input || !input.dataset || !input.dataset.dimBoundInput) return;
+    const container = input.closest(".dim-bounds-filter");
+    if (!container) return;
+    const minInput = container.querySelector("[data-dim-bound-input='min']");
+    const maxInput = container.querySelector("[data-dim-bound-input='max']");
+    if (!minInput || !maxInput) return;
+    let minValue = parseOptionalNonNegativeInteger(minInput.value);
+    let maxValue = parseOptionalNonNegativeInteger(maxInput.value);
+    if (minValue !== null) minInput.value = String(minValue);
+    if (maxValue !== null) maxInput.value = String(maxValue);
+    if (minValue !== null && maxValue !== null && minValue > maxValue) {
+      if (input.dataset.dimBoundInput === "min") {
+        maxValue = minValue;
+        maxInput.value = String(maxValue);
+      } else {
+        minValue = maxValue;
+        minInput.value = String(minValue);
+      }
+    }
+
+    const hiddenContainer = document.getElementById(input.dataset.dimBoundHiddenTarget || "");
+    if (!hiddenContainer) return;
+    hiddenContainer.replaceChildren();
+    const hiddenValues = [];
+    if (minValue !== null && minValue > 32) hiddenValues.push(`gte:${minValue}`);
+    if (maxValue !== null) hiddenValues.push(`lte:${maxValue}`);
+    for (const value of hiddenValues) {
+      const hidden = document.createElement("input");
+      hidden.type = "hidden";
+      hidden.name = "dim_filter";
+      hidden.value = value;
+      hiddenContainer.appendChild(hidden);
+    }
+  }
+
+  document.addEventListener(
+    "input",
+    (event) => {
+      const input = closestElement(event.target, "[data-dim-bound-input]");
+      if (input) syncDimBoundControl(input);
+    },
+    true,
+  );
 
   // Floating sticky column header. Horizontal scrolling lives inside the table's
   // overflow container, so CSS sticky cannot pin the header on page scroll; this
@@ -590,6 +655,49 @@
   document.addEventListener("htmx:afterSwap", (event) => {
     if (event.target && event.target.id === "leaderboard-panel") window.__hakariInitStickyHeader();
   });
+
+  function renderHelpSummaryTable(container, tableJson) {
+    container.replaceChildren();
+    container.hidden = true;
+    if (!tableJson) return;
+
+    let rows = [];
+    try {
+      rows = JSON.parse(tableJson);
+    } catch (_error) {
+      return;
+    }
+    if (!Array.isArray(rows) || rows.length === 0) return;
+
+    const table = document.createElement("table");
+    table.className = "w-full border-collapse text-sm";
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    ["Facet", "Full name", "Tasks"].forEach((label) => {
+      const th = document.createElement("th");
+      th.scope = "col";
+      th.className = "border-t px-2 py-1 text-left font-semibold text-zinc-800";
+      th.textContent = label;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      ["code", "name", "tasks"].forEach((key) => {
+        const td = document.createElement("td");
+        td.className = "border-t px-2 py-1 text-left text-zinc-700";
+        td.textContent = row && row[key] != null ? String(row[key]) : "";
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    container.appendChild(table);
+    container.hidden = false;
+  }
 
   window.__hakariApplyHashQueryState();
   window.__hakariBindThemeToggle();

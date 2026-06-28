@@ -5577,6 +5577,7 @@ def _create_viewer_task_results_table(con: duckdb.DuckDBPyConnection) -> None:
             dm.language,
             dm.languages,
             dm.primary_languages,
+            dm.category,
             fts.active_parameters,
             fts.total_parameters,
             fts.max_seq_length,

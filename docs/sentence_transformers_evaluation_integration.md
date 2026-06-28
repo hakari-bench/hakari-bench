@@ -252,6 +252,21 @@ same query IDs.
 - `sampled_candidates`: keep only sampled-query positives plus candidate docs.
   Use this for smoke tests only.
 
+For SentenceTransformers training-time evaluators, dataset caching is enabled by
+default. The first evaluation loads and samples each target task, and later
+evaluations reuse the same sampled `LoadedIrDataset` objects. This is intended
+for step-based trainer evaluation where the target set, query sample, dataset
+revision, and candidate settings remain fixed across steps. Pass
+`cache_datasets=False` when you need to reload datasets on every evaluator call.
+
+When `corpus_policy="sampled_candidates"` is used with a candidate ranking,
+HAKARI loads only candidate documents where possible. If `rerank_top_k` is set,
+candidate lists are trimmed before sampling so dense training-time evaluation
+encodes roughly `query_limit * rerank_top_k` candidate documents. Positives
+outside the selected candidate window are treated as missed candidates. These
+sampled-candidate scores are fast feedback signals, not leaderboard-comparable
+results.
+
 Smoke scores are not benchmark-comparable because the corpus is intentionally
 reduced:
 

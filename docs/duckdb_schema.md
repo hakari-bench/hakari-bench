@@ -22,7 +22,7 @@ which represents each leaderboard score target as rows such as `all` and
 applied, `viewer_filter_values`, a precomputed filter-value mart, and
 `viewer_leaderboard_rows`, a precomputed leaderboard standings mart for common
 no-filter raw-task display modes, plus
-`viewer_leaderboard_language_options` for the matching language filter choices.
+`viewer_leaderboard_language_options` for the matching task facet choices.
 The HTMX leaderboard requires the current schema and reads these mart tables or
 computes from `viewer_task_results`.
 `runs` contains run-level metadata,
@@ -833,16 +833,16 @@ benchmark.
 For overall scope presets:
 
 - `Overall`: the default and broadest leaderboard scope. It includes all
-  configured benchmark views before language, model, task, and variant filters
-  are applied.
+  configured benchmark views before task facets, model filters, task filters,
+  and variant controls are applied.
 - `Overall (EN)`: the English-focused counterpart to Overall. It uses the same
   benchmark components as `Overall`, then applies the `EN` task facet so
   multilingual suites contribute their English slices.
 - `Custom`: a dynamic scope built from repeated `bench=` query parameters.
   Nano-set labels in the viewer toggle membership in this selected set. When
   `view=Custom` has no `bench=` values, it is the empty custom state: no
-  benchmarks are selected, language task facets reset to All languages, and no
-  leaderboard rows are returned.
+  benchmarks are selected, task facets reset to All languages/categories, and
+  no leaderboard rows are returned.
 - `Clear`: a UI action button that resets the benchmark selection into empty
   `view=Custom`. It is not a selected scope state in the URL.
 
@@ -900,22 +900,28 @@ overall `score=macro`, the selected component score group for a single Custom
 benchmark selection such as `MNanoBEIR:task_mean` or `MNanoBEIR:lang_mean`, or
 task-level columns when no score group is available.
 By default, `model_filter` only hides rendered model rows,
-`task_filter` only narrows displayed task score columns, and facet filters such
-as model type, dimensions, quantization, dtype, attention implementation, and
-prompt mode only hide rendered model rows. Model type filters use `dense`,
-`sparse`, `late-interaction`, and `reranker`; BM25 is grouped under `sparse`.
+`task_filter` only narrows displayed task score columns, and refinement facet
+filters such as model type, dimensions, quantization, dtype, attention
+implementation, and prompt mode only hide rendered model rows. Model type
+filters use `dense`, `bm25`, `sparse`, `late-interaction`, and `reranker`; BM25
+is a separate lexical-baseline bucket. Dimension filters accept exact legacy
+bucket values such as `768` and `1025+`, and the current Dims bound inputs emit
+minimum and maximum bounds such as `dim_filter=gte:128` and `dim_filter=lte:768`.
 Parameter filter query parameters `active_params_min`, `active_params_max`,
 `total_params_min`, and `total_params_max` are interpreted in millions of
 parameters and filter rows using `active_parameters` and `total_parameters`.
 For example, `active_params_max=100` keeps rows with at most 100M active
-parameters and excludes rows missing active-parameter metadata.
-When `rank_filtered=1` is present, those active filters narrow the ranked
-population before Borda, mean scores, task counts, and task score columns are
-computed. With a ranking task filter, the viewer ranks
-the matching task rows directly; overall views render a single task-level `Mean
-Score` column instead of separate macro and micro overall means. Model and task
-text filters use case-insensitive whitespace-separated tokens of at least three
-characters, with OR semantics.
+parameters and excludes rows missing active-parameter metadata. Task length
+filter query parameters `query_len_min`, `query_len_max`, `doc_len_min`, and
+`doc_len_max` filter task rows using average query/document character metadata.
+Parameter and task length filters always narrow the ranked population before
+Borda, mean scores, task counts, and task score columns are computed.
+When `rank_filtered=1` is present, active text and refinement facet filters are
+also promoted into ranked-population filters. With a ranking task filter, the
+viewer ranks the matching task rows directly; overall views render a single
+task-level `Mean Score` column instead of separate macro and micro overall
+means. Model and task text filters use case-insensitive whitespace-separated
+tokens of at least three characters, with OR semantics.
 
 When variants are displayed, the leaderboard keeps a unique internal row label
 by appending `embedding_dim`, `quantization`, and sometimes
@@ -1036,11 +1042,13 @@ choices:
 - Surface runtime metadata such as dtype, attention implementation, prompt
   mode, and `trust_remote_code` in model details metadata; dtype, attention,
   and prompt remain available as facet filters.
-- Read materialized `language`, `languages`, and `primary_languages` from `viewer_task_results`.
-  The HTMX viewer uses `lang_filter` query parameters as
+- Read materialized `language`, `languages`, `primary_languages`, and `category` from
+  `viewer_task_results`. The HTMX viewer uses `lang_filter` query parameters as
   task-level ranking filters: Borda, mean scores, expected task counts, and
-  completeness are recomputed only over matching tasks. If no `lang_filter` is
-  set, all tasks in the selected view are ranked.
+  completeness are recomputed only over matching tasks. Normal language filters
+  use language codes such as `en`; category task facets use prefixed values such
+  as `category:code`. If no `lang_filter` is set, all tasks in the selected view
+  are ranked.
 - Benchmarks may override that filter source with
   `language_filter_mode: primary_language`. In this mode the viewer uses
   `primary_languages` first. If an older DuckDB does not have that column or a
@@ -1062,11 +1070,12 @@ choices:
 - Viewer benchmark scope exposes `Overall`, `Overall (EN)`, a `Clear`
   action button, then the individual NanoSet labels. Scope preset buttons
   carry inline help explaining their aggregation semantics. `Overall` resets
-  Task facets to All languages when selected; `Overall (EN)` selects the `EN`
-  facet and is represented as `view=Overall (EN)&lang_filter=en`; `Clear`
-  pushes `view=Custom` with no `bench=` values, resets to All languages, is not
-  itself selected, and shows no rows. Overall, Overall (EN), and Custom scopes
-  expose a Score selector for `micro` and `macro`.
+  Task facets to All languages/categories when selected; `Overall (EN)` selects
+  the `EN` facet and is represented as `view=Overall (EN)&lang_filter=en`;
+  `Clear` pushes `view=Custom` with no `bench=` values, resets to All
+  languages/categories, is not itself selected, and shows no rows. Overall,
+  Overall (EN), and Custom scopes expose a Score selector for `micro` and
+  `macro`.
   NanoSet labels toggle a `Custom` selection through repeated `bench=` query
   parameters, so small combinations such as `NanoJMTEB-v2` plus `NanoMTEB-v2`
   are represented directly in the URL. `MNanoBEIR` is special:
@@ -1101,13 +1110,15 @@ resolved DuckDB path, file `mtime_ns`, file size, benchmark tuple, target, and
 variant flags. When `rank_filtered=1`, the refinement facet filters for
 embedding dimension, quantization, model type, dtype, attention implementation,
 and prompt bucket are also pushed into the DuckDB `WHERE` clause before rows are
-fetched. The Python facet filter still runs after loading as a final consistency
-guard, but the SQL pushdown keeps variant-heavy views from materializing
-unneeded task rows. This lets repeated HTMX requests reuse the expensive DuckDB
-read and row-to-`TaskScore` conversion while still invalidating automatically
-when a new DuckDB file is downloaded or otherwise modified. The cache emits
-`viewer.leaderboard.cache` log records with `hit`, `size`, and
-`task_score_count` fields.
+fetched. Dimension pushdown supports both exact bucket values and `gte:N` /
+`lte:N` dimension bounds. The Python facet filter still runs after loading as a
+final consistency guard, but the SQL pushdown keeps variant-heavy views from
+materializing unneeded task rows. Parameter and task length filters are applied
+in Python before completeness and ranking, regardless of `rank_filtered`. This lets
+repeated HTMX requests reuse the expensive DuckDB read and row-to-`TaskScore`
+conversion while still invalidating automatically when a new DuckDB file is
+downloaded or otherwise modified. The cache emits `viewer.leaderboard.cache` log
+records with `hit`, `size`, and `task_score_count` fields.
 
 The latest production DuckDB equivalence/performance check is intentionally
 opt-in because it requires a local full DuckDB. Run it with:
@@ -1124,8 +1135,8 @@ DB build scripts create `viewer_task_results` as a physical table after
 `dataset_metadata` and `fact_task_score` are written. It selects only the
 columns required by `TaskResultsRepository`, includes `score_target`, joins
 `dataset_metadata` by `(benchmark, dataset_id, task_key)`, includes
-`primary_languages`, `query_mean_chars`, and `document_mean_chars` for language
-and task text-length filters,
+`primary_languages`, `category`, `query_mean_chars`, and `document_mean_chars`
+for language/category and task text-length filters,
 keeps late-interaction runtime fields for the Model Details modal, and orders
 rows by
 `(benchmark, score_target, dataset_id, task_name, model_name,
@@ -1141,9 +1152,10 @@ unavailable, the result should record a skipped reranking evaluation and no
 `reranking` task-score row.
 Because `viewer_task_results` is already physically ordered, the viewer skips
 the query-time `ORDER BY` when reading it.
-If an older database has these length columns only in `dataset_metadata`, the
-repository falls back to a metadata join so `query_len_min`, `query_len_max`,
-`doc_len_min`, and `doc_len_max` viewer filters still work.
+If an older database has these length or category columns only in
+`dataset_metadata`, the repository falls back to a metadata join so task facets
+and the `query_len_min`, `query_len_max`, `doc_len_min`, and `doc_len_max`
+viewer filters still work.
 
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Configured
@@ -1198,8 +1210,9 @@ render the language support row at the top of the Model Details dialog. This is
 display metadata only and is not stored in the DuckDB schema.
 
 `viewer_leaderboard_language_options` uses the same key columns as
-`viewer_leaderboard_rows` and stores the language filter choices that should be
-shown beside that materialized leaderboard. The remaining columns are `code`,
+`viewer_leaderboard_rows` and stores the task facet choices that should be shown
+beside that materialized leaderboard. Language choices use language codes; code
+task-category choices use `category:code`. The remaining columns are `code`,
 `label`, and `task_count`. Keeping these options in a companion table lets the
 fast precomputed leaderboard path preserve the same filter UI without scanning
 and aggregating all task-score rows on every display-toggle request.
@@ -1833,8 +1846,10 @@ not just `model_name`.
 
 ### 8. Variant Facet Values
 
-For dimension and quantization filter UI, compute options from the same
-view/variant population used by the leaderboard:
+For dimension and quantization filter UI, use the same view/variant population
+used by the leaderboard. The current viewer renders dimension filtering as
+numeric min/max bound inputs in the form `input <= dims <= input`; legacy exact
+bucket values remain accepted by the query API.
 
 ```sql
 SELECT DISTINCT
@@ -1863,10 +1878,11 @@ WHERE benchmark = 'MNanoBEIR'
 ORDER BY attention_filter_value, dtype_filter_value;
 ```
 
-The current viewer applies facet filters as display filters after the ranking
-population has been selected. When `rank_filtered=1` is enabled, the selected
-facet filters are promoted into ranking-population filters before completeness,
-Borda, and mean calculations.
+The current viewer applies refinement facet filters as display filters after the
+ranking population has been selected. When `rank_filtered=1` is enabled, the
+selected text and refinement facet filters are promoted into ranking-population
+filters before completeness, Borda, and mean calculations. Parameter and task
+length range filters are ranking-population filters whenever they are set.
 
 ## Minimal Viewer Checklist
 
@@ -1884,9 +1900,10 @@ Borda, and mean calculations.
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`; `mean_score`
    follows the selected `score` aggregation.
-8. If `rank_filtered=1`, apply model, task, and active facet filters before the
-   completeness rule and ranking. With a task filter, use direct task-level
-   means for overall views instead of grouped macro/micro means.
+8. Apply parameter and task length range filters before the completeness rule
+   and ranking. If `rank_filtered=1`, also apply model, task, and active
+   refinement facet filters before ranking. With a task filter, use direct
+   task-level means for overall views instead of grouped macro/micro means.
 9. Only render benchmark metric columns when `task_scores=1` is active. Use the
    already-selected scoring group rows when present; otherwise use task-level
    values. When `rank_filtered` is not active, apply `task_filter` to the

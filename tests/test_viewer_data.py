@@ -167,6 +167,45 @@ def test_task_results_repository_can_fetch_non_default_metric_scores(tmp_path: P
     assert [(row.model_name, row.score) for row in rows] == [("model/a", 0.20), ("model/b", 0.95)]
 
 
+def test_metric_task_results_read_category_from_dataset_metadata(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_viewer_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", None, "code-a", "code-a", 0.90, 10, 12, 8192),
+        ],
+    )
+    _write_metric_tables(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "code-a", "code-a", "BenchA_code-a_cosine_acc@1", 0.20, "a.json"),
+        ],
+    )
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE dataset_metadata (
+                benchmark VARCHAR,
+                dataset_id VARCHAR,
+                task_key VARCHAR,
+                category VARCHAR
+            )
+            """
+        )
+        con.execute("INSERT INTO dataset_metadata VALUES ('BenchA', 'bench/a', 'code-a', 'code')")
+    finally:
+        con.close()
+
+    rows = TaskResultsRepository(db_path).fetch_task_result_rows(
+        benchmarks=["BenchA"],
+        include_embedding_variants=False,
+        score_metric="acc@1",
+    )
+
+    assert rows[0].category == "code"
+
+
 def test_task_results_repository_limits_display_metric_options_to_research_focused_set(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_viewer_task_results(
