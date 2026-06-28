@@ -1,5 +1,5 @@
 import { ArrowDown, ArrowUp, BookOpen } from 'lucide-react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import type { LeaderboardResponse, LeaderboardRow } from '../lib/api';
 import { cn } from '../lib/cn';
 import { heatBackground, normalize, zScoreColor } from '../lib/heat';
@@ -149,6 +149,84 @@ export function LeaderboardTable({
     return map;
   }, [rows, columns]);
 
+  // Floating sticky header: the horizontal overflow wrapper is also the vertical
+  // scroll context, so CSS sticky cannot pin the header on page scroll. Mirror a
+  // read-only clone of the header at the viewport top, synced to width + scroll.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const container = scrollRef.current;
+    const table = container?.querySelector('table');
+    const thead = table?.querySelector('thead');
+    if (!container || !table || !thead) return;
+
+    const floater = document.createElement('div');
+    Object.assign(floater.style, {
+      position: 'fixed',
+      top: '0',
+      overflow: 'hidden',
+      pointerEvents: 'none',
+      zIndex: '30',
+      borderBottom: '1px solid var(--border)',
+      display: 'none',
+    });
+    const cloneTable = document.createElement('table');
+    cloneTable.className = table.className;
+    cloneTable.style.tableLayout = 'fixed';
+    const cloneThead = thead.cloneNode(true) as HTMLElement;
+    cloneTable.appendChild(cloneThead);
+    floater.appendChild(cloneTable);
+    container.appendChild(floater);
+
+    const syncWidths = () => {
+      const realThs = thead.querySelectorAll('tr > th');
+      const cloneThs = cloneThead.querySelectorAll('tr > th');
+      let total = 0;
+      realThs.forEach((th, index) => {
+        const width = (th as HTMLElement).getBoundingClientRect().width;
+        total += width;
+        const clone = cloneThs[index] as HTMLElement | undefined;
+        if (clone) clone.style.width = `${width}px`;
+      });
+      cloneTable.style.width = `${total}px`;
+    };
+
+    const update = () => {
+      const rect = container.getBoundingClientRect();
+      const headHeight = thead.getBoundingClientRect().height;
+      const shouldShow = rect.top < 0 && rect.bottom > headHeight + 4;
+      if (!shouldShow) {
+        floater.style.display = 'none';
+        return;
+      }
+      if (floater.style.display === 'none') {
+        floater.style.display = 'block';
+        syncWidths();
+      }
+      floater.style.left = `${rect.left}px`;
+      floater.style.width = `${container.clientWidth}px`;
+      floater.scrollLeft = container.scrollLeft;
+    };
+
+    const onContainerScroll = () => {
+      if (floater.style.display !== 'none') floater.scrollLeft = container.scrollLeft;
+    };
+    const onResize = () => {
+      syncWidths();
+      update();
+    };
+
+    container.addEventListener('scroll', onContainerScroll, { passive: true });
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', onResize);
+    update();
+    return () => {
+      container.removeEventListener('scroll', onContainerScroll);
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', onResize);
+      floater.remove();
+    };
+  }, [result, columns]);
+
   const heatFor = (col: ColumnDef, value: number | null | undefined): string | undefined => {
     if (value === null || value === undefined) return undefined;
     if (showRank && !showZ && col.kind === 'metric') return undefined; // ranks-only: no heat
@@ -164,8 +242,8 @@ export function LeaderboardTable({
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
-      <table className="w-full border-collapse text-[12px]">
+    <div ref={scrollRef} className="leaderboard-scroll overflow-x-auto rounded-lg border border-border">
+      <table className="w-full border-collapse bg-surface text-[12px]">
         <thead>
           <tr className="border-b border-border text-[11px] text-muted-foreground">
             <th className="sticky left-0 z-20 w-8 bg-surface px-2 py-1.5 text-right font-normal" />
