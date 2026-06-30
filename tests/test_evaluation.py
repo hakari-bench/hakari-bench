@@ -23,7 +23,14 @@ from hakari_bench.evaluation import (
     evaluate_reranker_task,
     load_ir_dataset,
 )
-from hakari_bench.results import TaskRunResult, build_run_summary_payload, result_path_for_task, run_or_load_task, safe_path_part
+from hakari_bench.results import (
+    TaskRunResult,
+    build_run_summary_payload,
+    result_path_for_task,
+    run_or_load_task,
+    safe_path_part,
+    resolved_prompt_config,
+)
 
 
 def _pipeline_variant(name: str, *steps: dict[str, object]) -> dict[str, object]:
@@ -72,6 +79,52 @@ def _quantized_variant(
     device: str | None = None,
 ) -> dict[str, object]:
     return _pipeline_variant(name, _normalize_step(), _quantized_step(precision, rescore=rescore, device=device))
+
+
+def test_resolved_prompt_config_uses_custom_backend_metadata() -> None:
+    args = argparse.Namespace(
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        model_loader_kwargs={
+            "query_prompt": "Loader query: ",
+            "document_prompt": "Loader doc: ",
+            "query_prompt_name": None,
+            "document_prompt_name": None,
+        },
+    )
+
+    assert resolved_prompt_config(args, model_metadata={}) == {
+        "query_prompt": "Loader query: ",
+        "document_prompt": "Loader doc: ",
+        "query_prompt_name": None,
+        "document_prompt_name": None,
+    }
+
+
+def test_resolved_prompt_config_resolves_backend_prompt_names() -> None:
+    args = argparse.Namespace(
+        query_prompt=None,
+        corpus_prompt=None,
+        query_prompt_name=None,
+        corpus_prompt_name=None,
+        model_loader_kwargs={},
+    )
+    model_metadata = {
+        "backend_metadata": {
+            "prompts": {"query": "Backend query: ", "document": "Backend doc: "},
+            "query_prompt_name": "query",
+            "document_prompt_name": "document",
+        }
+    }
+
+    assert resolved_prompt_config(args, model_metadata=model_metadata) == {
+        "query_prompt": "Backend query: ",
+        "document_prompt": "Backend doc: ",
+        "query_prompt_name": "query",
+        "document_prompt_name": "document",
+    }
 
 
 def _cuda_test_device_is_usable() -> bool:

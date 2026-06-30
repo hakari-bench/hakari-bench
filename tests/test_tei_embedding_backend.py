@@ -102,6 +102,24 @@ def test_tei_backend_allows_similarity_override() -> None:
     assert model.metadata()["similarity_fn_name"] == "cosine"
 
 
+def test_tei_backend_metadata_records_resolved_prompts() -> None:
+    model = TeiEmbeddingBackend(
+        endpoint="http://tei.test",
+        model="Qwen/Qwen3-Embedding-8B",
+        query_prompt="Query: ",
+        document_prompt="Passage: ",
+        query_prompt_name=None,
+        document_prompt_name=None,
+    )
+
+    metadata = model.metadata()
+
+    assert metadata["query_prompt"] == "Query: "
+    assert metadata["document_prompt"] == "Passage: "
+    assert metadata["query_prompt_name"] is None
+    assert metadata["document_prompt_name"] is None
+
+
 def test_load_model_requires_endpoint_and_dense_model_type() -> None:
     with pytest.raises(ValueError, match="endpoint"):
         load_model(ModelLoadConfig(model_name_or_path="Qwen/Qwen3-Embedding-4B", model_loader_kwargs={}))

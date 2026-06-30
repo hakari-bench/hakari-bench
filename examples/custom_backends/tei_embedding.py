@@ -112,12 +112,26 @@ class TeiEmbeddingBackend:
         )
 
     def metadata(self) -> dict[str, Any]:
+        query_prompt = self._resolve_prompt(
+            explicit_prompt=None,
+            explicit_prompt_name=None,
+            default_prompt=self.query_prompt,
+            default_prompt_name=self.query_prompt_name,
+        )
+        document_prompt = self._resolve_prompt(
+            explicit_prompt=None,
+            explicit_prompt_name=None,
+            default_prompt=self.document_prompt,
+            default_prompt_name=self.document_prompt_name,
+        )
         return {
             "backend_library": "text-embeddings-inference",
             "api": "openai_embeddings",
             "endpoint": self.endpoint,
             "model": self.model,
             "prompts": self.prompts,
+            "query_prompt": query_prompt,
+            "document_prompt": document_prompt,
             "query_prompt_name": self.query_prompt_name,
             "document_prompt_name": self.document_prompt_name,
             "similarity_fn_name": self.similarity_fn_name,

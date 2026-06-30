@@ -2535,6 +2535,65 @@ def test_load_results_reads_task_json_as_source(tmp_path: Path) -> None:
     assert ranking_rows[0].corpus_id == "d1"
 
 
+def test_load_results_backfills_prompts_from_model_loader_kwargs(tmp_path: Path) -> None:
+    model_dir = tmp_path / "model"
+    task_path = model_dir / "hakari-bench__NanoRTEB" / "NanoDS1000.json"
+    task_path.parent.mkdir(parents=True)
+    task_path.write_text(
+        json.dumps(
+            {
+                "model": {
+                    "id": "Qwen/Qwen3-Embedding-8B",
+                    "source": {
+                        "type": "huggingface",
+                        "name": "Qwen/Qwen3-Embedding-8B",
+                        "revision": "model-sha",
+                    },
+                    "method": "dense",
+                    "dtype": "fp16",
+                    "attn_implementation": "flash_attention_2",
+                    "trust_remote_code": False,
+                },
+                "config": {
+                    "query_prompt": None,
+                    "document_prompt": None,
+                    "query_prompt_name": None,
+                    "document_prompt_name": None,
+                    "model_loader_kwargs": {
+                        "endpoint": "http://127.0.0.1:18101",
+                        "query_prompt": "Instruct: ",
+                        "document_prompt": "",
+                        "query_prompt_name": None,
+                        "document_prompt_name": None,
+                    },
+                },
+                "target": {
+                    "dataset_name": "NanoRTEB",
+                    "dataset_id": "hakari-bench/NanoRTEB",
+                    "dataset_revision": {"resolved": "dataset-sha"},
+                    "split_name": "NanoDS1000",
+                    "task_name": "NanoDS1000",
+                },
+                "evaluation": {
+                    "aggregate_metric": "ndcg@10",
+                    "aggregate_metric_value": 0.42,
+                    "evaluated_at_utc": "2026-04-29T00:00:00+00:00",
+                },
+                "metrics": {"NanoDS1000_ndcg@10": 0.42},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    rows, *_ = report.load_results(tmp_path)
+
+    assert len(rows) == 1
+    assert rows[0].query_prompt == "Instruct: "
+    assert rows[0].document_prompt == ""
+    assert rows[0].query_prompt_name is None
+    assert rows[0].document_prompt_name is None
+
+
 def test_load_results_backfills_missing_parameters_from_model_card_yaml(tmp_path: Path) -> None:
     task_path = tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-en" / "arguana.json"
     task_path.parent.mkdir(parents=True)

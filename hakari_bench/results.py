@@ -309,6 +309,7 @@ def run_or_load_task(
         task.dataset_id,
         requested_revision=getattr(args, "dataset_revision", None),
     )
+    prompt_config = resolved_prompt_config(args, model_metadata=payload_model_metadata)
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "model": payload_model_metadata,
@@ -329,10 +330,10 @@ def run_or_load_task(
             "batch_size": args.batch_size,
             "primary_metric": args.aggregate_metric,
             "show_progress": args.show_progress,
-            "query_prompt": args.query_prompt,
-            "document_prompt": args.corpus_prompt,
-            "query_prompt_name": args.query_prompt_name,
-            "document_prompt_name": args.corpus_prompt_name,
+            "query_prompt": prompt_config["query_prompt"],
+            "document_prompt": prompt_config["document_prompt"],
+            "query_prompt_name": prompt_config["query_prompt_name"],
+            "document_prompt_name": prompt_config["document_prompt_name"],
             "query_encode_task": getattr(args, "query_task", None),
             "document_encode_task": getattr(args, "corpus_task", None),
             "truncate_dim": args.truncate_dim,
@@ -434,6 +435,71 @@ def _remove_optional_artifact(path: Path) -> None:
         path.parent.rmdir()
     except OSError:
         pass
+
+
+def resolved_prompt_config(args: Any, *, model_metadata: dict[str, Any]) -> dict[str, Any]:
+    loader_kwargs = getattr(args, "model_loader_kwargs", {}) or {}
+    if not isinstance(loader_kwargs, dict):
+        loader_kwargs = {}
+    backend_metadata = model_metadata.get("backend_metadata") if isinstance(model_metadata, dict) else {}
+    if not isinstance(backend_metadata, dict):
+        backend_metadata = {}
+
+    query_prompt_name = _first_not_none(
+        getattr(args, "query_prompt_name", None),
+        loader_kwargs.get("query_prompt_name"),
+        backend_metadata.get("query_prompt_name"),
+    )
+    document_prompt_name = _first_not_none(
+        getattr(args, "corpus_prompt_name", None),
+        loader_kwargs.get("document_prompt_name"),
+        backend_metadata.get("document_prompt_name"),
+    )
+    return {
+        "query_prompt": _resolved_prompt_value(
+            explicit=getattr(args, "query_prompt", None),
+            loader_kwargs=loader_kwargs,
+            backend_metadata=backend_metadata,
+            prompt_key="query_prompt",
+            prompt_name=query_prompt_name,
+        ),
+        "document_prompt": _resolved_prompt_value(
+            explicit=getattr(args, "corpus_prompt", None),
+            loader_kwargs=loader_kwargs,
+            backend_metadata=backend_metadata,
+            prompt_key="document_prompt",
+            prompt_name=document_prompt_name,
+        ),
+        "query_prompt_name": query_prompt_name,
+        "document_prompt_name": document_prompt_name,
+    }
+
+
+def _resolved_prompt_value(
+    *,
+    explicit: Any,
+    loader_kwargs: dict[str, Any],
+    backend_metadata: dict[str, Any],
+    prompt_key: str,
+    prompt_name: Any,
+) -> Any:
+    if explicit is not None:
+        return explicit
+    if prompt_key in loader_kwargs and loader_kwargs[prompt_key] is not None:
+        return loader_kwargs[prompt_key]
+    if prompt_key in backend_metadata and backend_metadata[prompt_key] is not None:
+        return backend_metadata[prompt_key]
+    prompts = backend_metadata.get("prompts")
+    if isinstance(prompts, dict) and prompt_name is not None:
+        return prompts.get(str(prompt_name))
+    return None
+
+
+def _first_not_none(*values: Any) -> Any:
+    for value in values:
+        if value is not None:
+            return value
+    return None
 
 
 def _summary_metric_values(metrics: dict[str, float]) -> dict[str, float]:

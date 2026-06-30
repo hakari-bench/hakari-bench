@@ -1997,6 +1997,7 @@ def _process_result_rows(
     model_name = selected_result.model_name
     model_source = model.get("source", {}) if isinstance(model, dict) else {}
     late_interaction = _late_interaction_metadata(model if isinstance(model, dict) else {}, evaluation)
+    prompt_metadata = _prompt_metadata(config, model if isinstance(model, dict) else {})
     model_revision = _model_revision_value(model_source, key="revision")
     model_revision_requested = _model_revision_value(model_source, key="revision_requested")
     dataset_id = selected_result.dataset_id
@@ -2040,10 +2041,10 @@ def _process_result_rows(
         "max_seq_length": _int_or_none(model.get("max_seq_length")) if isinstance(model, dict) else None,
         "dtype": model.get("dtype") if isinstance(model, dict) else None,
         "attn_implementation": model.get("attn_implementation") if isinstance(model, dict) else None,
-        "query_prompt": _str_or_none(config.get("query_prompt")),
-        "document_prompt": _str_or_none(config.get("document_prompt")),
-        "query_prompt_name": _str_or_none(config.get("query_prompt_name")),
-        "document_prompt_name": _str_or_none(config.get("document_prompt_name")),
+        "query_prompt": _str_or_none(prompt_metadata.get("query_prompt")),
+        "document_prompt": _str_or_none(prompt_metadata.get("document_prompt")),
+        "query_prompt_name": _str_or_none(prompt_metadata.get("query_prompt_name")),
+        "document_prompt_name": _str_or_none(prompt_metadata.get("document_prompt_name")),
         "query_encode_task": _str_or_none(config.get("query_encode_task")),
         "document_encode_task": _str_or_none(config.get("document_encode_task")),
         "trust_remote_code": _bool_or_none(model.get("trust_remote_code")) if isinstance(model, dict) else None,
@@ -6333,6 +6334,77 @@ def _late_interaction_metadata(model: dict[str, Any], evaluation: dict[str, Any]
         # model defaults when both are present.
         merged.update({key: value for key, value in evaluation_section.items() if value is not None})
     return merged
+
+
+def _prompt_metadata(config: dict[str, Any], model: dict[str, Any]) -> dict[str, Any]:
+    model_loader_kwargs = config.get("model_loader_kwargs")
+    if not isinstance(model_loader_kwargs, dict):
+        model_loader_kwargs = {}
+    backend = model.get("backend")
+    backend_loader_kwargs = backend.get("loader_kwargs") if isinstance(backend, dict) else {}
+    if not isinstance(backend_loader_kwargs, dict):
+        backend_loader_kwargs = {}
+    backend_metadata = model.get("backend_metadata")
+    if not isinstance(backend_metadata, dict):
+        backend_metadata = {}
+
+    query_prompt_name = _first_not_none(
+        config.get("query_prompt_name"),
+        model_loader_kwargs.get("query_prompt_name"),
+        backend_loader_kwargs.get("query_prompt_name"),
+        backend_metadata.get("query_prompt_name"),
+    )
+    document_prompt_name = _first_not_none(
+        config.get("document_prompt_name"),
+        model_loader_kwargs.get("document_prompt_name"),
+        backend_loader_kwargs.get("document_prompt_name"),
+        backend_metadata.get("document_prompt_name"),
+    )
+    return {
+        "query_prompt": _prompt_value(
+            config=config,
+            model_loader_kwargs=model_loader_kwargs,
+            backend_loader_kwargs=backend_loader_kwargs,
+            backend_metadata=backend_metadata,
+            prompt_key="query_prompt",
+            prompt_name=query_prompt_name,
+        ),
+        "document_prompt": _prompt_value(
+            config=config,
+            model_loader_kwargs=model_loader_kwargs,
+            backend_loader_kwargs=backend_loader_kwargs,
+            backend_metadata=backend_metadata,
+            prompt_key="document_prompt",
+            prompt_name=document_prompt_name,
+        ),
+        "query_prompt_name": query_prompt_name,
+        "document_prompt_name": document_prompt_name,
+    }
+
+
+def _prompt_value(
+    *,
+    config: dict[str, Any],
+    model_loader_kwargs: dict[str, Any],
+    backend_loader_kwargs: dict[str, Any],
+    backend_metadata: dict[str, Any],
+    prompt_key: str,
+    prompt_name: Any,
+) -> Any:
+    for source in (config, model_loader_kwargs, backend_loader_kwargs, backend_metadata):
+        if prompt_key in source and source[prompt_key] is not None:
+            return source[prompt_key]
+    prompts = backend_metadata.get("prompts")
+    if isinstance(prompts, dict) and prompt_name is not None:
+        return prompts.get(str(prompt_name))
+    return None
+
+
+def _first_not_none(*values: Any) -> Any:
+    for value in values:
+        if value is not None:
+            return value
+    return None
 
 
 def _int_or_none(value: Any) -> int | None:
