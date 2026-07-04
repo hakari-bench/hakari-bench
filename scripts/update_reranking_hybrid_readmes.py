@@ -28,7 +28,6 @@ DEFAULT_TAGS = [
 NANOBEIR_ORIGINAL_SOURCE_DATASETS = {
     "NanoBEIR-ar": "lightonai/NanoBEIR-ar",
     "NanoBEIR-de": "lightonai/NanoBEIR-de",
-    "NanoBEIR-en": "sentence-transformers/NanoBEIR-en",
     "NanoBEIR-es": "lightonai/NanoBEIR-es",
     "NanoBEIR-fr": "lightonai/NanoBEIR-fr",
     "NanoBEIR-it": "lightonai/NanoBEIR-it",

@@ -101,7 +101,7 @@ uv run python scripts/generate_model_cards.py \
   --model MODEL_ID \
   --model-type dense \
   --truncate-dims none \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --output-dir config/model_cards
 ```
 
@@ -112,7 +112,7 @@ uv run python scripts/generate_model_cards.py \
   --model MODEL_ID \
   --model-type dense \
   --truncate-dims 64 128 256 512 \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --output-dir config/model_cards
 ```
 
@@ -165,7 +165,7 @@ to use:
 ```bash
 uv run hakari-bench evaluate from-model-card \
   --model-card config/model_cards/MODEL_ID_WITH_DOUBLE_UNDERSCORE.yaml \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --split NanoArguAna \
   --dtype bf16 \
   --device cuda:0
@@ -176,7 +176,7 @@ Alternatively, run the method-specific command directly:
 ```bash
 uv run hakari-bench evaluate dense \
   --model MODEL_ID \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --split NanoArguAna \
   --dtype bf16 \
   --device cuda:0 \

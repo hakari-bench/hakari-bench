@@ -26,7 +26,7 @@ Run evaluations with `uv run --group openai`:
 uv run --group openai hakari-bench evaluate dense \
   --model text-embedding-3-small \
   --model-loader openai \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --split arguana
 ```
 
@@ -35,7 +35,7 @@ The model cards under `config/model_cards/openai__*.yaml` can also be used:
 ```bash
 uv run --group openai hakari-bench evaluate from-model-card \
   --model-card config/model_cards/openai__text-embedding-3-small.yaml \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --split arguana
 ```
 
@@ -51,7 +51,7 @@ uv run --group openai hakari-bench evaluate dense \
   --model text-embedding-3-large \
   --model-loader openai \
   --truncate-dim 1024 \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --split arguana
 ```
 
@@ -151,7 +151,7 @@ uv run --group openai hakari-bench batch dense register \
   --target openai-small-nanobeir-en \
   --provider openai \
   --model text-embedding-3-small \
-  --dataset hakari-bench/NanoBEIR-en
+  --dataset hakari-bench/NanoBEIR-ja
 
 uv run --group openai hakari-bench batch dense process \
   --target openai-small-nanobeir-en \

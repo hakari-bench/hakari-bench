@@ -36,7 +36,7 @@ def test_model_card_from_metadata_applies_parameter_overrides() -> None:
         metadata,
         truncate_dims=[768],
         overrides=overrides,
-        target={"datasets": ["hakari-bench/NanoBEIR-en"]},
+        target={"datasets": ["hakari-bench/NanoBEIR-ja"]},
     )
 
     assert card["id"] == "BAAI/bge-m3"
@@ -49,7 +49,7 @@ def test_model_card_from_metadata_applies_parameter_overrides() -> None:
     }
     assert card["embedding"] == {"truncate_dims": [768]}
     assert card["runtime"]["max_seq_length"] == 8192
-    assert card["target"] == {"datasets": ["hakari-bench/NanoBEIR-en"]}
+    assert card["target"] == {"datasets": ["hakari-bench/NanoBEIR-ja"]}
 
 
 def test_model_card_from_metadata_requires_method() -> None:
@@ -102,7 +102,7 @@ def test_model_card_from_metadata_preserves_late_interaction_settings() -> None:
 
 def test_collect_model_cards_from_results_excludes_bekko_and_bm25(tmp_path: Path) -> None:
     _write_result(
-        tmp_path / "BAAI__bge-m3" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        tmp_path / "BAAI__bge-m3" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
         model={
             "method": "dense",
             "id": "BAAI/bge-m3",
@@ -122,11 +122,11 @@ def test_collect_model_cards_from_results_excludes_bekko_and_bm25(tmp_path: Path
         ],
     )
     _write_result(
-        tmp_path / "hotchpotch__bekko-model" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        tmp_path / "hotchpotch__bekko-model" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
         model={"method": "dense", "id": "hotchpotch/bekko-model"},
     )
     _write_result(
-        tmp_path / "bm25" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        tmp_path / "bm25" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
         model={"method": "bm25", "id": "bm25"},
     )
 
@@ -138,7 +138,7 @@ def test_collect_model_cards_from_results_excludes_bekko_and_bm25(tmp_path: Path
 
     assert list(cards) == ["BAAI/bge-m3"]
     assert cards["BAAI/bge-m3"]["embedding"]["truncate_dims"] == [768]
-    assert cards["BAAI/bge-m3"]["target"] == {"datasets": ["hakari-bench/NanoBEIR-en"]}
+    assert cards["BAAI/bge-m3"]["target"] == {"datasets": ["hakari-bench/NanoBEIR-ja"]}
 
 
 def test_collect_model_cards_from_results_excludes_noop_truncate_dimension(tmp_path: Path) -> None:
@@ -172,7 +172,7 @@ def test_collect_model_cards_from_results_excludes_noop_truncate_dimension(tmp_p
 
 def test_collect_model_cards_from_results_preserves_existing_notes(tmp_path: Path) -> None:
     _write_result(
-        tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
         model={
             "method": "dense",
             "id": "jinaai/jina-embeddings-v3",
@@ -197,7 +197,7 @@ def test_collect_model_cards_from_results_preserves_existing_notes(tmp_path: Pat
 
 def test_collect_model_cards_from_results_infers_prompt_settings(tmp_path: Path) -> None:
     _write_result(
-        tmp_path / "intfloat__multilingual-e5-small" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        tmp_path / "intfloat__multilingual-e5-small" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
         model={
             "method": "dense",
             "id": "intfloat/multilingual-e5-small",
@@ -223,7 +223,7 @@ def test_collect_model_cards_from_results_infers_prompt_settings(tmp_path: Path)
 
 def test_collect_model_cards_from_results_infers_late_interaction_settings(tmp_path: Path) -> None:
     _write_result(
-        tmp_path / "lightonai__ColBERT-Zero" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        tmp_path / "lightonai__ColBERT-Zero" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
         model={
             "method": "late-interaction",
             "id": "lightonai/ColBERT-Zero",
@@ -262,7 +262,7 @@ def test_collect_model_cards_from_results_infers_late_interaction_settings(tmp_p
 
 def test_collect_model_cards_from_results_keeps_existing_reviewed_prompt_settings(tmp_path: Path) -> None:
     _write_result(
-        tmp_path / "Qwen__Qwen3-Embedding-0.6B" / "hakari-bench__NanoBEIR-en" / "arguana.json",
+        tmp_path / "Qwen__Qwen3-Embedding-0.6B" / "hakari-bench__NanoBEIR-ja" / "arguana.json",
         model={
             "method": "dense",
             "id": "Qwen/Qwen3-Embedding-0.6B",
@@ -289,9 +289,9 @@ def test_collect_model_cards_from_results_keeps_existing_reviewed_prompt_setting
 
 
 def test_collect_model_cards_from_results_reads_each_json_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    first_path = tmp_path / "model-a" / "hakari-bench__NanoBEIR-en" / "arguana.json"
+    first_path = tmp_path / "model-a" / "hakari-bench__NanoBEIR-ja" / "arguana.json"
     second_path = tmp_path / "model-a" / "hakari-bench__NanoRTEB" / "ja_cwir.json"
-    _write_result(first_path, model={"method": "dense", "id": "model/a"}, dataset_id="hakari-bench/NanoBEIR-en")
+    _write_result(first_path, model={"method": "dense", "id": "model/a"}, dataset_id="hakari-bench/NanoBEIR-ja")
     _write_result(second_path, model={"method": "dense", "id": "model/a"}, dataset_id="hakari-bench/NanoRTEB")
     original_read_json = model_cards._read_json
     read_paths = []
@@ -306,7 +306,7 @@ def test_collect_model_cards_from_results_reads_each_json_once(tmp_path: Path, m
 
     assert read_paths == [first_path, second_path]
     assert cards["model/a"]["target"]["datasets"] == [
-        "hakari-bench/NanoBEIR-en",
+        "hakari-bench/NanoBEIR-ja",
         "hakari-bench/NanoRTEB",
     ]
 
@@ -390,7 +390,7 @@ def test_write_evaluation_model_card_uses_model_output_directory(tmp_path: Path)
     args = argparse.Namespace(
         output_dir=str(tmp_path),
         model_id="BAAI/bge-m3",
-        dataset=["hakari-bench/NanoBEIR-en"],
+        dataset=["hakari-bench/NanoBEIR-ja"],
         collection=[],
         split=[],
         dataset_revision=None,
@@ -420,7 +420,7 @@ def test_write_evaluation_model_card_uses_model_output_directory(tmp_path: Path)
 
     assert output_path == tmp_path / "BAAI__bge-m3" / "BAAI__bge-m3.yaml"
     payload = yaml.safe_load(output_path.read_text(encoding="utf-8"))
-    assert payload["target"] == {"datasets": ["hakari-bench/NanoBEIR-en"]}
+    assert payload["target"] == {"datasets": ["hakari-bench/NanoBEIR-ja"]}
     assert payload["prompts"] == {
         "query_prompt": "query: ",
         "document_prompt": "passage: ",
@@ -431,7 +431,7 @@ def test_write_evaluation_model_card_preserves_late_interaction_args(tmp_path: P
     args = argparse.Namespace(
         output_dir=str(tmp_path),
         model_id="lightonai/ColBERT-Zero",
-        dataset=["hakari-bench/NanoBEIR-en"],
+        dataset=["hakari-bench/NanoBEIR-ja"],
         collection=[],
         split=[],
         dataset_revision=None,
@@ -837,7 +837,7 @@ def _write_result(
     model: dict[str, object],
     embedding_evaluations: list[dict[str, object]] | None = None,
     config: dict[str, object] | None = None,
-    dataset_id: str = "hakari-bench/NanoBEIR-en",
+    dataset_id: str = "hakari-bench/NanoBEIR-ja",
     score: float = 0.5,
 ) -> None:
     path.parent.mkdir(parents=True)

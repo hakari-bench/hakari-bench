@@ -1,6 +1,5 @@
 name: MNanoBEIR
 datasets:
-- NanoBEIR-en
 - name: NanoBEIR-ar
   dataset_id: hakari-bench/NanoBEIR-ar
   benchmark_kind: nanobeir

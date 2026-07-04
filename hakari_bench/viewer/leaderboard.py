@@ -450,13 +450,36 @@ class LeaderboardService:
                 )
                 if precomputed is not None:
                     rows, expected_tasks, available_languages = precomputed
-                    available_languages = _with_precomputed_category_options(
-                        duckdb_path=self.duckdb_path,
-                        benchmarks=benchmarks,
-                        score_target=score_target,
-                        options=available_languages,
-                        config=self.config,
-                    )
+                    if _language_filter_policy_supports_precomputed(language_filter_policy):
+                        available_languages = _with_precomputed_category_options(
+                            duckdb_path=self.duckdb_path,
+                            benchmarks=benchmarks,
+                            score_target=score_target,
+                            options=available_languages,
+                            config=self.config,
+                        )
+                    else:
+                        policy_language_options = self._load_language_options_for_scope(
+                            benchmarks,
+                            score_target=score_target,
+                            score_metric=selected_score_metric,
+                            include_quantization_variants=include_quantization_variants,
+                            include_truncate_variants=include_truncate_variants,
+                            include_rescore_variants=include_rescore_variants,
+                            include_other_variants=include_other_variants,
+                            policy=language_filter_policy,
+                        )
+                        available_languages = (
+                            policy_language_options
+                            if policy_language_options is not None
+                            else _with_precomputed_category_options(
+                                duckdb_path=self.duckdb_path,
+                                benchmarks=benchmarks,
+                                score_target=score_target,
+                                options=available_languages,
+                                config=self.config,
+                            )
+                        )
                     rows = _with_model_card_parameters_for_leaderboard_rows(
                         rows, self.model_card_parameters
                     )
@@ -759,6 +782,34 @@ class LeaderboardService:
             return view_name, overall, overall.benchmark_names
         benchmarks = self.config.benchmarks_for_view(view_name)
         return view_name, None, benchmarks
+
+    def _load_language_options_for_scope(
+        self,
+        benchmarks: list[str],
+        *,
+        score_target: ScoreTarget,
+        score_metric: str,
+        include_quantization_variants: bool,
+        include_truncate_variants: bool,
+        include_rescore_variants: bool,
+        include_other_variants: bool,
+        policy: LanguageFilterPolicy,
+    ) -> list[LanguageOption] | None:
+        if not _viewer_task_results_supports_language_options(self.duckdb_path):
+            return None
+        rows = self._load_task_scores(
+            benchmarks,
+            score_target=score_target,
+            score_metric=score_metric,
+            include_quantization_variants=include_quantization_variants,
+            include_truncate_variants=include_truncate_variants,
+            include_rescore_variants=include_rescore_variants,
+            include_other_variants=include_other_variants,
+        )
+        rows = _exclude_configured_tasks(rows, self.config)
+        if _score_metric_cutoff(score_metric) == 100:
+            rows = _exclude_bm25_task_scores(rows)
+        return _language_options(rows, policy=policy)
 
     def _load_task_scores(
         self,
@@ -1376,6 +1427,34 @@ def _load_precomputed_leaderboard_rows(
         for row in leaderboard_rows
     ]
     return (leaderboard_rows, expected_tasks, language_options)
+
+
+def _viewer_task_results_supports_language_options(duckdb_path: Path) -> bool:
+    if not duckdb_path.exists():
+        return False
+    con = duckdb.connect(str(duckdb_path), read_only=True)
+    try:
+        if not _table_exists(con, "viewer_task_results"):
+            return False
+        columns = _table_columns(con, "viewer_task_results")
+    finally:
+        con.close()
+    return {
+        "model_name",
+        "benchmark",
+        "dataset_id",
+        "dataset_name",
+        "split_name",
+        "task_name",
+        "task_key",
+        "score_target",
+        "score",
+        "language",
+        "languages",
+        "active_parameters",
+        "total_parameters",
+        "max_seq_length",
+    }.issubset(columns)
 
 
 def _precomputed_mean_score(
@@ -2923,6 +3002,7 @@ def _load_task_breakdowns_for_benchmarks(
     }
     for benchmark, dataset_name, task_name, task_key in rows:
         benchmark_value = str(benchmark)
+        dataset_name_value = str(dataset_name)
         task_name_value = str(task_name)
         task_key_value = str(task_key)
         if task_name_value in excluded_by_benchmark.get(
@@ -2932,7 +3012,7 @@ def _load_task_breakdowns_for_benchmarks(
         _add_task_breakdown(
             by_key,
             benchmark=benchmark_value,
-            dataset_name=str(dataset_name),
+            dataset_name=dataset_name_value,
             task_name=task_name_value,
             task_key=task_key_value,
         )

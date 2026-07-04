@@ -36,7 +36,6 @@ OLD_REPLACED_REPOS = {
 EXCLUDED_REPOS = {
     "hakari-bench/NanoBEIR-ar",
     "hakari-bench/NanoBEIR-de",
-    "hakari-bench/NanoBEIR-en",
     "hakari-bench/NanoBEIR-es",
     "hakari-bench/NanoBEIR-fr",
     "hakari-bench/NanoBEIR-it",

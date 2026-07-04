@@ -71,7 +71,7 @@ Evaluate a SentenceTransformers-compatible dense embedding model:
 ```bash
 uv run hakari-bench evaluate dense \
   --model intfloat/multilingual-e5-small \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --query-prompt 'query: ' \
   --document-prompt 'passage: ' \
   --dtype bf16

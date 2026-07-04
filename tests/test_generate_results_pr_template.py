@@ -12,16 +12,16 @@ from scripts import generate_results_pr_template as template
 def test_generate_pr_template_summarizes_overall_scores_from_xz_results(tmp_path: Path) -> None:
     result_dir = tmp_path / "Example__model"
     _write_result(
-        result_dir / "hakari-bench__NanoBEIR-en" / "arguana.json.xz",
-        dataset_name="NanoBEIR-en",
-        dataset_id="hakari-bench/NanoBEIR-en",
+        result_dir / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz",
+        dataset_name="NanoBEIR-ja",
+        dataset_id="hakari-bench/NanoBEIR-ja",
         task_name="arguana",
         score=0.6,
     )
     _write_result(
-        result_dir / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz",
-        dataset_name="NanoBEIR-ja",
-        dataset_id="hakari-bench/NanoBEIR-ja",
+        result_dir / "hakari-bench__NanoBEIR-ar" / "arguana.json.xz",
+        dataset_name="NanoBEIR-ar",
+        dataset_id="hakari-bench/NanoBEIR-ar",
         task_name="arguana",
         score=0.8,
     )
@@ -74,16 +74,16 @@ def test_default_comparison_models_use_qwen_06b() -> None:
 def test_generate_pr_template_adds_duckdb_comparison_table(tmp_path: Path) -> None:
     result_dir = tmp_path / "Example__model"
     _write_result(
-        result_dir / "hakari-bench__NanoBEIR-en" / "arguana.json.xz",
-        dataset_name="NanoBEIR-en",
-        dataset_id="hakari-bench/NanoBEIR-en",
+        result_dir / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz",
+        dataset_name="NanoBEIR-ja",
+        dataset_id="hakari-bench/NanoBEIR-ja",
         task_name="arguana",
         score=0.6,
     )
     _write_result(
-        result_dir / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz",
-        dataset_name="NanoBEIR-ja",
-        dataset_id="hakari-bench/NanoBEIR-ja",
+        result_dir / "hakari-bench__NanoBEIR-ar" / "arguana.json.xz",
+        dataset_name="NanoBEIR-ar",
+        dataset_id="hakari-bench/NanoBEIR-ar",
         task_name="arguana",
         score=0.8,
     )
@@ -121,8 +121,8 @@ def test_generate_pr_template_adds_duckdb_comparison_table(tmp_path: Path) -> No
         ("bm25", None, None, [0.2, 0.3, 0.1]),
     ]:
         for dataset_id, dataset_name, task_name, score in [
-            ("hakari-bench/NanoBEIR-en", "NanoBEIR-en", "arguana", scores[0]),
-            ("hakari-bench/NanoBEIR-ja", "NanoBEIR-ja", "arguana", scores[1]),
+            ("hakari-bench/NanoBEIR-ja", "NanoBEIR-ja", "arguana", scores[0]),
+            ("hakari-bench/NanoBEIR-ar", "NanoBEIR-ar", "arguana", scores[1]),
             ("hakari-bench/NanoRTEB", "NanoRTEB", "task-a", scores[2]),
         ]:
             con.execute(
@@ -162,9 +162,9 @@ def test_generate_pr_template_adds_duckdb_comparison_table(tmp_path: Path) -> No
 def test_generate_pr_template_uses_submitted_results_when_duckdb_lacks_model(tmp_path: Path) -> None:
     result_dir = tmp_path / "Example__model"
     _write_result(
-        result_dir / "hakari-bench__NanoBEIR-en" / "arguana.json.xz",
-        dataset_name="NanoBEIR-en",
-        dataset_id="hakari-bench/NanoBEIR-en",
+        result_dir / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz",
+        dataset_name="NanoBEIR-ja",
+        dataset_id="hakari-bench/NanoBEIR-ja",
         task_name="arguana",
         score=0.6,
     )
@@ -192,8 +192,8 @@ def test_generate_pr_template_uses_submitted_results_when_duckdb_lacks_model(tmp
         INSERT INTO task_results VALUES (
             'Other/model',
             'MNanoBEIR',
-            'hakari-bench/NanoBEIR-en',
-            'NanoBEIR-en',
+            'hakari-bench/NanoBEIR-ja',
+            'NanoBEIR-ja',
             'arguana',
             'arguana',
             0.8,

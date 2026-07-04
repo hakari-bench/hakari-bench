@@ -485,7 +485,7 @@ def test_parse_args_accepts_dense_batch_commands() -> None:
             "--model",
             "text-embedding-3-small",
             "--dataset",
-            "hakari-bench/NanoBEIR-en",
+            "hakari-bench/NanoBEIR-ja",
         ]
     )
     assert register.command == "batch"
@@ -507,7 +507,7 @@ def test_parse_args_accepts_dense_batch_commands() -> None:
             "--model",
             "text-embedding-3-small",
             "--dataset",
-            "hakari-bench/NanoBEIR-en",
+            "hakari-bench/NanoBEIR-ja",
             "--max-input-file-bytes",
             "1000000",
         ]

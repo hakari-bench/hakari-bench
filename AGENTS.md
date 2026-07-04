@@ -322,7 +322,7 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 - `MNanoBEIR` is defined as a built-in collection in
   `config/dataset_collections/mnanobeir.yaml`.
 - Built-in dataset names should stay consistent across docs, configs, and tests:
-  `NanoBEIR-en`, `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`,
+  `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`,
   `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoFaMTEB`,
   `NanoRuMTEB`, `NanoVNMTEB`, `NanoMTEB-Misc`, `NanoLongEmbed`, and
   `NanoCoIR`.
