@@ -14,11 +14,13 @@ from hakari_bench.model_loaders import (
 )
 from hakari_bench.models import (
     ColbertLateInteractionAdapter,
+    GeminiEmbeddingAdapter,
     ModelLoadConfig,
     OpenAIEmbeddingAdapter,
     _patch_pylate_dense_missing_activation_function,
     collect_model_metadata,
     load_model,
+    load_gemini_embedding_model,
     load_openai_embedding_model,
     resolve_model_revision,
     resolve_attn_implementation,
@@ -203,6 +205,33 @@ def test_load_model_uses_builtin_openai_loader() -> None:
     assert model.metadata()["backend_library"] == "openai"
 
 
+def test_load_model_uses_builtin_gemini_loader() -> None:
+    model = load_model(
+        ModelLoadConfig(
+            model_name_or_path="gemini-embedding-2",
+            model_type="dense",
+            model_loader="gemini",
+            model_loader_kwargs={"project": "ml-sandbox-309804", "location": "global"},
+        )
+    )
+
+    assert isinstance(model, GeminiEmbeddingAdapter)
+    assert model.model_name == "gemini-embedding-2"
+    assert model.project == "ml-sandbox-309804"
+    assert model.metadata()["backend_library"] == "google-genai"
+
+
+def test_gemini_loader_rejects_unknown_kwargs() -> None:
+    with pytest.raises(ValueError, match="Unsupported Gemini loader kwargs"):
+        load_gemini_embedding_model(
+            ModelLoadConfig(
+                model_name_or_path="gemini-embedding-2",
+                model_type="dense",
+                model_loader_kwargs={"unexpected": True},
+            )
+        )
+
+
 def test_openai_loader_rejects_unknown_kwargs() -> None:
     with pytest.raises(ValueError, match="Unsupported OpenAI loader kwargs"):
         load_openai_embedding_model(
@@ -212,6 +241,114 @@ def test_openai_loader_rejects_unknown_kwargs() -> None:
                 model_loader_kwargs={"unexpected": True},
             )
         )
+
+
+def test_gemini_embedding_adapter_fetches_and_normalizes_prefix(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[dict[str, object]] = []
+    client_kwargs: list[dict[str, object]] = []
+
+    class FakeEmbedding:
+        def __init__(self, values: list[float]) -> None:
+            self.values = values
+
+    class FakeModels:
+        def embed_content(self, **kwargs: object) -> object:
+            calls.append(dict(kwargs))
+            contents = kwargs["contents"]
+            assert isinstance(contents, FakeTypes.Content)
+            return SimpleNamespace(embeddings=[FakeEmbedding([3.0, 4.0, 12.0])])
+
+    class FakeClient:
+        def __init__(self, **kwargs: object) -> None:
+            client_kwargs.append(kwargs)
+            self.models = FakeModels()
+
+    class FakeTypes:
+        class HttpOptions:
+            def __init__(self, **kwargs: object) -> None:
+                self.kwargs = kwargs
+
+        class EmbedContentConfig:
+            def __init__(self, **kwargs: object) -> None:
+                self.kwargs = kwargs
+
+        class Part:
+            def __init__(self, **kwargs: object) -> None:
+                self.kwargs = kwargs
+
+        class Content:
+            def __init__(self, **kwargs: object) -> None:
+                self.kwargs = kwargs
+
+    def fake_import_module(name: str) -> object:
+        if name == "google.genai":
+            return SimpleNamespace(Client=FakeClient)
+        if name == "google.genai.types":
+            return FakeTypes
+        raise AssertionError(f"unexpected import: {name}")
+
+    monkeypatch.setattr("hakari_bench.models.importlib.import_module", fake_import_module)
+
+    model = GeminiEmbeddingAdapter(
+        model_name="gemini-embedding-2",
+        project="ml-sandbox-309804",
+        location="global",
+        max_concurrency=2,
+    )
+    model._local_tokenizer = SimpleNamespace(encode=list, decode=lambda tokens: "".join(tokens))
+    embeddings = model.encode(["abcdef", "xy", "wxyz"], batch_size=2, truncate_dim=2)
+
+    assert embeddings.shape == (3, 2)
+    assert [row.tolist() for row in embeddings] == [pytest.approx([0.6, 0.8])] * 3
+    assert client_kwargs[0]["vertexai"] is True
+    assert client_kwargs[0]["project"] == "ml-sandbox-309804"
+    assert client_kwargs[0]["location"] == "global"
+    assert [call["model"] for call in calls] == ["gemini-embedding-2"] * 3
+    sent_texts: list[str] = []
+    for call in calls:
+        contents = call["contents"]
+        assert isinstance(contents, FakeTypes.Content)
+        parts = contents.kwargs["parts"]
+        assert isinstance(parts, list)
+        part = parts[0]
+        assert isinstance(part, FakeTypes.Part)
+        text = part.kwargs["text"]
+        assert isinstance(text, str)
+        sent_texts.append(text)
+    assert sorted(sent_texts) == ["abcdef", "wxyz", "xy"]
+
+
+def test_gemini_embedding_adapter_truncates_with_local_gemma2_tokenizer() -> None:
+    class FakeGemma2Tokenizer:
+        def encode(self, text: str) -> list[str]:
+            return list(text)
+
+        def decode(self, tokens: list[str]) -> str:
+            return "".join(tokens)
+
+    model = GeminiEmbeddingAdapter(model_name="gemini-embedding-2", max_input_tokens=4)
+    model._local_tokenizer = FakeGemma2Tokenizer()
+
+    assert model._prepare_inputs(["abcdef", "xy"]) == ["abc", "xy"]
+
+
+def test_gemini_embedding_adapter_rejects_over_limit_without_truncation() -> None:
+    class FakeGemma2Tokenizer:
+        def encode(self, text: str) -> list[str]:
+            return list(text)
+
+        def decode(self, tokens: list[str]) -> str:
+            return "".join(tokens)
+
+    model = GeminiEmbeddingAdapter(
+        model_name="gemini-embedding-2",
+        max_input_tokens=4,
+        truncate_input_tokens=False,
+    )
+    model._local_tokenizer = FakeGemma2Tokenizer()
+
+    with pytest.raises(ValueError, match="exceeding the 4 token limit"):
+        model._prepare_inputs(["abcdef"])
 
 
 def test_openai_embedding_adapter_truncates_inputs_and_normalizes_prefix(

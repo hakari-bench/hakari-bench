@@ -25,12 +25,16 @@ from hakari_bench.batch import (
     PrecomputedDenseEmbeddingModel,
     batch_index_path,
     cleanup_batch_download_files,
+    collect_gemini_batch_task_embeddings,
     collect_openai_batch_embeddings,
     collect_openai_batch_task_embeddings,
     load_batch_index,
     load_batch_metadata,
+    refresh_gemini_batch_files,
     refresh_openai_batch_files,
+    register_gemini_embedding_task_batches,
     register_openai_embedding_task_batches,
+    wait_for_gemini_batch,
     wait_for_openai_batch,
 )
 from hakari_bench.cli_schema import BuildCandidatesParamsJson, EvaluateParamsJson
@@ -163,12 +167,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     batch_dense_register = batch_dense_actions.add_parser("register", help="Create and submit a dense batch job.")
     _add_batch_common_args(batch_dense_register)
-    batch_dense_register.add_argument("--provider", choices=["openai"], default="openai")
+    batch_dense_register.add_argument("--provider", choices=["openai", "gemini"], default="openai")
     batch_dense_register.add_argument("--model", required=True)
+    batch_dense_register.add_argument("--model-alias", default=None, help="Logical model id to write into result JSON.")
     _add_dataset_args(batch_dense_register, action="evaluate")
     _add_prompt_args(batch_dense_register)
     _add_execution_args(batch_dense_register)
     _add_openai_batch_args(batch_dense_register)
+    _add_gemini_batch_args(batch_dense_register)
     batch_dense_register.add_argument("--results-dir", default=DEFAULT_RESULTS_DIR)
     batch_dense_register.add_argument("--result-format", default="json.xz", choices=["json.xz", "json"])
     batch_dense_register.add_argument("--overwrite", action="store_true")
@@ -176,6 +182,7 @@ def build_parser() -> argparse.ArgumentParser:
     batch_dense_fetch = batch_dense_actions.add_parser("fetch", help="Refresh batch status and download output files.")
     _add_batch_common_args(batch_dense_fetch)
     _add_openai_batch_auth_args(batch_dense_fetch)
+    _add_gemini_batch_args(batch_dense_fetch, include_gcs=False)
     batch_dense_fetch.add_argument("--wait", action="store_true", help="Poll until the batch reaches a terminal state.")
     batch_dense_fetch.add_argument("--poll-seconds", type=int, default=900)
 
@@ -194,6 +201,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_batch_common_args(batch_dense_process)
     _add_openai_batch_auth_args(batch_dense_process)
+    _add_gemini_batch_args(batch_dense_process, include_gcs=False)
     _add_embedding_variant_args(batch_dense_process)
     _add_candidate_args(batch_dense_process)
     _add_output_args(batch_dense_process, results_default=DEFAULT_RESULTS_DIR)
@@ -258,8 +266,8 @@ def _add_evaluate_model_args(parser: argparse.ArgumentParser) -> None:
         "--model-loader",
         default=None,
         help=(
-            "Optional built-in or custom model loader. Use 'openai' for OpenAI embeddings, or module:function "
-            "for a custom callable that receives ModelLoadConfig and returns an object matching the "
+            "Optional built-in or custom model loader. Use 'openai' or 'gemini' for hosted embeddings, "
+            "or module:function for a custom callable that receives ModelLoadConfig and returns an object matching the "
             "evaluation method's duck-typed interface."
         ),
     )
@@ -493,6 +501,18 @@ def _add_openai_batch_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_gemini_batch_args(parser: argparse.ArgumentParser, *, include_gcs: bool = True) -> None:
+    parser.add_argument("--gemini-project", default=None, help="Google Cloud project for Gemini Vertex/Enterprise API.")
+    parser.add_argument("--gemini-location", default="global", help="Google Cloud location for Gemini batch jobs.")
+    parser.add_argument("--gemini-api-version", default="v1", help="Google Gen AI API version for Gemini batch jobs.")
+    if include_gcs:
+        parser.add_argument(
+            "--gcs-uri-prefix",
+            default=None,
+            help="GCS prefix used for Gemini batch input and output, for example gs://bucket/hakari-batches/target.",
+        )
+
+
 def _add_bm25_args(parser: argparse.ArgumentParser, *, include_source: bool = False) -> None:
     if include_source:
         parser.add_argument(
@@ -550,11 +570,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         try:
             if args.model_type == "dense":
                 args.embedding_variants = dense_embedding_variants(
-                    args.embedding_variant_values,
-                    args.embedding_variant_grid_values,
-                    include_defaults=not args.no_default_embedding_variants,
-                    normalize_truncate=getattr(args, "model_loader", None) == "openai",
-                )
+                args.embedding_variant_values,
+                args.embedding_variant_grid_values,
+                include_defaults=not args.no_default_embedding_variants,
+                normalize_truncate=getattr(args, "model_loader", None) in {"openai", "gemini"},
+            )
             elif args.model_type == "sparse":
                 args.embedding_variants = sparse_embedding_variants(
                     args.embedding_variant_values,
@@ -625,6 +645,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--model-loader openai requires evaluate dense.")
         if args.model_loader == "openai" and args.encode_devices:
             parser.error("--encode-devices is not supported with --model-loader openai.")
+        if args.model_loader == "gemini" and args.model_type != "dense":
+            parser.error("--model-loader gemini requires evaluate dense.")
+        if args.model_loader == "gemini" and args.encode_devices:
+            parser.error("--encode-devices is not supported with --model-loader gemini.")
     if args.command == "build-candidates":
         try:
             _apply_build_candidates_params_json(args)
@@ -671,6 +695,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                 parser.error("--max-embedding-inputs must be positive.")
             if args.max_input_file_bytes <= 0:
                 parser.error("--max-input-file-bytes must be positive.")
+            if args.provider == "gemini" and not args.gcs_uri_prefix:
+                parser.error("--provider gemini requires --gcs-uri-prefix.")
         elif args.batch_action == "fetch":
             if args.poll_seconds <= 0:
                 parser.error("--poll-seconds must be positive.")
@@ -852,8 +878,8 @@ def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[st
     args.model = str(source_name or model_id)
     args.model_alias = model_id
     args.model_revision = _model_card_revision(source)
-    if isinstance(source, dict) and source.get("type") == "openai":
-        args.model_loader = "openai"
+    if isinstance(source, dict) and source.get("type") in {"openai", "gemini"}:
+        args.model_loader = str(source["type"])
     runtime = card.get("runtime")
     if isinstance(runtime, dict):
         _apply_model_card_runtime(args, runtime, provided_options=provided_options)
@@ -1016,9 +1042,10 @@ def _apply_model_identity(args: argparse.Namespace) -> None:
     alias = getattr(args, "model_alias", None)
     if not model:
         return
-    if getattr(args, "model_loader", None) == "openai":
+    if getattr(args, "model_loader", None) in {"openai", "gemini"}:
+        source_type = str(args.model_loader)
         args.model_id = alias or model
-        args.model_source = {"type": "openai", "name": model}
+        args.model_source = {"type": source_type, "name": model}
         return
     is_local = _is_local_model_path(model)
     args.model_id = _model_id_for(model, alias=alias, is_local=is_local)
@@ -1507,19 +1534,20 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
         split_values=args.split,
         evaluation_scope=args.evaluation_scope,
     )
-    if args.provider != "openai":
+    if args.provider not in {"openai", "gemini"}:
         raise ValueError(f"Unsupported dense batch provider: {args.provider}")
     workspace_root = Path(args.workspace_root)
     index_path = batch_index_path(target=args.target, workspace_root=workspace_root)
     if index_path.exists() and not args.overwrite:
         raise FileExistsError(f"Batch index already exists: {index_path}. Use --overwrite to replace it.")
     output_dir = Path(args.results_dir)
+    result_model_id = args.model_alias or args.model
     task_groups: list[dict[str, Any]] = []
     skipped_existing_results: list[dict[str, Any]] = []
     for task in tasks:
         existing_result = _existing_readable_result_path(
             output_dir=output_dir,
-            model_id=args.model,
+            model_id=result_model_id,
             task=task,
             result_format=args.result_format,
         )
@@ -1536,27 +1564,47 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
             )
             continue
         dataset = _load_dataset_for_args(args, task)
-        metadatas = register_openai_embedding_task_batches(
-            target=args.target,
-            workspace_root=workspace_root,
-            model=args.model,
-            task=task,
-            dataset=dataset,
-            batch_size=args.batch_size,
-            max_input_tokens=args.max_input_tokens,
-            max_request_tokens=args.max_request_tokens,
-            max_embedding_inputs=args.max_embedding_inputs,
-            max_input_file_bytes=args.max_input_file_bytes,
-            query_prompt=args.query_prompt,
-            document_prompt=args.document_prompt,
-            dataset_revision=getattr(args, "dataset_revision", None),
-            dotenv_path=args.dotenv_path,
-            api_key_env=args.api_key_env,
-            base_url=args.base_url,
-            organization=args.organization,
-            project=args.project,
-            overwrite=args.overwrite,
-        )
+        if args.provider == "openai":
+            metadatas = register_openai_embedding_task_batches(
+                target=args.target,
+                workspace_root=workspace_root,
+                model=args.model,
+                task=task,
+                dataset=dataset,
+                batch_size=args.batch_size,
+                max_input_tokens=args.max_input_tokens,
+                max_request_tokens=args.max_request_tokens,
+                max_embedding_inputs=args.max_embedding_inputs,
+                max_input_file_bytes=args.max_input_file_bytes,
+                query_prompt=args.query_prompt,
+                document_prompt=args.document_prompt,
+                dataset_revision=getattr(args, "dataset_revision", None),
+                dotenv_path=args.dotenv_path,
+                api_key_env=args.api_key_env,
+                base_url=args.base_url,
+                organization=args.organization,
+                project=args.project,
+                overwrite=args.overwrite,
+            )
+        else:
+            metadatas = register_gemini_embedding_task_batches(
+                target=args.target,
+                workspace_root=workspace_root,
+                model=args.model,
+                task=task,
+                dataset=dataset,
+                max_input_tokens=args.max_input_tokens,
+                max_embedding_inputs=args.max_embedding_inputs,
+                max_input_file_bytes=args.max_input_file_bytes,
+                query_prompt=args.query_prompt,
+                document_prompt=args.document_prompt,
+                dataset_revision=getattr(args, "dataset_revision", None),
+                project=args.gemini_project,
+                location=args.gemini_location,
+                api_version=args.gemini_api_version,
+                gcs_uri_prefix=args.gcs_uri_prefix,
+                overwrite=args.overwrite,
+            )
         task_payload = dict(metadatas[0].tasks[0]) if metadatas else {
             "dataset_id": task.dataset_id,
             "dataset_name": task.dataset_name,
@@ -1583,7 +1631,7 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
         schema_version=1,
         provider=args.provider,
         model_type="dense",
-        model=args.model,
+        model=result_model_id,
         target=args.target,
         workspace_path=workspace_root / safe_path_part(args.target),
         index_path=index_path,
@@ -1602,17 +1650,30 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
             "result_format": args.result_format,
             "dimension_reduction": "full_embedding_prefix_l2_normalize",
         },
-        api={
-            "endpoint": "/v1/embeddings",
-            "completion_window": "24h",
-            "input_purpose": "batch",
-        },
+        api=(
+            {
+                "endpoint": "/v1/embeddings",
+                "completion_window": "24h",
+                "input_purpose": "batch",
+                "model": args.model,
+            }
+            if args.provider == "openai"
+            else {
+                "endpoint": "batchPredictionJobs",
+                "model": args.model,
+                "project": args.gemini_project,
+                "location": args.gemini_location,
+                "api_version": args.gemini_api_version,
+                "gcs_uri_prefix": args.gcs_uri_prefix,
+            }
+        ),
     )
     index.write()
     payload = {
         "target": args.target,
         "provider": args.provider,
-        "model": args.model,
+        "model": result_model_id,
+        "api_model": args.model,
         "index_path": str(index.index_path),
         "registered_task_count": len(task_groups),
         "registered_batch_count": sum(len(group["batches"]) for group in task_groups),
@@ -1627,9 +1688,28 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
 
 def run_batch_dense_fetch(args: argparse.Namespace) -> dict[str, Any]:
     metadata = load_batch_metadata(target=args.target, workspace_root=Path(args.workspace_root))
-    if metadata.provider != "openai":
+    if metadata.provider not in {"openai", "gemini"}:
         raise ValueError(f"Unsupported batch provider for fetch: {metadata.provider}")
-    if args.wait:
+    if metadata.provider == "gemini":
+        project = args.gemini_project or (metadata.api or {}).get("project")
+        location = args.gemini_location or (metadata.api or {}).get("location") or "global"
+        api_version = args.gemini_api_version or (metadata.api or {}).get("api_version") or "v1"
+        if args.wait:
+            metadata = wait_for_gemini_batch(
+                metadata=metadata,
+                poll_seconds=args.poll_seconds,
+                project=project,
+                location=location,
+                api_version=api_version,
+            )
+        else:
+            metadata = refresh_gemini_batch_files(
+                metadata=metadata,
+                project=project,
+                location=location,
+                api_version=api_version,
+            )
+    elif args.wait:
         metadata = wait_for_openai_batch(
             metadata=metadata,
             poll_seconds=args.poll_seconds,
@@ -1655,11 +1735,12 @@ def run_batch_dense_fetch(args: argparse.Namespace) -> dict[str, Any]:
 
 def run_batch_dense_process(args: argparse.Namespace) -> dict[str, Any]:
     index = load_batch_index(target=args.target, workspace_root=Path(args.workspace_root))
-    if index.provider != "openai":
+    if index.provider not in {"openai", "gemini"}:
         raise ValueError(f"Unsupported batch provider for process: {index.provider}")
+    api_model = (index.api or {}).get("model") or index.model
     args.model = index.model
     args.model_id = index.model
-    args.model_source = {"type": index.provider, "name": index.model}
+    args.model_source = {"type": index.provider, "name": api_model}
     args.model_loader = f"{index.provider}-batch"
     args.model_revision = None
     args.dtype = "fp32"
@@ -1690,38 +1771,68 @@ def run_batch_dense_process(args: argparse.Namespace) -> dict[str, Any]:
             skipped_existing_result_count += 1
             continue
         metadatas = [BatchMetadata.from_path(Path(batch["metadata_path"])) for batch in task_group["batches"]]
-        refreshed = [
-            refresh_openai_batch_files(
-                metadata=metadata,
-                dotenv_path=args.dotenv_path,
-                api_key_env=args.api_key_env,
-                base_url=args.base_url,
-                organization=args.organization,
-                project=args.project,
-                download_files=False,
-            )
-            for metadata in metadatas
-        ]
+        if index.provider == "gemini":
+            project = args.gemini_project or (index.api or {}).get("project")
+            location = args.gemini_location or (index.api or {}).get("location") or "global"
+            api_version = args.gemini_api_version or (index.api or {}).get("api_version") or "v1"
+            refreshed = [
+                refresh_gemini_batch_files(
+                    metadata=metadata,
+                    project=project,
+                    location=location,
+                    api_version=api_version,
+                    download_files=False,
+                )
+                for metadata in metadatas
+            ]
+            completed_status = "JOB_STATE_SUCCEEDED"
+        else:
+            refreshed = [
+                refresh_openai_batch_files(
+                    metadata=metadata,
+                    dotenv_path=args.dotenv_path,
+                    api_key_env=args.api_key_env,
+                    base_url=args.base_url,
+                    organization=args.organization,
+                    project=args.project,
+                    download_files=False,
+                )
+                for metadata in metadatas
+            ]
+            completed_status = "completed"
         statuses = {metadata.status for metadata in refreshed}
-        if statuses - {"completed"}:
-            if statuses & {"failed", "cancelled", "expired"}:
+        if statuses - {completed_status}:
+            if statuses & {"failed", "cancelled", "expired", "JOB_STATE_FAILED", "JOB_STATE_CANCELLED"}:
                 failed_count += 1
             else:
                 pending_count += 1
             continue
-        downloaded = [
-            refresh_openai_batch_files(
-                metadata=metadata,
-                dotenv_path=args.dotenv_path,
-                api_key_env=args.api_key_env,
-                base_url=args.base_url,
-                organization=args.organization,
-                project=args.project,
-                download_files=True,
-            )
-            for metadata in refreshed
-        ]
-        task_embeddings = collect_openai_batch_task_embeddings(downloaded)
+        if index.provider == "gemini":
+            downloaded = [
+                refresh_gemini_batch_files(
+                    metadata=metadata,
+                    project=project,
+                    location=location,
+                    api_version=api_version,
+                    download_files=True,
+                )
+                for metadata in refreshed
+            ]
+            task_embeddings = collect_gemini_batch_task_embeddings(downloaded)
+        else:
+            downloaded = [
+                refresh_openai_batch_files(
+                    metadata=metadata,
+                    dotenv_path=args.dotenv_path,
+                    api_key_env=args.api_key_env,
+                    base_url=args.base_url,
+                    organization=args.organization,
+                    project=args.project,
+                    download_files=True,
+                )
+                for metadata in refreshed
+            ]
+            task_embeddings = collect_openai_batch_task_embeddings(downloaded)
         dataset = _load_dataset_for_args(args, task)
         result = _materialize_precomputed_batch_task(
             args=args,
@@ -2076,7 +2187,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
 def _warn_if_missing_attention_implementation(args: argparse.Namespace) -> None:
     if args.model_type == "bm25":
         return
-    if getattr(args, "model_loader", None) == "openai":
+    if getattr(args, "model_loader", None) in {"openai", "gemini"}:
         return
     if args.flash_attn2 or args.attn_implementation is not None:
         return

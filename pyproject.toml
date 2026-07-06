@@ -155,6 +155,10 @@ openai = [
     "openai>=2.41.1",
     "tiktoken>=0.13.0",
 ]
+gemini = [
+    "google-genai>=2.8.0",
+    "sentencepiece>=0.2.1",
+]
 
 [tool.tox]
 legacy_tox_ini = """

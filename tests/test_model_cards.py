@@ -776,6 +776,7 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "Qwen/Qwen3-Embedding-8B": 4096,
         "Snowflake/snowflake-arctic-embed-l-v2.0": 1024,
         "google/embeddinggemma-300m": 768,
+        "google/gemini-embedding-2": 3072,
         "hotchpotch/bekko-embedding-v1-a25m": 384,
         "hotchpotch/bekko-embedding-v1-a8m": 384,
         "ibm-granite/granite-embedding-311m-multilingual-r2": 768,

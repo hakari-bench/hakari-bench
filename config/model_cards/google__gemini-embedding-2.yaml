@@ -1,0 +1,67 @@
+id: google/gemini-embedding-2
+display_name: Google Gemini Embedding 2
+source:
+  type: gemini
+  name: gemini-embedding-2
+method: dense
+license:
+  id: google-gemini-api-terms
+  label: Google API Terms
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: provider_terms
+  source_url: https://ai.google.dev/terms
+parameters:
+  total:
+  active:
+embedding:
+  dimensions: 3072
+  api_dimensions_supported: true
+  api_dimension_supported_range:
+    min: 128
+    max: 3072
+  api_dimension_recommended_dims:
+  - 768
+  - 1536
+  - 3072
+  api_dimension_verified_dims:
+  - 128
+  - 256
+  - 512
+  - 768
+  - 1536
+  - 3072
+  truncate_method: full_embedding_prefix_l2_normalize
+  truncate_dims:
+  - 128
+  - 256
+  - 512
+  - 768
+  - 1536
+runtime:
+  max_seq_length: 8192
+  backend_library: google-genai
+  similarity_fn_name: cosine
+prompts:
+  query_prompt: "task: search result | query: "
+  document_prompt: "title: none | text: "
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: provider_model_family_is_general_multilingual_embedding_api
+    evaluated_language_count: 20
+target:
+  evaluation_scope: standard
+notes:
+- "Use `--model-loader gemini` and run with `uv run --group gemini`."
+- "The direct Gemini adapter uses Vertex/Enterprise via `google-genai`; set `GOOGLE_CLOUD_PROJECT` or pass `project` in model loader kwargs. Batch result files for this model can also be produced through the Gemini Developer API embedding batch path with `GEMINI_API_KEY` or `GOOGLE_API_KEY`."
+- "For text retrieval, Gemini Embedding 2 does not support `task_type`; use the prompt prefixes recorded in `prompts`."
+- "`--truncate-dim` and `embedding.truncate_dims` use full embeddings followed by `full[:DIM]` and L2 normalization."
+- "API-side `output_dimensionality` is supported for 128-3072 dimensions and returns normalized lower-dimensional vectors; HAKARI uses normalized-prefix truncation for reusable benchmark variants."
+- "Gemini Embedding 2 has an 8192-token input limit; the built-in adapter keeps a conservative 8100-token local guard and enables provider auto-truncation."

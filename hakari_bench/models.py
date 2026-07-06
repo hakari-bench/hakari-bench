@@ -688,6 +688,292 @@ class OpenAIEmbeddingAdapter:
             )
 
 
+class GeminiEmbeddingAdapter:
+    similarity_fn_name = "cosine"
+    max_seq_length = 8100
+    token_count_offset = 1
+
+    _BASE_DIMENSIONS = {
+        "gemini-embedding-2": 3072,
+    }
+
+    def __init__(
+        self,
+        *,
+        model_name: str,
+        project: str | None = None,
+        location: str = "global",
+        api_version: str = "v1",
+        max_input_tokens: int = 8100,
+        truncate_input_tokens: bool = True,
+        max_concurrency: int = 4,
+        output_dimensionality: int | None = None,
+    ) -> None:
+        if max_input_tokens <= 0:
+            raise ValueError("Gemini max_input_tokens must be positive.")
+        if max_concurrency <= 0:
+            raise ValueError("Gemini max_concurrency must be positive.")
+        self.model_name_or_path = model_name
+        self.model_name = model_name
+        self.project = project
+        self.location = location
+        self.api_version = api_version
+        self.max_seq_length = int(max_input_tokens)
+        self.truncate_input_tokens = bool(truncate_input_tokens)
+        self.max_concurrency = int(max_concurrency)
+        self.output_dimensionality = output_dimensionality
+        self.default_prompt_name = None
+        self.prompts = None
+        self._local_tokenizer: Any | None = None
+        self._validate_dimensions(output_dimensionality)
+
+    @property
+    def base_dimensions(self) -> int | None:
+        return self._BASE_DIMENSIONS.get(self.model_name)
+
+    def encode_query(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return self.encode(sentences, **kwargs)
+
+    def encode_document(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return self.encode(sentences, **kwargs)
+
+    def encode(
+        self,
+        sentences: list[str] | str,
+        *,
+        batch_size: int = 32,
+        show_progress_bar: bool | None = None,
+        convert_to_numpy: bool = True,
+        convert_to_tensor: bool = False,
+        truncate_dim: int | None = None,
+        dimensions: int | None = None,
+        prompt: str | None = None,
+        prompt_name: str | None = None,
+        task: str | None = None,
+        **_: Any,
+    ) -> Any:
+        return _run_async_from_sync(
+            self.aencode(
+                sentences,
+                batch_size=batch_size,
+                show_progress_bar=show_progress_bar,
+                convert_to_numpy=convert_to_numpy,
+                convert_to_tensor=convert_to_tensor,
+                truncate_dim=truncate_dim,
+                dimensions=dimensions,
+                prompt=prompt,
+                prompt_name=prompt_name,
+                task=task,
+            )
+        )
+
+    async def aencode_query(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return await self.aencode(sentences, **kwargs)
+
+    async def aencode_document(self, sentences: list[str] | str, **kwargs: Any) -> Any:
+        return await self.aencode(sentences, **kwargs)
+
+    async def aencode(
+        self,
+        sentences: list[str] | str,
+        *,
+        batch_size: int = 32,
+        show_progress_bar: bool | None = None,
+        convert_to_numpy: bool = True,
+        convert_to_tensor: bool = False,
+        truncate_dim: int | None = None,
+        dimensions: int | None = None,
+        prompt: str | None = None,
+        prompt_name: str | None = None,
+        task: str | None = None,
+        **_: Any,
+    ) -> Any:
+        del task
+        if batch_size <= 0:
+            raise ValueError("Gemini embedding batch_size must be positive.")
+        if prompt_name is not None:
+            raise ValueError("Gemini embedding adapter does not support prompt_name; pass an explicit prompt string.")
+        requested_dimensions = dimensions if dimensions is not None else truncate_dim
+        self._validate_dimensions(requested_dimensions)
+
+        input_was_string = isinstance(sentences, str)
+        raw_texts = [sentences] if input_was_string else list(sentences)
+        texts = [str(sentence) for sentence in raw_texts]
+        if prompt is not None:
+            texts = [f"{prompt}{text}" for text in texts]
+        prepared = self._prepare_inputs(texts)
+        ranges = [(start, start + 1) for start in range(len(prepared))]
+        vectors = await self._fetch_embedding_batches(
+            prepared=prepared,
+            ranges=ranges,
+            show_progress_bar=bool(show_progress_bar),
+        )
+
+        array = np.asarray(vectors, dtype=np.float32)
+        if requested_dimensions is not None:
+            array = _truncate_and_l2_normalize_array(array, dim=requested_dimensions)
+        if convert_to_tensor:
+            result: Any = torch.as_tensor(array)
+        elif convert_to_numpy:
+            result = array
+        else:
+            result = array.tolist()
+        return result[0] if input_was_string else result
+
+    def metadata(self) -> dict[str, Any]:
+        return {
+            "backend_library": "google-genai",
+            "provider": "gemini",
+            "api_endpoint": "models.embed_content",
+            "model": self.model_name,
+            "base_dimensions": self.base_dimensions,
+            "max_input_tokens": self.max_seq_length,
+            "truncate_input_tokens": self.truncate_input_tokens,
+            "max_concurrency": self.max_concurrency,
+            "project": self.project,
+            "location": self.location,
+            "api_version": self.api_version,
+            "output_dimensionality": self.output_dimensionality,
+            "dimension_reduction": "full_embedding_prefix_l2_normalize",
+            "tokenizer": "gemma2_sentencepiece",
+            "token_count_policy": "len(gemma2.encode(text)) + 1",
+            "token_count_offset": self.token_count_offset,
+        }
+
+    async def _fetch_embedding_batches(
+        self,
+        *,
+        prepared: list[str],
+        ranges: list[tuple[int, int]],
+        show_progress_bar: bool,
+    ) -> list[list[float]]:
+        if not ranges:
+            return []
+        client = self._client()
+        semaphore = asyncio.Semaphore(self.max_concurrency)
+        progress = None
+        if show_progress_bar:
+            tqdm = getattr(importlib.import_module("tqdm.auto"), "tqdm")
+            progress = tqdm(total=len(ranges), desc="Gemini embedding batches")
+        try:
+            tasks = [
+                asyncio.create_task(
+                    self._fetch_embedding_batch(
+                        client=client,
+                        semaphore=semaphore,
+                        prepared=prepared,
+                        start=start,
+                        end=end,
+                    )
+                )
+                for start, end in ranges
+            ]
+            batches_by_start: dict[int, list[list[float]]] = {}
+            for task in asyncio.as_completed(tasks):
+                start, vectors = await task
+                batches_by_start[start] = vectors
+                if progress is not None:
+                    progress.update(1)
+            ordered_vectors: list[list[float]] = []
+            for start, _end in ranges:
+                ordered_vectors.extend(batches_by_start[start])
+            return ordered_vectors
+        finally:
+            if progress is not None:
+                progress.close()
+
+    async def _fetch_embedding_batch(
+        self,
+        *,
+        client: Any,
+        semaphore: asyncio.Semaphore,
+        prepared: list[str],
+        start: int,
+        end: int,
+    ) -> tuple[int, list[list[float]]]:
+        async with semaphore:
+            response = await asyncio.to_thread(
+                client.models.embed_content,
+                model=self.model_name,
+                contents=self._content_from_text(prepared[start]),
+                config=self._embed_config(),
+            )
+        embeddings = getattr(response, "embeddings", None) or []
+        if len(embeddings) != 1:
+            raise ValueError(f"Gemini embedding API returned {len(embeddings)} embeddings for one input.")
+        return start, [list(embeddings[0].values)]
+
+    def _client(self) -> Any:
+        genai = importlib.import_module("google.genai")
+        types = importlib.import_module("google.genai.types")
+        kwargs: dict[str, Any] = {
+            "vertexai": True,
+            "location": self.location,
+            "http_options": types.HttpOptions(api_version=self.api_version),
+        }
+        if self.project is not None:
+            kwargs["project"] = self.project
+        return genai.Client(**kwargs)
+
+    def _embed_config(self) -> Any:
+        types = importlib.import_module("google.genai.types")
+        kwargs: dict[str, Any] = {"auto_truncate": self.truncate_input_tokens}
+        if self.output_dimensionality is not None:
+            kwargs["output_dimensionality"] = self.output_dimensionality
+        return types.EmbedContentConfig(**kwargs)
+
+    def _content_from_text(self, text: str) -> Any:
+        types = importlib.import_module("google.genai.types")
+        return types.Content(parts=[types.Part(text=text)], role="user")
+
+    def _prepare_inputs(self, texts: list[str]) -> list[str]:
+        tokenizer = self._tokenizer()
+        token_budget = max(0, self.max_seq_length - self.token_count_offset)
+        prepared: list[str] = []
+        for text in texts:
+            text = str(text)
+            tokens = list(tokenizer.encode(text))
+            effective_tokens = len(tokens) + self.token_count_offset
+            if effective_tokens > self.max_seq_length:
+                if not self.truncate_input_tokens:
+                    raise ValueError(
+                        f"Gemini embedding input has {effective_tokens} tokens, exceeding the "
+                        f"{self.max_seq_length} token limit for {self.model_name}."
+                    )
+                tokens = tokens[:token_budget]
+                text = str(tokenizer.decode(tokens))
+            prepared.append(text)
+        return prepared
+
+    def _tokenizer(self) -> Any:
+        if self._local_tokenizer is None:
+            self._local_tokenizer = _gemini_embedding_tokenizer()
+        return self._local_tokenizer
+
+    def _validate_dimensions(self, dimensions: int | None) -> None:
+        if dimensions is None:
+            return
+        if not isinstance(dimensions, int) or dimensions <= 0:
+            raise ValueError("Gemini embedding dimensions/truncate_dim must be a positive integer.")
+        base_dimensions = self.base_dimensions
+        if base_dimensions is not None and dimensions > base_dimensions:
+            raise ValueError(
+                f"Gemini embedding dimensions={dimensions} exceeds {self.model_name} base dimension {base_dimensions}."
+            )
+
+
+@lru_cache
+def _gemini_embedding_tokenizer() -> Any:
+    try:
+        loader = importlib.import_module("google.genai._local_tokenizer_loader")
+        return loader.get_sentencepiece("gemma2")
+    except Exception as exc:
+        raise RuntimeError(
+            "Gemini embedding local tokenization requires google-genai with the "
+            "Gemma2 SentencePiece tokenizer and sentencepiece installed."
+        ) from exc
+
+
 def load_openai_embedding_model(config: ModelLoadConfig) -> OpenAIEmbeddingAdapter:
     if config.model_type != "dense":
         raise ValueError("The built-in OpenAI model loader supports evaluate dense only.")
@@ -711,6 +997,25 @@ def load_openai_embedding_model(config: ModelLoadConfig) -> OpenAIEmbeddingAdapt
     if unknown:
         raise ValueError(f"Unsupported OpenAI loader kwargs: {', '.join(unknown)}")
     return OpenAIEmbeddingAdapter(model_name=config.model_name_or_path, **kwargs)
+
+
+def load_gemini_embedding_model(config: ModelLoadConfig) -> GeminiEmbeddingAdapter:
+    if config.model_type != "dense":
+        raise ValueError("The built-in Gemini model loader supports evaluate dense only.")
+    kwargs = dict(config.model_loader_kwargs or {})
+    allowed = {
+        "project",
+        "location",
+        "api_version",
+        "max_input_tokens",
+        "truncate_input_tokens",
+        "max_concurrency",
+        "output_dimensionality",
+    }
+    unknown = sorted(set(kwargs) - allowed)
+    if unknown:
+        raise ValueError(f"Unsupported Gemini loader kwargs: {', '.join(unknown)}")
+    return GeminiEmbeddingAdapter(model_name=config.model_name_or_path, **kwargs)
 
 
 def load_model(config: ModelLoadConfig) -> Any:
@@ -825,6 +1130,8 @@ def _load_custom_model(config: ModelLoadConfig) -> Any:
 def _import_loader_factory(loader: str) -> Any:
     if loader == "openai":
         return load_openai_embedding_model
+    if loader == "gemini":
+        return load_gemini_embedding_model
     module_name, separator, attr_name = loader.partition(":")
     if not separator or not module_name or not attr_name:
         raise ValueError("--model-loader must use 'module:function' syntax.")

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import importlib
 import json
+import shutil
+import subprocess
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -12,14 +14,24 @@ import numpy as np
 
 from hakari_bench.datasets import EvalTask, resolve_dataset_revision
 from hakari_bench.evaluation import LoadedIrDataset
-from hakari_bench.models import OpenAIEmbeddingAdapter, _load_dotenv_file
+from hakari_bench.models import GeminiEmbeddingAdapter, OpenAIEmbeddingAdapter, _load_dotenv_file
 from hakari_bench.results import safe_path_part
 
 OPENAI_EMBEDDINGS_BATCH_ENDPOINT = "/v1/embeddings"
+GEMINI_EMBEDDINGS_BATCH_ENDPOINT = "batchPredictionJobs"
 DEFAULT_BATCH_WORKSPACE_ROOT = "tmp/batch_workspace"
 DEFAULT_BATCH_COMPLETION_WINDOW = "24h"
 DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES = 190_000_000
-TERMINAL_BATCH_STATUSES = {"completed", "failed", "cancelled", "expired"}
+TERMINAL_BATCH_STATUSES = {
+    "completed",
+    "failed",
+    "cancelled",
+    "expired",
+    "JOB_STATE_SUCCEEDED",
+    "JOB_STATE_FAILED",
+    "JOB_STATE_CANCELLED",
+    "JOB_STATE_PAUSED",
+}
 
 
 @dataclass(frozen=True)
@@ -462,6 +474,122 @@ def write_openai_embedding_task_batch_files(
     return metadatas
 
 
+def write_gemini_embedding_task_batch_files(
+    *,
+    target: str,
+    workspace_root: Path,
+    model: str,
+    task: EvalTask,
+    dataset: LoadedIrDataset,
+    max_input_tokens: int,
+    max_embedding_inputs: int,
+    max_input_file_bytes: int = DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
+    query_prompt: str | None,
+    document_prompt: str | None,
+    dataset_revision: str | None,
+    project: str | None,
+    location: str,
+    api_version: str,
+    gcs_uri_prefix: str,
+    overwrite: bool = False,
+) -> list[BatchMetadata]:
+    if max_embedding_inputs <= 0:
+        raise ValueError("Gemini max_embedding_inputs must be positive.")
+    if max_input_file_bytes <= 0:
+        raise ValueError("Gemini max_input_file_bytes must be positive.")
+    adapter = GeminiEmbeddingAdapter(
+        model_name=model,
+        project=project,
+        location=location,
+        api_version=api_version,
+        max_input_tokens=max_input_tokens,
+    )
+    index_workspace_path = workspace_root / safe_path_part(target)
+    task_key = _task_key(task)
+    task_payload = {
+        "dataset_name": task.dataset_name,
+        "dataset_id": task.dataset_id,
+        "split_name": task.split_name,
+        "task_name": task.task_name,
+        "task_key": task_key,
+        "query_count": len(dataset.queries),
+        "corpus_count": len(dataset.corpus),
+        "dataset_revision": resolve_dataset_revision(task.dataset_id, requested_revision=dataset_revision),
+    }
+    requests: list[dict[str, Any]] = []
+    request_lines: list[str] = []
+    request_lines.extend(
+        _gemini_embedding_request_lines_for_role(
+            task=task,
+            task_key=task_key,
+            role="query",
+            ids=list(dataset.queries),
+            texts=adapter._prepare_inputs(list(dataset.queries.values())),
+            prompt=query_prompt,
+            requests=requests,
+        )
+    )
+    request_lines.extend(
+        _gemini_embedding_request_lines_for_role(
+            task=task,
+            task_key=task_key,
+            role="document",
+            ids=list(dataset.corpus),
+            texts=adapter._prepare_inputs([dataset.corpus[corpus_id] for corpus_id in dataset.corpus]),
+            prompt=document_prompt,
+            requests=requests,
+        )
+    )
+    shard_pairs = _split_openai_embedding_requests(
+        requests=requests,
+        request_lines=request_lines,
+        max_embedding_inputs=max_embedding_inputs,
+        max_input_file_bytes=max_input_file_bytes,
+    )
+    gcs_prefix = _normalize_gcs_prefix(gcs_uri_prefix)
+    metadatas: list[BatchMetadata] = []
+    task_suffix = f"{safe_path_part(task.dataset_name)}__{safe_path_part(task.split_name)}"
+    for shard_index, pairs in enumerate(shard_pairs):
+        shard_target = f"{target}__{task_suffix}__part{shard_index:03d}"
+        workspace_path = index_workspace_path / "batches" / safe_path_part(shard_target)
+        input_file_path = workspace_path / "requests.jsonl"
+        output_file_path = workspace_path / "output.jsonl"
+        error_file_path = workspace_path / "errors.jsonl"
+        metadata_path = workspace_path / "batch_metadata.json"
+        if metadata_path.exists() and not overwrite:
+            raise FileExistsError(f"Batch metadata already exists: {metadata_path}. Use --overwrite to replace it.")
+        shard_requests = [request for request, _line in pairs]
+        shard_lines = [line for _request, line in pairs]
+        gcs_target_prefix = f"{gcs_prefix}/{safe_path_part(shard_target)}"
+        metadatas.append(
+            _write_gemini_embedding_batch_payload(
+                target=shard_target,
+                workspace_path=workspace_path,
+                input_file_path=input_file_path,
+                output_file_path=output_file_path,
+                error_file_path=error_file_path,
+                metadata_path=metadata_path,
+                model=model,
+                requests=shard_requests,
+                tasks=[task_payload],
+                request_lines=shard_lines,
+                embedding_input_count=sum(len(request["ids"]) for request in shard_requests),
+                max_input_tokens=max_input_tokens,
+                max_embedding_inputs=max_embedding_inputs,
+                max_input_file_bytes=max_input_file_bytes,
+                query_prompt=query_prompt,
+                document_prompt=document_prompt,
+                dataset_revision=dataset_revision,
+                project=project,
+                location=location,
+                api_version=api_version,
+                gcs_input_uri=f"{gcs_target_prefix}/requests.jsonl",
+                gcs_output_uri=f"{gcs_target_prefix}/output",
+            )
+        )
+    return metadatas
+
+
 def _write_openai_embedding_batch_payload(
     *,
     target: str,
@@ -517,6 +645,76 @@ def _write_openai_embedding_batch_payload(
             "endpoint": OPENAI_EMBEDDINGS_BATCH_ENDPOINT,
             "completion_window": DEFAULT_BATCH_COMPLETION_WINDOW,
             "input_purpose": "batch",
+        },
+    )
+    metadata.write()
+    return metadata
+
+
+def _write_gemini_embedding_batch_payload(
+    *,
+    target: str,
+    workspace_path: Path,
+    input_file_path: Path,
+    output_file_path: Path,
+    error_file_path: Path,
+    metadata_path: Path,
+    model: str,
+    requests: list[dict[str, Any]],
+    tasks: list[dict[str, Any]],
+    request_lines: list[str],
+    embedding_input_count: int,
+    max_input_tokens: int,
+    max_embedding_inputs: int,
+    max_input_file_bytes: int,
+    query_prompt: str | None,
+    document_prompt: str | None,
+    dataset_revision: str | None,
+    project: str | None,
+    location: str,
+    api_version: str,
+    gcs_input_uri: str,
+    gcs_output_uri: str,
+) -> BatchMetadata:
+    workspace_path.mkdir(parents=True, exist_ok=True)
+    input_file_path.write_text("\n".join(request_lines) + ("\n" if request_lines else ""), encoding="utf-8")
+    metadata = BatchMetadata(
+        schema_version=1,
+        provider="gemini",
+        model_type="dense",
+        model=model,
+        target=target,
+        workspace_path=workspace_path,
+        metadata_path=metadata_path,
+        input_file_path=input_file_path,
+        output_file_path=output_file_path,
+        error_file_path=error_file_path,
+        requests=requests,
+        tasks=tasks,
+        request_count=len(requests),
+        embedding_input_count=embedding_input_count,
+        status="prepared",
+        input_file_id=gcs_input_uri,
+        output_file_id=gcs_output_uri,
+        dataset_revision=dataset_revision,
+        config={
+            "max_input_tokens": max_input_tokens,
+            "max_embedding_inputs": max_embedding_inputs,
+            "max_input_file_bytes": max_input_file_bytes,
+            "query_prompt": query_prompt,
+            "document_prompt": document_prompt,
+            "dimension_reduction": "full_embedding_prefix_l2_normalize",
+            "tokenizer": "gemma2_sentencepiece",
+            "token_count_policy": "len(gemma2.encode(text)) + 1",
+            "token_count_offset": 1,
+        },
+        api={
+            "endpoint": GEMINI_EMBEDDINGS_BATCH_ENDPOINT,
+            "project": project,
+            "location": location,
+            "api_version": api_version,
+            "gcs_input_uri": gcs_input_uri,
+            "gcs_output_uri": gcs_output_uri,
         },
     )
     metadata.write()
@@ -724,6 +922,66 @@ def register_openai_embedding_task_batches(
     return registered
 
 
+def register_gemini_embedding_task_batches(
+    *,
+    target: str,
+    workspace_root: Path,
+    model: str,
+    task: EvalTask,
+    dataset: LoadedIrDataset,
+    max_input_tokens: int,
+    max_embedding_inputs: int,
+    max_input_file_bytes: int = DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
+    query_prompt: str | None,
+    document_prompt: str | None,
+    dataset_revision: str | None,
+    project: str | None,
+    location: str,
+    api_version: str,
+    gcs_uri_prefix: str,
+    overwrite: bool = False,
+) -> list[BatchMetadata]:
+    metadatas = write_gemini_embedding_task_batch_files(
+        target=target,
+        workspace_root=workspace_root,
+        model=model,
+        task=task,
+        dataset=dataset,
+        max_input_tokens=max_input_tokens,
+        max_embedding_inputs=max_embedding_inputs,
+        max_input_file_bytes=max_input_file_bytes,
+        query_prompt=query_prompt,
+        document_prompt=document_prompt,
+        dataset_revision=dataset_revision,
+        project=project,
+        location=location,
+        api_version=api_version,
+        gcs_uri_prefix=gcs_uri_prefix,
+        overwrite=overwrite,
+    )
+    client = _gemini_client(project=project, location=location, api_version=api_version)
+    types = importlib.import_module("google.genai.types")
+    registered: list[BatchMetadata] = []
+    for metadata in metadatas:
+        gcs_input_uri = str((metadata.api or {})["gcs_input_uri"])
+        gcs_output_uri = str((metadata.api or {})["gcs_output_uri"])
+        _gcloud_storage_cp(str(metadata.input_file_path), gcs_input_uri)
+        job = client.batches.create(
+            model=model,
+            src=gcs_input_uri,
+            config=types.CreateBatchJobConfig(dest=gcs_output_uri, display_name=metadata.target[:128]),
+        )
+        registered.append(
+            metadata.replace(
+                status=_gemini_job_state(job),
+                batch_id=str(getattr(job, "name", "")) or None,
+                input_file_id=gcs_input_uri,
+                output_file_id=gcs_output_uri,
+            )
+        )
+    return registered
+
+
 def refresh_openai_batch_files(
     *,
     metadata: BatchMetadata,
@@ -757,6 +1015,27 @@ def refresh_openai_batch_files(
     )
 
 
+def refresh_gemini_batch_files(
+    *,
+    metadata: BatchMetadata,
+    project: str | None,
+    location: str,
+    api_version: str,
+    download_files: bool = True,
+) -> BatchMetadata:
+    if metadata.batch_id is None:
+        raise ValueError("Batch metadata does not contain batch_id.")
+    client = _gemini_client(project=project, location=location, api_version=api_version)
+    job = client.batches.get(name=metadata.batch_id)
+    status = _gemini_job_state(job)
+    output_info = getattr(job, "output_info", None)
+    gcs_output_directory = getattr(output_info, "gcs_output_directory", None) if output_info is not None else None
+    output_file_id = gcs_output_directory or metadata.output_file_id
+    if download_files and status == "JOB_STATE_SUCCEEDED" and output_file_id and not metadata.output_file_path.exists():
+        _download_gemini_gcs_output(str(output_file_id), metadata.output_file_path, metadata.error_file_path)
+    return metadata.replace(status=status, output_file_id=output_file_id)
+
+
 def wait_for_openai_batch(
     *,
     metadata: BatchMetadata,
@@ -776,6 +1055,40 @@ def wait_for_openai_batch(
             base_url=base_url,
             organization=organization,
             project=project,
+        )
+        print(
+            json.dumps(
+                {
+                    "target": current.target,
+                    "batch_id": current.batch_id,
+                    "status": current.status,
+                    "checked_at_utc": datetime.now(timezone.utc).isoformat(),
+                },
+                ensure_ascii=False,
+            ),
+            flush=True,
+        )
+        if current.status in TERMINAL_BATCH_STATUSES:
+            break
+        time.sleep(poll_seconds)
+    return current
+
+
+def wait_for_gemini_batch(
+    *,
+    metadata: BatchMetadata,
+    poll_seconds: int,
+    project: str | None,
+    location: str,
+    api_version: str,
+) -> BatchMetadata:
+    current = metadata
+    while current.status not in TERMINAL_BATCH_STATUSES:
+        current = refresh_gemini_batch_files(
+            metadata=current,
+            project=project,
+            location=location,
+            api_version=api_version,
         )
         print(
             json.dumps(
@@ -834,6 +1147,60 @@ def collect_openai_batch_embeddings(*, metadata: BatchMetadata, output_path: Pat
             "corpus_embeddings": np.asarray([values[task_key]["document"][doc_id] for doc_id in corpus_ids], dtype=np.float32),
         }
     return results
+
+
+def collect_gemini_batch_task_embeddings(metadatas: list[BatchMetadata]) -> dict[str, Any]:
+    if not metadatas:
+        raise ValueError("No batch metadata files were provided for task embedding collection.")
+    task_keys = {str(task["task_key"]) for metadata in metadatas for task in metadata.tasks}
+    if len(task_keys) != 1:
+        raise ValueError(f"Expected one task across batch shards, got {sorted(task_keys)}.")
+    task_key = next(iter(task_keys))
+    request_by_custom_id = {str(request["custom_id"]): request for metadata in metadatas for request in metadata.requests}
+    values: dict[str, dict[str, dict[str, list[float]]]] = {}
+    failed_custom_ids: dict[str, Any] = {}
+    for metadata in metadatas:
+        if not metadata.output_file_path.exists():
+            raise FileNotFoundError(f"Batch output file does not exist: {metadata.output_file_path}")
+        with metadata.output_file_path.open("rt", encoding="utf-8") as file:
+            for line_number, line in enumerate(file, 1):
+                if not line.strip():
+                    continue
+                _collect_gemini_batch_output_line(
+                    line=line,
+                    line_number=line_number,
+                    request_by_custom_id=request_by_custom_id,
+                    values=values,
+                    failed_custom_ids=failed_custom_ids,
+                )
+    query_requests = [
+        request
+        for metadata in metadatas
+        for request in metadata.requests
+        if request["task_key"] == task_key and request["role"] == "query"
+    ]
+    doc_requests = [
+        request
+        for metadata in metadatas
+        for request in metadata.requests
+        if request["task_key"] == task_key and request["role"] == "document"
+    ]
+    query_ids = [str(item) for request in query_requests for item in request["ids"]]
+    corpus_ids = [str(item) for request in doc_requests for item in request["ids"]]
+    missing_queries = [query_id for query_id in query_ids if query_id not in values.get(task_key, {}).get("query", {})]
+    missing_docs = [doc_id for doc_id in corpus_ids if doc_id not in values.get(task_key, {}).get("document", {})]
+    if missing_queries or missing_docs:
+        raise ValueError(
+            f"Batch output is incomplete for {task_key}: "
+            f"missing_queries={len(missing_queries)}, missing_docs={len(missing_docs)}"
+        )
+    return {
+        "task_key": task_key,
+        "query_ids": query_ids,
+        "corpus_ids": corpus_ids,
+        "query_embeddings": np.asarray([values[task_key]["query"][query_id] for query_id in query_ids], dtype=np.float32),
+        "corpus_embeddings": np.asarray([values[task_key]["document"][doc_id] for doc_id in corpus_ids], dtype=np.float32),
+    }
 
 
 def collect_openai_batch_task_embeddings(metadatas: list[BatchMetadata]) -> dict[str, Any]:
@@ -899,6 +1266,10 @@ def cleanup_batch_download_files(metadata: BatchMetadata) -> list[Path]:
         if path.exists():
             path.unlink()
             removed.append(path)
+    gemini_output_dir = metadata.output_file_path.parent / "gemini_output"
+    if gemini_output_dir.exists():
+        shutil.rmtree(gemini_output_dir)
+        removed.append(gemini_output_dir)
     return removed
 
 
@@ -939,6 +1310,59 @@ def _collect_openai_batch_output_line(
         if index < 0 or index >= len(ids):
             raise ValueError(f"Batch output line {line_number} has invalid item index {index} for {custom_id}.")
         values[task_key][role][ids[index]] = [float(value) for value in item["embedding"]]
+
+
+def _collect_gemini_batch_output_line(
+    *,
+    line: str,
+    line_number: int,
+    request_by_custom_id: dict[str, dict[str, Any]],
+    values: dict[str, dict[str, dict[str, list[float]]]],
+    failed_custom_ids: dict[str, Any] | None = None,
+) -> None:
+    row = json.loads(line)
+    instance = row.get("instance")
+    if instance is not None and not isinstance(instance, dict):
+        raise ValueError(f"Gemini batch output line {line_number} has invalid instance object.")
+    custom_id = str(
+        row.get("key")
+        or (instance or {}).get("key")
+        or (instance or {}).get("custom_id")
+        or (instance or {}).get("customId")
+        or ""
+    )
+    request = request_by_custom_id.get(custom_id)
+    if request is None:
+        raise ValueError(f"Gemini batch output line {line_number} has unknown custom_id: {custom_id}")
+    status = row.get("status")
+    if status not in (None, ""):
+        if failed_custom_ids is not None:
+            failed_custom_ids[custom_id] = status
+            return
+        raise ValueError(f"Gemini batch output line {line_number} failed for {custom_id}: {status}")
+    response = row.get("response")
+    error = response.get("error") if isinstance(response, dict) else row.get("error")
+    if error:
+        if failed_custom_ids is not None:
+            failed_custom_ids[custom_id] = error
+            return
+        raise ValueError(f"Gemini batch output line {line_number} failed for {custom_id}: {error}")
+    if isinstance(response, dict):
+        embedding = response.get("embedding")
+    else:
+        predictions = row.get("predictions")
+        if not isinstance(predictions, list) or not predictions:
+            raise ValueError(f"Gemini batch output line {line_number} has no predictions for {custom_id}.")
+        embedding = predictions[0].get("embeddings") if isinstance(predictions[0], dict) else None
+    if not isinstance(embedding, dict) or not isinstance(embedding.get("values"), list):
+        raise ValueError(f"Gemini batch output line {line_number} has no embedding values for {custom_id}.")
+    ids = [str(item) for item in request["ids"]]
+    if len(ids) != 1:
+        raise ValueError(f"Gemini batch request {custom_id} must map to exactly one input id.")
+    task_key = str(request["task_key"])
+    role = str(request["role"])
+    values.setdefault(task_key, {}).setdefault(role, {})
+    values[task_key][role][ids[0]] = [float(value) for value in embedding["values"]]
 
 
 def _openai_embedding_request_lines_for_role(
@@ -990,6 +1414,57 @@ def _openai_embedding_request_lines_for_role(
                         "model": model,
                         "input": [text for text, _token_count in chunk_prepared],
                         "encoding_format": "float",
+                    },
+                },
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+        )
+    return lines
+
+
+def _gemini_embedding_request_lines_for_role(
+    *,
+    task: EvalTask,
+    task_key: str,
+    role: str,
+    ids: list[str],
+    texts: list[str],
+    prompt: str | None,
+    requests: list[dict[str, Any]],
+) -> list[str]:
+    if prompt is not None:
+        texts = [f"{prompt}{text}" for text in texts]
+    lines: list[str] = []
+    for index, (item_id, text) in enumerate(zip(ids, texts, strict=True)):
+        custom_id = f"{safe_path_part(task.dataset_name)}__{safe_path_part(task.split_name)}__{role}__{index:06d}"
+        requests.append(
+            {
+                "custom_id": custom_id,
+                "dataset_id": task.dataset_id,
+                "dataset_name": task.dataset_name,
+                "split_name": task.split_name,
+                "task_name": task.task_name,
+                "task_key": task_key,
+                "role": role,
+                "start": index,
+                "end": index + 1,
+                "ids": [item_id],
+                "content": text,
+            }
+        )
+        lines.append(
+            json.dumps(
+                {
+                    "key": custom_id,
+                    "request": {
+                        "content": {
+                            "parts": [
+                                {
+                                    "text": text,
+                                }
+                            ]
+                        }
                     },
                 },
                 ensure_ascii=False,
@@ -1056,6 +1531,68 @@ def _openai_client(
     if project is not None:
         kwargs["project"] = project
     return getattr(importlib.import_module("openai"), "OpenAI")(**kwargs)
+
+
+def _gemini_client(*, project: str | None, location: str, api_version: str) -> Any:
+    genai = importlib.import_module("google.genai")
+    types = importlib.import_module("google.genai.types")
+    kwargs: dict[str, Any] = {
+        "vertexai": True,
+        "location": location,
+        "http_options": types.HttpOptions(api_version=api_version),
+    }
+    if project is not None:
+        kwargs["project"] = project
+    return genai.Client(**kwargs)
+
+
+def _gemini_job_state(job: Any) -> str:
+    state = getattr(job, "state", None)
+    if state is None:
+        return "unknown"
+    name = getattr(state, "name", None)
+    return str(name or state)
+
+
+def _normalize_gcs_prefix(uri: str) -> str:
+    value = uri.rstrip("/")
+    if not value.startswith("gs://"):
+        raise ValueError("--gcs-uri-prefix must start with gs://")
+    return value
+
+
+def _gcloud_storage_cp(source: str, destination: str) -> None:
+    subprocess.run(["gcloud", "storage", "cp", source, destination], check=True)
+
+
+def _download_gemini_gcs_output(gcs_output_directory: str, output_path: Path, error_path: Path) -> None:
+    download_dir = output_path.parent / "gemini_output"
+    if download_dir.exists():
+        for path in sorted(download_dir.rglob("*"), reverse=True):
+            if path.is_file():
+                path.unlink()
+            elif path.is_dir():
+                path.rmdir()
+    download_dir.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["gcloud", "storage", "cp", "--recursive", f"{gcs_output_directory.rstrip('/')}/*", str(download_dir)], check=True)
+    output_lines: list[str] = []
+    error_lines: list[str] = []
+    for path in sorted(download_dir.rglob("*.jsonl")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                error_lines.append(line)
+                continue
+            if row.get("status") not in (None, ""):
+                error_lines.append(line)
+            else:
+                output_lines.append(line)
+    output_path.write_text("\n".join(output_lines) + ("\n" if output_lines else ""), encoding="utf-8")
+    if error_lines:
+        error_path.write_text("\n".join(error_lines) + "\n", encoding="utf-8")
 
 
 def _download_openai_file(client: Any, file_id: str, path: Path) -> None:

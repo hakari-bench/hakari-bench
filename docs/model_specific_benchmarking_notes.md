@@ -709,6 +709,57 @@ Operational notes:
 - See `docs/openai_embedding_evaluation.md` for the API-vs-local dimension
   check and the cost-estimation workflow.
 
+## Gemini Embedding Models
+
+Applies to:
+
+- `gemini-embedding-2`
+
+Use the built-in Gemini dense loader with Vertex/Enterprise credentials:
+
+```bash
+uv run --group gemini hakari-bench evaluate dense \
+  --model gemini-embedding-2 \
+  --model-alias google/gemini-embedding-2 \
+  --model-loader gemini \
+  --model-loader-kwargs-json '{"project":"ml-sandbox-309804","location":"global"}' \
+  --query-prompt "task: search result | query: " \
+  --document-prompt "title: none | text: "
+```
+
+Operational notes:
+
+- `gemini-embedding-2` must be embedded one content at a time in the direct API;
+  the adapter parallelizes those requests with `max_concurrency`.
+- Install the Gemini dependencies with `uv add --group gemini google-genai
+  sentencepiece`. The adapter uses the Gemma2 SentencePiece tokenizer locally
+  because the public `google.genai.local_tokenizer.LocalTokenizer` does not yet
+  accept `gemini-embedding-2`. Smoke checks on 2026-06-23 found
+  `Gemini count_tokens == len(gemma2.encode(text)) + 1` across mixed-language
+  samples, while Gemma3 did not match all samples.
+- Google recommends prompt-formatted task instructions for Embeddings 2 instead
+  of a `task_type` parameter. For asymmetric retrieval, use
+  `task: search result | query: ` for queries and `title: none | text: ` for
+  documents when no title metadata is available.
+- `--truncate-dim` and `--embedding-variant truncate:DIM` use full Gemini
+  embeddings followed by `full[:DIM]` and L2 normalization. API-side
+  `output_dimensionality` supports 128-3072 dimensions and normalizes
+  lower-dimensional vectors; the local normalized-prefix path matches API-side
+  dimensionality within float32 noise in smoke checks.
+- The model card records 8192 as the provider input limit. The adapter keeps a
+  conservative 8100-token local guard using `len(gemma2.encode(text)) + 1`.
+  Developer API batch silently truncates over-limit inputs to the provider limit
+  instead of failing, but benchmark inputs should still be pre-truncated locally
+  to avoid hidden behavior and unnecessary enqueued-token usage.
+- Gemini batch jobs use Vertex/Enterprise batch prediction with GCS input/output
+  and currently require `location=global` for `gemini-embedding-2`.
+- As of 2026-06-23, `gemini-embedding-2` Vertex/Enterprise batch jobs can remain
+  in `JOB_STATE_QUEUED` without `startTime` because Gemini batch uses shared
+  provider capacity. The Gemini Developer API has a separate
+  `batches.create_embeddings` path, but that requires `GEMINI_API_KEY` or
+  `GOOGLE_API_KEY` and is not supported by the Python Gen AI SDK with
+  `vertexai=True`.
+
 ## Sentence Transformers Static Similarity MRL
 
 Applies to:

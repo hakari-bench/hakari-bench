@@ -10,9 +10,11 @@ from hakari_bench.batch import (
     DEFAULT_OPENAI_BATCH_MAX_INPUT_FILE_BYTES,
     PrecomputedDenseEmbeddingModel,
     cleanup_batch_download_files,
+    collect_gemini_batch_task_embeddings,
     collect_openai_batch_embeddings,
     collect_openai_batch_task_embeddings,
     _download_openai_file,
+    write_gemini_embedding_task_batch_files,
     register_openai_embedding_batch,
     write_openai_embedding_task_batch_files,
     write_openai_embedding_batch_files,
@@ -52,6 +54,18 @@ class _WhitespaceEncoding:
 
     def decode(self, tokens: list[int]) -> str:
         return " ".join(f"tok{token}" for token in tokens)
+
+
+class _PassthroughGeminiTokenizer:
+    def encode(self, text: str) -> list[str]:
+        return list(text)
+
+    def decode(self, tokens: list[str]) -> str:
+        return "".join(tokens)
+
+
+def _patch_gemini_tokenizer(monkeypatch) -> None:
+    monkeypatch.setattr("hakari_bench.models._gemini_embedding_tokenizer", lambda: _PassthroughGeminiTokenizer())
 
 
 def test_download_openai_file_retries_and_removes_partial_tmp(tmp_path: Path, monkeypatch) -> None:
@@ -385,6 +399,257 @@ def test_collect_openai_batch_task_embeddings_restores_split_task(tmp_path: Path
     assert embeddings["corpus_embeddings"].tolist() == [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]
 
 
+def test_write_gemini_embedding_task_batch_files_writes_gcs_jsonl(tmp_path: Path, monkeypatch) -> None:
+    _patch_gemini_tokenizer(monkeypatch)
+
+    batches = write_gemini_embedding_task_batch_files(
+        target="tiny-gemini",
+        workspace_root=tmp_path,
+        model="gemini-embedding-2",
+        task=_task(),
+        dataset=_dataset(),
+        max_input_tokens=8100,
+        max_embedding_inputs=3,
+        query_prompt="query: ",
+        document_prompt="document: ",
+        dataset_revision=None,
+        project="ml-sandbox-309804",
+        location="global",
+        api_version="v1",
+        gcs_uri_prefix="gs://bucket/hakari",
+    )
+
+    assert [metadata.provider for metadata in batches] == ["gemini", "gemini"]
+    assert [metadata.embedding_input_count for metadata in batches] == [3, 2]
+    first_lines = [json.loads(line) for line in batches[0].input_file_path.read_text(encoding="utf-8").splitlines()]
+    assert first_lines == [
+        {
+            "key": "TinyNano__TinyTask__query__000000",
+            "request": {"content": {"parts": [{"text": "query: query one"}]}},
+        },
+        {
+            "key": "TinyNano__TinyTask__query__000001",
+            "request": {"content": {"parts": [{"text": "query: query two"}]}},
+        },
+        {
+            "key": "TinyNano__TinyTask__document__000000",
+            "request": {"content": {"parts": [{"text": "document: document one"}]}},
+        },
+    ]
+    api = batches[0].api
+    assert api is not None
+    assert api["gcs_input_uri"] == "gs://bucket/hakari/tiny-gemini__TinyNano__TinyTask__part000/requests.jsonl"
+    assert api["gcs_output_uri"] == "gs://bucket/hakari/tiny-gemini__TinyNano__TinyTask__part000/output"
+
+
+def test_collect_gemini_batch_task_embeddings_restores_split_task(tmp_path: Path, monkeypatch) -> None:
+    _patch_gemini_tokenizer(monkeypatch)
+
+    batches = write_gemini_embedding_task_batch_files(
+        target="tiny-gemini",
+        workspace_root=tmp_path,
+        model="gemini-embedding-2",
+        task=_task(),
+        dataset=_dataset(),
+        max_input_tokens=8100,
+        max_embedding_inputs=3,
+        query_prompt=None,
+        document_prompt=None,
+        dataset_revision=None,
+        project="ml-sandbox-309804",
+        location="global",
+        api_version="v1",
+        gcs_uri_prefix="gs://bucket/hakari",
+    )
+    batches[0].output_file_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "instance": {"content": "query one", "custom_id": "TinyNano__TinyTask__query__000000"},
+                        "predictions": [{"embeddings": {"values": [1.0, 0.0]}}],
+                        "status": "",
+                    }
+                ),
+                json.dumps(
+                    {
+                        "instance": {"content": "query two", "custom_id": "TinyNano__TinyTask__query__000001"},
+                        "predictions": [{"embeddings": {"values": [0.0, 1.0]}}],
+                        "status": "",
+                    }
+                ),
+                json.dumps(
+                    {
+                        "instance": {"content": "document one", "custom_id": "TinyNano__TinyTask__document__000000"},
+                        "predictions": [{"embeddings": {"values": [1.0, 1.0]}}],
+                        "status": "",
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    batches[1].output_file_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "instance": {"content": "document two", "custom_id": "TinyNano__TinyTask__document__000001"},
+                        "predictions": [{"embeddings": {"values": [2.0, 2.0]}}],
+                        "status": "",
+                    }
+                ),
+                json.dumps(
+                    {
+                        "instance": {"content": "document three", "custom_id": "TinyNano__TinyTask__document__000002"},
+                        "predictions": [{"embeddings": {"values": [3.0, 3.0]}}],
+                        "status": "",
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    embeddings = collect_gemini_batch_task_embeddings(batches)
+
+    assert embeddings["task_key"] == "tiny/nano::TinyTask"
+    assert embeddings["query_ids"] == ["q1", "q2"]
+    assert embeddings["corpus_ids"] == ["d1", "d2", "d3"]
+    assert embeddings["query_embeddings"].tolist() == [[1.0, 0.0], [0.0, 1.0]]
+    assert embeddings["corpus_embeddings"].tolist() == [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]
+
+
+def test_collect_gemini_batch_task_embeddings_accepts_developer_api_output(tmp_path: Path, monkeypatch) -> None:
+    _patch_gemini_tokenizer(monkeypatch)
+
+    batches = write_gemini_embedding_task_batch_files(
+        target="tiny-gemini",
+        workspace_root=tmp_path,
+        model="gemini-embedding-2",
+        task=_task(),
+        dataset=_dataset(),
+        max_input_tokens=8100,
+        max_embedding_inputs=3,
+        query_prompt=None,
+        document_prompt=None,
+        dataset_revision=None,
+        project="ml-sandbox-309804",
+        location="global",
+        api_version="v1",
+        gcs_uri_prefix="gs://bucket/hakari",
+    )
+    batches[0].output_file_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "key": "TinyNano__TinyTask__query__000000",
+                        "response": {"embedding": {"values": [1.0, 0.0]}},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "key": "TinyNano__TinyTask__query__000001",
+                        "response": {"embedding": {"values": [0.0, 1.0]}},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "key": "TinyNano__TinyTask__document__000000",
+                        "response": {"embedding": {"values": [1.0, 1.0]}},
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    batches[1].output_file_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "key": "TinyNano__TinyTask__document__000001",
+                        "response": {"embedding": {"values": [2.0, 2.0]}},
+                    }
+                ),
+                json.dumps(
+                    {
+                        "key": "TinyNano__TinyTask__document__000002",
+                        "response": {"embedding": {"values": [3.0, 3.0]}},
+                    }
+                ),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    embeddings = collect_gemini_batch_task_embeddings(batches)
+
+    assert embeddings["query_ids"] == ["q1", "q2"]
+    assert embeddings["corpus_ids"] == ["d1", "d2", "d3"]
+    assert embeddings["query_embeddings"].tolist() == [[1.0, 0.0], [0.0, 1.0]]
+    assert embeddings["corpus_embeddings"].tolist() == [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]
+
+
+def test_collect_gemini_batch_task_embeddings_uses_retry_output_after_transient_line_error(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _patch_gemini_tokenizer(monkeypatch)
+
+    batches = write_gemini_embedding_task_batch_files(
+        target="tiny-gemini",
+        workspace_root=tmp_path,
+        model="gemini-embedding-2",
+        task=_task(),
+        dataset=_dataset(),
+        max_input_tokens=8100,
+        max_embedding_inputs=3,
+        query_prompt=None,
+        document_prompt=None,
+        dataset_revision=None,
+        project="ml-sandbox-309804",
+        location="global",
+        api_version="v1",
+        gcs_uri_prefix="gs://bucket/hakari",
+    )
+    batches[0].output_file_path.write_text(
+        "\n".join(
+            [
+                json.dumps({"key": "TinyNano__TinyTask__query__000000", "response": {"embedding": {"values": [1.0, 0.0]}}}),
+                json.dumps({"key": "TinyNano__TinyTask__query__000001", "response": {"embedding": {"values": [0.0, 1.0]}}}),
+                json.dumps({"key": "TinyNano__TinyTask__document__000000", "response": {"embedding": {"values": [1.0, 1.0]}}}),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    batches[1].output_file_path.write_text(
+        "\n".join(
+            [
+                json.dumps(
+                    {
+                        "key": "TinyNano__TinyTask__document__000001",
+                        "response": {"error": {"code": 4, "message": "Deadline expired before operation could complete."}},
+                    }
+                ),
+                json.dumps({"key": "TinyNano__TinyTask__document__000001", "response": {"embedding": {"values": [2.0, 2.0]}}}),
+                json.dumps({"key": "TinyNano__TinyTask__document__000002", "response": {"embedding": {"values": [3.0, 3.0]}}}),
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    embeddings = collect_gemini_batch_task_embeddings(batches)
+
+    assert embeddings["corpus_embeddings"].tolist() == [[1.0, 1.0], [2.0, 2.0], [3.0, 3.0]]
+
+
 def test_cleanup_batch_download_files_removes_large_provider_outputs(tmp_path: Path) -> None:
     metadata = write_openai_embedding_batch_files(
         target="tiny-openai",
@@ -404,13 +669,17 @@ def test_cleanup_batch_download_files_removes_large_provider_outputs(tmp_path: P
     metadata.error_file_path.write_text("{}\n", encoding="utf-8")
     tmp_output = metadata.output_file_path.with_name(f"{metadata.output_file_path.name}.tmp")
     tmp_output.write_text("partial", encoding="utf-8")
+    gemini_output = metadata.output_file_path.parent / "gemini_output"
+    gemini_output.mkdir()
+    (gemini_output / "predictions.jsonl").write_text("{}\n", encoding="utf-8")
 
     removed = cleanup_batch_download_files(metadata)
 
-    assert sorted(path.name for path in removed) == ["errors.jsonl", "output.jsonl", "output.jsonl.tmp"]
+    assert sorted(path.name for path in removed) == ["errors.jsonl", "gemini_output", "output.jsonl", "output.jsonl.tmp"]
     assert not metadata.output_file_path.exists()
     assert not metadata.error_file_path.exists()
     assert not tmp_output.exists()
+    assert not gemini_output.exists()
 
 
 def test_register_openai_embedding_batch_enforces_embedding_input_limit(
@@ -513,6 +782,32 @@ def test_parse_args_accepts_dense_batch_commands() -> None:
         ]
     )
     assert register_with_file_limit.max_input_file_bytes == 1_000_000
+
+    gemini_register = parse_args(
+        [
+            "batch",
+            "dense",
+            "register",
+            "--provider",
+            "gemini",
+            "--target",
+            "gemini-nanobeir",
+            "--model",
+            "gemini-embedding-2",
+            "--model-alias",
+            "google/gemini-embedding-2",
+            "--dataset",
+            "hakari-bench/NanoBEIR-en",
+            "--gemini-project",
+            "ml-sandbox-309804",
+            "--gcs-uri-prefix",
+            "gs://bucket/hakari",
+        ]
+    )
+    assert gemini_register.provider == "gemini"
+    assert gemini_register.model_alias == "google/gemini-embedding-2"
+    assert gemini_register.gemini_location == "global"
+    assert gemini_register.gcs_uri_prefix == "gs://bucket/hakari"
 
     materialize = parse_args(
         [

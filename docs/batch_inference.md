@@ -6,9 +6,9 @@ Batch inference is an offline dense-embedding workflow. It writes provider
 request files, registers remote batch jobs, fetches finished provider outputs,
 and materializes normal HAKARI result JSON from the returned embeddings.
 
-The initial provider implementation is OpenAI embeddings. The command layout is
-provider-aware so additional dense providers can be added without changing the
-materialized result format.
+The provider implementations currently cover OpenAI embeddings and Gemini
+embeddings. The command layout is provider-aware so additional dense providers
+can be added without changing the materialized result format.
 
 ## Register
 
@@ -43,6 +43,59 @@ input JSONL file size, using a 190,000,000-byte default limit to stay below the
 provider's 200 MiB input file limit. Inputs are truncated with `tiktoken` to
 8100 tokens by default, leaving headroom below the 8192-token embedding input
 limit.
+
+Gemini embedding batches use Vertex/Enterprise batch prediction with GCS
+input/output. Provide `--provider gemini`, `--gemini-project`, and
+`--gcs-uri-prefix`; for `gemini-embedding-2`, use `--gemini-location global`.
+The input JSONL is written as one request per line:
+
+```json
+{"key":"...","request":{"content":{"parts":[{"text":"..."}]}}}
+```
+
+Gemini embedding inputs are locally truncated before JSONL writing with the
+Gemma2 SentencePiece tokenizer. HAKARI records this as
+`token_count_policy=len(gemma2.encode(text)) + 1`, matching local smoke checks
+against `gemini-embedding-2` `count_tokens`. Keep the default 8100-token guard;
+Developer API batch can silently truncate over-limit inputs, but benchmark runs
+should not rely on that hidden provider behavior.
+
+For `gemini-embedding-2`, Vertex/Enterprise batch prediction and the Gemini
+Developer API embedding batch are different surfaces:
+
+- Vertex/Enterprise uses Google Cloud ADC/project credentials, GCS input/output,
+  `client.batches.create(...)`, and `batchPredictionJobs` under the selected
+  location. In local checks on 2026-06-23, `gemini-embedding-2` accepted only the
+  `global` location for batch registration; `us-central1` returned
+  `MODEL_NOT_SUPPORTED_FOR_BATCH`.
+- The Gemini Developer API uses an API key (`GEMINI_API_KEY` or
+  `GOOGLE_API_KEY`) and `client.batches.create_embeddings(...)`. The Python Gen
+  AI SDK explicitly rejects `create_embeddings` when `vertexai=True`.
+
+If Vertex/Enterprise Gemini embedding batch remains in `JOB_STATE_PENDING` or
+`JOB_STATE_QUEUED` with no `startTime`, treat it as provider capacity queueing
+rather than a local retryable error. Google documents that Gemini batch jobs use
+a shared resource pool, can queue for up to 72 hours, and do not support
+Provisioned Throughput. There is no known local flag that forces queued Vertex
+Gemini embedding jobs to start. Prefer direct async embedding evaluation or the
+Gemini Developer API embedding batch path when an API key is available.
+
+For text retrieval with Gemini Embedding 2, pass the provider-recommended
+retrieval prompts explicitly:
+
+```bash
+uv run --group gemini hakari-bench batch dense register \
+  --target gemini-embedding-2-nanomiracl-en \
+  --provider gemini \
+  --model gemini-embedding-2 \
+  --dataset NanoMIRACL \
+  --split en \
+  --gemini-project ml-sandbox-309804 \
+  --gemini-location global \
+  --gcs-uri-prefix gs://bucket/hakari-batches/gemini-embedding-2-nanomiracl-en \
+  --query-prompt "task: search result | query: " \
+  --document-prompt "title: none | text: "
+```
 
 If a readable result JSON already exists for a selected Nano-set task, register
 skips that task by default. Pass `--overwrite` to force a new batch registration
@@ -79,9 +132,10 @@ dataset id order, and runs the standard dense scoring path. Dense default
 variants are preserved. Explicit truncation dimensions also expand into
 truncation plus int8/binary and rescore variants.
 
-OpenAI batch truncation variants use the repository OpenAI policy: request full
-embeddings once, then compute `full[:DIM]` followed by L2 normalization locally.
-This keeps batch materialization aligned with the normal OpenAI dense evaluator.
+OpenAI and Gemini batch truncation variants use the hosted-embedding policy:
+request full embeddings once, then compute `full[:DIM]` followed by L2
+normalization locally. This keeps batch materialization aligned with the normal
+hosted dense evaluators.
 
 ## Legacy Single-Batch Commands
 
