@@ -30,19 +30,19 @@ def test_resolve_plan_can_opt_into_metadata_backed_bm25_generation(tmp_path: Pat
             str(tmp_path),
             "--materialize-bm25-baseline-from-metadata",
             "--bm25-dataset",
-            "NanoBEIR-en",
+            "NanoBEIR-ja",
         ]
     )
 
     plan = sync_rebuild.resolve_plan(args)
 
     assert plan.materialize_bm25_baseline_from_metadata is True
-    assert plan.bm25_dataset == ["NanoBEIR-en"]
+    assert plan.bm25_dataset == ["NanoBEIR-ja"]
 
 
 def test_resolve_plan_rejects_bm25_generation_options_without_opt_in(tmp_path: Path) -> None:
     args = sync_rebuild.build_arg_parser().parse_args(
-        ["--cache-root", str(tmp_path), "--bm25-dataset", "NanoBEIR-en"]
+        ["--cache-root", str(tmp_path), "--bm25-dataset", "NanoBEIR-ja"]
     )
 
     with pytest.raises(ValueError, match="BM25 metadata materialization is disabled by default"):
@@ -230,7 +230,7 @@ def test_materialize_bm25_baseline_uses_task_metadata(tmp_path: Path, monkeypatc
         sync_rebuild,
         "load_task_doc_bm25_metadata",
         lambda: {
-            ("hakari-bench/NanoBEIR-en", "NanoArguAna"): {
+            ("hakari-bench/NanoBEIR-ja", "NanoArguAna"): {
                 "bm25": {"ndcg_at_10": 0.25, "hit_at_10": 0.5, "source": "dataset_candidate_subset"},
                 "candidate_subsets": {
                     "bm25": {
@@ -245,12 +245,12 @@ def test_materialize_bm25_baseline_uses_task_metadata(tmp_path: Path, monkeypatc
             }
         },
     )
-    plan = replace(plan, bm25_dataset=["NanoBEIR-en"], bm25_split=["NanoArguAna"])
+    plan = replace(plan, bm25_dataset=["NanoBEIR-ja"], bm25_split=["NanoArguAna"])
 
     counts = sync_rebuild.materialize_bm25_baseline_from_metadata(plan)
 
     assert counts == {"written": 1, "skipped": 0, "missing": 0}
-    output_path = plan.results_dir / "bm25" / "hakari-bench__NanoBEIR-en" / "arguana.json.xz"
+    output_path = plan.results_dir / "bm25" / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz"
     payload = read_result_json(output_path)
     assert payload["model"]["id"] == "bm25"
     assert payload["config"]["bm25"]["source"] == "dataset_candidate_subset"
@@ -265,7 +265,7 @@ def test_materialize_bm25_baseline_skips_existing_files(tmp_path: Path, monkeypa
             str(tmp_path),
             "--materialize-bm25-baseline-from-metadata",
             "--bm25-dataset",
-            "NanoBEIR-en",
+            "NanoBEIR-ja",
             "--bm25-split",
             "NanoArguAna",
         ]
@@ -275,7 +275,7 @@ def test_materialize_bm25_baseline_skips_existing_files(tmp_path: Path, monkeypa
         sync_rebuild,
         "load_task_doc_bm25_metadata",
         lambda: {
-            ("hakari-bench/NanoBEIR-en", "NanoArguAna"): {
+            ("hakari-bench/NanoBEIR-ja", "NanoArguAna"): {
                 "candidate_subsets": {
                     "bm25": {
                         "config": "bm25",
@@ -286,7 +286,7 @@ def test_materialize_bm25_baseline_skips_existing_files(tmp_path: Path, monkeypa
             }
         },
     )
-    output_path = plan.results_dir / "bm25" / "hakari-bench__NanoBEIR-en" / "arguana.json.xz"
+    output_path = plan.results_dir / "bm25" / "hakari-bench__NanoBEIR-ja" / "arguana.json.xz"
     output_path.parent.mkdir(parents=True)
     with lzma.open(output_path, "wt", encoding="utf-8") as file:
         file.write("{}\n")

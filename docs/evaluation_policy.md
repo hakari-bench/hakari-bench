@@ -41,10 +41,11 @@ viewer startup.
 ## Target Selection
 
 Use `--all` when the requested run should cover every standard built-in dataset
-task from `config/datasets/`. Existing per-task result JSON files are skipped
-unless `--overwrite` is set, so `--all` can be used to fill missing benchmark
-coverage. Per-task evaluation output defaults to compressed `.json.xz` files;
-pass `--result-format json` only when a plain `.json` result tree is required:
+task selected for full benchmark evaluation. Existing per-task result JSON files
+are skipped unless `--overwrite` is set, so `--all` can be used to fill missing
+benchmark coverage. Per-task evaluation output defaults to compressed
+`.json.xz` files; pass `--result-format json` only when a plain `.json` result
+tree is required:
 
 ```bash
 uv run hakari-bench evaluate reranker \

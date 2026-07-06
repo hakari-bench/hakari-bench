@@ -73,6 +73,7 @@ MISSING_ATTENTION_IMPLEMENTATION_WARNING = (
     "implementation can be substantially faster."
 )
 DEFAULT_RESULTS_DIR = "output/hakari-results"
+DEFAULT_SINGLE_DATASET = "hakari-bench/NanoBEIR-ja"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -682,7 +683,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             _validate_all_target_args(args, parser)
             _validate_evaluation_scope_arg(args, parser)
             if args.dataset is None and not args.collection:
-                args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
+                args.dataset = [] if args.all else [DEFAULT_SINGLE_DATASET]
             elif args.dataset is None:
                 args.dataset = []
             if args.batch_size <= 0:
@@ -741,7 +742,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         _validate_all_target_args(args, parser)
         _validate_evaluation_scope_arg(args, parser)
     if args.command == "evaluate" and args.dataset is None and not args.collection:
-        args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
+        args.dataset = [] if args.all else [DEFAULT_SINGLE_DATASET]
     elif args.command == "evaluate" and args.dataset is None:
         args.dataset = []
     if args.command == "evaluate" and args.model_type == "bm25":
@@ -759,7 +760,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         _validate_all_target_args(args, parser)
         _validate_evaluation_scope_arg(args, parser)
     if args.command == "build-candidates" and args.dataset is None and not args.collection:
-        args.dataset = [] if args.all else ["hakari-bench/NanoBEIR-en"]
+        args.dataset = [] if args.all else [DEFAULT_SINGLE_DATASET]
     elif args.command == "build-candidates" and args.dataset is None:
         args.dataset = []
     return args

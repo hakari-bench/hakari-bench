@@ -728,8 +728,8 @@ def test_benchmark_name_uses_yaml_match_patterns_and_prefers_longest_match() -> 
     )
     assert (
         report.benchmark_name(
-            "hakari-bench/NanoBEIR-en",
-            "NanoBEIR-en",
+            "hakari-bench/NanoBEIR-ja",
+            "NanoBEIR-ja",
             benchmark_configs=benchmark_configs,
         )
         == "MNanoBEIR"
@@ -2595,7 +2595,7 @@ def test_load_results_backfills_prompts_from_model_loader_kwargs(tmp_path: Path)
 
 
 def test_load_results_backfills_missing_parameters_from_model_card_yaml(tmp_path: Path) -> None:
-    task_path = tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-en" / "arguana.json"
+    task_path = tmp_path / "jinaai__jina-embeddings-v3" / "hakari-bench__NanoBEIR-ja" / "arguana.json"
     task_path.parent.mkdir(parents=True)
     model_cards_path = tmp_path / "model_cards.yaml"
     model_cards_path.write_text(
@@ -2630,8 +2630,8 @@ models:
                 },
                 "environment": {"package_versions": {}},
                 "target": {
-                    "dataset_name": "NanoBEIR-en",
-                    "dataset_id": "hakari-bench/NanoBEIR-en",
+                    "dataset_name": "NanoBEIR-ja",
+                    "dataset_id": "hakari-bench/NanoBEIR-ja",
                     "split_name": "arguana",
                     "task_name": "arguana",
                 },

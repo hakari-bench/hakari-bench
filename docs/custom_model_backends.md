@@ -177,7 +177,7 @@ PYTHONPATH=$PWD uv run --with 'sentence-transformers[onnx,openvino]>=5.4' \
     --model-alias hotchpotch/bekko-embedding-v1-a8m-onnx-qint8-avx512-cpu \
     --model-loader examples.custom_backends.quantized_sentence_transformers:load_model \
     --model-loader-kwargs-json '{"backend":"onnx","model_kwargs":{"file_name":"onnx/model_qint8_avx512.onnx","provider":"CPUExecutionProvider"}}' \
-    --dataset hakari-bench/NanoBEIR-en \
+    --dataset hakari-bench/NanoBEIR-ja \
     --split NanoNQ \
     --device cpu \
     --dtype fp32 \
@@ -194,7 +194,7 @@ PYTHONPATH=$PWD uv run --with 'sentence-transformers[onnx,openvino]>=5.4' \
     --model-alias hotchpotch/bekko-embedding-v1-a8m-openvino-qint8-cpu \
     --model-loader examples.custom_backends.quantized_sentence_transformers:load_model \
     --model-loader-kwargs-json '{"backend":"openvino","model_kwargs":{"file_name":"openvino/openvino_model_qint8_quantized.xml","device":"CPU"}}' \
-    --dataset hakari-bench/NanoBEIR-en \
+    --dataset hakari-bench/NanoBEIR-ja \
     --split NanoNQ \
     --device cpu \
     --dtype fp32 \
@@ -207,7 +207,7 @@ compare the result JSON or rebuild the DuckDB viewer database:
 ```bash
 uv run hakari-bench evaluate dense \
   --model hotchpotch/bekko-embedding-v1-a8m \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --split NanoNQ \
   --dtype bf16 \
   --device cuda:0
@@ -229,7 +229,7 @@ PYTHONPATH=$PWD uv run hakari-bench evaluate dense \
   --model dummy/model \
   --model-loader examples.custom_backends.dummy_backend:load_model \
   --model-loader-kwargs-json '{"scale":1.0}' \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --split NanoNQ \
   --no-default-embedding-variants
 ```

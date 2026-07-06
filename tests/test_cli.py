@@ -129,7 +129,7 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.model_source == {"type": "huggingface", "name": "hotchpotch/model"}
     assert args.dtype == "bf16"
     assert args.retrieval_score_device == "auto"
-    assert args.dataset == ["hakari-bench/NanoBEIR-en"]
+    assert args.dataset == ["hakari-bench/NanoBEIR-ja"]
     assert args.results_dir == "output/hakari-results"
     assert args.result_format == "json.xz"
     assert args.save_top_rankings is True
@@ -180,10 +180,10 @@ def test_parse_args_accepts_task_docs_validation_command() -> None:
 
 
 def test_parse_args_accepts_task_docs_validation_legacy_alias() -> None:
-    args = parse_args(["validate-benchmark-docs", "task_docs/docs/NanoBEIR-en/NanoNQ.md"])
+    args = parse_args(["validate-benchmark-docs", "task_docs/docs/NanoBEIR-ja/NanoNQ.md"])
 
     assert args.command == "validate-benchmark-docs"
-    assert [path.as_posix() for path in args.paths] == ["task_docs/docs/NanoBEIR-en/NanoNQ.md"]
+    assert [path.as_posix() for path in args.paths] == ["task_docs/docs/NanoBEIR-ja/NanoNQ.md"]
 
 
 def test_parse_args_normalizes_local_model_alias() -> None:
@@ -387,7 +387,7 @@ runtime:
   max_seq_length: 8192
 target:
   datasets:
-    - hakari-bench/NanoBEIR-en
+    - hakari-bench/NanoBEIR-ja
   splits:
     - arguana
 """.strip(),
@@ -402,7 +402,7 @@ target:
     assert args.model_revision == "5617a9f61b028005a4858fdac845db406aefb181"
     assert args.trust_remote_code is True
     assert args.model_max_seq_length == 8192
-    assert args.dataset == ["hakari-bench/NanoBEIR-en"]
+    assert args.dataset == ["hakari-bench/NanoBEIR-ja"]
     assert args.split == ["arguana"]
     assert args.batch_size == 8
     assert args.embedding_variants[:1] == [_pipeline_variant("truncate_dim_768", _truncate_step(768))]
@@ -487,7 +487,7 @@ late_interaction:
   attend_to_expansion_tokens: false
 target:
   datasets:
-    - hakari-bench/NanoBEIR-en
+    - hakari-bench/NanoBEIR-ja
 """.strip(),
         encoding="utf-8",
     )
@@ -525,7 +525,7 @@ late_interaction:
   query_length: 39
 target:
   datasets:
-    - hakari-bench/NanoBEIR-en
+    - hakari-bench/NanoBEIR-ja
 """.strip(),
         encoding="utf-8",
     )
@@ -561,7 +561,7 @@ runtime:
   trust_remote_code: true
 target:
   datasets:
-    - hakari-bench/NanoBEIR-en
+    - hakari-bench/NanoBEIR-ja
 """.strip(),
         encoding="utf-8",
     )
@@ -590,7 +590,7 @@ runtime:
   remote_code_approved: true
 target:
   datasets:
-    - hakari-bench/NanoBEIR-en
+    - hakari-bench/NanoBEIR-ja
 """.strip(),
         encoding="utf-8",
     )
@@ -616,7 +616,7 @@ runtime:
   dtype: bf16
 target:
   datasets:
-    - hakari-bench/NanoBEIR-en
+    - hakari-bench/NanoBEIR-ja
 """.strip(),
         encoding="utf-8",
     )

@@ -34,7 +34,7 @@ be run easily with [HAKARI-Bench](https://github.com/hakari-bench/hakari-bench).
 
 {{DATASET_NAME}} is derived from {{SOURCE_BENCHMARK_NAME}}. It follows the
 Hugging Face Datasets layout convention used by
-[sentence-transformers/NanoBEIR-en](https://huggingface.co/datasets/sentence-transformers/NanoBEIR-en):
+[sentence-transformers/NanoBEIR-ja](https://huggingface.co/datasets/sentence-transformers/NanoBEIR-ja):
 each Nano split has separate `corpus`, `queries`, and `qrels` tables, with
 candidate subsets stored in `bm25`, `harrier_oss_v1_270m`, and
 `reranking_hybrid` tables. This layout follows the NanoBEIR-style evaluation

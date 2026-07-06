@@ -2636,7 +2636,7 @@ def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:
         return (
             "Benchmark scope: NanoBEIR(lang)",
             "Averages the multilingual NanoBEIR matrix by language dataset.",
-            f"{matrix_note}\n\nNanoBEIR(lang) first groups rows by language dataset, such as NanoBEIR-en, NanoBEIR-ja, or NanoBEIR-de, averaging all tasks within each language before the final score is computed. Use it when you want language coverage and per-language robustness to be the visible unit.\n\nThis differs from NanoBEIR(task), which groups by BEIR source task first and averages languages inside each task.",
+            f"{matrix_note}\n\nNanoBEIR(lang) first groups rows by language dataset, such as NanoBEIR-ja, NanoBEIR-de, or NanoBEIR-fr, averaging all tasks within each language before the final score is computed. Use it when you want language coverage and per-language robustness to be the visible unit.\n\nThis differs from NanoBEIR(task), which groups by BEIR source task first and averages languages inside each task.",
         )
     return (
         "Benchmark scope: NanoBEIR(task)",

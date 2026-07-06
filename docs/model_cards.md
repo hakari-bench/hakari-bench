@@ -67,7 +67,7 @@ uv run python scripts/generate_model_cards.py \
   --model BAAI/bge-m3 \
   --model-type dense \
   --truncate-dims none \
-  --dataset hakari-bench/NanoBEIR-en \
+  --dataset hakari-bench/NanoBEIR-ja \
   --output-dir config/model_cards
 ```
 
@@ -330,7 +330,7 @@ from existing cards.
 
 `--infer-language-support` reads finished result JSON and proposes
 `language_support` only when the existing card does not already define it. It
-uses NanoBEIR language-slice results such as `NanoBEIR-en` and NanoMIRACL task
+uses NanoBEIR language-slice results such as `NanoBEIR-ja` and NanoMIRACL task
 languages, computes per-language mean scores, and writes a conservative
 classification. The generated value is an initial review aid; update it manually
 when the model card, paper, or model family gives a clearer language identity

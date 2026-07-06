@@ -9,7 +9,7 @@ fixed candidate subsets such as `bm25`, `harrier_oss_v1_270m`, and
 `reranking_hybrid`. This makes candidate generation and reranking comparable
 under the same metrics.
 
-The benchmark currently covers 35+ benchmark groups and 551+ retrieval tasks
+The benchmark currently covers 35+ benchmark groups and 538 standard retrieval tasks
 across 43+ languages, including BEIR-style retrieval, MTEB/MMTEB language
 families, MIRACL, MLDR, code retrieval, long-context retrieval, and expert
 domains such as legal, medical, chemistry, finance, and built-environment
