@@ -444,6 +444,7 @@ def test_leaderboard_service_reads_precomputed_rows_when_available(tmp_path: Pat
                 ["Overall", "all", True, False, False, False, "ar", "AR", 3],
                 ["Overall", "all", True, False, False, False, "en", "EN", 8],
                 ["Overall", "all", True, False, False, False, "ja", "Japanese", 3],
+                ["Overall", "reranking", True, False, False, False, "en", "EN", 8],
             ],
         )
         con.execute(
@@ -507,17 +508,26 @@ runtime:
     )
 
     service = LeaderboardService(duckdb_path=db_path, config=config, model_cards_path=model_cards_dir)
-    result = service.get_leaderboard(
-        "Overall",
-        score_aggregation="micro",
-        include_quantization_variants=True,
-    )
-    reranking_result = service.get_leaderboard(
-        "Overall",
-        score_target="reranking",
-        score_aggregation="micro",
-        include_quantization_variants=True,
-    )
+
+    def fail_language_options_recompute(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("precomputed language options should be used")
+
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr(service, "_load_language_options_for_scope", fail_language_options_recompute)
+    try:
+        result = service.get_leaderboard(
+            "Overall",
+            score_aggregation="micro",
+            include_quantization_variants=True,
+        )
+        reranking_result = service.get_leaderboard(
+            "Overall",
+            score_target="reranking",
+            score_aggregation="micro",
+            include_quantization_variants=True,
+        )
+    finally:
+        monkeypatch.undo()
 
     assert result.expected_tasks == 3
     assert [(task.key, task.label, task.doc_key) for task in result.task_breakdowns] == [

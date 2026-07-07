@@ -1213,9 +1213,15 @@ display metadata only and is not stored in the DuckDB schema.
 `viewer_leaderboard_rows` and stores the task facet choices that should be shown
 beside that materialized leaderboard. Language choices use language codes; code
 task-category choices use `category:code`. The remaining columns are `code`,
-`label`, and `task_count`. Keeping these options in a companion table lets the
+`label`, and `task_count`. Overall view rows are materialized with task-facet
+options computed from the same component benchmark language policy used by the
+dynamic viewer path, including per-benchmark `primary_language` and fixed
+language-page constraints. Keeping these options in a companion table lets the
 fast precomputed leaderboard path preserve the same filter UI without scanning
-and aggregating all task-score rows on every display-toggle request.
+and aggregating all task-score rows on every display-toggle request. If an older
+DuckDB has precomputed leaderboard rows but no matching language-option rows,
+the viewer falls back to dynamic language-option computation for policy-specific
+facets.
 
 `viewer_filter_values` is generated from `viewer_task_results` and stores
 precomputed filter values for `target`, `benchmark`, `model`, and `variant`.
