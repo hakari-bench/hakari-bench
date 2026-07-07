@@ -55,6 +55,14 @@ class BenchmarkDocs:
         self.docs_dir = docs_dir
         self.metadata_dir = metadata_dir
         self.group_names = tuple(group_names) if group_names is not None else None
+        self._group_doc_cache: dict[str, BenchmarkDoc | None] = {}
+        self._task_doc_cache: dict[tuple[str, str], BenchmarkDoc | None] = {}
+        self._route_doc_cache: dict[tuple[str, str | None], BenchmarkDoc | None] = {}
+        self._task_doc_path_cache: dict[tuple[str, str], Path | None] = {}
+        self._matching_task_doc_path_cache: dict[tuple[str, str], Path | None] = {}
+        self._doc_from_path_cache: dict[tuple[Path, tuple[str, ...]], BenchmarkDoc | None] = {}
+        self._group_task_metadata_cache: dict[Path, tuple[tuple[Path, TaskMetadata], ...]] = {}
+        self._metadata_cache: dict[Path, TaskMetadata | None] = {}
 
     def group_docs(self) -> list[BenchmarkDoc]:
         if not self.docs_dir.is_dir():
@@ -75,22 +83,46 @@ class BenchmarkDocs:
         return sorted(docs, key=lambda doc: doc.title.lower())
 
     def group_doc(self, view_name: str) -> BenchmarkDoc | None:
-        return self._doc_from_path(self.docs_dir / _safe_segment(view_name) / "index.md", url_parts=(view_name,))
+        if view_name not in self._group_doc_cache:
+            self._group_doc_cache[view_name] = self._doc_from_path(
+                self.docs_dir / _safe_segment(view_name) / "index.md",
+                url_parts=(view_name,),
+            )
+        return self._group_doc_cache[view_name]
 
     def task_doc(self, *, view_name: str, metric_column: str) -> BenchmarkDoc | None:
+        cache_key = (view_name, metric_column)
+        if cache_key in self._task_doc_cache:
+            return self._task_doc_cache[cache_key]
         path = self._task_doc_path(view_name=view_name, metric_column=metric_column)
         if path is None:
+            self._task_doc_cache[cache_key] = None
             return None
-        return self._doc_from_path(path, url_parts=(path.parent.name, path.stem))
+        doc = self._doc_from_path(path, url_parts=(path.parent.name, path.stem))
+        self._task_doc_cache[cache_key] = doc
+        return doc
 
     def route_doc(self, *, benchmark: str, task: str | None = None) -> BenchmarkDoc | None:
+        cache_key = (benchmark, task)
+        if cache_key in self._route_doc_cache:
+            return self._route_doc_cache[cache_key]
         benchmark_segment = _safe_segment(benchmark)
         if task is None:
-            return self._doc_from_path(self.docs_dir / benchmark_segment / "index.md", url_parts=(benchmark_segment,))
+            doc = self._doc_from_path(self.docs_dir / benchmark_segment / "index.md", url_parts=(benchmark_segment,))
+            self._route_doc_cache[cache_key] = doc
+            return doc
         task_segment = _safe_segment(task)
-        return self._doc_from_path(self.docs_dir / benchmark_segment / f"{task_segment}.md", url_parts=(benchmark_segment, task_segment))
+        doc = self._doc_from_path(
+            self.docs_dir / benchmark_segment / f"{task_segment}.md",
+            url_parts=(benchmark_segment, task_segment),
+        )
+        self._route_doc_cache[cache_key] = doc
+        return doc
 
     def _task_doc_path(self, *, view_name: str, metric_column: str) -> Path | None:
+        cache_key = (view_name, metric_column)
+        if cache_key in self._task_doc_path_cache:
+            return self._task_doc_path_cache[cache_key]
         benchmark = _safe_segment(view_name)
         parts = metric_column.split("::")
         candidates: list[str] = []
@@ -107,15 +139,22 @@ class BenchmarkDocs:
         for candidate in candidates:
             path = self._matching_task_doc_path(benchmark=benchmark, candidate=candidate)
             if path is not None:
+                self._task_doc_path_cache[cache_key] = path
                 return path
+        self._task_doc_path_cache[cache_key] = None
         return None
 
     def _matching_task_doc_path(self, *, benchmark: str, candidate: str) -> Path | None:
+        cache_key = (benchmark, candidate)
+        if cache_key in self._matching_task_doc_path_cache:
+            return self._matching_task_doc_path_cache[cache_key]
         benchmark_dir = self.docs_dir / benchmark
         exact_path = benchmark_dir / f"{candidate}.md"
         if exact_path.is_file():
+            self._matching_task_doc_path_cache[cache_key] = exact_path
             return exact_path
         if not benchmark_dir.is_dir():
+            self._matching_task_doc_path_cache[cache_key] = None
             return None
         candidate_dataset, candidate_task = _split_dataset_task_stem(candidate)
         candidate_task_key = _normalize_doc_key(candidate_task)
@@ -128,20 +167,28 @@ class BenchmarkDocs:
             if candidate_dataset_key and _normalize_doc_key(doc_dataset) != candidate_dataset_key:
                 continue
             if _normalize_doc_key(doc_task) in candidate_task_keys:
+                self._matching_task_doc_path_cache[cache_key] = path
                 return path
+        self._matching_task_doc_path_cache[cache_key] = None
         return None
 
     def _doc_from_path(self, path: Path, *, url_parts: tuple[str, ...]) -> BenchmarkDoc | None:
+        cache_key = (path, url_parts)
+        if cache_key in self._doc_from_path_cache:
+            return self._doc_from_path_cache[cache_key]
         if not _is_relative_to(path, self.docs_dir) or not path.is_file():
+            self._doc_from_path_cache[cache_key] = None
             return None
         markdown = _read_markdown(path)
         markdown = self._markdown_with_metadata(path=path, markdown=markdown)
-        return BenchmarkDoc(
+        doc = BenchmarkDoc(
             title=_extract_title(markdown) or path.stem,
             description=_extract_overview(markdown),
             url=_doc_url(url_parts),
             markdown=markdown,
         )
+        self._doc_from_path_cache[cache_key] = doc
+        return doc
 
     def _markdown_with_metadata(self, *, path: Path, markdown: str) -> str:
         source_markdown = markdown
@@ -174,6 +221,8 @@ class BenchmarkDocs:
         )
 
     def _group_task_metadata(self, group_dir: Path) -> list[tuple[Path, TaskMetadata]]:
+        if group_dir in self._group_task_metadata_cache:
+            return list(self._group_task_metadata_cache[group_dir])
         items: list[tuple[Path, TaskMetadata]] = []
         for path in sorted(group_dir.glob("*.md")):
             if path.name == "index.md":
@@ -181,15 +230,22 @@ class BenchmarkDocs:
             metadata = self._load_metadata(path)
             if metadata is not None:
                 items.append((path, metadata))
+        self._group_task_metadata_cache[group_dir] = tuple(items)
         return items
 
     def _load_metadata(self, path: Path) -> TaskMetadata | None:
+        if path in self._metadata_cache:
+            return self._metadata_cache[path]
         if self.metadata_dir is None:
+            self._metadata_cache[path] = None
             return None
         try:
-            return load_task_metadata(path, docs_root=self.docs_dir, metadata_root=self.metadata_dir)
+            metadata = load_task_metadata(path, docs_root=self.docs_dir, metadata_root=self.metadata_dir)
         except (OSError, ValidationError, ValueError):
+            self._metadata_cache[path] = None
             return None
+        self._metadata_cache[path] = metadata
+        return metadata
 
 
 def _render_docs_document(*, chrome: DocsPageChrome, title: str, body_html: str) -> str:

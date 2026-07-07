@@ -267,6 +267,7 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 | UI surface | source tables | semantics |
 | --- | --- | --- |
 | Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores. The `reranking_hybrid` candidate set is the RRF top-100 over BM25 and dense candidate rankings; BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them. The BM25 row shown in Reranking is a candidate-order baseline, not the source of the reranking candidate set. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive when a query's hybrid top-100 has no qrels-positive candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
+| Task breakdown modal | same as Leaderboard | The main leaderboard fragment renders a lightweight placeholder for the task-count modal. The task list and task-document links are loaded lazily from `/leaderboard/task-breakdown` with the same normalized query parameters, so normal table loads do not re-resolve hundreds of Markdown task docs. |
 
 The page header reads `meta_database.built_at_utc` for the latest available
 database timestamp and summary counts from `viewer_task_results`. Configured
@@ -1104,6 +1105,12 @@ The log fields include stable key-value pairs such as `operation`,
 `leaderboard_row_count`, so production logs can identify whether UI latency is
 coming from DuckDB scans, DTO conversion, variant filtering, overall
 aggregation, or row rendering.
+
+The `/leaderboard`, `/leaderboard.csv`, and `/leaderboard/task-breakdown`
+responses also include `Server-Timing` and `X-Hakari-Timing` headers with
+`service` and `render` durations. These headers make it possible to distinguish
+DuckDB/service work from Python HTML or CSV rendering when inspecting
+production latency through browser developer tools or `curl -D -`.
 
 Leaderboard task-score loading uses an in-process LRU cache keyed by the
 resolved DuckDB path, file `mtime_ns`, file size, benchmark tuple, target, and

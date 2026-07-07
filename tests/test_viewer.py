@@ -4,6 +4,7 @@ import csv
 import logging
 import os
 import re
+import threading
 import time
 from pathlib import Path
 from typing import Any, cast
@@ -19,6 +20,7 @@ from hakari_bench.viewer.app import (
     _fmt_params,
     _metric_column_label,
     _metric_column_labels,
+    _render_task_breakdown_section,
     _rounded_z_score,
     _view_group,
     _z_score_bucket_class,
@@ -1858,6 +1860,8 @@ def test_leaderboard_status_counts_are_clickable_and_open_breakdown_modal() -> N
     assert 'data-count-breakdown-section="shown" data-count-breakdown-title="Visible rows" hidden' in html
     assert 'data-count-breakdown-section="complete" data-count-breakdown-title="Complete models" hidden' in html
     assert 'data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden' in html
+    assert 'data-count-breakdown-loaded="false"' in html
+    assert 'data-count-breakdown-lazy-body' in html
     assert "Visible rows" in html
     assert "Complete models" in html
     assert "Tasks: 2" in html
@@ -1875,7 +1879,30 @@ def test_leaderboard_status_counts_are_clickable_and_open_breakdown_modal() -> N
     assert "Dense</span>" not in shown_section
     assert "Reranker</span>" not in complete_section
     assert "model-detail-trigger" not in tasks_section
-    assert "count-breakdown-task-link" in modal_html or "Task-level breakdown is unavailable" in modal_html
+    assert "count-breakdown-task-link" not in modal_html
+    assert "Loading tasks" in tasks_section
+
+
+def test_render_task_breakdown_section_renders_loaded_section() -> None:
+    result = LeaderboardResult(
+        view_name="BenchA",
+        view_label="Bench A",
+        is_overall=False,
+        expected_tasks=1,
+        rows=[],
+        available_views=["BenchA"],
+        available_view_labels={"BenchA": "BenchA"},
+        score_groups=[],
+        metric_columns=[],
+        task_breakdowns=[],
+    )
+
+    html = _render_task_breakdown_section(result=result, benchmark_docs=None, hidden=False)
+
+    assert 'id="count-breakdown-tasks"' in html
+    assert 'data-count-breakdown-loaded="true"' in html
+    assert 'data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks"' in html
+    assert "Task-level breakdown is unavailable" in html
 
 
 def test_leaderboard_plot_renders_visible_rows_axes_and_tooltips() -> None:
@@ -3844,7 +3871,8 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "Retrieval" in response.text
     assert 'data-count-breakdown-trigger="shown">2 shown</button>' in response.text
     assert 'data-count-breakdown-trigger="complete">2 complete models</button>' in response.text
-    assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in response.text
+    assert 'data-count-breakdown-trigger="tasks"' in response.text
+    assert ">1 tasks</button>" in response.text
 
 
 def test_task_facets_include_code_category_and_filter_tasks(tmp_path: Path) -> None:
@@ -3900,7 +3928,8 @@ def test_task_facets_include_code_category_and_filter_tasks(tmp_path: Path) -> N
 
     filtered_response = TestClient(app).get("/leaderboard?view=BenchA&lang_filter=category%3Acode")
     assert filtered_response.status_code == 200
-    assert 'data-count-breakdown-trigger="tasks">1 tasks</button>' in filtered_response.text
+    assert 'data-count-breakdown-trigger="tasks"' in filtered_response.text
+    assert ">1 tasks</button>" in filtered_response.text
 
 
 def test_grouped_overall_uses_configured_mean_units_before_borda(tmp_path: Path) -> None:
@@ -7226,6 +7255,56 @@ def test_local_duckdb_store_does_not_restart_background_sync_for_current_local_s
     assert store.sync_status().state == "ready"
 
 
+def test_local_duckdb_store_serializes_concurrent_ensure_current(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = tmp_path / "source.duckdb"
+    source.write_bytes(b"new")
+    local = tmp_path / "viewer" / "hakari_bench.duckdb"
+    store = LocalDuckDbStore(DuckDbLocation(local_path=local, source_path=source))
+    install_started = threading.Event()
+    release_install = threading.Event()
+    calls = 0
+
+    def fake_install(
+        install_source: Path,
+        destination: Path,
+        *,
+        progress_callback=None,
+    ) -> None:
+        del progress_callback
+        nonlocal calls
+        calls += 1
+        install_started.set()
+        assert release_install.wait(timeout=2)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(install_source.read_bytes())
+
+    monkeypatch.setattr(viewer_store, "_install_viewer_duckdb_atomic", fake_install)
+    first_result: list[bool] = []
+    second_result: list[bool] = []
+    first = threading.Thread(target=lambda: first_result.append(store.ensure_current()))
+    second = threading.Thread(target=lambda: second_result.append(store.ensure_current()))
+
+    first.start()
+    assert install_started.wait(timeout=1)
+    second.start()
+    time.sleep(0.05)
+
+    assert calls == 1
+    assert second_result == []
+
+    release_install.set()
+    first.join(timeout=2)
+    second.join(timeout=2)
+
+    assert first_result == [True]
+    assert second_result == [False]
+    assert calls == 1
+    assert local.read_bytes() == b"new"
+
+
 def test_local_duckdb_store_skips_hf_source_check_within_ttl(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -7441,6 +7520,58 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "Download CSV" in response.text
     assert 'data-icon="file-spreadsheet"' in response.text
     assert 'aria-label="Download visible leaderboard as CSV"' in response.text
+    assert "Server-Timing" in response.headers
+    assert "service;dur=" in response.headers["Server-Timing"]
+    assert "render;dur=" in response.headers["Server-Timing"]
+    assert "X-Hakari-Timing" in response.headers
+
+
+def test_viewer_task_breakdown_endpoint_renders_task_docs_lazily(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 20, 24, 4096),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    docs_dir = tmp_path / "task_docs" / "docs"
+    bench_docs_dir = docs_dir / "BenchA"
+    bench_docs_dir.mkdir(parents=True)
+    (bench_docs_dir / "a1.md").write_text(
+        "# BenchA task A1\n\n## Overview\n\nTask overview.\n",
+        encoding="utf-8",
+    )
+    app = create_app(
+        store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)),
+        config_dir=config_dir,
+        docs_dir=docs_dir,
+        docs_metadata_dir=None,
+    )
+    client = TestClient(app)
+
+    leaderboard_response = client.get("/leaderboard?view=BenchA&sort=borda_score&direction=desc")
+
+    assert leaderboard_response.status_code == 200
+    assert "count-breakdown-task-link" not in leaderboard_response.text
+    assert 'data-count-breakdown-url="/leaderboard/task-breakdown?view=BenchA' in leaderboard_response.text
+    assert 'data-count-breakdown-loaded="false"' in leaderboard_response.text
+
+    task_response = client.get("/leaderboard/task-breakdown?view=BenchA&sort=borda_score&direction=desc")
+
+    assert task_response.status_code == 200
+    assert 'id="count-breakdown-tasks"' in task_response.text
+    assert 'data-count-breakdown-loaded="true"' in task_response.text
+    assert "count-breakdown-task-link" in task_response.text
+    assert "BenchA task A1" in task_response.text
+    assert "/docs/benchmark-tasks/BenchA/a1" in task_response.text
+    assert "Server-Timing" in task_response.headers
 
 
 def test_leaderboard_csv_exports_visible_scores_and_model_metadata(tmp_path: Path) -> None:

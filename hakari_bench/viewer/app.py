@@ -13,10 +13,12 @@ import math
 import os
 from pathlib import Path
 import re
+from time import perf_counter
 from typing import Iterable, Sequence, TypedDict, cast
 from urllib.parse import quote, urlencode
 
 import duckdb
+from fastapi import Request
 from pydantic import BaseModel, ConfigDict
 
 from hakari_bench.viewer.config import (
@@ -568,7 +570,10 @@ def create_app(
                         next_url=_leaderboard_url(urlencode(state_query, doseq=True)),
                     )
                 )
+            service_started = perf_counter()
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
+            service_ms = _elapsed_ms(service_started)
+            render_started = perf_counter()
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
                 content = render_leaderboard(
                     result=result,
@@ -583,9 +588,33 @@ def create_app(
                 )
                 content = f"{content}\n{_render_footer_update(store=store)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
+            render_ms = _elapsed_ms(render_started)
             request_timing["view"] = result.view_name
             request_timing["leaderboard_row_count"] = len(result.rows)
-            return HTMLResponse(content=content, headers={"HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}"})
+            return HTMLResponse(
+                content=content,
+                headers={
+                    "HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}",
+                    **_timing_headers({"service": service_ms, "render": render_ms}),
+                },
+            )
+
+    @app.get("/leaderboard/task-breakdown", response_class=HTMLResponse)
+    def leaderboard_task_breakdown(request: Request) -> HTMLResponse:
+        with timed_operation("viewer.http.request", route="leaderboard_task_breakdown") as request_timing:
+            sync_status = store.start_background_sync()
+            if _duckdb_sync_blocks_leaderboard(store, sync_status):
+                return HTMLResponse(render_task_breakdown_loading_section())
+            state_query = _normalize_query_state_from_params(viewer_config, request.query_params)
+            service_started = perf_counter()
+            result, _sort, _direction, _filter_state = build_leaderboard_result(state_query)
+            service_ms = _elapsed_ms(service_started)
+            render_started = perf_counter()
+            content = _render_task_breakdown_section(result=result, benchmark_docs=benchmark_docs, hidden=False)
+            render_ms = _elapsed_ms(render_started)
+            request_timing["view"] = result.view_name
+            request_timing["task_count"] = result.expected_tasks
+            return HTMLResponse(content=content, headers=_timing_headers({"service": service_ms, "render": render_ms}))
 
     @app.get("/leaderboard.csv")
     def leaderboard_csv(
@@ -669,16 +698,23 @@ def create_app(
                 doc_len_min=doc_len_min,
                 doc_len_max=doc_len_max,
             )
+            service_started = perf_counter()
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
+            service_ms = _elapsed_ms(service_started)
+            render_started = perf_counter()
             with timed_operation("viewer.render", operation="render_leaderboard_csv", view=result.view_name) as render_timing:
                 content = render_leaderboard_csv(result=result, filter_state=filter_state)
                 render_timing["leaderboard_row_count"] = len(result.rows)
+            render_ms = _elapsed_ms(render_started)
             request_timing["view"] = result.view_name
             filename = _csv_filename(view=result.view_name, target=result.score_target)
             return Response(
                 content=content,
                 media_type="text/csv; charset=utf-8",
-                headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+                headers={
+                    "Content-Disposition": f'attachment; filename="{filename}"',
+                    **_timing_headers({"service": service_ms, "render": render_ms}),
+                },
             )
 
     return app
@@ -692,6 +728,94 @@ def _duckdb_sync_blocks_leaderboard(store: LocalDuckDbStore, status: DuckDbSyncS
     if status.state == "error":
         return True
     return status.active
+
+
+def _normalize_query_state_from_params(viewer_config: ViewerConfig, params: Mapping[str, object]) -> QueryState:
+    return normalize_query_state(
+        viewer_config=viewer_config,
+        view=_query_param_string(params, "view", viewer_config.overall.name),
+        sort=_query_param_string(params, "sort", "borda_score"),
+        direction=_query_param_string(params, "direction", "desc"),
+        target=_query_param_string(params, "target", "all"),
+        score=_query_param_string(params, "score", "micro"),
+        metric=_query_param_string(params, "metric", "ndcg@10"),
+        group=_query_param_optional_string(params, "group"),
+        variants=_query_param_bool(params, "variants"),
+        quantization=_query_param_bool(params, "quantization"),
+        truncate=_query_param_bool(params, "truncate"),
+        rescore=_query_param_bool(params, "rescore"),
+        other_variant=_query_param_bool(params, "other_variant"),
+        task_scores=_query_param_bool(params, "task_scores"),
+        task_z_scores=_query_param_bool(params, "task_z_scores"),
+        task_ranks=_query_param_bool(params, "task_ranks"),
+        other_columns=_query_param_bool(params, "other_columns"),
+        filters=_query_param_bool(params, "filters"),
+        dim_filter=_query_param_list(params, "dim_filter"),
+        quant_filter=_query_param_list(params, "quant_filter"),
+        commercial_filter=_query_param_list(params, "commercial_filter"),
+        model_type_filter=_query_param_list(params, "model_type_filter"),
+        dtype_filter=_query_param_list(params, "dtype_filter"),
+        attn_filter=_query_param_list(params, "attn_filter"),
+        prompt_filter=_query_param_list(params, "prompt_filter"),
+        lang_filter=_query_param_list(params, "lang_filter"),
+        bench=_query_param_list(params, "bench"),
+        model_filter=_query_param_string(params, "model_filter", ""),
+        task_filter=_query_param_string(params, "task_filter", ""),
+        rank_filtered=_query_param_bool(params, "rank_filtered"),
+        active_params_min=_query_param_string(params, "active_params_min", ""),
+        active_params_max=_query_param_string(params, "active_params_max", ""),
+        total_params_min=_query_param_string(params, "total_params_min", ""),
+        total_params_max=_query_param_string(params, "total_params_max", ""),
+        query_len_min=_query_param_string(params, "query_len_min", ""),
+        query_len_max=_query_param_string(params, "query_len_max", ""),
+        doc_len_min=_query_param_string(params, "doc_len_min", ""),
+        doc_len_max=_query_param_string(params, "doc_len_max", ""),
+        result_view=_query_param_string(params, "result_view", "table"),
+        chart_y=_query_param_string(params, "chart_y", "borda_score"),
+        chart_x=_query_param_string(params, "chart_x", "active_parameters"),
+        chart_color=_query_param_string(params, "chart_color", "embedding_dim"),
+    )
+
+
+def _query_param_string(params: Mapping[str, object], key: str, default: str) -> str:
+    value = params.get(key, default)
+    if isinstance(value, list):
+        value = value[0] if value else default
+    return str(value)
+
+
+def _query_param_optional_string(params: Mapping[str, object], key: str) -> str | None:
+    value = _query_param_string(params, key, "")
+    return value or None
+
+
+def _query_param_bool(params: Mapping[str, object], key: str) -> bool:
+    return _query_param_string(params, key, "").lower() in {"1", "true", "on", "yes"}
+
+
+def _query_param_list(params: Mapping[str, object], key: str) -> list[str] | None:
+    getlist = getattr(params, "getlist", None)
+    if callable(getlist):
+        values = [str(value) for value in getlist(key)]
+    else:
+        value = params.get(key)
+        if value is None:
+            values = []
+        elif isinstance(value, list):
+            values = [str(item) for item in value]
+        else:
+            values = [str(value)]
+    return values or None
+
+
+def _elapsed_ms(started_at: float) -> float:
+    return (perf_counter() - started_at) * 1000.0
+
+
+def _timing_headers(timings_ms: Mapping[str, float]) -> dict[str, str]:
+    server_timing = ", ".join(f"{name};dur={duration:.1f}" for name, duration in timings_ms.items())
+    text_timing = "; ".join(f"{name}={duration:.1f}ms" for name, duration in timings_ms.items())
+    return {"Server-Timing": server_timing, "X-Hakari-Timing": text_timing}
 
 
 def _safe_duckdb_sync_next_url(next_url: str) -> str:
@@ -1219,6 +1343,7 @@ def render_leaderboard(
     filter_context = row_filter_context(result.rows, filter_state)
     shown_count = visible_row_count(result.rows, filter_context)
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
+    task_breakdown_query = csv_query
     mode_icon, mode_label = _score_target_display(result.score_target)
     result_view = result_view if result_view in {"table", "chart"} else "table"
     plot_state = _plot_state_query(
@@ -1265,7 +1390,7 @@ def render_leaderboard(
         <span>{escape(mode_label)}</span>
       </span>
       <span class="text-zinc-400">/</span>
-      {_render_status_count_buttons(result=result, shown_count=shown_count)}
+      {_render_status_count_buttons(result=result, shown_count=shown_count, task_breakdown_query=task_breakdown_query)}
     </div>
     <a class="inline-flex items-center gap-1 border border-zinc-300 bg-zinc-50 px-2 py-0.5 text-xs font-medium text-zinc-800 underline-offset-2 hover:border-cyan-600 hover:text-cyan-700"
        href="{_csv_url(csv_query)}" aria-label="Download visible leaderboard as CSV">
@@ -1274,7 +1399,7 @@ def render_leaderboard(
     </a>
   </div>
   {data_surface}
-  {_render_count_breakdown_modal(result=result, filter_context=filter_context, benchmark_docs=benchmark_docs)}
+  {_render_count_breakdown_modal(result=result, filter_context=filter_context, task_breakdown_query=task_breakdown_query)}
   {render_model_detail_modal()}
   {render_doc_summary_modal()}
   {render_help_summary_modal()}
@@ -1282,14 +1407,15 @@ def render_leaderboard(
 """
 
 
-def _render_status_count_buttons(*, result: LeaderboardResult, shown_count: int) -> str:
+def _render_status_count_buttons(*, result: LeaderboardResult, shown_count: int, task_breakdown_query: str = "") -> str:
+    task_breakdown_url = _task_breakdown_url(task_breakdown_query)
     return f"""
       <span class="inline-flex items-center gap-1">
         <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="shown">{shown_count} shown</button>
         <span class="text-zinc-400">/</span>
         <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="complete">{len(result.rows)} complete models</button>
         <span class="text-zinc-400">/</span>
-        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="tasks">{result.expected_tasks} tasks</button>
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="tasks" data-count-breakdown-url="{task_breakdown_url}">{result.expected_tasks} tasks</button>
       </span>
     """
 
@@ -1298,7 +1424,7 @@ def _render_count_breakdown_modal(
     *,
     result: LeaderboardResult,
     filter_context: FilterContext,
-    benchmark_docs: BenchmarkDocs | None,
+    task_breakdown_query: str,
 ) -> str:
     visible_rows = [row for row in result.rows if filter_context.is_visible(row)]
     model_views = model_cell_views(result.rows)
@@ -1331,7 +1457,7 @@ def _render_count_breakdown_modal(
           rows=result.rows,
           model_views=model_views,
       )}
-      {_render_task_breakdown_section(result=result, benchmark_docs=benchmark_docs)}
+      {render_task_breakdown_loading_section(result=result, query=task_breakdown_query)}
     </div>
   </div>
 </dialog>
@@ -1374,7 +1500,29 @@ def _render_status_model_list(*, rows: list[LeaderboardRow], model_views: dict[s
     return f"""<ul class="mt-2 max-h-72 overflow-auto">{''.join(items)}</ul>"""
 
 
-def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs: BenchmarkDocs | None) -> str:
+def render_task_breakdown_loading_section(*, result: LeaderboardResult | None = None, query: str = "") -> str:
+    expected_tasks = result.expected_tasks if result is not None else 0
+    url_attr = f' data-count-breakdown-url="{_task_breakdown_url(query)}"' if query else ""
+    return f"""
+      <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden data-count-breakdown-loaded="false"{url_attr} class="pt-2">
+        <h4 class="font-semibold text-zinc-900">Tasks: {expected_tasks}</h4>
+        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected evaluation mode, benchmark scope, task facets, and task-length range filters. Linked tasks are loaded when this section is opened.</p>
+        <div data-count-breakdown-lazy-body>
+          <p class="mt-2 inline-flex items-center gap-2 text-sm text-zinc-500">
+            <span class="loading-spinner" aria-hidden="true"></span>
+            <span>Loading tasks...</span>
+          </p>
+        </div>
+      </section>
+    """
+
+
+def _render_task_breakdown_section(
+    *,
+    result: LeaderboardResult,
+    benchmark_docs: BenchmarkDocs | None,
+    hidden: bool = True,
+) -> str:
     task_items = []
     for task in result.task_breakdowns:
         doc = (
@@ -1398,8 +1546,9 @@ def _render_task_breakdown_section(*, result: LeaderboardResult, benchmark_docs:
         if task_items
         else '<p class="mt-2 text-sm text-zinc-500">Task-level breakdown is unavailable for this precomputed summary.</p>'
     )
+    hidden_attr = " hidden" if hidden else ""
     return f"""
-      <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden class="pt-2">
+      <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" data-count-breakdown-loaded="true"{hidden_attr} class="pt-2">
         <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
         <p class="mt-1 text-sm text-zinc-600">Tasks in the selected evaluation mode, benchmark scope, task facets, and task-length range filters. Linked tasks have verified local documentation and open in a new tab.</p>
         {task_body}
@@ -5038,3 +5187,7 @@ def _leaderboard_url(query: str) -> str:
 
 def _csv_url(query: str) -> str:
     return escape(f"/leaderboard.csv?{query}", quote=True)
+
+
+def _task_breakdown_url(query: str) -> str:
+    return escape(f"/leaderboard/task-breakdown?{query}", quote=True)

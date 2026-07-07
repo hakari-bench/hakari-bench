@@ -62,6 +62,7 @@ class LocalDuckDbStore:
     def __init__(self, location: DuckDbLocation) -> None:
         self.location = location
         self._last_hf_source_check_at: float | None = None
+        self._install_lock = threading.Lock()
         self._sync_lock = threading.Lock()
         self._sync_thread: threading.Thread | None = None
         self._sync_status = DuckDbSyncStatus(local_path=location.local_path)
@@ -71,20 +72,21 @@ class LocalDuckDbStore:
         return self.location.local_path
 
     def ensure_current(self, progress_callback: DuckDbProgressCallback | None = None) -> bool:
-        if self._source_check_is_fresh():
-            return False
-        source = self._source_path(progress_callback=progress_callback)
-        self._mark_hf_source_checked()
-        destination = self.location.local_path
-        if source is None or not source.exists():
-            return False
-        if destination.exists() and destination.stat().st_mtime >= source.stat().st_mtime:
-            return False
-        if destination.exists() and _file_sha1(destination) == _file_sha1(source):
-            return False
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        _install_viewer_duckdb_atomic(source, destination, progress_callback=progress_callback)
-        return True
+        with self._install_lock:
+            if self._source_check_is_fresh():
+                return False
+            source = self._source_path(progress_callback=progress_callback)
+            self._mark_hf_source_checked()
+            destination = self.location.local_path
+            if source is None or not source.exists():
+                return False
+            if destination.exists() and destination.stat().st_mtime >= source.stat().st_mtime:
+                return False
+            if destination.exists() and _file_sha1(destination) == _file_sha1(source):
+                return False
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            _install_viewer_duckdb_atomic(source, destination, progress_callback=progress_callback)
+            return True
 
     def start_background_sync(self) -> DuckDbSyncStatus:
         with self._sync_lock:

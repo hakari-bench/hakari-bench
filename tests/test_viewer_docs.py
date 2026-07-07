@@ -6,6 +6,7 @@ import re
 from fastapi.testclient import TestClient
 
 from hakari_bench.viewer.app import create_app
+from hakari_bench.viewer import docs as viewer_docs
 from hakari_bench.viewer.docs import BenchmarkDocs, render_markdown_to_html
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
 
@@ -38,6 +39,30 @@ def test_benchmark_docs_resolves_group_and_task_overviews(tmp_path: Path) -> Non
     assert task_doc.title == "NanoMIRACL / ja"
     assert task_doc.description == "Japanese task overview."
     assert task_doc.url == "/docs/benchmark-tasks/NanoMIRACL/ja"
+
+
+def test_benchmark_docs_caches_resolved_markdown(tmp_path: Path, monkeypatch) -> None:
+    docs_dir = tmp_path / "task_docs" / "docs"
+    group_dir = docs_dir / "NanoMIRACL"
+    group_dir.mkdir(parents=True)
+    (group_dir / "index.md").write_text("# NanoMIRACL\n\n## Overview\n\nGroup overview.\n", encoding="utf-8")
+    (group_dir / "ja.md").write_text("# NanoMIRACL / ja\n\n## Overview\n\nJapanese task overview.\n", encoding="utf-8")
+    read_paths: list[Path] = []
+    original_read_markdown = viewer_docs._read_markdown
+
+    def counting_read_markdown(path: Path) -> str:
+        read_paths.append(path)
+        return original_read_markdown(path)
+
+    monkeypatch.setattr(viewer_docs, "_read_markdown", counting_read_markdown)
+    docs = BenchmarkDocs(docs_dir)
+
+    assert docs.group_doc("NanoMIRACL") is not None
+    assert docs.group_doc("NanoMIRACL") is not None
+    assert docs.task_doc(view_name="NanoMIRACL", metric_column="ja") is not None
+    assert docs.task_doc(view_name="NanoMIRACL", metric_column="ja") is not None
+
+    assert read_paths == [group_dir / "index.md", group_dir / "ja.md"]
 
 
 def test_benchmark_docs_renders_task_metadata_from_task_docs_json(tmp_path: Path) -> None:
@@ -999,17 +1024,24 @@ def test_leaderboard_status_modal_links_existing_task_docs_in_blank_tabs(tmp_pat
     )
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
 
-    response = TestClient(app).get("/leaderboard?view=MNanoBEIR")
+    client = TestClient(app)
+    response = client.get("/leaderboard?view=MNanoBEIR")
 
     assert response.status_code == 200
     assert 'id="count-breakdown-modal"' in response.text
+    assert "count-breakdown-task-link" not in response.text
+    assert 'data-count-breakdown-url="/leaderboard/task-breakdown?view=MNanoBEIR' in response.text
+
+    task_response = client.get("/leaderboard/task-breakdown?view=MNanoBEIR")
+
+    assert task_response.status_code == 200
     assert (
         '<a class="count-breakdown-task-link underline underline-offset-2 hover:text-cyan-700" '
         'href="/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoArguAna" '
         'target="_blank" rel="noopener noreferrer">'
-    ) in response.text
-    assert "MNanoBEIR / NanoBEIR-ja / NanoArguAna" in response.text
-    assert "/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoMissing" not in response.text
+    ) in task_response.text
+    assert "MNanoBEIR / NanoBEIR-ja / NanoArguAna" in task_response.text
+    assert "/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-ja__NanoMissing" not in task_response.text
 
 
 def test_leaderboard_custom_task_doc_trigger_links_resolve_to_existing_docs(tmp_path: Path) -> None:

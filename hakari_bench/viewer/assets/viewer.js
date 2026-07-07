@@ -297,6 +297,54 @@
     appendModelDetailRow(list, "Notice", document.createTextNode(value));
   }
 
+  function countBreakdownSection(name) {
+    return document.querySelector(`[data-count-breakdown-section="${name}"]`);
+  }
+
+  function setActiveCountBreakdownSection(selectedSection) {
+    let activeTitle = "Result breakdown";
+    for (const section of document.querySelectorAll("[data-count-breakdown-section]")) {
+      const isActive = section.dataset.countBreakdownSection === selectedSection;
+      section.hidden = !isActive;
+      if (isActive) activeTitle = section.dataset.countBreakdownTitle || activeTitle;
+    }
+    const title = document.getElementById("count-breakdown-title");
+    if (title) title.textContent = activeTitle;
+  }
+
+  function loadCountBreakdownSection(trigger, selectedSection) {
+    if (selectedSection !== "tasks") return;
+    const section = countBreakdownSection("tasks");
+    if (!section || section.dataset.countBreakdownLoaded === "true" || section.dataset.countBreakdownLoading === "true") return;
+    const url = trigger.dataset.countBreakdownUrl || section.dataset.countBreakdownUrl || "";
+    if (!url) return;
+    section.dataset.countBreakdownLoading = "true";
+    const body = section.querySelector("[data-count-breakdown-lazy-body]");
+    if (body) {
+      body.innerHTML = '<p class="mt-2 inline-flex items-center gap-2 text-sm text-zinc-500"><span class="loading-spinner" aria-hidden="true"></span><span>Loading tasks...</span></p>';
+    }
+    fetch(url, { headers: { "X-Requested-With": "fetch" } })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Task breakdown request failed: ${response.status}`);
+        return response.text();
+      })
+      .then((html) => {
+        const currentSection = countBreakdownSection("tasks");
+        if (!currentSection) return;
+        currentSection.outerHTML = html;
+        setActiveCountBreakdownSection("tasks");
+      })
+      .catch(() => {
+        const currentSection = countBreakdownSection("tasks");
+        if (!currentSection) return;
+        delete currentSection.dataset.countBreakdownLoading;
+        const currentBody = currentSection.querySelector("[data-count-breakdown-lazy-body]");
+        if (currentBody) {
+          currentBody.innerHTML = '<p class="mt-2 text-sm text-zinc-500">Task breakdown is temporarily unavailable.</p>';
+        }
+      });
+  }
+
   window.__hakariBindModelDetails = () => {
     if (window.__hakariModelDetailsBound) return;
     window.__hakariModelDetailsBound = true;
@@ -350,17 +398,11 @@
       event.preventDefault();
       event.stopPropagation();
       const modal = document.getElementById("count-breakdown-modal");
-      const title = document.getElementById("count-breakdown-title");
       if (!modal) return;
       const selectedSection = trigger.dataset.countBreakdownTrigger || "";
-      let activeTitle = "Result breakdown";
-      for (const section of document.querySelectorAll("[data-count-breakdown-section]")) {
-        const isActive = section.dataset.countBreakdownSection === selectedSection;
-        section.hidden = !isActive;
-        if (isActive) activeTitle = section.dataset.countBreakdownTitle || activeTitle;
-      }
-      if (title) title.textContent = activeTitle;
+      setActiveCountBreakdownSection(selectedSection);
       if (typeof modal.showModal === "function") modal.showModal();
+      loadCountBreakdownSection(trigger, selectedSection);
     });
 
     document.addEventListener("click", (event) => {
