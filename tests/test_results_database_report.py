@@ -4238,6 +4238,96 @@ def test_build_viewer_leaderboard_mart_materializes_display_modes(tmp_path: Path
         con.close()
 
 
+def test_build_viewer_leaderboard_mart_materializes_overall_language_policy(tmp_path: Path) -> None:
+    rows = [
+        report.TaskResult(
+            model_dir="model",
+            model_name="example/model",
+            benchmark="BenchPrimary",
+            dataset_id="bench/primary",
+            dataset_name="BenchPrimary-no",
+            split_name="task-no",
+            task_name="task-no",
+            task_key="BenchPrimary::bench/primary::task-no",
+            score=0.60,
+            aggregate_metric="ndcg@10",
+            result_path="primary-no.json",
+        ),
+        report.TaskResult(
+            model_dir="model",
+            model_name="example/model",
+            benchmark="BenchAllowed",
+            dataset_id="bench/allowed",
+            dataset_name="BenchAllowed",
+            split_name="task-nl",
+            task_name="task-nl",
+            task_key="BenchAllowed::bench/allowed::task-nl",
+            score=0.70,
+            aggregate_metric="ndcg@10",
+            result_path="allowed-nl.json",
+        ),
+    ]
+    db_path = tmp_path / "results.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=rows,
+        metric_rows=[],
+        dataset_metadata_rows=[
+            DatasetMetadataRow(
+                benchmark="BenchPrimary",
+                dataset_id="bench/primary",
+                dataset_name="BenchPrimary-no",
+                split_name="task-no",
+                task_name="task-no",
+                task_key="BenchPrimary::bench/primary::task-no",
+                language="multilingual",
+                languages=["no", "en"],
+                primary_languages=["no"],
+            ),
+            DatasetMetadataRow(
+                benchmark="BenchAllowed",
+                dataset_id="bench/allowed",
+                dataset_name="BenchAllowed",
+                split_name="task-nl",
+                task_name="task-nl",
+                task_key="BenchAllowed::bench/allowed::task-nl",
+                language="multilingual",
+                languages=["nl", "en"],
+            ),
+        ],
+        standings={},
+        borda_rows=[],
+    )
+    viewer_config = ViewerConfig(
+        benchmarks=[
+            BenchmarkConfig(name="BenchPrimary", language_filter_mode="primary_language"),
+            BenchmarkConfig(name="BenchAllowed", language_page_languages=["nl"]),
+        ],
+        overalls=[OverallConfig(name="Overall", label="Overall", benchmarks=["BenchPrimary", "BenchAllowed"])],
+    )
+
+    report.build_viewer_leaderboard_mart(db_path, viewer_config=viewer_config, view_names=["Overall"])
+
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        assert con.execute(
+            """
+            SELECT code, label, task_count
+            FROM viewer_leaderboard_language_options
+            WHERE view_name = 'Overall'
+              AND score_target = 'all'
+              AND include_quantization_variants = false
+              AND include_truncate_variants = false
+              AND include_rescore_variants = false
+              AND include_other_variants = false
+            ORDER BY code
+            """
+        ).fetchall() == [("nl", "NL", 1), ("no", "NO", 1)]
+    finally:
+        con.close()
+
+
 def test_build_viewer_leaderboard_mart_materializes_overall_en_scope(tmp_path: Path) -> None:
     en_row = report.TaskResult(
         model_dir="model",

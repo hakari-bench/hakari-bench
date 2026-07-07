@@ -127,6 +127,42 @@ def test_latest_duckdb_precomputed_benchmark_mart_matches_dynamic_path_and_is_fa
     )
 
 
+def test_latest_duckdb_precomputed_overall_mart_avoids_language_recompute(tmp_path: Path) -> None:
+    if os.getenv("HAKARI_BENCH_RUN_DUCKDB_PERF_TESTS") != "1":
+        pytest.skip("Set HAKARI_BENCH_RUN_DUCKDB_PERF_TESTS=1 to run latest DuckDB performance checks.")
+    duckdb_path = _latest_duckdb_path()
+    if duckdb_path is None:
+        pytest.skip("No latest leaderboard DuckDB found. Set HAKARI_BENCH_VIEWER_PERF_DUCKDB_PATH.")
+
+    mart_duckdb_path = tmp_path / "hakari_bench.duckdb"
+    shutil.copy2(duckdb_path, mart_duckdb_path)
+    viewer_config = load_viewer_config(Path("config/viewer"))
+    build_viewer_leaderboard_mart(mart_duckdb_path, viewer_config=viewer_config, view_names=["Overall"])
+
+    baseline_seconds, baseline_rows = _measure_leaderboard_view(
+        mart_duckdb_path,
+        viewer_config=viewer_config,
+        view_name="Overall",
+        use_precomputed=False,
+        include_variants=False,
+    )
+    mart_seconds, mart_rows = _measure_leaderboard_view(
+        mart_duckdb_path,
+        viewer_config=viewer_config,
+        view_name="Overall",
+        use_precomputed=True,
+        include_variants=False,
+    )
+
+    assert _leaderboard_row_signature(mart_rows) == _leaderboard_row_signature(baseline_rows)
+    assert mart_seconds <= baseline_seconds * 0.5
+    print(
+        "latest DuckDB precomputed Overall mart: "
+        f"dynamic={baseline_seconds:.3f}s/{len(baseline_rows)} rows, "
+        f"mart={mart_seconds:.3f}s/{len(mart_rows)} rows"
+    )
+
+
 def _latest_duckdb_path() -> Path | None:
     configured = os.getenv("HAKARI_BENCH_VIEWER_PERF_DUCKDB_PATH")
     candidates = [
@@ -144,7 +180,9 @@ def _measure_leaderboard_view(
     duckdb_path: Path,
     *,
     viewer_config,
+    view_name: str = "NanoMLDR",
     use_precomputed: bool,
+    include_variants: bool = True,
 ) -> tuple[float, list[LeaderboardRow]]:
     service = LeaderboardService(
         duckdb_path=duckdb_path,
@@ -154,10 +192,10 @@ def _measure_leaderboard_view(
     )
     start = time.perf_counter()
     result = service.get_leaderboard(
-        "NanoMLDR",
+        view_name,
         score_target="all",
-        include_quantization_variants=True,
-        include_truncate_variants=True,
+        include_quantization_variants=include_variants,
+        include_truncate_variants=include_variants,
     )
     return time.perf_counter() - start, result.rows
 

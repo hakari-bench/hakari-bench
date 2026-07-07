@@ -44,6 +44,7 @@ from hakari_bench.viewer.leaderboard import (
     _exclude_configured_tasks,
     _exclude_reranker_task_scores,
     _filter_rows_by_languages,
+    _language_filter_policy_for_view,
     _language_filter_mode_for_view,
     _language_options,
     _language_page_languages_for_view,
@@ -5911,6 +5912,11 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
         )
         language_filter_mode = _language_filter_mode_for_view(viewer_config, view_name)
         language_page_languages = _language_page_languages_for_view(viewer_config, view_name)
+        language_filter_policy = _language_filter_policy_for_view(
+            viewer_config,
+            view_name,
+            overall=overall,
+        )
         for score_target in ("all", "reranking"):
             records = service.task_results_repository.fetch_task_result_rows(
                 benchmarks=benchmarks,
@@ -5953,8 +5959,7 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                 rows = _exclude_configured_tasks(rows, viewer_config)
                 available_languages = _language_options(
                     rows,
-                    mode=language_filter_mode,
-                    allowed_languages=language_page_languages,
+                    policy=language_filter_policy,
                 )
                 if view_name == "Overall (EN)":
                     rows = _filter_rows_by_languages(

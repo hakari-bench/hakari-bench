@@ -450,7 +450,9 @@ class LeaderboardService:
                 )
                 if precomputed is not None:
                     rows, expected_tasks, available_languages = precomputed
-                    if _language_filter_policy_supports_precomputed(language_filter_policy):
+                    if available_languages or _language_filter_policy_supports_precomputed(
+                        language_filter_policy
+                    ):
                         available_languages = _with_precomputed_category_options(
                             duckdb_path=self.duckdb_path,
                             benchmarks=benchmarks,
