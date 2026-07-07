@@ -36,7 +36,6 @@ from hakari_bench.viewer.store import (
     _download_hf_duckdb,
 )
 from hakari_bench.viewer.leaderboard import (
-    LanguageFilterPolicy,
     LeaderboardService,
     _aggregate_overall_scores,
     _aggregate_benchmark_score_group_scores,
@@ -45,10 +44,9 @@ from hakari_bench.viewer.leaderboard import (
     _exclude_reranker_task_scores,
     _filter_rows_by_languages,
     _language_filter_policy_for_view,
-    _language_filter_mode_for_view,
     _language_options,
-    _language_page_languages_for_view,
     _overall_metric_score_group,
+    _precomputed_language_filters_for_view,
     _score_groups_for_view,
     _select_score_group,
     _task_scores_from_records,
@@ -5839,6 +5837,7 @@ def _viewer_leaderboard_mart_rows_from_service(
                     include_truncate_variants=truncate,
                     include_rescore_variants=rescore,
                     include_other_variants=other,
+                    language_filters=_precomputed_language_filters_for_view(view_name),
                 )
                 language_rows.extend(
                     (
@@ -5910,8 +5909,6 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
             if is_overall
             else _select_score_group(_score_groups_for_view(viewer_config, view_name), None)
         )
-        language_filter_mode = _language_filter_mode_for_view(viewer_config, view_name)
-        language_page_languages = _language_page_languages_for_view(viewer_config, view_name)
         language_filter_policy = _language_filter_policy_for_view(
             viewer_config,
             view_name,
@@ -5961,14 +5958,12 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                     rows,
                     policy=language_filter_policy,
                 )
-                if view_name == "Overall (EN)":
+                precomputed_language_filters = _precomputed_language_filters_for_view(view_name)
+                if precomputed_language_filters:
                     rows = _filter_rows_by_languages(
                         rows,
-                        ("en",),
-                        policy=LanguageFilterPolicy(
-                            default_mode=language_filter_mode,
-                            default_allowed_languages=tuple(language_page_languages),
-                        ),
+                        precomputed_language_filters,
+                        policy=language_filter_policy,
                     )
                 metric_score_group = None
                 if overall is not None:

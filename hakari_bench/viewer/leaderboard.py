@@ -426,9 +426,10 @@ class LeaderboardService:
                 total_params_min_millions=total_params_min_millions,
                 total_params_max_millions=total_params_max_millions,
             )
+            precomputed_language_filters = _precomputed_language_filters_for_view(view_name)
             if (
                 self.use_precomputed
-                and not language_filters
+                and language_filters == precomputed_language_filters
                 and not show_task_scores
                 and not show_task_z_scores
                 and not show_task_ranks
@@ -530,7 +531,7 @@ class LeaderboardService:
                         metric_columns=[],
                         task_breakdowns=task_breakdowns,
                         available_languages=available_languages,
-                        selected_languages=(),
+                        selected_languages=precomputed_language_filters,
                         selected_benchmarks=selected_benchmark_names,
                     )
             with timed_operation(
@@ -1291,6 +1292,12 @@ def _cached_task_scores(
 
 def _clear_task_score_cache() -> None:
     _cached_task_scores.cache_clear()
+
+
+def _precomputed_language_filters_for_view(view_name: str) -> tuple[str, ...]:
+    if view_name == "Overall (EN)":
+        return ("en",)
+    return ()
 
 
 def _load_precomputed_leaderboard_rows(

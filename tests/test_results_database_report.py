@@ -4397,8 +4397,8 @@ def test_build_viewer_leaderboard_mart_materializes_overall_en_scope(tmp_path: P
                 split_name="task-ja",
                 task_name="task-ja",
                 task_key="BenchA::bench/a::task-ja",
-                language="ja",
-                languages=["ja"],
+                language="multilingual",
+                languages=["ja", "en"],
                 primary_languages=["ja"],
             ),
         ],
@@ -4406,7 +4406,7 @@ def test_build_viewer_leaderboard_mart_materializes_overall_en_scope(tmp_path: P
         borda_rows=[],
     )
     viewer_config = ViewerConfig(
-        benchmarks=[BenchmarkConfig(name="BenchA")],
+        benchmarks=[BenchmarkConfig(name="BenchA", language_filter_mode="primary_language")],
         overalls=[
             OverallConfig(name="Overall", label="Overall", benchmarks=["BenchA"]),
             OverallConfig(name="Overall (EN)", label="Overall (EN)", benchmarks=["BenchA"]),
@@ -4438,6 +4438,90 @@ def test_build_viewer_leaderboard_mart_materializes_overall_en_scope(tmp_path: P
         ]
     finally:
         con.close()
+
+
+def test_overall_en_cached_mart_rows_match_service_path_with_language_filter(tmp_path: Path) -> None:
+    en_row = report.TaskResult(
+        model_dir="model",
+        model_name="example/model",
+        benchmark="BenchA",
+        dataset_id="bench/a",
+        dataset_name="BenchA",
+        split_name="task-en",
+        task_name="task-en",
+        task_key="BenchA::bench/a::task-en",
+        score=0.80,
+        aggregate_metric="ndcg@10",
+        result_path="en.json",
+    )
+    ja_row = en_row.model_copy(
+        update={
+            "split_name": "task-ja",
+            "task_name": "task-ja",
+            "task_key": "BenchA::bench/a::task-ja",
+            "score": 0.20,
+            "result_path": "ja.json",
+        }
+    )
+    db_path = tmp_path / "results.duckdb"
+    report.write_duckdb(
+        db_path,
+        runs=[{"model_dir": "model", "model_name": "example/model"}],
+        rows=[en_row, ja_row],
+        metric_rows=[],
+        dataset_metadata_rows=[
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name="task-en",
+                task_name="task-en",
+                task_key="BenchA::bench/a::task-en",
+                language="en",
+                languages=["en"],
+                primary_languages=["en"],
+            ),
+            DatasetMetadataRow(
+                benchmark="BenchA",
+                dataset_id="bench/a",
+                dataset_name="BenchA",
+                split_name="task-ja",
+                task_name="task-ja",
+                task_key="BenchA::bench/a::task-ja",
+                language="ja",
+                languages=["ja"],
+                primary_languages=["ja"],
+            ),
+        ],
+        standings={},
+        borda_rows=[],
+    )
+    viewer_config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA", language_filter_mode="primary_language")],
+        overalls=[OverallConfig(name="Overall (EN)", label="Overall (EN)", benchmarks=["BenchA"])],
+    )
+
+    cached_rows, cached_languages = report._viewer_leaderboard_mart_rows_from_cached_records(
+        db_path,
+        viewer_config=viewer_config,
+        view_names=["Overall (EN)"],
+    )
+    service_rows, service_languages = report._viewer_leaderboard_mart_rows_from_service(
+        db_path,
+        viewer_config=viewer_config,
+        view_names=["Overall (EN)"],
+    )
+
+    assert cached_rows == service_rows
+    assert cached_languages == service_languages
+    base_rows = [
+        row
+        for row in cached_rows
+        if row[1] == "all" and not row[2] and not row[3] and not row[4] and not row[5]
+    ]
+    assert [(row[0], row[6], row[9], row[12], row[15]) for row in base_rows] == [
+        ("Overall (EN)", 1, "example/model", 80.0, 1)
+    ]
 
 
 def test_cached_viewer_leaderboard_mart_rows_match_service_path(tmp_path: Path) -> None:

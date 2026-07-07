@@ -558,6 +558,146 @@ runtime:
     ]
 
 
+def test_leaderboard_service_reads_overall_en_precomputed_rows_with_implicit_language_filter(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    db_path = tmp_path / "results.duckdb"
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            """
+            CREATE TABLE viewer_leaderboard_rows (
+                view_name VARCHAR,
+                score_target VARCHAR,
+                include_quantization_variants BOOLEAN,
+                include_truncate_variants BOOLEAN,
+                include_rescore_variants BOOLEAN,
+                include_other_variants BOOLEAN,
+                expected_tasks INTEGER,
+                borda_rank DOUBLE,
+                mean_rank DOUBLE,
+                model_name VARCHAR,
+                model_type VARCHAR,
+                borda_score DOUBLE,
+                mean_score DOUBLE,
+                macro_mean DOUBLE,
+                micro_mean DOUBLE,
+                task_count INTEGER,
+                active_parameters BIGINT,
+                total_parameters BIGINT,
+                max_seq_length INTEGER,
+                dtype VARCHAR,
+                attn_implementation VARCHAR,
+                prompt_summary VARCHAR,
+                trust_remote_code BOOLEAN,
+                embedding_variant_name VARCHAR,
+                embedding_dim INTEGER,
+                quantization VARCHAR,
+                source_model_name VARCHAR,
+                base_score_delta_percent DOUBLE
+            )
+            """
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_rows VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                "Overall (EN)",
+                "all",
+                False,
+                False,
+                False,
+                False,
+                1,
+                1.0,
+                1.0,
+                "model/en",
+                "dense",
+                100.0,
+                60.0,
+                60.0,
+                60.0,
+                1,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                "model/en",
+                None,
+            ],
+        )
+        con.execute(
+            """
+            CREATE TABLE viewer_leaderboard_language_options (
+                view_name VARCHAR,
+                score_target VARCHAR,
+                include_quantization_variants BOOLEAN,
+                include_truncate_variants BOOLEAN,
+                include_rescore_variants BOOLEAN,
+                include_other_variants BOOLEAN,
+                code VARCHAR,
+                label VARCHAR,
+                task_count INTEGER
+            )
+            """
+        )
+        con.execute(
+            "INSERT INTO viewer_leaderboard_language_options VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            ["Overall (EN)", "all", False, False, False, False, "en", "EN", 1],
+        )
+        con.execute(
+            """
+            CREATE TABLE viewer_task_results (
+                benchmark VARCHAR,
+                dataset_name VARCHAR,
+                task_name VARCHAR,
+                task_key VARCHAR
+            )
+            """
+        )
+        con.execute(
+            "INSERT INTO viewer_task_results VALUES (?, ?, ?, ?)",
+            ("BenchA", "BenchA", "task-en", "BenchA::bench/a::task-en"),
+        )
+        con.execute(
+            """
+            CREATE TABLE dataset_metadata (
+                benchmark VARCHAR,
+                task_key VARCHAR,
+                category VARCHAR
+            )
+            """
+        )
+    finally:
+        con.close()
+
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[OverallConfig(name="Overall (EN)", label="Overall (EN)", benchmarks=["BenchA"])],
+    )
+    service = LeaderboardService(duckdb_path=db_path, config=config, model_cards_path=None)
+
+    monkeypatch.setattr(
+        service,
+        "_load_task_scores",
+        lambda *_args, **_kwargs: pytest.fail("Overall (EN) should use precomputed rows"),
+    )
+
+    result = service.get_leaderboard("Overall (EN)", language_filters=("en",))
+
+    assert result.expected_tasks == 1
+    assert result.selected_languages == ("en",)
+    assert [(row.model_name, row.mean_score, row.task_count) for row in result.rows] == [
+        ("model/en", 60.0, 1)
+    ]
+
+
 def test_leaderboard_service_backfills_task_result_parameters_from_model_cards(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(

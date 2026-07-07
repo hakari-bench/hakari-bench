@@ -163,6 +163,46 @@ def test_latest_duckdb_precomputed_overall_mart_avoids_language_recompute(tmp_pa
     )
 
 
+def test_latest_duckdb_precomputed_overall_en_mart_matches_dynamic_language_filter_and_is_faster(
+    tmp_path: Path,
+) -> None:
+    if os.getenv("HAKARI_BENCH_RUN_DUCKDB_PERF_TESTS") != "1":
+        pytest.skip("Set HAKARI_BENCH_RUN_DUCKDB_PERF_TESTS=1 to run latest DuckDB performance checks.")
+    duckdb_path = _latest_duckdb_path()
+    if duckdb_path is None:
+        pytest.skip("No latest leaderboard DuckDB found. Set HAKARI_BENCH_VIEWER_PERF_DUCKDB_PATH.")
+
+    mart_duckdb_path = tmp_path / "hakari_bench.duckdb"
+    shutil.copy2(duckdb_path, mart_duckdb_path)
+    viewer_config = load_viewer_config(Path("config/viewer"))
+    build_viewer_leaderboard_mart(mart_duckdb_path, viewer_config=viewer_config, view_names=["Overall (EN)"])
+
+    baseline_seconds, baseline_rows = _measure_leaderboard_view(
+        mart_duckdb_path,
+        viewer_config=viewer_config,
+        view_name="Overall (EN)",
+        use_precomputed=False,
+        include_variants=False,
+        language_filters=("en",),
+    )
+    mart_seconds, mart_rows = _measure_leaderboard_view(
+        mart_duckdb_path,
+        viewer_config=viewer_config,
+        view_name="Overall (EN)",
+        use_precomputed=True,
+        include_variants=False,
+        language_filters=("en",),
+    )
+
+    assert _leaderboard_row_signature(mart_rows) == _leaderboard_row_signature(baseline_rows)
+    assert mart_seconds <= baseline_seconds * 0.5
+    print(
+        "latest DuckDB precomputed Overall (EN) mart: "
+        f"dynamic={baseline_seconds:.3f}s/{len(baseline_rows)} rows, "
+        f"mart={mart_seconds:.3f}s/{len(mart_rows)} rows"
+    )
+
+
 def _latest_duckdb_path() -> Path | None:
     configured = os.getenv("HAKARI_BENCH_VIEWER_PERF_DUCKDB_PATH")
     candidates = [
@@ -183,6 +223,7 @@ def _measure_leaderboard_view(
     view_name: str = "NanoMLDR",
     use_precomputed: bool,
     include_variants: bool = True,
+    language_filters: tuple[str, ...] = (),
 ) -> tuple[float, list[LeaderboardRow]]:
     service = LeaderboardService(
         duckdb_path=duckdb_path,
@@ -196,6 +237,7 @@ def _measure_leaderboard_view(
         score_target="all",
         include_quantization_variants=include_variants,
         include_truncate_variants=include_variants,
+        language_filters=language_filters,
     )
     return time.perf_counter() - start, result.rows
 

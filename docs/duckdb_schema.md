@@ -1167,6 +1167,9 @@ viewer filters still work.
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Configured
 overall rows in this mart use the default raw-task `score=micro` semantics.
+`Overall (EN)` is materialized with the same implicit `lang_filter=en` task
+facet used by the viewer UI, so it can still use this mart when that implicit
+filter is present.
 DuckDB builds also materialize benchmark views whose language filter policy can
 use the standard `languages` list without a fixed language-page constraint.
 Benchmark views that use `primary_language` semantics, such as MNanoBEIR and
@@ -1180,11 +1183,12 @@ flags
 `include_quantization_variants`, `include_truncate_variants`,
 `include_rescore_variants`, and `include_other_variants`. The last flag backs
 the UI label `Sparse pruning` and means sparse active-dimension cap variants,
-not arbitrary uncategorized variants. The viewer uses this
-mart when language filters, task-score columns, task text filters, length
-filters, parameter filters, macro overall aggregation, and custom `bench=`
-selection are not active. Those interactive, macro, and custom cases still fall
-back to the normal `LeaderboardService` computation from task-score rows.
+not arbitrary uncategorized variants. The viewer uses this mart when task-score
+columns, task text filters, length filters, parameter filters, macro overall
+aggregation, custom `bench=` selection, and non-implicit language filters are
+not active. Those interactive, macro, custom, and ad hoc language-filter cases
+still fall back to the normal `LeaderboardService` computation from task-score
+rows.
 For `score_target = 'reranking'`, the viewer uses this mart only when the
 materialized rows already include a BM25 baseline row. Older DuckDB builds that
 lack that row fall back to dynamic task-score computation so Borda and mean ranks
