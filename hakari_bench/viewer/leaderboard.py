@@ -260,6 +260,10 @@ class LeaderboardService:
         self.use_precomputed = use_precomputed
         self.task_results_repository = TaskResultsRepository(duckdb_path)
         self.model_card_parameters = _load_model_card_parameters(model_cards_path)
+        self.expected_task_keys_by_overall = {
+            overall.name: config.expected_task_keys_for_overall(overall)
+            for overall in config.overalls
+        }
 
     def get_leaderboard(
         self,
@@ -448,6 +452,13 @@ class LeaderboardService:
                     score_aggregation=score_aggregation,
                     variant_flags=include_flags,
                 )
+                expected_task_keys = self.expected_task_keys_by_overall.get(view_name)
+                if (
+                    precomputed is not None
+                    and expected_task_keys is not None
+                    and precomputed[1] != len(expected_task_keys)
+                ):
+                    precomputed = None
                 if precomputed is not None:
                     rows, expected_tasks, available_languages = precomputed
                     if available_languages or _language_filter_policy_supports_precomputed(
@@ -548,6 +559,13 @@ class LeaderboardService:
                 )
                 phase_timing["task_score_count"] = len(rows)
             rows = _exclude_configured_tasks(rows, self.config)
+            expected_task_keys = (
+                self.expected_task_keys_by_overall.get(view_name)
+                if overall is not None
+                else None
+            )
+            if expected_task_keys is not None:
+                rows = _filter_rows_to_task_keys(rows, expected_task_keys)
             if _score_metric_cutoff(selected_score_metric) == 100:
                 rows = _exclude_bm25_task_scores(rows)
             if ranking_model_filter_terms:
@@ -693,9 +711,17 @@ class LeaderboardService:
             with timed_operation(
                 "viewer.leaderboard.phase", operation="compute_rows", view=view_name
             ) as phase_timing:
+                completeness_task_keys = (
+                    expected_task_keys
+                    if overall is not None
+                    and score_aggregation == "micro"
+                    and not ranking_task_filter_terms
+                    else None
+                )
                 leaderboard_rows = compute_leaderboard_rows(
                     rows,
                     is_overall=is_overall,
+                    expected_task_keys=completeness_task_keys,
                     score_group=metric_score_group,
                     metric_columns=metric_columns,
                     show_task_z_scores=show_task_z_scores,
@@ -727,7 +753,15 @@ class LeaderboardService:
                 score_aggregation=score_aggregation,
                 selected_score_metric=selected_score_metric,
                 available_score_metrics=available_score_metrics,
-                expected_tasks=len({row.task_key for row in rows}),
+                expected_tasks=(
+                    len(expected_task_keys)
+                    if expected_task_keys is not None
+                    and score_aggregation == "micro"
+                    and not selected_languages
+                    and not ranking_task_filter_terms
+                    and not has_length_filters
+                    else len({row.task_key for row in rows})
+                ),
                 rows=sorted_rows,
                 available_views=available_views,
                 available_view_labels=available_view_labels,
@@ -1814,6 +1848,7 @@ def compute_leaderboard_rows(
     rows: list[TaskScore],
     *,
     is_overall: bool,
+    expected_task_keys: set[str] | frozenset[str] | None = None,
     score_group: ScoreGroupConfig | None = None,
     metric_columns: list[str] | None = None,
     show_task_z_scores: bool = False,
@@ -1821,7 +1856,9 @@ def compute_leaderboard_rows(
     use_task_mean_for_overall: bool = False,
     overall_score_aggregation: ScoreAggregation = "micro",
 ) -> list[LeaderboardRow]:
-    expected_tasks = {row.task_key for row in rows}
+    if expected_task_keys is not None:
+        rows = [row for row in rows if row.task_key in expected_task_keys]
+    expected_tasks = set(expected_task_keys) if expected_task_keys is not None else {row.task_key for row in rows}
     if not expected_tasks:
         return []
 
@@ -2333,6 +2370,12 @@ def _exclude_configured_tasks(
         if row.task_name not in excluded_by_benchmark.get(row.benchmark, set())
         and row.task_key not in excluded_by_benchmark.get(row.benchmark, set())
     ]
+
+
+def _filter_rows_to_task_keys(
+    rows: list[TaskScore], task_keys: frozenset[str]
+) -> list[TaskScore]:
+    return [row for row in rows if row.task_key in task_keys]
 
 
 def _language_options(

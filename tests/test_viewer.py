@@ -98,6 +98,12 @@ def test_viewer_config_uses_overall_scope_views() -> None:
         None,
         "task_name",
     ]
+    overall_task_keys = config.expected_task_keys_for_overall(overall)
+    overall_en_task_keys = config.expected_task_keys_for_overall(overall_en)
+    assert overall_task_keys is not None
+    assert overall_en_task_keys is not None
+    assert len(overall_task_keys) == 538
+    assert len(overall_en_task_keys) == 538
     assert config.overall_for_view("Core") is None
     assert config.overall_for_view("Core (EN)") is None
     assert config.view_names[: len(all_benchmarks) + 2] == [
@@ -3776,6 +3782,61 @@ benchmarks:
     assert result.rows[0].task_count == 2
     assert result.rows[0].macro_mean == 77.5
     assert result.rows[0].micro_mean == 77.5
+
+
+def test_leaderboard_uses_configured_task_manifest_not_newer_database_tasks() -> None:
+    rows = [
+        TaskScore("model/538", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, None, None, None),
+        TaskScore("model/538", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.80, None, None, None),
+        TaskScore("model/539", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, None, None, None),
+        TaskScore("model/539", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.60, None, None, None),
+        TaskScore("model/539", "BenchA", "bench/a", "BenchA", "new", "new", "new", 1.00, None, None, None),
+    ]
+
+    result = compute_leaderboard_rows(
+        rows,
+        is_overall=True,
+        expected_task_keys={"a1", "a2"},
+    )
+
+    assert [row.model_name for row in result] == ["model/538", "model/539"]
+    assert [row.task_count for row in result] == [2, 2]
+    assert [row.mean_score for row in result] == [85.0, 65.0]
+
+
+def test_overall_service_uses_task_manifest_to_ignore_newer_database_tasks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/538", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/538", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.80, 10, 12, 8192),
+            ("model/539", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.70, 20, 24, 4096),
+            ("model/539", "BenchA", "bench/a", "BenchA", "a2", "a2", "a2", 0.60, 20, 24, 4096),
+            ("model/539", "BenchA", "bench/a", "BenchA", "new", "new", "new", 1.00, 20, 24, 4096),
+        ],
+    )
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[
+            OverallConfig(
+                name="Overall",
+                label="Overall",
+                benchmarks=["BenchA"],
+                task_manifest="current",
+                expected_task_count=2,
+            )
+        ],
+        task_manifests={"current": frozenset({"a1", "a2"})},
+    )
+
+    result = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("Overall")
+
+    assert result.expected_tasks == 2
+    assert [(row.model_name, row.task_count, row.mean_score) for row in result.rows] == [
+        ("model/538", 2, 85.0),
+        ("model/539", 2, 65.0),
+    ]
 
 
 def test_leaderboard_language_filter_recomputes_ranking_for_matching_tasks(tmp_path: Path) -> None:
