@@ -7,7 +7,7 @@ method: dense
 license:
   id: sarashina-model-noncommercial
   label: Sarashina Model NonCommercial License Agreement
-  type: noncommercial
+  type: non_commercial
   commercial_use: not_allowed
   source: huggingface_model_card
   source_url: https://huggingface.co/sbintuitions/sarashina-embedding-v2-1b
@@ -38,8 +38,13 @@ prompts:
 language_support:
   category: english_plus
   evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
     classification_policy: model identity first; use broad score evidence only for models without explicit language identity
     classification_reason: model_identity_japanese
+    evaluated_language_count: 20
     official_supported_languages:
     - ja
   languages:
