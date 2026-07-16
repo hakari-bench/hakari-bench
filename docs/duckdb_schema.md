@@ -813,11 +813,17 @@ colliding variant display names.
 
 ### Complete Model Rule
 
-Only models that have every expected task in the selected view are ranked.
+Only models that have every expected task in the selected view are ranked. The
+built-in `Overall` and `Overall (EN)` views use the fixed standard task manifest
+in `config/viewer/overall_tasks.yaml` (currently 538 tasks), rather than
+expanding when a newer DuckDB contains an additional task. Adding a standard
+Nano-set or task requires updating the manifest and its configured expected
+count in `config/viewer/overall.yaml` deliberately.
 
 1. Apply benchmark filtering and `excluded_tasks`.
 2. Apply embedding variant display settings.
-3. Build the expected task set from the remaining rows.
+3. For configured Overall manifests, use their fixed task set; otherwise build
+   the expected task set from the remaining rows.
 4. Keep only models whose task-key set exactly matches the expected task set.
 
 For overall scope presets, the complete model rule depends on the selected

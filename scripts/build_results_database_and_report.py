@@ -5954,6 +5954,13 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                 elif score_target == "reranking":
                     rows = _append_missing_bm25_task_scores(rows, bm25_task_scores)
                 rows = _exclude_configured_tasks(rows, viewer_config)
+                expected_task_keys = (
+                    viewer_config.expected_task_keys_for_overall(overall)
+                    if overall is not None
+                    else None
+                )
+                if expected_task_keys is not None:
+                    rows = [row for row in rows if row.task_key in expected_task_keys]
                 available_languages = _language_options(
                     rows,
                     policy=language_filter_policy,
@@ -5982,12 +5989,17 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                 leaderboard_rows = compute_leaderboard_rows(
                     rows,
                     is_overall=is_overall,
+                    expected_task_keys=expected_task_keys,
                     score_group=metric_score_group,
                     metric_columns=[],
                     overall_score_aggregation="micro",
                 )
                 sorted_rows = sort_rows(leaderboard_rows, sort="borda_rank", direction="asc")
-                expected_tasks = len({row.task_key for row in rows})
+                expected_tasks = (
+                    len(expected_task_keys)
+                    if expected_task_keys is not None
+                    else len({row.task_key for row in rows})
+                )
                 language_rows.extend(
                     (
                         view_name,

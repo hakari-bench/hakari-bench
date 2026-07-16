@@ -68,6 +68,8 @@ class OverallConfig(BaseModel):
     name: str = "Overall"
     label: str = "Overall"
     benchmarks: list[str | OverallBenchmarkConfig] = Field(default_factory=list)
+    task_manifest: str | None = None
+    expected_task_count: int | None = Field(default=None, ge=1)
 
     @property
     def benchmark_components(self) -> list[OverallBenchmarkConfig]:
@@ -86,6 +88,7 @@ class ViewerConfig(BaseModel):
 
     benchmarks: list[BenchmarkConfig]
     overalls: list[OverallConfig]
+    task_manifests: dict[str, frozenset[str]] = Field(default_factory=dict)
 
     @property
     def overall(self) -> OverallConfig:
@@ -181,12 +184,46 @@ class ViewerConfig(BaseModel):
     def selection_keys_for_overall(self, overall: OverallConfig) -> list[str]:
         return [self.selection_key_for_component(component) for component in overall.benchmark_components]
 
+    def expected_task_keys_for_overall(self, overall: OverallConfig) -> frozenset[str] | None:
+        """Return the configured fixed task universe for an Overall scope.
+
+        The manifest is intentionally independent of whichever result files
+        happen to be present in a DuckDB. Adding a standard task or Nano-set
+        therefore requires an explicit manifest and count update.
+        """
+
+        if overall.task_manifest is None:
+            return None
+        if overall.expected_task_count is None:
+            raise ValueError(
+                f"Overall '{overall.name}' sets task_manifest but no expected_task_count."
+            )
+        task_keys = self.task_manifests.get(overall.task_manifest)
+        if task_keys is None:
+            raise ValueError(
+                f"Overall '{overall.name}' references unknown task manifest "
+                f"'{overall.task_manifest}'."
+            )
+        if len(task_keys) != overall.expected_task_count:
+            raise ValueError(
+                f"Overall '{overall.name}' task manifest has {len(task_keys)} tasks, "
+                f"but expected_task_count is {overall.expected_task_count}. "
+                "Update config/viewer/overall.yaml and its task manifest when changing the standard Nano-set scope."
+            )
+        return task_keys
+
 
 def load_viewer_config(config_dir: Path = Path("config/viewer")) -> ViewerConfig:
     benchmarks_path = config_dir / "benchmarks.yaml"
     overall_path = config_dir / "overall.yaml"
     benchmarks_payload = yaml.safe_load(benchmarks_path.read_text(encoding="utf-8"))
     overall_payload = yaml.safe_load(overall_path.read_text(encoding="utf-8"))
+    task_manifests_path = config_dir / "overall_tasks.yaml"
+    task_manifests_payload = (
+        yaml.safe_load(task_manifests_path.read_text(encoding="utf-8"))
+        if task_manifests_path.is_file()
+        else {}
+    )
 
     benchmarks = [BenchmarkConfig.model_validate(item) for item in benchmarks_payload.get("benchmarks", [])]
     configured_names = {benchmark.name for benchmark in benchmarks}
@@ -199,7 +236,20 @@ def load_viewer_config(config_dir: Path = Path("config/viewer")) -> ViewerConfig
     ]
     if missing:
         raise ValueError(f"Unknown overall benchmark(s): {', '.join(missing)}")
-    return ViewerConfig(benchmarks=benchmarks, overalls=overalls)
+    task_manifests = {
+        str(name): frozenset(str(task_key) for task_key in task_keys)
+        for name, task_keys in (task_manifests_payload or {}).get("task_manifests", {}).items()
+        if isinstance(task_keys, list) and all(isinstance(task_key, str) for task_key in task_keys)
+    }
+    viewer_config = ViewerConfig(
+        benchmarks=benchmarks,
+        overalls=overalls,
+        task_manifests=task_manifests,
+    )
+    for overall in viewer_config.overalls:
+        if overall.task_manifest is not None:
+            viewer_config.expected_task_keys_for_overall(overall)
+    return viewer_config
 
 
 def _load_overalls(payload: dict[str, Any]) -> list[OverallConfig]:
