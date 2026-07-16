@@ -1,0 +1,50 @@
+id: sbintuitions/sarashina-embedding-v2-1b
+source:
+  type: huggingface
+  name: sbintuitions/sarashina-embedding-v2-1b
+  revision: 1f3408afaa7b617e3445d891310a9c26dd0c68a5
+method: dense
+license:
+  id: sarashina-model-noncommercial
+  label: Sarashina Model NonCommercial License Agreement
+  type: noncommercial
+  commercial_use: not_allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/sbintuitions/sarashina-embedding-v2-1b
+links:
+  huggingface: https://huggingface.co/sbintuitions/sarashina-embedding-v2-1b
+parameters:
+  total: 1224038144
+  trainable: 1224038144
+  input_embedding: 183500800
+  active: 1040537344
+embedding:
+  truncate_dims: null
+  output_dimension: 1792
+  mrl_support: false
+  pooling: lasttoken
+  normalize: false
+  include_prompt: false
+runtime:
+  max_seq_length: 8192
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt: "task: \u8CEA\u554F\u3092\u4E0E\u3048\u308B\u306E\u3067\u3001\u305D\u306E\u8CEA\u554F\u306B\u7B54\u3048\u308B\u306E\u306B\u5F79\u7ACB\u3064\u95A2\u9023\u6587\u66F8\u3092\u691C\u7D22\u3057\u3066\u304F\u3060\u3055\u3044\u3002\nquery: "
+  document_prompt: "text: "
+language_support:
+  category: english_plus
+  evidence:
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_japanese
+    official_supported_languages:
+    - ja
+  languages:
+  - ja
+  - en
+target:
+  evaluation_scope: standard
+notice: Licensed for non-commercial use only; contact SB Intuitions for commercial licensing.
