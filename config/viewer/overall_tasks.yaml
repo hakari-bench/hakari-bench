@@ -1,8 +1,7 @@
-# Canonical task keys for the current 525-task Overall scope after configured
-# duplicate-task exclusions. Keep this in
+# Canonical task keys for the current 538-task Overall scope. Keep this in
 # sync with config/viewer/overall.yaml when adding a Nano-set or task.
 task_manifests:
-  overall_525:
+  overall_538:
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::dbpedia
@@ -255,8 +254,11 @@ task_manifests:
     - NanoFaMTEB-v2::hakari-bench/NanoFaMTEB-v2::wikipedia_multilingual_fa
     - NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRAila
     - NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRCds
+    - NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRFiQA
     - NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRFire
+    - NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRNFCorpus
     - NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRPm
+    - NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRScifact
     - NanoIndicQA::hakari-bench/NanoIndicQA::as
     - NanoIndicQA::hakari-bench/NanoIndicQA::bn
     - NanoIndicQA::hakari-bench/NanoIndicQA::gu
@@ -279,10 +281,14 @@ task_manifests:
     - NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::nlpjournal_abs_intro
     - NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::nlpjournal_title_abs
     - NanoJMTEB-v2::hakari-bench/NanoJMTEB-v2::nlpjournal_title_intro
+    - NanoLaw::hakari-bench/NanoLaw::NanoAILACasedocs
+    - NanoLaw::hakari-bench/NanoLaw::NanoAILAStatutes
     - NanoLaw::hakari-bench/NanoLaw::NanoGerDaLIRSmall
     - NanoLaw::hakari-bench/NanoLaw::NanoLeCaRDv2
     - NanoLaw::hakari-bench/NanoLaw::NanoLegalBenchConsumerContractsQA
+    - NanoLaw::hakari-bench/NanoLaw::NanoLegalBenchCorporateLobbying
     - NanoLaw::hakari-bench/NanoLaw::NanoLegalQuAD
+    - NanoLaw::hakari-bench/NanoLaw::NanoLegalSummarization
     - NanoLongEmbed::hakari-bench/NanoLongEmbed::Nano2WikiMultihopQA
     - NanoLongEmbed::hakari-bench/NanoLongEmbed::NanoNarrativeQA
     - NanoLongEmbed::hakari-bench/NanoLongEmbed::NanoNeedle
@@ -443,9 +449,12 @@ task_manifests:
     - NanoMTEB-v2::hakari-bench/NanoMTEB-v2::touche2020_v3
     - NanoMTEB-v2::hakari-bench/NanoMTEB-v2::treccovid
     - NanoMedical::hakari-bench/NanoMedical::NanoCMedQAv2reranking
+    - NanoMedical::hakari-bench/NanoMedical::NanoCUREv1
     - NanoMedical::hakari-bench/NanoMedical::NanoCmedqa
     - NanoMedical::hakari-bench/NanoMedical::NanoMedicalQA
+    - NanoMedical::hakari-bench/NanoMedical::NanoNFCorpus
     - NanoMedical::hakari-bench/NanoMedical::NanoPublicHealthQA
+    - NanoMedical::hakari-bench/NanoMedical::NanoSciFact
     - NanoMedical::hakari-bench/NanoMedical::NanoSciFactPL
     - NanoMedical::hakari-bench/NanoMedical::NanoTRECCOVID
     - NanoMedical::hakari-bench/NanoMedical::NanoTRECCOVIDPL
@@ -479,12 +488,15 @@ task_manifests:
     - NanoRARb::hakari-bench/NanoRARb::NanoRARbCode
     - NanoRARb::hakari-bench/NanoRARb::NanoRARbMath
     - NanoRARb::hakari-bench/NanoRARb::NanoSIQA
+    - NanoRARb::hakari-bench/NanoRARb::NanoSpartQA
+    - NanoRARb::hakari-bench/NanoRARb::NanoTempReasonL1
     - NanoRARb::hakari-bench/NanoRARb::NanoTempReasonL2Context
     - NanoRARb::hakari-bench/NanoRARb::NanoTempReasonL2Fact
     - NanoRARb::hakari-bench/NanoRARb::NanoTempReasonL2Pure
     - NanoRARb::hakari-bench/NanoRARb::NanoTempReasonL3Context
     - NanoRARb::hakari-bench/NanoRARb::NanoTempReasonL3Fact
     - NanoRARb::hakari-bench/NanoRARb::NanoTempReasonL3Pure
+    - NanoRARb::hakari-bench/NanoRARb::NanoWinoGrande
     - NanoRTEB::hakari-bench/NanoRTEB::NanoAILACasedocs
     - NanoRTEB::hakari-bench/NanoRTEB::NanoAILAStatutes
     - NanoRTEB::hakari-bench/NanoRTEB::NanoApps
