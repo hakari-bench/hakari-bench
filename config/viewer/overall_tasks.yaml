@@ -1,5 +1,16 @@
-# Canonical task keys for the current 538-task Overall scope. Keep this in
-# sync with config/viewer/overall.yaml when adding a Nano-set or task.
+# A complete HAKARI evaluation runs and preserves 551 task results. This Overall
+# manifest contains 538 task keys because it excludes these 13 overlapping Nano
+# task copies so that the same underlying benchmark is not weighted twice:
+# - NanoIFIR: NanoIFIRFiQA, NanoIFIRNFCorpus, NanoIFIRScifact
+# - NanoLaw: NanoAILACasedocs, NanoAILAStatutes, NanoLegalSummarization,
+#   NanoLegalBenchCorporateLobbying
+# - NanoMedical: NanoCUREv1, NanoNFCorpus, NanoSciFact
+# - NanoRARb: NanoWinoGrande, NanoSpartQA, NanoTempReasonL1
+# The excluded task results remain part of the 551-task evaluation and results
+# dataset; they are omitted only from Overall. Whenever a Nano-set or its task
+# membership changes, update this comment, the manifest name and keys below,
+# config/viewer/overall.yaml, and config/viewer/benchmarks.yaml together so the
+# evaluation count, exclusion list, and Overall count remain accurate.
 task_manifests:
   overall_538:
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana
