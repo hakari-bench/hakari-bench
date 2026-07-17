@@ -1,0 +1,89 @@
+id: nvidia/Nemotron-3-Embed-1B-BF16
+source:
+  type: huggingface
+  name: nvidia/Nemotron-3-Embed-1B-BF16
+  revision: 0677b2025cbc37daf92d7b9c7a225de8cfbc5b0b
+method: dense
+license:
+  id: openmdw-1.1
+  label: OpenMDW License Agreement 1.1
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: huggingface_model_card
+  source_url: https://huggingface.co/nvidia/Nemotron-3-Embed-1B-BF16
+links:
+  huggingface: https://huggingface.co/nvidia/Nemotron-3-Embed-1B-BF16
+parameters:
+  total: 1140918272
+  trainable: 1140918272
+  input_embedding: 268435456
+  active: 872482816
+embedding:
+  truncate_dims: null
+  output_dimension: 2048
+  mrl_support: false
+  pooling: mean
+  normalize: true
+  include_prompt: true
+runtime:
+  max_seq_length: 32768
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 34
+    official_supported_languages:
+    - ar
+    - as
+    - bn
+    - bg
+    - zh
+    - da
+    - nl
+    - en
+    - fi
+    - fr
+    - de
+    - hi
+    - id
+    - it
+    - ja
+    - ko
+    - ms
+    - mr
+    - ne
+    - "no"
+    - fa
+    - pt
+    - ro
+    - ru
+    - es
+    - sw
+    - sv
+    - ta
+    - te
+    - th
+    - uk
+    - ur
+    - vi
+target:
+  evaluation_scope: standard
+notice: OpenMDW-1.1 permits commercial use subject to its model-license terms.
+notes: >-
+  Official model card specifies Transformers >=5.2.0 and SentenceTransformers
+  >=5.4.1. NVIDIA's tested PyTorch container includes FlashAttention-2; use
+  SDPA when FlashAttention-2 is unavailable. Retrieval uses `query: ` and
+  `passage: ` prefixes. The checkpoint is not documented as Matryoshka.
