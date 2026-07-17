@@ -1055,7 +1055,10 @@ choices:
   completeness are recomputed only over matching tasks. Normal language filters
   use language codes such as `en`; category task facets use prefixed values such
   as `category:code`. If no `lang_filter` is set, all tasks in the selected view
-  are ranked.
+  are ranked. Overall task manifests still restrict the source rows to the
+  canonical task set, but a language or task-length filter checks model
+  completeness against the matching manifest tasks rather than the full
+  unfiltered manifest.
 - Benchmarks may override that filter source with
   `language_filter_mode: primary_language`. In this mode the viewer uses
   `primary_languages` first. If an older DuckDB does not have that column or a

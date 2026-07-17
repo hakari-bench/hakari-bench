@@ -716,7 +716,9 @@ class LeaderboardService:
                     expected_task_keys
                     if overall is not None
                     and score_aggregation == "micro"
+                    and not selected_languages
                     and not ranking_task_filter_terms
+                    and not has_length_filters
                     else None
                 )
                 leaderboard_rows = compute_leaderboard_rows(

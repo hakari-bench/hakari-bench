@@ -4038,6 +4038,113 @@ def test_leaderboard_language_filter_recomputes_ranking_for_matching_tasks(tmp_p
     assert [row.task_count for row in result.rows] == [1, 1]
 
 
+def test_overall_language_filter_uses_filtered_manifest_tasks_for_completeness(
+    tmp_path: Path,
+) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "en",
+                "task-en",
+                "task-en",
+                0.90,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "ja",
+                "task-ja",
+                "task-ja",
+                0.40,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/b",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "en",
+                "task-en",
+                "task-en",
+                0.80,
+                20,
+                24,
+                4096,
+            ),
+            (
+                "model/b",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "ja",
+                "task-ja",
+                "task-ja",
+                0.95,
+                20,
+                24,
+                4096,
+            ),
+        ],
+        dataset_metadata_rows=[
+            (
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "en",
+                "task-en",
+                "task-en",
+                "en",
+                ["en"],
+            ),
+            (
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                "ja",
+                "task-ja",
+                "task-ja",
+                "ja",
+                ["ja"],
+            ),
+        ],
+    )
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[
+            OverallConfig(
+                name="Overall",
+                label="Overall",
+                benchmarks=["BenchA"],
+                task_manifest="current",
+                expected_task_count=2,
+            )
+        ],
+        task_manifests={"current": frozenset({"task-en", "task-ja"})},
+    )
+
+    result = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard(
+        "Overall", language_filters=("ja",)
+    )
+
+    assert result.selected_languages == ("ja",)
+    assert result.expected_tasks == 1
+    assert [row.model_name for row in result.rows] == ["model/b", "model/a"]
+    assert [row.task_count for row in result.rows] == [1, 1]
+
+
 def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
