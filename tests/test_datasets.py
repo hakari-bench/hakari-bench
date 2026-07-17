@@ -18,8 +18,7 @@ from hakari_bench.datasets import (
 def test_builtin_registry_contains_requested_benchmarks() -> None:
     registry = DatasetRegistry.load_builtin()
 
-    with pytest.raises(KeyError):
-        registry.get_dataset("NanoBEIR-en")
+    assert registry.get_dataset("NanoBEIR-en").dataset_id == "hakari-bench/NanoBEIR-en"
     assert registry.get_dataset("NanoMIRACL").dataset_id == "hakari-bench/NanoMIRACL"
     assert registry.get_dataset("NanoMLDR").dataset_id == "hakari-bench/NanoMLDR"
     assert registry.get_dataset("NanoJMTEB-v2").dataset_id == "hakari-bench/NanoJMTEB-v2"
@@ -46,12 +45,12 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoMTEB-Dutch").dataset_id == "hakari-bench/NanoMTEB-Dutch"
     assert registry.get_dataset("NanoMTEB-Misc").dataset_id == "hakari-bench/NanoMTEB-Misc"
     assert registry.get_dataset("NanoMTEB-Polish").dataset_id == "hakari-bench/NanoMTEB-Polish"
-    assert len(registry.get_collection("MNanoBEIR").datasets) == 13
+    assert len(registry.get_collection("MNanoBEIR").datasets) == 14
     with pytest.raises(KeyError):
         registry.get_collection("NanoMTEB_Family")
 
 
-def test_builtin_all_target_does_not_include_nanobeir_en_duplicate() -> None:
+def test_builtin_all_target_includes_all_551_evaluation_tasks() -> None:
     registry = DatasetRegistry.load_builtin()
 
     tasks = resolve_eval_tasks(
@@ -61,14 +60,15 @@ def test_builtin_all_target_does_not_include_nanobeir_en_duplicate() -> None:
         split_values=[],
     )
 
-    assert "NanoBEIR-en" not in registry.dataset_names()
-    assert len(tasks) == 538
+    assert "NanoBEIR-en" in registry.dataset_names()
+    assert len(tasks) == 551
+    assert sum(task.dataset_name == "NanoBEIR-en" for task in tasks) == 13
 
 
 def test_builtin_config_lives_in_repo_config() -> None:
     config_root = Path("config")
 
-    assert not config_root.joinpath("datasets", "nanobeir_en.yaml").exists()
+    assert config_root.joinpath("datasets", "nanobeir_en.yaml").is_file()
     assert config_root.joinpath("dataset_collections", "mnanobeir.yaml").is_file()
     assert not config_root.joinpath("dataset_collections", "nanomteb_family.yaml").exists()
     assert config_root.joinpath("viewer", "benchmarks.yaml").is_file()
@@ -368,8 +368,8 @@ def test_resolve_eval_tasks_expands_mnanobeir_collection() -> None:
 
     tasks = resolve_eval_tasks(registry=registry, dataset_values=[], collection_values=["MNanoBEIR"], split_values=["msmarco"])
 
-    assert len(tasks) == 13
-    assert tasks[0].dataset_id == "hakari-bench/NanoBEIR-ar"
+    assert len(tasks) == 14
+    assert tasks[0].dataset_id == "hakari-bench/NanoBEIR-en"
     assert tasks[0].split_name == "NanoMSMARCO"
     assert tasks[0].task_name == "msmarco"
 

@@ -329,7 +329,7 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
   in the results dataset; see `docs/benchmark_scope.md` for the rationale and
   exact task list.
 - Built-in dataset names should stay consistent across docs, configs, and tests:
-  `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`,
+  `NanoBEIR-en`, `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`,
   `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoFaMTEB`,
   `NanoRuMTEB`, `NanoVNMTEB`, `NanoMTEB-Misc`, `NanoLongEmbed`, and
   `NanoCoIR`.

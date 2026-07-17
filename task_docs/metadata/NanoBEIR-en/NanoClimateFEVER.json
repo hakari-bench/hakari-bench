@@ -1,0 +1,195 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoBEIR-en",
+    "backing_dataset": "NanoBEIR-en",
+    "dataset_id": "hakari-bench/NanoBEIR-en",
+    "task_name": "NanoClimateFEVER",
+    "split_name": "NanoClimateFEVER",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoBEIR-en/NanoClimateFEVER.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true
+    },
+    "counts": {
+      "queries": 50,
+      "documents": 3408,
+      "positive_qrels": 148
+    },
+    "positives_per_query": {
+      "average": 2.96,
+      "min": 1,
+      "median": 3.0,
+      "max": 5,
+      "multi_positive_queries": 44,
+      "multi_positive_query_percent": 88.0
+    },
+    "text_stats_chars": {
+      "query_mean": 128.4,
+      "document_mean": 1619.53169
+    },
+    "bm25": {
+      "ndcg_at_10": 0.3265612239542905,
+      "hit_at_10": 0.72,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.326561224,
+        "hit_at_10": 0.72,
+        "recall_at_100": 0.5743243243,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.5743243243
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2810517681,
+        "hit_at_10": 0.68,
+        "recall_at_100": 0.6756756757,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6756756757
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.3418726246,
+        "hit_at_10": 0.76,
+        "recall_at_100": 0.7027027027,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.02,
+        "query_count": 50,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7027027027,
+        "safeguard_positive_rows": 1,
+        "rows_with_101_candidates": 1
+      }
+    },
+    "learning": {
+      "original_train_split": "unknown",
+      "evaluation_split_origin": "unknown",
+      "train_eval_overlap_audit": "not_audited",
+      "leakage_note": "prefer excluding upstream dev/test data or other Climate-FEVER/BEIR-derived data likely to overlap with the NanoBEIR evaluation claims and evidence",
+      "useful_training_data": [
+        "non-overlapping climate claim-evidence retrieval pairs",
+        "FEVER-style fact verification evidence retrieval data",
+        "scientific and climate-domain claim verification datasets"
+      ],
+      "synthetic_data": {
+        "document_generation": "climate or environmental science evidence passages with entities, dates, quantities, and causal statements",
+        "question_generation": "declarative climate claims that can be supported, refuted, or qualified by one selected passage",
+        "answerability": "positives should contain evidence addressing the claim, not merely the same climate topic"
+      },
+      "multi_positive_training": "multi_positive_objective"
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoBEIR-en",
+      "source_urls": [
+        {
+          "label": "Climate-FEVER project site",
+          "url": "http://climatefever.ai"
+        },
+        {
+          "label": "Zeta Alpha NanoBEIR collection",
+          "url": "https://huggingface.co/collections/zeta-alpha-ai/nanobeir"
+        }
+      ],
+      "source_notes": []
+    },
+    "references": [
+      {
+        "title": "CLIMATE-FEVER: A Dataset for Verification of Real-World Climate Claims",
+        "url": "https://arxiv.org/abs/2012.00614",
+        "year": 2020,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2012.00614",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+        "url": "https://arxiv.org/abs/2104.08663",
+        "year": 2021,
+        "is_paper": true,
+        "doi": "10.48550/arXiv.2104.08663",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "Climate-FEVER project site",
+        "url": "http://climatefever.ai",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "412",
+        "document_id": "Paleocene",
+        "query": {
+          "text": "From 1970 until 1998 there was a warming period that raised temperatures by about 0.7 F that helped spawn the global warming alarmist movement.",
+          "full_chars": 143,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The Paleocene ( -LSB- pronˈpæliəˌsiːn , _ ˈpæ - , _ - lioʊ - -RSB- ) or Palaeocene , the `` old recent '' , is a geologic epoch that lasted from about . It is the first epoch of the Paleogene Period in the modern Cenozoic Era . As with many geologic periods , the strata that define the epoch 's beginning and end are well identified , but the exact ages remain uncertain . The Paleocene Epoch brackets two major events in Earth 's history . It started with the mass extinction event at the end of the Cretaceous , known as the Cretaceous -- Paleogene ( K -- Pg ) boundary . This was a time marked by the demise of non-avian dinosaurs , giant marine reptiles and much other fauna and flora . The die-off of the dinosaurs left unfilled ecological niches worldwide . The Paleocene ended with the Paleocene -- Eocene Thermal Maximum , a geologically brief ( ~ 0.2 million year ) interval characterized by extreme changes in climate and carbon cycling . The name `` Paleocene '' comes from Ancient Greek",
+          "full_chars": 1126,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "1360",
+        "document_id": "Solar_cycle",
+        "query": {
+          "text": "In fact, the trend, while not statistically significant, is downward.”",
+          "full_chars": 70,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "The solar cycle or solar magnetic activity cycle is the nearly periodic 11-year change in the Sun 's activity ( including changes in the levels of solar radiation and ejection of solar material ) and appearance ( changes in the number and size of sunspots , flares , and other manifestations ) . They have been observed ( by changes in the sun 's appearance and by changes seen on Earth , such as auroras ) for centuries . The changes on the sun cause effects in space , in the atmosphere , and on Earth 's surface . While it is the dominant variable in solar activity , aperiodic fluctuations also occur .",
+          "full_chars": 610,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "109",
+        "document_id": "Sea_level",
+        "query": {
+          "text": "Local and regional sea levels continue to exhibit typical natural variability—in some places rising and in others falling.",
+          "full_chars": 122,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Mean sea level ( MSL ) ( abbreviated simply sea level ) is an average level of the surface of one or more of Earth 's oceans from which heights such as elevations may be measured . MSL is a type of vertical datuma standardised geodetic reference pointthat is used , for example , as a chart datum in cartography and marine navigation , or , in aviation , as the standard sea level at which atmospheric pressure is measured in order to calibrate altitude and , consequently , aircraft flight levels . A common and relatively straightforward mean sea-level standard is the midpoint between a mean low and mean high tide at a particular location . Sea levels can be affected by many factors and are known to have varied greatly over geological time scales . The careful measurement of variations in MSL can offer insights into ongoing climate change , and sea level rise has been widely quoted as evidence of ongoing global warming . The term above sea level generally refers to above mean sea level ( A",
+          "full_chars": 1011,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "example_count": 3
+  }
+}

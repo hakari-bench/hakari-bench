@@ -628,15 +628,15 @@ prefixes, dtype, attention implementation, and ColBERT query/document token
 lengths. Do not record candidate ranking, reranking top-K, or other benchmark
 protocol settings as model defaults.
 
-The current best MNanoBEIR English-subset options measured in this repository are:
+The current best NanoBEIR-en options measured in this repository are:
 
 | Model | Runtime | Prompts | Prefixes | Query/document length | Expansion attention | Note |
 | --- | --- | --- | --- | --- | --- | --- |
 | `lightonai/ColBERT-Zero` | `fp32`, `sdpa`; best reproduced with Transformers 4.48.3 + PyLate 1.3.4 | `query_prompt_name=query`, `document_prompt_name=document` | `[Q] ` / `[D] ` | `39` / `519` | `false` | Required to avoid the no-prompt regression. |
-| `lightonai/GTE-ModernColBERT-v1` | `fp32`, `sdpa`; best reproduced with Transformers 4.48.3 + PyLate 1.3.4 | none | `[Q] ` / `[D] ` | `48` / `512` | `false` | Do not enable expansion-token attention; it regressed the MNanoBEIR English subset. |
+| `lightonai/GTE-ModernColBERT-v1` | `fp32`, `sdpa`; best reproduced with Transformers 4.48.3 + PyLate 1.3.4 | none | `[Q] ` / `[D] ` | `48` / `512` | `false` | Do not enable expansion-token attention; it regressed NanoBEIR-en. |
 | `answerdotai/answerai-colbert-small-v1` | `fp32`, `sdpa` | none | `[unused0]` / `[unused1]` | `48` / `512` | n/a | fp32 was only marginally better than the existing bf16 result. |
 | `colbert-ir/colbertv2.0` | `bf16`, `sdpa` | none | `[unused0]` / `[unused1]` | `32` / `512` | `false` | Required for the Stanford ColBERT marker-token path; the fallback adapter inserts these as token IDs after CLS. |
-| `mixedbread-ai/mxbai-edge-colbert-v0-17m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | README/PyLate config defaults are q48/d512/no expansion; the MNanoBEIR English-subset primary exact score improved with q40/d512 over the default query length while keeping document length at 512. |
+| `mixedbread-ai/mxbai-edge-colbert-v0-17m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | README/PyLate config defaults are q48/d512/no expansion; NanoBEIR-en primary exact score improved with q40/d512 over the default query length while keeping document length at 512. |
 | `mixedbread-ai/mxbai-edge-colbert-v0-32m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | Evaluated with the same optimized mxbai-edge ColBERT option as the 17m checkpoint for apples-to-apples full Nano-set coverage. |
 
 Example for the highest-scoring ColBERT-Zero option:
@@ -668,7 +668,7 @@ Compatibility notes:
 - This repository keeps PyLate behind the `pylate` dependency group, so use
   `uv run --group pylate ...` for these models unless using a dedicated
   compatibility environment.
-- ColBERT-Zero and GTE-ModernColBERT-v1 scored best in the local MNanoBEIR English-subset
+- ColBERT-Zero and GTE-ModernColBERT-v1 scored best in the local NanoBEIR-en
   sweep under a Transformers 4.48.3 + PyLate 1.3.4 compatibility environment.
   Torch was not pinned for that comparison.
 - The local evaluator aliases PyLate's renamed `_input_length` helper to

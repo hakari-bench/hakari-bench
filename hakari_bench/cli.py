@@ -73,7 +73,7 @@ MISSING_ATTENTION_IMPLEMENTATION_WARNING = (
     "implementation can be substantially faster."
 )
 DEFAULT_RESULTS_DIR = "output/hakari-results"
-DEFAULT_SINGLE_DATASET = "hakari-bench/NanoBEIR-ja"
+DEFAULT_SINGLE_DATASET = "hakari-bench/NanoBEIR-en"
 
 
 def build_parser() -> argparse.ArgumentParser:

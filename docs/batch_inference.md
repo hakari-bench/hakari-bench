@@ -19,7 +19,7 @@ uv run --group openai hakari-bench batch dense register \
   --target openai-small-nanobeir-en \
   --provider openai \
   --model text-embedding-3-small \
-  --dataset hakari-bench/NanoBEIR-ja \
+  --dataset hakari-bench/NanoBEIR-en \
   --split arguana \
   --split climate-fever \
   --results-dir output/openai-batch

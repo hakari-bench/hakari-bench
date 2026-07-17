@@ -129,7 +129,7 @@ def test_parse_args_defaults_to_dense_bf16_nanobeir() -> None:
     assert args.model_source == {"type": "huggingface", "name": "hotchpotch/model"}
     assert args.dtype == "bf16"
     assert args.retrieval_score_device == "auto"
-    assert args.dataset == ["hakari-bench/NanoBEIR-ja"]
+    assert args.dataset == ["hakari-bench/NanoBEIR-en"]
     assert args.results_dir == "output/hakari-results"
     assert args.result_format == "json.xz"
     assert args.save_top_rankings is True

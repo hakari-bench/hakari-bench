@@ -583,6 +583,14 @@ def test_static_model_cards_all_declare_supported_method() -> None:
         assert model_cards.validate_model_card_method(card.get("method"), model_id=model_id) == card["method"]
 
 
+def test_static_model_card_target_datasets_do_not_contain_duplicates() -> None:
+    cards = model_cards.load_model_cards(Path("config/model_cards"))
+
+    for model_id, card in cards.items():
+        datasets = (card.get("target") or {}).get("datasets") or []
+        assert len(datasets) == len(set(datasets)), f"{model_id} contains duplicate target datasets"
+
+
 def test_static_model_cards_include_language_support_evidence() -> None:
     cards = model_cards.load_model_cards(Path("config/model_cards"))
 

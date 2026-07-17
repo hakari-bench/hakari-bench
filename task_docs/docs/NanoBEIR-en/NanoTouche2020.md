@@ -1,0 +1,89 @@
+# NanoBEIR-en / NanoTouche2020
+
+## Overview
+
+NanoTouche2020 is the compact English NanoBEIR version of Touche 2020 argument retrieval for controversial questions. Queries are short debate-style questions, and the corpus contains long argumentative passages from online debate sources. The retrieval goal is to find passages that substantively address the controversial issue, often from either side of the debate. This makes the task useful for evaluating argument retrieval, stance-diverse topical coverage, and ranking over long noisy debate text.
+
+## Details
+
+### What the Original Data Measures
+
+Touche 2020 evaluates argument retrieval for controversial and decision-oriented information needs. In the controversial-question setting, systems retrieve argumentative texts from debate-oriented sources. A relevant document is not a factual answer snippet; it is an argument that addresses the topic, supplies reasons, or engages with the issue.
+
+The BEIR version treats Touche 2020 as argument retrieval, and the NanoBEIR version keeps the short-query, long-document structure. The original task uses graded relevance, while this Nano task exposes binary positive qrels. A strong retriever should rank multiple useful arguments, not only one passage that repeats the query words.
+
+### Observed Data Profile
+
+The task contains 49 queries, 5,745 documents, and 932 relevance judgments. Every query is multi-positive, with an average of 19.02 positives per query. The minimum is 6, the median is 19.0, the maximum is 32, and all 49 queries are multi-positive.
+
+Queries average 43.43 characters, while documents average 2,142.57 characters. Queries are short controversial questions, and documents are long debate passages containing claims, evidence, rebuttals, informal wording, and sometimes several argument points. The task is therefore about ranking a diverse argument set for each topic.
+
+### BM25 Evaluation Profile
+
+BM25 reaches nDCG@10 of 0.6648, hit@10 of 1.0000, and recall@100 of 0.8176 using the top-500 BM25 candidate subset. This is a strong lexical profile. Controversial questions often contain topic terms such as abortion, homework, vaccines, minimum wage, or standardized tests, and relevant arguments repeat those terms.
+
+The high hit@10 should not be overread. Since each query has many positives, finding one argument is relatively easy. The harder problem is ranking a broad set of relevant arguments near the top and not over-focusing on one stance or phrasing pattern.
+
+### Dense Evaluation Profile
+
+The dense harrier-oss-270m run reaches nDCG@10 of 0.5407, hit@10 of 1.0000, and recall@100 of 0.8079. Dense retrieval also finds at least one positive for every query, but it is weaker than BM25 in nDCG@10 and slightly weaker in recall@100.
+
+This suggests that the task remains strongly lexical in this English slice. Long debate documents repeat topic vocabulary, and general embedding similarity can blur distinct argumentative aspects. Dense retrieval may retrieve passages that are broadly about the same issue but less directly useful under the topic narrative.
+
+### Reranking Hybrid Evaluation Profile
+
+The reranking_hybrid candidate set reaches nDCG@10 of 0.6184, hit@10 of 1.0000, and recall@100 of 0.8391. It uses exactly 100 candidates per query, with no safeguard rows. The hybrid profile has the best recall@100, while BM25 has the best nDCG@10.
+
+This makes hybrid retrieval a strong candidate pool for downstream reranking. BM25 contributes precise controversial-topic anchors, while dense retrieval broadens coverage to arguments phrased differently. A reranker can then focus on argument relevance, stance diversity, and quality.
+
+### Metric Interpretation for Model Researchers
+
+Because every query has many positives, hit@10 is too forgiving: all three methods reach 1.0000. nDCG@10 measures whether the top list is rich in relevant arguments, and recall@100 measures whether a reranker can access enough of the positive argument set.
+
+The comparison shows that BM25 is strongest for direct top ranking, dense retrieval is weaker on these long debate passages, and reranking_hybrid gives the best candidate coverage. This task is useful for testing argument retrieval beyond simple first-hit success.
+
+### Query and Relevance Type Tendencies
+
+Queries include questions such as whether homework is beneficial, whether prescription drugs should be advertised directly to consumers, whether vaccines should be required for children, whether abortion should be legal, and whether standardized tests improve education. Relevant documents are long passages making pro or con arguments.
+
+The task rewards topical argument relevance and diversity. A relevant passage should address the controversial issue with a substantive argumentative move. It need not share the query's stance, and in many cases useful retrieval should expose both sides.
+
+### Representative Failure Modes
+
+Likely failures include retrieving passages that mention the topic but do not make a useful argument, over-ranking one stance while missing other relevant arguments, matching repeated terms without considering the topic narrative, and missing informal or noisy debate passages. BM25 may be too topic-term driven, while dense retrieval may be too broad.
+
+### Training Data That May Help
+
+Useful training data includes non-overlapping debate-portal argument relevance judgments, args.me-style query-to-argument supervision, pro/con topic retrieval data, stance-labeled arguments, and multi-positive argument retrieval sets. Hard negatives should discuss the same issue but fail the specific topic or argument relevance criterion.
+
+### Model Improvement Notes
+
+A model targeting this task should optimize for multi-positive argument ranking rather than single-answer retrieval. Sparse systems need long-document handling and phrase normalization. Dense systems need argument-specific training that distinguishes substantive arguments from broad topical similarity. Hybrid systems are promising reranking inputs because they provide the broadest candidate coverage.
+
+## Example Data
+
+| Query | Positive document |
+| --- | --- |
+| Is homework beneficial? [23 chars] | First, there are three arguments for why homework is excellent and ought to continue in modern schools. 1. Homework aids doer-learners. It is generally accepted that there are three types of learners: those who learn by hearing, those who learn by seeing, and those who learn by doing. While many are content to hear or see instruction of a given subject, some need to actually do it. Thus, homework is beneficial for this latter group because the instruction is learn through action. 2. Homework reinforces instruction. Although many would probably be thrilled to not have homework, the quality of the education received would certainly suffer if it was removed. Whether the homework is assigned reading, term papers, etc. , all of it is designed to reinforce the instruction in the students' minds. After all, those who do their homework are more academically successful than those who do not. I feel that this is a self-evident truth, but I'll leave it Pro to dissuade you. 3. Homework mirrors rea... [1,000 / 3,553 chars] |
+| Should prescription drugs be advertised directly to consumers? [62 chars] | Many ads don't include enough information on how well drugs work. For example, Lunesta is advertised by a moth floating through a bedroom window, above a peacefully sleeping person. Actually, Lunesta helps patients sleep 15 minutes faster after six months of treatment and gives 37 minutes more sleep per night. The Majority of ads are based on emotional appeals, but few include causes of the condition, risk factors, or important lifestyle changes. In a study of 38 pharmaceutical advertisements researchers found that 82 percent made a factual claim and 86 percent made rational arguments for product use. Only 26 percent described condition causes, risk factors, or prevalence.[1] Thus not giving the patients balanced information that would make them aware, that taking one of the pills is not a magic solution to their problem. Actually, according to a study conducted in the US and New Zealand, patients requested prescriptions in 12% of surveyed visits. Of these requests, 42% were for produc... [1,000 / 1,682 chars] |
+| Should any vaccines be required for children? [45 chars] | Not a full case yet.. Just some little points I put together... Governments should not have the right to intervene in the health decisions parents make for their children. 31% of parents believe they should have the right to refuse mandated school entry vaccinations for their children, according to a 2010 survey by the University of Michigan. Many parents hold religious beliefs against vaccination. Forcing such parents to vaccinate their children would violate the 1st Amendment which guarantees citizens the right to the free exercise of their religion. Vaccines are often unnecessary in many cases where the threat of death from disease is small. During the early nineteenth century, mortality for the childhood diseases whooping cough, measles, and scarlet fever fell drastically before immunization became available. This decreased mortality has been attributed to improved personal hygiene, water purification, effective sewage disposal, and better food hygiene and nutrition. Vaccines inter... [1,000 / 4,497 chars] |
+
+### Source Reference Table
+
+| Item | Reference |
+| --- | --- |
+| Original task paper | [Overview of Touche 2020: Argument Retrieval](https://doi.org/10.1007/978-3-030-58219-7_26) |
+| Open PDF | [Overview of Touche 2020 PDF](https://downloads.webis.de/touche/publications/papers/bondarenko_2020d.pdf) |
+| Dataset record | [Touche20 Argument Retrieval](https://doi.org/10.5281/zenodo.6862281) |
+| Retrieval benchmark framing | [BEIR](https://arxiv.org/abs/2104.08663) |
+| Source dataset card | [mteb/touche2020](https://huggingface.co/datasets/mteb/touche2020) |
+
+Representative query and positive argument snippets:
+
+| Query | Positive document snippet |
+| --- | --- |
+| Is homework beneficial? | Homework aids doer-learners and should continue in modern schools. |
+| Should prescription drugs be advertised directly to consumers? | Many ads do not include enough information on how well drugs work. |
+| Should any vaccines be required for children? | Governments should not have the right to intervene in health decisions parents make for their children. |
+| Should abortion be legal? | Abortions should be legal because personhood begins after viability or birth. |
+| Do standardized tests improve education? | Standardized tests can provide insight into student preparedness beyond high school GPA. |

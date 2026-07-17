@@ -12,9 +12,11 @@ offline/cache policy, or coverage-audit requirements.
 
 ## Full Evaluation
 
-Use `--all` to evaluate every standard built-in benchmark task selected for full
-coverage. Existing task results are skipped unless `--overwrite` is supplied, so
-this command is safe for resuming interrupted runs.
+Use `--all` to evaluate every standard built-in benchmark task. Existing task
+results are skipped unless `--overwrite` is supplied, so this command is safe
+for resuming interrupted runs. The complete target currently contains 551
+tasks; the leaderboard's 538-task Overall count is a post-evaluation aggregate,
+not an evaluation target.
 
 ```bash
 uv run hakari-bench evaluate dense \
@@ -314,7 +316,7 @@ uv run python scripts/sync_remote_results_and_rebuild.py \
 # Refresh only a metadata-backed BM25 subset before rebuilding.
 uv run python scripts/sync_remote_results_and_rebuild.py \
   --materialize-bm25-baseline-from-metadata \
-  --bm25-dataset NanoBEIR-ja \
+  --bm25-dataset NanoBEIR-en \
   --bm25-split NanoArguAna
 ```
 

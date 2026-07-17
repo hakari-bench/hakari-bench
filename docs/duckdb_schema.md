@@ -1065,10 +1065,10 @@ choices:
   organized around explicit dataset/language axes and several multilingual rows
   include secondary detected languages such as English.
 - Overall scope presets apply the same per-benchmark language policy before
-  overall aggregation. For example, selecting `EN` in `Overall` includes only
-  rows whose benchmark policy exposes English as a primary or allowed language;
-  it does not include `NanoBEIR-no` rows merely because their detected
-  `languages` array contains English as a secondary language.
+  overall aggregation. For example, selecting `EN` in `Overall` includes
+  `NanoBEIR-en`
+  rows from MNanoBEIR but does not include `NanoBEIR-no` rows merely because
+  their detected `languages` array contains English as a secondary language.
 - Benchmarks may also set `language_page_languages` to constrain the Task
   language filter options. Language-focused Nano-sets use this together with
   `primary_languages` to keep auxiliary detector languages from cross-language
@@ -1806,7 +1806,7 @@ SELECT *
 FROM score_group_values
 PIVOT (
   first(metric_value)
-  FOR metric_column IN ('NanoBEIR-ja', 'NanoBEIR-de')
+  FOR metric_column IN ('NanoBEIR-en', 'NanoBEIR-ja')
 );
 ```
 

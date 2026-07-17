@@ -57,4 +57,4 @@ language_support:
   - en
 target:
   datasets:
-  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-en

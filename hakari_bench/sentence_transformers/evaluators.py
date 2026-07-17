@@ -555,7 +555,7 @@ def _normalize_targets(
     targets: TargetSpec,
 ) -> list[HakariNanoTarget]:
     if targets is None:
-        return [HakariNanoTarget(dataset="NanoBEIR-ja")]
+        return [HakariNanoTarget(dataset="NanoBEIR-en")]
     normalized: list[HakariNanoTarget] = []
     for target in targets:
         normalized.append(HakariNanoTarget(dataset=target) if isinstance(target, str) else target)

@@ -104,13 +104,13 @@ def test_viewer_config_uses_overall_scope_views() -> None:
     assert overall_en_task_keys is not None
     assert len(overall_task_keys) == 538
     assert len(overall_en_task_keys) == 538
-    assert not any("hakari-bench/NanoBEIR-en" in task_key for task_key in overall_task_keys)
-    assert {
+    assert sum("hakari-bench/NanoBEIR-en" in task_key for task_key in overall_task_keys) == 13
+    assert not {
         "NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRFiQA",
         "NanoLaw::hakari-bench/NanoLaw::NanoAILAStatutes",
         "NanoMedical::hakari-bench/NanoMedical::NanoCUREv1",
         "NanoRARb::hakari-bench/NanoRARb::NanoWinoGrande",
-    } <= overall_task_keys
+    } & overall_task_keys
     assert config.overall_for_view("Core") is None
     assert config.overall_for_view("Core (EN)") is None
     assert config.view_names[: len(all_benchmarks) + 2] == [
@@ -133,7 +133,12 @@ def test_viewer_config_uses_overall_scope_views() -> None:
     assert nano_cmteb.language_page_languages == ["zh"]
     nano_law = config.benchmark_for_view("NanoLaw")
     assert nano_law is not None
-    assert nano_law.excluded_tasks == []
+    assert nano_law.excluded_tasks == [
+        "NanoAILACasedocs",
+        "NanoAILAStatutes",
+        "NanoLegalSummarization",
+        "NanoLegalBenchCorporateLobbying",
+    ]
     mnanobeir = config.benchmark_for_view("MNanoBEIR")
     assert mnanobeir is not None
     assert [group.name for group in mnanobeir.resolved_score_groups] == ["task_mean", "lang_mean"]
