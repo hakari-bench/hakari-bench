@@ -1111,3 +1111,68 @@ benchmarks:
     assert doc_urls
     broken_urls = [url for url in doc_urls if client.get(url).status_code != 200]
     assert broken_urls == []
+
+
+def test_grouped_columns_use_group_docs_for_multi_task_benchmarks(tmp_path: Path) -> None:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "NanoBIRCO", "bench/birco", "NanoBIRCO", "relic", "relic", "birco::relic", 0.70, 10, 12, 8192),
+            ("model/a", "NanoBIRCO", "bench/birco", "NanoBIRCO", "wtb", "wtb", "birco::wtb", 0.60, 10, 12, 8192),
+            ("model/a", "NanoBRIGHT", "bench/bright", "NanoBRIGHT", "aops", "aops", "bright::aops", 0.50, 10, 12, 8192),
+            ("model/a", "NanoBRIGHT", "bench/bright", "NanoBRIGHT", "biology", "biology", "bright::biology", 0.40, 10, 12, 8192),
+            (
+                "model/a",
+                "NanoBuiltBench",
+                "bench/built",
+                "NanoBuiltBench",
+                "built",
+                "built",
+                "built::built",
+                0.80,
+                10,
+                12,
+                8192,
+            ),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        "benchmarks:\n  - name: NanoBIRCO\n  - name: NanoBRIGHT\n  - name: NanoBuiltBench\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoBIRCO\n  - NanoBRIGHT\n  - NanoBuiltBench\n",
+        encoding="utf-8",
+    )
+    docs_dir = tmp_path / "task_docs" / "docs"
+    for benchmark, title in [
+        ("NanoBIRCO", "BIRCO group overview"),
+        ("NanoBRIGHT", "BRIGHT group overview"),
+        ("NanoBuiltBench", "BuiltBench group overview"),
+    ]:
+        group_dir = docs_dir / benchmark
+        group_dir.mkdir(parents=True)
+        (group_dir / "index.md").write_text(
+            f"# {title}\n\n## Overview\n\n{title} description.\n",
+            encoding="utf-8",
+        )
+
+    app = create_app(
+        store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)),
+        config_dir=config_dir,
+        docs_dir=docs_dir,
+    )
+    response = TestClient(app).get("/leaderboard?view=Overall&columns=grouped")
+
+    assert response.status_code == 200
+    grouped_head = response.text.split("<thead", 1)[1].split("</thead>", 1)[0]
+    for benchmark, title in [
+        ("NanoBIRCO", "BIRCO group overview"),
+        ("NanoBRIGHT", "BRIGHT group overview"),
+        ("NanoBuiltBench", "BuiltBench group overview"),
+    ]:
+        assert f'data-doc-title="{title}"' in grouped_head
+        assert f'data-doc-url="/docs/benchmark-tasks/{benchmark}"' in grouped_head

@@ -41,6 +41,7 @@ from hakari_bench.viewer.filters import (
     visible_row_count,
 )
 from hakari_bench.viewer.leaderboard import (
+    ColumnMode,
     LanguageOption,
     LeaderboardResult,
     LeaderboardRow,
@@ -330,6 +331,7 @@ def create_app(
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        columns: list[str] | None = Query(default=None),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
@@ -376,6 +378,7 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
+                columns=columns,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -447,7 +450,13 @@ def create_app(
             include_rescore_variants=display_flags.rescore,
             include_other_variants=display_flags.other,
             language_filters=filter_state.language_filters,
-            show_task_scores=state_query.get("task_scores") == "1",
+            column_mode=cast(
+                ColumnMode,
+                state_query.get("columns"),
+            )
+            if state_query.get("columns") in {"task", "grouped"}
+            else None,
+            show_task_scores=state_query.get("columns") in {"task", "grouped"},
             show_task_z_scores=state_query.get("task_z_scores") == "1",
             show_task_ranks=state_query.get("task_ranks") == "1",
             show_other_columns=state_query.get("other_columns") == "1",
@@ -488,6 +497,7 @@ def create_app(
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        columns: list[str] | None = Query(default=None),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
@@ -538,6 +548,7 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
+                columns=columns,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -636,6 +647,7 @@ def create_app(
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        columns: list[str] | None = Query(default=None),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
@@ -678,6 +690,7 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
+                columns=columns,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -751,6 +764,7 @@ def _normalize_query_state_from_params(viewer_config: ViewerConfig, params: Mapp
         truncate=_query_param_bool(params, "truncate"),
         rescore=_query_param_bool(params, "rescore"),
         other_variant=_query_param_bool(params, "other_variant"),
+        columns=_query_param_list(params, "columns"),
         task_scores=_query_param_bool(params, "task_scores"),
         task_z_scores=_query_param_bool(params, "task_z_scores"),
         task_ranks=_query_param_bool(params, "task_ranks"),
@@ -2965,10 +2979,13 @@ def _render_score_aggregation_group(
 ) -> str:
     if not result.is_overall:
         return ""
+    column_mode = _column_mode_for_result(result)
+    locked_score = "micro" if column_mode == "task" else "macro" if column_mode == "grouped" else None
     buttons = []
     for score, label in [("micro", "Micro"), ("macro", "Macro")]:
         active = result.score_aggregation == score
         classes = _control_button_classes(active=active)
+        disabled = locked_score is not None and score != locked_score
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = _apply_plot_state(
@@ -2980,26 +2997,44 @@ def _render_score_aggregation_group(
         else:
             query_payload["score"] = score
         query = urlencode(query_payload, doseq=True)
+        disabled_attrs = (
+            ' disabled aria-disabled="true" title="Score is set by the selected column mode."'
+            if disabled
+            else ""
+        )
         buttons.append(
             f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                  {_leaderboard_control_hx_attrs()}>
+                  {_leaderboard_control_hx_attrs()}{disabled_attrs}>
                   {escape(label)}
                 </button>"""
         )
+    score_aria_label = (
+        f"Score aggregation: {locked_score.title()} (locked by {column_mode.title()} columns)"
+        if locked_score is not None and column_mode is not None
+        else "Score aggregation"
+    )
     return f"""
-            <div class="flex min-w-0 flex-wrap items-center gap-2">
+            <div class="flex min-w-0 flex-wrap items-center gap-2" aria-label="{escape(score_aria_label, quote=True)}">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="sigma", text="Score")}
                 {_render_help_tooltip(
                   "Score aggregation",
                   "Chooses between raw task weighting and grouped NanoSet weighting.",
-                  "Micro is the default score. Think of it as the raw task average: every task row gets one vote. A NanoSet with many tasks or language variants therefore has more influence on the final ranking. This is the closest mode to the older raw-task Overall/All behavior.\n\nMacro is the grouped score. Think of it as the Group-style idea moved into the Score control: tasks are first summarized into one score per NanoSet, then the leaderboard ranks and averages those NanoSet scores. Each NanoSet gets one vote regardless of how many raw tasks it contains, so large suites do not dominate simply because they are larger.\n\nFor grouped collections such as MNanoBEIR, language variants are first averaged by BEIR source task, then MNanoBEIR contributes one NanoSet score to the final Macro ranking. Use Macro when you want a family-balanced view across benchmark groups.",
+                  "Micro is the default score. Think of it as the raw task average: every task row gets one vote. A NanoSet with many tasks or language variants therefore has more influence on the final ranking. Task columns always selects Micro.\n\nMacro is the grouped score: tasks are first summarized into one score per NanoSet, then each NanoSet gets one vote regardless of how many raw tasks it contains. Grouped columns always selects Macro. While either column mode is active, the incompatible Score choice is disabled.\n\nFor MNanoBEIR, the selected task or language groups are shown as separate breakdown columns, then averaged before MNanoBEIR contributes its one Macro group score.",
                 )}
               </span>
               {''.join(buttons)}
             </div>
             """
+
+
+def _column_mode_for_result(result: LeaderboardResult) -> str | None:
+    if result.column_mode is not None:
+        return result.column_mode
+    if not result.show_task_scores:
+        return None
+    return "grouped" if result.score_aggregation == "macro" else "task"
 
 
 def _render_benchmark_group(*, label: str, description: str, buttons: list[str], framed: bool = True) -> str:
@@ -3415,7 +3450,9 @@ def render_display_controls(
     truncate_checked = " checked" if result.include_truncate_variants else ""
     rescore_checked = " checked" if result.include_rescore_variants else ""
     other_variant_checked = " checked" if result.include_other_variants else ""
-    task_scores_checked = " checked" if result.show_task_scores else ""
+    column_mode = _column_mode_for_result(result)
+    task_scores_checked = " checked" if column_mode == "task" else ""
+    grouped_scores_checked = " checked" if column_mode == "grouped" else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     task_ranks_checked = " checked" if result.show_task_ranks else ""
     other_columns_checked = " checked" if result.show_other_columns else ""
@@ -3431,13 +3468,15 @@ def render_display_controls(
         state_fields.append(("metric", result.selected_score_metric))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
+    if result.score_aggregation == "macro" and column_mode is None:
+        state_fields.append(("score", "macro"))
     state_fields.extend(_query_state_fields(plot_state))
     sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
     variant_filter_fields = _variant_filter_hidden_fields(filter_state)
     variant_hidden_fields = _active_variant_hidden_fields(result)
     task_score_hidden_fields = []
-    if result.show_task_scores:
-        task_score_hidden_fields.append(("task_scores", "1"))
+    if column_mode is not None:
+        task_score_hidden_fields.append(("columns", column_mode))
     if result.show_task_z_scores:
         task_score_hidden_fields.append(("task_z_scores", "1"))
     else:
@@ -3460,14 +3499,21 @@ def render_display_controls(
           {_render_help_tooltip(
               "Table display",
               "Changes which columns and per-task annotations are visible.",
-              "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD adds standard-deviation deltas so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank, score, and standard-deviation delta together.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
+              "Table display controls how much detail appears in the result table. Task columns and Grouped columns are mutually exclusive.\n\nTask columns shows one score column per raw task and fixes Score to Micro, so every task row has equal weight. Grouped columns shows benchmark groups such as JMTEB-v2 or IFIR and fixes Score to Macro. M-BEIR expands the selected inner grouping into columns such as M-BEIR-arguana for task mode or M-BEIR-ar for language mode; those columns are averaged into M-BEIR's one Macro group score.\n\nSTD adds standard-deviation deltas. Task ranks shows the rank for whichever Task or Grouped columns are active.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <label class="toggle-chip">
-            <input type="checkbox" name="task_scores" value="1"{task_scores_checked}>
-            <span>Task columns</span>
-          </label>
+          <span class="column-mode-group" role="group" aria-label="Score columns: choose Task or Grouped" data-column-mode-group="score-columns">
+            <label class="toggle-chip">
+              <input type="checkbox" name="columns" value="task"{task_scores_checked} data-column-mode-toggle>
+              <span>Task columns</span>
+            </label>
+            <span class="column-mode-or" aria-hidden="true">or</span>
+            <label class="toggle-chip">
+              <input type="checkbox" name="columns" value="grouped"{grouped_scores_checked} data-column-mode-toggle>
+              <span>Grouped columns</span>
+            </label>
+          </span>
           <label class="toggle-chip">
             <input type="hidden" name="task_z_scores" value="0">
             <input type="checkbox" name="task_z_scores" value="1"{task_z_scores_checked}>
@@ -3544,11 +3590,14 @@ def render_controls(
         state_fields.append(("metric", result.selected_score_metric))
     if result.selected_score_group is not None:
         state_fields.append(("group", result.selected_score_group.name))
+    column_mode = _column_mode_for_result(result)
+    if result.score_aggregation == "macro" and column_mode is None:
+        state_fields.append(("score", "macro"))
     state_fields.extend(_query_state_fields(plot_state))
     variant_hidden_fields = _active_variant_hidden_fields(result)
     task_score_hidden_fields = []
-    if result.show_task_scores:
-        task_score_hidden_fields.append(("task_scores", "1"))
+    if column_mode is not None:
+        task_score_hidden_fields.append(("columns", column_mode))
     if result.show_task_z_scores:
         task_score_hidden_fields.append(("task_z_scores", "1"))
     else:
@@ -3834,7 +3883,7 @@ def render_controls(
                 {_render_help_tooltip(
                     "Task filter",
                     "Filters task columns and task rows by benchmark, dataset, split, or task name.",
-                    "Task filter searches task identifiers such as benchmark name, dataset name, split name, task name, and task key.\n\nYou can search for multiple task keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, arguana fever keeps task columns or task rows whose identifiers contain arguana or fever. Short task names such as nq also work because task keywords are accepted from 2 characters.\n\nWhen task columns are visible, matching task columns remain and non-matching columns are hidden. The underlying model ranking keeps its original context unless Recalculate ranks from filters is enabled. One-character task keywords are ignored.",
+                    "Task filter searches task identifiers such as benchmark name, dataset name, split name, task name, and task key.\n\nYou can search for multiple task keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, arguana fever keeps task columns or task rows whose identifiers contain arguana or fever. Short task names such as nq also work because task keywords are accepted from 2 characters.\n\nWhen Task columns or Grouped columns are visible, matching columns remain and non-matching columns are hidden. The underlying model ranking keeps its original context unless Recalculate ranks from filters is enabled. One-character task keywords are ignored.",
                 )}
                 <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
@@ -4249,11 +4298,16 @@ def render_table_head(
                 f' aria-label="{escape(_metric_column_tooltip(label=label, full_metric_name=full_metric_name, result=result), quote=True)}"'
             )
         doc_metric_name = result.metric_column_doc_keys.get(full_metric_name, full_metric_name)
-        doc = (
-            benchmark_docs.task_doc(view_name=result.view_name, metric_column=doc_metric_name)
-            if benchmark_docs is not None and is_metric
-            else None
-        )
+        doc = None
+        if benchmark_docs is not None and is_metric:
+            if result.column_mode == "grouped":
+                grouped_benchmark = full_metric_name.split("::", 1)[0]
+                doc = benchmark_docs.group_doc(grouped_benchmark)
+            if doc is None:
+                doc = benchmark_docs.task_doc(
+                    view_name=result.view_name,
+                    metric_column=doc_metric_name,
+                )
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
         if is_metric:
             group_label, task_label = _metric_column_header_parts(label)
@@ -5138,6 +5192,8 @@ def _metric_column_label_markup(label: str) -> str:
 
 
 def _metric_column_header_parts(label: str) -> tuple[str, str]:
+    if label.startswith("M-BEIR-"):
+        return "M-BEIR", label.removeprefix("M-BEIR-")
     parts = [part for part in label.split("::") if part]
     if len(parts) >= 3:
         group_label = parts[-2].rsplit("/", 1)[-1]
@@ -5150,7 +5206,12 @@ def _metric_column_header_parts(label: str) -> tuple[str, str]:
 
 
 def _metric_column_tooltip(*, label: str, full_metric_name: str, result: LeaderboardResult) -> str:
-    if result.selected_score_group is not None:
+    if result.column_mode == "grouped":
+        base = (
+            "Grouped score breakdown column. Benchmark groups contribute one final value to the Macro score; "
+            "M-BEIR may expose its selected task or language groups as separate display columns first."
+        )
+    elif result.selected_score_group is not None:
         group_label = result.selected_score_group.label
         base = (
             f"{group_label} column. Scores are averaged per model over the raw benchmark rows that belong "

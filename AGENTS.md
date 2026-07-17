@@ -150,6 +150,10 @@ under `config/datasets/`, and dataset collection definitions live under
 
 - For leaderboard viewer design changes, read `@DESIGN.md` first and keep
   design-specific rules there.
+- Before and after implementing viewer or DuckDB-related changes, benchmark
+  representative queries against a freshly updated latest remote DuckDB cache.
+  Record comparable timings, preserve the established filter and calculation
+  order, and do not accept material regressions in unrelated viewer paths.
 - When updating viewer UI design, check `@DESIGN.md` before editing and update
   it when the design direction, tokens, layout rules, or component behavior
   changes.

@@ -44,6 +44,26 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
 
                 assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
+                task_columns = page.locator('#column-controls input[name="columns"][value="task"]')
+                grouped_columns = page.locator('#column-controls input[name="columns"][value="grouped"]')
+                page.locator("#column-controls label", has_text="Task columns").click()
+                page.wait_for_url(lambda url: "columns=task" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert task_columns.is_checked() is True
+                assert grouped_columns.is_checked() is False
+                assert page.locator('[aria-label="Score aggregation: Micro (locked by Task columns)"]').count() == 1
+                assert page.get_by_role("button", name="Macro", exact=True).is_disabled() is True
+
+                page.locator("#column-controls label", has_text="Grouped columns").click()
+                page.wait_for_url(
+                    lambda url: "columns=grouped" in url and "score=macro" in url,
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert task_columns.is_checked() is False
+                assert grouped_columns.is_checked() is True
+                assert page.locator('[aria-label="Score aggregation: Macro (locked by Grouped columns)"]').count() == 1
+                assert page.get_by_role("button", name="Micro", exact=True).is_disabled() is True
                 section_icon_state = page.locator("h1 svg.section-heading-icon[data-icon='hakari-bench']").first.evaluate(
                     """(el) => ({
                         width: parseFloat(getComputedStyle(el).width),

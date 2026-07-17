@@ -1339,6 +1339,28 @@
 
 /* --- Toggle chips (display / variant checkboxes styled as control chips) --- */
 
+.column-mode-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-surface-faint);
+  padding: 0.12rem;
+}
+
+.column-mode-group .toggle-chip {
+  border-radius: var(--hakari-radius-sm);
+}
+
+.column-mode-or {
+  padding-inline: 0.2rem;
+  color: var(--hakari-text-faint);
+  font-size: 0.625rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .toggle-chip {
   display: inline-flex;
   align-items: center;

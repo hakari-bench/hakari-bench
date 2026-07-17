@@ -18,6 +18,7 @@ QueryValue = str | list[str]
 QueryState = dict[str, QueryValue]
 
 RESULT_VIEW_VALUES = {"table", "chart"}
+COLUMN_MODE_VALUES = {"task", "grouped"}
 PLOT_SCORE_FIELDS = {"borda_score", "macro_mean", "micro_mean"}
 PLOT_NONE_FIELD = "none"
 PLOT_AXIS_FIELDS = {
@@ -97,6 +98,7 @@ def normalize_query_state(
     bench: list[str] | None = None,
     model_filter: str = "",
     rank_filtered: bool = False,
+    columns: list[str] | None = None,
     task_scores: bool = False,
     task_z_scores: bool = False,
     task_ranks: bool = False,
@@ -136,7 +138,16 @@ def normalize_query_state(
     chart_color = chart_color if chart_color in PLOT_ENCODING_FIELDS else "embedding_dim"
     if "quantization" in {chart_x, chart_color}:
         quantization = True
-    score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
+    task_filter = task_filter.strip()
+    column_mode = _normalized_column_mode(columns)
+    if column_mode is None and (task_scores or task_filter or task_ranks):
+        column_mode = "grouped" if score == "macro" else "task"
+    if column_mode == "task":
+        score_aggregation: ScoreAggregation = "micro"
+    elif column_mode == "grouped":
+        score_aggregation = "macro"
+    else:
+        score_aggregation = "macro" if score == "macro" else "micro"
     display_flags = variant_display_flags_from_values(
         variants=variants,
         quantization=quantization,
@@ -144,7 +155,6 @@ def normalize_query_state(
         rescore=rescore,
         other=other_variant,
     )
-    task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if result_view != "table":
         query["result_view"] = result_view
@@ -161,12 +171,12 @@ def normalize_query_state(
         query["target"] = target
     if score_aggregation != "micro":
         query["score"] = score_aggregation
+    if column_mode is not None:
+        query["columns"] = column_mode
     if metric and metric != "ndcg@10":
         query["metric"] = metric.strip().casefold()
     if group:
         query["group"] = group
-    if task_scores or task_filter or task_ranks:
-        query["task_scores"] = "1"
     if task_z_scores:
         query["task_z_scores"] = "1"
     if task_ranks:
@@ -287,7 +297,7 @@ def state_payload(
     if result.view_name == CUSTOM_SCOPE_NAME and selected_benchmarks:
         query_payload["bench"] = list(selected_benchmarks)
     if result.show_task_scores:
-        query_payload["task_scores"] = "1"
+        query_payload["columns"] = "grouped" if result.score_aggregation == "macro" else "task"
     if result.show_task_z_scores:
         query_payload["task_z_scores"] = "1"
     else:
@@ -401,6 +411,11 @@ def _normalized_query_values(values: list[str] | None) -> list[str]:
     if values is None:
         return []
     return [value for value in values if value]
+
+
+def _normalized_column_mode(values: list[str] | None) -> str | None:
+    valid_values = [value for value in _normalized_query_values(values) if value in COLUMN_MODE_VALUES]
+    return valid_values[-1] if valid_values else None
 
 
 def _normalized_benchmark_values(values: list[str] | None, viewer_config: ViewerConfig) -> list[str]:

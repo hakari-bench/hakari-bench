@@ -65,7 +65,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "view": "BenchA",
         "sort": "metric:task1",
         "direction": "desc",
-        "task_scores": "1",
+        "columns": "task",
         "quantization": "1",
         "filters": "1",
         "dim_filter": ["384"],
@@ -187,8 +187,90 @@ def test_task_filter_enables_task_score_columns() -> None:
         task_filter="fever",
     )
 
-    assert query["task_scores"] == "1"
+    assert query["columns"] == "task"
     assert query["task_filter"] == "fever"
+
+
+def test_task_column_mode_forces_micro_score() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        score="macro",
+        columns=["task"],
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+    )
+
+    assert query["columns"] == "task"
+    assert "score" not in query
+    assert "task_scores" not in query
+
+
+def test_grouped_column_mode_forces_macro_score() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        score="micro",
+        columns=["grouped"],
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+    )
+
+    assert query["columns"] == "grouped"
+    assert query["score"] == "macro"
+    assert "task_scores" not in query
+
+
+def test_column_modes_are_normalized_to_one_selection() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        columns=["task", "grouped"],
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+    )
+
+    assert query["columns"] == "grouped"
+    assert query["score"] == "macro"
 
 
 def test_custom_benchmark_selection_is_normalized() -> None:
@@ -350,7 +432,7 @@ def test_legacy_clear_view_normalizes_to_empty_custom() -> None:
         lang_filter=["ja"],
     )
 
-    assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc", "task_scores": "1"}
+    assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc", "columns": "task"}
 
 
 def test_task_z_scores_do_not_force_task_score_columns() -> None:
@@ -402,7 +484,7 @@ def test_task_ranks_force_task_score_columns() -> None:
         other_columns=True,
     )
 
-    assert query["task_scores"] == "1"
+    assert query["columns"] == "task"
     assert query["task_ranks"] == "1"
     assert query["other_columns"] == "1"
 

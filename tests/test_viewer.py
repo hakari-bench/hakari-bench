@@ -1529,6 +1529,221 @@ def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: 
     assert asset_response.headers["content-security-policy"] == response.headers["content-security-policy"]
 
 
+def test_table_column_modes_are_exclusive_and_grouped_columns_follow_benchmark_groups(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-en",
+                "NanoBEIR-en",
+                "arguana",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-en::arguana",
+                0.70,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-en",
+                "NanoBEIR-en",
+                "fever",
+                "fever",
+                "MNanoBEIR::hakari-bench/NanoBEIR-en::fever",
+                0.90,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "fever",
+                "fever",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::fever",
+                0.30,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "MNanoBEIR",
+                "hakari-bench/NanoBEIR-ja",
+                "NanoBEIR-ja",
+                "arguana",
+                "arguana",
+                "MNanoBEIR::hakari-bench/NanoBEIR-ja::arguana",
+                0.50,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "NanoJMTEB-v2",
+                "hakari-bench/NanoJMTEB-v2",
+                "NanoJMTEB-v2",
+                "jagovfaqs",
+                "jagovfaqs",
+                "NanoJMTEB-v2::jagovfaqs",
+                0.80,
+                10,
+                12,
+                8192,
+            ),
+            (
+                "model/a",
+                "NanoIFIR",
+                "hakari-bench/NanoIFIR",
+                "NanoIFIR",
+                "ifir",
+                "ifir",
+                "NanoIFIR::ifir",
+                0.60,
+                10,
+                12,
+                8192,
+            ),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        """benchmarks:
+  - name: MNanoBEIR
+    score_groups:
+      - name: task_mean
+        label: Task Mean
+        group_by: task_name
+      - name: lang_mean
+        label: Lang Mean
+        group_by: dataset_name
+  - name: NanoJMTEB-v2
+  - name: NanoIFIR
+""",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        """name: Overall
+label: Overall
+benchmarks:
+  - name: MNanoBEIR
+    group_by: task_name
+  - NanoJMTEB-v2
+  - NanoIFIR
+""",
+        encoding="utf-8",
+    )
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    client = TestClient(app)
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    task_grouped_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:task_mean", "NanoJMTEB-v2", "NanoIFIR"),
+        column_mode="grouped",
+        show_task_scores=True,
+        score_aggregation="macro",
+    )
+    lang_grouped_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:lang_mean", "NanoJMTEB-v2", "NanoIFIR"),
+        column_mode="grouped",
+        show_task_scores=True,
+        score_aggregation="macro",
+    )
+
+    assert task_grouped_result.metric_columns == [
+        "MNanoBEIR::arguana",
+        "MNanoBEIR::fever",
+        "NanoIFIR",
+        "NanoJMTEB-v2",
+    ]
+    assert task_grouped_result.metric_column_labels == {
+        "MNanoBEIR::arguana": "M-BEIR-arguana",
+        "MNanoBEIR::fever": "M-BEIR-fever",
+    }
+    assert task_grouped_result.rows[0].metric_values["MNanoBEIR::arguana"] == pytest.approx(60.0)
+    assert task_grouped_result.rows[0].metric_values["MNanoBEIR::fever"] == pytest.approx(60.0)
+    assert task_grouped_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
+    assert lang_grouped_result.metric_columns == [
+        "MNanoBEIR::NanoBEIR-en",
+        "MNanoBEIR::NanoBEIR-ja",
+        "NanoIFIR",
+        "NanoJMTEB-v2",
+    ]
+    assert lang_grouped_result.metric_column_labels == {
+        "MNanoBEIR::NanoBEIR-en": "M-BEIR-en",
+        "MNanoBEIR::NanoBEIR-ja": "M-BEIR-ja",
+    }
+    assert lang_grouped_result.rows[0].metric_values["MNanoBEIR::NanoBEIR-en"] == pytest.approx(80.0)
+    assert lang_grouped_result.rows[0].metric_values["MNanoBEIR::NanoBEIR-ja"] == pytest.approx(40.0)
+    assert lang_grouped_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
+
+    grouped_response = client.get(
+        "/leaderboard?view=Custom&bench=MNanoBEIR%3Atask_mean&bench=NanoJMTEB-v2&bench=NanoIFIR&columns=grouped"
+    )
+    task_response = client.get(
+        "/leaderboard?view=Custom&bench=MNanoBEIR%3Alang_mean&bench=NanoJMTEB-v2&bench=NanoIFIR&columns=task&score=macro"
+    )
+    filtered_grouped_response = client.get(
+        "/leaderboard?view=Custom&bench=MNanoBEIR%3Atask_mean&bench=NanoJMTEB-v2&bench=NanoIFIR"
+        "&columns=grouped&rank_filtered=1&task_filter=arguana"
+    )
+    individual_grouped_response = client.get(
+        "/leaderboard?view=MNanoBEIR&group=lang_mean&columns=grouped"
+    )
+    individual_task_response = client.get(
+        "/leaderboard?view=MNanoBEIR&group=lang_mean&columns=task"
+    )
+
+    assert grouped_response.status_code == 200
+    assert "score=macro" in grouped_response.headers["hx-push-url"]
+    assert "columns=grouped" in grouped_response.headers["hx-push-url"]
+    grouped_head = grouped_response.text.split("<thead", 1)[1].split("</thead>", 1)[0]
+    assert "M-BEIR-arguana" in grouped_head
+    assert "M-BEIR-fever" in grouped_head
+    assert "M-BEIR(task)" not in grouped_head
+    assert "JMTEB-v2" in grouped_head
+    assert "IFIR" in grouped_head
+    assert 'data-column-mode-group="score-columns"' in grouped_response.text
+    assert 'name="columns" value="grouped" checked' in grouped_response.text
+    assert 'name="columns" value="task" checked' not in grouped_response.text
+    assert 'aria-label="Score aggregation: Macro (locked by Grouped columns)"' in grouped_response.text
+
+    assert task_response.status_code == 200
+    assert "score=macro" not in task_response.headers["hx-push-url"]
+    assert "columns=task" in task_response.headers["hx-push-url"]
+    assert 'name="columns" value="task" checked' in task_response.text
+    assert 'name="columns" value="grouped" checked' not in task_response.text
+    assert 'aria-label="Score aggregation: Micro (locked by Task columns)"' in task_response.text
+
+    filtered_grouped_head = filtered_grouped_response.text.split("<thead", 1)[1].split("</thead>", 1)[0]
+    assert "M-BEIR-arguana" in filtered_grouped_head
+    assert "M-BEIR-fever" not in filtered_grouped_head
+    assert "NanoBEIR-en" not in filtered_grouped_head
+    assert "NanoBEIR-ja" not in filtered_grouped_head
+
+    individual_grouped_head = individual_grouped_response.text.split("<thead", 1)[1].split("</thead>", 1)[0]
+    assert "M-BEIR-en" in individual_grouped_head
+    assert "M-BEIR-ja" in individual_grouped_head
+    assert "M-BEIR(lang)" not in individual_grouped_head
+    individual_task_head = individual_task_response.text.split("<thead", 1)[1].split("</thead>", 1)[0]
+    assert "M-BEIR(lang)" not in individual_task_head
+    assert "NanoBEIR-en" in individual_task_head
+    assert "NanoBEIR-ja" in individual_task_head
+
+
 def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_path: Path) -> None:
     from fastapi.testclient import TestClient
 
@@ -1787,13 +2002,13 @@ overalls:
     assert lang_response.status_code == 200
     assert 'name="bench" value="MNanoBEIR:task_mean"' in task_response.text
     assert 'name="bench" value="MNanoBEIR:lang_mean"' in lang_response.text
-    assert 'data-metric-column-full-name="arguana"' in task_response.text
-    assert 'data-metric-column-full-name="fever"' in task_response.text
-    assert 'data-metric-column-full-name="NanoBEIR-en"' not in task_response.text
-    assert 'data-metric-column-full-name="NanoBEIR-ja"' not in task_response.text
-    assert 'data-metric-column-full-name="NanoBEIR-en"' in lang_response.text
-    assert 'data-metric-column-full-name="NanoBEIR-ja"' in lang_response.text
-    assert 'data-metric-column-full-name="fever"' not in lang_response.text
+    for response in (task_response, lang_response):
+        assert 'name="columns" value="task" checked' in response.text
+        assert 'data-metric-column-full-name="en-arguana"' in response.text
+        assert 'data-metric-column-full-name="en-fever"' in response.text
+        assert 'data-metric-column-full-name="ja-arguana"' in response.text
+        assert 'data-metric-column-full-name="NanoBEIR-en"' not in response.text
+        assert 'data-metric-column-full-name="NanoBEIR-ja"' not in response.text
 
 
 def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -> None:
@@ -5821,7 +6036,7 @@ benchmarks:
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     response = TestClient(app).get(
-        "/leaderboard?view=MNanoBEIR&group=lang_mean&task_scores=1&sort=metric:NanoBEIR-ja"
+        "/leaderboard?view=MNanoBEIR&group=lang_mean&task_scores=1&sort=metric:ja-arguana"
     )
     mmteb_response = TestClient(app).get("/leaderboard?view=NanoMMTEB-v2&task_scores=1")
 
@@ -5845,12 +6060,12 @@ benchmarks:
     assert "group=lang_mean" in response.text
     assert ">Tasks</span>" not in response.text
     assert "Task score columns" not in response.text
-    assert 'name="task_scores" value="1" checked' in response.text
+    assert 'name="columns" value="task" checked' in response.text
     assert "Mean Score" in response.text
-    assert ">BEIR-ja</span>" in response.text
+    assert ">ja-arguana</span>" in response.text
     assert "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]" in response.text
-    assert "metric%3ANanoBEIR-ja" in response.text
-    assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja' in response.text
+    assert "metric%3Aja-arguana" in response.text
+    assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3Aja-arguana' in response.text
 
 
 def test_mnanobeir_language_pages_use_dataset_primary_language(tmp_path: Path) -> None:
@@ -6291,7 +6506,7 @@ def test_task_score_display_can_show_all_tasks_and_filter_task_columns(tmp_path:
     assert 'value="ARGUANA qw"' in response.text
     assert ">arguana</span>" in response.text
     assert ">fever</span>" not in response.text
-    assert "metric%3Aarguana" in response.text
+    assert "metric%3Abench%3A%3Aarguana" in response.text
 
     nq_response = TestClient(app).get("/leaderboard?view=BenchA&task_scores=1&task_filter=nq")
 
@@ -6457,9 +6672,9 @@ def test_task_rank_display_uses_per_task_average_ranks(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "<span>Task ranks</span>" in response.text
-    assert 'name="task_scores" value="1" checked' in response.text
+    assert 'name="columns" value="task" checked' in response.text
     assert 'name="task_ranks" value="1" checked' in response.text
-    assert 'name="task_scores" value="1"' in response.text
+    assert 'name="columns" value="task"' in response.text
     assert '<span class="task-rank-label">[1]</span>' not in response.text
     assert '<span class="task-rank-label">[T2]</span>' not in response.text
     assert '<span class="task-rank-score-value">' not in response.text
@@ -6600,7 +6815,8 @@ def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_
     default_response = client.get("/leaderboard?view=BenchA")
 
     assert default_response.status_code == 200
-    assert 'name="task_scores" value="1">' in default_response.text
+    assert 'name="columns" value="task" data-column-mode-toggle>' in default_response.text
+    assert 'name="columns" value="grouped" data-column-mode-toggle>' in default_response.text
     assert 'name="task_z_scores" value="1" checked' not in default_response.text
     assert '<input type="hidden" name="task_z_scores" value="0">' in default_response.text
     assert "task-z-score" not in default_response.text
@@ -7188,7 +7404,7 @@ benchmarks:
     assert response.status_code == 200
     assert ">EuroPIRQ-en</span>" in response.text
     assert ">EuroPIRQ-fi</span>" in response.text
-    assert 'data-metric-column-full-name="en"' in response.text
+    assert 'data-metric-column-full-name="misc-en"' in response.text
 
 
 def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(tmp_path: Path) -> None:

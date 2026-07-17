@@ -899,13 +899,17 @@ the measured `embedding_dim`, and an equivalent non-truncate row exists for the
 same model, task, runtime metadata, dimension, and quantization, the leaderboard
 drops the no-op truncate row and prefers the original/full-dimension row.
 
-Task score columns are also controlled by an explicit display flag. The viewer
-does not render per-task or per-score-group metric columns by default. When
-`task_scores=1` is present, the leaderboard computes columns for the current
-selection: the selected score group for benchmark views, Nano-set columns for
-overall `score=macro`, the selected component score group for a single Custom
-benchmark selection such as `MNanoBEIR:task_mean` or `MNanoBEIR:lang_mean`, or
-task-level columns when no score group is available.
+Score columns are controlled by the mutually exclusive `columns=task` and
+`columns=grouped` display modes. The viewer does not render task or group metric
+columns by default. `columns=task` fixes `score=micro` and renders raw task-key
+columns. `columns=grouped` fixes `score=macro` and renders one column per
+selected Nano-set group, such as `JMTEB-v2` or `IFIR`. MNanoBEIR expands its
+selected inner axis for display: `MNanoBEIR:task_mean` renders columns such as
+`M-BEIR-arguana`, while `MNanoBEIR:lang_mean` renders columns such as
+`M-BEIR-ar`. These inner columns are display breakdowns; MNanoBEIR is still
+averaged into one Nano-set group before contributing to the Macro score. The legacy
+`task_scores=1` query parameter remains an accepted input and is normalized to
+the canonical column mode based on the accompanying score.
 By default, `model_filter` only hides rendered model rows,
 `task_filter` only narrows displayed task score columns, and refinement facet
 filters such as model type, dimensions, quantization, dtype, attention
@@ -924,11 +928,13 @@ filter query parameters `query_len_min`, `query_len_max`, `doc_len_min`, and
 Parameter and task length filters always narrow the ranked population before
 Borda, mean scores, task counts, and task score columns are computed.
 When `rank_filtered=1` is present, active text and refinement facet filters are
-also promoted into ranked-population filters. With a ranking task filter, the
-viewer ranks the matching task rows directly; overall views render a single
-task-level `Mean Score` column instead of separate macro and micro overall
-means. Model and task text filters use case-insensitive whitespace-separated
-tokens of at least three characters, with OR semantics.
+also promoted into ranked-population filters. With a ranking task filter in
+Micro/Task columns mode, the viewer ranks the matching task rows directly and
+overall views render a single task-level `Mean Score` column. In Macro/Grouped
+columns mode, the filter still runs before configured component and benchmark
+aggregation, so the visible and ranked units remain benchmark groups. Model and
+task text filters use case-insensitive whitespace-separated tokens of at least
+three characters, with OR semantics.
 
 When variants are displayed, the leaderboard keeps a unique internal row label
 by appending `embedding_dim`, `quantization`, and sometimes
@@ -1085,7 +1091,9 @@ choices:
   `Clear` pushes `view=Custom` with no `bench=` values, resets to All
   languages/categories, is not itself selected, and shows no rows. Overall,
   Overall (EN), and Custom scopes expose a Score selector for `micro` and
-  `macro`.
+  `macro`. When Task columns is active, Micro is selected and Macro is disabled;
+  when Grouped columns is active, Macro is selected and Micro is disabled. With
+  neither column mode active, Score remains independently selectable.
   NanoSet labels toggle a `Custom` selection through repeated `bench=` query
   parameters, so small combinations such as `NanoJMTEB-v2` plus `NanoMTEB-v2`
   are represented directly in the URL. `MNanoBEIR` is special:
@@ -1094,10 +1102,9 @@ choices:
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
   `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall` and
   `Overall (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
-  inside the same leaderboard configuration panel. When one grouped benchmark
-  is selected in Custom and `task_scores=1` is enabled, displayed task columns
-  follow that selection key: `MNanoBEIR(task)` displays BEIR source-task means
-  and `MNanoBEIR(lang)` displays language/dataset means.
+  inside the same leaderboard configuration panel. In Grouped columns mode,
+  this choice controls MNanoBEIR's inner macro aggregation and the visible
+  `M-BEIR-{task}` or `M-BEIR-{language}` display columns.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 
@@ -1571,7 +1578,7 @@ The final result should return both `macro_mean` and `micro_mean`. In
 
 ### 4. Overall Macro Leaderboard
 
-Overall views using `score=macro`, including `Overall`, `Overall (EN)`, and
+Overall views using `score=macro`, including Grouped columns in `Overall`, `Overall (EN)`, and
 dynamic `Custom` `bench=` selections, first average raw tasks
 into one score row per Nano-set, then compute Borda, means, and Nano-set metric
 columns. Components with a `group_by` setting, such as `MNanoBEIR` grouped by
@@ -1929,10 +1936,16 @@ length range filters are ranking-population filters whenever they are set.
 8. Apply parameter and task length range filters before the completeness rule
    and ranking. If `rank_filtered=1`, also apply model, task, and active
    refinement facet filters before ranking. With a task filter, use direct
-   task-level means for overall views instead of grouped macro/micro means.
-9. Only render benchmark metric columns when `task_scores=1` is active. Use the
-   already-selected scoring group rows when present; otherwise use task-level
-   values. When `rank_filtered` is not active, apply `task_filter` to the
-   displayed metric columns only.
+   task-level means for Micro/Task columns; preserve post-filter component and
+   benchmark aggregation for Macro/Grouped columns.
+9. Only render metric columns when a column mode is active. `columns=task` uses
+   raw task keys with Micro scoring; `columns=grouped` uses benchmark keys with
+   Macro scoring and preserves configured component grouping before the final
+   group mean. MNanoBEIR exposes the preserved task or language component rows
+   as separate display columns while retaining its single final benchmark row
+   for Macro means and ranks. Grouped headers resolve benchmark-level docs so
+   multi-task groups such as BIRCO and BRIGHT receive the same help affordance
+   as single-task groups. When `rank_filtered` is not active, apply `task_filter`
+   to the displayed metric columns only.
 10. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values.

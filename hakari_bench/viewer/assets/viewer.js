@@ -7,6 +7,20 @@
     return target.closest(selector);
   }
 
+  document.addEventListener(
+    "change",
+    (event) => {
+      const selected = closestElement(event.target, "[data-column-mode-toggle]");
+      if (!selected || !selected.checked) return;
+      const group = selected.closest("[data-column-mode-group]");
+      if (!group) return;
+      for (const other of group.querySelectorAll("[data-column-mode-toggle]")) {
+        if (other !== selected) other.checked = false;
+      }
+    },
+    true,
+  );
+
   const themeStorageKey = "hakari-theme";
   const themeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 

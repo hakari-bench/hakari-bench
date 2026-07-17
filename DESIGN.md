@@ -150,7 +150,14 @@ components:
       appended at the far right so the core score columns remain stable. These
       cells must stay one line using short labels such as Apache, CC BY-NC,
       OpenAI, and Late int.; expose the full label through hover tooltip and
-      Model Details.
+      Model Details. Task columns and Grouped columns form one visibly connected,
+      mutually exclusive choice. Task columns uses Micro scoring and shows raw
+      task units; Grouped columns uses Macro scoring and shows one column per
+      selected benchmark group. M-BEIR is expanded along its selected inner
+      axis: task mode uses columns such as `M-BEIR-arguana`, while language mode
+      uses columns such as `M-BEIR-ar`. These display columns do not change the
+      rule that M-BEIR contributes one final group score to the Macro ranking.
+      Every Grouped column uses its benchmark-group documentation tooltip.
   model-details:
     purpose: Modal metadata for a single result row.
     treatment: Prefer model-card metadata when present. Order fields as Language,
@@ -335,12 +342,18 @@ read as an analytical instrument rather than a general-purpose dashboard.
   background fill, rounded radius, and enough padding to create a stable target.
 - Active controls should use the stronger active surface and accent text or
   border.
-- Boolean display and variant toggles (Task columns, STD, Task ranks, Dims,
+- Boolean display and variant toggles (STD, Task ranks, Dims,
   Quantization, Rescore, Sparse pruning) use the `.toggle-chip` style: a control
   chip whose checked state adopts the active surface and accent text, matching the
   selection chips rather than a raw native checkbox. Keep the real checkbox for
   form submission and focus, visually hidden, with a visible focus ring on the
   chip.
+- Task columns and Grouped columns use the same chip treatment inside one
+  bordered choice group with a short `or` separator. Selecting either clears
+  the other; selecting the active chip again may return to the summary table.
+  While either mode is active, the incompatible Score choice is visibly
+  disabled because Task columns is always Micro and Grouped columns is always
+  Macro.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
