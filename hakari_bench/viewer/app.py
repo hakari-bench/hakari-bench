@@ -475,6 +475,7 @@ def create_app(
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
+        request: Request,
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_score"),
         direction: str = Query(default="desc", pattern="^(asc|desc)$"),
@@ -516,7 +517,12 @@ def create_app(
         chart_y: str = Query(default="borda_score"),
         chart_x: str = Query(default="active_parameters"),
         chart_color: str = Query(default="embedding_dim"),
-    ) -> HTMLResponse:
+    ) -> HTMLResponse | RedirectResponse:
+        if request.headers.get("HX-Request", "").lower() != "true" and "text/html" in request.headers.get(
+            "Accept", ""
+        ).lower():
+            query = request.url.query
+            return RedirectResponse(url=f"/?{query}" if query else "/")
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
             state_query = normalize_query_state(
                 viewer_config=viewer_config,

@@ -1101,7 +1101,24 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert "[overflow-wrap:anywhere]" not in response.text
     assert response.text.index('id="leaderboard-panel"') < response.text.index("<footer")
 
-    leaderboard_response = TestClient(app).get("/leaderboard?view=BenchA")
+    client = TestClient(app)
+    browser_response = client.get(
+        "/leaderboard?view=BenchA&sort=mean_score&direction=asc",
+        headers={"Accept": "text/html"},
+        follow_redirects=False,
+    )
+    assert browser_response.status_code == 307
+    assert browser_response.headers["location"] == "/?view=BenchA&sort=mean_score&direction=asc"
+
+    htmx_response = client.get(
+        "/leaderboard?view=BenchA",
+        headers={"Accept": "text/html", "HX-Request": "true"},
+    )
+    assert htmx_response.status_code == 200
+    assert "leaderboard-table-scroll" in htmx_response.text
+    assert "<html" not in htmx_response.text
+
+    leaderboard_response = client.get("/leaderboard?view=BenchA")
     assert leaderboard_response.status_code == 200
     assert "Analysis views" not in leaderboard_response.text
     assert 'class="border-t border-zinc-200 px-3 py-3 text-sm text-zinc-600"' not in leaderboard_response.text
