@@ -1,7 +1,8 @@
-# Canonical raw task keys for the current 538-task Overall scope. Keep this in
+# Canonical task keys for the current 525-task Overall scope after configured
+# duplicate-task exclusions. Keep this in
 # sync with config/viewer/overall.yaml when adding a Nano-set or task.
 task_manifests:
-  overall_538:
+  overall_525:
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::dbpedia
@@ -28,19 +29,6 @@ task_manifests:
     - MNanoBEIR::hakari-bench/NanoBEIR-de::scidocs
     - MNanoBEIR::hakari-bench/NanoBEIR-de::scifact
     - MNanoBEIR::hakari-bench/NanoBEIR-de::touche2020
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::arguana
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::climatefever
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::dbpedia
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::fever
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::fiqa2018
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::hotpotqa
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::msmarco
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::nfcorpus
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::nq
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::quoraretrieval
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::scidocs
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::scifact
-    - MNanoBEIR::hakari-bench/NanoBEIR-en::touche2020
     - MNanoBEIR::hakari-bench/NanoBEIR-es::arguana
     - MNanoBEIR::hakari-bench/NanoBEIR-es::climatefever
     - MNanoBEIR::hakari-bench/NanoBEIR-es::dbpedia

@@ -815,7 +815,8 @@ colliding variant display names.
 
 Only models that have every expected task in the selected view are ranked. The
 built-in `Overall` and `Overall (EN)` views use the fixed standard task manifest
-in `config/viewer/overall_tasks.yaml` (currently 538 tasks), rather than
+in `config/viewer/overall_tasks.yaml` (currently 525 tasks after configured
+duplicate-task exclusions), rather than
 expanding when a newer DuckDB contains an additional task. Adding a standard
 Nano-set or task requires updating the manifest and its configured expected
 count in `config/viewer/overall.yaml` deliberately.
