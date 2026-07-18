@@ -741,6 +741,7 @@ class LeaderboardService:
                     metric_columns = _filter_metric_columns(
                         metric_rows, metric_score_group, metric_columns, task_filter
                     )
+                metric_columns = _promote_sorted_metric_column(metric_columns, sort=sort)
                 metric_column_labels = _metric_column_label_overrides(
                     rows=metric_rows,
                     score_group=metric_score_group,
@@ -3117,6 +3118,15 @@ def _metric_columns(
     if score_group is None:
         return []
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
+
+
+def _promote_sorted_metric_column(columns: list[str], *, sort: str) -> list[str]:
+    if not sort.startswith("metric:"):
+        return columns
+    sorted_column = sort.removeprefix("metric:")
+    if not columns or columns[0] == sorted_column or sorted_column not in columns:
+        return columns
+    return [sorted_column, *(column for column in columns if column != sorted_column)]
 
 
 def _task_breakdowns(rows: list[TaskScore]) -> list[TaskBreakdown]:

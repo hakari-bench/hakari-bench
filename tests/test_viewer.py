@@ -1237,14 +1237,14 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".leaderboard-col-model{box-sizing:border-box;left:var(--hakari-index-col-width)" in css_response.text
     assert "overflow:hidden;width:var(--hakari-model-col-width)" in css_response.text
     assert ".leaderboard-col-index{box-sizing:border-box;background-color:inherit;left:0" in css_response.text
-    assert ".borda-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
+    assert ".model-score-bar{position:absolute;-webkit-appearance:none;-moz-appearance:none;appearance:none" in css_response.text
     assert "top:2px;bottom:2px;left:2px;border:0;display:block;width:calc(100% - 2px);height:calc(100% - 4px)" in css_response.text
     assert "background-color:transparent;color:var(--hakari-accent);opacity:.1;pointer-events:none" in css_response.text
-    assert ":root.dark .borda-score-bar{opacity:.13}" in css_response.text
-    assert ":root:not(.light) .borda-score-bar{opacity:.13}" in css_response.text
-    assert ".leaderboard-col-model:hover .borda-score-bar,.leaderboard-row:hover .borda-score-bar{opacity:.28}" in css_response.text
-    assert ".borda-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
-    assert ".borda-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
+    assert ":root.dark .model-score-bar{opacity:.13}" in css_response.text
+    assert ":root:not(.light) .model-score-bar{opacity:.13}" in css_response.text
+    assert ".leaderboard-col-model:hover .model-score-bar,.leaderboard-row:hover .model-score-bar{opacity:.28}" in css_response.text
+    assert ".model-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
+    assert ".model-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
     assert ".hakari-count-modal{width:min(92vw,48rem);max-height:92vh}" in css_response.text
@@ -1662,6 +1662,22 @@ benchmarks:
         show_task_scores=True,
         score_aggregation="macro",
     )
+    sorted_task_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:task_mean", "NanoJMTEB-v2", "NanoIFIR"),
+        column_mode="task",
+        show_task_scores=True,
+        score_aggregation="micro",
+        sort="metric:MNanoBEIR::hakari-bench/NanoBEIR-ja::fever",
+    )
+    sorted_grouped_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:task_mean", "NanoJMTEB-v2", "NanoIFIR"),
+        column_mode="grouped",
+        show_task_scores=True,
+        score_aggregation="macro",
+        sort="metric:NanoIFIR",
+    )
 
     assert task_grouped_result.metric_columns == [
         "MNanoBEIR::arguana",
@@ -1689,9 +1705,15 @@ benchmarks:
     assert lang_grouped_result.rows[0].metric_values["MNanoBEIR::NanoBEIR-en"] == pytest.approx(80.0)
     assert lang_grouped_result.rows[0].metric_values["MNanoBEIR::NanoBEIR-ja"] == pytest.approx(40.0)
     assert lang_grouped_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
+    assert sorted_task_result.metric_columns[0] == "MNanoBEIR::hakari-bench/NanoBEIR-ja::fever"
+    assert sorted_grouped_result.metric_columns[0] == "NanoIFIR"
 
     grouped_response = client.get(
         "/leaderboard?view=Custom&bench=MNanoBEIR%3Atask_mean&bench=NanoJMTEB-v2&bench=NanoIFIR&columns=grouped"
+    )
+    sorted_grouped_response = client.get(
+        "/leaderboard?view=Custom&bench=MNanoBEIR%3Atask_mean&bench=NanoJMTEB-v2&bench=NanoIFIR"
+        "&columns=grouped&sort=metric%3ANanoIFIR"
     )
     task_response = client.get(
         "/leaderboard?view=Custom&bench=MNanoBEIR%3Alang_mean&bench=NanoJMTEB-v2&bench=NanoIFIR&columns=task&score=macro"
@@ -1720,6 +1742,10 @@ benchmarks:
     assert 'name="columns" value="grouped" checked' in grouped_response.text
     assert 'name="columns" value="task" checked' not in grouped_response.text
     assert 'aria-label="Score aggregation: Macro (locked by Grouped columns)"' in grouped_response.text
+    sorted_grouped_head = sorted_grouped_response.text.split("<thead", 1)[1].split("</thead>", 1)[0]
+    assert sorted_grouped_head.index('data-column-key="metric:NanoIFIR"') < sorted_grouped_head.index(
+        'data-column-key="metric:MNanoBEIR::arguana"'
+    )
 
     assert task_response.status_code == 200
     assert "score=macro" not in task_response.headers["hx-push-url"]
@@ -5535,12 +5561,12 @@ def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> No
         '<span class="min-w-0 text-left leading-tight font-normal block max-w-full truncate tooltip-trigger cursor-pointer" '
         f'data-metric-column-full-name="{long_task}"'
     ) in head
-    assert body.count('class="borda-score-bar"') == 2
-    assert 'class="borda-score-bar" value="100.00" max="100"' in body
-    assert 'class="borda-score-bar" value="0.00" max="100"' in body
+    assert body.count('class="model-score-bar"') == 2
+    assert 'class="model-score-bar" value="100.00" max="100"' in body
+    assert 'class="model-score-bar" value="0.00" max="100"' in body
 
 
-def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row(tmp_path: Path) -> None:
+def test_leaderboard_model_name_score_bar_handles_one_visible_filtered_row(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
         db_path,
@@ -5559,12 +5585,65 @@ def test_leaderboard_model_name_borda_score_bar_handles_one_visible_filtered_row
 
     body = render_table_body(result=result, filter_context=filter_context)
 
-    assert body.count('class="borda-score-bar"') == 1
-    assert 'class="borda-score-bar" value="100.00" max="100"' in body
+    assert body.count('class="model-score-bar"') == 1
+    assert 'class="model-score-bar" value="100.00" max="100"' in body
     assert body.count('data-filter-hidden="true"') == 1
 
 
-def test_leaderboard_model_name_borda_score_bar_scales_to_visible_max_score() -> None:
+def test_leaderboard_model_name_score_bar_tracks_selected_score_sort() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=2,
+                model_name="model/borda-top",
+                borda_score=100.0,
+                mean_score=40.0,
+                macro_mean=40.0,
+                micro_mean=80.0,
+                task_count=1,
+                metric_values={"BenchA": 25.0},
+                metric_sort_values={"BenchA": 2.0},
+            ),
+            LeaderboardRow(
+                borda_rank=2,
+                mean_rank=1,
+                model_name="model/metric-top",
+                borda_score=50.0,
+                mean_score=80.0,
+                macro_mean=80.0,
+                micro_mean=20.0,
+                task_count=1,
+                metric_values={"BenchA": 50.0},
+                metric_sort_values={"BenchA": 1.0},
+            ),
+        ],
+        available_views=["Overall"],
+        available_view_labels={"Overall": "Overall"},
+        score_groups=[],
+        metric_columns=["BenchA"],
+    )
+
+    metric_body = render_table_body(result=result, sort="metric:BenchA")
+    macro_body = render_table_body(result=result, sort="macro_mean")
+    fallback_body = render_table_body(result=result, sort="model_name")
+
+    assert metric_body.count('data-score-bar-target="metric:BenchA"') == 2
+    assert '<progress class="model-score-bar" value="50.00" max="100" data-score-bar-target="metric:BenchA"' in metric_body
+    assert '<progress class="model-score-bar" value="100.00" max="100" data-score-bar-target="metric:BenchA"' in metric_body
+    assert macro_body.count('data-score-bar-target="macro_mean"') == 2
+    assert '<progress class="model-score-bar" value="50.00" max="100" data-score-bar-target="macro_mean"' in macro_body
+    assert '<progress class="model-score-bar" value="100.00" max="100" data-score-bar-target="macro_mean"' in macro_body
+    assert fallback_body.count('data-score-bar-target="borda_score"') == 2
+    assert '<progress class="model-score-bar" value="100.00" max="100" data-score-bar-target="borda_score"' in fallback_body
+    assert '<progress class="model-score-bar" value="50.00" max="100" data-score-bar-target="borda_score"' in fallback_body
+
+
+def test_leaderboard_model_name_score_bar_scales_to_visible_max_score() -> None:
     result = LeaderboardResult(
         view_name="BenchA",
         view_label="Bench A",
@@ -5608,11 +5687,11 @@ def test_leaderboard_model_name_borda_score_bar_scales_to_visible_max_score() ->
         filter_context=row_filter_context(result.rows, FilterState(filters_active=True, model_filter="middle")),
     )
 
-    assert 'class="borda-score-bar" value="100.00" max="100"' in body
-    assert 'class="borda-score-bar" value="50.00" max="100"' in body
-    assert 'class="borda-score-bar" value="3.75" max="100"' in body
-    assert filtered_body.count('class="borda-score-bar"') == 1
-    assert 'class="borda-score-bar" value="100.00" max="100"' in filtered_body
+    assert 'class="model-score-bar" value="100.00" max="100"' in body
+    assert 'class="model-score-bar" value="50.00" max="100"' in body
+    assert 'class="model-score-bar" value="3.75" max="100"' in body
+    assert filtered_body.count('class="model-score-bar"') == 1
+    assert 'class="model-score-bar" value="100.00" max="100"' in filtered_body
 
 
 def test_leaderboard_table_hides_task_count_column() -> None:
@@ -5655,7 +5734,7 @@ def test_leaderboard_table_hides_task_count_column() -> None:
     assert '<td class="px-2 py-1 text-left tabular-nums">1</td>' not in body
 
 
-def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:
+def test_leaderboard_model_name_score_bar_handles_no_visible_filtered_rows(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
         db_path,
@@ -5674,7 +5753,7 @@ def test_leaderboard_model_name_borda_score_bar_handles_no_visible_filtered_rows
 
     body = render_table_body(result=result, filter_context=filter_context)
 
-    assert 'class="borda-score-bar"' not in body
+    assert 'class="model-score-bar"' not in body
     assert body.count('data-filter-hidden="true"') == 2
 
 
@@ -6027,7 +6106,7 @@ benchmarks:
     assert task_result.metric_columns == ["arguana", "fever"]
     assert task_result.rows[0].mean_score == 67.5
     assert task_result.rows[0].metric_values["arguana"] == 75.0
-    assert lang_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
+    assert lang_result.metric_columns == ["NanoBEIR-ja", "NanoBEIR-en"]
     lang_by_model = {row.model_name: row for row in lang_result.rows}
     assert lang_by_model["model/a"].mean_score == 70.0
     assert lang_by_model["model/a"].metric_values["NanoBEIR-ja"] == 70.0
@@ -7326,6 +7405,33 @@ def test_task_score_column_headers_strip_repeated_suite_prefix_from_subtask() ->
     assert '<span class="block w-full truncate font-normal">NanoBRIGHT</span>' in head
     assert '<span class="block max-w-full truncate font-normal">FooBar</span>' in head
     assert '<span class="block max-w-full truncate font-normal">NanoBRIGHTFooBar</span>' not in head
+
+
+def test_grouped_score_column_headers_wrap_full_benchmark_names() -> None:
+    result = LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        expected_tasks=2,
+        rows=[],
+        available_views=["Overall"],
+        available_view_labels={"Overall": "Overall"},
+        score_groups=[],
+        column_mode="grouped",
+        score_aggregation="macro",
+        metric_columns=["NanoMTEB-Scandinavian", "NanoMTEB-Spanish"],
+    )
+
+    head = render_table_head(result=result, sort="borda_rank", direction="asc")
+
+    for column, label in (
+        ("NanoMTEB-Scandinavian", "MTEB-Scandinavian"),
+        ("NanoMTEB-Spanish", "MTEB-Spanish"),
+    ):
+        header = head.split(f'data-column-key="metric:{column}"', 1)[1].split("</th>", 1)[0]
+        assert f">{label}</span>" in header
+        assert "grouped-metric-label" in header
+        assert "truncate" not in header
 
 
 def test_task_score_column_headers_strip_view_prefix_from_single_task_name() -> None:

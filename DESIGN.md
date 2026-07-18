@@ -157,7 +157,11 @@ components:
       axis: task mode uses columns such as `M-BEIR-arguana`, while language mode
       uses columns such as `M-BEIR-ar`. These display columns do not change the
       rule that M-BEIR contributes one final group score to the Macro ranking.
-      Every Grouped column uses its benchmark-group documentation tooltip.
+      Every Grouped column uses its benchmark-group documentation tooltip and
+      wraps its complete label within the column instead of ellipsizing it. When
+      a Task or Grouped metric header is selected for sorting, move that metric
+      column to the front of the metric-column region so the sorted values stay
+      visible beside the fixed summary columns.
   model-details:
     purpose: Modal metadata for a single result row.
     treatment: Prefer model-card metadata when present. Order fields as Language,
@@ -218,8 +222,11 @@ components:
       switch with the same database icon used by the Benchmark scope control;
       avoid a bare slash before the scope label.
   model-score-bar:
-    purpose: Show relative Borda strength behind the sticky model name.
-    treatment: Subtle background bar scaled by visible max score; never competes with text.
+    purpose: Show the active score-sort target behind the sticky model name.
+    treatment: Use Borda, Mean, Macro, Micro, or the selected Task/Grouped raw
+      metric score when that score column controls sorting. Fall back to Borda
+      for non-score sorts. Scale against the visible maximum and never compete
+      with text.
   score-cell:
     purpose: Show score, optional task rank, z-score, and variant deltas.
     treatment: Numeric alignment and compact heat color; rank decoration is minimal.
@@ -440,16 +447,19 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep model name sticky and readable during horizontal scroll.
 - Keep task columns compact. Repeated suite prefixes may be removed from the
   subtask line when the remaining label is non-empty.
+- Allow Grouped column headers to grow vertically and wrap long benchmark names;
+  never replace part of a Grouped label with an ellipsis.
 - When a task label has a suite and subtask, use a two-line header treatment
   rather than `Suite::Task`.
 - Documentation icons should sit beside the specific task or suite label they
   explain.
 - Model-name hover and row hover backgrounds should match, including sticky
   columns.
-- Use Borda background bars as context, not as chart decoration. Bars should be
-  subtle, use the accent color, and scale relative to the visible maximum Borda
-  score so the top visible row reaches 100% without moving the minimum score to
-  zero.
+- Use model-name background bars as context, not as chart decoration. When a
+  score column controls sorting, bars use that Borda, Mean, Macro, Micro, Task,
+  or Grouped raw score; non-score sorts fall back to Borda. Bars should be
+  subtle, use the accent color, and scale relative to the visible maximum score
+  so the top visible score reaches 100% without moving the minimum score to zero.
 - If there is only one visible row, the bar can fill to 100%; if there are no
   visible rows, no bar should render.
 

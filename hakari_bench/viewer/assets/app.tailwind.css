@@ -403,6 +403,13 @@
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 70%, var(--hakari-surface));
   }
 
+  .grouped-metric-label {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
   .leaderboard-table tbody tr {
     background-color: var(--hakari-surface-faint);
   }
@@ -425,7 +432,7 @@
     width: var(--hakari-model-col-width);
   }
 
-  .borda-score-bar {
+  .model-score-bar {
     position: absolute;
     appearance: none;
     top: 2px;
@@ -443,31 +450,31 @@
     z-index: 0;
   }
 
-  :root.dark .borda-score-bar {
+  :root.dark .model-score-bar {
     opacity: 0.13;
   }
 
   @media (prefers-color-scheme: dark) {
-    :root:not(.light) .borda-score-bar {
+    :root:not(.light) .model-score-bar {
       opacity: 0.13;
     }
   }
 
-  .leaderboard-row:hover .borda-score-bar,
-  .leaderboard-col-model:hover .borda-score-bar {
+  .leaderboard-row:hover .model-score-bar,
+  .leaderboard-col-model:hover .model-score-bar {
     opacity: 0.28;
   }
 
-  .borda-score-bar::-webkit-progress-bar {
+  .model-score-bar::-webkit-progress-bar {
     background-color: transparent;
   }
 
-  .borda-score-bar::-webkit-progress-value {
+  .model-score-bar::-webkit-progress-value {
     background-color: var(--hakari-accent);
     border-radius: 0 4px 4px 0;
   }
 
-  .borda-score-bar::-moz-progress-bar {
+  .model-score-bar::-moz-progress-bar {
     background-color: var(--hakari-accent);
     border-radius: 0 4px 4px 0;
   }
@@ -936,7 +943,7 @@
       transition: none;
     }
 
-    .borda-score-bar {
+    .model-score-bar {
       transition: none;
     }
 

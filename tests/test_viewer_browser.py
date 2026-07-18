@@ -53,6 +53,17 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert grouped_columns.is_checked() is False
                 assert page.locator('[aria-label="Score aggregation: Micro (locked by Task columns)"]').count() == 1
                 assert page.get_by_role("button", name="Macro", exact=True).is_disabled() is True
+                task_table = page.locator(".leaderboard-table").first
+                task_table.locator('th[data-column-key="metric:a2"] button').click()
+                page.wait_for_url(lambda url: "sort=metric%3Aa2" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                first_task_metric = task_table.locator('thead th[data-column-key^="metric:"]').first
+                assert first_task_metric.get_attribute("data-column-key") == "metric:a2"
+                task_score_bars = task_table.locator('.model-score-bar[data-score-bar-target="metric:a2"]')
+                assert task_score_bars.count() > 0
+                assert task_score_bars.evaluate_all(
+                    "bars => Math.max(...bars.map((bar) => Number(bar.value)))"
+                ) == pytest.approx(100.0)
 
                 page.locator("#column-controls label", has_text="Grouped columns").click()
                 page.wait_for_url(
@@ -64,6 +75,18 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert grouped_columns.is_checked() is True
                 assert page.locator('[aria-label="Score aggregation: Macro (locked by Grouped columns)"]').count() == 1
                 assert page.get_by_role("button", name="Micro", exact=True).is_disabled() is True
+                grouped_header_style = page.locator("th .grouped-metric-label").first.evaluate(
+                    """(el) => ({
+                        overflowWrap: getComputedStyle(el).overflowWrap,
+                        textOverflow: getComputedStyle(el).textOverflow,
+                        whiteSpace: getComputedStyle(el).whiteSpace,
+                    })"""
+                )
+                assert grouped_header_style == {
+                    "overflowWrap": "anywhere",
+                    "textOverflow": "clip",
+                    "whiteSpace": "normal",
+                }
                 section_icon_state = page.locator("h1 svg.section-heading-icon[data-icon='hakari-bench']").first.evaluate(
                     """(el) => ({
                         width: parseFloat(getComputedStyle(el).width),

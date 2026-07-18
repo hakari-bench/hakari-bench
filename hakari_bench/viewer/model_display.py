@@ -295,15 +295,22 @@ def _model_metadata(
     }
 
 
-def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, borda_score_bar_width: float | None = None) -> str:
+def render_model_name_cell(
+    row: LeaderboardRow,
+    model_view: ModelCellView,
+    *,
+    score_bar_width: float | None = None,
+    score_bar_target: str = "borda_score",
+) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
     display_name = model_view.display_name
     name_attrs = f' aria-label="{escape(model_view.display_name, quote=True)}"'
-    borda_bar_html = ""
-    if borda_score_bar_width is not None:
-        clamped_width = min(100.0, max(0.0, borda_score_bar_width))
-        borda_bar_html = (
-            f'<progress class="borda-score-bar" value="{clamped_width:.2f}" max="100"'
+    score_bar_html = ""
+    if score_bar_width is not None:
+        clamped_width = min(100.0, max(0.0, score_bar_width))
+        score_bar_html = (
+            f'<progress class="model-score-bar" value="{clamped_width:.2f}" max="100"'
+            f' data-score-bar-target="{escape(score_bar_target, quote=True)}"'
             ' aria-hidden="true"></progress>'
         )
     badges = []
@@ -354,7 +361,7 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
       <div class="relative z-10 flex min-w-0 flex-wrap items-center gap-1">
         <button type="button" class="model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2 hover:underline"
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
-      </div>{borda_bar_html}
+      </div>{score_bar_html}
     </td>"""
 
 

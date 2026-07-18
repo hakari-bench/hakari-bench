@@ -909,7 +909,9 @@ selected inner axis for display: `MNanoBEIR:task_mean` renders columns such as
 `M-BEIR-ar`. These inner columns are display breakdowns; MNanoBEIR is still
 averaged into one Nano-set group before contributing to the Macro score. The legacy
 `task_scores=1` query parameter remains an accepted input and is normalized to
-the canonical column mode based on the accompanying score.
+the canonical column mode based on the accompanying score. When `sort=metric:KEY`
+names a visible Task or Grouped column, the viewer promotes `KEY` to the first
+metric-column position without changing the calculation or sort order of rows.
 By default, `model_filter` only hides rendered model rows,
 `task_filter` only narrows displayed task score columns, and refinement facet
 filters such as model type, dimensions, quantization, dtype, attention
@@ -987,6 +989,18 @@ tooltip.
 Benchmark-level `task_labels` from `config/viewer/benchmarks.yaml` override only
 the visible header text; sorting, task filters, and metric values continue to
 use the underlying metric key.
+Grouped metric headers always render their complete benchmark labels. Long
+labels such as `MTEB-Scandinavian` and `MTEB-Spanish` wrap across lines within
+the fixed metric-column width instead of using an ellipsis; Task column headers
+retain their compact truncation behavior.
+
+The background progress bar in each visible model-name cell follows the active
+score sort. `borda_score`, `mean_score`, `macro_mean`, and `micro_mean` use their
+corresponding row values, while `metric:KEY` uses the raw 0-100 task or grouped
+metric score even when rank or standard-deviation display is active. Non-score
+sorts and invalid metric keys fall back to `borda_score`. Widths are normalized
+against the maximum non-missing target score among currently visible rows, so
+filtering also updates the scale without changing DuckDB calculations.
 
 When `Task std display` is enabled, the viewer renders task metric columns with
 the raw 0-100 task score plus its z-score distance from the task distribution.
@@ -1948,4 +1962,5 @@ length range filters are ranking-population filters whenever they are set.
    as single-task groups. When `rank_filtered` is not active, apply `task_filter`
    to the displayed metric columns only.
 10. Default sort should be `borda_rank ASC`. Metric-column sorts should place
-   missing values after present values.
+   missing values after present values and promote the selected metric to the
+   first displayed metric-column position.

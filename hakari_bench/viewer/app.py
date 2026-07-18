@@ -1390,7 +1390,7 @@ def render_leaderboard(
   <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
     <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
       {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
-      {render_table_body(result=result, filter_context=filter_context)}
+      {render_table_body(result=result, filter_context=filter_context, sort=sort)}
     </table>
   </div>"""
     )
@@ -4311,16 +4311,19 @@ def render_table_head(
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
         if is_metric:
             group_label, task_label = _metric_column_header_parts(label)
+            metric_label_overflow_class = (
+                "grouped-metric-label" if result.column_mode == "grouped" else "truncate"
+            )
             if task_label:
                 header_content = f"""
                  <span class="doc-label-group block w-full min-w-0" data-doc-label-group="metric">
                    <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>
-                     <span class="block w-full truncate font-normal">{escape(group_label)}</span>
+                     <span class="block w-full {metric_label_overflow_class} font-normal">{escape(group_label)}</span>
                      <span class="inline-flex max-w-full items-center gap-1">
                        <button type="button" class="inline-flex min-w-0 items-center gap-0.5 text-left hover:text-cyan-700"
                                hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                                {_leaderboard_control_hx_attrs()}>
-                         <span class="block max-w-full truncate font-normal">{escape(task_label)}</span>{indicator}
+                         <span class="block max-w-full {metric_label_overflow_class} font-normal">{escape(task_label)}</span>{indicator}
                        </button>{doc_trigger}
                      </span>
                    </span>
@@ -4331,7 +4334,7 @@ def render_table_head(
                    <button type="button" class="inline-flex min-w-0 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                            hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                            {_leaderboard_control_hx_attrs()}>
-                     <span class="{label_class} block max-w-full truncate tooltip-trigger cursor-pointer"{label_attrs}>{escape(group_label)}</span>{indicator}
+                     <span class="{label_class} block max-w-full {metric_label_overflow_class} tooltip-trigger cursor-pointer"{label_attrs}>{escape(group_label)}</span>{indicator}
                    </button>{doc_trigger}
                  </span>"""
         else:
@@ -4366,14 +4369,24 @@ def _sticky_head_class(key: str) -> str:
     return ""
 
 
-def render_table_body(*, result: LeaderboardResult, filter_context: FilterContext | None = None) -> str:
+def render_table_body(
+    *,
+    result: LeaderboardResult,
+    filter_context: FilterContext | None = None,
+    sort: str = "borda_score",
+) -> str:
     if not result.rows:
         colspan = _leaderboard_table_colspan(result)
         return f"""<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="{colspan}">No complete results found.</td></tr></tbody>"""
     filter_context = filter_context or row_filter_context(result.rows, FilterState())
     body_rows = []
     model_views = model_cell_views(result.rows)
-    borda_score_bar_widths = _borda_score_bar_widths(rows=result.rows, filter_context=filter_context)
+    score_bar_target = _score_bar_target(result=result, sort=sort)
+    score_bar_widths = _score_bar_widths(
+        rows=result.rows,
+        filter_context=filter_context,
+        target=score_bar_target,
+    )
     metric_rank_labels = _metric_rank_display_labels(result)
     visible_index = 0
     for row in result.rows:
@@ -4390,7 +4403,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="leaderboard-col-index sticky z-10 bg-inherit px-1.5 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
-              {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
+              {render_model_name_cell(row, model_views[row.model_name], score_bar_width=score_bar_widths.get(row.model_name), score_bar_target=score_bar_target)}
               {borda_score_cell}
               {mean_cells}
               {_render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels)}
@@ -4430,14 +4443,40 @@ def _render_borda_score_cell(*, result: LeaderboardResult, row: LeaderboardRow) 
     return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>"""
 
 
-def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: FilterContext) -> dict[str, float]:
-    visible_rows = [row for row in rows if filter_context.is_visible(row)]
-    if not visible_rows:
+def _score_bar_target(*, result: LeaderboardResult, sort: str) -> str:
+    if sort in {"borda_score", "mean_score", "macro_mean", "micro_mean"}:
+        return sort
+    if sort.startswith("metric:") and sort.removeprefix("metric:") in result.metric_columns:
+        return sort
+    return "borda_score"
+
+
+def _score_bar_value(row: LeaderboardRow, *, target: str) -> float | None:
+    if target.startswith("metric:"):
+        return row.metric_values.get(target.removeprefix("metric:"))
+    value = getattr(row, target, None)
+    return float(value) if value is not None else None
+
+
+def _score_bar_widths(
+    *,
+    rows: Sequence[LeaderboardRow],
+    filter_context: FilterContext,
+    target: str,
+) -> dict[str, float]:
+    visible_values = [
+        (row, value)
+        for row in rows
+        if filter_context.is_visible(row)
+        for value in [_score_bar_value(row, target=target)]
+        if value is not None
+    ]
+    if not visible_values:
         return {}
-    max_score = max(row.borda_score for row in visible_rows)
+    max_score = max(value for _, value in visible_values)
     if max_score <= 0:
-        return {row.model_name: 0.0 for row in visible_rows}
-    return {row.model_name: (row.borda_score / max_score) * 100.0 for row in visible_rows}
+        return {row.model_name: 0.0 for row, _ in visible_values}
+    return {row.model_name: (value / max_score) * 100.0 for row, value in visible_values}
 
 
 def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:
