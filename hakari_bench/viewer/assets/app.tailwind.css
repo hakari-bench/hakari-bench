@@ -403,11 +403,18 @@
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 70%, var(--hakari-surface));
   }
 
-  .grouped-metric-label {
+  .metric-header-full-label {
     overflow: visible;
     overflow-wrap: anywhere;
     text-overflow: clip;
     white-space: normal;
+  }
+
+  .metric-header-label-group {
+    align-items: end;
+    column-gap: 0.25rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .leaderboard-table tbody tr {

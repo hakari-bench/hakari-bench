@@ -5558,7 +5558,7 @@ def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> No
     assert 'data-column-key="mean_rank"' not in head
     assert "leaderboard-col-rank" not in head
     assert (
-        '<span class="min-w-0 text-left leading-tight font-normal block max-w-full truncate tooltip-trigger cursor-pointer" '
+        '<span class="min-w-0 text-left leading-tight font-normal block max-w-full metric-header-full-label tooltip-trigger cursor-pointer" '
         f'data-metric-column-full-name="{long_task}"'
     ) in head
     assert body.count('class="model-score-bar"') == 2
@@ -7402,9 +7402,9 @@ def test_task_score_column_headers_strip_repeated_suite_prefix_from_subtask() ->
 
     head = render_table_head(result=result, sort="borda_rank", direction="asc")
 
-    assert '<span class="block w-full truncate font-normal">NanoBRIGHT</span>' in head
-    assert '<span class="block max-w-full truncate font-normal">FooBar</span>' in head
-    assert '<span class="block max-w-full truncate font-normal">NanoBRIGHTFooBar</span>' not in head
+    assert '<span class="block w-full metric-header-full-label font-normal">NanoBRIGHT</span>' in head
+    assert '<span class="block max-w-full metric-header-full-label font-normal">FooBar</span>' in head
+    assert '<span class="block max-w-full metric-header-full-label font-normal">NanoBRIGHTFooBar</span>' not in head
 
 
 def test_grouped_score_column_headers_wrap_full_benchmark_names() -> None:
@@ -7430,7 +7430,7 @@ def test_grouped_score_column_headers_wrap_full_benchmark_names() -> None:
     ):
         header = head.split(f'data-column-key="metric:{column}"', 1)[1].split("</th>", 1)[0]
         assert f">{label}</span>" in header
-        assert "grouped-metric-label" in header
+        assert "metric-header-full-label" in header
         assert "truncate" not in header
 
 
@@ -7640,13 +7640,22 @@ benchmarks:
 
     assert response.status_code == 200
     assert 'scope="colgroup"' not in response.text
-    assert '<span class="block w-full truncate font-normal">NanoBEIR-ar</span>' in response.text
-    assert '<span class="block w-full truncate font-normal">NanoBEIR-ja</span>' in response.text
-    assert '<span class="block max-w-full truncate font-normal">arguana</span>' in response.text
+    assert '<span class="block w-full metric-header-full-label font-normal">NanoBEIR-ar</span>' in response.text
+    assert '<span class="block w-full metric-header-full-label font-normal">NanoBEIR-ja</span>' in response.text
+    assert '<span class="block max-w-full metric-header-full-label font-normal">arguana</span>' in response.text
     assert (
-        '<span class="block max-w-full truncate font-normal">climatefever</span>'
+        '<span class="block max-w-full metric-header-full-label font-normal">climatefever</span>'
         in response.text
     )
+    climate_header = response.text.split(
+        '<th scope="col" data-column-key="metric:MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever"',
+        1,
+    )[1].split("</th>", 1)[0]
+    climate_sort_button = climate_header.split("<button", 1)[1].split("</button>", 1)[0]
+    assert ">NanoBEIR-ar</span>" in climate_sort_button
+    assert ">climatefever</span>" in climate_sort_button
+    assert "doc-summary-trigger" not in climate_sort_button
+    assert "truncate" not in climate_header
     assert "Task Key column. Scores are averaged per model over the raw benchmark rows" in response.text
     assert (
         'data-metric-column-full-name="MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana"'

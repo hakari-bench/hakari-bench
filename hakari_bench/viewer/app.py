@@ -4311,22 +4311,18 @@ def render_table_head(
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
         if is_metric:
             group_label, task_label = _metric_column_header_parts(label)
-            metric_label_overflow_class = (
-                "grouped-metric-label" if result.column_mode == "grouped" else "truncate"
-            )
+            metric_label_overflow_class = "metric-header-full-label"
             if task_label:
                 header_content = f"""
-                 <span class="doc-label-group block w-full min-w-0" data-doc-label-group="metric">
-                   <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>
+                 <span class="metric-header-label-group doc-label-group w-full min-w-0" data-doc-label-group="metric">
+                   <button type="button" class="{label_class} w-full min-w-0 tooltip-trigger cursor-pointer hover:text-cyan-700"
+                           hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                           {_leaderboard_control_hx_attrs()}{label_attrs}>
                      <span class="block w-full {metric_label_overflow_class} font-normal">{escape(group_label)}</span>
-                     <span class="inline-flex max-w-full items-center gap-1">
-                       <button type="button" class="inline-flex min-w-0 items-center gap-0.5 text-left hover:text-cyan-700"
-                               hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                               {_leaderboard_control_hx_attrs()}>
-                         <span class="block max-w-full {metric_label_overflow_class} font-normal">{escape(task_label)}</span>{indicator}
-                       </button>{doc_trigger}
+                     <span class="inline-flex max-w-full min-w-0 items-center gap-0.5">
+                       <span class="block max-w-full {metric_label_overflow_class} font-normal">{escape(task_label)}</span>{indicator}
                      </span>
-                   </span>
+                   </button>{doc_trigger}
                  </span>"""
             else:
                 header_content = f"""

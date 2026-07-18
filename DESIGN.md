@@ -445,14 +445,15 @@ read as an analytical instrument rather than a general-purpose dashboard.
   page scroll. Do not "fix" this by removing the horizontal wrapper — that makes a
   wide table scroll the whole page and drags the footer/chrome off-screen.
 - Keep model name sticky and readable during horizontal scroll.
-- Keep task columns compact. Repeated suite prefixes may be removed from the
-  subtask line when the remaining label is non-empty.
-- Allow Grouped column headers to grow vertically and wrap long benchmark names;
-  never replace part of a Grouped label with an ellipsis.
+- Keep task columns narrow, but allow Task and Grouped headers to grow vertically
+  and wrap long names. Never replace part of a metric label with an ellipsis.
+  Repeated suite prefixes may be removed from the subtask line when the remaining
+  label is non-empty.
 - When a task label has a suite and subtask, use a two-line header treatment
-  rather than `Suite::Task`.
+  rather than `Suite::Task`. Treat both lines as one sort button so clicking the
+  suite/dataset line or the task line performs the same column sort.
 - Documentation icons should sit beside the specific task or suite label they
-  explain.
+  explain and remain a separate control from the two-line sort button.
 - Model-name hover and row hover backgrounds should match, including sticky
   columns.
 - Use model-name background bars as context, not as chart decoration. When a

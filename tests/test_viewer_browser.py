@@ -75,7 +75,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert grouped_columns.is_checked() is True
                 assert page.locator('[aria-label="Score aggregation: Macro (locked by Grouped columns)"]').count() == 1
                 assert page.get_by_role("button", name="Micro", exact=True).is_disabled() is True
-                grouped_header_style = page.locator("th .grouped-metric-label").first.evaluate(
+                grouped_header_style = page.locator("th .metric-header-full-label").first.evaluate(
                     """(el) => ({
                         overflowWrap: getComputedStyle(el).overflowWrap,
                         textOverflow: getComputedStyle(el).textOverflow,

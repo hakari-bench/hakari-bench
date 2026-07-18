@@ -981,18 +981,19 @@ the same name, such as `NanoChemTEB::NanoChemTEB`, the visible header collapses
 to `NanoChemTEB`. Dataset/task labels such as
 `MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana` render as a two-line header in
 each metric column, with `NanoBEIR-ar` on the first line and `arguana` on the
-second line. Benchmark documentation triggers are attached beside the task label
-on the second line. If two full keys shorten to the same label, those
+second line. Both visible lines belong to one sort button, so either line sorts
+the same metric column. Benchmark documentation triggers are attached beside
+the task label as a separate control outside that sort button. If two full keys
+shorten to the same label, those
 conflicting headers render their full key. The full key is also exposed on the
 task header label with `data-metric-column-full-name` and in the task-column
 tooltip.
 Benchmark-level `task_labels` from `config/viewer/benchmarks.yaml` override only
 the visible header text; sorting, task filters, and metric values continue to
 use the underlying metric key.
-Grouped metric headers always render their complete benchmark labels. Long
-labels such as `MTEB-Scandinavian` and `MTEB-Spanish` wrap across lines within
-the fixed metric-column width instead of using an ellipsis; Task column headers
-retain their compact truncation behavior.
+Task and Grouped metric headers always render their complete visible labels.
+Long labels such as `MTEB-Scandinavian`, `MTEB-Spanish`, and `climatefever` wrap
+across lines within the fixed metric-column width instead of using an ellipsis.
 
 The background progress bar in each visible model-name cell follows the active
 score sort. `borda_score`, `mean_score`, `macro_mean`, and `micro_mean` use their
