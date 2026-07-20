@@ -4,11 +4,10 @@ from dataclasses import dataclass, field
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 from hakari_bench.viewer.model_types import MODEL_TYPE_FILTER_LABELS, MODEL_TYPE_FILTER_ORDER, model_type_filter_key
-from hakari_bench.viewer.state import FilterState
+from hakari_bench.viewer.state import FILTER_NONE_VALUE, FilterState
 from hakari_bench.viewer.text_match import active_filter_terms, text_matches_filter_terms
 
 
-FILTER_NONE_VALUE = "__none_selected__"
 DIM_FILTER_RANGE_PREFIX = "lte:"
 DIM_FILTER_MIN_RANGE_PREFIX = "gte:"
 DIM_FILTER_BOUND_SUGGESTIONS = (32, 64, 128, 256, 384, 512, 768, 1024, 1536, 2048, 2560)

@@ -33,6 +33,7 @@ PLOT_AXIS_FIELDS = {
     "sparse_document_dims",
 }
 PLOT_ENCODING_FIELDS = {*PLOT_AXIS_FIELDS, PLOT_NONE_FIELD}
+FILTER_NONE_VALUE = "__none_selected__"
 
 
 @dataclass(frozen=True)
@@ -410,7 +411,9 @@ def optional_query_string(value: QueryValue | None) -> str | None:
 def _normalized_query_values(values: list[str] | None) -> list[str]:
     if values is None:
         return []
-    return [value for value in values if value]
+    normalized = [value for value in values if value]
+    selected = [value for value in normalized if value != FILTER_NONE_VALUE]
+    return selected or normalized
 
 
 def _normalized_column_mode(values: list[str] | None) -> str | None:

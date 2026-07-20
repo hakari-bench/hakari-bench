@@ -81,6 +81,70 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
     }
 
 
+def test_normalize_query_state_ignores_none_sentinel_when_facet_values_are_selected() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        group=None,
+        variants=False,
+        quantization=True,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=True,
+        dim_filter=["__none_selected__", "384", "768"],
+        quant_filter=["__none_selected__", "__none__", "int8", "binary"],
+        commercial_filter=["__none_selected__", "commercial"],
+        model_type_filter=["__none_selected__", "dense"],
+        dtype_filter=["__none_selected__", "bf16"],
+        attn_filter=["__none_selected__", "sdpa"],
+        prompt_filter=["__none_selected__", "model default"],
+        model_filter="bge-m3 jina-embeddings-",
+    )
+
+    assert query["dim_filter"] == ["384", "768"]
+    assert query["quant_filter"] == ["__none__", "int8", "binary"]
+    assert query["commercial_filter"] == ["commercial"]
+    assert query["model_type_filter"] == ["dense"]
+    assert query["dtype_filter"] == ["bf16"]
+    assert query["attn_filter"] == ["sdpa"]
+    assert query["prompt_filter"] == ["model default"]
+
+
+def test_normalize_query_state_keeps_none_sentinel_when_no_facet_value_is_selected() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        group=None,
+        variants=False,
+        quantization=True,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=True,
+        dim_filter=["__none_selected__"],
+        quant_filter=["__none_selected__"],
+        commercial_filter=["__none_selected__"],
+        model_type_filter=["__none_selected__"],
+        dtype_filter=["__none_selected__"],
+        attn_filter=["__none_selected__"],
+        prompt_filter=["__none_selected__"],
+        model_filter="",
+    )
+
+    assert query["dim_filter"] == ["__none_selected__"]
+    assert query["quant_filter"] == ["__none_selected__"]
+    assert query["commercial_filter"] == []
+    assert query["model_type_filter"] == []
+    assert query["dtype_filter"] == ["__none_selected__"]
+    assert query["attn_filter"] == ["__none_selected__"]
+    assert query["prompt_filter"] == ["__none_selected__"]
+
+
 def test_legacy_variants_query_enables_all_variant_flags() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
