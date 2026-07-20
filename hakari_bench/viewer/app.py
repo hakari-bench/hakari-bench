@@ -3390,15 +3390,15 @@ def _language_page_button(
     active = result.selected_languages == language_filters
     label = "All languages" if option is None else f"{option.label} {option.task_count}"
     classes = _control_button_classes(active=active)
-    query_payload = _apply_plot_state(
-        state_payload(
-            result=result,
-            sort=sort,
-            direction=direction,
-            filter_state=_filter_state_with_languages(filter_state, language_filters),
-        ),
-        plot_state,
+    query_payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=_filter_state_with_languages(filter_state, language_filters),
     )
+    if result.view_name == "Overall (EN)" and language_filters != ("en",):
+        query_payload["view"] = "Overall"
+    query_payload = _apply_plot_state(query_payload, plot_state)
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
     return f"""<button type="button"{data_attr} class="shrink-0 whitespace-nowrap border px-2 py-1 text-[0.8125rem] {classes}"

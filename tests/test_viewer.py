@@ -28,6 +28,7 @@ from hakari_bench.viewer.app import (
     render_display_controls,
     render_leaderboard,
     render_tabs,
+    render_language_pages,
     render_leaderboard_csv,
     render_leaderboard_plot,
     render_page,
@@ -41,6 +42,7 @@ from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ViewerCon
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.filters import row_filter_context
 from hakari_bench.viewer.leaderboard import (
+    LanguageOption,
     LeaderboardResult,
     LeaderboardRow,
     LeaderboardService,
@@ -2094,6 +2096,51 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
     assert "bench=BenchA" in bench_c_html
     assert "bench=BenchB" in bench_c_html
     assert "bench=BenchC" in bench_c_html
+
+
+def test_overall_en_task_facets_switch_to_overall_for_non_english_selection() -> None:
+    result = LeaderboardResult(
+        view_name="Overall (EN)",
+        view_label="Overall (EN)",
+        is_overall=True,
+        expected_tasks=1,
+        rows=[],
+        available_views=["Overall", "Overall (EN)"],
+        available_view_labels={"Overall": "Overall", "Overall (EN)": "Overall (EN)"},
+        available_languages=[
+            LanguageOption(code="en", label="EN", task_count=1),
+            LanguageOption(code="ja", label="JA", task_count=1),
+            LanguageOption(code="category:code", label="Code", task_count=1),
+        ],
+        selected_languages=("en",),
+        score_groups=[],
+        metric_columns=[],
+    )
+
+    html = render_language_pages(
+        result=result,
+        sort="borda_score",
+        direction="desc",
+        filter_state=FilterState(language_filters=("en",)),
+    )
+
+    en_button = html.split(">EN 1</button>", 1)[0].rsplit("<button", 1)[1]
+    ja_button = html.split(">JA 1</button>", 1)[0].rsplit("<button", 1)[1]
+    code_button = html.split(">Code 1</button>", 1)[0].rsplit("<button", 1)[1]
+    all_languages_button = html.split(">All languages</button>", 1)[0].rsplit("<button", 1)[1]
+
+    assert "view=Overall+%28EN%29" in en_button
+    assert "lang_filter=en" in en_button
+    for button, language_filter in [
+        (ja_button, "lang_filter=ja"),
+        (code_button, "lang_filter=category%3Acode"),
+    ]:
+        assert "view=Overall&amp;" in button
+        assert "Overall+%28EN%29" not in button
+        assert language_filter in button
+    assert "view=Overall&amp;" in all_languages_button
+    assert "Overall+%28EN%29" not in all_languages_button
+    assert "lang_filter=" not in all_languages_button
 
 
 def test_display_controls_preserve_custom_benchmark_selection() -> None:

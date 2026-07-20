@@ -194,7 +194,11 @@ def normalize_query_state(
         query["other_variant"] = "1"
     language_filters = _normalized_query_values(lang_filter)
     if view == "Overall (EN)":
-        language_filters = ["en"]
+        if language_filters and language_filters != ["en"]:
+            view = "Overall"
+            query["view"] = view
+        else:
+            language_filters = ["en"]
     active_params_min = _normalized_numeric_bound(active_params_min)
     active_params_max = _normalized_numeric_bound(active_params_max)
     total_params_min = _normalized_numeric_bound(total_params_min)
