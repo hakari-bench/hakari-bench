@@ -158,11 +158,11 @@ components:
       task units for ordinary benchmarks; Grouped columns uses Macro scoring and
       shows one column per selected benchmark group. M-BEIR is the deliberate
       exception because its 13-task x 14-language matrix must never become 182
-      independent columns or ranking votes. Both table modes expand M-BEIR only
+      visible columns. Both table modes expand M-BEIR only
       along its selected inner axis: task mode uses 13 columns such as
       `M-BEIR-arguana`, while language mode uses 14 columns such as `M-BEIR-ar`.
-      The inner columns are display breakdowns; M-BEIR always contributes one
-      final score unit to the ranking, including Micro/Task columns mode.
+      The inner columns are display breakdowns. Micro still weights all 182 raw
+      result cells, while Macro averages M-BEIR into one benchmark contribution.
       Every Grouped column uses its benchmark-group documentation tooltip and
       wraps its complete label within the column instead of ellipsizing it. When
       a Task or Grouped metric header is selected for sorting, move that metric

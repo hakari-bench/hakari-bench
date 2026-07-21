@@ -10,9 +10,10 @@ benchmarks:
     matches:
       - NanoBEIR
     include_in_overall: true
-    # MNanoBEIR is a 13-task x 14-language matrix, not 182 independent score
-    # units. Every viewer mode must aggregate it by the selected task/language
-    # axis for display and collapse it to one final ranking contribution.
+    # MNanoBEIR is a 13-task x 14-language matrix. Micro scoring weights all 182
+    # raw cells as task results; Macro scoring collapses the matrix to one
+    # benchmark contribution. Both table modes use the selected task/language
+    # axis only to keep the visible breakdown compact at 13 or 14 columns.
     # Some dataset rows include
     # secondary languages such as English in `languages`, so Language pages use
     # the dataset primary language instead of expanding every detected language.
