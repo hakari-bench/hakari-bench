@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from hakari_bench.viewer.leaderboard import LeaderboardRow
 from hakari_bench.viewer.model_types import MODEL_TYPE_FILTER_LABELS, MODEL_TYPE_FILTER_ORDER, model_type_filter_key
@@ -123,6 +123,78 @@ def row_filter_context(rows: list[LeaderboardRow], filter_state: FilterState) ->
             filters_active=filter_state.filters_active,
         ),
         model_filter_terms=active_model_filter_terms(filter_state.model_filter),
+    )
+
+
+def canonical_filter_state(rows: list[LeaderboardRow], filter_state: FilterState) -> FilterState:
+    """Omit facet selections that are equivalent to their all-selected defaults."""
+
+    context = row_filter_context(rows, filter_state)
+
+    def constrained_values(
+        options: list[FilterOption], selected_values: set[str], original: tuple[str, ...]
+    ) -> tuple[str, ...]:
+        available = {value for value, _ in options}
+        if set(original) == available and selected_values == available:
+            return ()
+        return original
+
+    dim_filters = constrained_values(
+        context.dim_options,
+        context.selected_dims,
+        filter_state.dim_filters,
+    )
+    quant_filters = constrained_values(
+        context.quant_options,
+        context.selected_quants,
+        filter_state.quant_filters,
+    )
+    commercial_filters = constrained_values(
+        context.commercial_options,
+        context.selected_commercial,
+        filter_state.commercial_filters,
+    )
+    model_type_filters = constrained_values(
+        context.model_type_options,
+        context.selected_model_types,
+        filter_state.model_type_filters,
+    )
+    dtype_filters = constrained_values(
+        context.dtype_options,
+        context.selected_dtypes,
+        filter_state.dtype_filters,
+    )
+    attn_filters = constrained_values(
+        context.attn_options,
+        context.selected_attn,
+        filter_state.attn_filters,
+    )
+    prompt_filters = constrained_values(
+        context.prompt_options,
+        context.selected_prompts,
+        filter_state.prompt_filters,
+    )
+    filters_active = any(
+        (
+            dim_filters,
+            quant_filters,
+            commercial_filters,
+            model_type_filters,
+            dtype_filters,
+            attn_filters,
+            prompt_filters,
+        )
+    )
+    return replace(
+        filter_state,
+        filters_active=filters_active,
+        dim_filters=dim_filters,
+        quant_filters=quant_filters,
+        commercial_filters=commercial_filters,
+        model_type_filters=model_type_filters,
+        dtype_filters=dtype_filters,
+        attn_filters=attn_filters,
+        prompt_filters=prompt_filters,
     )
 
 

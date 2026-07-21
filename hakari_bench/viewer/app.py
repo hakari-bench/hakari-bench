@@ -37,6 +37,7 @@ from hakari_bench.viewer.filters import (
     DIM_FILTER_RANGE_PREFIX,
     FILTER_NONE_VALUE,
     FilterContext,
+    canonical_filter_state,
     row_filter_context,
     visible_row_count,
 )
@@ -64,7 +65,7 @@ from hakari_bench.viewer.state import (
     PLOT_NONE_FIELD,
     PLOT_SCORE_FIELDS,
     QueryState,
-    active_filter_hidden_fields,
+    canonical_query_state,
     filter_state_from_query,
     normalize_query_state,
     optional_query_string,
@@ -409,8 +410,7 @@ def create_app(
                 chart_x=chart_x,
                 chart_color=chart_color,
             )
-            if not task_z_scores:
-                initial_query["task_z_scores"] = "0"
+            initial_query = canonical_query_state(initial_query, viewer_config=viewer_config)
             with timed_operation("viewer.render", operation="render_page"):
                 content = render_page(
                     viewer_config=viewer_config,
@@ -420,7 +420,7 @@ def create_app(
                     benchmark_docs=benchmark_docs,
                     database_label="",
                 )
-            request_timing["view"] = initial_query["view"]
+            request_timing["view"] = query_string(initial_query.get("view", viewer_config.overall.name))
             return content
 
     def build_leaderboard_result(state_query: QueryState) -> tuple[LeaderboardResult, str, str, FilterState]:
@@ -589,6 +589,7 @@ def create_app(
                 )
             service_started = perf_counter()
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
+            filter_state = canonical_filter_state(result.rows, filter_state)
             service_ms = _elapsed_ms(service_started)
             render_started = perf_counter()
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
@@ -611,7 +612,26 @@ def create_app(
             return HTMLResponse(
                 content=content,
                 headers={
-                    "HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}",
+                    "HX-Push-Url": _page_path(
+                        canonical_query_state(
+                            _apply_plot_state(
+                                state_payload(
+                                    result=result,
+                                    sort=sort,
+                                    direction=direction,
+                                    filter_state=filter_state,
+                                ),
+                                _plot_state_query(
+                                    result_view=query_string(state_query.get("result_view", "table")),
+                                    plot_y=query_string(state_query.get("chart_y", "borda_score")),
+                                    plot_x=query_string(state_query.get("chart_x", "active_parameters")),
+                                    plot_size="embedding_dim",
+                                    plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
+                                ),
+                            ),
+                            viewer_config=viewer_config,
+                        )
+                    ),
                     **_timing_headers({"service": service_ms, "render": render_ms}),
                 },
             )
@@ -879,7 +899,7 @@ def render_page(
     benchmark_docs: BenchmarkDocs | None = None,
     database_label: str = "",
 ) -> str:
-    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_score", "direction": "desc"}, doseq=True)
+    query = urlencode(initial_query or {}, doseq=True)
     css_url = _asset_url("app.css")
     favicon_svg_url = _asset_url("favicon-white.svg")
     favicon_url = _asset_url("favicon.png")
@@ -1359,7 +1379,7 @@ def render_leaderboard(
     plot_size: str = "embedding_dim",
     plot_color: str = "embedding_dim",
 ) -> str:
-    filter_state = filter_state or FilterState()
+    filter_state = canonical_filter_state(result.rows, filter_state or FilterState())
     filter_context = row_filter_context(result.rows, filter_state)
     shown_count = visible_row_count(result.rows, filter_context)
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
@@ -1799,6 +1819,29 @@ def _query_state_fields(payload: QueryState | None) -> list[tuple[str, str]]:
         else:
             fields.append((key, value))
     return fields
+
+
+def _form_state_fields(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None,
+    exclude: set[str],
+) -> list[tuple[str, str]]:
+    """Serialize only state that is not owned by the submitting form."""
+
+    payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+    )
+    _apply_plot_state(payload, plot_state)
+    for key in exclude:
+        payload.pop(key, None)
+    return _query_state_fields(payload)
 
 
 def render_leaderboard_plot(
@@ -2687,6 +2730,21 @@ def render_tabs(
         )
     preset_buttons = [button for _, button in sorted(grouped_buttons["Scope presets"])]
     suite_buttons = [button for _, button in sorted(grouped_buttons["Nano suites"])]
+    task_facets = render_language_pages(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        embedded=True,
+        plot_state=plot_state,
+    )
+    task_facets_section = (
+        f"""<div class="benchmark-task-facets-divider mt-1.5 border-t border-zinc-200 pt-1.5">
+          {task_facets}
+        </div>"""
+        if task_facets
+        else ""
+    )
     return f"""
     <nav class="mb-3 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
       <div class="grid gap-1.5">
@@ -2698,7 +2756,7 @@ def render_tabs(
           </div>
         </div>
         <div class="grid gap-1.5">
-          <div class="border border-zinc-200 bg-white p-1.5">
+          <div class="benchmark-task-scope-panel border border-zinc-200 bg-white p-1.5" data-benchmark-task-scope="true">
             <div class="mb-1.5 flex flex-wrap items-center gap-2">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="database", text="Benchmark scope")}
@@ -2707,8 +2765,8 @@ def render_tabs(
             </div>
             <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
+            {task_facets_section}
           </div>
-          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True, plot_state=plot_state)}
         </div>
         {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
         {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, plot_state=plot_state)}
@@ -2881,7 +2939,11 @@ def _scope_preset_query_payload(
         direction=direction,
         filter_state=scope_filter_state,
     )
-    query_payload["view"] = CUSTOM_SCOPE_NAME if view_name == CLEAR_SCOPE_NAME else view_name
+    selected_view = CUSTOM_SCOPE_NAME if view_name == CLEAR_SCOPE_NAME else view_name
+    if selected_view == "Overall":
+        query_payload.pop("view", None)
+    else:
+        query_payload["view"] = selected_view
     query_payload.pop("bench", None)
     if view_name == CLEAR_SCOPE_NAME:
         query_payload.pop("lang_filter", None)
@@ -3374,7 +3436,7 @@ def render_language_pages(
         """
     wrapper_tag = "div" if embedded else "nav"
     wrapper_class = (
-        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-1.5"
+        "flex flex-wrap items-start gap-2"
         if embedded
         else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
     )
@@ -3415,7 +3477,7 @@ def _language_page_button(
         filter_state=_filter_state_with_languages(filter_state, language_filters),
     )
     if result.view_name == "Overall (EN)" and language_filters != ("en",):
-        query_payload["view"] = "Overall"
+        query_payload.pop("view", None)
     query_payload = _apply_plot_state(query_payload, plot_state)
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
@@ -3474,37 +3536,26 @@ def render_display_controls(
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     task_ranks_checked = " checked" if result.show_task_ranks else ""
     other_columns_checked = " checked" if result.show_other_columns else ""
-    state_fields = [
-        ("view", result.view_name),
-        ("sort", sort),
-        ("direction", direction),
-    ]
-    state_fields.extend(_selected_benchmark_hidden_fields(result))
-    if result.score_target != "all":
-        state_fields.append(("target", result.score_target))
-    if result.selected_score_metric != "ndcg@10":
-        state_fields.append(("metric", result.selected_score_metric))
-    if result.selected_score_group is not None:
-        state_fields.append(("group", result.selected_score_group.name))
-    if result.score_aggregation == "macro" and column_mode is None:
-        state_fields.append(("score", "macro"))
-    state_fields.extend(_query_state_fields(plot_state))
-    sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
-    variant_filter_fields = _variant_filter_hidden_fields(filter_state)
-    variant_hidden_fields = _active_variant_hidden_fields(result)
-    task_score_hidden_fields = []
-    if column_mode is not None:
-        task_score_hidden_fields.append(("columns", column_mode))
-    if result.show_task_z_scores:
-        task_score_hidden_fields.append(("task_z_scores", "1"))
-    else:
-        task_score_hidden_fields.append(("task_z_scores", "0"))
-    if result.show_task_ranks:
-        task_score_hidden_fields.append(("task_ranks", "1"))
-    if result.show_other_columns:
-        task_score_hidden_fields.append(("other_columns", "1"))
-    column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
-    variant_hidden_html = _hidden_inputs(state_fields + variant_filter_fields + task_score_hidden_fields)
+    column_hidden_html = _hidden_inputs(
+        _form_state_fields(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            plot_state=plot_state,
+            exclude={"columns", "task_z_scores", "task_ranks", "other_columns"},
+        )
+    )
+    variant_hidden_html = _hidden_inputs(
+        _form_state_fields(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            plot_state=plot_state,
+            exclude={"quantization", "truncate", "rescore", "other_variant"},
+        )
+    )
     return f"""
     <div class="grid gap-1.5 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
       <form id="column-controls" class="border border-zinc-200 bg-white p-1.5"
@@ -3596,38 +3647,35 @@ def render_controls(
     filter_state = filter_state or FilterState()
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
     rank_filtered_checked = " checked" if filter_state.rank_filtered else ""
-    state_fields = [
-        ("view", result.view_name),
-        ("sort", sort),
-        ("direction", direction),
-    ]
-    state_fields.extend(_selected_benchmark_hidden_fields(result))
-    if result.score_target != "all":
-        state_fields.append(("target", result.score_target))
-    if result.selected_score_metric != "ndcg@10":
-        state_fields.append(("metric", result.selected_score_metric))
-    if result.selected_score_group is not None:
-        state_fields.append(("group", result.selected_score_group.name))
-    column_mode = _column_mode_for_result(result)
-    if result.score_aggregation == "macro" and column_mode is None:
-        state_fields.append(("score", "macro"))
-    state_fields.extend(_query_state_fields(plot_state))
-    variant_hidden_fields = _active_variant_hidden_fields(result)
-    task_score_hidden_fields = []
-    if column_mode is not None:
-        task_score_hidden_fields.append(("columns", column_mode))
-    if result.show_task_z_scores:
-        task_score_hidden_fields.append(("task_z_scores", "1"))
-    else:
-        task_score_hidden_fields.append(("task_z_scores", "0"))
-    if result.show_task_ranks:
-        task_score_hidden_fields.append(("task_ranks", "1"))
-    filter_hidden_fields = [
-        *state_fields,
-        ("filters", "1"),
-        *variant_hidden_fields,
-        *task_score_hidden_fields,
-    ]
+    filter_hidden_fields = _form_state_fields(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        plot_state=plot_state,
+        exclude={
+            "filters",
+            "model_filter",
+            "task_filter",
+            "rank_filtered",
+            "lang_filter",
+            "dim_filter",
+            "quant_filter",
+            "commercial_filter",
+            "model_type_filter",
+            "dtype_filter",
+            "attn_filter",
+            "prompt_filter",
+            "active_params_min",
+            "active_params_max",
+            "total_params_min",
+            "total_params_max",
+            "query_len_min",
+            "query_len_max",
+            "doc_len_min",
+            "doc_len_max",
+        },
+    )
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
@@ -3865,6 +3913,7 @@ def render_controls(
           </span>
         </summary>
         <form id="filter-controls" class="border-t border-zinc-200 p-2"
+              data-filters-active={str(filter_state.filters_active).lower()}
               hx-get="/leaderboard" hx-push-url="true"
               {_leaderboard_control_hx_attrs()}
               hx-trigger="change from:input[type='checkbox'], submit">
@@ -3962,40 +4011,6 @@ def _filter_results_panel_should_open(filter_state: FilterState) -> bool:
         or filter_state.has_parameter_filters
         or filter_state.has_task_length_filters
     )
-
-
-def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
-    fields = []
-    if result.include_quantization_variants:
-        fields.append(("quantization", "1"))
-    if result.include_truncate_variants:
-        fields.append(("truncate", "1"))
-    if result.include_rescore_variants:
-        fields.append(("rescore", "1"))
-    if result.include_other_variants:
-        fields.append(("other_variant", "1"))
-    return fields
-
-
-def _variant_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    return active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
-
-
-def _selected_benchmark_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
-    if result.view_name != CUSTOM_SCOPE_NAME:
-        return []
-    return [("bench", benchmark) for benchmark in result.selected_benchmarks]
-
-
-def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    fields = []
-    if filter_state.model_filter:
-        fields.append(("model_filter", filter_state.model_filter))
-    if filter_state.task_filter:
-        fields.append(("task_filter", filter_state.task_filter))
-    if filter_state.rank_filtered:
-        fields.append(("rank_filtered", "1"))
-    return fields
 
 
 def _render_model_type_controls(
@@ -5305,16 +5320,24 @@ def _metric_column_labels(
 
 
 def _page_url(query: QueryState) -> str:
-    return escape(f"/?{urlencode(query, doseq=True)}", quote=True)
+    return escape(_page_path(query), quote=True)
+
+
+def _page_path(query: QueryState) -> str:
+    encoded = urlencode(query, doseq=True)
+    return f"/?{encoded}" if encoded else "/"
 
 
 def _leaderboard_url(query: str) -> str:
-    return escape(f"/leaderboard?{query}", quote=True)
+    return escape(f"/leaderboard?{query}" if query else "/leaderboard", quote=True)
 
 
 def _csv_url(query: str) -> str:
-    return escape(f"/leaderboard.csv?{query}", quote=True)
+    return escape(f"/leaderboard.csv?{query}" if query else "/leaderboard.csv", quote=True)
 
 
 def _task_breakdown_url(query: str) -> str:
-    return escape(f"/leaderboard/task-breakdown?{query}", quote=True)
+    return escape(
+        f"/leaderboard/task-breakdown?{query}" if query else "/leaderboard/task-breakdown",
+        quote=True,
+    )

@@ -113,6 +113,9 @@ components:
       M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
       one benchmark scope and share the same integrated `or` selector treatment
       used by Task columns and Grouped columns.
+      Benchmark scope and Task facets are two cuts over the same task population,
+      so they share one bordered panel. Preserve their existing labels and controls,
+      and separate Task facets from the scope controls with only a horizontal border.
       The main filter controls are arranged as two aligned flex lanes: left lane
       Model, Dims, Active params (M), and Query length; right lane Task,
       Quantization, Total params (M), and Document length.

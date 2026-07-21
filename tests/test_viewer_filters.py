@@ -5,6 +5,7 @@ from hakari_bench.viewer.filters import (
     FilterContext,
     active_model_filter_terms,
     active_task_filter_terms,
+    canonical_filter_state,
     task_name_matches_filter_terms,
     row_filter_context,
     visible_row_count,
@@ -23,6 +24,38 @@ def test_row_filter_context_defaults_to_all_available_facets_when_filters_are_in
     assert context.quant_options == [("__none__", "Original"), ("binary", "binary"), ("int8", "int8")]
     assert context.selected_dims == {"384", "768", "__unknown__"}
     assert context.selected_quants == {"__none__", "binary", "int8"}
+
+
+def test_canonical_filter_state_omits_all_selected_facets_when_another_filter_opens_panel() -> None:
+    rows = _rows()
+    defaults = row_filter_context(rows, FilterState())
+    state = FilterState(
+        model_filter="jina",
+        filters_active=True,
+        dim_filters=tuple(value for value, _ in defaults.dim_options),
+        quant_filters=tuple(value for value, _ in defaults.quant_options),
+        commercial_filters=tuple(value for value, _ in defaults.commercial_options),
+        model_type_filters=tuple(value for value, _ in defaults.model_type_options),
+        dtype_filters=tuple(value for value, _ in defaults.dtype_options),
+        attn_filters=tuple(value for value, _ in defaults.attn_options),
+        prompt_filters=tuple(value for value, _ in defaults.prompt_options),
+    )
+
+    canonical = canonical_filter_state(rows, state)
+
+    assert canonical == FilterState(model_filter="jina")
+
+
+def test_canonical_filter_state_preserves_only_non_default_facet_selections() -> None:
+    rows = _rows()
+    state = FilterState(
+        filters_active=True,
+        quant_filters=("int8",),
+    )
+
+    canonical = canonical_filter_state(rows, state)
+
+    assert canonical == FilterState(filters_active=True, quant_filters=("int8",))
 
 
 def test_row_filter_context_keeps_empty_selection_as_none_when_filters_are_active() -> None:
