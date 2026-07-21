@@ -4,11 +4,64 @@ from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ScoreGrou
 from hakari_bench.viewer.leaderboard import LeaderboardResult
 from hakari_bench.viewer.state import (
     FilterState,
+    canonical_query_state,
     filter_state_from_query,
     normalize_query_state,
     query_string,
     state_payload,
 )
+
+
+def test_canonical_query_state_omits_defaults_but_preserves_dependencies() -> None:
+    cases = [
+        ({"view": "Overall", "sort": "borda_score", "direction": "desc"}, {}),
+        ({"view": "BenchA", "sort": "borda_score", "direction": "desc"}, {"view": "BenchA"}),
+        ({"view": "Overall", "sort": "mean_score", "direction": "desc"}, {"sort": "mean_score"}),
+        (
+            {"view": "Overall", "sort": "borda_score", "direction": "desc", "columns": "task", "score": "micro"},
+            {"columns": "task"},
+        ),
+        (
+            {
+                "view": "Overall",
+                "sort": "borda_score",
+                "direction": "desc",
+                "columns": "grouped",
+                "score": "macro",
+            },
+            {"score": "macro", "columns": "grouped"},
+        ),
+        (
+            {"view": "Overall (EN)", "sort": "borda_score", "direction": "desc", "lang_filter": ["en"]},
+            {"lang_filter": ["en"]},
+        ),
+        (
+            {"view": "MNanoBEIR", "sort": "borda_score", "direction": "desc", "group": "task_mean"},
+            {"view": "MNanoBEIR"},
+        ),
+        (
+            {"view": "MNanoBEIR", "sort": "borda_score", "direction": "desc", "group": "lang_mean"},
+            {"view": "MNanoBEIR", "group": "lang_mean"},
+        ),
+    ]
+
+    for verbose, expected in cases:
+        assert canonical_query_state(verbose, viewer_config=_viewer_config()) == expected
+
+
+def test_canonical_query_state_is_idempotent() -> None:
+    verbose = {
+        "view": "Overall",
+        "sort": "borda_score",
+        "columns": "grouped",
+        "score": "macro",
+        "model_filter": "jina",
+        "task_z_scores": "0",
+    }
+
+    canonical = canonical_query_state(verbose, viewer_config=_viewer_config())
+
+    assert canonical_query_state(canonical, viewer_config=_viewer_config()) == canonical
 
 
 def test_normalize_query_state_rejects_invalid_view_sort_and_direction() -> None:
@@ -687,7 +740,6 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
     assert query == {
         "view": "BenchA",
         "sort": "mean_score",
-        "direction": "desc",
         "quantization": "1",
         "rescore": "1",
         "task_z_scores": "1",
@@ -701,9 +753,6 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "quant_filter": ["binary"],
         "commercial_filter": ["commercial"],
         "model_type_filter": ["sparse"],
-        "dtype_filter": [],
-        "attn_filter": [],
-        "prompt_filter": [],
     }
     assert query_string(query["dim_filter"]) == "768"
 

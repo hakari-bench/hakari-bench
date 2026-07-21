@@ -1107,7 +1107,8 @@ choices:
   action button, then the individual NanoSet labels. Scope preset buttons
   carry inline help explaining their aggregation semantics. `Overall` resets
   Task facets to All languages/categories when selected; `Overall (EN)` selects
-  the `EN` facet and is represented as `view=Overall (EN)&lang_filter=en`;
+  the `EN` facet and is canonically represented as `lang_filter=en`; the
+  `view=Overall (EN)` alias remains accepted when restoring older links;
   `Clear` pushes `view=Custom` with no `bench=` values, resets to All
   languages/categories, is not itself selected, and shows no rows. Overall,
   Overall (EN), and Custom scopes expose a Score selector for `micro` and
@@ -1125,6 +1126,17 @@ choices:
   inside the same leaderboard configuration panel. In both table modes, this
   choice controls MNanoBEIR's mandatory inner aggregation and the visible
   `M-BEIR-{task}` or `M-BEIR-{language}` display columns.
+- Viewer URLs store only state that differs from the route defaults. The default
+  table is therefore `/`, not
+  `/?view=Overall&sort=borda_score&direction=desc`. The server continues to
+  accept verbose query strings and iframe hash parameters for compatibility,
+  but normalizes both forms to the same compact URL after restoration. Default
+  values such as Overall, Borda descending, Micro, table view, and unselected
+  filters are omitted. Values required by another non-default choice remain
+  explicit: `columns=task` implies Micro and omits `score`, while
+  `columns=grouped` always preserves `score=macro`. Filter facets that select
+  every currently available value are likewise omitted; subset selections,
+  explicit none selections, numeric bounds, and text filters remain in the URL.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
 

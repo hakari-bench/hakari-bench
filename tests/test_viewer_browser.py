@@ -7,6 +7,7 @@ import threading
 import time
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 import duckdb
 import pytest
@@ -20,30 +21,49 @@ from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
 @pytest.mark.browser
 def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
     playwright_sync = pytest.importorskip("playwright.sync_api")
-
-    db_path = tmp_path / "results.duckdb"
-    _write_browser_task_results(db_path)
-    config_dir = tmp_path / "config"
-    config_dir.mkdir()
-    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: NanoRTEB\n", encoding="utf-8")
-    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
-    docs_dir = tmp_path / "task_docs" / "docs"
-    bench_docs_dir = docs_dir / "BenchA"
-    bench_docs_dir.mkdir(parents=True)
-    (bench_docs_dir / "index.md").write_text("# BenchA\n\n## Overview\n\nBenchA overview for browser tests.\n", encoding="utf-8")
-    (bench_docs_dir / "a1.md").write_text("# BenchA / a1\n\n## Overview\n\nTask a1 overview for browser tests.\n", encoding="utf-8")
-    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
+    app = _create_browser_test_app(tmp_path)
 
     with _serve_app(app) as base_url:
         with playwright_sync.sync_playwright() as playwright:
             browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
             try:
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
+                leaderboard_requests: list[str] = []
+                page.on(
+                    "request",
+                    lambda request: leaderboard_requests.append(request.url)
+                    if "/leaderboard?" in request.url
+                    else None,
+                )
                 page.goto(f"{base_url}/#view=Overall&quantization=1&truncate=1&task_z_scores=1", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
 
+                assert leaderboard_requests
+                assert "view=Overall" not in leaderboard_requests[0]
+                assert "sort=borda_score" not in leaderboard_requests[0]
+                assert "direction=desc" not in leaderboard_requests[0]
+                assert "quantization=1" in leaderboard_requests[0]
+                assert "truncate=1" in leaderboard_requests[0]
+                assert "task_z_scores=1" in leaderboard_requests[0]
                 assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
+                page.locator("#filter-controls-panel").evaluate("(element) => { element.open = true; }")
+                model_filter = page.locator("#model-filter-input")
+                model_filter.fill("model/a")
+                model_filter.press("Enter")
+                page.wait_for_url(lambda url: "model_filter=model%2Fa" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                compact_search = page.evaluate("() => window.location.search")
+                assert "model_filter=model%2Fa" in compact_search
+                assert "view=Overall" not in compact_search
+                assert "sort=borda_score" not in compact_search
+                assert "direction=desc" not in compact_search
+                assert "filters=1" not in compact_search
+                assert "model_type_filter=" not in compact_search
+                model_filter.fill("")
+                model_filter.press("Enter")
+                page.wait_for_url(lambda url: "model_filter=" not in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 task_columns = page.locator('#column-controls input[name="columns"][value="task"]')
                 grouped_columns = page.locator('#column-controls input[name="columns"][value="grouped"]')
                 page.locator("#column-controls label", has_text="Task columns").click()
@@ -395,8 +415,214 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 nano_rteb_label = nano_rteb_button.locator("xpath=ancestor::*[@data-doc-label-group='benchmark']").first
                 active_classes = nano_rteb_label.get_attribute("class") if nano_rteb_label.count() else nano_rteb_button.get_attribute("class")
                 assert "border-cyan-700" in (active_classes or "")
+
+                restoration_cases = [
+                    ("/", {}, False),
+                    ("/?view=Overall&sort=borda_score&direction=desc&score=micro&task_z_scores=0", {}, False),
+                    (
+                        "/#view=Overall&sort=borda_score&direction=desc&model_filter=model%2Fa",
+                        {"model_filter": ["model/a"]},
+                        True,
+                    ),
+                    (
+                        "/?view=Overall&sort=borda_score&direction=desc&columns=task&score=macro",
+                        {"columns": ["task"]},
+                        False,
+                    ),
+                    (
+                        "/?view=Overall&sort=borda_score&direction=desc&columns=grouped&score=micro",
+                        {"score": ["macro"], "columns": ["grouped"]},
+                        False,
+                    ),
+                    (
+                        "/?view=Overall%20%28EN%29&lang_filter=en&sort=borda_score&direction=desc",
+                        {"lang_filter": ["en"]},
+                        False,
+                    ),
+                    (
+                        "/?quantization=1&filters=1&quant_filter=int8",
+                        {"quantization": ["1"], "filters": ["1"], "quant_filter": ["int8"]},
+                        False,
+                    ),
+                    (
+                        "/?sort=macro_mean&direction=asc",
+                        {"sort": ["macro_mean"], "direction": ["asc"]},
+                        False,
+                    ),
+                    (
+                        "/?columns=grouped&columns=task&score=macro",
+                        {"columns": ["task"]},
+                        False,
+                    ),
+                    (
+                        "/?task_ranks=1",
+                        {"columns": ["task"], "task_ranks": ["1"]},
+                        False,
+                    ),
+                    (
+                        "/?result_view=chart&chart_x=quantization",
+                        {"result_view": ["chart"], "chart_x": ["quantization"], "quantization": ["1"]},
+                        False,
+                    ),
+                    (
+                        "/?view=Custom&bench=BenchA&bench=NanoRTEB",
+                        {"view": ["Custom"], "bench": ["BenchA", "NanoRTEB"]},
+                        False,
+                    ),
+                    (
+                        "/?filters=1&quant_filter=__none_selected__&quantization=1",
+                        {
+                            "quantization": ["1"],
+                            "filters": ["1"],
+                            "quant_filter": ["__none_selected__"],
+                        },
+                        False,
+                    ),
+                ]
+                for path, expected_query, uses_hash in restoration_cases:
+                    leaderboard_requests.clear()
+                    page.goto("about:blank")
+                    page.goto(f"{base_url}{path}", wait_until="domcontentloaded")
+                    page.wait_for_selector(
+                        "#leaderboard-panel table, #leaderboard-panel #plot-controls",
+                        timeout=15_000,
+                    )
+                    page.locator("#leaderboard-loading-toast.htmx-request").wait_for(
+                        state="detached",
+                        timeout=15_000,
+                    )
+                    restored_query = (
+                        parse_qs(urlparse(leaderboard_requests[-1]).query)
+                        if uses_hash
+                        else parse_qs(urlparse(page.url).query)
+                    )
+                    assert restored_query == expected_query, path
+
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked() is True
+                assert page.locator('#filter-controls input[name="quant_filter"][value="int8"]').is_checked() is False
+                assert page.locator('#filter-controls input[name="quant_filter"][value="binary"]').is_checked() is False
             finally:
                 browser.close()
+
+
+@pytest.mark.browser
+def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                page.goto(f"{base_url}/", wait_until="domcontentloaded")
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+
+                page.get_by_role("tab", name="Chart").click()
+                page.wait_for_url(lambda url: "result_view=chart" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#plot-controls").wait_for(timeout=15_000)
+                page.wait_for_timeout(100)
+                for name in ("chart_y", "chart_x", "chart_color"):
+                    values = page.locator(f'#plot-controls select[name="{name}"] option').evaluate_all(
+                        "options => options.map((option) => option.value)"
+                    )
+                    assert len(values) == len(set(values)), name
+
+                page.locator('#plot-controls select[name="chart_x"]').select_option("quantization")
+                page.wait_for_timeout(500)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                chart_query = parse_qs(urlparse(page.url).query)
+                assert chart_query == {
+                    "result_view": ["chart"],
+                    "chart_x": ["quantization"],
+                    "quantization": ["1"],
+                }
+
+                page.get_by_role("tab", name="Table").click()
+                page.wait_for_url(lambda url: "result_view=" not in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert parse_qs(urlparse(page.url).query) == {"quantization": ["1"]}
+
+                page.locator("#column-controls label", has_text="Task ranks").click()
+                page.wait_for_url(
+                    lambda url: "task_ranks=1" in url and "columns=task" in url,
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert "score" not in parse_qs(urlparse(page.url).query)
+                assert page.locator('#column-controls input[name="columns"][value="task"]').is_checked()
+
+                page.locator("#column-controls label", has_text="Others").click()
+                page.wait_for_url(lambda url: "other_columns=1" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert page.locator('th[data-column-key="license"]:visible').count() >= 1
+                assert page.locator('th[data-column-key="model_type"]:visible').count() >= 1
+
+                page.locator("#filter-controls-panel").evaluate("element => { element.open = true; }")
+                int8_filter = page.locator(
+                    '#filter-controls input[value="int8"]:is([name="quant_filter"], [data-facet-parameter="quant_filter"])'
+                )
+                binary_filter = page.locator(
+                    '#filter-controls input[value="binary"]:is([name="quant_filter"], [data-facet-parameter="quant_filter"])'
+                )
+                assert int8_filter.is_checked()
+                assert binary_filter.is_checked()
+                int8_filter.uncheck()
+                page.wait_for_url(lambda url: "quant_filter=" in url and "filters=1" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                filtered_query = parse_qs(urlparse(page.url).query)
+                assert filtered_query["quant_filter"] == ["__none__", "binary"]
+                assert "model_type_filter" not in filtered_query
+
+                int8_filter.check()
+                page.wait_for_url(lambda url: "quant_filter=" not in url and "filters=1" not in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.wait_for_function(
+                    "() => document.querySelector('#filter-controls')?.dataset.filtersActive === 'false'",
+                    timeout=15_000,
+                )
+                unfiltered_row_count = page.locator(".leaderboard-table tbody tr:not([hidden])").count()
+
+                page.locator("#filter-controls-panel").evaluate("element => { element.open = true; }")
+                page.locator('#filter-controls input[name="active_params_max"]').fill("0.000015")
+                page.locator('#filter-controls input[name="active_params_max"]').press("Enter")
+                page.wait_for_url(lambda url: "active_params_max=0.000015" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.wait_for_function(
+                    "() => !window.location.search.includes('model_filter=')",
+                    timeout=15_000,
+                )
+                filtered_row_count = page.locator(".leaderboard-table tbody tr:not([hidden])").count()
+                assert 0 < filtered_row_count < unfiltered_row_count
+
+            finally:
+                browser.close()
+
+
+def _create_browser_test_app(tmp_path: Path):
+    db_path = tmp_path / "results.duckdb"
+    _write_browser_task_results(db_path)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: NanoRTEB\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    docs_dir = tmp_path / "task_docs" / "docs"
+    bench_docs_dir = docs_dir / "BenchA"
+    bench_docs_dir.mkdir(parents=True)
+    (bench_docs_dir / "index.md").write_text(
+        "# BenchA\n\n## Overview\n\nBenchA overview for browser tests.\n",
+        encoding="utf-8",
+    )
+    (bench_docs_dir / "a1.md").write_text(
+        "# BenchA / a1\n\n## Overview\n\nTask a1 overview for browser tests.\n",
+        encoding="utf-8",
+    )
+    return create_app(
+        store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)),
+        config_dir=config_dir,
+        docs_dir=docs_dir,
+    )
 
 
 def _write_browser_task_results(db_path: Path) -> None:

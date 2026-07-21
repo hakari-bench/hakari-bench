@@ -1092,7 +1092,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'hx-sync="#leaderboard-panel:replace"' in response.text
     assert "https://cdn.tailwindcss.com" not in response.text
     assert "https://unpkg.com/htmx.org" not in response.text
-    assert 'hx-get="/leaderboard?view=Overall' in response.text
+    assert 'hx-get="/leaderboard"' in response.text
     assert "<footer" in response.text
     assert (
         '<footer id="hakari-page-footer" '
@@ -1291,7 +1291,8 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ", delay);" in viewer_js_response.text
     assert "const queryString = mergedStateQueryString();" in viewer_js_response.text
     assert 'window.parent.postMessage({ queryString: "", hash: hashValue }, "https://huggingface.co")' in viewer_js_response.text
-    assert 'panel.setAttribute("hx-get", "/leaderboard?" + queryString);' in viewer_js_response.text
+    assert 'queryString ? "/leaderboard?" + queryString : "/leaderboard"' in viewer_js_response.text
+    assert "canonicalStateParams(params).toString()" in viewer_js_response.text
     assert 'document.addEventListener("htmx:beforeRequest"' in viewer_js_response.text
     assert 'document.addEventListener("htmx:afterRequest"' in viewer_js_response.text
     assert 'document.addEventListener("htmx:sendAbort"' in viewer_js_response.text
@@ -1870,10 +1871,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
-    assert (
-        'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;sort=borda_score&amp;direction=desc'
-        '&amp;group=task&amp;task_z_scores=0&amp;target=reranking"'
-    ) in response.text
+    assert 'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;target=reranking"' in response.text
     scope_section = response.text.split("Benchmark scope", 1)[1].split("Efficiency variants", 1)[0]
     assert "MTEB-Japanese" in scope_section
     assert "RTEB" in scope_section
@@ -2106,14 +2104,14 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
     assert "Core" not in html
     assert "Clear" in html
     assert 'class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"' in html
-    assert 'hx-get="/leaderboard?view=Overall&amp;sort=borda_rank&amp;direction=asc' in html
+    assert 'hx-get="/leaderboard?sort=borda_rank&amp;direction=asc' in html
     overall_en_button = html.split(">Overall (EN)</button>", 1)[0].rsplit("<button", 1)[1]
     clear_button = html.split(">Clear</span>", 1)[0].rsplit("<button", 1)[1]
     assert "view=Overall+%28EN%29" in overall_en_button
     assert "lang_filter=en" in overall_en_button
     assert 'data-icon="eraser"' in clear_button
     assert 'data-icon="rotate-ccw"' not in clear_button
-    assert 'hx-get="/leaderboard?view=Custom&amp;sort=borda_rank&amp;direction=asc' in clear_button
+    assert 'hx-get="/leaderboard?sort=borda_rank&amp;direction=asc&amp;view=Custom"' in clear_button
     assert "lang_filter=" not in clear_button
     assert "border-cyan-700" not in clear_button
     assert html.index(">Clear</span>") < html.index("benchmark-scope-divider") < html.index('data-benchmark-toggle="BenchA"')
@@ -2171,10 +2169,10 @@ def test_overall_en_task_facets_switch_to_overall_for_non_english_selection() ->
         (ja_button, "lang_filter=ja"),
         (code_button, "lang_filter=category%3Acode"),
     ]:
-        assert "view=Overall&amp;" in button
+        assert "view=" not in button
         assert "Overall+%28EN%29" not in button
         assert language_filter in button
-    assert "view=Overall&amp;" in all_languages_button
+    assert "view=" not in all_languages_button
     assert "Overall+%28EN%29" not in all_languages_button
     assert "lang_filter=" not in all_languages_button
 
@@ -3481,12 +3479,13 @@ def test_variant_controls_preserve_filter_results_state() -> None:
     assert 'name="model_filter" value="jina"' in variant_form
     assert 'name="active_params_max" value="2000"' in variant_form
     assert 'name="filters" value="1"' in variant_form
-    assert 'name="dim_filter" value="768"' in variant_form
-    assert 'name="quant_filter" value="__none__"' in variant_form
-    assert 'name="model_type_filter" value="dense"' in variant_form
+    assert 'name="dim_filter"' not in variant_form
+    assert 'name="quant_filter"' not in variant_form
+    assert 'name="model_type_filter"' not in variant_form
     assert 'name="dtype_filter" value="bf16"' in variant_form
-    assert 'name="dim_filter" value="768"' in column_form
-    assert 'name="quant_filter" value="__none__"' in column_form
+    assert 'name="dim_filter"' not in column_form
+    assert 'name="quant_filter"' not in column_form
+    assert 'name="dtype_filter" value="bf16"' in column_form
 
 
 def test_sparse_and_bm25_rows_show_sparse_dims_and_none_max_len_in_table() -> None:
@@ -4535,10 +4534,7 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "&quot;code&quot;:&quot;category:code&quot;" in response.text
     assert "&quot;name&quot;:&quot;Code tasks&quot;" in response.text
     assert 'data-language-page="ja"' in response.text
-    assert (
-        'hx-push-url="/?view=BenchA&amp;sort=borda_score&amp;direction=desc&amp;group=task'
-        '&amp;task_z_scores=0&amp;lang_filter=en"'
-    ) in response.text
+    assert 'hx-push-url="/?view=BenchA&amp;lang_filter=en"' in response.text
     assert 'aria-label="Task facets"' in response.text
     scope_panel = response.text.split('data-benchmark-task-scope="true"', 1)[1].split(
         "Table display", 1
@@ -4868,6 +4864,27 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="facet-filters"' not in default_response.text
 
     response = TestClient(app).get("/leaderboard?view=BenchA&quantization=1&model_filter=model%2Fb")
+
+    verbose_default_response = TestClient(app).get(
+        "/leaderboard?view=Overall&sort=borda_score&direction=desc&score=micro"
+        "&task_z_scores=0&model_filter=model%2Fb",
+        headers={"HX-Request": "true"},
+    )
+    concise_default_response = TestClient(app).get(
+        "/leaderboard?model_filter=model%2Fb",
+        headers={"HX-Request": "true"},
+    )
+    verbose_grouped_response = TestClient(app).get(
+        "/leaderboard?view=Overall&sort=borda_score&direction=desc&columns=grouped&score=micro",
+        headers={"HX-Request": "true"},
+    )
+
+    assert verbose_default_response.headers["hx-push-url"] == "/?model_filter=model%2Fb"
+    assert concise_default_response.headers["hx-push-url"] == "/?model_filter=model%2Fb"
+    assert verbose_default_response.text == concise_default_response.text
+    assert verbose_grouped_response.headers["hx-push-url"] == "/?score=macro&columns=grouped"
+    assert 'name="columns" value="grouped" checked' in verbose_grouped_response.text
+    assert 'aria-label="Score aggregation: Macro (locked by Grouped columns)"' in verbose_grouped_response.text
 
     assert response.status_code == 200
     assert "Table display" in response.text
@@ -8274,7 +8291,7 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "Macro Mean" in response.text
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
-    assert 'href="/leaderboard.csv?view=Overall' in response.text
+    assert 'href="/leaderboard.csv?sort=borda_rank&amp;direction=asc"' in response.text
     assert "Download CSV" in response.text
     assert 'data-icon="file-spreadsheet"' in response.text
     assert 'aria-label="Download visible leaderboard as CSV"' in response.text
@@ -8565,11 +8582,7 @@ benchmarks:
 
     assert response.status_code == 200
     assert '<link rel="canonical" href="/">' in response.text
-    assert (
-        'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja&amp;direction=desc'
-        '&amp;group=lang_mean&amp;task_z_scores=0"'
-        in response.text
-    )
+    assert 'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja"' in response.text
 
 
 def _write_task_results(
