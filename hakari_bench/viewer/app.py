@@ -2687,6 +2687,21 @@ def render_tabs(
         )
     preset_buttons = [button for _, button in sorted(grouped_buttons["Scope presets"])]
     suite_buttons = [button for _, button in sorted(grouped_buttons["Nano suites"])]
+    task_facets = render_language_pages(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        embedded=True,
+        plot_state=plot_state,
+    )
+    task_facets_section = (
+        f"""<div class="benchmark-task-facets-divider mt-1.5 border-t border-zinc-200 pt-1.5">
+          {task_facets}
+        </div>"""
+        if task_facets
+        else ""
+    )
     return f"""
     <nav class="mb-3 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
       <div class="grid gap-1.5">
@@ -2698,7 +2713,7 @@ def render_tabs(
           </div>
         </div>
         <div class="grid gap-1.5">
-          <div class="border border-zinc-200 bg-white p-1.5">
+          <div class="benchmark-task-scope-panel border border-zinc-200 bg-white p-1.5" data-benchmark-task-scope="true">
             <div class="mb-1.5 flex flex-wrap items-center gap-2">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="database", text="Benchmark scope")}
@@ -2707,8 +2722,8 @@ def render_tabs(
             </div>
             <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
+            {task_facets_section}
           </div>
-          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True, plot_state=plot_state)}
         </div>
         {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
         {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, plot_state=plot_state)}
@@ -3374,7 +3389,7 @@ def render_language_pages(
         """
     wrapper_tag = "div" if embedded else "nav"
     wrapper_class = (
-        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-1.5"
+        "flex flex-wrap items-start gap-2"
         if embedded
         else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
     )

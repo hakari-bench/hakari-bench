@@ -4540,6 +4540,16 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
         '&amp;task_z_scores=0&amp;lang_filter=en"'
     ) in response.text
     assert 'aria-label="Task facets"' in response.text
+    scope_panel = response.text.split('data-benchmark-task-scope="true"', 1)[1].split(
+        "Table display", 1
+    )[0]
+    assert 'class="benchmark-task-facets-divider mt-1.5 border-t border-zinc-200 pt-1.5"' in scope_panel
+    assert scope_panel.index("Benchmark scope") < scope_panel.index("benchmark-task-facets-divider")
+    assert scope_panel.index("benchmark-task-facets-divider") < scope_panel.index(
+        'aria-label="Task facets"'
+    )
+    assert 'aria-label="Task facets"' in scope_panel
+    assert 'aria-label="Task facets">\n        <span' in scope_panel
     assert 'data-shown-count="2"' in response.text
     assert 'data-icon="search"' in response.text
     assert "Retrieval" in response.text
