@@ -2593,7 +2593,8 @@ def render_tabs(
         query_payload = _apply_plot_state(query_payload, plot_state)
         if view_name == "MNanoBEIR":
             if result.view_name != "MNanoBEIR":
-                for offset, selection_key, label in [
+                mnanobeir_buttons = []
+                for _offset, selection_key, label in [
                     (0, benchmark_selection_key("MNanoBEIR", "task_mean"), "M-BEIR(task)"),
                     (1, benchmark_selection_key("MNanoBEIR", "lang_mean"), "M-BEIR(lang)"),
                 ]:
@@ -2610,22 +2611,22 @@ def render_tabs(
                     selection_query_payload = _apply_plot_state(selection_query_payload, plot_state)
                     selection_query = urlencode(selection_query_payload, doseq=True)
                     selection_active = _benchmark_selection_active(result=result, selection_key=selection_key)
-                    grouped_buttons[group].append(
-                        (
-                            sort_key * 10 + offset,
-                            _render_benchmark_view_button(
-                                label=label,
-                                active=selection_active,
-                                query=selection_query,
-                                query_payload=selection_query_payload,
-                                doc=doc,
-                                benchmark_name=selection_key,
-                                help_content=_mnanobeir_scope_help(score_group),
-                            ),
+                    mnanobeir_buttons.append(
+                        _render_benchmark_view_button(
+                            label=label,
+                            active=selection_active,
+                            query=selection_query,
+                            query_payload=selection_query_payload,
+                            doc=doc,
+                            benchmark_name=selection_key,
+                            help_content=_mnanobeir_scope_help(score_group),
+                            extra_class="mnanobeir-scope-option",
                         )
                     )
+                grouped_buttons[group].append((sort_key * 10, _render_mnanobeir_scope_group(mnanobeir_buttons)))
                 continue
-            for offset, score_group, label in [
+            mnanobeir_buttons = []
+            for _offset, score_group, label in [
                 (0, "task_mean", "M-BEIR(task)"),
                 (1, "lang_mean", "M-BEIR(lang)"),
             ]:
@@ -2643,20 +2644,19 @@ def render_tabs(
                 active = result.view_name == view_name and (
                     result.selected_score_group is not None and result.selected_score_group.name == score_group
                 )
-                grouped_buttons[group].append(
-                    (
-                        sort_key * 10 + offset,
-                        _render_benchmark_view_button(
-                            label=label,
-                            active=active,
-                            query=group_query,
-                            query_payload=group_query_payload,
-                            doc=doc,
-                            benchmark_name=view_name,
-                            help_content=_mnanobeir_scope_help(score_group),
-                        ),
+                mnanobeir_buttons.append(
+                    _render_benchmark_view_button(
+                        label=label,
+                        active=active,
+                        query=group_query,
+                        query_payload=group_query_payload,
+                        doc=doc,
+                        benchmark_name=view_name,
+                        help_content=_mnanobeir_scope_help(score_group),
+                        extra_class="mnanobeir-scope-option",
                     )
                 )
+            grouped_buttons[group].append((sort_key * 10, _render_mnanobeir_scope_group(mnanobeir_buttons)))
             continue
         query = urlencode(query_payload, doseq=True)
         if doc is None:
@@ -2756,8 +2756,10 @@ def _render_benchmark_view_button(
     doc: BenchmarkDoc | None,
     benchmark_name: str | None = None,
     help_content: tuple[str, str, str] | None = None,
+    extra_class: str = "",
 ) -> str:
     classes = _control_button_classes(active=active)
+    group_class = f" {extra_class}" if extra_class else ""
     data_attr = "" if benchmark_name is None else f' data-benchmark-toggle="{escape(benchmark_name, quote=True)}"'
     if doc is None and help_content is None:
         return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
@@ -2767,7 +2769,7 @@ def _render_benchmark_view_button(
                     </button>"""
     if doc is not None and help_content is None:
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
-        return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+        return f"""<span class="control-button-group doc-label-group{group_class} inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
                   <button type="button" class="py-1 pl-2 pr-0 text-left"
                     {data_attr}
                     hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2782,7 +2784,7 @@ def _render_benchmark_view_button(
     if help_content is not None:
         title, summary, details = help_content
         icon_triggers.append(_render_button_help_icon(title=title, summary=summary, details=details))
-    return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+    return f"""<span class="control-button-group doc-label-group{group_class} inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 {data_attr}
                 hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2791,6 +2793,18 @@ def _render_benchmark_view_button(
               </button>
               <span class="inline-flex items-center gap-0.5 pl-0.5 pr-2">{''.join(icon_triggers)}</span>
             </span>"""
+
+
+def _render_mnanobeir_scope_group(buttons: list[str]) -> str:
+    if len(buttons) != 2:
+        raise ValueError("M-BEIR scope selector requires task and language buttons")
+    return f"""<span class="column-mode-group mnanobeir-scope-group" role="group"
+                  aria-label="M-BEIR scope: choose task or language grouping"
+                  data-mnanobeir-scope-group="true">
+                {buttons[0]}
+                <span class="column-mode-or" aria-hidden="true">or</span>
+                {buttons[1]}
+              </span>"""
 
 
 def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:

@@ -3754,6 +3754,15 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     lang_button = re.search(r'<button[^>]+data-benchmark-toggle="MNanoBEIR:lang_mean"[^>]+>', html)
     assert task_button is not None
     assert lang_button is not None
+    scope_group_start = html.index('<span class="column-mode-group mnanobeir-scope-group"')
+    scope_group_end = html.index('data-benchmark-toggle="BenchA"', scope_group_start)
+    scope_group = html[scope_group_start:scope_group_end]
+    assert 'role="group"' in scope_group
+    assert 'aria-label="M-BEIR scope: choose task or language grouping"' in scope_group
+    assert 'data-mnanobeir-scope-group="true"' in scope_group
+    assert scope_group.count('class="column-mode-or"') == 1
+    assert scope_group.index("M-BEIR(task)") < scope_group.index(">or<")
+    assert scope_group.index(">or<") < scope_group.index("M-BEIR(lang)")
     lang_html = lang_button.group(0)
     task_group_html = html[: task_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
     lang_group_html = html[: lang_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
