@@ -47,7 +47,6 @@ from hakari_bench.viewer.leaderboard import (
     _language_options,
     _overall_metric_score_group,
     _precomputed_language_filters_for_view,
-    _micro_rows_with_grouped_mnanobeir,
     _score_groups_for_view,
     _select_score_group,
     _task_scores_from_records,
@@ -5977,7 +5976,6 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                 if overall is not None:
                     if expected_task_keys is not None and not precomputed_language_filters:
                         rows = _filter_rows_to_complete_models(rows, expected_task_keys)
-                    rows = _micro_rows_with_grouped_mnanobeir(rows, overall)
                     metric_score_group = _overall_metric_score_group(
                         overall,
                         score_aggregation="micro",
@@ -5988,7 +5986,7 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                 leaderboard_rows = compute_leaderboard_rows(
                     rows,
                     is_overall=is_overall,
-                    expected_task_keys=(None if overall is not None else expected_task_keys),
+                    expected_task_keys=expected_task_keys,
                     score_group=metric_score_group,
                     metric_columns=[],
                     overall_score_aggregation="micro",

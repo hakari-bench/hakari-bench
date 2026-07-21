@@ -1736,10 +1736,11 @@ benchmarks:
         "MNanoBEIR::NanoBEIR-en": "M-BEIR-en",
         "MNanoBEIR::NanoBEIR-ja": "M-BEIR-ja",
     }
-    # M-BEIR contributes one score unit (60), not four raw language x task
-    # cells, while ordinary Task Columns remain raw task units (80 and 60).
-    assert sorted_task_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
-    assert lang_task_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
+    # Micro ranks all six raw task rows: four M-BEIR language x task cells plus
+    # the two ordinary NanoSet tasks. The task/lang scope changes only M-BEIR's
+    # visible breakdown axis, not the raw rows used by Micro.
+    assert sorted_task_result.rows[0].mean_score == pytest.approx(380.0 / 6.0)
+    assert lang_task_result.rows[0].mean_score == pytest.approx(380.0 / 6.0)
     assert sorted_grouped_result.metric_columns[0] == "NanoIFIR"
 
     grouped_response = client.get(
@@ -3813,9 +3814,9 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     assert "M-BEIR evaluates 13 retrieval tasks in 14 languages, producing 182 raw result cells." in html
     assert "The 13 visible task columns are breakdowns, not 13 ranking votes." in html
     assert "The 14 visible language columns are breakdowns, not 14 ranking votes." in html
-    assert "M-BEIR contributes one final score to the leaderboard ranking" in html
-    assert "With Task columns, ordinary benchmarks remain at raw-task detail" in html
-    assert "with Grouped columns, each ordinary benchmark contributes one final score" in html
+    assert "With Micro scoring, all 182 raw M-BEIR cells contribute independently" in html
+    assert "With Macro scoring" in html
+    assert "M-BEIR contributes one final benchmark score" in html
 
 
 def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:

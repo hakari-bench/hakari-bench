@@ -2810,14 +2810,14 @@ def _render_mnanobeir_scope_group(buttons: list[str]) -> str:
 def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:
     matrix_note = (
         "M-BEIR evaluates 13 retrieval tasks in 14 languages, producing 182 raw result cells. "
-        "Those cells are always grouped before display and ranking so this large matrix does "
-        "not dominate the leaderboard."
+        "The viewer summarizes them into 13 task columns or 14 language columns so the table "
+        "does not expand to 182 columns."
     )
     ranking_note = (
-        "M-BEIR contributes one final score to the leaderboard ranking after the visible "
-        "breakdowns are averaged. With Task columns, ordinary benchmarks remain at raw-task "
-        "detail; with Grouped columns, each ordinary benchmark contributes one final score. "
-        "Changing this M-BEIR scope changes its breakdown axis, not its final ranking weight."
+        "With Micro scoring, all 182 raw M-BEIR cells contribute independently, just like raw "
+        "task results from other benchmarks. With Macro scoring, the visible breakdowns are "
+        "averaged and M-BEIR contributes one final benchmark score. Changing this scope changes "
+        "the breakdown axis, not which raw cells Micro uses or M-BEIR's one-benchmark Macro weight."
     )
     if score_group == "lang_mean":
         return (
@@ -3039,7 +3039,7 @@ def _render_score_aggregation_group(
                 {_render_help_tooltip(
                   "Score aggregation",
                   "Chooses between raw task weighting and grouped NanoSet weighting.",
-                  "Micro is the default score. For ordinary NanoSets, every raw task row gets one vote. Task columns always selects Micro. M-BEIR is the deliberate exception: its 13 x 14 matrix is first grouped by the selected task or language axis and always contributes one final ranking unit, never 182 votes.\n\nMacro is the grouped score: tasks are first summarized into one score per NanoSet, then each NanoSet gets one vote regardless of how many raw tasks it contains. Grouped columns always selects Macro. While either column mode is active, the incompatible Score choice is disabled.\n\nFor M-BEIR, the 13 task means or 14 language means are shown as separate breakdown columns in both table modes, then averaged into M-BEIR's one final score.",
+                  "Micro is the default score: every raw task result gets equal weight. M-BEIR therefore contributes all 182 cells in its 13-task x 14-language matrix. Task columns always selects Micro.\n\nMacro is the grouped score: tasks are summarized into one score per NanoSet, then each NanoSet gets equal weight regardless of its raw task count. M-BEIR contributes one benchmark score. Grouped columns always selects Macro. While either column mode is active, the incompatible Score choice is disabled.\n\nM-BEIR still shows only 13 task means or 14 language means as compact breakdown columns in both table modes; those visible summaries do not replace Micro's 182 raw inputs.",
                 )}
               </span>
               {''.join(buttons)}
@@ -3517,7 +3517,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Table display",
               "Changes which columns and per-task annotations are visible.",
-              "Table display controls how much detail appears in the result table. Task columns and Grouped columns are mutually exclusive.\n\nTask columns shows one score column per raw task for ordinary benchmarks and fixes Score to Micro. Grouped columns shows benchmark groups such as JMTEB-v2 or IFIR and fixes Score to Macro. M-BEIR is special in both modes: task scope shows 13 language-averaged task columns such as M-BEIR-arguana, while language scope shows 14 task-averaged language columns such as M-BEIR-ar. Its 182 raw matrix cells are never shown or counted independently, and the breakdowns are averaged into one final M-BEIR ranking unit.\n\nSTD adds standard-deviation deltas. Task ranks shows the rank for whichever Task or Grouped columns are active.",
+              "Table display controls how much detail appears in the result table. Task columns and Grouped columns are mutually exclusive.\n\nTask columns shows one score column per raw task for ordinary benchmarks and fixes Score to Micro. Grouped columns shows benchmark groups such as JMTEB-v2 or IFIR and fixes Score to Macro. M-BEIR is compact in both modes: task scope shows 13 language-averaged task columns such as M-BEIR-arguana, while language scope shows 14 task-averaged language columns such as M-BEIR-ar. Micro nevertheless uses all 182 raw matrix cells; Macro averages M-BEIR into one benchmark score.\n\nSTD adds standard-deviation deltas. Task ranks shows the rank for whichever Task or Grouped columns are active.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -5268,8 +5268,8 @@ def _metric_column_tooltip(*, label: str, full_metric_name: str, result: Leaderb
         selection.startswith("MNanoBEIR") for selection in result.selected_benchmarks
     ):
         base = (
-            "M-BEIR grouped breakdown column. The 13 task means or 14 language means are visible in both "
-            "table modes, but M-BEIR contributes one final ranking unit rather than 182 raw matrix cells."
+            "M-BEIR compact breakdown column. The 13 task means or 14 language means are visible in both "
+            "table modes. Micro still uses all 182 raw matrix cells; Macro uses one final M-BEIR score."
         )
     elif result.selected_score_group is not None:
         group_label = result.selected_score_group.label
