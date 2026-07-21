@@ -826,11 +826,14 @@ count in `config/viewer/overall.yaml` deliberately.
    the expected task set from the remaining rows.
 4. Keep only models whose task-key set exactly matches the expected task set.
 
-For overall scope presets, the complete model rule depends on the selected
-score aggregation. `micro` uses the raw task-key set directly. `macro` first
-checks raw task completeness within each model/benchmark pair, applies any
+For overall scope presets, completeness is checked against raw task keys before
+any display or ranking aggregation. `macro` then checks raw task completeness
+within each model/benchmark pair, applies any
 component-level `group_by` rule, aggregates each benchmark into one Nano-set
 score row, and finally applies the complete model rule to those Nano-set rows.
+Micro normally retains raw task units, with one intentional exception:
+MNanoBEIR's complete 13-task x 14-language matrix is collapsed to one ranking
+unit after its selected task- or language-axis aggregation.
 
 ### Benchmark and Overall Views
 
@@ -855,9 +858,9 @@ For overall scope presets:
 
 Overall scope presets also expose a `score` aggregation selector:
 
-- `score=micro`: the default score. Every raw task row contributes directly.
-  This is useful for raw-task-weighted analysis and for comparing against older
-  leaderboard results.
+- `score=micro`: the default score. Every ordinary raw task row contributes
+  directly. MNanoBEIR is the exception: its 182 matrix cells never contribute
+  independently and are collapsed to one final M-BEIR score unit.
 - `score=macro`: each Nano-set contributes one score row. Components with
   `group_by`, currently
   `MNanoBEIR` using `task_name`, are first averaged inside the Nano-set, then the
@@ -866,7 +869,8 @@ Overall scope presets also expose a `score` aggregation selector:
 
 For overall views, `mean_score` follows the selected aggregation. In macro
 mode, Borda, `mean_score`, and metric columns are computed from Nano-set rows.
-In micro mode, they are computed from raw task rows.
+In micro mode, they are computed from ordinary raw task rows plus the single
+grouped MNanoBEIR unit.
 
 Macro overall views expose the Nano-set rows as metric columns, using benchmark
 names such as `MNanoBEIR` and `NanoMLDR`. Micro overall views keep metric
@@ -902,12 +906,14 @@ drops the no-op truncate row and prefers the original/full-dimension row.
 Score columns are controlled by the mutually exclusive `columns=task` and
 `columns=grouped` display modes. The viewer does not render task or group metric
 columns by default. `columns=task` fixes `score=micro` and renders raw task-key
-columns. `columns=grouped` fixes `score=macro` and renders one column per
+columns for ordinary benchmarks. `columns=grouped` fixes `score=macro` and renders one column per
 selected Nano-set group, such as `JMTEB-v2` or `IFIR`. MNanoBEIR expands its
-selected inner axis for display: `MNanoBEIR:task_mean` renders columns such as
-`M-BEIR-arguana`, while `MNanoBEIR:lang_mean` renders columns such as
-`M-BEIR-ar`. These inner columns are display breakdowns; MNanoBEIR is still
-averaged into one Nano-set group before contributing to the Macro score. The legacy
+selected inner axis in both column modes: `MNanoBEIR:task_mean` renders 13
+task-mean columns such as `M-BEIR-arguana`, while `MNanoBEIR:lang_mean` renders
+14 language-mean columns such as `M-BEIR-ar`. The raw 182 language x task cells
+must never be exposed as independent columns or ranking votes. These inner
+columns are display breakdowns; MNanoBEIR is always averaged into one final
+ranking unit, including Micro/Task columns mode. The legacy
 `task_scores=1` query parameter remains an accepted input and is normalized to
 the canonical column mode based on the accompanying score. When `sort=metric:KEY`
 names a visible Task or Grouped column, the viewer promotes `KEY` to the first
@@ -1117,8 +1123,8 @@ choices:
   mutually exclusive, and bare `bench=MNanoBEIR` normalizes to
   `bench=MNanoBEIR:task_mean`. In configured presets such as `Overall` and
   `Overall (EN)`, only the task-mean MNanoBEIR selection is active. Task facets live
-  inside the same leaderboard configuration panel. In Grouped columns mode,
-  this choice controls MNanoBEIR's inner macro aggregation and the visible
+  inside the same leaderboard configuration panel. In both table modes, this
+  choice controls MNanoBEIR's mandatory inner aggregation and the visible
   `M-BEIR-{task}` or `M-BEIR-{language}` display columns.
 
 The viewer logs timing records through the `hakari_bench.viewer` logger:
@@ -1954,11 +1960,11 @@ length range filters are ranking-population filters whenever they are set.
    task-level means for Micro/Task columns; preserve post-filter component and
    benchmark aggregation for Macro/Grouped columns.
 9. Only render metric columns when a column mode is active. `columns=task` uses
-   raw task keys with Micro scoring; `columns=grouped` uses benchmark keys with
-   Macro scoring and preserves configured component grouping before the final
-   group mean. MNanoBEIR exposes the preserved task or language component rows
-   as separate display columns while retaining its single final benchmark row
-   for Macro means and ranks. Grouped headers resolve benchmark-level docs so
+   ordinary raw task keys with Micro scoring; `columns=grouped` uses benchmark
+   keys with Macro scoring and preserves configured component grouping before the final
+   group mean. In both modes, MNanoBEIR exposes only the preserved 13 task or
+   14 language component rows, and contributes one final ranking unit rather
+   than its 182 raw matrix cells. Grouped headers resolve benchmark-level docs so
    multi-task groups such as BIRCO and BRIGHT receive the same help affordance
    as single-task groups. When `rank_filtered` is not active, apply `task_filter`
    to the displayed metric columns only.

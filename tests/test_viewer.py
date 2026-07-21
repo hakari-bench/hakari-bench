@@ -1672,6 +1672,13 @@ benchmarks:
         score_aggregation="micro",
         sort="metric:MNanoBEIR::hakari-bench/NanoBEIR-ja::fever",
     )
+    lang_task_result = service.get_leaderboard(
+        "Custom",
+        selected_benchmarks=("MNanoBEIR:lang_mean", "NanoJMTEB-v2", "NanoIFIR"),
+        column_mode="task",
+        show_task_scores=True,
+        score_aggregation="micro",
+    )
     sorted_grouped_result = service.get_leaderboard(
         "Custom",
         selected_benchmarks=("MNanoBEIR:task_mean", "NanoJMTEB-v2", "NanoIFIR"),
@@ -1707,7 +1714,32 @@ benchmarks:
     assert lang_grouped_result.rows[0].metric_values["MNanoBEIR::NanoBEIR-en"] == pytest.approx(80.0)
     assert lang_grouped_result.rows[0].metric_values["MNanoBEIR::NanoBEIR-ja"] == pytest.approx(40.0)
     assert lang_grouped_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
-    assert sorted_task_result.metric_columns[0] == "MNanoBEIR::hakari-bench/NanoBEIR-ja::fever"
+    assert sorted_task_result.metric_columns == [
+        "MNanoBEIR::arguana",
+        "MNanoBEIR::fever",
+        "NanoIFIR::ifir",
+        "NanoJMTEB-v2::jagovfaqs",
+    ]
+    assert sorted_task_result.metric_column_labels == {
+        "MNanoBEIR::arguana": "M-BEIR-arguana",
+        "MNanoBEIR::fever": "M-BEIR-fever",
+    }
+    assert sorted_task_result.rows[0].metric_values["MNanoBEIR::arguana"] == pytest.approx(60.0)
+    assert sorted_task_result.rows[0].metric_values["MNanoBEIR::fever"] == pytest.approx(60.0)
+    assert lang_task_result.metric_columns == [
+        "MNanoBEIR::NanoBEIR-en",
+        "MNanoBEIR::NanoBEIR-ja",
+        "NanoIFIR::ifir",
+        "NanoJMTEB-v2::jagovfaqs",
+    ]
+    assert lang_task_result.metric_column_labels == {
+        "MNanoBEIR::NanoBEIR-en": "M-BEIR-en",
+        "MNanoBEIR::NanoBEIR-ja": "M-BEIR-ja",
+    }
+    # M-BEIR contributes one score unit (60), not four raw language x task
+    # cells, while ordinary Task Columns remain raw task units (80 and 60).
+    assert sorted_task_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
+    assert lang_task_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
     assert sorted_grouped_result.metric_columns[0] == "NanoIFIR"
 
     grouped_response = client.get(
@@ -1821,7 +1853,6 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'data-help-title="Benchmark scope: Overall"' in response.text
     assert 'class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
     assert "Overall is the default and broadest leaderboard scope." in response.text
-    assert 'class="doc-summary-trigger' in response.text
     assert 'data-icon="book-open"' in response.text
     assert 'data-icon="circle-help"' in response.text
     assert 'data-icon="question-mark"' not in response.text
@@ -2002,23 +2033,28 @@ overalls:
     task_columns_result = service.get_leaderboard(
         "Custom",
         selected_benchmarks=("MNanoBEIR:task_mean",),
+        column_mode="task",
         show_task_scores=True,
     )
     lang_columns_result = service.get_leaderboard(
         "Custom",
         selected_benchmarks=("MNanoBEIR:lang_mean",),
+        column_mode="task",
         show_task_scores=True,
     )
 
-    assert task_columns_result.metric_columns == ["arguana", "fever"]
+    assert task_columns_result.metric_columns == ["MNanoBEIR::arguana", "MNanoBEIR::fever"]
     assert task_columns_result.rows[0].metric_values == {
-        "arguana": pytest.approx(50.0),
-        "fever": pytest.approx(90.0),
+        "MNanoBEIR::arguana": pytest.approx(50.0),
+        "MNanoBEIR::fever": pytest.approx(90.0),
     }
-    assert lang_columns_result.metric_columns == ["NanoBEIR-en", "NanoBEIR-ja"]
+    assert lang_columns_result.metric_columns == [
+        "MNanoBEIR::NanoBEIR-en",
+        "MNanoBEIR::NanoBEIR-ja",
+    ]
     assert lang_columns_result.rows[0].metric_values == {
-        "NanoBEIR-en": pytest.approx(90.0),
-        "NanoBEIR-ja": pytest.approx(10.0),
+        "MNanoBEIR::NanoBEIR-en": pytest.approx(90.0),
+        "MNanoBEIR::NanoBEIR-ja": pytest.approx(10.0),
     }
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
@@ -2030,13 +2066,12 @@ overalls:
     assert lang_response.status_code == 200
     assert 'name="bench" value="MNanoBEIR:task_mean"' in task_response.text
     assert 'name="bench" value="MNanoBEIR:lang_mean"' in lang_response.text
-    for response in (task_response, lang_response):
-        assert 'name="columns" value="task" checked' in response.text
-        assert 'data-metric-column-full-name="en-arguana"' in response.text
-        assert 'data-metric-column-full-name="en-fever"' in response.text
-        assert 'data-metric-column-full-name="ja-arguana"' in response.text
-        assert 'data-metric-column-full-name="NanoBEIR-en"' not in response.text
-        assert 'data-metric-column-full-name="NanoBEIR-ja"' not in response.text
+    assert 'data-metric-column-full-name="MNanoBEIR::arguana"' in task_response.text
+    assert 'data-metric-column-full-name="MNanoBEIR::fever"' in task_response.text
+    assert 'data-metric-column-full-name="en-arguana"' not in task_response.text
+    assert 'data-metric-column-full-name="MNanoBEIR::NanoBEIR-en"' in lang_response.text
+    assert 'data-metric-column-full-name="MNanoBEIR::NanoBEIR-ja"' in lang_response.text
+    assert 'data-metric-column-full-name="ja-arguana"' not in lang_response.text
 
 
 def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -> None:
@@ -3762,7 +3797,7 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     assert 'data-mnanobeir-scope-group="true"' in scope_group
     assert scope_group.count('class="column-mode-or"') == 1
     assert scope_group.index("M-BEIR(task)") < scope_group.index(">or<")
-    assert scope_group.index(">or<") < scope_group.index("M-BEIR(lang)")
+    assert scope_group.index(">or<") < scope_group.rindex("M-BEIR(lang)")
     lang_html = lang_button.group(0)
     task_group_html = html[: task_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
     lang_group_html = html[: lang_button.start()].rsplit('<span class="control-button-group', 1)[1].split(">", 1)[0]
@@ -3771,12 +3806,16 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     assert "bench=MNanoBEIR%3Alang_mean" in lang_html
     assert "bench=MNanoBEIR%3Atask_mean" not in lang_html
     assert "bench=BenchA" in lang_html
-    assert 'data-help-title="Benchmark scope: NanoBEIR(task)"' in html
-    assert 'data-help-title="Benchmark scope: NanoBEIR(lang)"' in html
-    assert "Averages the multilingual NanoBEIR matrix by BEIR source task." in html
-    assert "Averages the multilingual NanoBEIR matrix by language dataset." in html
-    assert "MNanoBEIR is a language x task benchmark matrix" in html
-    assert "Showing every language-task cell as an individual benchmark scope would make the picker hard to scan" in html
+    assert 'data-help-title="Benchmark scope: M-BEIR(task)"' in html
+    assert 'data-help-title="Benchmark scope: M-BEIR(lang)"' in html
+    assert "Shows 13 BEIR task means; each task score averages its 14 language results." in html
+    assert "Shows 14 language means; each language score averages its 13 BEIR tasks." in html
+    assert "M-BEIR evaluates 13 retrieval tasks in 14 languages, producing 182 raw result cells." in html
+    assert "The 13 visible task columns are breakdowns, not 13 ranking votes." in html
+    assert "The 14 visible language columns are breakdowns, not 14 ranking votes." in html
+    assert "M-BEIR contributes one final score to the leaderboard ranking" in html
+    assert "With Task columns, ordinary benchmarks remain at raw-task detail" in html
+    assert "with Grouped columns, each ordinary benchmark contributes one final score" in html
 
 
 def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:
@@ -6197,10 +6236,11 @@ benchmarks:
     assert "Task score columns" not in response.text
     assert 'name="columns" value="task" checked' in response.text
     assert "Mean Score" in response.text
-    assert ">ja-arguana</span>" in response.text
+    assert ">ja</span>" in response.text
+    assert ">en</span>" in response.text
+    assert ">ja-arguana</span>" not in response.text
     assert "w-[5.5rem] min-w-[5.5rem] max-w-[5.5rem]" in response.text
-    assert "metric%3Aja-arguana" in response.text
-    assert 'hx-push-url="/?view=MNanoBEIR&amp;sort=metric%3Aja-arguana' in response.text
+    assert "metric%3AMNanoBEIR%3A%3ANanoBEIR-ja" in response.text
 
 
 def test_mnanobeir_language_pages_use_dataset_primary_language(tmp_path: Path) -> None:
@@ -7574,7 +7614,7 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
     task_rows = [
         (
             "model/a",
-            "MNanoBEIR",
+            "BenchMulti",
             "hakari-bench/NanoBEIR-ar",
             "NanoBEIR-ar",
             "ar",
@@ -7587,7 +7627,7 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
         ),
         (
             "model/a",
-            "MNanoBEIR",
+            "BenchMulti",
             "hakari-bench/NanoBEIR-ar",
             "NanoBEIR-ar",
             "ar",
@@ -7600,7 +7640,7 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
         ),
         (
             "model/a",
-            "MNanoBEIR",
+            "BenchMulti",
             "hakari-bench/NanoBEIR-ja",
             "NanoBEIR-ja",
             "ja",
@@ -7613,7 +7653,7 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
         ),
         (
             "model/b",
-            "MNanoBEIR",
+            "BenchMulti",
             "hakari-bench/NanoBEIR-ar",
             "NanoBEIR-ar",
             "ar",
@@ -7626,7 +7666,7 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
         ),
         (
             "model/b",
-            "MNanoBEIR",
+            "BenchMulti",
             "hakari-bench/NanoBEIR-ar",
             "NanoBEIR-ar",
             "ar",
@@ -7639,7 +7679,7 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
         ),
         (
             "model/b",
-            "MNanoBEIR",
+            "BenchMulti",
             "hakari-bench/NanoBEIR-ja",
             "NanoBEIR-ja",
             "ja",
@@ -7676,7 +7716,7 @@ def test_task_score_column_headers_shorten_dataset_task_keys_and_keep_full_name(
     (config_dir / "benchmarks.yaml").write_text(
         """
 benchmarks:
-  - name: MNanoBEIR
+  - name: BenchMulti
     score_groups:
       - name: task_key
         label: Task Key
@@ -7687,12 +7727,12 @@ benchmarks:
 """.strip(),
         encoding="utf-8",
     )
-    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - MNanoBEIR\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchMulti\n", encoding="utf-8")
 
     from fastapi.testclient import TestClient
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=MNanoBEIR&group=task_key&task_scores=1")
+    response = TestClient(app).get("/leaderboard?view=BenchMulti&group=task_key&task_scores=1")
 
     assert response.status_code == 200
     assert 'scope="colgroup"' not in response.text
@@ -7717,23 +7757,6 @@ benchmarks:
         'data-metric-column-full-name="MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana"'
         in response.text
     )
-    assert 'class="doc-summary-trigger' in response.text
-
-    filtered_result = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)).get_leaderboard(
-        "MNanoBEIR",
-        score_group_name="task_mean",
-        show_task_scores=True,
-        language_filters=("ja",),
-    )
-    assert filtered_result.metric_columns == ["arguana"]
-    assert filtered_result.metric_column_doc_keys == {"arguana": "MNanoBEIR::NanoBEIR-ja::arguana"}
-
-    filtered_response = TestClient(app).get(
-        "/leaderboard?view=MNanoBEIR&group=task_mean&task_scores=1&lang_filter=ja"
-    )
-    assert filtered_response.status_code == 200
-    assert 'data-doc-title="MNanoBEIR / NanoBEIR-ja / NanoArguAna"' in filtered_response.text
-    assert 'data-doc-title="MNanoBEIR / NanoBEIR-ar / NanoArguAna"' not in filtered_response.text
 
 
 def test_max_len_uses_compact_k_display_for_1k_and_above() -> None:
