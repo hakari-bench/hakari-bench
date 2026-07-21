@@ -1367,6 +1367,11 @@
   border-radius: var(--hakari-radius-sm);
 }
 
+.mnanobeir-scope-group > .mnanobeir-scope-option {
+  border: 0;
+  border-radius: var(--hakari-radius-sm);
+}
+
 .column-mode-or {
   padding-inline: 0.2rem;
   color: var(--hakari-text-faint);

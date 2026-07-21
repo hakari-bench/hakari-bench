@@ -2593,7 +2593,8 @@ def render_tabs(
         query_payload = _apply_plot_state(query_payload, plot_state)
         if view_name == "MNanoBEIR":
             if result.view_name != "MNanoBEIR":
-                for offset, selection_key, label in [
+                mnanobeir_buttons = []
+                for _offset, selection_key, label in [
                     (0, benchmark_selection_key("MNanoBEIR", "task_mean"), "M-BEIR(task)"),
                     (1, benchmark_selection_key("MNanoBEIR", "lang_mean"), "M-BEIR(lang)"),
                 ]:
@@ -2610,22 +2611,22 @@ def render_tabs(
                     selection_query_payload = _apply_plot_state(selection_query_payload, plot_state)
                     selection_query = urlencode(selection_query_payload, doseq=True)
                     selection_active = _benchmark_selection_active(result=result, selection_key=selection_key)
-                    grouped_buttons[group].append(
-                        (
-                            sort_key * 10 + offset,
-                            _render_benchmark_view_button(
-                                label=label,
-                                active=selection_active,
-                                query=selection_query,
-                                query_payload=selection_query_payload,
-                                doc=doc,
-                                benchmark_name=selection_key,
-                                help_content=_mnanobeir_scope_help(score_group),
-                            ),
+                    mnanobeir_buttons.append(
+                        _render_benchmark_view_button(
+                            label=label,
+                            active=selection_active,
+                            query=selection_query,
+                            query_payload=selection_query_payload,
+                            doc=doc,
+                            benchmark_name=selection_key,
+                            help_content=_mnanobeir_scope_help(score_group),
+                            extra_class="mnanobeir-scope-option",
                         )
                     )
+                grouped_buttons[group].append((sort_key * 10, _render_mnanobeir_scope_group(mnanobeir_buttons)))
                 continue
-            for offset, score_group, label in [
+            mnanobeir_buttons = []
+            for _offset, score_group, label in [
                 (0, "task_mean", "M-BEIR(task)"),
                 (1, "lang_mean", "M-BEIR(lang)"),
             ]:
@@ -2643,20 +2644,19 @@ def render_tabs(
                 active = result.view_name == view_name and (
                     result.selected_score_group is not None and result.selected_score_group.name == score_group
                 )
-                grouped_buttons[group].append(
-                    (
-                        sort_key * 10 + offset,
-                        _render_benchmark_view_button(
-                            label=label,
-                            active=active,
-                            query=group_query,
-                            query_payload=group_query_payload,
-                            doc=doc,
-                            benchmark_name=view_name,
-                            help_content=_mnanobeir_scope_help(score_group),
-                        ),
+                mnanobeir_buttons.append(
+                    _render_benchmark_view_button(
+                        label=label,
+                        active=active,
+                        query=group_query,
+                        query_payload=group_query_payload,
+                        doc=doc,
+                        benchmark_name=view_name,
+                        help_content=_mnanobeir_scope_help(score_group),
+                        extra_class="mnanobeir-scope-option",
                     )
                 )
+            grouped_buttons[group].append((sort_key * 10, _render_mnanobeir_scope_group(mnanobeir_buttons)))
             continue
         query = urlencode(query_payload, doseq=True)
         if doc is None:
@@ -2756,8 +2756,10 @@ def _render_benchmark_view_button(
     doc: BenchmarkDoc | None,
     benchmark_name: str | None = None,
     help_content: tuple[str, str, str] | None = None,
+    extra_class: str = "",
 ) -> str:
     classes = _control_button_classes(active=active)
+    group_class = f" {extra_class}" if extra_class else ""
     data_attr = "" if benchmark_name is None else f' data-benchmark-toggle="{escape(benchmark_name, quote=True)}"'
     if doc is None and help_content is None:
         return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
@@ -2767,7 +2769,7 @@ def _render_benchmark_view_button(
                     </button>"""
     if doc is not None and help_content is None:
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
-        return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+        return f"""<span class="control-button-group doc-label-group{group_class} inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
                   <button type="button" class="py-1 pl-2 pr-0 text-left"
                     {data_attr}
                     hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2782,7 +2784,7 @@ def _render_benchmark_view_button(
     if help_content is not None:
         title, summary, details = help_content
         icon_triggers.append(_render_button_help_icon(title=title, summary=summary, details=details))
-    return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+    return f"""<span class="control-button-group doc-label-group{group_class} inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 {data_attr}
                 hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2793,24 +2795,40 @@ def _render_benchmark_view_button(
             </span>"""
 
 
+def _render_mnanobeir_scope_group(buttons: list[str]) -> str:
+    if len(buttons) != 2:
+        raise ValueError("M-BEIR scope selector requires task and language buttons")
+    return f"""<span class="column-mode-group mnanobeir-scope-group" role="group"
+                  aria-label="M-BEIR scope: choose task or language grouping"
+                  data-mnanobeir-scope-group="true">
+                {buttons[0]}
+                <span class="column-mode-or" aria-hidden="true">or</span>
+                {buttons[1]}
+              </span>"""
+
+
 def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:
     matrix_note = (
-        "MNanoBEIR is a language x task benchmark matrix: each raw row is one "
-        "NanoBEIR language dataset, such as NanoBEIR-ja, crossed with one "
-        "BEIR-style task, such as NanoArguAna or NanoSciFact. Showing every "
-        "language-task cell as an individual benchmark scope would make the "
-        "picker hard to scan, so the viewer exposes two grouped views."
+        "M-BEIR evaluates 13 retrieval tasks in 14 languages, producing 182 raw result cells. "
+        "Those cells are always grouped before display and ranking so this large matrix does "
+        "not dominate the leaderboard."
+    )
+    ranking_note = (
+        "M-BEIR contributes one final score to the leaderboard ranking after the visible "
+        "breakdowns are averaged. With Task columns, ordinary benchmarks remain at raw-task "
+        "detail; with Grouped columns, each ordinary benchmark contributes one final score. "
+        "Changing this M-BEIR scope changes its breakdown axis, not its final ranking weight."
     )
     if score_group == "lang_mean":
         return (
-            "Benchmark scope: NanoBEIR(lang)",
-            "Averages the multilingual NanoBEIR matrix by language dataset.",
-            f"{matrix_note}\n\nNanoBEIR(lang) first groups rows by language dataset, such as NanoBEIR-ja, NanoBEIR-de, or NanoBEIR-fr, averaging all tasks within each language before the final score is computed. Use it when you want language coverage and per-language robustness to be the visible unit.\n\nThis differs from NanoBEIR(task), which groups by BEIR source task first and averages languages inside each task.",
+            "Benchmark scope: M-BEIR(lang)",
+            "Shows 14 language means; each language score averages its 13 BEIR tasks.",
+            f"{matrix_note}\n\nM-BEIR(lang) displays one column per language, such as M-BEIR-ja, M-BEIR-de, or M-BEIR-fr. Each column is the mean of all 13 retrieval tasks for that language. The 14 visible language columns are breakdowns, not 14 ranking votes. Choose this view to compare language coverage and per-language robustness.\n\n{ranking_note}\n\nM-BEIR(task) is the alternative view: it displays 13 task means, averaging the 14 languages inside each task.",
         )
     return (
-        "Benchmark scope: NanoBEIR(task)",
-        "Averages the multilingual NanoBEIR matrix by BEIR source task.",
-        f"{matrix_note}\n\nNanoBEIR(task) first groups rows by BEIR-style task, such as ArguAna, FEVER, or SciFact, averaging all available languages within each task before the final score is computed. Use it when you want task behavior to be the visible unit while smoothing over language coverage.\n\nThis differs from NanoBEIR(lang), which groups by language dataset first and averages tasks inside each language.",
+        "Benchmark scope: M-BEIR(task)",
+        "Shows 13 BEIR task means; each task score averages its 14 language results.",
+        f"{matrix_note}\n\nM-BEIR(task) displays one column per retrieval task, such as M-BEIR-arguana, M-BEIR-fever, or M-BEIR-scifact. Each column is the mean of that task across all 14 languages. The 13 visible task columns are breakdowns, not 13 ranking votes. Choose this view to compare retrieval-task behavior while averaging over languages.\n\n{ranking_note}\n\nM-BEIR(lang) is the alternative view: it displays 14 language means, averaging the 13 tasks inside each language.",
     )
 
 
@@ -3021,7 +3039,7 @@ def _render_score_aggregation_group(
                 {_render_help_tooltip(
                   "Score aggregation",
                   "Chooses between raw task weighting and grouped NanoSet weighting.",
-                  "Micro is the default score. Think of it as the raw task average: every task row gets one vote. A NanoSet with many tasks or language variants therefore has more influence on the final ranking. Task columns always selects Micro.\n\nMacro is the grouped score: tasks are first summarized into one score per NanoSet, then each NanoSet gets one vote regardless of how many raw tasks it contains. Grouped columns always selects Macro. While either column mode is active, the incompatible Score choice is disabled.\n\nFor MNanoBEIR, the selected task or language groups are shown as separate breakdown columns, then averaged before MNanoBEIR contributes its one Macro group score.",
+                  "Micro is the default score. For ordinary NanoSets, every raw task row gets one vote. Task columns always selects Micro. M-BEIR is the deliberate exception: its 13 x 14 matrix is first grouped by the selected task or language axis and always contributes one final ranking unit, never 182 votes.\n\nMacro is the grouped score: tasks are first summarized into one score per NanoSet, then each NanoSet gets one vote regardless of how many raw tasks it contains. Grouped columns always selects Macro. While either column mode is active, the incompatible Score choice is disabled.\n\nFor M-BEIR, the 13 task means or 14 language means are shown as separate breakdown columns in both table modes, then averaged into M-BEIR's one final score.",
                 )}
               </span>
               {''.join(buttons)}
@@ -3390,15 +3408,15 @@ def _language_page_button(
     active = result.selected_languages == language_filters
     label = "All languages" if option is None else f"{option.label} {option.task_count}"
     classes = _control_button_classes(active=active)
-    query_payload = _apply_plot_state(
-        state_payload(
-            result=result,
-            sort=sort,
-            direction=direction,
-            filter_state=_filter_state_with_languages(filter_state, language_filters),
-        ),
-        plot_state,
+    query_payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=_filter_state_with_languages(filter_state, language_filters),
     )
+    if result.view_name == "Overall (EN)" and language_filters != ("en",):
+        query_payload["view"] = "Overall"
+    query_payload = _apply_plot_state(query_payload, plot_state)
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
     return f"""<button type="button"{data_attr} class="shrink-0 whitespace-nowrap border px-2 py-1 text-[0.8125rem] {classes}"
@@ -3499,7 +3517,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Table display",
               "Changes which columns and per-task annotations are visible.",
-              "Table display controls how much detail appears in the result table. Task columns and Grouped columns are mutually exclusive.\n\nTask columns shows one score column per raw task and fixes Score to Micro, so every task row has equal weight. Grouped columns shows benchmark groups such as JMTEB-v2 or IFIR and fixes Score to Macro. M-BEIR expands the selected inner grouping into columns such as M-BEIR-arguana for task mode or M-BEIR-ar for language mode; those columns are averaged into M-BEIR's one Macro group score.\n\nSTD adds standard-deviation deltas. Task ranks shows the rank for whichever Task or Grouped columns are active.",
+              "Table display controls how much detail appears in the result table. Task columns and Grouped columns are mutually exclusive.\n\nTask columns shows one score column per raw task for ordinary benchmarks and fixes Score to Micro. Grouped columns shows benchmark groups such as JMTEB-v2 or IFIR and fixes Score to Macro. M-BEIR is special in both modes: task scope shows 13 language-averaged task columns such as M-BEIR-arguana, while language scope shows 14 task-averaged language columns such as M-BEIR-ar. Its 182 raw matrix cells are never shown or counted independently, and the breakdowns are averaged into one final M-BEIR ranking unit.\n\nSTD adds standard-deviation deltas. Task ranks shows the rank for whichever Task or Grouped columns are active.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -5245,6 +5263,13 @@ def _metric_column_tooltip(*, label: str, full_metric_name: str, result: Leaderb
         base = (
             "Grouped score breakdown column. Benchmark groups contribute one final value to the Macro score; "
             "M-BEIR may expose its selected task or language groups as separate display columns first."
+        )
+    elif full_metric_name.startswith("MNanoBEIR::") and any(
+        selection.startswith("MNanoBEIR") for selection in result.selected_benchmarks
+    ):
+        base = (
+            "M-BEIR grouped breakdown column. The 13 task means or 14 language means are visible in both "
+            "table modes, but M-BEIR contributes one final ranking unit rather than 182 raw matrix cells."
         )
     elif result.selected_score_group is not None:
         group_label = result.selected_score_group.label

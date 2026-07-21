@@ -654,10 +654,8 @@ class LeaderboardService:
                     rows = _filter_rows_by_task_terms(rows, ranking_task_filter_terms)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["term_count"] = len(ranking_task_filter_terms)
-            metric_score_group = (
-                None if column_mode == "task" else selected_score_group
-            )
-            grouped_column_source_rows = list(rows) if column_mode == "grouped" else None
+            metric_score_group = None if column_mode == "task" else selected_score_group
+            column_source_rows = list(rows) if column_mode is not None else None
             should_show_task_scores = (
                 column_mode is not None
                 or show_task_scores
@@ -665,7 +663,7 @@ class LeaderboardService:
                 or bool(ranking_task_filter_terms)
             )
             aggregation_overall = overall
-            if column_mode == "grouped" and aggregation_overall is None:
+            if column_mode is not None and aggregation_overall is None:
                 aggregation_overall = OverallConfig(
                     name=view_name,
                     label=self.config.label_for_view(view_name),
@@ -680,7 +678,21 @@ class LeaderboardService:
                         )
                     ],
                 )
-            if aggregation_overall is not None and (
+            if (
+                aggregation_overall is not None
+                and score_aggregation == "micro"
+                and _mnanobeir_component(aggregation_overall) is not None
+            ):
+                with timed_operation(
+                    "viewer.leaderboard.phase",
+                    operation="aggregate_mnanobeir_for_micro",
+                    view=view_name,
+                ) as phase_timing:
+                    if expected_task_keys is not None and not selected_languages:
+                        rows = _filter_rows_to_complete_models(rows, expected_task_keys)
+                    rows = _micro_rows_with_grouped_mnanobeir(rows, aggregation_overall)
+                    phase_timing["task_score_count"] = len(rows)
+            elif aggregation_overall is not None and (
                 not ranking_task_filter_terms or score_aggregation == "macro"
             ):
                 with timed_operation(
@@ -714,16 +726,18 @@ class LeaderboardService:
                     )
                     phase_timing["task_score_count"] = len(rows)
             metric_rows = rows
-            if (
-                column_mode == "grouped"
-                and aggregation_overall is not None
-                and grouped_column_source_rows is not None
-            ):
-                metric_rows, metric_score_group = _grouped_column_metric_rows(
-                    source_rows=grouped_column_source_rows,
-                    aggregated_rows=rows,
-                    overall=aggregation_overall,
-                )
+            if aggregation_overall is not None and column_source_rows is not None:
+                if column_mode == "grouped":
+                    metric_rows, metric_score_group = _grouped_column_metric_rows(
+                        source_rows=column_source_rows,
+                        aggregated_rows=rows,
+                        overall=aggregation_overall,
+                    )
+                elif column_mode == "task":
+                    metric_rows, metric_score_group = _task_column_metric_rows(
+                        source_rows=column_source_rows,
+                        overall=aggregation_overall,
+                    )
             if should_show_task_scores and metric_score_group is None:
                 metric_score_group = ScoreGroupConfig(
                     name="task_scores", label="Task Scores", group_by="task_key"
@@ -762,6 +776,7 @@ class LeaderboardService:
                     expected_task_keys
                     if overall is not None
                     and score_aggregation == "micro"
+                    and _mnanobeir_component(overall) is None
                     and not selected_languages
                     and not ranking_task_filter_terms
                     and not has_length_filters
@@ -2239,6 +2254,106 @@ def _aggregate_overall_scores(
     return aggregated
 
 
+def _mnanobeir_component(overall: OverallConfig) -> OverallBenchmarkConfig | None:
+    """Return M-BEIR's mandatory inner grouping policy for this scope.
+
+    M-BEIR is a 13-task x 14-language matrix, not 182 independent benchmark
+    units. Its selected task/language axis must therefore survive every table
+    display mode, and the matrix must collapse to one score before it enters an
+    Overall ranking.
+    """
+
+    return next(
+        (
+            component
+            for component in overall.benchmark_components
+            if component.name == "MNanoBEIR"
+            and component.group_by in {"task_name", "dataset_name"}
+        ),
+        None,
+    )
+
+
+def _mnanobeir_inner_rows(
+    source_rows: list[TaskScore], component: OverallBenchmarkConfig
+) -> list[TaskScore]:
+    if component.group_by is None:
+        raise AssertionError("M-BEIR requires a task or language grouping axis")
+    return _aggregate_benchmark_score_group_scores(
+        [row for row in source_rows if row.benchmark == component.name],
+        ScoreGroupConfig(
+            name=f"MNanoBEIR_{component.group_by}",
+            label="M-BEIR inner groups",
+            group_by=component.group_by,
+        ),
+    )
+
+
+def _micro_rows_with_grouped_mnanobeir(
+    rows: list[TaskScore], overall: OverallConfig
+) -> list[TaskScore]:
+    """Keep ordinary Micro task units but give the M-BEIR matrix one vote."""
+
+    component = _mnanobeir_component(overall)
+    if component is None:
+        return rows
+    mnanobeir_source_rows = [row for row in rows if row.benchmark == component.name]
+    expected_mnanobeir_keys = {row.task_key for row in mnanobeir_source_rows}
+    mnanobeir_keys_by_model: dict[str, set[str]] = defaultdict(set)
+    for row in mnanobeir_source_rows:
+        mnanobeir_keys_by_model[row.model_name].add(row.task_key)
+    complete_mnanobeir_models = {
+        model_name
+        for model_name, task_keys in mnanobeir_keys_by_model.items()
+        if task_keys == expected_mnanobeir_keys
+    }
+    # Aggregating first can conceal a missing matrix cell when the incomplete
+    # model still has at least one row for every task/language group. Enforce
+    # raw matrix completeness before producing the selected 13/14 inner means.
+    complete_mnanobeir_rows = [
+        row
+        for row in mnanobeir_source_rows
+        if row.model_name in complete_mnanobeir_models
+    ]
+    inner_rows = _mnanobeir_inner_rows(complete_mnanobeir_rows, component)
+    mnanobeir_rows_by_model = _group_by_model(inner_rows)
+    grouped_mnanobeir_rows = [
+        _aggregate_task_score_rows(
+            model_name=model_name,
+            benchmark=component.name,
+            aggregate_key=component.name,
+            aggregate_rows=model_rows,
+        )
+        for model_name, model_rows in mnanobeir_rows_by_model.items()
+    ]
+    return [row for row in rows if row.benchmark != component.name] + grouped_mnanobeir_rows
+
+
+def _task_column_metric_rows(
+    *, source_rows: list[TaskScore], overall: OverallConfig
+) -> tuple[list[TaskScore], ScoreGroupConfig]:
+    """Render raw task columns except for M-BEIR's selected 13/14 inner groups."""
+
+    component = _mnanobeir_component(overall)
+    metric_rows = [
+        row for row in source_rows if component is None or row.benchmark != component.name
+    ]
+    if component is not None:
+        inner_group_by = component.group_by
+        if inner_group_by is None:
+            raise AssertionError("M-BEIR task columns require an inner grouping axis")
+        metric_rows.extend(
+            replace(
+                row,
+                task_key=f"{component.name}::{_score_group_key(row, inner_group_by)}",
+            )
+            for row in _mnanobeir_inner_rows(source_rows, component)
+        )
+    return metric_rows, ScoreGroupConfig(
+        name="task_columns", label="Task columns", group_by="task_key"
+    )
+
+
 def _grouped_column_metric_rows(
     *,
     source_rows: list[TaskScore],
@@ -2246,14 +2361,7 @@ def _grouped_column_metric_rows(
     overall: OverallConfig,
 ) -> tuple[list[TaskScore], ScoreGroupConfig]:
     """Keep benchmark-level macro rows while expanding M-BEIR's selected inner axis for display."""
-    mnanobeir_component = next(
-        (
-            component
-            for component in overall.benchmark_components
-            if component.name == "MNanoBEIR" and component.group_by is not None
-        ),
-        None,
-    )
+    mnanobeir_component = _mnanobeir_component(overall)
     metric_rows = [
         replace(row, task_key=row.benchmark)
         for row in aggregated_rows
@@ -2263,15 +2371,7 @@ def _grouped_column_metric_rows(
         inner_group_by = mnanobeir_component.group_by
         if inner_group_by is None:
             raise AssertionError("M-BEIR grouped columns require an inner grouping axis")
-        inner_score_group = ScoreGroupConfig(
-            name=f"MNanoBEIR_{inner_group_by}",
-            label="M-BEIR grouped columns",
-            group_by=inner_group_by,
-        )
-        inner_rows = _aggregate_benchmark_score_group_scores(
-            [row for row in source_rows if row.benchmark == mnanobeir_component.name],
-            inner_score_group,
-        )
+        inner_rows = _mnanobeir_inner_rows(source_rows, mnanobeir_component)
         metric_rows.extend(
             replace(
                 row,
@@ -2498,6 +2598,23 @@ def _filter_rows_to_task_keys(
     rows: list[TaskScore], task_keys: frozenset[str]
 ) -> list[TaskScore]:
     return [row for row in rows if row.task_key in task_keys]
+
+
+def _filter_rows_to_complete_models(
+    rows: list[TaskScore], expected_task_keys: set[str] | frozenset[str]
+) -> list[TaskScore]:
+    """Enforce raw-task completeness before special grouped units replace keys."""
+
+    task_keys_by_model: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        task_keys_by_model[row.model_name].add(row.task_key)
+    expected = set(expected_task_keys)
+    complete_models = {
+        model_name
+        for model_name, task_keys in task_keys_by_model.items()
+        if task_keys == expected
+    }
+    return [row for row in rows if row.model_name in complete_models]
 
 
 def _language_options(
@@ -3318,7 +3435,10 @@ def _metric_column_label_overrides(
         if overall is not None
         else None
     )
-    if mnanobeir_component is not None and score_group.name == "grouped_columns":
+    if mnanobeir_component is not None and score_group.name in {
+        "grouped_columns",
+        "task_columns",
+    }:
         for column in metric_columns:
             prefix = "MNanoBEIR::"
             if not column.startswith(prefix):

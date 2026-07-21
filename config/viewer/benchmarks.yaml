@@ -10,7 +10,10 @@ benchmarks:
     matches:
       - NanoBEIR
     include_in_overall: true
-    # MNanoBEIR is a task x language benchmark. Some dataset rows include
+    # MNanoBEIR is a 13-task x 14-language matrix, not 182 independent score
+    # units. Every viewer mode must aggregate it by the selected task/language
+    # axis for display and collapse it to one final ranking contribution.
+    # Some dataset rows include
     # secondary languages such as English in `languages`, so Language pages use
     # the dataset primary language instead of expanding every detected language.
     language_filter_mode: primary_language

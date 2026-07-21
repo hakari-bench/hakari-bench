@@ -110,6 +110,9 @@ components:
       Efficiency variants toggles preserve the active Filter results state,
       including Dims and Quantization selections, so toggling additional variant
       rows does not clear visible filters.
+      M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
+      one benchmark scope and share the same integrated `or` selector treatment
+      used by Task columns and Grouped columns.
       The main filter controls are arranged as two aligned flex lanes: left lane
       Model, Dims, Active params (M), and Query length; right lane Task,
       Quantization, Total params (M), and Document length.
@@ -152,11 +155,14 @@ components:
       OpenAI, and Late int.; expose the full label through hover tooltip and
       Model Details. Task columns and Grouped columns form one visibly connected,
       mutually exclusive choice. Task columns uses Micro scoring and shows raw
-      task units; Grouped columns uses Macro scoring and shows one column per
-      selected benchmark group. M-BEIR is expanded along its selected inner
-      axis: task mode uses columns such as `M-BEIR-arguana`, while language mode
-      uses columns such as `M-BEIR-ar`. These display columns do not change the
-      rule that M-BEIR contributes one final group score to the Macro ranking.
+      task units for ordinary benchmarks; Grouped columns uses Macro scoring and
+      shows one column per selected benchmark group. M-BEIR is the deliberate
+      exception because its 13-task x 14-language matrix must never become 182
+      independent columns or ranking votes. Both table modes expand M-BEIR only
+      along its selected inner axis: task mode uses 13 columns such as
+      `M-BEIR-arguana`, while language mode uses 14 columns such as `M-BEIR-ar`.
+      The inner columns are display breakdowns; M-BEIR always contributes one
+      final score unit to the ranking, including Micro/Task columns mode.
       Every Grouped column uses its benchmark-group documentation tooltip and
       wraps its complete label within the column instead of ellipsizing it. When
       a Task or Grouped metric header is selected for sorting, move that metric

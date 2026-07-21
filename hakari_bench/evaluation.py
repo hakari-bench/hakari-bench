@@ -2205,9 +2205,12 @@ def _quantize_embedding_pair(
     score_representation = _normalize_quantized_dense_score_representation(score_representation)
     if _is_sparse_embedding(query_embeddings) or _is_sparse_embedding(corpus_embeddings):
         raise ValueError("Quantized embedding variants are not supported for sparse embeddings.")
-    if precision not in {"int8", "binary"}:
+    if precision == "int8":
+        precision_literal: QuantizationPrecision = "int8"
+    elif precision == "binary":
+        precision_literal = "binary"
+    else:
         raise ValueError(f"Unsupported quantization precision: {precision}")
-    precision_literal = cast(QuantizationPrecision, precision)
     target = _normalize_quantization_target(target)
     if target != "query_and_corpus":
         raise ValueError("Quantized search requires query_and_corpus quantization.")

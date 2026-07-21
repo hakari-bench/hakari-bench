@@ -443,7 +443,7 @@ def test_empty_custom_benchmark_selection_stays_custom_and_resets_language() -> 
     assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc"}
 
 
-def test_overall_en_view_normalizes_to_en_language_filter() -> None:
+def test_overall_en_view_switches_to_overall_for_explicit_non_english_filter() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
         view="Overall (EN)",
@@ -466,10 +466,10 @@ def test_overall_en_view_normalizes_to_en_language_filter() -> None:
     )
 
     assert query == {
-        "view": "Overall (EN)",
+        "view": "Overall",
         "sort": "borda_rank",
         "direction": "asc",
-        "lang_filter": ["en"],
+        "lang_filter": ["ja"],
     }
 
 
