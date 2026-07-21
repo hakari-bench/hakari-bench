@@ -157,8 +157,10 @@ under `config/datasets/`, and dataset collection definitions live under
 - When updating viewer UI design, check `@DESIGN.md` before editing and update
   it when the design direction, tokens, layout rules, or component behavior
   changes.
-- When changing viewer design, layout, interactive controls, or generated HTML,
-  install Playwright Chromium and run the browser smoke test whenever practical:
+- After changing the leaderboard viewer, install Playwright Chromium and run the
+  browser test before considering the work complete. This is required for
+  changes to viewer behavior, queries, URL/state restoration, filters, design,
+  layout, interactive controls, generated HTML, CSS, or JavaScript:
 
   ```bash
   uv run --only-group viewer-browser-test playwright install chromium
@@ -166,7 +168,9 @@ under `config/datasets/`, and dataset collection definitions live under
   ```
 
   `uv run tox -e browser` is the CI-style shortcut for the same workflow; it
-  installs Chromium before running the smoke test.
+  installs Chromium before running the browser test. Do not skip this validation
+  merely because focused unit tests pass. If the browser test cannot run, report
+  the reason explicitly and do not describe the viewer change as fully verified.
 
 - When updating the leaderboard viewer in this project, keep
   `docs/duckdb_schema.md` in sync. Update it when DuckDB schema, viewer queries,
