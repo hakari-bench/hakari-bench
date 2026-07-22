@@ -10,12 +10,90 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 import duckdb
+from fastapi.responses import HTMLResponse
 import pytest
 import uvicorn
 
 from hakari_bench.viewer.app import create_app
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
+
+
+@pytest.mark.browser
+def test_iframe_hash_replaces_stale_query_without_changing_top_level_merge_semantics(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_FRAME_ANCESTORS", "'self'")
+    app = _create_browser_test_app(tmp_path)
+
+    @app.get("/__test_embed")
+    def test_embed() -> HTMLResponse:
+        return HTMLResponse(
+            '<iframe id="viewer" src="/?quantization=1&amp;truncate=1#rescore=1"></iframe>',
+            headers={"Content-Security-Policy": "frame-src 'self'"},
+        )
+
+    @app.get("/__test_embed_query_only")
+    def test_embed_query_only() -> HTMLResponse:
+        return HTMLResponse(
+            '<iframe id="viewer" src="/?quantization=1"></iframe>',
+            headers={"Content-Security-Policy": "frame-src 'self'"},
+        )
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                leaderboard_requests: list[str] = []
+                page.on(
+                    "request",
+                    lambda request: leaderboard_requests.append(request.url)
+                    if "/leaderboard?" in request.url
+                    else None,
+                )
+
+                # A direct viewer URL keeps the established behavior: query
+                # state wins and hash state only fills missing parameters.
+                page.goto(
+                    f"{base_url}/?quantization=1&truncate=1#rescore=1",
+                    wait_until="domcontentloaded",
+                )
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                top_level_query = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert top_level_query == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+
+                # Hugging Face updates an existing iframe by replacing its hash.
+                # In that context the hash is the complete requested state, so
+                # omitted variant flags must return to their defaults.
+                leaderboard_requests.clear()
+                page.goto(f"{base_url}/__test_embed", wait_until="domcontentloaded")
+                iframe = page.frame_locator("#viewer")
+                iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
+                iframe_query = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert iframe_query == {"rescore": ["1"]}
+                assert iframe.locator('#variant-controls input[name="truncate"]').is_checked() is False
+                assert iframe.locator('#variant-controls input[name="quantization"]').is_checked() is False
+                assert iframe.locator('#variant-controls input[name="rescore"]').is_checked() is True
+
+                # An iframe without hash state still restores its query normally.
+                leaderboard_requests.clear()
+                page.goto(f"{base_url}/__test_embed_query_only", wait_until="domcontentloaded")
+                query_only_iframe = page.frame_locator("#viewer")
+                query_only_iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
+                query_only = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert query_only == {"quantization": ["1"]}
+                assert query_only_iframe.locator(
+                    '#variant-controls input[name="quantization"]'
+                ).is_checked() is True
+            finally:
+                browser.close()
 
 
 @pytest.mark.browser
