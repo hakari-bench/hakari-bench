@@ -678,6 +678,67 @@ def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path
                 browser.close()
 
 
+@pytest.mark.browser
+def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope(tmp_path: Path) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                page.goto(f"{base_url}/", wait_until="domcontentloaded")
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+
+                def visible_variants() -> set[str | None]:
+                    values = page.locator("#leaderboard-panel [data-model-metadata]").evaluate_all(
+                        "elements => elements.map(element => JSON.parse(element.dataset.modelMetadata).embedding_variant_name)"
+                    )
+                    return set(values)
+
+                def toggle(name: str) -> None:
+                    page.locator(f'#variant-controls input[name="{name}"]').locator("xpath=ancestor::label").click()
+                    page.wait_for_url(lambda url: parse_qs(urlparse(url).query).get(name) == ["1"], timeout=15_000)
+                    page.locator("#leaderboard-loading-toast.htmx-request").wait_for(
+                        state="detached",
+                        timeout=15_000,
+                    )
+
+                toggle("rescore")
+                assert parse_qs(urlparse(page.url).query) == {"rescore": ["1"]}
+                assert visible_variants() == {None}
+
+                help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
+                help_trigger.click()
+                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
+                assert page.locator("#help-summary-heading").inner_text() == "Rescore"
+                assert "Enable Quantization with Rescore" in page.locator("#help-summary-details").inner_text()
+                assert page.locator('#variant-controls input[name="rescore"]').is_checked()
+                page.locator("#help-summary-modal").evaluate("modal => modal.close()")
+
+                toggle("quantization")
+                assert visible_variants() == {None, "binary_rescore"}
+
+                toggle("truncate")
+                assert visible_variants() == {
+                    None,
+                    "truncate_dim_256",
+                    "binary_rescore",
+                    "truncate_dim_256_binary_rescore",
+                }
+
+                page.locator('#variant-controls input[name="quantization"]').locator("xpath=ancestor::label").click()
+                page.wait_for_url(
+                    lambda url: "quantization" not in parse_qs(urlparse(url).query),
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert visible_variants() == {None, "truncate_dim_256"}
+            finally:
+                browser.close()
+
+
 def _create_browser_test_app(tmp_path: Path):
     db_path = tmp_path / "results.duckdb"
     _write_browser_task_results(db_path)
@@ -762,6 +823,78 @@ def _write_browser_task_results(db_path: Path) -> None:
                         "truncate_dim_256",
                         256,
                         None,
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.86,
+                        10,
+                        12,
+                        8192,
+                        "binary_rescore",
+                        384,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.66,
+                        10,
+                        12,
+                        8192,
+                        "binary_rescore",
+                        384,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.58,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256_binary_rescore",
+                        256,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.80,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256_binary_rescore",
+                        256,
+                        "binary",
                     )
                 ),
                 _viewer_task_result_row(

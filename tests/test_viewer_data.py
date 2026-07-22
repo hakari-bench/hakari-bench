@@ -435,6 +435,22 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
                 None,
                 "a1",
                 "a1",
+                0.80,
+                10,
+                12,
+                8192,
+                "truncate_dim_256_binary_rescore",
+                256,
+                "binary",
+            ),
+            (
+                "model/a",
+                "BenchA",
+                "bench/a",
+                "BenchA",
+                None,
+                "a1",
+                "a1",
                 0.75,
                 10,
                 12,
@@ -482,6 +498,21 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
         include_embedding_variants=True,
         variant_display_flags=VariantDisplayFlags(rescore=True),
     )
+    quantization_rescore_records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(quantization=True, rescore=True),
+    )
+    truncate_rescore_records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(truncate=True, rescore=True),
+    )
+    all_rescore_records = TaskResultsRepository(db_path).fetch_task_results(
+        benchmarks=["BenchA"],
+        include_embedding_variants=True,
+        variant_display_flags=VariantDisplayFlags(quantization=True, truncate=True, rescore=True),
+    )
     other_records = TaskResultsRepository(db_path).fetch_task_results(
         benchmarks=["BenchA"],
         include_embedding_variants=True,
@@ -502,7 +533,24 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
         ("truncate_dim_384", None),
         ("truncate_dim_256_quantize_int8_docs", "int8"),
     ]
-    assert [record.embedding_variant_name for record in rescore_records] == [None, "binary_rescore"]
+    assert [record.embedding_variant_name for record in rescore_records] == [None]
+    assert [record.embedding_variant_name for record in quantization_rescore_records] == [
+        None,
+        "quantize_uint8_docs",
+        "binary_rescore",
+    ]
+    assert [record.embedding_variant_name for record in truncate_rescore_records] == [
+        None,
+        "truncate_dim_384",
+    ]
+    assert [record.embedding_variant_name for record in all_rescore_records] == [
+        None,
+        "quantize_uint8_docs",
+        "truncate_dim_384",
+        "truncate_dim_256_quantize_int8_docs",
+        "binary_rescore",
+        "truncate_dim_256_binary_rescore",
+    ]
     assert [record.embedding_variant_name for record in other_records] == [
         None,
         "sparse_query_max_active_dims_32_sparse_document_max_active_dims_256",

@@ -890,11 +890,16 @@ variant categories are added.
 | --- | --- |
 | Quantization | Non-rescore rows where `quantization IS NOT NULL` or `embedding_variant_name` contains `quantize`, excluding rows that also contain `truncate` unless Truncate dims is also enabled. |
 | Truncate dims | Rows where `embedding_variant_name` contains `truncate`, excluding quantized rows unless Quantization is also enabled. |
-| Rescore | `embedding_variant_name` contains `rescore`. Rescore rows are not included by the Quantization flag by default. |
+| Rescore | Adds rescore rows only when Quantization is also enabled. With Dims disabled, only full-dimension `int8_rescore` and `binary_rescore` rows are included. Enabling Dims as well also includes rescore rows whose names contain `truncate`. |
 | Sparse pruning | Sparse encoder pruning rows that cap active query or document dimensions. These rows have an `embedding_variant_name` containing `sparse_` and either `max_active_dims` or `max_dims`, excluding rows categorized as quantization, truncation, or rescore variants. The query parameter and materialized-column name remain `other_variant` / `include_other_variants` for compatibility. |
 
 Rows that are both quantized and truncated are displayed only when both matching
-category flags are enabled. Facet filter query parameters such as `dim_filter` and
+category flags are enabled. Rescore follows the same dependency: Rescore alone,
+and Dims + Rescore without Quantization, add no rescore rows. Quantization +
+Rescore is a valid full-dimension comparison; Dims + Quantization + Rescore
+extends it with truncated-dimension comparisons. The controls remain independent
+so the URL accurately preserves the user's selection instead of silently enabling
+a prerequisite. Facet filter query parameters such as `dim_filter` and
 `quant_filter` do not infer or re-enable display flags; the display flags come
 only from the explicit display controls.
 If old results contain a no-op truncation variant whose `truncate_dim_N` matches
@@ -1454,7 +1459,12 @@ source_rows AS (
       )
       OR (
         p.include_rescore_variants
+        AND p.include_quantization_variants
         AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%rescore%'
+        AND (
+          p.include_truncate_variants
+          OR lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%truncate%'
+        )
       )
       OR (
         p.include_other_variants
@@ -1707,7 +1717,12 @@ raw_rows AS (
       )
       OR (
         p.include_rescore_variants
+        AND p.include_quantization_variants
         AND lower(COALESCE(tr.embedding_variant_name, '')) LIKE '%rescore%'
+        AND (
+          p.include_truncate_variants
+          OR lower(COALESCE(tr.embedding_variant_name, '')) NOT LIKE '%truncate%'
+        )
       )
       OR (
         p.include_other_variants

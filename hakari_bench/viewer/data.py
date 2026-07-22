@@ -755,8 +755,11 @@ def _variant_filter_sql(columns: set[str], flags: VariantDisplayFlags) -> str:
     sparse_dims_category = f"({name} LIKE '%sparse_%' AND ({name} LIKE '%max_active_dims%' OR {name} LIKE '%max_dims%'))"
     non_rescore = f"NOT {rescore_category}"
     clauses = ["tr.embedding_variant_name IS NULL"]
-    if flags.rescore:
-        clauses.append(rescore_category)
+    if flags.rescore and flags.quantization:
+        if flags.truncate:
+            clauses.append(rescore_category)
+        else:
+            clauses.append(f"({rescore_category} AND NOT {truncate_category})")
     quantize_or_truncate_clause = _quantize_or_truncate_variant_filter(
         flags=flags,
         quantization_category=quantization_category,

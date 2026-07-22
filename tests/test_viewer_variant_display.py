@@ -75,16 +75,36 @@ def test_cross_variant_requires_quantization_and_truncate_flags() -> None:
     )
 
 
-def test_rescore_is_not_included_by_quantization_flag() -> None:
+def test_rescore_requires_quantization_and_truncated_rescore_also_requires_dims() -> None:
     assert not include_variant_row(
         embedding_variant_name="binary_rescore",
         quantization="binary",
         flags=VariantDisplayFlags(quantization=True),
     )
-    assert include_variant_row(
+    assert not include_variant_row(
         embedding_variant_name="binary_rescore",
         quantization="binary",
         flags=VariantDisplayFlags(rescore=True),
+    )
+    assert include_variant_row(
+        embedding_variant_name="binary_rescore",
+        quantization="binary",
+        flags=VariantDisplayFlags(quantization=True, rescore=True),
+    )
+    assert not include_variant_row(
+        embedding_variant_name="truncate_dim_256_binary_rescore",
+        quantization="binary",
+        flags=VariantDisplayFlags(quantization=True, rescore=True),
+    )
+    assert not include_variant_row(
+        embedding_variant_name="truncate_dim_256_binary_rescore",
+        quantization="binary",
+        flags=VariantDisplayFlags(truncate=True, rescore=True),
+    )
+    assert include_variant_row(
+        embedding_variant_name="truncate_dim_256_binary_rescore",
+        quantization="binary",
+        flags=VariantDisplayFlags(quantization=True, truncate=True, rescore=True),
     )
 
 

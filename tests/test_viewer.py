@@ -4766,6 +4766,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.85, 10, 12, 8192, "truncate_dim_512", 512, None),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.82, 10, 12, 8192, "truncate_dim_256_quantize_int8_docs", 256, "int8"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.81, 10, 12, 8192, "binary_rescore", 768, "binary"),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.79, 10, 12, 8192, "truncate_dim_256_binary_rescore", 256, "binary"),
             ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.75, 10, 12, 8192, "custom_variant", 2048, None),
             (
                 "model/a",
@@ -4810,6 +4811,17 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         quant_filters=("__none__",),
     )
     rescore_result = service.get_leaderboard("BenchA", include_rescore_variants=True)
+    quantization_rescore_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_rescore_variants=True,
+    )
+    all_rescore_result = service.get_leaderboard(
+        "BenchA",
+        include_quantization_variants=True,
+        include_truncate_variants=True,
+        include_rescore_variants=True,
+    )
     other_variant_result = service.get_leaderboard("BenchA", include_other_variants=True)
 
     assert [row.model_name for row in base_result.rows] == ["model/a", "model/b"]
@@ -4844,11 +4856,21 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         "model/a (768 dims, uint8)": pytest.approx(-11.1111111111),
         "model/b (512 dims)": None,
     }
-    assert [row.model_name for row in rescore_result.rows] == [
-        "model/a (768 dims)",
-        "model/a (768 dims, binary)",
-        "model/b (512 dims)",
-    ]
+    assert [row.embedding_variant_name for row in rescore_result.rows] == [None, None]
+    assert {row.embedding_variant_name for row in quantization_rescore_result.rows} == {
+        None,
+        "quantize_uint8_docs",
+        "binary_rescore",
+    }
+    assert {row.embedding_variant_name for row in all_rescore_result.rows} == {
+        None,
+        "truncate_dim_512",
+        "truncate_dim_384",
+        "truncate_dim_256_quantize_int8_docs",
+        "quantize_uint8_docs",
+        "binary_rescore",
+        "truncate_dim_256_binary_rescore",
+    }
     assert [row.model_name for row in other_variant_result.rows] == [
         "model/a (768 dims)",
         "model/a (2048 dims)",
@@ -4895,6 +4917,9 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert ">Sparse pruning</span>" in response.text
     assert "Other variants" not in response.text
     assert 'data-help-title="Efficiency variants"' in response.text
+    assert 'data-help-title="Rescore"' in response.text
+    assert "Enable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows." in response.text
+    assert "Dims with Rescore but without Quantization, has no matching result rows." in response.text
     assert "Dims includes truncated dense embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
     assert "Quantization includes compressed numeric formats such as int8 and binary." in response.text
     assert "Sparse pruning includes sparse encoder pruning variants" in response.text
@@ -4987,7 +5012,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "768d" in response.text
     assert "quantization-badge bg-zinc-100 text-amber-800" in response.text
     assert "uint8" in response.text
-    assert "binary_rescore" not in response.text
+    assert "&quot;embedding_variant_name&quot;:&quot;binary_rescore&quot;" not in response.text
     assert "Δ vs Base" in response.text
     assert "-11.1%" in response.text
     assert "-8.9%" not in response.text
@@ -5104,8 +5129,28 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     assert rescore_response.status_code == 200
     assert 'name="rescore" value="1" checked' in rescore_response.text
-    assert "binary_rescore" in rescore_response.text
-    assert "Δ vs Base" in rescore_response.text
+    assert "&quot;embedding_variant_name&quot;:&quot;binary_rescore&quot;" not in rescore_response.text
+
+    quantization_rescore_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&quantization=1&rescore=1"
+    )
+
+    assert "&quot;embedding_variant_name&quot;:&quot;binary_rescore&quot;" in quantization_rescore_response.text
+    assert (
+        "&quot;embedding_variant_name&quot;:&quot;truncate_dim_256_binary_rescore&quot;"
+        not in quantization_rescore_response.text
+    )
+
+    all_rescore_response = TestClient(app).get(
+        "/leaderboard?view=BenchA&truncate=1&quantization=1&rescore=1"
+    )
+
+    assert "&quot;embedding_variant_name&quot;:&quot;binary_rescore&quot;" in all_rescore_response.text
+    assert (
+        "&quot;embedding_variant_name&quot;:&quot;truncate_dim_256_binary_rescore&quot;"
+        in all_rescore_response.text
+    )
+    assert "Δ vs Base" in all_rescore_response.text
 
     other_variant_response = TestClient(app).get("/leaderboard?view=BenchA&other_variant=1")
 
