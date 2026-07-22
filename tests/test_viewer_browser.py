@@ -10,12 +10,90 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 import duckdb
+from fastapi.responses import HTMLResponse
 import pytest
 import uvicorn
 
 from hakari_bench.viewer.app import create_app
 from hakari_bench.viewer.data import CURRENT_DUCKDB_SCHEMA_VERSION
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
+
+
+@pytest.mark.browser
+def test_iframe_hash_replaces_stale_query_without_changing_top_level_merge_semantics(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_FRAME_ANCESTORS", "'self'")
+    app = _create_browser_test_app(tmp_path)
+
+    @app.get("/__test_embed")
+    def test_embed() -> HTMLResponse:
+        return HTMLResponse(
+            '<iframe id="viewer" src="/?quantization=1&amp;truncate=1#rescore=1"></iframe>',
+            headers={"Content-Security-Policy": "frame-src 'self'"},
+        )
+
+    @app.get("/__test_embed_query_only")
+    def test_embed_query_only() -> HTMLResponse:
+        return HTMLResponse(
+            '<iframe id="viewer" src="/?quantization=1"></iframe>',
+            headers={"Content-Security-Policy": "frame-src 'self'"},
+        )
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                leaderboard_requests: list[str] = []
+                page.on(
+                    "request",
+                    lambda request: leaderboard_requests.append(request.url)
+                    if "/leaderboard?" in request.url
+                    else None,
+                )
+
+                # A direct viewer URL keeps the established behavior: query
+                # state wins and hash state only fills missing parameters.
+                page.goto(
+                    f"{base_url}/?quantization=1&truncate=1#rescore=1",
+                    wait_until="domcontentloaded",
+                )
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                top_level_query = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert top_level_query == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+
+                # Hugging Face updates an existing iframe by replacing its hash.
+                # In that context the hash is the complete requested state, so
+                # omitted variant flags must return to their defaults.
+                leaderboard_requests.clear()
+                page.goto(f"{base_url}/__test_embed", wait_until="domcontentloaded")
+                iframe = page.frame_locator("#viewer")
+                iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
+                iframe_query = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert iframe_query == {"rescore": ["1"]}
+                assert iframe.locator('#variant-controls input[name="truncate"]').is_checked() is False
+                assert iframe.locator('#variant-controls input[name="quantization"]').is_checked() is False
+                assert iframe.locator('#variant-controls input[name="rescore"]').is_checked() is True
+
+                # An iframe without hash state still restores its query normally.
+                leaderboard_requests.clear()
+                page.goto(f"{base_url}/__test_embed_query_only", wait_until="domcontentloaded")
+                query_only_iframe = page.frame_locator("#viewer")
+                query_only_iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
+                query_only = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert query_only == {"quantization": ["1"]}
+                assert query_only_iframe.locator(
+                    '#variant-controls input[name="quantization"]'
+                ).is_checked() is True
+            finally:
+                browser.close()
 
 
 @pytest.mark.browser
@@ -600,6 +678,67 @@ def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path
                 browser.close()
 
 
+@pytest.mark.browser
+def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope(tmp_path: Path) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                page.goto(f"{base_url}/", wait_until="domcontentloaded")
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+
+                def visible_variants() -> set[str | None]:
+                    values = page.locator("#leaderboard-panel [data-model-metadata]").evaluate_all(
+                        "elements => elements.map(element => JSON.parse(element.dataset.modelMetadata).embedding_variant_name)"
+                    )
+                    return set(values)
+
+                def toggle(name: str) -> None:
+                    page.locator(f'#variant-controls input[name="{name}"]').locator("xpath=ancestor::label").click()
+                    page.wait_for_url(lambda url: parse_qs(urlparse(url).query).get(name) == ["1"], timeout=15_000)
+                    page.locator("#leaderboard-loading-toast.htmx-request").wait_for(
+                        state="detached",
+                        timeout=15_000,
+                    )
+
+                toggle("rescore")
+                assert parse_qs(urlparse(page.url).query) == {"rescore": ["1"]}
+                assert visible_variants() == {None}
+
+                help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
+                help_trigger.click()
+                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
+                assert page.locator("#help-summary-heading").inner_text() == "Rescore"
+                assert "Enable Quantization with Rescore" in page.locator("#help-summary-details").inner_text()
+                assert page.locator('#variant-controls input[name="rescore"]').is_checked()
+                page.locator("#help-summary-modal").evaluate("modal => modal.close()")
+
+                toggle("quantization")
+                assert visible_variants() == {None, "binary_rescore"}
+
+                toggle("truncate")
+                assert visible_variants() == {
+                    None,
+                    "truncate_dim_256",
+                    "binary_rescore",
+                    "truncate_dim_256_binary_rescore",
+                }
+
+                page.locator('#variant-controls input[name="quantization"]').locator("xpath=ancestor::label").click()
+                page.wait_for_url(
+                    lambda url: "quantization" not in parse_qs(urlparse(url).query),
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert visible_variants() == {None, "truncate_dim_256"}
+            finally:
+                browser.close()
+
+
 def _create_browser_test_app(tmp_path: Path):
     db_path = tmp_path / "results.duckdb"
     _write_browser_task_results(db_path)
@@ -684,6 +823,78 @@ def _write_browser_task_results(db_path: Path) -> None:
                         "truncate_dim_256",
                         256,
                         None,
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.86,
+                        10,
+                        12,
+                        8192,
+                        "binary_rescore",
+                        384,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.66,
+                        10,
+                        12,
+                        8192,
+                        "binary_rescore",
+                        384,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.58,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256_binary_rescore",
+                        256,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.80,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256_binary_rescore",
+                        256,
+                        "binary",
                     )
                 ),
                 _viewer_task_result_row(

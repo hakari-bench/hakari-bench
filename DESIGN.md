@@ -110,6 +110,13 @@ components:
       Efficiency variants toggles preserve the active Filter results state,
       including Dims and Quantization selections, so toggling additional variant
       rows does not clear visible filters.
+      Rescore is an additive refinement of Quantization, not an independent row
+      category: Quantization + Rescore shows full-dimension compressed-first-pass
+      rescore rows, and adding Dims also shows truncated-dimension rescore rows.
+      Rescore alone, or Dims + Rescore without Quantization, intentionally adds
+      no rows. Keep the toggles independent and explain this dependency from a
+      dedicated question-mark help trigger beside Rescore; do not silently toggle
+      prerequisites.
       M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
       one benchmark scope and share the same integrated `or` selector treatment
       used by Task columns and Grouped columns.

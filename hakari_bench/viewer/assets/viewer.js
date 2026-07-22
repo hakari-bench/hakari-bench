@@ -114,8 +114,12 @@
   }
 
   function mergedStateQueryString() {
+    const hashParams = paramsFrom(window.location.hash);
+    if (window.parent !== window && Array.from(hashParams.keys()).length > 0) {
+      return canonicalStateParams(hashParams).toString();
+    }
     const params = new URLSearchParams(window.location.search);
-    paramsFrom(window.location.hash).forEach((value, key) => {
+    hashParams.forEach((value, key) => {
       if (!params.has(key)) params.append(key, value);
     });
     return canonicalStateParams(params).toString();

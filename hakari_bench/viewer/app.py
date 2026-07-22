@@ -3609,7 +3609,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Efficiency variants",
               "Adds non-base rows that compare quality against storage, dimension, and reranking trade-offs.",
-              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
+              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore is additive to Quantization: it includes full-dimension rescore rows, while enabling Dims as well also includes truncated rescore rows. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -3621,10 +3621,17 @@ def render_display_controls(
             <input type="checkbox" name="quantization" value="1"{quantization_checked}>
             <span>Quantization</span>
           </label>
-          <label class="toggle-chip">
-            <input type="checkbox" name="rescore" value="1"{rescore_checked}>
-            <span>Rescore</span>
-          </label>
+          <span class="inline-flex items-center gap-1">
+            <label class="toggle-chip">
+              <input type="checkbox" name="rescore" value="1"{rescore_checked}>
+              <span>Rescore</span>
+            </label>
+            {_render_help_tooltip(
+                "Rescore",
+                "Refines candidates retrieved with compressed embeddings using higher-precision scores.",
+                "Rescore runs the initial retrieval with int8 or binary embeddings, then recomputes candidate scores with the original higher-precision embeddings. This can recover retrieval quality while keeping the first pass compact.\n\nEnable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows. Enable Dims as well to also include truncated-dimension rescore rows. Rescore alone, or Dims with Rescore but without Quantization, has no matching result rows.",
+            )}
+          </span>
           <label class="toggle-chip">
             <input type="checkbox" name="other_variant" value="1"{other_variant_checked}>
             <span>Sparse pruning</span>
