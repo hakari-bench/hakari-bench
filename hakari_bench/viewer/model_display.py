@@ -152,6 +152,8 @@ def _variant_label(row: LeaderboardRow, *, original_dim: int | None, model_type_
     truncate_dim = _truncate_dim(row)
     if truncate_dim is not None:
         return f"{truncate_dim}d <- {original_dim}" if original_dim is not None else f"{truncate_dim}d"
+    if _is_rescore_variant(row):
+        return None
     if model_type_key == "sparse":
         sparse_label = _sparse_active_dims_label(variant_name)
         if sparse_label is not None:
@@ -344,6 +346,13 @@ def render_model_name_cell(
                 classes="quantization-badge bg-zinc-100 text-amber-800",
             )
         )
+    if _is_rescore_variant(row):
+        badges.append(
+            _render_badge(
+                label="rescore",
+                classes="rescore-badge bg-zinc-100 text-cyan-800",
+            )
+        )
     if model_view.variant_label and model_view.truncated_embedding_dim is None:
         badges.append(
             _render_badge(
@@ -363,6 +372,10 @@ def render_model_name_cell(
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
       </div>{score_bar_html}
     </td>"""
+
+
+def _is_rescore_variant(row: LeaderboardRow) -> bool:
+    return bool(row.embedding_variant_name and "rescore" in row.embedding_variant_name.casefold())
 
 
 def _language_support_label(row: LeaderboardRow) -> str | None:

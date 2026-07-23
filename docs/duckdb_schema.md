@@ -897,11 +897,20 @@ Rows that are both quantized and truncated are displayed only when both matching
 category flags are enabled. Rescore follows the same dependency: Rescore alone,
 and Dims + Rescore without Quantization, add no rescore rows. Quantization +
 Rescore is a valid full-dimension comparison; Dims + Quantization + Rescore
-extends it with truncated-dimension comparisons. The controls remain independent
-so the URL accurately preserves the user's selection instead of silently enabling
-a prerequisite. Facet filter query parameters such as `dim_filter` and
+extends it with truncated-dimension comparisons. Apart from the first-click
+convenience described below, the controls and URL state remain independent.
+Facet filter query parameters such as `dim_filter` and
 `quant_filter` do not infer or re-enable display flags; the display flags come
 only from the explicit display controls.
+
+As a UI convenience, turning on Rescore while both Dims and Quantization are
+off checks both prerequisites before submitting the control form. Turning
+Rescore off leaves them unchanged, and an already selected Dims or Quantization
+choice is not expanded automatically. Direct URL restoration preserves the
+encoded flags exactly, so `rescore=1` by itself still returns no rescore rows.
+In the model-name cell, truncated rescore rows show separate dimension,
+quantization, and `rescore` badges so they remain distinguishable from the
+corresponding non-rescore truncate + quantization rows.
 If old results contain a no-op truncation variant whose `truncate_dim_N` matches
 the measured `embedding_dim`, and an equivalent non-truncate row exists for the
 same model, task, runtime metadata, dimension, and quantization, the leaderboard

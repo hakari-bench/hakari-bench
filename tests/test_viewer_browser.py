@@ -595,7 +595,6 @@ def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
                 page.goto(f"{base_url}/", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
-
                 page.get_by_role("tab", name="Chart").click()
                 page.wait_for_url(lambda url: "result_view=chart" in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
@@ -690,6 +689,7 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
                 page.goto(f"{base_url}/", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                assert page.locator('#leaderboard-panel th[data-column-key="rescore"]').count() == 0
 
                 def visible_variants() -> set[str | None]:
                     values = page.locator("#leaderboard-panel [data-model-metadata]").evaluate_all(
@@ -706,10 +706,77 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                     )
 
                 toggle("rescore")
-                assert parse_qs(urlparse(page.url).query) == {"rescore": ["1"]}
-                assert visible_variants() == {None}
+                assert parse_qs(urlparse(page.url).query) == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked()
+                assert page.locator('#variant-controls input[name="truncate"]').is_checked()
+                assert visible_variants() == {
+                    None,
+                    "truncate_dim_256",
+                    "binary_rescore",
+                    "truncate_dim_256_binary_rescore",
+                }
+                assert page.locator('#leaderboard-panel th[data-column-key="rescore"]').first.inner_text().casefold() == "rescore"
+                rescore_rows = page.locator("#leaderboard-panel table").first.locator("tbody tr").evaluate_all(
+                    """rows => rows.map(row => ({
+                        variant: JSON.parse(row.querySelector('[data-model-metadata]').dataset.modelMetadata)
+                            .embedding_variant_name,
+                        label: row.querySelector('td[data-column-key="rescore"]').textContent.trim(),
+                    }))"""
+                )
+                assert rescore_rows
+                assert all(
+                    item["label"] == ("rescore" if item["variant"] and "rescore" in item["variant"] else "")
+                    for item in rescore_rows
+                )
+                assert any(item["label"] == "rescore" for item in rescore_rows)
+                assert any(item["label"] == "" for item in rescore_rows)
+                assert "binary_rescore" not in page.locator("#leaderboard-panel table").first.inner_text()
+                truncated_rescore_row = page.locator(
+                    '#leaderboard-panel [data-model-metadata*="truncate_dim_256_binary_rescore"]'
+                ).first.locator("xpath=ancestor::tr")
+                assert "rescore" in truncated_rescore_row.inner_text()
+                for theme in ("light", "dark"):
+                    page.evaluate(
+                        "theme => { document.documentElement.classList.remove('light', 'dark'); "
+                        "document.documentElement.classList.add(theme); }",
+                        theme,
+                    )
+                    badge_colors = truncated_rescore_row.evaluate(
+                        """row => Object.fromEntries(
+                            ["dimension", "quantization", "rescore"].map(name => {
+                                const style = getComputedStyle(row.querySelector(`.${name}-badge`));
+                                return [name, {
+                                    color: style.color,
+                                    background: style.backgroundColor,
+                                    borderWidth: style.borderWidth,
+                                    boxShadow: style.boxShadow,
+                                    fontFamily: style.fontFamily,
+                                    fontSize: style.fontSize,
+                                    fontWeight: style.fontWeight,
+                                    lineHeight: style.lineHeight,
+                                }];
+                            })
+                        )"""
+                    )
+                    assert badge_colors["rescore"]["color"] != badge_colors["dimension"]["color"], theme
+                    assert badge_colors["rescore"]["color"] != badge_colors["quantization"]["color"], theme
+                    assert badge_colors["rescore"]["background"] != badge_colors["dimension"]["background"], theme
+                    assert badge_colors["rescore"]["borderWidth"] == "0px", theme
+                    assert badge_colors["rescore"]["boxShadow"] == "none", theme
+                    for font_property in ("fontFamily", "fontSize", "fontWeight", "lineHeight"):
+                        assert badge_colors["rescore"][font_property] == badge_colors["quantization"][font_property], (
+                            theme,
+                            font_property,
+                        )
 
                 help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
+                assert help_trigger.locator(
+                    'xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " toggle-chip ")]'
+                ).count() == 1
                 help_trigger.click()
                 page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
                 assert page.locator("#help-summary-heading").inner_text() == "Rescore"
@@ -717,16 +784,18 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                 assert page.locator('#variant-controls input[name="rescore"]').is_checked()
                 page.locator("#help-summary-modal").evaluate("modal => modal.close()")
 
-                toggle("quantization")
-                assert visible_variants() == {None, "binary_rescore"}
-
-                toggle("truncate")
-                assert visible_variants() == {
-                    None,
-                    "truncate_dim_256",
-                    "binary_rescore",
-                    "truncate_dim_256_binary_rescore",
+                page.locator('#variant-controls input[name="rescore"]').locator("xpath=ancestor::label").click()
+                page.wait_for_url(
+                    lambda url: "rescore" not in parse_qs(urlparse(url).query),
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert parse_qs(urlparse(page.url).query) == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
                 }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked()
+                assert page.locator('#variant-controls input[name="truncate"]').is_checked()
 
                 page.locator('#variant-controls input[name="quantization"]').locator("xpath=ancestor::label").click()
                 page.wait_for_url(
@@ -734,6 +803,14 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                     timeout=15_000,
                 )
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert visible_variants() == {None, "truncate_dim_256"}
+
+                toggle("rescore")
+                assert parse_qs(urlparse(page.url).query) == {
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked() is False
                 assert visible_variants() == {None, "truncate_dim_256"}
             finally:
                 browser.close()

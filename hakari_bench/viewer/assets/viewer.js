@@ -21,6 +21,21 @@
     true,
   );
 
+  document.addEventListener(
+    "change",
+    (event) => {
+      const rescore = closestElement(event.target, "#variant-controls input[name='rescore']");
+      if (!rescore || !rescore.checked) return;
+      const form = rescore.closest("form");
+      const dims = form && form.querySelector("input[name='truncate']");
+      const quantization = form && form.querySelector("input[name='quantization']");
+      if (!dims || !quantization || dims.checked || quantization.checked) return;
+      dims.checked = true;
+      quantization.checked = true;
+    },
+    true,
+  );
+
   const themeStorageKey = "hakari-theme";
   const themeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 

@@ -114,9 +114,20 @@ components:
       category: Quantization + Rescore shows full-dimension compressed-first-pass
       rescore rows, and adding Dims also shows truncated-dimension rescore rows.
       Rescore alone, or Dims + Rescore without Quantization, intentionally adds
-      no rows. Keep the toggles independent and explain this dependency from a
-      dedicated question-mark help trigger beside Rescore; do not silently toggle
-      prerequisites.
+      no rows when restored from a URL. To avoid an apparently inert first click,
+      turning on Rescore while both prerequisites are off also turns on Dims and
+      Quantization; turning Rescore off never changes them. If either prerequisite
+      is already on, preserve that explicit selection. Explain this behavior from
+      a dedicated question-mark help trigger beside Rescore. Keep that trigger
+      inside the Rescore chip's visual boundary, matching the integrated help
+      treatment used by benchmark-scope buttons.
+      Rescore rows must retain a visible `rescore` badge in addition to their
+      dimension and quantization badges; never expose internal names such as
+      `binary_rescore` or `int8_rescore`. Use the
+      purple variant-metadata token for the Rescore badge's text and tint in
+      both light and dark themes so it does not read like the cyan dimension
+      badge or amber quantization badge. Keep it borderless like the other
+      compact metadata badges.
       M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
       one benchmark scope and share the same integrated `or` selector treatment
       used by Task columns and Grouped columns.
@@ -510,6 +521,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep row metadata short. Prefer `Dims`, `Quant`, `Rescore`, and
   `Sparse pruning` over longer technical labels when the displayed values are
   compact.
+- Show a `Rescore` table column immediately after `Quant` only while the Rescore
+  efficiency-variant toggle is active. Put `rescore` in that column for rescore
+  variants and leave ordinary rows empty so mixed result sets remain scannable.
 - Model type, dimension, variant, and quantization labels use the same
   semi-transparent active-control background so light-mode labels stay visible
   against both white and faint-cyan table rows. Dimension and variant labels

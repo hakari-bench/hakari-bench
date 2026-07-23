@@ -490,9 +490,15 @@
   .model-type-badge,
   .dimension-badge,
   .variant-badge,
-  .quantization-badge {
+  .quantization-badge,
+  .rescore-badge {
     background-color: color-mix(in srgb, var(--hakari-control-active) 88%, transparent);
     border: 0;
+  }
+
+  .model-variant-badges .rescore-badge {
+    background-color: var(--hakari-purple-soft);
+    color: var(--hakari-purple);
   }
 
   .benchmark-doc h1 {
