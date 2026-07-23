@@ -35,6 +35,16 @@ scale.
 
 ## 🚀 Quick Start
 
+Open the latest public leaderboard locally:
+
+```bash
+uv run hakari-bench web
+```
+
+The viewer checks `hakari-bench/leaderboard_database` and reuses its local
+cache on later starts. No DuckDB path or Hugging Face repository option is
+needed for the normal viewer workflow.
+
 Start with [docs/quickstart.md](docs/quickstart.md) for the shortest path from
 installation to a local leaderboard:
 

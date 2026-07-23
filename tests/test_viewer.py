@@ -7926,6 +7926,11 @@ def test_resolve_duckdb_location_defaults_to_hakari_bench_name(tmp_path: Path) -
     )
 
     assert location.local_path == tmp_path / "hakari_bench.duckdb"
+    assert location.source_path is None
+    assert location.hf_source == HuggingFaceDuckDbSource(
+        repo_id="hakari-bench/leaderboard_database",
+        filename="duckdb/hakari_bench.duckdb",
+    )
 
 
 def test_resolve_duckdb_location_uses_source_results_dir(tmp_path: Path) -> None:
@@ -7961,6 +7966,7 @@ def test_resolve_duckdb_location_does_not_auto_discover_source_for_explicit_duck
 
     assert location.local_path == local
     assert location.source_path is None
+    assert location.hf_source is None
 
 
 def test_resolve_duckdb_location_uses_environment_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -210,11 +210,14 @@ Start the web viewer with:
 uv run hakari-bench web
 ```
 
-By default, the viewer reads `output/viewer/hakari_bench.duckdb`. On each page
-load, it copies a newer source database from the benchmark results directory
-when one is available. Use `--source-results-dir` to point at another results
-directory containing `hakari_bench.duckdb`, or `--source-duckdb-path` for an
-explicit database path.
+By default, the viewer checks the latest public DuckDB in
+`hakari-bench/leaderboard_database`, keeps the full downloaded source at
+`~/.cache/hakari-bench/duckdb/remote_latest_hakari_bench.duckdb`, and installs
+the tables needed by the viewer into `output/viewer/hakari_bench.duckdb`. Use
+`--source-results-dir` for a local results directory containing
+`hakari_bench.duckdb`, `--source-duckdb-path` for an explicit source database,
+or `--duckdb-path` to open an explicit local viewer database without selecting
+the default remote source.
 
 When the source is a Hugging Face dataset, the viewer starts the source
 check/download from the FastAPI lifespan startup and exposes progress through

@@ -318,7 +318,9 @@ PY
 
 ## Runtime Configuration
 
-The viewer image sets these defaults:
+The application defaults to the public leaderboard dataset and DuckDB path.
+The viewer image additionally places its installed viewer database under the
+persistent `/data` mount:
 
 ```text
 HAKARI_BENCH_VIEWER_DATA_DIR=/data/viewer

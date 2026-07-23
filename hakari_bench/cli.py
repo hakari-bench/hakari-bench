@@ -212,7 +212,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Keep downloaded provider output/error JSONL files after successful materialization.",
     )
 
-    web = subparsers.add_parser("web", help="Run the HAKARI-Bench result viewer.")
+    web = subparsers.add_parser(
+        "web",
+        help="Run the HAKARI-Bench result viewer using the latest public DuckDB by default.",
+    )
     web.add_argument("--host", default="127.0.0.1", help="Bind host. Use 0.0.0.0 to allow remote access.")
     web.add_argument("--port", type=int, default=8000)
     web.add_argument("--data-dir", default="output/viewer", help="Local viewer data/cache directory.")
@@ -223,7 +226,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Source benchmark results directory containing hakari_bench.duckdb.",
     )
     web.add_argument("--source-duckdb-path", default=None, help="Explicit source DuckDB path to copy from.")
-    web.add_argument("--hf-dataset-repo-id", default=None, help="Hugging Face dataset repo containing the viewer DuckDB.")
+    web.add_argument(
+        "--hf-dataset-repo-id",
+        default=None,
+        help="Override the default Hugging Face dataset repo containing the viewer DuckDB.",
+    )
     web.add_argument("--hf-dataset-path", default=None, help="DuckDB file path inside the Hugging Face dataset repo.")
     web.add_argument("--hf-dataset-revision", default=None, help="Hugging Face dataset revision to download.")
     web.add_argument("--viewer-config-dir", default="config/viewer", help="Viewer YAML config directory.")
