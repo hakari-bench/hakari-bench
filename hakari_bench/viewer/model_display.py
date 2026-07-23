@@ -344,6 +344,13 @@ def render_model_name_cell(
                 classes="quantization-badge bg-zinc-100 text-amber-800",
             )
         )
+    if model_view.truncated_embedding_dim is not None and _is_rescore_variant(row):
+        badges.append(
+            _render_badge(
+                label="rescore",
+                classes="rescore-badge bg-zinc-100 text-cyan-800",
+            )
+        )
     if model_view.variant_label and model_view.truncated_embedding_dim is None:
         badges.append(
             _render_badge(
@@ -363,6 +370,10 @@ def render_model_name_cell(
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
       </div>{score_bar_html}
     </td>"""
+
+
+def _is_rescore_variant(row: LeaderboardRow) -> bool:
+    return bool(row.embedding_variant_name and "rescore" in row.embedding_variant_name.casefold())
 
 
 def _language_support_label(row: LeaderboardRow) -> str | None:

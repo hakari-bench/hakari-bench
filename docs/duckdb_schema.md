@@ -908,6 +908,9 @@ off checks both prerequisites before submitting the control form. Turning
 Rescore off leaves them unchanged, and an already selected Dims or Quantization
 choice is not expanded automatically. Direct URL restoration preserves the
 encoded flags exactly, so `rescore=1` by itself still returns no rescore rows.
+In the model-name cell, truncated rescore rows show separate dimension,
+quantization, and `rescore` badges so they remain distinguishable from the
+corresponding non-rescore truncate + quantization rows.
 If old results contain a no-op truncation variant whose `truncate_dim_N` matches
 the measured `embedding_dim`, and an equivalent non-truncate row exists for the
 same model, task, runtime metadata, dimension, and quantization, the leaderboard

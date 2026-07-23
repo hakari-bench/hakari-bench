@@ -121,6 +121,9 @@ components:
       a dedicated question-mark help trigger beside Rescore. Keep that trigger
       inside the Rescore chip's visual boundary, matching the integrated help
       treatment used by benchmark-scope buttons.
+      Truncated rescore rows must retain a visible `rescore` badge in addition
+      to their dimension and quantization badges; otherwise they are visually
+      indistinguishable from ordinary truncate + quantization rows.
       M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
       one benchmark scope and share the same integrated `or` selector treatment
       used by Task columns and Grouped columns.

@@ -719,6 +719,10 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                     "binary_rescore",
                     "truncate_dim_256_binary_rescore",
                 }
+                truncated_rescore_row = page.locator(
+                    '#leaderboard-panel [data-model-metadata*="truncate_dim_256_binary_rescore"]'
+                ).first.locator("xpath=ancestor::tr")
+                assert "rescore" in truncated_rescore_row.inner_text()
 
                 help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
                 assert help_trigger.locator(
