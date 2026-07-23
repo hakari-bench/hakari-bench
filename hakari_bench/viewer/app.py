@@ -3621,15 +3621,15 @@ def render_display_controls(
             <input type="checkbox" name="quantization" value="1"{quantization_checked}>
             <span>Quantization</span>
           </label>
-          <span class="inline-flex items-center gap-1">
-            <label class="toggle-chip">
+          <span class="toggle-chip">
+            <label class="inline-flex cursor-pointer items-center gap-1">
               <input type="checkbox" name="rescore" value="1"{rescore_checked}>
               <span>Rescore</span>
             </label>
             {_render_help_tooltip(
                 "Rescore",
                 "Refines candidates retrieved with compressed embeddings using higher-precision scores.",
-                "Rescore runs the initial retrieval with int8 or binary embeddings, then recomputes candidate scores with the original higher-precision embeddings. This can recover retrieval quality while keeping the first pass compact.\n\nEnable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows. Enable Dims as well to also include truncated-dimension rescore rows. Rescore alone, or Dims with Rescore but without Quantization, has no matching result rows.",
+                "Rescore runs the initial retrieval with int8 or binary embeddings, then recomputes candidate scores with the original higher-precision embeddings. This can recover retrieval quality while keeping the first pass compact.\n\nEnable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows. Enable Dims as well to also include truncated-dimension rescore rows. When both Dims and Quantization are off, turning on Rescore enables both so results appear immediately. Turning Rescore off leaves their state unchanged. A restored URL containing Rescore alone, or Dims with Rescore but without Quantization, still has no matching result rows.",
             )}
           </span>
           <label class="toggle-chip">

@@ -114,9 +114,13 @@ components:
       category: Quantization + Rescore shows full-dimension compressed-first-pass
       rescore rows, and adding Dims also shows truncated-dimension rescore rows.
       Rescore alone, or Dims + Rescore without Quantization, intentionally adds
-      no rows. Keep the toggles independent and explain this dependency from a
-      dedicated question-mark help trigger beside Rescore; do not silently toggle
-      prerequisites.
+      no rows when restored from a URL. To avoid an apparently inert first click,
+      turning on Rescore while both prerequisites are off also turns on Dims and
+      Quantization; turning Rescore off never changes them. If either prerequisite
+      is already on, preserve that explicit selection. Explain this behavior from
+      a dedicated question-mark help trigger beside Rescore. Keep that trigger
+      inside the Rescore chip's visual boundary, matching the integrated help
+      treatment used by benchmark-scope buttons.
       M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
       one benchmark scope and share the same integrated `or` selector treatment
       used by Task columns and Grouped columns.

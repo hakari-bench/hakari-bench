@@ -4918,8 +4918,10 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert "Other variants" not in response.text
     assert 'data-help-title="Efficiency variants"' in response.text
     assert 'data-help-title="Rescore"' in response.text
+    assert '<span class="toggle-chip">\n            <label class="inline-flex cursor-pointer items-center gap-1">' in response.text
     assert "Enable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows." in response.text
-    assert "Dims with Rescore but without Quantization, has no matching result rows." in response.text
+    assert "When both Dims and Quantization are off, turning on Rescore enables both" in response.text
+    assert "Turning Rescore off leaves their state unchanged." in response.text
     assert "Dims includes truncated dense embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
     assert "Quantization includes compressed numeric formats such as int8 and binary." in response.text
     assert "Sparse pruning includes sparse encoder pruning variants" in response.text

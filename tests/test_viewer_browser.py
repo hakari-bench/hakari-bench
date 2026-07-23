@@ -706,21 +706,13 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                     )
 
                 toggle("rescore")
-                assert parse_qs(urlparse(page.url).query) == {"rescore": ["1"]}
-                assert visible_variants() == {None}
-
-                help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
-                help_trigger.click()
-                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
-                assert page.locator("#help-summary-heading").inner_text() == "Rescore"
-                assert "Enable Quantization with Rescore" in page.locator("#help-summary-details").inner_text()
-                assert page.locator('#variant-controls input[name="rescore"]').is_checked()
-                page.locator("#help-summary-modal").evaluate("modal => modal.close()")
-
-                toggle("quantization")
-                assert visible_variants() == {None, "binary_rescore"}
-
-                toggle("truncate")
+                assert parse_qs(urlparse(page.url).query) == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked()
+                assert page.locator('#variant-controls input[name="truncate"]').is_checked()
                 assert visible_variants() == {
                     None,
                     "truncate_dim_256",
@@ -728,12 +720,44 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                     "truncate_dim_256_binary_rescore",
                 }
 
+                help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
+                assert help_trigger.locator(
+                    'xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " toggle-chip ")]'
+                ).count() == 1
+                help_trigger.click()
+                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
+                assert page.locator("#help-summary-heading").inner_text() == "Rescore"
+                assert "Enable Quantization with Rescore" in page.locator("#help-summary-details").inner_text()
+                assert page.locator('#variant-controls input[name="rescore"]').is_checked()
+                page.locator("#help-summary-modal").evaluate("modal => modal.close()")
+
+                page.locator('#variant-controls input[name="rescore"]').locator("xpath=ancestor::label").click()
+                page.wait_for_url(
+                    lambda url: "rescore" not in parse_qs(urlparse(url).query),
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert parse_qs(urlparse(page.url).query) == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked()
+                assert page.locator('#variant-controls input[name="truncate"]').is_checked()
+
                 page.locator('#variant-controls input[name="quantization"]').locator("xpath=ancestor::label").click()
                 page.wait_for_url(
                     lambda url: "quantization" not in parse_qs(urlparse(url).query),
                     timeout=15_000,
                 )
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert visible_variants() == {None, "truncate_dim_256"}
+
+                toggle("rescore")
+                assert parse_qs(urlparse(page.url).query) == {
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked() is False
                 assert visible_variants() == {None, "truncate_dim_256"}
             finally:
                 browser.close()
