@@ -4298,6 +4298,8 @@ def render_table_head(
     )
     if result.include_quantization_variants:
         columns.append(("quantization", "Quant", "asc", "left", False, ""))
+    if result.include_rescore_variants:
+        columns.append(("rescore", "Rescore", "", "left", False, ""))
     if _show_base_delta_column(result):
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
     if result.show_other_columns:
@@ -4448,6 +4450,7 @@ def render_table_body(
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_row_embedding_dim(row)}</td>
               {_render_quantization_cell(result=result, row=row)}
+              {_render_rescore_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
               {_render_other_columns(result=result, model_view=model_views[row.model_name])}
             </tr>"""
@@ -4461,6 +4464,8 @@ def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
     column_count += len(result.metric_columns)
     column_count += 4
     if result.include_quantization_variants:
+        column_count += 1
+    if result.include_rescore_variants:
         column_count += 1
     if _show_base_delta_column(result):
         column_count += 1
@@ -4842,6 +4847,13 @@ def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow)
     if not result.include_quantization_variants:
         return ""
     return f"""<td class="px-2 py-1 text-left">{escape(row.quantization or "")}</td>"""
+
+
+def _render_rescore_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if not result.include_rescore_variants:
+        return ""
+    label = "rescore" if row.embedding_variant_name and "rescore" in row.embedding_variant_name.casefold() else ""
+    return f'<td data-column-key="rescore" class="px-2 py-1 text-left">{label}</td>'
 
 
 def _render_other_columns(*, result: LeaderboardResult, model_view: ModelCellView) -> str:

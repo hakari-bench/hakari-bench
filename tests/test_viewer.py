@@ -5047,9 +5047,18 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
 
     base_head = render_table_head(result=base_result, sort="borda_score", direction="asc")
     quantization_head = render_table_head(result=quantization_result, sort="borda_score", direction="asc")
+    rescore_head = render_table_head(result=all_rescore_result, sort="borda_score", direction="asc")
+    rescore_body = render_table_body(result=all_rescore_result)
     score_desc_head = render_table_head(result=base_result, sort="borda_score", direction="desc")
     assert ">Quant</span>" not in base_head
+    assert ">Rescore</span>" not in base_head
     assert ">Quant</span>" in quantization_head
+    assert ">Rescore</span>" not in quantization_head
+    assert rescore_head.index(">Quant</span>") < rescore_head.index(">Rescore</span>")
+    assert rescore_body.count('data-column-key="rescore"') == len(all_rescore_result.rows)
+    rescore_cells = re.findall(r'<td data-column-key="rescore"[^>]*>(.*?)</td>', rescore_body)
+    assert rescore_cells.count("rescore") == 2
+    assert rescore_cells.count("") == len(all_rescore_result.rows) - 2
     assert " ▲" not in base_head
     assert " ▼" not in base_head
     assert 'data-icon="arrow-down-narrow-wide"' in base_head
@@ -7131,9 +7140,10 @@ def test_variant_badge_css_uses_visible_shared_background() -> None:
 
     shared_badge_selector = (
         r"\.model-type-badge,\s*"
-        r"\.dimension-badge,\s*"
-        r"\.variant-badge,\s*"
-        r"\.quantization-badge\s*{[^}]*"
+            r"\.dimension-badge,\s*"
+            r"\.variant-badge,\s*"
+            r"\.quantization-badge,\s*"
+            r"\.rescore-badge\s*{[^}]*"
         r"background-color: color-mix\(in srgb, var\(--hakari-control-active\) 88%, transparent\);"
         r"[^}]*border: 0;"
     )

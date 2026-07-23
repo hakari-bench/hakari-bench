@@ -121,9 +121,13 @@ components:
       a dedicated question-mark help trigger beside Rescore. Keep that trigger
       inside the Rescore chip's visual boundary, matching the integrated help
       treatment used by benchmark-scope buttons.
-      Truncated rescore rows must retain a visible `rescore` badge in addition
-      to their dimension and quantization badges; otherwise they are visually
-      indistinguishable from ordinary truncate + quantization rows.
+      Rescore rows must retain a visible `rescore` badge in addition to their
+      dimension and quantization badges; never expose internal names such as
+      `binary_rescore` or `int8_rescore`. Use the
+      purple variant-metadata token for the Rescore badge's text and tint in
+      both light and dark themes so it does not read like the cyan dimension
+      badge or amber quantization badge. Keep it borderless like the other
+      compact metadata badges.
       M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
       one benchmark scope and share the same integrated `or` selector treatment
       used by Task columns and Grouped columns.
@@ -517,6 +521,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep row metadata short. Prefer `Dims`, `Quant`, `Rescore`, and
   `Sparse pruning` over longer technical labels when the displayed values are
   compact.
+- Show a `Rescore` table column immediately after `Quant` only while the Rescore
+  efficiency-variant toggle is active. Put `rescore` in that column for rescore
+  variants and leave ordinary rows empty so mixed result sets remain scannable.
 - Model type, dimension, variant, and quantization labels use the same
   semi-transparent active-control background so light-mode labels stay visible
   against both white and faint-cyan table rows. Dimension and variant labels

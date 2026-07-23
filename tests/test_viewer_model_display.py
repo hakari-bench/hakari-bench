@@ -41,9 +41,10 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert "&quot;trust_remote_code&quot;:true" in html
     assert ">768d</span>" in html
     assert ">binary</span>" in html
-    assert ">binary_rescore</span>" in html
+    assert ">rescore</span>" in html
+    assert ">binary_rescore</span>" not in html
     assert "quantization-badge bg-zinc-100 text-amber-800" in html
-    assert "variant-badge bg-zinc-100 text-cyan-800" in html
+    assert "rescore-badge bg-zinc-100 text-cyan-800" in html
     assert "variant-badge bg-zinc-100 text-amber-800" not in html
 
 
