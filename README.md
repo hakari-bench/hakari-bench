@@ -18,7 +18,7 @@ scale.
 ## ✨ Highlights
 
 - 🌍 **Broad coverage, fast iteration.** Run compact retrieval evaluations over
-  35+ benchmark groups, 551+ tasks, and 43+ languages without the cost of full
+  35+ benchmark groups, 557 tasks, and 43+ languages without the cost of full
   benchmark sweeps.
 - 📈 **A high-fidelity ranking proxy.** Nano-set rankings reproduce official
   MTEB retrieval v2, MMTEB v2 retrieval, and English BEIR full rankings at

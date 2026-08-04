@@ -33,6 +33,7 @@ overalls:
       - NanoMTEB-Korean
       - NanoFaMTEB-v2
       - NanoMTEB-Polish
+      - NanoMTEB-BR
       - NanoRuMTEB
       - NanoMTEB-Scandinavian
       - NanoMTEB-Spanish

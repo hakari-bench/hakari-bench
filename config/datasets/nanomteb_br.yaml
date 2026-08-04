@@ -1,0 +1,159 @@
+name: NanoMTEB-BR
+dataset_id: hakari-bench/NanoMTEB-BR
+benchmark_kind: nano
+corpus_config: corpus
+queries_config: queries
+qrels_config: qrels
+candidate_config: bm25
+splits:
+  - BRTaxQAR
+  - FaQuADIR
+  - FaqBacenRetrieval
+  - JurisTCU
+  - MedPTRetrieval
+  - Quati
+metadata:
+  language: pt
+  primary_languages:
+    - pt
+  category: natural_language
+  short_description: Brazilian Portuguese Nano retrieval benchmark derived from MTEB-BR.
+  description: >-
+    NanoMTEB-BR is a compact retrieval benchmark built from the six native
+    Brazilian Portuguese retrieval tasks in MTEB-BR. It covers tax law,
+    university and central-bank FAQs, public-sector case law, medicine, and
+    general passage retrieval.
+  citation_keys:
+    - stekel2026mtebbr
+  references:
+    - title: "MTEB-BR: A Text Embedding Benchmark for Brazilian Portuguese"
+      authors:
+        - Tardelli R. C. Stekel
+      year: 2026
+      url: https://doi.org/10.5281/zenodo.21087217
+      doi: 10.5281/zenodo.21087217
+      is_paper: true
+      source_confidence: definitive_paper_link
+    - title: MTEB-BR source repository
+      url: https://github.com/tardellirs/mteb-br
+      is_paper: false
+      source_confidence: probably_correct
+  bibtex: |-
+    @misc{stekel2026mtebbr,
+      title = {{MTEB-BR}: A Text Embedding Benchmark for Brazilian Portuguese},
+      author = {Stekel, Tardelli R. C.},
+      year = {2026},
+      doi = {10.5281/zenodo.21087217},
+      url = {https://doi.org/10.5281/zenodo.21087217}
+    }
+task_metadata:
+  BRTaxQAR:
+    language: pt
+    primary_languages: [pt]
+    category: natural_language
+    short_description: Brazilian tax-law question-to-legal-document retrieval.
+    description: >-
+      A compact BRTaxQAR split where Brazilian tax questions retrieve relevant
+      statutes, regulations, administrative rulings, and other tax-law sources.
+    source_task: BRTaxQAR
+    source_dataset_id: unicamp-dl/BR-TaxQA-R
+    source_dataset_revision: 9f0f4263928c6152a40f888da3e63375a24bb0f3
+    source_eval_split: test
+    languages: [pt]
+    references:
+      - title: BRTaxQAR source paper
+        url: https://arxiv.org/abs/2505.15916
+        is_paper: true
+        source_confidence: definitive_paper_link
+  FaQuADIR:
+    language: pt
+    primary_languages: [pt]
+    category: natural_language
+    short_description: Brazilian Portuguese higher-education FAQ retrieval.
+    description: >-
+      A compact FaQuADIR split that retrieves FAQ answers for questions about
+      Brazilian higher-education institutions and services.
+    source_task: FaQuADIR
+    source_dataset_id: MTEB-BR/faquad-ir
+    source_dataset_revision: 51fd9e7707bb4971229a0189560379992c3adce2
+    source_eval_split: test
+    languages: [pt]
+    references:
+      - title: FaQuAD source paper
+        url: https://doi.org/10.1109/BRACIS.2019.00084
+        is_paper: true
+        source_confidence: definitive_paper_link
+  FaqBacenRetrieval:
+    language: pt
+    primary_languages: [pt]
+    category: natural_language
+    short_description: Banco Central do Brasil FAQ retrieval.
+    description: >-
+      A compact financial FAQ task where user questions retrieve relevant
+      answers from Banco Central do Brasil public information.
+    source_task: FaqBacenRetrieval
+    source_dataset_id: MTEB-BR/faq-bacen
+    source_dataset_revision: 076d89a68a8b8d2f14e3161631c416ffe29b8463
+    source_eval_split: test
+    languages: [pt]
+    references:
+      - title: FaqBacen source paper
+        url: https://arxiv.org/abs/2311.11331
+        is_paper: true
+        source_confidence: definitive_paper_link
+  JurisTCU:
+    language: pt
+    primary_languages: [pt]
+    category: natural_language
+    short_description: Brazilian federal audit-court case-law retrieval.
+    description: >-
+      A compact legal retrieval task based on Tribunal de Contas da União
+      rulings and queries, with hard negatives derived from the related MTEB-BR
+      reranking task.
+    source_task: JurisTCU
+    source_dataset_id: LeandroRibeiro/JurisTCU
+    source_dataset_revision: ac7bea9e580626a586ffea69b245d26f5a73d44e
+    source_eval_split: test
+    languages: [pt]
+    references:
+      - title: JurisTCU source paper
+        url: https://doi.org/10.1007/s10579-025-09881-w
+        is_paper: true
+        source_confidence: definitive_paper_link
+  MedPTRetrieval:
+    language: pt
+    primary_languages: [pt]
+    category: natural_language
+    short_description: Brazilian Portuguese medical question-answer retrieval.
+    description: >-
+      A compact medical retrieval task where health questions retrieve relevant
+      Brazilian Portuguese answers across multiple medical question types.
+    source_task: MedPTRetrieval
+    source_dataset_id: AKCIT/MedPT
+    source_dataset_revision: 6a55a33e289539ad676da89dd20208729acc7509
+    source_eval_split: test
+    languages: [pt]
+    references:
+      - title: MedPT source paper
+        url: https://arxiv.org/abs/2511.11878
+        is_paper: true
+        source_confidence: definitive_paper_link
+  Quati:
+    language: pt
+    primary_languages: [pt]
+    category: natural_language
+    short_description: Native Brazilian Portuguese passage retrieval.
+    description: >-
+      A compact Quati retrieval split with native Brazilian Portuguese queries,
+      relevant passages, and hard negatives derived from the related MTEB-BR
+      reranking task.
+    source_task: Quati
+    source_dataset_id: MTEB-BR/quati-50k
+    source_dataset_revision: 5cb87d9561d8ace807305f50e59a4b0af352da2e
+    source_eval_split: test
+    languages: [pt]
+    references:
+      - title: Quati source paper
+        url: https://aclanthology.org/2024.stil-1.19/
+        is_paper: true
+        source_confidence: definitive_paper_link

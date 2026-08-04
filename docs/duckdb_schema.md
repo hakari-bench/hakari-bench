@@ -178,7 +178,7 @@ directory order. The base embedding result is stored as a row where
 `evaluation.embedding_evaluations` are stored as additional variant rows.
 NanoMTEB family datasets are stored as distinct benchmark groups, separate from
 the generic English `NanoMTEB` group, so official-family datasets such as
-`NanoCMTEB`, `NanoJMTEB`, `NanoFaMTEB`, `NanoRuMTEB`, `NanoVNMTEB`, and
+`NanoCMTEB`, `NanoJMTEB`, `NanoFaMTEB`, `NanoMTEB-BR`, `NanoRuMTEB`, `NanoVNMTEB`, and
 remaining `NanoMTEB-{language}` groups can be opened as individual viewer tabs
 and included separately in overall scope presets. Mixed or separate-source
 retrieval tasks are grouped as `NanoMTEB-Misc`; old `NanoMTEB-{language}` names

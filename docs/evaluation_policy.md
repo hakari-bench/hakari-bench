@@ -46,10 +46,10 @@ unless `--overwrite` is set, so `--all` can be used to fill missing benchmark
 coverage. Per-task evaluation output defaults to compressed `.json.xz` files;
 pass `--result-format json` only when a plain `.json` result tree is required:
 
-The complete built-in target currently resolves to 551 tasks, including the 13
+The complete built-in target currently resolves to 557 tasks, including the 13
 `NanoBEIR-en` tasks in `MNanoBEIR`. Do not apply the viewer's 13 duplicate-task
 exclusions during evaluation: those exclusions reduce only the leaderboard
-Overall aggregate to 538 tasks, while all 551 result artifacts must be retained.
+Overall aggregate to 538 tasks, while all 557 result artifacts must be retained.
 See [`benchmark_scope.md`](benchmark_scope.md#evaluation-count-and-overall-count).
 
 ```bash

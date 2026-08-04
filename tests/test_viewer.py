@@ -72,6 +72,7 @@ def test_viewer_config_uses_overall_scope_views() -> None:
         "NanoMTEB-Korean",
         "NanoFaMTEB-v2",
         "NanoMTEB-Polish",
+        "NanoMTEB-BR",
         "NanoRuMTEB",
         "NanoMTEB-Scandinavian",
         "NanoMTEB-Spanish",
@@ -159,6 +160,7 @@ def test_viewer_config_uses_overall_scope_views() -> None:
         "NanoMTEB-Korean": ["ko"],
         "NanoFaMTEB-v2": ["fa"],
         "NanoMTEB-Polish": ["pl"],
+        "NanoMTEB-BR": ["pt"],
         "NanoRuMTEB": ["ru"],
         "NanoMTEB-Scandinavian": ["da", "no", "sv"],
         "NanoMTEB-Spanish": ["es"],
@@ -219,6 +221,7 @@ def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
     assert _view_group("Group") == "Scope presets"
     assert _view_group("NanoMMTEB-v2") == "Nano suites"
     assert _view_group("NanoMTEB-Dutch") == "Nano suites"
+    assert _view_group("NanoMTEB-BR") == "Nano suites"
     assert _view_group("NanoJMTEB-v2") == "Nano suites"
     assert _view_group("NanoFaMTEB-v2") == "Nano suites"
     assert _view_group("NanoRuMTEB") == "Nano suites"
