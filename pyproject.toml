@@ -33,7 +33,7 @@ dependencies = [
     "duckdb>=1.5.2",
     "fast-langdetect>=1.0.0",
     "huggingface-hub[cli]>=0.34,<2",
-    "nltk>=3.9.4",
+    "nltk>=3.9.4,<3.10",
     "numpy>=2.4.4",
     "peft>=0.19.1",
     "protobuf>=6.33.2",
@@ -119,10 +119,10 @@ pylate = { git = "https://github.com/lightonai/pylate.git", rev = "1f1f47cee5df3
 dev = [
     "pytest>=9.0.3",
     "pytest-xdist>=3.8.0",
-    "ruff>=0.15.12",
+    "ruff>=0.15.12,<0.16",
     "tox>=4.53.0",
     "tox-uv>=1.35.1",
-    "ty>=0.0.32",
+    "ty>=0.0.32,<0.0.33",
 ]
 viewer = [
     "duckdb>=1.5.2",
