@@ -45,6 +45,11 @@ def test_nanocoir_is_a_ranked_benchmark() -> None:
     assert report.benchmark_name("hakari-bench/NanoCoIR", "NanoCoIR") == "NanoCoIR"
 
 
+def test_nanomteb_br_is_a_ranked_benchmark() -> None:
+    assert "NanoMTEB-BR" in report.TARGET_BENCHMARKS
+    assert report.benchmark_name("hakari-bench/NanoMTEB-BR", "NanoMTEB-BR") == "NanoMTEB-BR"
+
+
 def test_linux_physical_cpu_count_from_cpuinfo_counts_hyperthreaded_cores() -> None:
     cpuinfo = "\n\n".join(
         "\n".join(
@@ -689,6 +694,7 @@ def test_language_specific_nanomteb_benchmarks_are_ranked_separately() -> None:
         "NanoMTEB-Korean",
         "NanoFaMTEB-v2",
         "NanoMTEB-Polish",
+        "NanoMTEB-BR",
         "NanoRuMTEB",
         "NanoMTEB-Scandinavian",
         "NanoMTEB-Spanish",

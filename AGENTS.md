@@ -330,7 +330,7 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 - `MNanoBEIR` is defined as a built-in collection in
   `config/dataset_collections/mnanobeir.yaml`.
 - Keep the evaluation task count distinct from the leaderboard Overall count.
-  A complete model evaluation runs and preserves 551 task results, including
+  A complete model evaluation runs and preserves 557 task results, including
   `NanoBEIR-en` as the English component of `MNanoBEIR`. The viewer excludes 13
   overlapping Nano task copies through `config/viewer/benchmarks.yaml`, so the
   Overall score is calculated from 538 tasks. The excluded results must remain
@@ -339,5 +339,5 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
 - Built-in dataset names should stay consistent across docs, configs, and tests:
   `NanoBEIR-en`, `MNanoBEIR`, `NanoMIRACL`, `NanoMLDR`, `NanoJMTEB`,
   `NanoRTEB`, `NanoMTEB`, `NanoCMTEB`, `NanoMMTEB`, `NanoFaMTEB`,
-  `NanoRuMTEB`, `NanoVNMTEB`, `NanoMTEB-Misc`, `NanoLongEmbed`, and
+  `NanoRuMTEB`, `NanoVNMTEB`, `NanoMTEB-BR`, `NanoMTEB-Misc`, `NanoLongEmbed`, and
   `NanoCoIR`.

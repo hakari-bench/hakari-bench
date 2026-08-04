@@ -74,6 +74,7 @@ def test_viewer_config_uses_overall_scope_views() -> None:
         "NanoMTEB-Korean",
         "NanoFaMTEB-v2",
         "NanoMTEB-Polish",
+        "NanoMTEB-BR",
         "NanoRuMTEB",
         "NanoMTEB-Scandinavian",
         "NanoMTEB-Spanish",
@@ -161,6 +162,7 @@ def test_viewer_config_uses_overall_scope_views() -> None:
         "NanoMTEB-Korean": ["ko"],
         "NanoFaMTEB-v2": ["fa"],
         "NanoMTEB-Polish": ["pl"],
+        "NanoMTEB-BR": ["pt"],
         "NanoRuMTEB": ["ru"],
         "NanoMTEB-Scandinavian": ["da", "no", "sv"],
         "NanoMTEB-Spanish": ["es"],
@@ -221,6 +223,7 @@ def test_benchmark_view_groups_follow_viewer_information_architecture() -> None:
     assert _view_group("Group") == "Scope presets"
     assert _view_group("NanoMMTEB-v2") == "Nano suites"
     assert _view_group("NanoMTEB-Dutch") == "Nano suites"
+    assert _view_group("NanoMTEB-BR") == "Nano suites"
     assert _view_group("NanoJMTEB-v2") == "Nano suites"
     assert _view_group("NanoFaMTEB-v2") == "Nano suites"
     assert _view_group("NanoRuMTEB") == "Nano suites"
@@ -7926,6 +7929,11 @@ def test_resolve_duckdb_location_defaults_to_hakari_bench_name(tmp_path: Path) -
     )
 
     assert location.local_path == tmp_path / "hakari_bench.duckdb"
+    assert location.source_path is None
+    assert location.hf_source == HuggingFaceDuckDbSource(
+        repo_id="hakari-bench/leaderboard_database",
+        filename="duckdb/hakari_bench.duckdb",
+    )
 
 
 def test_resolve_duckdb_location_uses_source_results_dir(tmp_path: Path) -> None:
@@ -7961,6 +7969,7 @@ def test_resolve_duckdb_location_does_not_auto_discover_source_for_explicit_duck
 
     assert location.local_path == local
     assert location.source_path is None
+    assert location.hf_source is None
 
 
 def test_resolve_duckdb_location_uses_environment_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

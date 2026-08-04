@@ -14,7 +14,7 @@ offline/cache policy, or coverage-audit requirements.
 
 Use `--all` to evaluate every standard built-in benchmark task. Existing task
 results are skipped unless `--overwrite` is supplied, so this command is safe
-for resuming interrupted runs. The complete target currently contains 551
+for resuming interrupted runs. The complete target currently contains 557
 tasks; the leaderboard's 538-task Overall count is a post-evaluation aggregate,
 not an evaluation target.
 
@@ -396,6 +396,19 @@ logical model.
 Start the local viewer:
 
 ```bash
+uv run hakari-bench web
+```
+
+With no local DuckDB option, this uses the latest public database from
+`hakari-bench/leaderboard_database` and maintains the remote-latest cache under
+`~/.cache/hakari-bench/duckdb/`. Pass `--source-duckdb-path`,
+`--source-results-dir`, or `--duckdb-path` when the viewer should use local data
+instead.
+
+For example, inspect the evaluation database built earlier in this runbook
+with:
+
+```bash
 uv run hakari-bench web \
   --source-duckdb-path output/hakari-results/hakari_bench.duckdb
 ```
@@ -404,7 +417,6 @@ For remote access from another machine:
 
 ```bash
 uv run hakari-bench web \
-  --source-duckdb-path output/hakari-results/hakari_bench.duckdb \
   --host 0.0.0.0 \
   --port 28090
 ```
@@ -412,9 +424,9 @@ uv run hakari-bench web \
 If the viewer should sync from a results directory instead of a specific file,
 use `--source-results-dir output/hakari-results`.
 
-When the viewer uses `--hf-dataset-repo-id`, it reads the same remote latest
-cache described above and copies it to the viewer's local DuckDB only when the
-contents differ.
+The default remote source and an explicit `--hf-dataset-repo-id` both read the
+same remote-latest cache described above and copy it to the viewer's local
+DuckDB only when the contents differ.
 
 ## Before Reporting
 

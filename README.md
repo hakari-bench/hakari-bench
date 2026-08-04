@@ -18,7 +18,7 @@ scale.
 ## ✨ Highlights
 
 - 🌍 **Broad coverage, fast iteration.** Run compact retrieval evaluations over
-  35+ benchmark groups, 551+ tasks, and 43+ languages without the cost of full
+  35+ benchmark groups, 557 tasks, and 43+ languages without the cost of full
   benchmark sweeps.
 - 📈 **A high-fidelity ranking proxy.** Nano-set rankings reproduce official
   MTEB retrieval v2, MMTEB v2 retrieval, and English BEIR full rankings at
@@ -34,6 +34,16 @@ scale.
   retrieval tasks.
 
 ## 🚀 Quick Start
+
+Open the latest public leaderboard locally:
+
+```bash
+uv run hakari-bench web
+```
+
+The viewer checks `hakari-bench/leaderboard_database` and reuses its local
+cache on later starts. No DuckDB path or Hugging Face repository option is
+needed for the normal viewer workflow.
 
 Start with [docs/quickstart.md](docs/quickstart.md) for the shortest path from
 installation to a local leaderboard:

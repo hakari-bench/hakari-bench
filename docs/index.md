@@ -9,11 +9,12 @@ place and AGENTS.md can stay focused on repository-level guardrails.
 | Need | Primary document | Notes |
 | --- | --- | --- |
 | Find the right project document | [index.md](index.md) | This map for humans and agents: canonical docs, workflow routes, and artifact boundaries. |
-| Install HAKARI-Bench and run a first local evaluation | [quickstart.md](quickstart.md) | Shortest path from installation to evaluation, DuckDB build, local viewer, and result submission pointers. |
+| Open the latest leaderboard or run a first local evaluation | [quickstart.md](quickstart.md) | Shortest path to the default public-data viewer, installation, evaluation, local DuckDB builds, and result submission pointers. |
 | Decide benchmark settings before running models | [evaluation_policy.md](evaluation_policy.md) | Source of truth for prompts, dtype, attention, variants, target scope, cache policy, and coverage audits. |
 | Run concrete evaluation and DuckDB commands | [evaluation_runbook.md](evaluation_runbook.md) | Runnable commands for full/partial evaluation, remote result sync, DuckDB rebuild/append, and viewer startup. |
 | Evaluate a new model and submit results | [new_model_results_workflow.md](new_model_results_workflow.md) | End-to-end checklist from model research through model card review, full evaluation, audit, and result PRs. |
 | Understand benchmark scope | [benchmark_scope.md](benchmark_scope.md) | Compact explanation of Nano-set task layout, coverage, dataset locations, and intended use. |
+| Understand the Brazilian Portuguese suite | [nanomteb_br.md](nanomteb_br.md) | NanoMTEB-BR task list, provenance, evaluation command, viewer scope, and full-to-Nano rank validation. |
 
 ## Source Of Truth By Area
 

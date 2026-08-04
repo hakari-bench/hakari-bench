@@ -44,13 +44,14 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoMuPLeR").dataset_id == "hakari-bench/NanoMuPLeR"
     assert registry.get_dataset("NanoMTEB-Dutch").dataset_id == "hakari-bench/NanoMTEB-Dutch"
     assert registry.get_dataset("NanoMTEB-Misc").dataset_id == "hakari-bench/NanoMTEB-Misc"
+    assert registry.get_dataset("NanoMTEB-BR").dataset_id == "hakari-bench/NanoMTEB-BR"
     assert registry.get_dataset("NanoMTEB-Polish").dataset_id == "hakari-bench/NanoMTEB-Polish"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
     with pytest.raises(KeyError):
         registry.get_collection("NanoMTEB_Family")
 
 
-def test_builtin_all_target_includes_all_551_evaluation_tasks() -> None:
+def test_builtin_all_target_includes_all_557_evaluation_tasks() -> None:
     registry = DatasetRegistry.load_builtin()
 
     tasks = resolve_eval_tasks(
@@ -61,8 +62,29 @@ def test_builtin_all_target_includes_all_551_evaluation_tasks() -> None:
     )
 
     assert "NanoBEIR-en" in registry.dataset_names()
-    assert len(tasks) == 551
+    assert len(tasks) == 557
     assert sum(task.dataset_name == "NanoBEIR-en" for task in tasks) == 13
+    assert sum(task.dataset_name == "NanoMTEB-BR" for task in tasks) == 6
+
+
+def test_resolve_eval_tasks_for_builtin_nanomteb_br_uses_declared_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(
+        registry=registry,
+        dataset_values=["NanoMTEB-BR"],
+        collection_values=[],
+        split_values=[],
+    )
+
+    assert [(task.dataset_name, task.split_name) for task in tasks] == [
+        ("NanoMTEB-BR", "BRTaxQAR"),
+        ("NanoMTEB-BR", "FaQuADIR"),
+        ("NanoMTEB-BR", "FaqBacenRetrieval"),
+        ("NanoMTEB-BR", "JurisTCU"),
+        ("NanoMTEB-BR", "MedPTRetrieval"),
+        ("NanoMTEB-BR", "Quati"),
+    ]
 
 
 def test_builtin_config_lives_in_repo_config() -> None:
