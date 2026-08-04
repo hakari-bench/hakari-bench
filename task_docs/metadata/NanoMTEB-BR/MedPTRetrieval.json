@@ -1,0 +1,174 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-BR",
+    "backing_dataset": "NanoMTEB-BR",
+    "dataset_id": "hakari-bench/NanoMTEB-BR",
+    "task_name": "MedPTRetrieval",
+    "split_name": "MedPTRetrieval",
+    "language": "pt",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoMTEB-BR/MedPTRetrieval.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://arxiv.org/abs/2511.11878",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/AKCIT/MedPT"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 500,
+      "positive_qrels": 204
+    },
+    "positives_per_query": {
+      "average": 1.02,
+      "min": 1,
+      "median": 1.0,
+      "max": 3,
+      "multi_positive_queries": 3,
+      "multi_positive_query_percent": 1.5
+    },
+    "text_stats_chars": {
+      "query_mean": 151.965,
+      "document_mean": 368.208
+    },
+    "bm25": {
+      "ndcg_at_10": 0.43283327376062153,
+      "hit_at_10": 0.555,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4328332738,
+        "hit_at_10": 0.555,
+        "recall_at_100": 0.7794117647,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.7794117647
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6974270032,
+        "hit_at_10": 0.82,
+        "recall_at_100": 0.9754901961,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9754901961
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5975061731,
+        "hit_at_10": 0.73,
+        "recall_at_100": 0.9656862745,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.035,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9656862745,
+        "safeguard_positive_rows": 7,
+        "rows_with_101_candidates": 7
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-BR",
+      "source_urls": [
+        {
+          "label": "MedPT paper",
+          "url": "https://arxiv.org/abs/2511.11878"
+        },
+        {
+          "label": "MedPT dataset",
+          "url": "https://huggingface.co/datasets/AKCIT/MedPT"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "MedPT: A Massive Medical Question Answering Dataset for Brazilian-Portuguese Speakers",
+        "url": "https://arxiv.org/abs/2511.11878",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "AKCIT/MedPT",
+        "url": "https://huggingface.co/datasets/AKCIT/MedPT",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "q_d5f5209b2658",
+        "document_id": "a_d5f5209b2658",
+        "query": {
+          "text": "Fiz cirurgia de hernia incisional há 40 dias e agora, através de USG descobri que tenho mais uma hernia supra- umbilical e uma na inguinal. É normal ter tantas hernias assim, ou pode ser algum outro problema como ruptura abdominal. O que deve ser investigado?",
+          "full_chars": 259,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Dificil afirmar a relacao entre elas, mas provavel que no pre-operatorio nao tenha sido investigado minuciosamente sua parede abdominal. Hoje e mandatorio para tratamento de hernias incisionais a tomografia em pre-operatorio, evitando que possiveis defeitos associados nao sejam tratados.Sugiro avaliacao com cirurgiao especialista em parede abdominal. Fique a vontade para entrar em contato caso queira esclarecer e aprofundar melhor no assimto",
+          "full_chars": 445,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q_21b8c9f745e6",
+        "document_id": "a_21b8c9f745e6",
+        "query": {
+          "text": "Podemos fazer corrida mesmo tendo esporão?",
+          "full_chars": 42,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Na fase aguda, não é recomendado, piora a dor, mas depois de analgésicos e muito alongamento, quando você estiver sem dor, sim, pode, sem problemas.",
+          "full_chars": 148,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q_0780ba2d9343",
+        "document_id": "a_0780ba2d9343",
+        "query": {
+          "text": "Perdi um casal de filhos com holoprosencefalia. Devo engravidar de novo? Nenhum exame apontou nada. Meu marido e eu temos os mesmos tataravós.",
+          "full_chars": 142,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Esta relação familiar sua com seu marido favorece o aparecimento de doenças genéticas do tipo recessivas. Não necessariamente vocês terão um novo filho com a mesma doença, mas acredito que sempre existirá uma possibilidade. Sugiro uma consulta com médico geneticista para que vocês façam um heredograma, testes genéticos, afim de quantificarem melhor esse risco e poderem avaliar se querem correr o risco, ou mesmo, conhecerem alternativas.Espero tê-la(o) ajudado.",
+          "full_chars": 464,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "source_dataset_id": "AKCIT/MedPT",
+    "source_task": "MedPTRetrieval",
+    "example_count": 3
+  }
+}

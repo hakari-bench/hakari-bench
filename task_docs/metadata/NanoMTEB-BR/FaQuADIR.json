@@ -1,0 +1,175 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-BR",
+    "backing_dataset": "NanoMTEB-BR",
+    "dataset_id": "hakari-bench/NanoMTEB-BR",
+    "task_name": "FaQuADIR",
+    "split_name": "FaQuADIR",
+    "language": "pt",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoMTEB-BR/FaQuADIR.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://doi.org/10.1109/BRACIS.2019.00084",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/MTEB-BR/faquad-ir"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 243,
+      "positive_qrels": 201
+    },
+    "positives_per_query": {
+      "average": 1.005,
+      "min": 1,
+      "median": 1.0,
+      "max": 2,
+      "multi_positive_queries": 1,
+      "multi_positive_query_percent": 0.5
+    },
+    "text_stats_chars": {
+      "query_mean": 62.3,
+      "document_mean": 825.62963
+    },
+    "bm25": {
+      "ndcg_at_10": 0.8870165057629393,
+      "hit_at_10": 0.98,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.8870165058,
+        "hit_at_10": 0.98,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 243,
+        "candidate_count_max": 243,
+        "candidate_count_mean": 243.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.8425237773,
+        "hit_at_10": 0.935,
+        "recall_at_100": 0.9950248756,
+        "candidate_count_min": 243,
+        "candidate_count_max": 243,
+        "candidate_count_mean": 243.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9950248756
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.8779341403,
+        "hit_at_10": 0.98,
+        "recall_at_100": 1.0,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 1.0,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-BR",
+      "source_urls": [
+        {
+          "label": "FaQuAD paper",
+          "url": "https://doi.org/10.1109/BRACIS.2019.00084"
+        },
+        {
+          "label": "FaQuADIR dataset",
+          "url": "https://huggingface.co/datasets/MTEB-BR/faquad-ir"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "FaQuAD: Reading Comprehension Dataset in the Domain of Brazilian Higher Education",
+        "url": "https://doi.org/10.1109/BRACIS.2019.00084",
+        "year": 2019,
+        "is_paper": true,
+        "doi": "10.1109/BRACIS.2019.00084",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB-BR/faquad-ir",
+        "url": "https://huggingface.co/datasets/MTEB-BR/faquad-ir",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "d35a68e1e8344f38aee681eb5ba72c77",
+        "document_id": "ENGENHARIA_DE_SOFTWARE__p002",
+        "query": {
+          "text": "O que os modelos usados pelos fundamentos científicos da engenharia de software devem permitir ao engenheiro?",
+          "full_chars": 109,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "ENGENHARIA_DE_SOFTWARE Os fundamentos científicos da engenharia de software envolvem o uso de modelos abstratos e precisos que permitem ao engenheiro especificar, projetar, implementar e manter sistemas de software, avaliando e garantindo sua qualidade. Além disto, deve oferecer mecanismos para se planejar e gerenciar o processo de desenvolvimento. Empresas desenvolvedoras de software passaram a empregar esses conceitos sobretudo para orientar suas áreas de desenvolvimento, muitas delas organizadas sob a forma de Fábrica de Software. A engenharia de sistemas é uma área ampla por tratar de aspectos de sistemas baseados em computadores, incluindo hardware e engenharia de processos para construção de software. A Universidade Federal de Goiás foi pioneira no Brasil quando criou o curso de graduação em Engenharia de Software, hoje o curso ganha popularidade e já é adotado por outras universidades como Universidade Federal de Mato Grosso do Sul, Universidade de Brasilia, Universidade Tecnoló",
+          "full_chars": 1238,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "2e9fb80cadc94bf4a50a84f0f1fcc693",
+        "document_id": "EXERCICIOS_DOMICILIARES__p005",
+        "query": {
+          "text": "Quando o professor deve devolver as provas aos alunos?",
+          "full_chars": 54,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "EXERCICIOS_DOMICILIARES Após a realização e correção das provas, o professor deverá devolvê-las ao acadêmico, anexando cópia no processo de regime de exercícios domiciliares e fazer o lançamento no sistema acadêmico. Ao final do regime de exercícios domiciliares o Coordenador de Curso ou equivalente deverá encaminhar à Secretaria Acadêmica (Secac) o Laudo Médico para ser arquivados na pasta do acadêmico. Compete ao Coordenador de Curso, ou equivalente, acompanhar todos os procedimentos relativos ao regime de exercícios domiciliares.",
+          "full_chars": 539,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "06cb438e08cf4a03bfd907115c827f47",
+        "document_id": "COMPUTADOR__p006",
+        "query": {
+          "text": "O que é a unidade lógica e aritmética?",
+          "full_chars": 38,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "COMPUTADOR O processador (ou CPU) é uma das partes principais do hardware do computador e é responsável pelos cálculos, execução de tarefas e processamento de dados. A velocidade com que o computador executa as tarefas ou processa dados está diretamente ligada à velocidade do processador. As primeiras CPUs eram constituídas de vários componentes separados, mas desde meados da década de 1970 as CPUs vêm sendo manufaturadas em um único circuito integrado, sendo então chamadas microprocessadores. A unidade lógica e aritmética (ULA) é a unidade central do processador, que realmente executa as operações aritméticas e lógicas entre dois números. Seus parâmetros incluem, além dos números operandos, um resultado, um comando da unidade de controle, e o estado do comando após a operação. O conjunto de operações aritméticas de uma ULA pode ser limitado a adição e subtração, mas também pode incluir multiplicação, divisão, funções trigonométricas e raízes quadradas. Algumas podem operar somente com",
+          "full_chars": 1141,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      }
+    ],
+    "source_dataset_id": "MTEB-BR/faquad-ir",
+    "source_task": "FaQuADIR",
+    "example_count": 3
+  }
+}

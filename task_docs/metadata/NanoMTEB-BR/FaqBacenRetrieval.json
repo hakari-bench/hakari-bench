@@ -1,0 +1,174 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-BR",
+    "backing_dataset": "NanoMTEB-BR",
+    "dataset_id": "hakari-bench/NanoMTEB-BR",
+    "task_name": "FaqBacenRetrieval",
+    "split_name": "FaqBacenRetrieval",
+    "language": "pt",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoMTEB-BR/FaqBacenRetrieval.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://arxiv.org/abs/2311.11331",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/MTEB-BR/faq-bacen"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 1654,
+      "positive_qrels": 201
+    },
+    "positives_per_query": {
+      "average": 1.005,
+      "min": 1,
+      "median": 1.0,
+      "max": 2,
+      "multi_positive_queries": 1,
+      "multi_positive_query_percent": 0.5
+    },
+    "text_stats_chars": {
+      "query_mean": 70.52,
+      "document_mean": 518.830713
+    },
+    "bm25": {
+      "ndcg_at_10": 0.4717040124997817,
+      "hit_at_10": 0.64,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4717040125,
+        "hit_at_10": 0.64,
+        "recall_at_100": 0.8805970149,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8805970149
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6576834312,
+        "hit_at_10": 0.8,
+        "recall_at_100": 0.960199005,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.960199005
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5858148947,
+        "hit_at_10": 0.755,
+        "recall_at_100": 0.9402985075,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.055,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9402985075,
+        "safeguard_positive_rows": 11,
+        "rows_with_101_candidates": 11
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-BR",
+      "source_urls": [
+        {
+          "label": "Portuguese FAQ for Financial Services paper",
+          "url": "https://arxiv.org/abs/2311.11331"
+        },
+        {
+          "label": "FaqBacen dataset",
+          "url": "https://huggingface.co/datasets/MTEB-BR/faq-bacen"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Portuguese FAQ for Financial Services",
+        "url": "https://arxiv.org/abs/2311.11331",
+        "year": 2023,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB-BR/faq-bacen",
+        "url": "https://huggingface.co/datasets/MTEB-BR/faq-bacen",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "q366",
+        "document_id": "a1666",
+        "query": {
+          "text": "Qual o requisito para a constituição do grupo?",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Deve haver adesão suficiente de consorciados e viabilidade econômico-financeira do grupo. A administradora deve elaborar relatório circunstanciado comprovando a viabilidade econômico-financeira do grupo. Esse relatório fica à disposição do Banco Central do Brasil para efeito de fiscalização. Na ocasião, o grupo deve escolher até 3 consorciados que o representarão perante a administradora com a finalidade de acompanhar a regularidade de sua gestão.",
+          "full_chars": 451,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "q148",
+        "document_id": "a1449",
+        "query": {
+          "text": "Quais instituições financeiras estão dispensadas de solicitar autorização do Banco Central para a prestação de serviços de pagamento?",
+          "full_chars": 133,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Estão dispensados:os bancos comerciais, os bancos múltiplos com carteira comercial e as caixas econômicas, para a prestação dos serviços de pagamento como: emissor de moeda eletrônica; emissor de instrumento de pagamento pós-pago; credenciador; e iniciador de transação de pagamento;os bancos múltiplos com carteira de crédito, financiamento e investimento e as sociedades de crédito, financiamento e investimento, para a prestação dos serviços de pagamento como: emissor de moeda eletrônica; emissor de instrumento de pagamento pós-pago; e iniciador de transação de pagamento;as cooperativas singulares de crédito, para a prestação dos serviços de pagamento como: emissor de moeda eletrônica; emissor de instrumento de pagamento pós-pago; credenciador; e iniciador de transação de pagamento, a associados e não associados;as sociedades de crédito direto, para a prestação dos serviços de pagamento como: emissor de moeda eletrônica; e emissor de instrumento de pagamento pós-pago;as sociedades de cr",
+          "full_chars": 2173,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "q11",
+        "document_id": "a1312",
+        "query": {
+          "text": "Os bancos centrais atuam como garantidores das operações?",
+          "full_chars": 57,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Não. Os bancos centrais atuam apenas como intermediários da operação. Eles não assumem risco de crédito das instituições financeiras autorizadas em seus países.",
+          "full_chars": 160,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "source_dataset_id": "MTEB-BR/faq-bacen",
+    "source_task": "FaqBacenRetrieval",
+    "example_count": 3
+  }
+}

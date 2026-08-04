@@ -6,6 +6,7 @@ import re
 from fastapi.testclient import TestClient
 
 from hakari_bench.viewer.app import create_app
+from hakari_bench.viewer.config import load_viewer_config
 from hakari_bench.viewer import docs as viewer_docs
 from hakari_bench.viewer.docs import BenchmarkDocs, render_markdown_to_html
 from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
@@ -686,6 +687,76 @@ def test_language_specific_group_overviews_start_with_language_axis_context() ->
         doc = docs.group_doc(view_name)
         assert doc is not None
         assert phrase in doc.description.lower()
+
+
+def test_all_configured_benchmark_scopes_have_group_overviews() -> None:
+    config = load_viewer_config()
+    docs = BenchmarkDocs(Path("task_docs/docs"))
+
+    missing_overviews = [benchmark.name for benchmark in config.benchmarks if docs.group_doc(benchmark.name) is None]
+    doc = docs.group_doc("NanoMTEB-BR")
+
+    assert missing_overviews == []
+    assert doc is not None
+    assert doc.title == "NanoMTEB-BR"
+    assert doc.url == "/docs/benchmark-tasks/NanoMTEB-BR"
+    assert "Brazilian Portuguese" in doc.description
+
+
+def test_nanomteb_br_task_columns_link_all_task_docs(tmp_path: Path) -> None:
+    tasks = [
+        "BRTaxQAR",
+        "FaQuADIR",
+        "FaqBacenRetrieval",
+        "JurisTCU",
+        "MedPTRetrieval",
+        "Quati",
+    ]
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            (
+                "model/a",
+                "NanoMTEB-BR",
+                "hakari-bench/NanoMTEB-BR",
+                "NanoMTEB-BR",
+                task,
+                task,
+                f"NanoMTEB-BR::hakari-bench/NanoMTEB-BR::{task}",
+                0.80,
+                10,
+                12,
+                8192,
+            )
+            for task in tasks
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text(
+        "benchmarks:\n  - name: NanoMTEB-BR\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - NanoMTEB-BR\n",
+        encoding="utf-8",
+    )
+    app = create_app(
+        store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)),
+        config_dir=config_dir,
+        docs_dir=Path("task_docs/docs"),
+        docs_metadata_dir=Path("task_docs/metadata"),
+    )
+    client = TestClient(app)
+
+    response = client.get("/leaderboard?view=NanoMTEB-BR&columns=task")
+
+    assert response.status_code == 200
+    for task in tasks:
+        url = f"/docs/benchmark-tasks/NanoMTEB-BR/{task}"
+        assert f'data-doc-url="{url}"' in response.text
+        assert client.get(url).status_code == 200
 
 
 def test_docs_endpoint_renders_markdown_page_and_rejects_missing_docs(tmp_path: Path) -> None:

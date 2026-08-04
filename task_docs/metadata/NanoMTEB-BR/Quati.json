@@ -1,0 +1,175 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoMTEB-BR",
+    "backing_dataset": "NanoMTEB-BR",
+    "dataset_id": "hakari-bench/NanoMTEB-BR",
+    "task_name": "Quati",
+    "split_name": "Quati",
+    "language": "pt",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoMTEB-BR/Quati.md",
+    "source_research": {
+      "primary_source_type": "task_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://aclanthology.org/2024.stil-1.19/",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/MTEB-BR/quati-50k"
+      ]
+    },
+    "counts": {
+      "queries": 49,
+      "documents": 10000,
+      "positive_qrels": 892
+    },
+    "positives_per_query": {
+      "average": 18.204082,
+      "min": 2,
+      "median": 18.0,
+      "max": 46,
+      "multi_positive_queries": 49,
+      "multi_positive_query_percent": 100.0
+    },
+    "text_stats_chars": {
+      "query_mean": 48.571429,
+      "document_mean": 1108.5628
+    },
+    "bm25": {
+      "ndcg_at_10": 0.38145434904042774,
+      "hit_at_10": 0.8571428571428571,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.381454349,
+        "hit_at_10": 0.8571428571,
+        "recall_at_100": 0.6221973094,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.6221973094
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.6494132555,
+        "hit_at_10": 0.9795918367,
+        "recall_at_100": 0.9383408072,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9383408072
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5201924125,
+        "hit_at_10": 0.9387755102,
+        "recall_at_100": 0.8890134529,
+        "candidate_count_min": 100,
+        "candidate_count_max": 100,
+        "candidate_count_mean": 100.0,
+        "query_count": 49,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8890134529,
+        "safeguard_positive_rows": 0,
+        "rows_with_101_candidates": 0
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoMTEB-BR",
+      "source_urls": [
+        {
+          "label": "Quati paper",
+          "url": "https://aclanthology.org/2024.stil-1.19/"
+        },
+        {
+          "label": "Quati dataset",
+          "url": "https://huggingface.co/datasets/MTEB-BR/quati-50k"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Quati: A Brazilian Portuguese Information Retrieval Dataset from Native Speakers",
+        "url": "https://aclanthology.org/2024.stil-1.19/",
+        "year": 2024,
+        "is_paper": true,
+        "doi": "10.18653/v1/2024.stil-1.19",
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "MTEB-BR/quati-50k",
+        "url": "https://huggingface.co/datasets/MTEB-BR/quati-50k",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "54",
+        "document_id": "clueweb22-pt0000-63-18637_0",
+        "query": {
+          "text": "Quais são os biomas do Brasil?",
+          "full_chars": 30,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "Biomas Brasileiros - Conservação para Ensino Médio Conservação Biodiversidade Biomas do Brasil Des. sustentável Direito ambiental Lixo Links Roberto Langanke Indicado para: Mata Atlântica | Cerrado | Pantanal | Caatinga Floresta Amazônica | Campos Sulinos | Biomas Costeiros Topo A Mata Atlântica, originalmente, estendia-se por mais de 4000 quilômetros, representando cerca de 8,5% do território nacional. Ocupava uma faixa próxima ao litoral, que se prolongava até o interior em algumas regiões, e se estendia do Rio Grande do Norte até o Rio Grande do Sul. Hoje resta somente 7% da área original. Esse bioma tem por principal característica sua biodiversidade. O número de espécies endêmicas é alto, especialmente em árvores e bromélias. Existe também uma grande biodiversidade de animais vertebrados e invertebrados. É considerado o bioma de maior biodviersidade do mundo. O clima e a temperatura variam de acordo com a região. A mata, em geral, é fechada, mas devido à sua grande extensão territ",
+          "full_chars": 1027,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "127",
+        "document_id": "clueweb22-pt0000-86-11385_3",
+        "query": {
+          "text": "O que é a associação em série de um capacitor?",
+          "full_chars": 46,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "\"a tensão atingir seu valor máximo (esta tensão não pode sofrer uma variação brusca) e se estabilizar, sendo que esta estabilização corre após 5𝜏𝜏. Ao produto RC, dá-se o nome de constante de tempo (𝝉𝝉). Com a tensão estabilizada e constante, diz-se que o capacitor está em regime permanente DC. A análise de formas de onda e de equações será realizada através de um circuito série RC. Um capacitor excitado por uma fonte DC tende a se carregar com a mesma tensão da fonte. 5 Fonte: https://blogdocontroleiro.wordpress.com/2017/06/22/56/ 1.2 Análise DC de Circuito com Resistor e Indutor em Série (RL Série) Indutor é um componente de circuitos elétricos que armazena energia na forma de um campo magnético criado por uma corrente elétrica. Fonte: https://www.mundodaeletrica.com.br/o-que-e-um-indutor/ “A indutância é uma medida de capacidade de um componente de armazenar energia na forma de um campo magnético criado por uma corrente elétrica” (DORF, SVOBODA, 2009, p. 263). Essa propriedade é rep",
+          "full_chars": 1252,
+          "limit_chars": 1000,
+          "truncated": true
+        }
+      },
+      {
+        "query_id": "105",
+        "document_id": "clueweb22-pt0000-76-05791_1",
+        "query": {
+          "text": "Onde está localizada a Praça XV de Novembro?",
+          "full_chars": 44,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "No percurso da visitação deve-se ter atenção no deslocamento, a fim de evitar acidentes pessoais, pois o acesso de entrada e saída são de longas escadas, há a necessidade de agachamento da cabeça para passar pelas escotilhas e, dependendo da altura do visitante, isso ocorrerá em outros ambientes. Não sugerimos a visitação por pessoas idosas, gestantes e aos que sofrem de claustrofobia. Devido à sua arquitetura, não há acessibilidade para quem se desloca por meio de cadeiras de rodas. Planeje o seu passeio e tenha uma excelente visitação! ENDEREÇO Local: Espaço Cultural da Marinha Endereço: Boulevard Olímpico, Praça XV, Rio de Janeiro, RJ. INFORMAÇÕES: No momento o trabalho está sendo realizado em home office e o contato pode ser realizado pelo e-mail “ dphdm.agendamento@marinha.mil.br ”.",
+          "full_chars": 798,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "source_dataset_id": "MTEB-BR/quati-50k",
+    "source_task": "Quati",
+    "example_count": 3
+  }
+}
