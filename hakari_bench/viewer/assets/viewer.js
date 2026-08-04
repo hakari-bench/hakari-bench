@@ -7,6 +7,35 @@
     return target.closest(selector);
   }
 
+  document.addEventListener(
+    "change",
+    (event) => {
+      const selected = closestElement(event.target, "[data-column-mode-toggle]");
+      if (!selected || !selected.checked) return;
+      const group = selected.closest("[data-column-mode-group]");
+      if (!group) return;
+      for (const other of group.querySelectorAll("[data-column-mode-toggle]")) {
+        if (other !== selected) other.checked = false;
+      }
+    },
+    true,
+  );
+
+  document.addEventListener(
+    "change",
+    (event) => {
+      const rescore = closestElement(event.target, "#variant-controls input[name='rescore']");
+      if (!rescore || !rescore.checked) return;
+      const form = rescore.closest("form");
+      const dims = form && form.querySelector("input[name='truncate']");
+      const quantization = form && form.querySelector("input[name='quantization']");
+      if (!dims || !quantization || dims.checked || quantization.checked) return;
+      dims.checked = true;
+      quantization.checked = true;
+    },
+    true,
+  );
+
   const themeStorageKey = "hakari-theme";
   const themeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
@@ -79,21 +108,44 @@
     return raw ? new URLSearchParams(raw) : new URLSearchParams();
   }
 
+  function canonicalStateParams(params) {
+    const canonical = new URLSearchParams(params);
+    if ((canonical.get("view") || "Overall") === "Overall") canonical.delete("view");
+    if ((canonical.get("sort") || "borda_score") === "borda_score") canonical.delete("sort");
+    if ((canonical.get("direction") || "desc") === "desc") canonical.delete("direction");
+    if (canonical.get("task_z_scores") === "0") canonical.delete("task_z_scores");
+
+    const columns = canonical.getAll("columns").at(-1);
+    if (columns === "grouped") canonical.set("score", "macro");
+    else if (columns === "task") canonical.delete("score");
+    else if (canonical.get("score") === "micro") canonical.delete("score");
+
+    if (canonical.get("view") === "Overall (EN)") {
+      canonical.delete("view");
+      canonical.delete("lang_filter");
+      canonical.append("lang_filter", "en");
+    }
+    return canonical;
+  }
+
   function mergedStateQueryString() {
+    const hashParams = paramsFrom(window.location.hash);
+    if (window.parent !== window && Array.from(hashParams.keys()).length > 0) {
+      return canonicalStateParams(hashParams).toString();
+    }
     const params = new URLSearchParams(window.location.search);
-    paramsFrom(window.location.hash).forEach((value, key) => {
+    hashParams.forEach((value, key) => {
       if (!params.has(key)) params.append(key, value);
     });
-    return params.toString();
+    return canonicalStateParams(params).toString();
   }
 
   window.__hakariApplyHashQueryState = () => {
     const hashParams = paramsFrom(window.location.hash);
     if (Array.from(hashParams.keys()).length === 0) return;
     const queryString = mergedStateQueryString();
-    if (!queryString) return;
     const panel = document.getElementById("leaderboard-panel");
-    if (panel) panel.setAttribute("hx-get", "/leaderboard?" + queryString);
+    if (panel) panel.setAttribute("hx-get", queryString ? "/leaderboard?" + queryString : "/leaderboard");
   };
 
   window.__hakariSyncHashQueryStateToParent = () => {
@@ -113,6 +165,62 @@
     if (!source || !source.closest) return null;
     return source.closest("[data-leaderboard-control='true']");
   }
+
+  const facetParameterNames = [
+    "dim_filter",
+    "quant_filter",
+    "commercial_filter",
+    "model_type_filter",
+    "dtype_filter",
+    "attn_filter",
+    "prompt_filter",
+  ];
+
+  function prepareInactiveFacetForm(root = document) {
+    const form = root.querySelector ? root.querySelector("#filter-controls") : null;
+    if (!form || form.dataset.filtersActive === "true") return;
+    facetParameterNames.forEach((name) => {
+      form.querySelectorAll(`[name='${name}']`).forEach((input) => {
+        input.dataset.facetParameter = name;
+        input.removeAttribute("name");
+      });
+    });
+  }
+
+  function activateFacetForm(form) {
+    form.querySelectorAll("[data-facet-parameter]").forEach((input) => {
+      input.name = input.dataset.facetParameter;
+    });
+    form.dataset.filtersActive = "true";
+  }
+
+  document.addEventListener(
+    "change",
+    (event) => {
+      const checkbox = closestElement(event.target, "#filter-controls input[type='checkbox']");
+      const parameterName = checkbox && (checkbox.name || checkbox.dataset.facetParameter);
+      if (!checkbox || !facetParameterNames.includes(parameterName)) return;
+      const form = checkbox.closest("form");
+      if (form) activateFacetForm(form);
+    },
+    true,
+  );
+
+  document.addEventListener(
+    "htmx:configRequest",
+    (event) => {
+      const source = event.detail && event.detail.elt;
+      const form = source && source.closest ? source.closest("#filter-controls") : null;
+      if (!form || form.dataset.filtersActive === "true") return;
+      facetParameterNames.forEach((name) => {
+        if (typeof event.detail.parameters.delete === "function") event.detail.parameters.delete(name);
+        else delete event.detail.parameters[name];
+      });
+    },
+    true,
+  );
+
+  document.addEventListener("htmx:afterSwap", (event) => prepareInactiveFacetForm(event.target));
 
   window.__hakariSetLeaderboardPending = (event, pending) => {
     const control = leaderboardControlFrom(event);
@@ -741,6 +849,7 @@
     container.hidden = false;
   }
 
+  prepareInactiveFacetForm();
   window.__hakariApplyHashQueryState();
   window.__hakariBindThemeToggle();
   window.__hakariBindModelDetails();

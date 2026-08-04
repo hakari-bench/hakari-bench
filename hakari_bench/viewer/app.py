@@ -37,10 +37,12 @@ from hakari_bench.viewer.filters import (
     DIM_FILTER_RANGE_PREFIX,
     FILTER_NONE_VALUE,
     FilterContext,
+    canonical_filter_state,
     row_filter_context,
     visible_row_count,
 )
 from hakari_bench.viewer.leaderboard import (
+    ColumnMode,
     LanguageOption,
     LeaderboardResult,
     LeaderboardRow,
@@ -63,7 +65,7 @@ from hakari_bench.viewer.state import (
     PLOT_NONE_FIELD,
     PLOT_SCORE_FIELDS,
     QueryState,
-    active_filter_hidden_fields,
+    canonical_query_state,
     filter_state_from_query,
     normalize_query_state,
     optional_query_string,
@@ -330,6 +332,7 @@ def create_app(
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        columns: list[str] | None = Query(default=None),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
@@ -376,6 +379,7 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
+                columns=columns,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -406,8 +410,7 @@ def create_app(
                 chart_x=chart_x,
                 chart_color=chart_color,
             )
-            if not task_z_scores:
-                initial_query["task_z_scores"] = "0"
+            initial_query = canonical_query_state(initial_query, viewer_config=viewer_config)
             with timed_operation("viewer.render", operation="render_page"):
                 content = render_page(
                     viewer_config=viewer_config,
@@ -417,7 +420,7 @@ def create_app(
                     benchmark_docs=benchmark_docs,
                     database_label="",
                 )
-            request_timing["view"] = initial_query["view"]
+            request_timing["view"] = query_string(initial_query.get("view", viewer_config.overall.name))
             return content
 
     def build_leaderboard_result(state_query: QueryState) -> tuple[LeaderboardResult, str, str, FilterState]:
@@ -447,7 +450,13 @@ def create_app(
             include_rescore_variants=display_flags.rescore,
             include_other_variants=display_flags.other,
             language_filters=filter_state.language_filters,
-            show_task_scores=state_query.get("task_scores") == "1",
+            column_mode=cast(
+                ColumnMode,
+                state_query.get("columns"),
+            )
+            if state_query.get("columns") in {"task", "grouped"}
+            else None,
+            show_task_scores=state_query.get("columns") in {"task", "grouped"},
             show_task_z_scores=state_query.get("task_z_scores") == "1",
             show_task_ranks=state_query.get("task_ranks") == "1",
             show_other_columns=state_query.get("other_columns") == "1",
@@ -475,6 +484,7 @@ def create_app(
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
+        request: Request,
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_score"),
         direction: str = Query(default="desc", pattern="^(asc|desc)$"),
@@ -487,6 +497,7 @@ def create_app(
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        columns: list[str] | None = Query(default=None),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
@@ -516,7 +527,12 @@ def create_app(
         chart_y: str = Query(default="borda_score"),
         chart_x: str = Query(default="active_parameters"),
         chart_color: str = Query(default="embedding_dim"),
-    ) -> HTMLResponse:
+    ) -> HTMLResponse | RedirectResponse:
+        if request.headers.get("HX-Request", "").lower() != "true" and "text/html" in request.headers.get(
+            "Accept", ""
+        ).lower():
+            query = request.url.query
+            return RedirectResponse(url=f"/?{query}" if query else "/")
         with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
             state_query = normalize_query_state(
                 viewer_config=viewer_config,
@@ -532,6 +548,7 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
+                columns=columns,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -572,6 +589,7 @@ def create_app(
                 )
             service_started = perf_counter()
             result, sort, direction, filter_state = build_leaderboard_result(state_query)
+            filter_state = canonical_filter_state(result.rows, filter_state)
             service_ms = _elapsed_ms(service_started)
             render_started = perf_counter()
             with timed_operation("viewer.render", operation="render_leaderboard", view=view) as render_timing:
@@ -594,7 +612,26 @@ def create_app(
             return HTMLResponse(
                 content=content,
                 headers={
-                    "HX-Push-Url": f"/?{urlencode(state_query, doseq=True)}",
+                    "HX-Push-Url": _page_path(
+                        canonical_query_state(
+                            _apply_plot_state(
+                                state_payload(
+                                    result=result,
+                                    sort=sort,
+                                    direction=direction,
+                                    filter_state=filter_state,
+                                ),
+                                _plot_state_query(
+                                    result_view=query_string(state_query.get("result_view", "table")),
+                                    plot_y=query_string(state_query.get("chart_y", "borda_score")),
+                                    plot_x=query_string(state_query.get("chart_x", "active_parameters")),
+                                    plot_size="embedding_dim",
+                                    plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
+                                ),
+                            ),
+                            viewer_config=viewer_config,
+                        )
+                    ),
                     **_timing_headers({"service": service_ms, "render": render_ms}),
                 },
             )
@@ -630,6 +667,7 @@ def create_app(
         truncate: bool = Query(default=False),
         rescore: bool = Query(default=False),
         other_variant: bool = Query(default=False),
+        columns: list[str] | None = Query(default=None),
         task_scores: bool = Query(default=False),
         task_z_scores: bool = Query(default=False),
         task_ranks: bool = Query(default=False),
@@ -672,6 +710,7 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
+                columns=columns,
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -745,6 +784,7 @@ def _normalize_query_state_from_params(viewer_config: ViewerConfig, params: Mapp
         truncate=_query_param_bool(params, "truncate"),
         rescore=_query_param_bool(params, "rescore"),
         other_variant=_query_param_bool(params, "other_variant"),
+        columns=_query_param_list(params, "columns"),
         task_scores=_query_param_bool(params, "task_scores"),
         task_z_scores=_query_param_bool(params, "task_z_scores"),
         task_ranks=_query_param_bool(params, "task_ranks"),
@@ -859,7 +899,7 @@ def render_page(
     benchmark_docs: BenchmarkDocs | None = None,
     database_label: str = "",
 ) -> str:
-    query = urlencode(initial_query or {"view": viewer_config.overall.name, "sort": "borda_score", "direction": "desc"}, doseq=True)
+    query = urlencode(initial_query or {}, doseq=True)
     css_url = _asset_url("app.css")
     favicon_svg_url = _asset_url("favicon-white.svg")
     favicon_url = _asset_url("favicon.png")
@@ -1339,7 +1379,7 @@ def render_leaderboard(
     plot_size: str = "embedding_dim",
     plot_color: str = "embedding_dim",
 ) -> str:
-    filter_state = filter_state or FilterState()
+    filter_state = canonical_filter_state(result.rows, filter_state or FilterState())
     filter_context = row_filter_context(result.rows, filter_state)
     shown_count = visible_row_count(result.rows, filter_context)
     csv_query = urlencode(state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state), doseq=True)
@@ -1370,7 +1410,7 @@ def render_leaderboard(
   <div class="leaderboard-table-scroll table-shell overflow-x-auto bg-white">
     <table class="leaderboard-table min-w-full border-collapse text-[0.8125rem]">
       {render_table_head(result=result, sort=sort, direction=direction, filter_state=filter_state, benchmark_docs=benchmark_docs)}
-      {render_table_body(result=result, filter_context=filter_context)}
+      {render_table_body(result=result, filter_context=filter_context, sort=sort)}
     </table>
   </div>"""
     )
@@ -1779,6 +1819,29 @@ def _query_state_fields(payload: QueryState | None) -> list[tuple[str, str]]:
         else:
             fields.append((key, value))
     return fields
+
+
+def _form_state_fields(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None,
+    exclude: set[str],
+) -> list[tuple[str, str]]:
+    """Serialize only state that is not owned by the submitting form."""
+
+    payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+    )
+    _apply_plot_state(payload, plot_state)
+    for key in exclude:
+        payload.pop(key, None)
+    return _query_state_fields(payload)
 
 
 def render_leaderboard_plot(
@@ -2573,7 +2636,8 @@ def render_tabs(
         query_payload = _apply_plot_state(query_payload, plot_state)
         if view_name == "MNanoBEIR":
             if result.view_name != "MNanoBEIR":
-                for offset, selection_key, label in [
+                mnanobeir_buttons = []
+                for _offset, selection_key, label in [
                     (0, benchmark_selection_key("MNanoBEIR", "task_mean"), "M-BEIR(task)"),
                     (1, benchmark_selection_key("MNanoBEIR", "lang_mean"), "M-BEIR(lang)"),
                 ]:
@@ -2590,22 +2654,22 @@ def render_tabs(
                     selection_query_payload = _apply_plot_state(selection_query_payload, plot_state)
                     selection_query = urlencode(selection_query_payload, doseq=True)
                     selection_active = _benchmark_selection_active(result=result, selection_key=selection_key)
-                    grouped_buttons[group].append(
-                        (
-                            sort_key * 10 + offset,
-                            _render_benchmark_view_button(
-                                label=label,
-                                active=selection_active,
-                                query=selection_query,
-                                query_payload=selection_query_payload,
-                                doc=doc,
-                                benchmark_name=selection_key,
-                                help_content=_mnanobeir_scope_help(score_group),
-                            ),
+                    mnanobeir_buttons.append(
+                        _render_benchmark_view_button(
+                            label=label,
+                            active=selection_active,
+                            query=selection_query,
+                            query_payload=selection_query_payload,
+                            doc=doc,
+                            benchmark_name=selection_key,
+                            help_content=_mnanobeir_scope_help(score_group),
+                            extra_class="mnanobeir-scope-option",
                         )
                     )
+                grouped_buttons[group].append((sort_key * 10, _render_mnanobeir_scope_group(mnanobeir_buttons)))
                 continue
-            for offset, score_group, label in [
+            mnanobeir_buttons = []
+            for _offset, score_group, label in [
                 (0, "task_mean", "M-BEIR(task)"),
                 (1, "lang_mean", "M-BEIR(lang)"),
             ]:
@@ -2623,20 +2687,19 @@ def render_tabs(
                 active = result.view_name == view_name and (
                     result.selected_score_group is not None and result.selected_score_group.name == score_group
                 )
-                grouped_buttons[group].append(
-                    (
-                        sort_key * 10 + offset,
-                        _render_benchmark_view_button(
-                            label=label,
-                            active=active,
-                            query=group_query,
-                            query_payload=group_query_payload,
-                            doc=doc,
-                            benchmark_name=view_name,
-                            help_content=_mnanobeir_scope_help(score_group),
-                        ),
+                mnanobeir_buttons.append(
+                    _render_benchmark_view_button(
+                        label=label,
+                        active=active,
+                        query=group_query,
+                        query_payload=group_query_payload,
+                        doc=doc,
+                        benchmark_name=view_name,
+                        help_content=_mnanobeir_scope_help(score_group),
+                        extra_class="mnanobeir-scope-option",
                     )
                 )
+            grouped_buttons[group].append((sort_key * 10, _render_mnanobeir_scope_group(mnanobeir_buttons)))
             continue
         query = urlencode(query_payload, doseq=True)
         if doc is None:
@@ -2667,6 +2730,21 @@ def render_tabs(
         )
     preset_buttons = [button for _, button in sorted(grouped_buttons["Scope presets"])]
     suite_buttons = [button for _, button in sorted(grouped_buttons["Nano suites"])]
+    task_facets = render_language_pages(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        embedded=True,
+        plot_state=plot_state,
+    )
+    task_facets_section = (
+        f"""<div class="benchmark-task-facets-divider mt-1.5 border-t border-zinc-200 pt-1.5">
+          {task_facets}
+        </div>"""
+        if task_facets
+        else ""
+    )
     return f"""
     <nav class="mb-3 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
       <div class="grid gap-1.5">
@@ -2678,7 +2756,7 @@ def render_tabs(
           </div>
         </div>
         <div class="grid gap-1.5">
-          <div class="border border-zinc-200 bg-white p-1.5">
+          <div class="benchmark-task-scope-panel border border-zinc-200 bg-white p-1.5" data-benchmark-task-scope="true">
             <div class="mb-1.5 flex flex-wrap items-center gap-2">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="database", text="Benchmark scope")}
@@ -2687,8 +2765,8 @@ def render_tabs(
             </div>
             <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
             <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
+            {task_facets_section}
           </div>
-          {render_language_pages(result=result, sort=sort, direction=direction, filter_state=filter_state, embedded=True, plot_state=plot_state)}
         </div>
         {render_display_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
         {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, plot_state=plot_state)}
@@ -2736,8 +2814,10 @@ def _render_benchmark_view_button(
     doc: BenchmarkDoc | None,
     benchmark_name: str | None = None,
     help_content: tuple[str, str, str] | None = None,
+    extra_class: str = "",
 ) -> str:
     classes = _control_button_classes(active=active)
+    group_class = f" {extra_class}" if extra_class else ""
     data_attr = "" if benchmark_name is None else f' data-benchmark-toggle="{escape(benchmark_name, quote=True)}"'
     if doc is None and help_content is None:
         return f"""<button type="button"{data_attr} class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
@@ -2747,7 +2827,7 @@ def _render_benchmark_view_button(
                     </button>"""
     if doc is not None and help_content is None:
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview")
-        return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+        return f"""<span class="control-button-group doc-label-group{group_class} inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
                   <button type="button" class="py-1 pl-2 pr-0 text-left"
                     {data_attr}
                     hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2762,7 +2842,7 @@ def _render_benchmark_view_button(
     if help_content is not None:
         title, summary, details = help_content
         icon_triggers.append(_render_button_help_icon(title=title, summary=summary, details=details))
-    return f"""<span class="control-button-group doc-label-group inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
+    return f"""<span class="control-button-group doc-label-group{group_class} inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 {data_attr}
                 hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
@@ -2773,24 +2853,40 @@ def _render_benchmark_view_button(
             </span>"""
 
 
+def _render_mnanobeir_scope_group(buttons: list[str]) -> str:
+    if len(buttons) != 2:
+        raise ValueError("M-BEIR scope selector requires task and language buttons")
+    return f"""<span class="column-mode-group mnanobeir-scope-group" role="group"
+                  aria-label="M-BEIR scope: choose task or language grouping"
+                  data-mnanobeir-scope-group="true">
+                {buttons[0]}
+                <span class="column-mode-or" aria-hidden="true">or</span>
+                {buttons[1]}
+              </span>"""
+
+
 def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:
     matrix_note = (
-        "MNanoBEIR is a language x task benchmark matrix: each raw row is one "
-        "NanoBEIR language dataset, such as NanoBEIR-ja, crossed with one "
-        "BEIR-style task, such as NanoArguAna or NanoSciFact. Showing every "
-        "language-task cell as an individual benchmark scope would make the "
-        "picker hard to scan, so the viewer exposes two grouped views."
+        "M-BEIR evaluates 13 retrieval tasks in 14 languages, producing 182 raw result cells. "
+        "The viewer summarizes them into 13 task columns or 14 language columns so the table "
+        "does not expand to 182 columns."
+    )
+    ranking_note = (
+        "With Micro scoring, all 182 raw M-BEIR cells contribute independently, just like raw "
+        "task results from other benchmarks. With Macro scoring, the visible breakdowns are "
+        "averaged and M-BEIR contributes one final benchmark score. Changing this scope changes "
+        "the breakdown axis, not which raw cells Micro uses or M-BEIR's one-benchmark Macro weight."
     )
     if score_group == "lang_mean":
         return (
-            "Benchmark scope: NanoBEIR(lang)",
-            "Averages the multilingual NanoBEIR matrix by language dataset.",
-            f"{matrix_note}\n\nNanoBEIR(lang) first groups rows by language dataset, such as NanoBEIR-ja, NanoBEIR-de, or NanoBEIR-fr, averaging all tasks within each language before the final score is computed. Use it when you want language coverage and per-language robustness to be the visible unit.\n\nThis differs from NanoBEIR(task), which groups by BEIR source task first and averages languages inside each task.",
+            "Benchmark scope: M-BEIR(lang)",
+            "Shows 14 language means; each language score averages its 13 BEIR tasks.",
+            f"{matrix_note}\n\nM-BEIR(lang) displays one column per language, such as M-BEIR-ja, M-BEIR-de, or M-BEIR-fr. Each column is the mean of all 13 retrieval tasks for that language. The 14 visible language columns are breakdowns, not 14 ranking votes. Choose this view to compare language coverage and per-language robustness.\n\n{ranking_note}\n\nM-BEIR(task) is the alternative view: it displays 13 task means, averaging the 14 languages inside each task.",
         )
     return (
-        "Benchmark scope: NanoBEIR(task)",
-        "Averages the multilingual NanoBEIR matrix by BEIR source task.",
-        f"{matrix_note}\n\nNanoBEIR(task) first groups rows by BEIR-style task, such as ArguAna, FEVER, or SciFact, averaging all available languages within each task before the final score is computed. Use it when you want task behavior to be the visible unit while smoothing over language coverage.\n\nThis differs from NanoBEIR(lang), which groups by language dataset first and averages tasks inside each language.",
+        "Benchmark scope: M-BEIR(task)",
+        "Shows 13 BEIR task means; each task score averages its 14 language results.",
+        f"{matrix_note}\n\nM-BEIR(task) displays one column per retrieval task, such as M-BEIR-arguana, M-BEIR-fever, or M-BEIR-scifact. Each column is the mean of that task across all 14 languages. The 13 visible task columns are breakdowns, not 13 ranking votes. Choose this view to compare retrieval-task behavior while averaging over languages.\n\n{ranking_note}\n\nM-BEIR(lang) is the alternative view: it displays 14 language means, averaging the 13 tasks inside each language.",
     )
 
 
@@ -2843,7 +2939,11 @@ def _scope_preset_query_payload(
         direction=direction,
         filter_state=scope_filter_state,
     )
-    query_payload["view"] = CUSTOM_SCOPE_NAME if view_name == CLEAR_SCOPE_NAME else view_name
+    selected_view = CUSTOM_SCOPE_NAME if view_name == CLEAR_SCOPE_NAME else view_name
+    if selected_view == "Overall":
+        query_payload.pop("view", None)
+    else:
+        query_payload["view"] = selected_view
     query_payload.pop("bench", None)
     if view_name == CLEAR_SCOPE_NAME:
         query_payload.pop("lang_filter", None)
@@ -2959,10 +3059,13 @@ def _render_score_aggregation_group(
 ) -> str:
     if not result.is_overall:
         return ""
+    column_mode = _column_mode_for_result(result)
+    locked_score = "micro" if column_mode == "task" else "macro" if column_mode == "grouped" else None
     buttons = []
     for score, label in [("micro", "Micro"), ("macro", "Macro")]:
         active = result.score_aggregation == score
         classes = _control_button_classes(active=active)
+        disabled = locked_score is not None and score != locked_score
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
         tab_direction = "asc" if sort.startswith("metric:") else direction
         query_payload = _apply_plot_state(
@@ -2974,26 +3077,44 @@ def _render_score_aggregation_group(
         else:
             query_payload["score"] = score
         query = urlencode(query_payload, doseq=True)
+        disabled_attrs = (
+            ' disabled aria-disabled="true" title="Score is set by the selected column mode."'
+            if disabled
+            else ""
+        )
         buttons.append(
             f"""<button type="button" class="border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                  {_leaderboard_control_hx_attrs()}>
+                  {_leaderboard_control_hx_attrs()}{disabled_attrs}>
                   {escape(label)}
                 </button>"""
         )
+    score_aria_label = (
+        f"Score aggregation: {locked_score.title()} (locked by {column_mode.title()} columns)"
+        if locked_score is not None and column_mode is not None
+        else "Score aggregation"
+    )
     return f"""
-            <div class="flex min-w-0 flex-wrap items-center gap-2">
+            <div class="flex min-w-0 flex-wrap items-center gap-2" aria-label="{escape(score_aria_label, quote=True)}">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="sigma", text="Score")}
                 {_render_help_tooltip(
                   "Score aggregation",
                   "Chooses between raw task weighting and grouped NanoSet weighting.",
-                  "Micro is the default score. Think of it as the raw task average: every task row gets one vote. A NanoSet with many tasks or language variants therefore has more influence on the final ranking. This is the closest mode to the older raw-task Overall/All behavior.\n\nMacro is the grouped score. Think of it as the Group-style idea moved into the Score control: tasks are first summarized into one score per NanoSet, then the leaderboard ranks and averages those NanoSet scores. Each NanoSet gets one vote regardless of how many raw tasks it contains, so large suites do not dominate simply because they are larger.\n\nFor grouped collections such as MNanoBEIR, language variants are first averaged by BEIR source task, then MNanoBEIR contributes one NanoSet score to the final Macro ranking. Use Macro when you want a family-balanced view across benchmark groups.",
+                  "Micro is the default score: every raw task result gets equal weight. M-BEIR therefore contributes all 182 cells in its 13-task x 14-language matrix. Task columns always selects Micro.\n\nMacro is the grouped score: tasks are summarized into one score per NanoSet, then each NanoSet gets equal weight regardless of its raw task count. M-BEIR contributes one benchmark score. Grouped columns always selects Macro. While either column mode is active, the incompatible Score choice is disabled.\n\nM-BEIR still shows only 13 task means or 14 language means as compact breakdown columns in both table modes; those visible summaries do not replace Micro's 182 raw inputs.",
                 )}
               </span>
               {''.join(buttons)}
             </div>
             """
+
+
+def _column_mode_for_result(result: LeaderboardResult) -> str | None:
+    if result.column_mode is not None:
+        return result.column_mode
+    if not result.show_task_scores:
+        return None
+    return "grouped" if result.score_aggregation == "macro" else "task"
 
 
 def _render_benchmark_group(*, label: str, description: str, buttons: list[str], framed: bool = True) -> str:
@@ -3315,7 +3436,7 @@ def render_language_pages(
         """
     wrapper_tag = "div" if embedded else "nav"
     wrapper_class = (
-        "flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-1.5"
+        "flex flex-wrap items-start gap-2"
         if embedded
         else "mb-4 flex flex-wrap items-start gap-2 border border-zinc-200 bg-white p-2"
     )
@@ -3349,15 +3470,15 @@ def _language_page_button(
     active = result.selected_languages == language_filters
     label = "All languages" if option is None else f"{option.label} {option.task_count}"
     classes = _control_button_classes(active=active)
-    query_payload = _apply_plot_state(
-        state_payload(
-            result=result,
-            sort=sort,
-            direction=direction,
-            filter_state=_filter_state_with_languages(filter_state, language_filters),
-        ),
-        plot_state,
+    query_payload = state_payload(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=_filter_state_with_languages(filter_state, language_filters),
     )
+    if result.view_name == "Overall (EN)" and language_filters != ("en",):
+        query_payload.pop("view", None)
+    query_payload = _apply_plot_state(query_payload, plot_state)
     query = urlencode(query_payload, doseq=True)
     data_attr = "" if option is None else f' data-language-page="{escape(option.code)}"'
     return f"""<button type="button"{data_attr} class="shrink-0 whitespace-nowrap border px-2 py-1 text-[0.8125rem] {classes}"
@@ -3409,39 +3530,32 @@ def render_display_controls(
     truncate_checked = " checked" if result.include_truncate_variants else ""
     rescore_checked = " checked" if result.include_rescore_variants else ""
     other_variant_checked = " checked" if result.include_other_variants else ""
-    task_scores_checked = " checked" if result.show_task_scores else ""
+    column_mode = _column_mode_for_result(result)
+    task_scores_checked = " checked" if column_mode == "task" else ""
+    grouped_scores_checked = " checked" if column_mode == "grouped" else ""
     task_z_scores_checked = " checked" if result.show_task_z_scores else ""
     task_ranks_checked = " checked" if result.show_task_ranks else ""
     other_columns_checked = " checked" if result.show_other_columns else ""
-    state_fields = [
-        ("view", result.view_name),
-        ("sort", sort),
-        ("direction", direction),
-    ]
-    state_fields.extend(_selected_benchmark_hidden_fields(result))
-    if result.score_target != "all":
-        state_fields.append(("target", result.score_target))
-    if result.selected_score_metric != "ndcg@10":
-        state_fields.append(("metric", result.selected_score_metric))
-    if result.selected_score_group is not None:
-        state_fields.append(("group", result.selected_score_group.name))
-    state_fields.extend(_query_state_fields(plot_state))
-    sticky_filter_fields = active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
-    variant_filter_fields = _variant_filter_hidden_fields(filter_state)
-    variant_hidden_fields = _active_variant_hidden_fields(result)
-    task_score_hidden_fields = []
-    if result.show_task_scores:
-        task_score_hidden_fields.append(("task_scores", "1"))
-    if result.show_task_z_scores:
-        task_score_hidden_fields.append(("task_z_scores", "1"))
-    else:
-        task_score_hidden_fields.append(("task_z_scores", "0"))
-    if result.show_task_ranks:
-        task_score_hidden_fields.append(("task_ranks", "1"))
-    if result.show_other_columns:
-        task_score_hidden_fields.append(("other_columns", "1"))
-    column_hidden_html = _hidden_inputs(state_fields + sticky_filter_fields + variant_hidden_fields)
-    variant_hidden_html = _hidden_inputs(state_fields + variant_filter_fields + task_score_hidden_fields)
+    column_hidden_html = _hidden_inputs(
+        _form_state_fields(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            plot_state=plot_state,
+            exclude={"columns", "task_z_scores", "task_ranks", "other_columns"},
+        )
+    )
+    variant_hidden_html = _hidden_inputs(
+        _form_state_fields(
+            result=result,
+            sort=sort,
+            direction=direction,
+            filter_state=filter_state,
+            plot_state=plot_state,
+            exclude={"quantization", "truncate", "rescore", "other_variant"},
+        )
+    )
     return f"""
     <div class="grid gap-1.5 text-[0.8125rem] text-zinc-700 lg:grid-cols-2">
       <form id="column-controls" class="border border-zinc-200 bg-white p-1.5"
@@ -3454,14 +3568,21 @@ def render_display_controls(
           {_render_help_tooltip(
               "Table display",
               "Changes which columns and per-task annotations are visible.",
-              "Table display controls how much detail appears in the result table without changing which models or tasks are included.\n\nTask columns adds one score column per task or grouped task. STD adds standard-deviation deltas so you can see unusually strong or weak task performance. Task ranks shows the per-task rank instead of the raw score; when STD and Task ranks are both enabled, each task cell shows the rank, score, and standard-deviation delta together.\n\nUse this panel when the ranking is already scoped correctly and you want to inspect the table at a different level of detail.",
+              "Table display controls how much detail appears in the result table. Task columns and Grouped columns are mutually exclusive.\n\nTask columns shows one score column per raw task for ordinary benchmarks and fixes Score to Micro. Grouped columns shows benchmark groups such as JMTEB-v2 or IFIR and fixes Score to Macro. M-BEIR is compact in both modes: task scope shows 13 language-averaged task columns such as M-BEIR-arguana, while language scope shows 14 task-averaged language columns such as M-BEIR-ar. Micro nevertheless uses all 182 raw matrix cells; Macro averages M-BEIR into one benchmark score.\n\nSTD adds standard-deviation deltas. Task ranks shows the rank for whichever Task or Grouped columns are active.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
-          <label class="toggle-chip">
-            <input type="checkbox" name="task_scores" value="1"{task_scores_checked}>
-            <span>Task columns</span>
-          </label>
+          <span class="column-mode-group" role="group" aria-label="Score columns: choose Task or Grouped" data-column-mode-group="score-columns">
+            <label class="toggle-chip">
+              <input type="checkbox" name="columns" value="task"{task_scores_checked} data-column-mode-toggle>
+              <span>Task columns</span>
+            </label>
+            <span class="column-mode-or" aria-hidden="true">or</span>
+            <label class="toggle-chip">
+              <input type="checkbox" name="columns" value="grouped"{grouped_scores_checked} data-column-mode-toggle>
+              <span>Grouped columns</span>
+            </label>
+          </span>
           <label class="toggle-chip">
             <input type="hidden" name="task_z_scores" value="0">
             <input type="checkbox" name="task_z_scores" value="1"{task_z_scores_checked}>
@@ -3488,7 +3609,7 @@ def render_display_controls(
           {_render_help_tooltip(
               "Efficiency variants",
               "Adds non-base rows that compare quality against storage, dimension, and reranking trade-offs.",
-              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore includes variants that run a compressed first pass and then rescore or rerank. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
+              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore is additive to Quantization: it includes full-dimension rescore rows, while enabling Dims as well also includes truncated rescore rows. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
           )}
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -3500,10 +3621,17 @@ def render_display_controls(
             <input type="checkbox" name="quantization" value="1"{quantization_checked}>
             <span>Quantization</span>
           </label>
-          <label class="toggle-chip">
-            <input type="checkbox" name="rescore" value="1"{rescore_checked}>
-            <span>Rescore</span>
-          </label>
+          <span class="toggle-chip">
+            <label class="inline-flex cursor-pointer items-center gap-1">
+              <input type="checkbox" name="rescore" value="1"{rescore_checked}>
+              <span>Rescore</span>
+            </label>
+            {_render_help_tooltip(
+                "Rescore",
+                "Refines candidates retrieved with compressed embeddings using higher-precision scores.",
+                "Rescore runs the initial retrieval with int8 or binary embeddings, then recomputes candidate scores with the original higher-precision embeddings. This can recover retrieval quality while keeping the first pass compact.\n\nEnable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows. Enable Dims as well to also include truncated-dimension rescore rows. When both Dims and Quantization are off, turning on Rescore enables both so results appear immediately. Turning Rescore off leaves their state unchanged. A restored URL containing Rescore alone, or Dims with Rescore but without Quantization, still has no matching result rows.",
+            )}
+          </span>
           <label class="toggle-chip">
             <input type="checkbox" name="other_variant" value="1"{other_variant_checked}>
             <span>Sparse pruning</span>
@@ -3526,35 +3654,35 @@ def render_controls(
     filter_state = filter_state or FilterState()
     filter_context = filter_context or row_filter_context(result.rows, filter_state)
     rank_filtered_checked = " checked" if filter_state.rank_filtered else ""
-    state_fields = [
-        ("view", result.view_name),
-        ("sort", sort),
-        ("direction", direction),
-    ]
-    state_fields.extend(_selected_benchmark_hidden_fields(result))
-    if result.score_target != "all":
-        state_fields.append(("target", result.score_target))
-    if result.selected_score_metric != "ndcg@10":
-        state_fields.append(("metric", result.selected_score_metric))
-    if result.selected_score_group is not None:
-        state_fields.append(("group", result.selected_score_group.name))
-    state_fields.extend(_query_state_fields(plot_state))
-    variant_hidden_fields = _active_variant_hidden_fields(result)
-    task_score_hidden_fields = []
-    if result.show_task_scores:
-        task_score_hidden_fields.append(("task_scores", "1"))
-    if result.show_task_z_scores:
-        task_score_hidden_fields.append(("task_z_scores", "1"))
-    else:
-        task_score_hidden_fields.append(("task_z_scores", "0"))
-    if result.show_task_ranks:
-        task_score_hidden_fields.append(("task_ranks", "1"))
-    filter_hidden_fields = [
-        *state_fields,
-        ("filters", "1"),
-        *variant_hidden_fields,
-        *task_score_hidden_fields,
-    ]
+    filter_hidden_fields = _form_state_fields(
+        result=result,
+        sort=sort,
+        direction=direction,
+        filter_state=filter_state,
+        plot_state=plot_state,
+        exclude={
+            "filters",
+            "model_filter",
+            "task_filter",
+            "rank_filtered",
+            "lang_filter",
+            "dim_filter",
+            "quant_filter",
+            "commercial_filter",
+            "model_type_filter",
+            "dtype_filter",
+            "attn_filter",
+            "prompt_filter",
+            "active_params_min",
+            "active_params_max",
+            "total_params_min",
+            "total_params_max",
+            "query_len_min",
+            "query_len_max",
+            "doc_len_min",
+            "doc_len_max",
+        },
+    )
     filter_hidden_html = _hidden_inputs(filter_hidden_fields)
     dim_options = filter_context.dim_options
     quant_options = filter_context.quant_options
@@ -3792,6 +3920,7 @@ def render_controls(
           </span>
         </summary>
         <form id="filter-controls" class="border-t border-zinc-200 p-2"
+              data-filters-active={str(filter_state.filters_active).lower()}
               hx-get="/leaderboard" hx-push-url="true"
               {_leaderboard_control_hx_attrs()}
               hx-trigger="change from:input[type='checkbox'], submit">
@@ -3828,7 +3957,7 @@ def render_controls(
                 {_render_help_tooltip(
                     "Task filter",
                     "Filters task columns and task rows by benchmark, dataset, split, or task name.",
-                    "Task filter searches task identifiers such as benchmark name, dataset name, split name, task name, and task key.\n\nYou can search for multiple task keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, arguana fever keeps task columns or task rows whose identifiers contain arguana or fever. Short task names such as nq also work because task keywords are accepted from 2 characters.\n\nWhen task columns are visible, matching task columns remain and non-matching columns are hidden. The underlying model ranking keeps its original context unless Recalculate ranks from filters is enabled. One-character task keywords are ignored.",
+                    "Task filter searches task identifiers such as benchmark name, dataset name, split name, task name, and task key.\n\nYou can search for multiple task keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, arguana fever keeps task columns or task rows whose identifiers contain arguana or fever. Short task names such as nq also work because task keywords are accepted from 2 characters.\n\nWhen Task columns or Grouped columns are visible, matching columns remain and non-matching columns are hidden. The underlying model ranking keeps its original context unless Recalculate ranks from filters is enabled. One-character task keywords are ignored.",
                 )}
                 <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
@@ -3889,40 +4018,6 @@ def _filter_results_panel_should_open(filter_state: FilterState) -> bool:
         or filter_state.has_parameter_filters
         or filter_state.has_task_length_filters
     )
-
-
-def _active_variant_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
-    fields = []
-    if result.include_quantization_variants:
-        fields.append(("quantization", "1"))
-    if result.include_truncate_variants:
-        fields.append(("truncate", "1"))
-    if result.include_rescore_variants:
-        fields.append(("rescore", "1"))
-    if result.include_other_variants:
-        fields.append(("other_variant", "1"))
-    return fields
-
-
-def _variant_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    return active_filter_hidden_fields(filter_state) + _text_filter_hidden_fields(filter_state)
-
-
-def _selected_benchmark_hidden_fields(result: LeaderboardResult) -> list[tuple[str, str]]:
-    if result.view_name != CUSTOM_SCOPE_NAME:
-        return []
-    return [("bench", benchmark) for benchmark in result.selected_benchmarks]
-
-
-def _text_filter_hidden_fields(filter_state: FilterState) -> list[tuple[str, str]]:
-    fields = []
-    if filter_state.model_filter:
-        fields.append(("model_filter", filter_state.model_filter))
-    if filter_state.task_filter:
-        fields.append(("task_filter", filter_state.task_filter))
-    if filter_state.rank_filtered:
-        fields.append(("rank_filtered", "1"))
-    return fields
 
 
 def _render_model_type_controls(
@@ -4203,6 +4298,8 @@ def render_table_head(
     )
     if result.include_quantization_variants:
         columns.append(("quantization", "Quant", "asc", "left", False, ""))
+    if result.include_rescore_variants:
+        columns.append(("rescore", "Rescore", "", "left", False, ""))
     if _show_base_delta_column(result):
         columns.append(("base_score_delta_percent", "Δ vs Base", "desc", "right", False, ""))
     if result.show_other_columns:
@@ -4243,27 +4340,31 @@ def render_table_head(
                 f' aria-label="{escape(_metric_column_tooltip(label=label, full_metric_name=full_metric_name, result=result), quote=True)}"'
             )
         doc_metric_name = result.metric_column_doc_keys.get(full_metric_name, full_metric_name)
-        doc = (
-            benchmark_docs.task_doc(view_name=result.view_name, metric_column=doc_metric_name)
-            if benchmark_docs is not None and is_metric
-            else None
-        )
+        doc = None
+        if benchmark_docs is not None and is_metric:
+            if result.column_mode == "grouped":
+                grouped_benchmark = full_metric_name.split("::", 1)[0]
+                doc = benchmark_docs.group_doc(grouped_benchmark)
+            if doc is None:
+                doc = benchmark_docs.task_doc(
+                    view_name=result.view_name,
+                    metric_column=doc_metric_name,
+                )
         doc_trigger = _render_doc_summary_trigger(doc=doc, label=f"{label} overview") if doc is not None else ""
         if is_metric:
             group_label, task_label = _metric_column_header_parts(label)
+            metric_label_overflow_class = "metric-header-full-label"
             if task_label:
                 header_content = f"""
-                 <span class="doc-label-group block w-full min-w-0" data-doc-label-group="metric">
-                   <span class="{label_class} tooltip-trigger cursor-pointer"{label_attrs}>
-                     <span class="block w-full truncate font-normal">{escape(group_label)}</span>
-                     <span class="inline-flex max-w-full items-center gap-1">
-                       <button type="button" class="inline-flex min-w-0 items-center gap-0.5 text-left hover:text-cyan-700"
-                               hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                               {_leaderboard_control_hx_attrs()}>
-                         <span class="block max-w-full truncate font-normal">{escape(task_label)}</span>{indicator}
-                       </button>{doc_trigger}
+                 <span class="metric-header-label-group doc-label-group w-full min-w-0" data-doc-label-group="metric">
+                   <button type="button" class="{label_class} w-full min-w-0 tooltip-trigger cursor-pointer hover:text-cyan-700"
+                           hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                           {_leaderboard_control_hx_attrs()}{label_attrs}>
+                     <span class="block w-full {metric_label_overflow_class} font-normal">{escape(group_label)}</span>
+                     <span class="inline-flex max-w-full min-w-0 items-center gap-0.5">
+                       <span class="block max-w-full {metric_label_overflow_class} font-normal">{escape(task_label)}</span>{indicator}
                      </span>
-                   </span>
+                   </button>{doc_trigger}
                  </span>"""
             else:
                 header_content = f"""
@@ -4271,7 +4372,7 @@ def render_table_head(
                    <button type="button" class="inline-flex min-w-0 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                            hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                            {_leaderboard_control_hx_attrs()}>
-                     <span class="{label_class} block max-w-full truncate tooltip-trigger cursor-pointer"{label_attrs}>{escape(group_label)}</span>{indicator}
+                     <span class="{label_class} block max-w-full {metric_label_overflow_class} tooltip-trigger cursor-pointer"{label_attrs}>{escape(group_label)}</span>{indicator}
                    </button>{doc_trigger}
                  </span>"""
         else:
@@ -4306,14 +4407,24 @@ def _sticky_head_class(key: str) -> str:
     return ""
 
 
-def render_table_body(*, result: LeaderboardResult, filter_context: FilterContext | None = None) -> str:
+def render_table_body(
+    *,
+    result: LeaderboardResult,
+    filter_context: FilterContext | None = None,
+    sort: str = "borda_score",
+) -> str:
     if not result.rows:
         colspan = _leaderboard_table_colspan(result)
         return f"""<tbody><tr><td class="px-3 py-5 text-center text-zinc-500" colspan="{colspan}">No complete results found.</td></tr></tbody>"""
     filter_context = filter_context or row_filter_context(result.rows, FilterState())
     body_rows = []
     model_views = model_cell_views(result.rows)
-    borda_score_bar_widths = _borda_score_bar_widths(rows=result.rows, filter_context=filter_context)
+    score_bar_target = _score_bar_target(result=result, sort=sort)
+    score_bar_widths = _score_bar_widths(
+        rows=result.rows,
+        filter_context=filter_context,
+        target=score_bar_target,
+    )
     metric_rank_labels = _metric_rank_display_labels(result)
     visible_index = 0
     for row in result.rows:
@@ -4330,7 +4441,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="leaderboard-col-index sticky z-10 bg-inherit px-1.5 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
-              {render_model_name_cell(row, model_views[row.model_name], borda_score_bar_width=borda_score_bar_widths.get(row.model_name))}
+              {render_model_name_cell(row, model_views[row.model_name], score_bar_width=score_bar_widths.get(row.model_name), score_bar_target=score_bar_target)}
               {borda_score_cell}
               {mean_cells}
               {_render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels)}
@@ -4339,6 +4450,7 @@ def render_table_body(*, result: LeaderboardResult, filter_context: FilterContex
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_row_embedding_dim(row)}</td>
               {_render_quantization_cell(result=result, row=row)}
+              {_render_rescore_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
               {_render_other_columns(result=result, model_view=model_views[row.model_name])}
             </tr>"""
@@ -4352,6 +4464,8 @@ def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
     column_count += len(result.metric_columns)
     column_count += 4
     if result.include_quantization_variants:
+        column_count += 1
+    if result.include_rescore_variants:
         column_count += 1
     if _show_base_delta_column(result):
         column_count += 1
@@ -4370,14 +4484,40 @@ def _render_borda_score_cell(*, result: LeaderboardResult, row: LeaderboardRow) 
     return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.borda_score)}</td>"""
 
 
-def _borda_score_bar_widths(*, rows: Sequence[LeaderboardRow], filter_context: FilterContext) -> dict[str, float]:
-    visible_rows = [row for row in rows if filter_context.is_visible(row)]
-    if not visible_rows:
+def _score_bar_target(*, result: LeaderboardResult, sort: str) -> str:
+    if sort in {"borda_score", "mean_score", "macro_mean", "micro_mean"}:
+        return sort
+    if sort.startswith("metric:") and sort.removeprefix("metric:") in result.metric_columns:
+        return sort
+    return "borda_score"
+
+
+def _score_bar_value(row: LeaderboardRow, *, target: str) -> float | None:
+    if target.startswith("metric:"):
+        return row.metric_values.get(target.removeprefix("metric:"))
+    value = getattr(row, target, None)
+    return float(value) if value is not None else None
+
+
+def _score_bar_widths(
+    *,
+    rows: Sequence[LeaderboardRow],
+    filter_context: FilterContext,
+    target: str,
+) -> dict[str, float]:
+    visible_values = [
+        (row, value)
+        for row in rows
+        if filter_context.is_visible(row)
+        for value in [_score_bar_value(row, target=target)]
+        if value is not None
+    ]
+    if not visible_values:
         return {}
-    max_score = max(row.borda_score for row in visible_rows)
+    max_score = max(value for _, value in visible_values)
     if max_score <= 0:
-        return {row.model_name: 0.0 for row in visible_rows}
-    return {row.model_name: (row.borda_score / max_score) * 100.0 for row in visible_rows}
+        return {row.model_name: 0.0 for row, _ in visible_values}
+    return {row.model_name: (value / max_score) * 100.0 for row, value in visible_values}
 
 
 def render_leaderboard_csv(*, result: LeaderboardResult, filter_state: FilterState | None = None) -> str:
@@ -4707,6 +4847,13 @@ def _render_quantization_cell(*, result: LeaderboardResult, row: LeaderboardRow)
     if not result.include_quantization_variants:
         return ""
     return f"""<td class="px-2 py-1 text-left">{escape(row.quantization or "")}</td>"""
+
+
+def _render_rescore_cell(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
+    if not result.include_rescore_variants:
+        return ""
+    label = "rescore" if row.embedding_variant_name and "rescore" in row.embedding_variant_name.casefold() else ""
+    return f'<td data-column-key="rescore" class="px-2 py-1 text-left">{label}</td>'
 
 
 def _render_other_columns(*, result: LeaderboardResult, model_view: ModelCellView) -> str:
@@ -5132,6 +5279,8 @@ def _metric_column_label_markup(label: str) -> str:
 
 
 def _metric_column_header_parts(label: str) -> tuple[str, str]:
+    if label.startswith("M-BEIR-"):
+        return "M-BEIR", label.removeprefix("M-BEIR-")
     parts = [part for part in label.split("::") if part]
     if len(parts) >= 3:
         group_label = parts[-2].rsplit("/", 1)[-1]
@@ -5144,7 +5293,19 @@ def _metric_column_header_parts(label: str) -> tuple[str, str]:
 
 
 def _metric_column_tooltip(*, label: str, full_metric_name: str, result: LeaderboardResult) -> str:
-    if result.selected_score_group is not None:
+    if result.column_mode == "grouped":
+        base = (
+            "Grouped score breakdown column. Benchmark groups contribute one final value to the Macro score; "
+            "M-BEIR may expose its selected task or language groups as separate display columns first."
+        )
+    elif full_metric_name.startswith("MNanoBEIR::") and any(
+        selection.startswith("MNanoBEIR") for selection in result.selected_benchmarks
+    ):
+        base = (
+            "M-BEIR compact breakdown column. The 13 task means or 14 language means are visible in both "
+            "table modes. Micro still uses all 182 raw matrix cells; Macro uses one final M-BEIR score."
+        )
+    elif result.selected_score_group is not None:
         group_label = result.selected_score_group.label
         base = (
             f"{group_label} column. Scores are averaged per model over the raw benchmark rows that belong "
@@ -5178,16 +5339,24 @@ def _metric_column_labels(
 
 
 def _page_url(query: QueryState) -> str:
-    return escape(f"/?{urlencode(query, doseq=True)}", quote=True)
+    return escape(_page_path(query), quote=True)
+
+
+def _page_path(query: QueryState) -> str:
+    encoded = urlencode(query, doseq=True)
+    return f"/?{encoded}" if encoded else "/"
 
 
 def _leaderboard_url(query: str) -> str:
-    return escape(f"/leaderboard?{query}", quote=True)
+    return escape(f"/leaderboard?{query}" if query else "/leaderboard", quote=True)
 
 
 def _csv_url(query: str) -> str:
-    return escape(f"/leaderboard.csv?{query}", quote=True)
+    return escape(f"/leaderboard.csv?{query}" if query else "/leaderboard.csv", quote=True)
 
 
 def _task_breakdown_url(query: str) -> str:
-    return escape(f"/leaderboard/task-breakdown?{query}", quote=True)
+    return escape(
+        f"/leaderboard/task-breakdown?{query}" if query else "/leaderboard/task-breakdown",
+        quote=True,
+    )

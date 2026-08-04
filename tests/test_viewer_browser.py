@@ -7,8 +7,10 @@ import threading
 import time
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 import duckdb
+from fastapi.responses import HTMLResponse
 import pytest
 import uvicorn
 
@@ -18,32 +20,171 @@ from hakari_bench.viewer.store import DuckDbLocation, LocalDuckDbStore
 
 
 @pytest.mark.browser
-def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
+def test_iframe_hash_replaces_stale_query_without_changing_top_level_merge_semantics(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     playwright_sync = pytest.importorskip("playwright.sync_api")
+    monkeypatch.setenv("HAKARI_BENCH_VIEWER_FRAME_ANCESTORS", "'self'")
+    app = _create_browser_test_app(tmp_path)
 
-    db_path = tmp_path / "results.duckdb"
-    _write_browser_task_results(db_path)
-    config_dir = tmp_path / "config"
-    config_dir.mkdir()
-    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: NanoRTEB\n", encoding="utf-8")
-    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
-    docs_dir = tmp_path / "task_docs" / "docs"
-    bench_docs_dir = docs_dir / "BenchA"
-    bench_docs_dir.mkdir(parents=True)
-    (bench_docs_dir / "index.md").write_text("# BenchA\n\n## Overview\n\nBenchA overview for browser tests.\n", encoding="utf-8")
-    (bench_docs_dir / "a1.md").write_text("# BenchA / a1\n\n## Overview\n\nTask a1 overview for browser tests.\n", encoding="utf-8")
-    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir, docs_dir=docs_dir)
+    @app.get("/__test_embed")
+    def test_embed() -> HTMLResponse:
+        return HTMLResponse(
+            '<iframe id="viewer" src="/?quantization=1&amp;truncate=1#rescore=1"></iframe>',
+            headers={"Content-Security-Policy": "frame-src 'self'"},
+        )
+
+    @app.get("/__test_embed_query_only")
+    def test_embed_query_only() -> HTMLResponse:
+        return HTMLResponse(
+            '<iframe id="viewer" src="/?quantization=1"></iframe>',
+            headers={"Content-Security-Policy": "frame-src 'self'"},
+        )
 
     with _serve_app(app) as base_url:
         with playwright_sync.sync_playwright() as playwright:
             browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
             try:
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
+                leaderboard_requests: list[str] = []
+                page.on(
+                    "request",
+                    lambda request: leaderboard_requests.append(request.url)
+                    if "/leaderboard?" in request.url
+                    else None,
+                )
+
+                # A direct viewer URL keeps the established behavior: query
+                # state wins and hash state only fills missing parameters.
+                page.goto(
+                    f"{base_url}/?quantization=1&truncate=1#rescore=1",
+                    wait_until="domcontentloaded",
+                )
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                top_level_query = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert top_level_query == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+
+                # Hugging Face updates an existing iframe by replacing its hash.
+                # In that context the hash is the complete requested state, so
+                # omitted variant flags must return to their defaults.
+                leaderboard_requests.clear()
+                page.goto(f"{base_url}/__test_embed", wait_until="domcontentloaded")
+                iframe = page.frame_locator("#viewer")
+                iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
+                iframe_query = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert iframe_query == {"rescore": ["1"]}
+                assert iframe.locator('#variant-controls input[name="truncate"]').is_checked() is False
+                assert iframe.locator('#variant-controls input[name="quantization"]').is_checked() is False
+                assert iframe.locator('#variant-controls input[name="rescore"]').is_checked() is True
+
+                # An iframe without hash state still restores its query normally.
+                leaderboard_requests.clear()
+                page.goto(f"{base_url}/__test_embed_query_only", wait_until="domcontentloaded")
+                query_only_iframe = page.frame_locator("#viewer")
+                query_only_iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
+                query_only = parse_qs(urlparse(leaderboard_requests[-1]).query)
+                assert query_only == {"quantization": ["1"]}
+                assert query_only_iframe.locator(
+                    '#variant-controls input[name="quantization"]'
+                ).is_checked() is True
+            finally:
+                browser.close()
+
+
+@pytest.mark.browser
+def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                leaderboard_requests: list[str] = []
+                page.on(
+                    "request",
+                    lambda request: leaderboard_requests.append(request.url)
+                    if "/leaderboard?" in request.url
+                    else None,
+                )
                 page.goto(f"{base_url}/#view=Overall&quantization=1&truncate=1&task_z_scores=1", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
 
+                assert leaderboard_requests
+                assert "view=Overall" not in leaderboard_requests[0]
+                assert "sort=borda_score" not in leaderboard_requests[0]
+                assert "direction=desc" not in leaderboard_requests[0]
+                assert "quantization=1" in leaderboard_requests[0]
+                assert "truncate=1" in leaderboard_requests[0]
+                assert "task_z_scores=1" in leaderboard_requests[0]
                 assert page.evaluate("() => Boolean(window.__hakariApplyHashQueryState && window.__hakariBindModelDetails)")
                 assert page.locator("main script:not([src])").count() == 0
+                page.locator("#filter-controls-panel").evaluate("(element) => { element.open = true; }")
+                model_filter = page.locator("#model-filter-input")
+                model_filter.fill("model/a")
+                model_filter.press("Enter")
+                page.wait_for_url(lambda url: "model_filter=model%2Fa" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                compact_search = page.evaluate("() => window.location.search")
+                assert "model_filter=model%2Fa" in compact_search
+                assert "view=Overall" not in compact_search
+                assert "sort=borda_score" not in compact_search
+                assert "direction=desc" not in compact_search
+                assert "filters=1" not in compact_search
+                assert "model_type_filter=" not in compact_search
+                model_filter.fill("")
+                model_filter.press("Enter")
+                page.wait_for_url(lambda url: "model_filter=" not in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                task_columns = page.locator('#column-controls input[name="columns"][value="task"]')
+                grouped_columns = page.locator('#column-controls input[name="columns"][value="grouped"]')
+                page.locator("#column-controls label", has_text="Task columns").click()
+                page.wait_for_url(lambda url: "columns=task" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert task_columns.is_checked() is True
+                assert grouped_columns.is_checked() is False
+                assert page.locator('[aria-label="Score aggregation: Micro (locked by Task columns)"]').count() == 1
+                assert page.get_by_role("button", name="Macro", exact=True).is_disabled() is True
+                task_table = page.locator(".leaderboard-table").first
+                task_table.locator('th[data-column-key="metric:a2"] button').click()
+                page.wait_for_url(lambda url: "sort=metric%3Aa2" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                first_task_metric = task_table.locator('thead th[data-column-key^="metric:"]').first
+                assert first_task_metric.get_attribute("data-column-key") == "metric:a2"
+                task_score_bars = task_table.locator('.model-score-bar[data-score-bar-target="metric:a2"]')
+                assert task_score_bars.count() > 0
+                assert task_score_bars.evaluate_all(
+                    "bars => Math.max(...bars.map((bar) => Number(bar.value)))"
+                ) == pytest.approx(100.0)
+
+                page.locator("#column-controls label", has_text="Grouped columns").click()
+                page.wait_for_url(
+                    lambda url: "columns=grouped" in url and "score=macro" in url,
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert task_columns.is_checked() is False
+                assert grouped_columns.is_checked() is True
+                assert page.locator('[aria-label="Score aggregation: Macro (locked by Grouped columns)"]').count() == 1
+                assert page.get_by_role("button", name="Micro", exact=True).is_disabled() is True
+                grouped_header_style = page.locator("th .metric-header-full-label").first.evaluate(
+                    """(el) => ({
+                        overflowWrap: getComputedStyle(el).overflowWrap,
+                        textOverflow: getComputedStyle(el).textOverflow,
+                        whiteSpace: getComputedStyle(el).whiteSpace,
+                    })"""
+                )
+                assert grouped_header_style == {
+                    "overflowWrap": "anywhere",
+                    "textOverflow": "clip",
+                    "whiteSpace": "normal",
+                }
                 section_icon_state = page.locator("h1 svg.section-heading-icon[data-icon='hakari-bench']").first.evaluate(
                     """(el) => ({
                         width: parseFloat(getComputedStyle(el).width),
@@ -352,8 +493,352 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 nano_rteb_label = nano_rteb_button.locator("xpath=ancestor::*[@data-doc-label-group='benchmark']").first
                 active_classes = nano_rteb_label.get_attribute("class") if nano_rteb_label.count() else nano_rteb_button.get_attribute("class")
                 assert "border-cyan-700" in (active_classes or "")
+
+                restoration_cases = [
+                    ("/", {}, False),
+                    ("/?view=Overall&sort=borda_score&direction=desc&score=micro&task_z_scores=0", {}, False),
+                    (
+                        "/#view=Overall&sort=borda_score&direction=desc&model_filter=model%2Fa",
+                        {"model_filter": ["model/a"]},
+                        True,
+                    ),
+                    (
+                        "/?view=Overall&sort=borda_score&direction=desc&columns=task&score=macro",
+                        {"columns": ["task"]},
+                        False,
+                    ),
+                    (
+                        "/?view=Overall&sort=borda_score&direction=desc&columns=grouped&score=micro",
+                        {"score": ["macro"], "columns": ["grouped"]},
+                        False,
+                    ),
+                    (
+                        "/?view=Overall%20%28EN%29&lang_filter=en&sort=borda_score&direction=desc",
+                        {"lang_filter": ["en"]},
+                        False,
+                    ),
+                    (
+                        "/?quantization=1&filters=1&quant_filter=int8",
+                        {"quantization": ["1"], "filters": ["1"], "quant_filter": ["int8"]},
+                        False,
+                    ),
+                    (
+                        "/?sort=macro_mean&direction=asc",
+                        {"sort": ["macro_mean"], "direction": ["asc"]},
+                        False,
+                    ),
+                    (
+                        "/?columns=grouped&columns=task&score=macro",
+                        {"columns": ["task"]},
+                        False,
+                    ),
+                    (
+                        "/?task_ranks=1",
+                        {"columns": ["task"], "task_ranks": ["1"]},
+                        False,
+                    ),
+                    (
+                        "/?result_view=chart&chart_x=quantization",
+                        {"result_view": ["chart"], "chart_x": ["quantization"], "quantization": ["1"]},
+                        False,
+                    ),
+                    (
+                        "/?view=Custom&bench=BenchA&bench=NanoRTEB",
+                        {"view": ["Custom"], "bench": ["BenchA", "NanoRTEB"]},
+                        False,
+                    ),
+                    (
+                        "/?filters=1&quant_filter=__none_selected__&quantization=1",
+                        {
+                            "quantization": ["1"],
+                            "filters": ["1"],
+                            "quant_filter": ["__none_selected__"],
+                        },
+                        False,
+                    ),
+                ]
+                for path, expected_query, uses_hash in restoration_cases:
+                    leaderboard_requests.clear()
+                    page.goto("about:blank")
+                    page.goto(f"{base_url}{path}", wait_until="domcontentloaded")
+                    page.wait_for_selector(
+                        "#leaderboard-panel table, #leaderboard-panel #plot-controls",
+                        timeout=15_000,
+                    )
+                    page.locator("#leaderboard-loading-toast.htmx-request").wait_for(
+                        state="detached",
+                        timeout=15_000,
+                    )
+                    restored_query = (
+                        parse_qs(urlparse(leaderboard_requests[-1]).query)
+                        if uses_hash
+                        else parse_qs(urlparse(page.url).query)
+                    )
+                    assert restored_query == expected_query, path
+
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked() is True
+                assert page.locator('#filter-controls input[name="quant_filter"][value="int8"]').is_checked() is False
+                assert page.locator('#filter-controls input[name="quant_filter"][value="binary"]').is_checked() is False
             finally:
                 browser.close()
+
+
+@pytest.mark.browser
+def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                page.goto(f"{base_url}/", wait_until="domcontentloaded")
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                page.get_by_role("tab", name="Chart").click()
+                page.wait_for_url(lambda url: "result_view=chart" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#plot-controls").wait_for(timeout=15_000)
+                page.wait_for_timeout(100)
+                for name in ("chart_y", "chart_x", "chart_color"):
+                    values = page.locator(f'#plot-controls select[name="{name}"] option').evaluate_all(
+                        "options => options.map((option) => option.value)"
+                    )
+                    assert len(values) == len(set(values)), name
+
+                page.locator('#plot-controls select[name="chart_x"]').select_option("quantization")
+                page.wait_for_timeout(500)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                chart_query = parse_qs(urlparse(page.url).query)
+                assert chart_query == {
+                    "result_view": ["chart"],
+                    "chart_x": ["quantization"],
+                    "quantization": ["1"],
+                }
+
+                page.get_by_role("tab", name="Table").click()
+                page.wait_for_url(lambda url: "result_view=" not in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert parse_qs(urlparse(page.url).query) == {"quantization": ["1"]}
+
+                page.locator("#column-controls label", has_text="Task ranks").click()
+                page.wait_for_url(
+                    lambda url: "task_ranks=1" in url and "columns=task" in url,
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert "score" not in parse_qs(urlparse(page.url).query)
+                assert page.locator('#column-controls input[name="columns"][value="task"]').is_checked()
+
+                page.locator("#column-controls label", has_text="Others").click()
+                page.wait_for_url(lambda url: "other_columns=1" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert page.locator('th[data-column-key="license"]:visible').count() >= 1
+                assert page.locator('th[data-column-key="model_type"]:visible').count() >= 1
+
+                page.locator("#filter-controls-panel").evaluate("element => { element.open = true; }")
+                int8_filter = page.locator(
+                    '#filter-controls input[value="int8"]:is([name="quant_filter"], [data-facet-parameter="quant_filter"])'
+                )
+                binary_filter = page.locator(
+                    '#filter-controls input[value="binary"]:is([name="quant_filter"], [data-facet-parameter="quant_filter"])'
+                )
+                assert int8_filter.is_checked()
+                assert binary_filter.is_checked()
+                int8_filter.uncheck()
+                page.wait_for_url(lambda url: "quant_filter=" in url and "filters=1" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                filtered_query = parse_qs(urlparse(page.url).query)
+                assert filtered_query["quant_filter"] == ["__none__", "binary"]
+                assert "model_type_filter" not in filtered_query
+
+                int8_filter.check()
+                page.wait_for_url(lambda url: "quant_filter=" not in url and "filters=1" not in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.wait_for_function(
+                    "() => document.querySelector('#filter-controls')?.dataset.filtersActive === 'false'",
+                    timeout=15_000,
+                )
+                unfiltered_row_count = page.locator(".leaderboard-table tbody tr:not([hidden])").count()
+
+                page.locator("#filter-controls-panel").evaluate("element => { element.open = true; }")
+                page.locator('#filter-controls input[name="active_params_max"]').fill("0.000015")
+                page.locator('#filter-controls input[name="active_params_max"]').press("Enter")
+                page.wait_for_url(lambda url: "active_params_max=0.000015" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.wait_for_function(
+                    "() => !window.location.search.includes('model_filter=')",
+                    timeout=15_000,
+                )
+                filtered_row_count = page.locator(".leaderboard-table tbody tr:not([hidden])").count()
+                assert 0 < filtered_row_count < unfiltered_row_count
+
+            finally:
+                browser.close()
+
+
+@pytest.mark.browser
+def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope(tmp_path: Path) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                page.goto(f"{base_url}/", wait_until="domcontentloaded")
+                page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                assert page.locator('#leaderboard-panel th[data-column-key="rescore"]').count() == 0
+
+                def visible_variants() -> set[str | None]:
+                    values = page.locator("#leaderboard-panel [data-model-metadata]").evaluate_all(
+                        "elements => elements.map(element => JSON.parse(element.dataset.modelMetadata).embedding_variant_name)"
+                    )
+                    return set(values)
+
+                def toggle(name: str) -> None:
+                    page.locator(f'#variant-controls input[name="{name}"]').locator("xpath=ancestor::label").click()
+                    page.wait_for_url(lambda url: parse_qs(urlparse(url).query).get(name) == ["1"], timeout=15_000)
+                    page.locator("#leaderboard-loading-toast.htmx-request").wait_for(
+                        state="detached",
+                        timeout=15_000,
+                    )
+
+                toggle("rescore")
+                assert parse_qs(urlparse(page.url).query) == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked()
+                assert page.locator('#variant-controls input[name="truncate"]').is_checked()
+                assert visible_variants() == {
+                    None,
+                    "truncate_dim_256",
+                    "binary_rescore",
+                    "truncate_dim_256_binary_rescore",
+                }
+                assert page.locator('#leaderboard-panel th[data-column-key="rescore"]').first.inner_text().casefold() == "rescore"
+                rescore_rows = page.locator("#leaderboard-panel table").first.locator("tbody tr").evaluate_all(
+                    """rows => rows.map(row => ({
+                        variant: JSON.parse(row.querySelector('[data-model-metadata]').dataset.modelMetadata)
+                            .embedding_variant_name,
+                        label: row.querySelector('td[data-column-key="rescore"]').textContent.trim(),
+                    }))"""
+                )
+                assert rescore_rows
+                assert all(
+                    item["label"] == ("rescore" if item["variant"] and "rescore" in item["variant"] else "")
+                    for item in rescore_rows
+                )
+                assert any(item["label"] == "rescore" for item in rescore_rows)
+                assert any(item["label"] == "" for item in rescore_rows)
+                assert "binary_rescore" not in page.locator("#leaderboard-panel table").first.inner_text()
+                truncated_rescore_row = page.locator(
+                    '#leaderboard-panel [data-model-metadata*="truncate_dim_256_binary_rescore"]'
+                ).first.locator("xpath=ancestor::tr")
+                assert "rescore" in truncated_rescore_row.inner_text()
+                for theme in ("light", "dark"):
+                    page.evaluate(
+                        "theme => { document.documentElement.classList.remove('light', 'dark'); "
+                        "document.documentElement.classList.add(theme); }",
+                        theme,
+                    )
+                    badge_colors = truncated_rescore_row.evaluate(
+                        """row => Object.fromEntries(
+                            ["dimension", "quantization", "rescore"].map(name => {
+                                const style = getComputedStyle(row.querySelector(`.${name}-badge`));
+                                return [name, {
+                                    color: style.color,
+                                    background: style.backgroundColor,
+                                    borderWidth: style.borderWidth,
+                                    boxShadow: style.boxShadow,
+                                    fontFamily: style.fontFamily,
+                                    fontSize: style.fontSize,
+                                    fontWeight: style.fontWeight,
+                                    lineHeight: style.lineHeight,
+                                }];
+                            })
+                        )"""
+                    )
+                    assert badge_colors["rescore"]["color"] != badge_colors["dimension"]["color"], theme
+                    assert badge_colors["rescore"]["color"] != badge_colors["quantization"]["color"], theme
+                    assert badge_colors["rescore"]["background"] != badge_colors["dimension"]["background"], theme
+                    assert badge_colors["rescore"]["borderWidth"] == "0px", theme
+                    assert badge_colors["rescore"]["boxShadow"] == "none", theme
+                    for font_property in ("fontFamily", "fontSize", "fontWeight", "lineHeight"):
+                        assert badge_colors["rescore"][font_property] == badge_colors["quantization"][font_property], (
+                            theme,
+                            font_property,
+                        )
+
+                help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
+                assert help_trigger.locator(
+                    'xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " toggle-chip ")]'
+                ).count() == 1
+                help_trigger.click()
+                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
+                assert page.locator("#help-summary-heading").inner_text() == "Rescore"
+                assert "Enable Quantization with Rescore" in page.locator("#help-summary-details").inner_text()
+                assert page.locator('#variant-controls input[name="rescore"]').is_checked()
+                page.locator("#help-summary-modal").evaluate("modal => modal.close()")
+
+                page.locator('#variant-controls input[name="rescore"]').locator("xpath=ancestor::label").click()
+                page.wait_for_url(
+                    lambda url: "rescore" not in parse_qs(urlparse(url).query),
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert parse_qs(urlparse(page.url).query) == {
+                    "quantization": ["1"],
+                    "truncate": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked()
+                assert page.locator('#variant-controls input[name="truncate"]').is_checked()
+
+                page.locator('#variant-controls input[name="quantization"]').locator("xpath=ancestor::label").click()
+                page.wait_for_url(
+                    lambda url: "quantization" not in parse_qs(urlparse(url).query),
+                    timeout=15_000,
+                )
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                assert visible_variants() == {None, "truncate_dim_256"}
+
+                toggle("rescore")
+                assert parse_qs(urlparse(page.url).query) == {
+                    "truncate": ["1"],
+                    "rescore": ["1"],
+                }
+                assert page.locator('#variant-controls input[name="quantization"]').is_checked() is False
+                assert visible_variants() == {None, "truncate_dim_256"}
+            finally:
+                browser.close()
+
+
+def _create_browser_test_app(tmp_path: Path):
+    db_path = tmp_path / "results.duckdb"
+    _write_browser_task_results(db_path)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: NanoRTEB\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    docs_dir = tmp_path / "task_docs" / "docs"
+    bench_docs_dir = docs_dir / "BenchA"
+    bench_docs_dir.mkdir(parents=True)
+    (bench_docs_dir / "index.md").write_text(
+        "# BenchA\n\n## Overview\n\nBenchA overview for browser tests.\n",
+        encoding="utf-8",
+    )
+    (bench_docs_dir / "a1.md").write_text(
+        "# BenchA / a1\n\n## Overview\n\nTask a1 overview for browser tests.\n",
+        encoding="utf-8",
+    )
+    return create_app(
+        store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)),
+        config_dir=config_dir,
+        docs_dir=docs_dir,
+    )
 
 
 def _write_browser_task_results(db_path: Path) -> None:
@@ -415,6 +900,78 @@ def _write_browser_task_results(db_path: Path) -> None:
                         "truncate_dim_256",
                         256,
                         None,
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.86,
+                        10,
+                        12,
+                        8192,
+                        "binary_rescore",
+                        384,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.66,
+                        10,
+                        12,
+                        8192,
+                        "binary_rescore",
+                        384,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "ar",
+                        "a2",
+                        "a2",
+                        0.58,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256_binary_rescore",
+                        256,
+                        "binary",
+                    )
+                ),
+                _viewer_task_result_row(
+                    (
+                        "model/a",
+                        "BenchA",
+                        "bench/a",
+                        "BenchA",
+                        "en",
+                        "a1",
+                        "a1",
+                        0.80,
+                        10,
+                        12,
+                        8192,
+                        "truncate_dim_256_binary_rescore",
+                        256,
+                        "binary",
                     )
                 ),
                 _viewer_task_result_row(

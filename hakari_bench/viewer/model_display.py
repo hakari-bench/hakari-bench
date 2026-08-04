@@ -152,6 +152,8 @@ def _variant_label(row: LeaderboardRow, *, original_dim: int | None, model_type_
     truncate_dim = _truncate_dim(row)
     if truncate_dim is not None:
         return f"{truncate_dim}d <- {original_dim}" if original_dim is not None else f"{truncate_dim}d"
+    if _is_rescore_variant(row):
+        return None
     if model_type_key == "sparse":
         sparse_label = _sparse_active_dims_label(variant_name)
         if sparse_label is not None:
@@ -295,15 +297,22 @@ def _model_metadata(
     }
 
 
-def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, borda_score_bar_width: float | None = None) -> str:
+def render_model_name_cell(
+    row: LeaderboardRow,
+    model_view: ModelCellView,
+    *,
+    score_bar_width: float | None = None,
+    score_bar_target: str = "borda_score",
+) -> str:
     metadata_json = json.dumps(model_view.metadata, ensure_ascii=False, separators=(",", ":"))
     display_name = model_view.display_name
     name_attrs = f' aria-label="{escape(model_view.display_name, quote=True)}"'
-    borda_bar_html = ""
-    if borda_score_bar_width is not None:
-        clamped_width = min(100.0, max(0.0, borda_score_bar_width))
-        borda_bar_html = (
-            f'<progress class="borda-score-bar" value="{clamped_width:.2f}" max="100"'
+    score_bar_html = ""
+    if score_bar_width is not None:
+        clamped_width = min(100.0, max(0.0, score_bar_width))
+        score_bar_html = (
+            f'<progress class="model-score-bar" value="{clamped_width:.2f}" max="100"'
+            f' data-score-bar-target="{escape(score_bar_target, quote=True)}"'
             ' aria-hidden="true"></progress>'
         )
     badges = []
@@ -337,6 +346,13 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
                 classes="quantization-badge bg-zinc-100 text-amber-800",
             )
         )
+    if _is_rescore_variant(row):
+        badges.append(
+            _render_badge(
+                label="rescore",
+                classes="rescore-badge bg-zinc-100 text-cyan-800",
+            )
+        )
     if model_view.variant_label and model_view.truncated_embedding_dim is None:
         badges.append(
             _render_badge(
@@ -354,8 +370,12 @@ def render_model_name_cell(row: LeaderboardRow, model_view: ModelCellView, *, bo
       <div class="relative z-10 flex min-w-0 flex-wrap items-center gap-1">
         <button type="button" class="model-detail-trigger min-w-0 [overflow-wrap:anywhere] text-left text-[0.8125rem] leading-tight font-medium underline-offset-2 hover:underline"
                 data-model-metadata="{escape(metadata_json)}"{name_attrs}>{escape(display_name)}</button>{badge_html}
-      </div>{borda_bar_html}
+      </div>{score_bar_html}
     </td>"""
+
+
+def _is_rescore_variant(row: LeaderboardRow) -> bool:
+    return bool(row.embedding_variant_name and "rescore" in row.embedding_variant_name.casefold())
 
 
 def _language_support_label(row: LeaderboardRow) -> str | None:

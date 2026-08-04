@@ -2,7 +2,7 @@ id: hotchpotch/bekko-embedding-v1-a25m
 source:
   type: huggingface
   name: hotchpotch/bekko-embedding-v1-a25m
-  revision: f2e4e3555fd9452984578ce112e72ee64e25ddd8
+  revision: 8acf4b7403ae799684467456c6102529d023e2f2
 method: dense
 license:
   id: mit
@@ -26,12 +26,9 @@ runtime:
   max_seq_length: 8192
   dtype: bf16
   trust_remote_code: false
-  attn_implementation: sdpa
+  attn_implementation: flash_attention_2
   backend_library: sentence-transformers
   similarity_fn_name: cosine
-prompts:
-  query_prompt_name: query
-  document_prompt_name: passage
 language_support:
   category: multilingual
   evidence:

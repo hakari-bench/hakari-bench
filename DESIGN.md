@@ -110,6 +110,30 @@ components:
       Efficiency variants toggles preserve the active Filter results state,
       including Dims and Quantization selections, so toggling additional variant
       rows does not clear visible filters.
+      Rescore is an additive refinement of Quantization, not an independent row
+      category: Quantization + Rescore shows full-dimension compressed-first-pass
+      rescore rows, and adding Dims also shows truncated-dimension rescore rows.
+      Rescore alone, or Dims + Rescore without Quantization, intentionally adds
+      no rows when restored from a URL. To avoid an apparently inert first click,
+      turning on Rescore while both prerequisites are off also turns on Dims and
+      Quantization; turning Rescore off never changes them. If either prerequisite
+      is already on, preserve that explicit selection. Explain this behavior from
+      a dedicated question-mark help trigger beside Rescore. Keep that trigger
+      inside the Rescore chip's visual boundary, matching the integrated help
+      treatment used by benchmark-scope buttons.
+      Rescore rows must retain a visible `rescore` badge in addition to their
+      dimension and quantization badges; never expose internal names such as
+      `binary_rescore` or `int8_rescore`. Use the
+      purple variant-metadata token for the Rescore badge's text and tint in
+      both light and dark themes so it does not read like the cyan dimension
+      badge or amber quantization badge. Keep it borderless like the other
+      compact metadata badges.
+      M-BEIR(task) and M-BEIR(lang) are mutually exclusive representations of
+      one benchmark scope and share the same integrated `or` selector treatment
+      used by Task columns and Grouped columns.
+      Benchmark scope and Task facets are two cuts over the same task population,
+      so they share one bordered panel. Preserve their existing labels and controls,
+      and separate Task facets from the scope controls with only a horizontal border.
       The main filter controls are arranged as two aligned flex lanes: left lane
       Model, Dims, Active params (M), and Query length; right lane Task,
       Quantization, Total params (M), and Document length.
@@ -150,7 +174,21 @@ components:
       appended at the far right so the core score columns remain stable. These
       cells must stay one line using short labels such as Apache, CC BY-NC,
       OpenAI, and Late int.; expose the full label through hover tooltip and
-      Model Details.
+      Model Details. Task columns and Grouped columns form one visibly connected,
+      mutually exclusive choice. Task columns uses Micro scoring and shows raw
+      task units for ordinary benchmarks; Grouped columns uses Macro scoring and
+      shows one column per selected benchmark group. M-BEIR is the deliberate
+      exception because its 13-task x 14-language matrix must never become 182
+      visible columns. Both table modes expand M-BEIR only
+      along its selected inner axis: task mode uses 13 columns such as
+      `M-BEIR-arguana`, while language mode uses 14 columns such as `M-BEIR-ar`.
+      The inner columns are display breakdowns. Micro still weights all 182 raw
+      result cells, while Macro averages M-BEIR into one benchmark contribution.
+      Every Grouped column uses its benchmark-group documentation tooltip and
+      wraps its complete label within the column instead of ellipsizing it. When
+      a Task or Grouped metric header is selected for sorting, move that metric
+      column to the front of the metric-column region so the sorted values stay
+      visible beside the fixed summary columns.
   model-details:
     purpose: Modal metadata for a single result row.
     treatment: Prefer model-card metadata when present. Order fields as Language,
@@ -211,8 +249,11 @@ components:
       switch with the same database icon used by the Benchmark scope control;
       avoid a bare slash before the scope label.
   model-score-bar:
-    purpose: Show relative Borda strength behind the sticky model name.
-    treatment: Subtle background bar scaled by visible max score; never competes with text.
+    purpose: Show the active score-sort target behind the sticky model name.
+    treatment: Use Borda, Mean, Macro, Micro, or the selected Task/Grouped raw
+      metric score when that score column controls sorting. Fall back to Borda
+      for non-score sorts. Scale against the visible maximum and never compete
+      with text.
   score-cell:
     purpose: Show score, optional task rank, z-score, and variant deltas.
     treatment: Numeric alignment and compact heat color; rank decoration is minimal.
@@ -335,12 +376,18 @@ read as an analytical instrument rather than a general-purpose dashboard.
   background fill, rounded radius, and enough padding to create a stable target.
 - Active controls should use the stronger active surface and accent text or
   border.
-- Boolean display and variant toggles (Task columns, STD, Task ranks, Dims,
+- Boolean display and variant toggles (STD, Task ranks, Dims,
   Quantization, Rescore, Sparse pruning) use the `.toggle-chip` style: a control
   chip whose checked state adopts the active surface and accent text, matching the
   selection chips rather than a raw native checkbox. Keep the real checkbox for
   form submission and focus, visually hidden, with a visible focus ring on the
   chip.
+- Task columns and Grouped columns use the same chip treatment inside one
+  bordered choice group with a short `or` separator. Selecting either clears
+  the other; selecting the active chip again may return to the summary table.
+  While either mode is active, the incompatible Score choice is visibly
+  disabled because Task columns is always Micro and Grouped columns is always
+  Macro.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
@@ -425,18 +472,22 @@ read as an analytical instrument rather than a general-purpose dashboard.
   page scroll. Do not "fix" this by removing the horizontal wrapper — that makes a
   wide table scroll the whole page and drags the footer/chrome off-screen.
 - Keep model name sticky and readable during horizontal scroll.
-- Keep task columns compact. Repeated suite prefixes may be removed from the
-  subtask line when the remaining label is non-empty.
+- Keep task columns narrow, but allow Task and Grouped headers to grow vertically
+  and wrap long names. Never replace part of a metric label with an ellipsis.
+  Repeated suite prefixes may be removed from the subtask line when the remaining
+  label is non-empty.
 - When a task label has a suite and subtask, use a two-line header treatment
-  rather than `Suite::Task`.
+  rather than `Suite::Task`. Treat both lines as one sort button so clicking the
+  suite/dataset line or the task line performs the same column sort.
 - Documentation icons should sit beside the specific task or suite label they
-  explain.
+  explain and remain a separate control from the two-line sort button.
 - Model-name hover and row hover backgrounds should match, including sticky
   columns.
-- Use Borda background bars as context, not as chart decoration. Bars should be
-  subtle, use the accent color, and scale relative to the visible maximum Borda
-  score so the top visible row reaches 100% without moving the minimum score to
-  zero.
+- Use model-name background bars as context, not as chart decoration. When a
+  score column controls sorting, bars use that Borda, Mean, Macro, Micro, Task,
+  or Grouped raw score; non-score sorts fall back to Borda. Bars should be
+  subtle, use the accent color, and scale relative to the visible maximum score
+  so the top visible score reaches 100% without moving the minimum score to zero.
 - If there is only one visible row, the bar can fill to 100%; if there are no
   visible rows, no bar should render.
 
@@ -470,6 +521,9 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Keep row metadata short. Prefer `Dims`, `Quant`, `Rescore`, and
   `Sparse pruning` over longer technical labels when the displayed values are
   compact.
+- Show a `Rescore` table column immediately after `Quant` only while the Rescore
+  efficiency-variant toggle is active. Put `rescore` in that column for rescore
+  variants and leave ordinary rows empty so mixed result sets remain scannable.
 - Model type, dimension, variant, and quantization labels use the same
   semi-transparent active-control background so light-mode labels stay visible
   against both white and faint-cyan table rows. Dimension and variant labels

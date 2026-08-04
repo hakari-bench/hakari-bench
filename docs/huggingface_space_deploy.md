@@ -78,12 +78,18 @@ refreshed:
 2. Rebuild the DuckDB from the current remote result JSON.
 3. Publish `duckdb/hakari_bench.duckdb` to
    `hakari-bench/leaderboard_database`.
-4. Run local validation with `uv run tox`.
-5. Push `hf-space-docker` so GitHub Actions publishes
+4. Check whether the rebuilt DuckDB contains Hugging Face model ids that are
+   missing from the Space repository's `models.py`. Whenever leaderboard model
+   coverage increases, regenerate and commit `models.py` as described below.
+   Do this check for every leaderboard refresh that adds or replaces model
+   results; do not assume that updating the DuckDB or Docker image updates this
+   static file.
+5. Run local validation with `uv run tox`.
+6. Push `hf-space-docker` so GitHub Actions publishes
    `ghcr.io/hakari-bench/hakari-bench-leaderboard:hf-space-docker-latest`.
-6. Factory reboot the Space so it pulls the rolling image tag and redownloads
+7. Factory reboot the Space so it pulls the rolling image tag and redownloads
    the latest DuckDB.
-7. Verify both public URLs and compare CSV output when possible.
+8. Verify both public URLs and compare CSV output when possible.
 
 The result sync helper can build the DuckDB directly from the private results
 dataset. Prefer the Xet backend for the large result dataset; it uses
@@ -167,12 +173,40 @@ The app downloads the current DuckDB leaderboard database at startup and serves 
 EOF
 ```
 
-Create or update the static model-link file from the latest local leaderboard
-DuckDB cache. The Space app does not import this file; Hugging Face scans the
-literal model ids to link this Space from model repository pages.
+Create or update the static model-link file from the exact DuckDB being
+deployed. The Space app does not import this file; Hugging Face scans the
+literal model ids to link this Space from model repository pages. Therefore,
+every deployment that adds leaderboard model coverage must explicitly check
+and update `models.py`; rebuilding the DuckDB or container image alone is not
+enough.
 
 ```bash
-uv run python scripts/generate_space_models_py.py --output "$SPACE_WORKDIR/models.py"
+uv run python scripts/generate_space_models_py.py \
+  --duckdb-path output/clean-hf-results-duckdb/hakari-bench__results__xet/hakari_bench.duckdb \
+  --output "$SPACE_WORKDIR/models.py"
+```
+
+Before committing, verify that each newly supported Hugging Face model id is
+present, that previously listed models were not removed unexpectedly, and that
+the diff contains only the intended model-link changes:
+
+```bash
+grep -F 'namespace/new-model-id' "$SPACE_WORKDIR/models.py"
+git -C "$SPACE_WORKDIR" diff --stat -- models.py
+git -C "$SPACE_WORKDIR" diff -- models.py
+```
+
+After pushing the Space repository, fetch `models.py` from the pushed revision
+or inspect it on the Hub and confirm the new id again. Also confirm that the
+Space returns to `RUNNING` and that the model appears in the public leaderboard.
+The generated file should remain the complete list derived from the deployed
+DuckDB, not a hand-maintained list containing only the newest models.
+
+If the generated file has no diff, record that the check was performed and do
+not create an empty `models.py` commit solely for this step.
+
+```bash
+git -C "$SPACE_WORKDIR" status --short -- models.py
 ```
 
 Create the Space Dockerfile:
@@ -284,7 +318,9 @@ PY
 
 ## Runtime Configuration
 
-The viewer image sets these defaults:
+The application defaults to the public leaderboard dataset and DuckDB path.
+The viewer image additionally places its installed viewer database under the
+persistent `/data` mount:
 
 ```text
 HAKARI_BENCH_VIEWER_DATA_DIR=/data/viewer

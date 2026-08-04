@@ -138,6 +138,15 @@ SQL examples.
 ## 5. Open The Viewer
 
 ```bash
+uv run hakari-bench web
+```
+
+With no DuckDB source option, the viewer checks the latest public database from
+`hakari-bench/leaderboard_database` and caches it under
+`~/.cache/hakari-bench/duckdb/`. To inspect the local database built in the
+previous step instead, run:
+
+```bash
 uv run hakari-bench web \
   --source-duckdb-path output/hakari-results/hakari_bench.duckdb
 ```

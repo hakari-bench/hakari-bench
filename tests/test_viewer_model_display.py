@@ -41,10 +41,43 @@ def test_render_model_name_cell_uses_metadata_json_and_compact_badges() -> None:
     assert "&quot;trust_remote_code&quot;:true" in html
     assert ">768d</span>" in html
     assert ">binary</span>" in html
-    assert ">binary_rescore</span>" in html
+    assert ">rescore</span>" in html
+    assert ">binary_rescore</span>" not in html
     assert "quantization-badge bg-zinc-100 text-amber-800" in html
-    assert "variant-badge bg-zinc-100 text-cyan-800" in html
+    assert "rescore-badge bg-zinc-100 text-cyan-800" in html
     assert "variant-badge bg-zinc-100 text-amber-800" not in html
+
+
+def test_render_model_name_cell_marks_truncated_rescore_as_rescore() -> None:
+    base = LeaderboardRow(
+        borda_rank=1,
+        mean_rank=1,
+        model_name="google/gemini-embedding-2",
+        borda_score=100,
+        mean_score=90,
+        task_count=1,
+        embedding_dim=3072,
+    )
+    row = LeaderboardRow(
+        borda_rank=2,
+        mean_rank=2,
+        model_name="google/gemini-embedding-2 (1536 dims, binary)",
+        source_model_name="google/gemini-embedding-2",
+        borda_score=99,
+        mean_score=89,
+        task_count=1,
+        embedding_variant_name="truncate_dim_1536_binary_rescore",
+        embedding_dim=1536,
+        quantization="binary",
+    )
+    model_view = model_cell_views([base, row])[row.model_name]
+
+    html = render_model_name_cell(row, model_view)
+
+    assert ">1536d &lt;- 3072</span>" in html
+    assert ">binary</span>" in html
+    assert ">rescore</span>" in html
+    assert "rescore-badge bg-zinc-100 text-cyan-800" in html
 
 
 def test_render_model_name_cell_allows_long_visible_model_name_to_wrap() -> None:

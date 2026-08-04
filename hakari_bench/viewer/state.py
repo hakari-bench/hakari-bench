@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 import math
 
@@ -17,7 +18,12 @@ from hakari_bench.viewer.variant_display import variant_display_flags_from_value
 QueryValue = str | list[str]
 QueryState = dict[str, QueryValue]
 
+DEFAULT_VIEW_NAME = "Overall"
+DEFAULT_SORT = "borda_score"
+DEFAULT_DIRECTION = "desc"
+
 RESULT_VIEW_VALUES = {"table", "chart"}
+COLUMN_MODE_VALUES = {"task", "grouped"}
 PLOT_SCORE_FIELDS = {"borda_score", "macro_mean", "micro_mean"}
 PLOT_NONE_FIELD = "none"
 PLOT_AXIS_FIELDS = {
@@ -32,6 +38,7 @@ PLOT_AXIS_FIELDS = {
     "sparse_document_dims",
 }
 PLOT_ENCODING_FIELDS = {*PLOT_AXIS_FIELDS, PLOT_NONE_FIELD}
+FILTER_NONE_VALUE = "__none_selected__"
 
 
 @dataclass(frozen=True)
@@ -71,6 +78,51 @@ class FilterState:
         return bool(self.query_len_min or self.query_len_max or self.doc_len_min or self.doc_len_max)
 
 
+def canonical_query_state(query: Mapping[str, QueryValue], *, viewer_config: ViewerConfig) -> QueryState:
+    """Return the shortest URL state that restores the same viewer behavior.
+
+    The normalized request state is intentionally complete enough for server
+    execution. URL state is different: route defaults and values implied by
+    another control are omitted, while non-default choices and dependencies
+    such as Grouped columns requiring Macro remain explicit.
+    """
+
+    canonical: QueryState = {
+        key: list(value) if isinstance(value, list) else value
+        for key, value in query.items()
+        if value != "" and value != []
+    }
+    default_view = viewer_config.overall.name
+    view = query_string(canonical.get("view", default_view))
+    if view == default_view:
+        canonical.pop("view", None)
+    if query_string(canonical.get("sort", DEFAULT_SORT)) == DEFAULT_SORT:
+        canonical.pop("sort", None)
+    if query_string(canonical.get("direction", DEFAULT_DIRECTION)) == DEFAULT_DIRECTION:
+        canonical.pop("direction", None)
+    if canonical.get("task_z_scores") == "0":
+        canonical.pop("task_z_scores", None)
+
+    column_mode = optional_query_string(canonical.get("columns"))
+    if column_mode == "task":
+        canonical.pop("score", None)
+    elif column_mode == "grouped":
+        canonical["score"] = "macro"
+    elif canonical.get("score") == "micro":
+        canonical.pop("score", None)
+
+    if view == "Overall (EN)":
+        canonical.pop("view", None)
+        canonical["lang_filter"] = ["en"]
+
+    group = optional_query_string(canonical.get("group"))
+    benchmark = viewer_config.benchmark_for_view(view)
+    default_group = benchmark.resolved_score_groups[0].name if benchmark is not None else None
+    if group is not None and group == default_group:
+        canonical.pop("group", None)
+    return canonical
+
+
 def normalize_query_state(
     *,
     viewer_config: ViewerConfig,
@@ -97,6 +149,7 @@ def normalize_query_state(
     bench: list[str] | None = None,
     model_filter: str = "",
     rank_filtered: bool = False,
+    columns: list[str] | None = None,
     task_scores: bool = False,
     task_z_scores: bool = False,
     task_ranks: bool = False,
@@ -136,7 +189,16 @@ def normalize_query_state(
     chart_color = chart_color if chart_color in PLOT_ENCODING_FIELDS else "embedding_dim"
     if "quantization" in {chart_x, chart_color}:
         quantization = True
-    score_aggregation: ScoreAggregation = "macro" if score == "macro" else "micro"
+    task_filter = task_filter.strip()
+    column_mode = _normalized_column_mode(columns)
+    if column_mode is None and (task_scores or task_filter or task_ranks):
+        column_mode = "grouped" if score == "macro" else "task"
+    if column_mode == "task":
+        score_aggregation: ScoreAggregation = "micro"
+    elif column_mode == "grouped":
+        score_aggregation = "macro"
+    else:
+        score_aggregation = "macro" if score == "macro" else "micro"
     display_flags = variant_display_flags_from_values(
         variants=variants,
         quantization=quantization,
@@ -144,7 +206,6 @@ def normalize_query_state(
         rescore=rescore,
         other=other_variant,
     )
-    task_filter = task_filter.strip()
     query: QueryState = {"view": view, "sort": sort, "direction": direction}
     if result_view != "table":
         query["result_view"] = result_view
@@ -161,12 +222,12 @@ def normalize_query_state(
         query["target"] = target
     if score_aggregation != "micro":
         query["score"] = score_aggregation
+    if column_mode is not None:
+        query["columns"] = column_mode
     if metric and metric != "ndcg@10":
         query["metric"] = metric.strip().casefold()
     if group:
         query["group"] = group
-    if task_scores or task_filter or task_ranks:
-        query["task_scores"] = "1"
     if task_z_scores:
         query["task_z_scores"] = "1"
     if task_ranks:
@@ -183,7 +244,11 @@ def normalize_query_state(
         query["other_variant"] = "1"
     language_filters = _normalized_query_values(lang_filter)
     if view == "Overall (EN)":
-        language_filters = ["en"]
+        if language_filters and language_filters != ["en"]:
+            view = "Overall"
+            query["view"] = view
+        else:
+            language_filters = ["en"]
     active_params_min = _normalized_numeric_bound(active_params_min)
     active_params_max = _normalized_numeric_bound(active_params_max)
     total_params_min = _normalized_numeric_bound(total_params_min)
@@ -194,11 +259,23 @@ def normalize_query_state(
     doc_len_max = _normalized_numeric_bound(doc_len_max)
     has_parameter_filters = bool(active_params_min or active_params_max or total_params_min or total_params_max)
     has_task_length_filters = bool(query_len_min or query_len_max or doc_len_min or doc_len_max)
+    has_facet_filters = any(
+        values is not None
+        for values in (
+            dim_filter,
+            quant_filter,
+            commercial_filter,
+            model_type_filter,
+            dtype_filter,
+            attn_filter,
+            prompt_filter,
+        )
+    )
     if language_filters:
         query["lang_filter"] = language_filters
     if empty_custom_scope:
         query.pop("lang_filter", None)
-    if filters or has_parameter_filters or has_task_length_filters:
+    if filters or has_facet_filters or has_parameter_filters or has_task_length_filters:
         query["filters"] = "1"
         query["dim_filter"] = _normalized_query_values(dim_filter)
         query["quant_filter"] = _normalized_query_values(quant_filter)
@@ -274,24 +351,29 @@ def state_payload(
     filter_state: FilterState | None = None,
 ) -> QueryState:
     filter_state = filter_state or FilterState()
-    query_payload: QueryState = {"view": result.view_name, "sort": sort, "direction": direction}
+    query_payload: QueryState = {}
+    if result.view_name != DEFAULT_VIEW_NAME:
+        query_payload["view"] = result.view_name
+    if sort != DEFAULT_SORT:
+        query_payload["sort"] = sort
+    if direction != DEFAULT_DIRECTION:
+        query_payload["direction"] = direction
     if result.score_target != "all":
         query_payload["target"] = result.score_target
     if result.score_aggregation != "micro":
         query_payload["score"] = result.score_aggregation
     if result.selected_score_metric != "ndcg@10":
         query_payload["metric"] = result.selected_score_metric
-    if result.selected_score_group is not None:
+    default_score_group = result.score_groups[0].name if result.score_groups else None
+    if result.selected_score_group is not None and result.selected_score_group.name != default_score_group:
         query_payload["group"] = result.selected_score_group.name
     selected_benchmarks = getattr(result, "selected_benchmarks", ())
     if result.view_name == CUSTOM_SCOPE_NAME and selected_benchmarks:
         query_payload["bench"] = list(selected_benchmarks)
     if result.show_task_scores:
-        query_payload["task_scores"] = "1"
+        query_payload["columns"] = "grouped" if result.score_aggregation == "macro" else "task"
     if result.show_task_z_scores:
         query_payload["task_z_scores"] = "1"
-    else:
-        query_payload["task_z_scores"] = "0"
     if result.show_task_ranks:
         query_payload["task_ranks"] = "1"
     if result.show_other_columns:
@@ -314,13 +396,17 @@ def state_payload(
         query_payload["lang_filter"] = list(filter_state.language_filters)
     if filter_state.filters_active or filter_state.has_parameter_filters or filter_state.has_task_length_filters:
         query_payload["filters"] = "1"
-        query_payload["dim_filter"] = list(filter_state.dim_filters)
-        query_payload["quant_filter"] = list(filter_state.quant_filters)
-        query_payload["commercial_filter"] = list(filter_state.commercial_filters)
-        query_payload["model_type_filter"] = list(filter_state.model_type_filters)
-        query_payload["dtype_filter"] = list(filter_state.dtype_filters)
-        query_payload["attn_filter"] = list(filter_state.attn_filters)
-        query_payload["prompt_filter"] = list(filter_state.prompt_filters)
+        for key, values in (
+            ("dim_filter", filter_state.dim_filters),
+            ("quant_filter", filter_state.quant_filters),
+            ("commercial_filter", filter_state.commercial_filters),
+            ("model_type_filter", filter_state.model_type_filters),
+            ("dtype_filter", filter_state.dtype_filters),
+            ("attn_filter", filter_state.attn_filters),
+            ("prompt_filter", filter_state.prompt_filters),
+        ):
+            if values:
+                query_payload[key] = list(values)
         if filter_state.active_params_min:
             query_payload["active_params_min"] = filter_state.active_params_min
         if filter_state.active_params_max:
@@ -400,7 +486,14 @@ def optional_query_string(value: QueryValue | None) -> str | None:
 def _normalized_query_values(values: list[str] | None) -> list[str]:
     if values is None:
         return []
-    return [value for value in values if value]
+    normalized = [value for value in values if value]
+    selected = [value for value in normalized if value != FILTER_NONE_VALUE]
+    return selected or normalized
+
+
+def _normalized_column_mode(values: list[str] | None) -> str | None:
+    valid_values = [value for value in _normalized_query_values(values) if value in COLUMN_MODE_VALUES]
+    return valid_values[-1] if valid_values else None
 
 
 def _normalized_benchmark_values(values: list[str] | None, viewer_config: ViewerConfig) -> list[str]:

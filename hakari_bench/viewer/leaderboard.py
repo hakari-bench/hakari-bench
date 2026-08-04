@@ -16,6 +16,7 @@ from hakari_bench.viewer.config import (
     CLEAR_SCOPE_NAME,
     CUSTOM_SCOPE_NAME,
     LanguageFilterMode,
+    OverallBenchmarkConfig,
     OverallConfig,
     ScoreAggregation,
     ScoreGroupConfig,
@@ -44,6 +45,7 @@ from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_var
 
 SortDirection = Literal["asc", "desc"]
 ScoreTarget = Literal["all", "reranking", "reranking_without_safeguard"]
+ColumnMode = Literal["task", "grouped"]
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 TASK_CATEGORY_FACET_PREFIX = "category:"
 
@@ -211,6 +213,7 @@ class LeaderboardResult(BaseModel):
     include_truncate_variants: bool = False
     include_rescore_variants: bool = False
     include_other_variants: bool = False
+    column_mode: ColumnMode | None = None
     show_task_scores: bool = False
     show_task_z_scores: bool = False
     show_task_ranks: bool = False
@@ -280,6 +283,7 @@ class LeaderboardService:
         include_rescore_variants: bool = False,
         include_other_variants: bool = False,
         language_filters: tuple[str, ...] = (),
+        column_mode: ColumnMode | None = None,
         show_task_scores: bool = False,
         show_task_z_scores: bool = False,
         show_task_ranks: bool = False,
@@ -311,6 +315,7 @@ class LeaderboardService:
             direction=direction,
             score_target=score_target,
             show_task_scores=show_task_scores,
+            column_mode=column_mode,
         ) as request_timing:
             model_filter_terms = active_filter_terms(model_filter)
             task_filter_terms = active_filter_terms(task_filter, min_length=2)
@@ -407,6 +412,7 @@ class LeaderboardService:
                     include_rescore_variants=include_rescore_variants,
                     include_other_variants=include_other_variants,
                     show_task_scores=False,
+                    column_mode=column_mode,
                     show_task_z_scores=False,
                     show_task_ranks=False,
                     show_other_columns=show_other_columns,
@@ -648,29 +654,54 @@ class LeaderboardService:
                     rows = _filter_rows_by_task_terms(rows, ranking_task_filter_terms)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["term_count"] = len(ranking_task_filter_terms)
-            metric_score_group = selected_score_group
+            metric_score_group = None if column_mode == "task" else selected_score_group
+            column_source_rows = list(rows) if column_mode is not None else None
             should_show_task_scores = (
-                show_task_scores or show_task_ranks or bool(ranking_task_filter_terms)
+                column_mode is not None
+                or show_task_scores
+                or show_task_ranks
+                or bool(ranking_task_filter_terms)
             )
-            if overall is not None and not ranking_task_filter_terms:
+            aggregation_overall = overall
+            if column_mode is not None and aggregation_overall is None:
+                aggregation_overall = OverallConfig(
+                    name=view_name,
+                    label=self.config.label_for_view(view_name),
+                    benchmarks=[
+                        OverallBenchmarkConfig(
+                            name=view_name,
+                            group_by=(
+                                selected_score_group.group_by
+                                if selected_score_group is not None
+                                else None
+                            ),
+                        )
+                    ],
+                )
+            if aggregation_overall is not None and (
+                not ranking_task_filter_terms or score_aggregation == "macro"
+            ):
                 with timed_operation(
                     "viewer.leaderboard.phase",
                     operation="aggregate_overall",
                     view=view_name,
                 ) as phase_timing:
                     rows = _aggregate_overall_scores(
-                        rows, overall, score_aggregation=score_aggregation
+                        rows,
+                        aggregation_overall,
+                        score_aggregation=score_aggregation,
                     )
                     metric_score_group = _overall_metric_score_group(
-                        overall, score_aggregation=score_aggregation
+                        aggregation_overall,
+                        score_aggregation=score_aggregation,
                     )
-                    if metric_score_group is None:
+                    if metric_score_group is None and column_mode != "task":
                         metric_score_group = _custom_single_component_metric_score_group(
                             self.config,
-                            overall,
+                            aggregation_overall,
                         )
                     phase_timing["task_score_count"] = len(rows)
-            elif selected_score_group is not None:
+            elif selected_score_group is not None and column_mode != "task":
                 with timed_operation(
                     "viewer.leaderboard.phase",
                     operation="aggregate_score_group",
@@ -680,6 +711,19 @@ class LeaderboardService:
                         rows, selected_score_group
                     )
                     phase_timing["task_score_count"] = len(rows)
+            metric_rows = rows
+            if aggregation_overall is not None and column_source_rows is not None:
+                if column_mode == "grouped":
+                    metric_rows, metric_score_group = _grouped_column_metric_rows(
+                        source_rows=column_source_rows,
+                        aggregated_rows=rows,
+                        overall=aggregation_overall,
+                    )
+                elif column_mode == "task":
+                    metric_rows, metric_score_group = _task_column_metric_rows(
+                        source_rows=column_source_rows,
+                        overall=aggregation_overall,
+                    )
             if should_show_task_scores and metric_score_group is None:
                 metric_score_group = ScoreGroupConfig(
                     name="task_scores", label="Task Scores", group_by="task_key"
@@ -689,22 +733,24 @@ class LeaderboardService:
                 "viewer.leaderboard.phase", operation="metric_columns", view=view_name
             ) as phase_timing:
                 metric_columns = (
-                    _metric_columns(rows, metric_score_group)
+                    _metric_columns(metric_rows, metric_score_group)
                     if should_show_task_scores and metric_score_group is not None
                     else []
                 )
                 if not ranking_task_filter_terms:
                     metric_columns = _filter_metric_columns(
-                        rows, metric_score_group, metric_columns, task_filter
+                        metric_rows, metric_score_group, metric_columns, task_filter
                     )
+                metric_columns = _promote_sorted_metric_column(metric_columns, sort=sort)
                 metric_column_labels = _metric_column_label_overrides(
-                    rows=rows,
+                    rows=metric_rows,
                     score_group=metric_score_group,
                     metric_columns=metric_columns,
                     config=self.config,
+                    overall=aggregation_overall,
                 )
                 metric_column_doc_keys = _metric_column_doc_keys(
-                    rows=rows,
+                    rows=metric_rows,
                     score_group=metric_score_group,
                     metric_columns=metric_columns,
                 )
@@ -716,7 +762,9 @@ class LeaderboardService:
                     expected_task_keys
                     if overall is not None
                     and score_aggregation == "micro"
+                    and not selected_languages
                     and not ranking_task_filter_terms
+                    and not has_length_filters
                     else None
                 )
                 leaderboard_rows = compute_leaderboard_rows(
@@ -724,10 +772,13 @@ class LeaderboardService:
                     is_overall=is_overall,
                     expected_task_keys=completeness_task_keys,
                     score_group=metric_score_group,
+                    metric_rows=metric_rows,
                     metric_columns=metric_columns,
                     show_task_z_scores=show_task_z_scores,
                     show_task_ranks=show_task_ranks,
-                    use_task_mean_for_overall=bool(ranking_task_filter_terms),
+                    use_task_mean_for_overall=bool(
+                        ranking_task_filter_terms and score_aggregation == "micro"
+                    ),
                     overall_score_aggregation=score_aggregation,
                 )
                 leaderboard_rows = _with_model_card_parameters_for_leaderboard_rows(
@@ -770,6 +821,7 @@ class LeaderboardService:
                 include_truncate_variants=include_truncate_variants,
                 include_rescore_variants=include_rescore_variants,
                 include_other_variants=include_other_variants,
+                column_mode=column_mode,
                 show_task_scores=should_show_task_scores,
                 show_task_z_scores=show_task_z_scores,
                 show_task_ranks=show_task_ranks,
@@ -1857,6 +1909,7 @@ def compute_leaderboard_rows(
     is_overall: bool,
     expected_task_keys: set[str] | frozenset[str] | None = None,
     score_group: ScoreGroupConfig | None = None,
+    metric_rows: list[TaskScore] | None = None,
     metric_columns: list[str] | None = None,
     show_task_z_scores: bool = False,
     show_task_ranks: bool = False,
@@ -1881,6 +1934,12 @@ def compute_leaderboard_rows(
         if task_keys == expected_tasks
     }
     complete_rows = [row for row in rows if row.model_name in complete_models]
+    complete_metric_rows = [
+        row
+        for row in (metric_rows if metric_rows is not None else complete_rows)
+        if row.model_name in complete_models
+    ]
+    metric_rows_by_model = _group_by_model(complete_metric_rows)
     borda_scores = _borda_scores(complete_rows)
     borda_score_z_values = (
         _borda_score_z_values(borda_scores=borda_scores, rows=complete_rows)
@@ -1890,7 +1949,9 @@ def compute_leaderboard_rows(
     metric_columns = metric_columns or []
     z_values_by_model = (
         _metric_z_values_by_model(
-            complete_rows, score_group=score_group, metric_columns=metric_columns
+            complete_metric_rows,
+            score_group=score_group,
+            metric_columns=metric_columns,
         )
         if show_task_z_scores and metric_columns
         else {}
@@ -1906,7 +1967,9 @@ def compute_leaderboard_rows(
     )
     metric_rank_values_by_model = (
         _metric_rank_values_by_model(
-            complete_rows, score_group=score_group, metric_columns=metric_columns
+            complete_metric_rows,
+            score_group=score_group,
+            metric_columns=metric_columns,
         )
         if show_task_ranks and metric_columns
         else {}
@@ -1931,7 +1994,9 @@ def compute_leaderboard_rows(
             else micro_mean
         )
         metric_values = _metric_values(
-            model_rows, score_group=score_group, metric_columns=metric_columns
+            metric_rows_by_model.get(model_name, []),
+            score_group=score_group,
+            metric_columns=metric_columns,
         )
         metric_z_values = z_values_by_model.get(model_name, {})
         metric_rank_values = metric_rank_values_by_model.get(model_name, {})
@@ -2174,6 +2239,100 @@ def _aggregate_overall_scores(
     return aggregated
 
 
+def _mnanobeir_component(overall: OverallConfig) -> OverallBenchmarkConfig | None:
+    """Return M-BEIR's inner grouping policy for display and Macro scoring.
+
+    Micro scoring still ranks all 182 raw language x task cells. The selected
+    axis controls the compact 13/14-column breakdown in both table modes and
+    the inner aggregation used before M-BEIR becomes one Macro benchmark row.
+    """
+
+    return next(
+        (
+            component
+            for component in overall.benchmark_components
+            if component.name == "MNanoBEIR"
+            and component.group_by in {"task_name", "dataset_name"}
+        ),
+        None,
+    )
+
+
+def _mnanobeir_inner_rows(
+    source_rows: list[TaskScore], component: OverallBenchmarkConfig
+) -> list[TaskScore]:
+    if component.group_by is None:
+        raise AssertionError("M-BEIR requires a task or language grouping axis")
+    return _aggregate_benchmark_score_group_scores(
+        [row for row in source_rows if row.benchmark == component.name],
+        ScoreGroupConfig(
+            name=f"MNanoBEIR_{component.group_by}",
+            label="M-BEIR inner groups",
+            group_by=component.group_by,
+        ),
+    )
+
+
+def _task_column_metric_rows(
+    *, source_rows: list[TaskScore], overall: OverallConfig
+) -> tuple[list[TaskScore], ScoreGroupConfig]:
+    """Render raw task columns except for M-BEIR's selected 13/14 inner groups."""
+
+    component = _mnanobeir_component(overall)
+    metric_rows = [
+        row for row in source_rows if component is None or row.benchmark != component.name
+    ]
+    if component is not None:
+        inner_group_by = component.group_by
+        if inner_group_by is None:
+            raise AssertionError("M-BEIR task columns require an inner grouping axis")
+        metric_rows.extend(
+            replace(
+                row,
+                task_key=f"{component.name}::{_score_group_key(row, inner_group_by)}",
+            )
+            for row in _mnanobeir_inner_rows(source_rows, component)
+        )
+    return metric_rows, ScoreGroupConfig(
+        name="task_columns", label="Task columns", group_by="task_key"
+    )
+
+
+def _grouped_column_metric_rows(
+    *,
+    source_rows: list[TaskScore],
+    aggregated_rows: list[TaskScore],
+    overall: OverallConfig,
+) -> tuple[list[TaskScore], ScoreGroupConfig]:
+    """Keep benchmark-level macro rows while expanding M-BEIR's selected inner axis for display."""
+    mnanobeir_component = _mnanobeir_component(overall)
+    metric_rows = [
+        replace(row, task_key=row.benchmark)
+        for row in aggregated_rows
+        if mnanobeir_component is None or row.benchmark != mnanobeir_component.name
+    ]
+    if mnanobeir_component is not None:
+        inner_group_by = mnanobeir_component.group_by
+        if inner_group_by is None:
+            raise AssertionError("M-BEIR grouped columns require an inner grouping axis")
+        inner_rows = _mnanobeir_inner_rows(source_rows, mnanobeir_component)
+        metric_rows.extend(
+            replace(
+                row,
+                task_key=(
+                    f"{mnanobeir_component.name}::"
+                    f"{_score_group_key(row, inner_group_by)}"
+                ),
+            )
+            for row in inner_rows
+        )
+    return metric_rows, ScoreGroupConfig(
+        name="grouped_columns",
+        label="Grouped columns",
+        group_by="task_key",
+    )
+
+
 def _aggregate_task_score_rows(
     *,
     model_name: str,
@@ -2383,6 +2542,23 @@ def _filter_rows_to_task_keys(
     rows: list[TaskScore], task_keys: frozenset[str]
 ) -> list[TaskScore]:
     return [row for row in rows if row.task_key in task_keys]
+
+
+def _filter_rows_to_complete_models(
+    rows: list[TaskScore], expected_task_keys: set[str] | frozenset[str]
+) -> list[TaskScore]:
+    """Enforce raw-task completeness before special grouped units replace keys."""
+
+    task_keys_by_model: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        task_keys_by_model[row.model_name].add(row.task_key)
+    expected = set(expected_task_keys)
+    complete_models = {
+        model_name
+        for model_name, task_keys in task_keys_by_model.items()
+        if task_keys == expected
+    }
+    return [row for row in rows if row.model_name in complete_models]
 
 
 def _language_options(
@@ -3005,6 +3181,15 @@ def _metric_columns(
     return sorted({_score_group_key(row, score_group.group_by) for row in rows})
 
 
+def _promote_sorted_metric_column(columns: list[str], *, sort: str) -> list[str]:
+    if not sort.startswith("metric:"):
+        return columns
+    sorted_column = sort.removeprefix("metric:")
+    if not columns or columns[0] == sorted_column or sorted_column not in columns:
+        return columns
+    return [sorted_column, *(column for column in columns if column != sorted_column)]
+
+
 def _task_breakdowns(rows: list[TaskScore]) -> list[TaskBreakdown]:
     by_key: dict[str, TaskBreakdown] = {}
     for row in rows:
@@ -3156,6 +3341,7 @@ def _metric_column_label_overrides(
     score_group: ScoreGroupConfig | None,
     metric_columns: list[str],
     config: ViewerConfig,
+    overall: OverallConfig | None = None,
 ) -> dict[str, str]:
     if score_group is None or not metric_columns:
         return {}
@@ -3176,11 +3362,44 @@ def _metric_column_label_overrides(
         )
         if label:
             labels_by_column[column].add(label)
-    return {
+    overrides = {
         column: next(iter(labels))
         for column, labels in labels_by_column.items()
         if len(labels) == 1
     }
+    mnanobeir_component = (
+        next(
+            (
+                component
+                for component in overall.benchmark_components
+                if component.name == "MNanoBEIR"
+            ),
+            None,
+        )
+        if overall is not None
+        else None
+    )
+    if mnanobeir_component is not None and score_group.name in {
+        "grouped_columns",
+        "task_columns",
+    }:
+        for column in metric_columns:
+            prefix = "MNanoBEIR::"
+            if not column.startswith(prefix):
+                continue
+            inner_label = column.removeprefix(prefix)
+            if mnanobeir_component.group_by == "dataset_name":
+                inner_label = inner_label.removeprefix("NanoBEIR-")
+            overrides[column] = f"M-BEIR-{inner_label}"
+    if (
+        overall is not None
+        and score_group.group_by == "benchmark"
+        and "MNanoBEIR" in metric_column_set
+    ):
+        if mnanobeir_component is not None:
+            group_suffix = "lang" if mnanobeir_component.group_by == "dataset_name" else "task"
+            overrides["MNanoBEIR"] = f"M-BEIR({group_suffix})"
+    return overrides
 
 
 def _metric_values(

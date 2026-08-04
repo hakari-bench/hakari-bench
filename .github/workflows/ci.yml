@@ -36,8 +36,11 @@ jobs:
             pyproject.toml
           cache-suffix: tox
 
+      - name: Sync locked validation dependencies
+        run: uv sync --frozen
+
       - name: Run Python tests, lint, and type checks
-        run: uv run tox
+        run: uv run --frozen tox
 
   browser:
     name: Viewer browser test

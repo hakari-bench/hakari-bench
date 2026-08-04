@@ -12,6 +12,7 @@ from typing import Callable
 
 
 DEFAULT_DUCKDB_NAME = "hakari_bench.duckdb"
+DEFAULT_HF_DATASET_REPO_ID = "hakari-bench/leaderboard_database"
 DEFAULT_HF_DUCKDB_PATH = "duckdb/hakari_bench.duckdb"
 DEFAULT_HF_SOURCE_CHECK_TTL_SECONDS = 600.0
 DEFAULT_REMOTE_LATEST_DUCKDB_PATH = Path.home() / ".cache" / "hakari-bench" / "duckdb" / "remote_latest_hakari_bench.duckdb"
@@ -233,19 +234,25 @@ def resolve_duckdb_location(
     env_duckdb_path = _env_path("HAKARI_BENCH_VIEWER_DUCKDB_PATH")
     local_path = duckdb_path or env_duckdb_path or data_dir / DEFAULT_DUCKDB_NAME
     local_path_is_explicit = duckdb_path is not None or env_duckdb_path is not None
-    source_results_dir = source_results_dir or _env_path("HAKARI_BENCH_VIEWER_SOURCE_RESULTS_DIR")
+    env_source_results_dir = _env_path("HAKARI_BENCH_VIEWER_SOURCE_RESULTS_DIR")
+    source_results_dir_is_explicit = source_results_dir is not None or env_source_results_dir is not None
+    source_results_dir = source_results_dir or env_source_results_dir
+    env_source_duckdb_path = _env_path("HAKARI_BENCH_VIEWER_SOURCE_DUCKDB_PATH")
+    source_duckdb_path_is_explicit = source_duckdb_path is not None or env_source_duckdb_path is not None
+    source_path = (
+        source_duckdb_path
+        or env_source_duckdb_path
+        or _source_from_results_dir(source_results_dir)
+    )
+    local_source_is_explicit = (
+        local_path_is_explicit or source_results_dir_is_explicit or source_duckdb_path_is_explicit
+    )
     hf_source = _resolve_hf_source(
         repo_id=hf_dataset_repo_id,
         filename=hf_dataset_path,
         revision=hf_dataset_revision,
+        use_default=not local_source_is_explicit,
     )
-    source_path = (
-        source_duckdb_path
-        or _env_path("HAKARI_BENCH_VIEWER_SOURCE_DUCKDB_PATH")
-        or _source_from_results_dir(source_results_dir)
-    )
-    if source_path is None and hf_source is None and not local_path_is_explicit:
-        source_path = _discover_source_duckdb()
     if source_path is not None and source_path.resolve() == local_path.resolve():
         source_path = None
     if source_path is not None:
@@ -263,8 +270,11 @@ def _resolve_hf_source(
     repo_id: str | None,
     filename: str | None,
     revision: str | None,
+    use_default: bool = False,
 ) -> HuggingFaceDuckDbSource | None:
-    repo_id = repo_id or os.getenv("HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID")
+    repo_id = repo_id or os.getenv("HAKARI_BENCH_VIEWER_HF_DATASET_REPO_ID") or (
+        DEFAULT_HF_DATASET_REPO_ID if use_default else None
+    )
     if not repo_id:
         return None
     filename = filename or os.getenv("HAKARI_BENCH_VIEWER_HF_DATASET_PATH") or DEFAULT_HF_DUCKDB_PATH

@@ -4,11 +4,64 @@ from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ScoreGrou
 from hakari_bench.viewer.leaderboard import LeaderboardResult
 from hakari_bench.viewer.state import (
     FilterState,
+    canonical_query_state,
     filter_state_from_query,
     normalize_query_state,
     query_string,
     state_payload,
 )
+
+
+def test_canonical_query_state_omits_defaults_but_preserves_dependencies() -> None:
+    cases = [
+        ({"view": "Overall", "sort": "borda_score", "direction": "desc"}, {}),
+        ({"view": "BenchA", "sort": "borda_score", "direction": "desc"}, {"view": "BenchA"}),
+        ({"view": "Overall", "sort": "mean_score", "direction": "desc"}, {"sort": "mean_score"}),
+        (
+            {"view": "Overall", "sort": "borda_score", "direction": "desc", "columns": "task", "score": "micro"},
+            {"columns": "task"},
+        ),
+        (
+            {
+                "view": "Overall",
+                "sort": "borda_score",
+                "direction": "desc",
+                "columns": "grouped",
+                "score": "macro",
+            },
+            {"score": "macro", "columns": "grouped"},
+        ),
+        (
+            {"view": "Overall (EN)", "sort": "borda_score", "direction": "desc", "lang_filter": ["en"]},
+            {"lang_filter": ["en"]},
+        ),
+        (
+            {"view": "MNanoBEIR", "sort": "borda_score", "direction": "desc", "group": "task_mean"},
+            {"view": "MNanoBEIR"},
+        ),
+        (
+            {"view": "MNanoBEIR", "sort": "borda_score", "direction": "desc", "group": "lang_mean"},
+            {"view": "MNanoBEIR", "group": "lang_mean"},
+        ),
+    ]
+
+    for verbose, expected in cases:
+        assert canonical_query_state(verbose, viewer_config=_viewer_config()) == expected
+
+
+def test_canonical_query_state_is_idempotent() -> None:
+    verbose = {
+        "view": "Overall",
+        "sort": "borda_score",
+        "columns": "grouped",
+        "score": "macro",
+        "model_filter": "jina",
+        "task_z_scores": "0",
+    }
+
+    canonical = canonical_query_state(verbose, viewer_config=_viewer_config())
+
+    assert canonical_query_state(canonical, viewer_config=_viewer_config()) == canonical
 
 
 def test_normalize_query_state_rejects_invalid_view_sort_and_direction() -> None:
@@ -65,7 +118,7 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "view": "BenchA",
         "sort": "metric:task1",
         "direction": "desc",
-        "task_scores": "1",
+        "columns": "task",
         "quantization": "1",
         "filters": "1",
         "dim_filter": ["384"],
@@ -79,6 +132,70 @@ def test_normalize_query_state_keeps_explicit_display_flags_separate_from_filter
         "task_filter": "arguana  fever",
         "rank_filtered": "1",
     }
+
+
+def test_normalize_query_state_ignores_none_sentinel_when_facet_values_are_selected() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        group=None,
+        variants=False,
+        quantization=True,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=True,
+        dim_filter=["__none_selected__", "384", "768"],
+        quant_filter=["__none_selected__", "__none__", "int8", "binary"],
+        commercial_filter=["__none_selected__", "commercial"],
+        model_type_filter=["__none_selected__", "dense"],
+        dtype_filter=["__none_selected__", "bf16"],
+        attn_filter=["__none_selected__", "sdpa"],
+        prompt_filter=["__none_selected__", "model default"],
+        model_filter="bge-m3 jina-embeddings-",
+    )
+
+    assert query["dim_filter"] == ["384", "768"]
+    assert query["quant_filter"] == ["__none__", "int8", "binary"]
+    assert query["commercial_filter"] == ["commercial"]
+    assert query["model_type_filter"] == ["dense"]
+    assert query["dtype_filter"] == ["bf16"]
+    assert query["attn_filter"] == ["sdpa"]
+    assert query["prompt_filter"] == ["model default"]
+
+
+def test_normalize_query_state_keeps_none_sentinel_when_no_facet_value_is_selected() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        group=None,
+        variants=False,
+        quantization=True,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=True,
+        dim_filter=["__none_selected__"],
+        quant_filter=["__none_selected__"],
+        commercial_filter=["__none_selected__"],
+        model_type_filter=["__none_selected__"],
+        dtype_filter=["__none_selected__"],
+        attn_filter=["__none_selected__"],
+        prompt_filter=["__none_selected__"],
+        model_filter="",
+    )
+
+    assert query["dim_filter"] == ["__none_selected__"]
+    assert query["quant_filter"] == ["__none_selected__"]
+    assert query["commercial_filter"] == []
+    assert query["model_type_filter"] == []
+    assert query["dtype_filter"] == ["__none_selected__"]
+    assert query["attn_filter"] == ["__none_selected__"]
+    assert query["prompt_filter"] == ["__none_selected__"]
 
 
 def test_legacy_variants_query_enables_all_variant_flags() -> None:
@@ -187,8 +304,90 @@ def test_task_filter_enables_task_score_columns() -> None:
         task_filter="fever",
     )
 
-    assert query["task_scores"] == "1"
+    assert query["columns"] == "task"
     assert query["task_filter"] == "fever"
+
+
+def test_task_column_mode_forces_micro_score() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        score="macro",
+        columns=["task"],
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+    )
+
+    assert query["columns"] == "task"
+    assert "score" not in query
+    assert "task_scores" not in query
+
+
+def test_grouped_column_mode_forces_macro_score() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        score="micro",
+        columns=["grouped"],
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+    )
+
+    assert query["columns"] == "grouped"
+    assert query["score"] == "macro"
+    assert "task_scores" not in query
+
+
+def test_column_modes_are_normalized_to_one_selection() -> None:
+    query = normalize_query_state(
+        viewer_config=_viewer_config(),
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        columns=["task", "grouped"],
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+        dtype_filter=None,
+        attn_filter=None,
+        prompt_filter=None,
+        model_filter="",
+    )
+
+    assert query["columns"] == "grouped"
+    assert query["score"] == "macro"
 
 
 def test_custom_benchmark_selection_is_normalized() -> None:
@@ -297,7 +496,7 @@ def test_empty_custom_benchmark_selection_stays_custom_and_resets_language() -> 
     assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc"}
 
 
-def test_overall_en_view_normalizes_to_en_language_filter() -> None:
+def test_overall_en_view_switches_to_overall_for_explicit_non_english_filter() -> None:
     query = normalize_query_state(
         viewer_config=_viewer_config(),
         view="Overall (EN)",
@@ -320,10 +519,10 @@ def test_overall_en_view_normalizes_to_en_language_filter() -> None:
     )
 
     assert query == {
-        "view": "Overall (EN)",
+        "view": "Overall",
         "sort": "borda_rank",
         "direction": "asc",
-        "lang_filter": ["en"],
+        "lang_filter": ["ja"],
     }
 
 
@@ -350,7 +549,7 @@ def test_legacy_clear_view_normalizes_to_empty_custom() -> None:
         lang_filter=["ja"],
     )
 
-    assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc", "task_scores": "1"}
+    assert query == {"view": "Custom", "sort": "borda_rank", "direction": "asc", "columns": "task"}
 
 
 def test_task_z_scores_do_not_force_task_score_columns() -> None:
@@ -402,7 +601,7 @@ def test_task_ranks_force_task_score_columns() -> None:
         other_columns=True,
     )
 
-    assert query["task_scores"] == "1"
+    assert query["columns"] == "task"
     assert query["task_ranks"] == "1"
     assert query["other_columns"] == "1"
 
@@ -541,7 +740,6 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
     assert query == {
         "view": "BenchA",
         "sort": "mean_score",
-        "direction": "desc",
         "quantization": "1",
         "rescore": "1",
         "task_z_scores": "1",
@@ -555,9 +753,6 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
         "quant_filter": ["binary"],
         "commercial_filter": ["commercial"],
         "model_type_filter": ["sparse"],
-        "dtype_filter": [],
-        "attn_filter": [],
-        "prompt_filter": [],
     }
     assert query_string(query["dim_filter"]) == "768"
 

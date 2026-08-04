@@ -403,6 +403,20 @@
     background-color: color-mix(in srgb, var(--hakari-surface-muted) 70%, var(--hakari-surface));
   }
 
+  .metric-header-full-label {
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .metric-header-label-group {
+    align-items: end;
+    column-gap: 0.25rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
   .leaderboard-table tbody tr {
     background-color: var(--hakari-surface-faint);
   }
@@ -425,7 +439,7 @@
     width: var(--hakari-model-col-width);
   }
 
-  .borda-score-bar {
+  .model-score-bar {
     position: absolute;
     appearance: none;
     top: 2px;
@@ -443,31 +457,31 @@
     z-index: 0;
   }
 
-  :root.dark .borda-score-bar {
+  :root.dark .model-score-bar {
     opacity: 0.13;
   }
 
   @media (prefers-color-scheme: dark) {
-    :root:not(.light) .borda-score-bar {
+    :root:not(.light) .model-score-bar {
       opacity: 0.13;
     }
   }
 
-  .leaderboard-row:hover .borda-score-bar,
-  .leaderboard-col-model:hover .borda-score-bar {
+  .leaderboard-row:hover .model-score-bar,
+  .leaderboard-col-model:hover .model-score-bar {
     opacity: 0.28;
   }
 
-  .borda-score-bar::-webkit-progress-bar {
+  .model-score-bar::-webkit-progress-bar {
     background-color: transparent;
   }
 
-  .borda-score-bar::-webkit-progress-value {
+  .model-score-bar::-webkit-progress-value {
     background-color: var(--hakari-accent);
     border-radius: 0 4px 4px 0;
   }
 
-  .borda-score-bar::-moz-progress-bar {
+  .model-score-bar::-moz-progress-bar {
     background-color: var(--hakari-accent);
     border-radius: 0 4px 4px 0;
   }
@@ -476,9 +490,15 @@
   .model-type-badge,
   .dimension-badge,
   .variant-badge,
-  .quantization-badge {
+  .quantization-badge,
+  .rescore-badge {
     background-color: color-mix(in srgb, var(--hakari-control-active) 88%, transparent);
     border: 0;
+  }
+
+  .model-variant-badges .rescore-badge {
+    background-color: var(--hakari-purple-soft);
+    color: var(--hakari-purple);
   }
 
   .benchmark-doc h1 {
@@ -936,7 +956,7 @@
       transition: none;
     }
 
-    .borda-score-bar {
+    .model-score-bar {
       transition: none;
     }
 
@@ -1338,6 +1358,33 @@
 }
 
 /* --- Toggle chips (display / variant checkboxes styled as control chips) --- */
+
+.column-mode-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-surface-faint);
+  padding: 0.12rem;
+}
+
+.column-mode-group .toggle-chip {
+  border-radius: var(--hakari-radius-sm);
+}
+
+.mnanobeir-scope-group > .mnanobeir-scope-option {
+  border: 0;
+  border-radius: var(--hakari-radius-sm);
+}
+
+.column-mode-or {
+  padding-inline: 0.2rem;
+  color: var(--hakari-text-faint);
+  font-size: 0.625rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
 
 .toggle-chip {
   display: inline-flex;

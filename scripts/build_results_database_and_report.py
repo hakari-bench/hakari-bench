@@ -37,12 +37,12 @@ from hakari_bench.viewer.store import (
 )
 from hakari_bench.viewer.leaderboard import (
     LeaderboardService,
-    _aggregate_overall_scores,
     _aggregate_benchmark_score_group_scores,
     _append_missing_bm25_task_scores,
     _exclude_configured_tasks,
     _exclude_reranker_task_scores,
     _filter_rows_by_languages,
+    _filter_rows_to_complete_models,
     _language_filter_policy_for_view,
     _language_options,
     _overall_metric_score_group,
@@ -5974,11 +5974,8 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                     )
                 metric_score_group = None
                 if overall is not None:
-                    rows = _aggregate_overall_scores(
-                        rows,
-                        overall,
-                        score_aggregation="micro",
-                    )
+                    if expected_task_keys is not None and not precomputed_language_filters:
+                        rows = _filter_rows_to_complete_models(rows, expected_task_keys)
                     metric_score_group = _overall_metric_score_group(
                         overall,
                         score_aggregation="micro",
