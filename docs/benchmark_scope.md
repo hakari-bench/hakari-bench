@@ -22,7 +22,7 @@ intentionally different:
 
 - A complete evaluation runs and preserves results for all **557 tasks**.
 - The leaderboard excludes **13 overlapping task copies** from its Overall
-  calculation, so a complete Overall result is based on **538 tasks**.
+  calculation, so a complete Overall result is based on **544 tasks**.
 
 The excluded copies are still valid evaluation artifacts and remain in the
 results dataset. They are omitted only from the Overall aggregate so that the
@@ -39,13 +39,11 @@ row or cause it to be counted twice.
 
 The canonical exclusion rules live in
 [`config/viewer/benchmarks.yaml`](../config/viewer/benchmarks.yaml). Do not
-remove evaluation outputs merely to make their file count match the 538-task
+remove evaluation outputs merely to make their file count match the 544-task
 Overall count.
 
 `NanoMTEB-BR` contributes six native Brazilian Portuguese Retrieval tasks to
-the complete evaluation target. It has a dedicated viewer page but is not added
-to Overall because the language-focused NanoMTEB family is diagnostic coverage
-rather than an additional Overall component. See
+the complete evaluation target and Overall. See
 [NanoMTEB-BR](nanomteb_br.md) for task provenance and validation details.
 
 Built-in dataset definitions live under [`config/datasets/`](../config/datasets/),

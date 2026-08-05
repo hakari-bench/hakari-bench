@@ -16,10 +16,8 @@ NanoMTEB-BR contributes six tasks to `evaluate --all`. Adding it changes the
 complete built-in evaluation target from 551 to **557 tasks**. It is available
 as a dedicated viewer benchmark and a Portuguese language page.
 
-Like the other language-focused NanoMTEB suites, NanoMTEB-BR is not an
-additional Overall component. The canonical Overall manifest remains at 538
-tasks; all six NanoMTEB-BR result files must still be evaluated, stored, and
-submitted.
+NanoMTEB-BR is included in the canonical 544-task Overall manifest. All six
+result files must be evaluated, stored, and submitted.
 
 | Task | Domain | Queries | Documents | Positive qrels |
 | --- | --- | ---: | ---: | ---: |

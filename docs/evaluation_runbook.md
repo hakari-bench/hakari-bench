@@ -15,7 +15,7 @@ offline/cache policy, or coverage-audit requirements.
 Use `--all` to evaluate every standard built-in benchmark task. Existing task
 results are skipped unless `--overwrite` is supplied, so this command is safe
 for resuming interrupted runs. The complete target currently contains 557
-tasks; the leaderboard's 538-task Overall count is a post-evaluation aggregate,
+tasks; the leaderboard's 544-task Overall count is a post-evaluation aggregate,
 not an evaluation target.
 
 ```bash

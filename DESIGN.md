@@ -88,6 +88,9 @@ components:
     treatment: Compact horizontal row; title and right-side controls share the
       same vertical center line. The title uses the same body-scale typography,
       color, weight, and font family as the short product description below it.
+      The in-page title reads `HAKARI-Bench - A Leaderboard for Information
+      Retrieval Models Across Diverse Tasks`; the browser document title
+      remains the shorter `HAKARI-Bench leaderboard`.
       The brand mark is a single-color inline SVG that follows the same
       stroke-based icon style as header actions. The brand/title target links to
       `/` so users can refresh back to the default leaderboard state.

@@ -929,7 +929,7 @@ def render_page(
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
           <a id="hakari-home-link" href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
             {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
-            <span>HAKARI-Bench leaderboard</span>
+            <span>HAKARI-Bench - A Leaderboard for Information Retrieval Models Across Diverse Tasks</span>
           </a>
         </h1>
         {header_actions}

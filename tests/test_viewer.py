@@ -105,8 +105,16 @@ def test_viewer_config_uses_overall_scope_views() -> None:
     overall_en_task_keys = config.expected_task_keys_for_overall(overall_en)
     assert overall_task_keys is not None
     assert overall_en_task_keys is not None
-    assert len(overall_task_keys) == 538
-    assert len(overall_en_task_keys) == 538
+    assert len(overall_task_keys) == 544
+    assert len(overall_en_task_keys) == 544
+    assert {
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::BRTaxQAR",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::FaQuADIR",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::FaqBacenRetrieval",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::JurisTCU",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::MedPTRetrieval",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::Quati",
+    } <= overall_task_keys
     assert sum("hakari-bench/NanoBEIR-en" in task_key for task_key in overall_task_keys) == 13
     assert not {
         "NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRFiQA",
@@ -1039,7 +1047,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
 
     assert response.status_code == 200
     assert "<title>HAKARI-Bench leaderboard</title>" in response.text
-    assert "HAKARI-Bench leaderboard" in response.text
+    assert (
+        "<span>HAKARI-Bench - A Leaderboard for Information Retrieval Models Across Diverse Tasks</span>"
+        in response.text
+    )
     assert '<div class="flex items-center justify-between gap-3">' in response.text
     assert '<h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">' in response.text
     assert 'id="hakari-home-link"' in response.text
