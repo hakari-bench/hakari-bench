@@ -85,6 +85,10 @@ def test_build_nano_dataset_from_rows_writes_flat_subset_layout_yaml_and_bm25(tm
     assert "| NanoToy | whitespace | 100.00 | n/a | n/a | 100.00% | n/a | n/a | n/a | n/a |" in readme
     assert "{{" not in readme
     assert "Template Fill Checklist" not in readme
+    frontmatter = yaml.safe_load(readme.split("---", maxsplit=2)[1])
+    configs = {item["config_name"]: item for item in frontmatter["configs"]}
+    assert configs["harrier_oss_v1_270m"]["data_files"] == []
+    assert configs["reranking_hybrid"]["data_files"] == []
 
     config = yaml.safe_load((config_dir / "nanoexample.yaml").read_text(encoding="utf-8"))
     assert config["name"] == "NanoExample"

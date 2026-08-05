@@ -9,7 +9,8 @@ fixed candidate subsets such as `bm25`, `harrier_oss_v1_270m`, and
 `reranking_hybrid`. This makes candidate generation and reranking comparable
 under the same metrics.
 
-The benchmark currently evaluates 557 retrieval tasks across 35+ benchmark
+The standard `--all` target currently evaluates 557 retrieval tasks across 35+
+benchmark
 groups and 43+ languages, including BEIR-style retrieval, MTEB/MMTEB language
 families, MIRACL, MLDR, code retrieval, long-context retrieval, and expert
 domains such as legal, medical, chemistry, finance, and built-environment
@@ -20,9 +21,11 @@ search.
 The evaluation task count and the leaderboard Overall task count are
 intentionally different:
 
-- A complete evaluation runs and preserves results for all **557 tasks**.
-- The leaderboard excludes **13 overlapping task copies** from its Overall
-  calculation, so a complete Overall result is based on **538 tasks**.
+- A standard `--all` evaluation runs and preserves results for all **557 tasks**.
+- The leaderboard uses a curated **538-task** Overall manifest. It excludes 13
+  overlapping task copies and keeps diagnostic suites such as `NanoMTEB-BR`
+  outside Overall. `NanoSSRB` is also outside Overall, but is not part of the
+  standard `--all` target.
 
 The excluded copies are still valid evaluation artifacts and remain in the
 results dataset. They are omitted only from the Overall aggregate so that the
@@ -41,6 +44,10 @@ The canonical exclusion rules live in
 [`config/viewer/benchmarks.yaml`](../config/viewer/benchmarks.yaml). Do not
 remove evaluation outputs merely to make their file count match the 538-task
 Overall count.
+
+`NanoSSRB` provides six semi-structured retrieval tasks. It can be evaluated
+explicitly with `--dataset NanoSSRB`, but it is intentionally excluded from
+both the standard `--all` target and the Overall manifest.
 
 `NanoMTEB-BR` contributes six native Brazilian Portuguese Retrieval tasks to
 the complete evaluation target. It has a dedicated viewer page but is not added

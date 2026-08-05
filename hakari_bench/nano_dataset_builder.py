@@ -621,7 +621,10 @@ def _replace_template_placeholders(template: str, context: Mapping[str, str]) ->
     rendered = template
     for key, value in context.items():
         rendered = rendered.replace(f"{{{{{key}}}}}", value)
-    return rendered
+    # An empty block sequence at the same indentation as ``data_files`` is not
+    # valid YAML. Keep populated lists in their existing readable form, while
+    # rendering unavailable optional candidate configs as an inline empty list.
+    return rendered.replace("  data_files:\n  []", "  data_files: []")
 
 
 def _drop_template_checklist(text: str) -> str:

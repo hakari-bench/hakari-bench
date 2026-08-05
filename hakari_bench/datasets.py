@@ -589,6 +589,7 @@ def resolve_eval_tasks(
     collection_values: list[str],
     split_values: list[str] | None,
     evaluation_scope: EvaluationScopeMode = "standard",
+    explicit_dataset_selection: bool = False,
 ) -> list[EvalTask]:
     if evaluation_scope not in EVALUATION_SCOPES:
         raise ValueError(f"Unknown evaluation scope '{evaluation_scope}'. Available: {list(EVALUATION_SCOPES)}")
@@ -610,11 +611,13 @@ def resolve_eval_tasks(
             task = EvalTask(dataset=spec, split_name=split_name, task_name=task_name)
             # `include_by_default` controls only standard target expansion. Omitted
             # scope metadata means included, keeping older YAML configs compatible.
-            # Explicit --split selection bypasses this filter so extended tasks
-            # remain runnable without editing dataset configuration.
+            # Explicit dataset/collection or --split selection bypasses this
+            # filter so extended tasks remain runnable without changing the
+            # standard target expanded by --all.
             if (
                 evaluation_scope == "standard"
                 and not explicit_splits
+                and not explicit_dataset_selection
                 and not task.evaluation_scope.include_by_default
             ):
                 continue

@@ -6,11 +6,36 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 from scripts.update_reranking_hybrid_readmes import (
+    canonical_dataset_id,
+    dataset_specific_documentation,
     parse_remote_readme,
     ranking_metrics,
     render_readme,
     source_links_for_dataset,
 )
+
+
+def test_nanossrb_publication_documentation_is_complete() -> None:
+    assert canonical_dataset_id(
+        dataset_name="NanoSSRB",
+        source_dataset="/tmp/output/nanossrb/NanoSSRB",
+    ) == "hakari-bench/NanoSSRB"
+
+    documentation = dataset_specific_documentation("NanoSSRB")
+
+    assert "vec-ai/struct-ir" in documentation
+    assert "99 upstream schemas" in documentation
+    assert "one to five" in documentation
+    assert "does not truncate" in documentation
+    assert "false negatives" in documentation
+    assert "HumanResources" in documentation
+    assert "query-id" in documentation
+    assert "Apache-2.0" in documentation
+    assert "## Variant Selection Rationale" in documentation
+    assert "official NanoSSRB release" in documentation
+    assert "Cap5" in documentation
+    assert "Max3" in documentation
+    assert "near-duplicate" in documentation
 
 
 def _write_parquet(path: Path, rows: list[dict[str, object]]) -> None:

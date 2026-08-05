@@ -127,6 +127,93 @@ The default q200 recipe is:
 Override limits with `--query-limit` and `--doc-limit` only when reproducing a
 different Nano shape.
 
+## Creating NanoSSRB
+
+Use `scripts/create_nanossrb_dataset.py` to merge the 99 SSRB/Struct-IR schema
+subsets into six domain tasks:
+
+- `Academic`
+- `FinanceAndEconomics`
+- `HumanResources`
+- `LLMAgentAndTool`
+- `ProductSearch`
+- `ResumeSearch`
+
+The recommended `strict-max5` variant keeps only upstream queries with one to
+five positive documents. It never truncates qrels. Query selection is
+condition-stratified with per-schema minimum coverage, and the initial target is
+200 queries and 10,000 documents per domain. All selected positives are forced
+into the corpus. Corpus fill documents are sampled deterministically and evenly
+across schemas from `--n--` provenance documents that never occur as a positive
+in any upstream qrels for that schema.
+
+```bash
+uv run python scripts/create_nanossrb_dataset.py \
+  --variant strict-max5 \
+  --output-root output/nanossrb \
+  --query-limit 200 \
+  --doc-limit 10000 \
+  --bm25-top-k 500 \
+  --seed 17 \
+  --overwrite
+```
+
+Two comparison variants are available:
+
+- `cap-max5` permits queries with more than five upstream positives, retains at
+  most five qrels, and excludes every omitted positive document from the whole
+  domain corpus. This prevents the removed judgments from becoming false
+  negatives.
+- `strict-max3` keeps only queries with one to three upstream positives and does
+  not truncate qrels.
+
+Generate all variants with `--variant all`, or regenerate one output task with
+`--domain ProductSearch`. Generated variants remain under `output/` and are not
+repository artifacts.
+
+Audit every selected qrel against the upstream qrels after generation:
+
+```bash
+uv run python scripts/audit_nanossrb_dataset.py \
+  --output-root output/nanossrb
+```
+
+The audit checks row counts, qrels references, the configured positive limit,
+BM25 coverage, filler provenance, and—most importantly—that every upstream
+positive omitted by a capping policy is absent from the Nano corpus. The audit
+writes `sampling_audit.json` beside each generated variant and fails if any
+check fails. A schema with no query satisfying a strict positive threshold can
+still contribute corpus documents while having no selected query; record this
+explicitly instead of relaxing the threshold silently.
+
+Build BM25 top-500, Harrier dense top-500, and RRF hybrid top-100 candidate
+subsets for each variant with the shared reranking-hybrid builder:
+
+```bash
+for dataset in NanoSSRB NanoSSRB-Cap5 NanoSSRB-Max3; do
+  uv run python scripts/build_reranking_hybrid_nano_dataset.py \
+    --source-dataset "$PWD/output/nanossrb/$dataset" \
+    --output-dir "output/nanossrb_hybrid/$dataset" \
+    --bm25-top-k 500 \
+    --dense-top-k 500 \
+    --hybrid-top-k 100 \
+    --rrf-k 100 \
+    --seed 20260524 \
+    --overwrite
+done
+
+uv run python scripts/update_reranking_hybrid_readmes.py \
+  --output-root output/nanossrb_hybrid \
+  --offline
+```
+
+The hybrid subset uses reciprocal-rank fusion over BM25 and
+`microsoft/harrier-oss-v1-270m`. If its top 100 contains no positive document,
+the builder appends one deterministic safeguard positive at rank 101. The
+generated metadata records these additions, and the README reports candidate
+`nDCG@10` and `Recall@100` without counting the rank-101 safeguard in
+`Recall@100`.
+
 ## BM25 Generation
 
 HAKARI-Bench already has BM25 implementation in `hakari_bench.bm25`.

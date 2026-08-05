@@ -1497,6 +1497,12 @@ def _dataset_values_for_args(args: argparse.Namespace, registry: DatasetRegistry
     return args.dataset
 
 
+def _has_explicit_dataset_selection(args: argparse.Namespace) -> bool:
+    return not getattr(args, "all", False) and bool(
+        getattr(args, "dataset", None) or getattr(args, "collection", None)
+    )
+
+
 def _existing_readable_result_path(
     *,
     output_dir: Path,
@@ -1541,6 +1547,7 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
         collection_values=args.collection,
         split_values=args.split,
         evaluation_scope=args.evaluation_scope,
+        explicit_dataset_selection=_has_explicit_dataset_selection(args),
     )
     if args.provider not in {"openai", "gemini"}:
         raise ValueError(f"Unsupported dense batch provider: {args.provider}")
@@ -2059,6 +2066,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         collection_values=args.collection,
         split_values=args.split,
         evaluation_scope=args.evaluation_scope,
+        explicit_dataset_selection=_has_explicit_dataset_selection(args),
     )
     output_dir = Path(args.output_dir)
     pending_tasks = [
@@ -2236,6 +2244,7 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
         collection_values=args.collection,
         split_values=args.split,
         evaluation_scope=args.evaluation_scope,
+        explicit_dataset_selection=_has_explicit_dataset_selection(args),
     )
     config = bm25_config_from_args(args)
     results: list[BM25BuildResult] = []
