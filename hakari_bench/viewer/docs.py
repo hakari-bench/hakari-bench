@@ -295,7 +295,7 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) 
     <section class="mb-4">
       <h2 class="text-lg font-semibold text-zinc-950">Paper</h2>
       <p class="mt-1 text-sm text-zinc-600">
-        <a class="underline underline-offset-2" href="{escape(HAKARI_BENCH_PAPER_URL, quote=True)}">{escape(HAKARI_BENCH_PAPER_TITLE)}</a>
+        <a class="underline underline-offset-2" href="{escape(HAKARI_BENCH_PAPER_URL, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(HAKARI_BENCH_PAPER_TITLE)}</a>
       </p>
     </section>
     <header class="mb-4">

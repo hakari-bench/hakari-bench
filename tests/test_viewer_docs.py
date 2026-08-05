@@ -836,7 +836,8 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
     assert "Benchmark documentation" in response.text
     assert ">Paper</h2>" in response.text
     assert (
-        '<a class="underline underline-offset-2" href="http://arxiv.org/abs/2606.22778">'
+        '<a class="underline underline-offset-2" href="http://arxiv.org/abs/2606.22778" '
+        'target="_blank" rel="noopener noreferrer">'
         "HAKARI-Bench: A Lightweight Benchmark for Comparing Retrieval Architectures and Efficiency Settings under Unified Conditions</a>"
     ) in response.text
     assert '<a class="underline underline-offset-2" href="/">Top</a>' in response.text
