@@ -52,7 +52,7 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
         registry.get_collection("NanoMTEB_Family")
 
 
-def test_builtin_all_target_includes_all_557_evaluation_tasks() -> None:
+def test_builtin_all_target_includes_all_563_evaluation_tasks() -> None:
     registry = DatasetRegistry.load_builtin()
 
     tasks = resolve_eval_tasks(
@@ -63,10 +63,10 @@ def test_builtin_all_target_includes_all_557_evaluation_tasks() -> None:
     )
 
     assert "NanoBEIR-en" in registry.dataset_names()
-    assert len(tasks) == 557
+    assert len(tasks) == 563
     assert sum(task.dataset_name == "NanoBEIR-en" for task in tasks) == 13
     assert sum(task.dataset_name == "NanoMTEB-BR" for task in tasks) == 6
-    assert sum(task.dataset_name == "NanoSSRB" for task in tasks) == 0
+    assert sum(task.dataset_name == "NanoSSRB" for task in tasks) == 6
 
 
 def test_resolve_eval_tasks_for_nanossrb_uses_six_domain_splits() -> None:
@@ -446,7 +446,6 @@ def test_resolve_dataset_splits_uses_yaml_splits_without_network() -> None:
         corpus_config="corpus",
         queries_config="queries",
         qrels_config="qrels",
-        candidate_config="bm25",
         splits=["a", "b"],
     )
 
@@ -597,7 +596,6 @@ dataset_id: local/toy
 corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
-candidate_config: bm25
 splits: [a]
 """.strip(),
         encoding="utf-8",

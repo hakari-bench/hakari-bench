@@ -281,7 +281,6 @@ def _toy_task() -> EvalTask:
         corpus_config="corpus",
         queries_config="queries",
         qrels_config="qrels",
-        candidate_config="bm25",
         splits=["test"],
     )
     return EvalTask(dataset=dataset, split_name="test", task_name="test")

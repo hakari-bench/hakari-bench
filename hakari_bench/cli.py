@@ -2281,7 +2281,7 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
     print(
         json.dumps(
             {
-                "candidate_config": config_name,
+                "candidate_subset": config_name,
                 "candidates_dir": args.output_dir,
                 "evaluated_count": payload["totals"]["evaluated_count"],
                 "cache_hit_count": payload["totals"]["cache_hit_count"],
@@ -2322,7 +2322,7 @@ def run_web(args: argparse.Namespace) -> None:
 def _load_dataset_for_args(args: argparse.Namespace, task: EvalTask) -> LoadedIrDataset:
     model_type = getattr(args, "model_type", None)
     candidate_subset_name = (
-        (getattr(args, "candidate_subset_name", None) or task.dataset.candidate_config)
+        (getattr(args, "candidate_subset_name", None) or DEFAULT_CANDIDATE_RANKING)
         if model_type in {"dense", "sparse", "late-interaction", "bm25", "reranker"}
         else None
     )

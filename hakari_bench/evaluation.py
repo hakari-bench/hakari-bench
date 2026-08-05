@@ -171,8 +171,11 @@ def _load_candidates(
             split=task.split_name,
             **_dataset_load_kwargs(task.dataset_id, revision=revision),
         )
-    except Exception:
-        return None
+    except Exception as exc:
+        raise RuntimeError(
+            f"Candidate subset '{candidate_subset_name}' is unavailable for "
+            f"{task.dataset_id} split '{task.split_name}'."
+        ) from exc
     candidates: dict[str, list[str]] = {}
     for row in rows:
         candidates[str(row["query-id"])] = [str(corpus_id) for corpus_id in row["corpus-ids"]]

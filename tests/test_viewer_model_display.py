@@ -458,3 +458,11 @@ def test_model_detail_script_orders_fields_and_labels_github_repo() -> None:
     assert '["Doc Prompt", "document_prompt"]' in script
     assert 'replace(/^https?:\\/\\/github\\.com\\//, "")' in script
     assert '"Repository"' not in script
+
+
+def test_model_detail_external_links_use_explicit_new_tab_navigation() -> None:
+    script = Path("hakari_bench/viewer/assets/viewer.js").read_text(encoding="utf-8")
+
+    assert 'model-detail-external-link break-all' in script
+    assert 'closestElement(event.target, ".model-detail-external-link")' in script
+    assert 'window.open(link.href, "_blank", "noopener,noreferrer")' in script

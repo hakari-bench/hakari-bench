@@ -468,6 +468,21 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 page.locator(".model-detail-trigger").first.click()
                 page.locator("#model-detail-modal[open]").wait_for(timeout=5_000)
                 assert page.locator("#model-detail-title").inner_text() == "model/a"
+                page.locator("#model-detail-fields").evaluate(
+                    """(fields) => {
+                        const link = document.createElement("a");
+                        link.className = "model-detail-external-link";
+                        link.href = "https://example.com/paper";
+                        link.textContent = "Model paper";
+                        fields.append(link);
+                    }"""
+                )
+                with page.expect_popup() as popup_info:
+                    page.get_by_text("Model paper").click()
+                popup = popup_info.value
+                popup.wait_for_load_state("domcontentloaded")
+                assert popup.url == "https://example.com/paper"
+                popup.close()
 
                 page.locator("#model-detail-modal").evaluate("(modal) => modal.close()")
                 page.get_by_role("button", name="AR 1").click()

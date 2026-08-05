@@ -13,6 +13,7 @@ place and AGENTS.md can stay focused on repository-level guardrails.
 | Decide benchmark settings before running models | [evaluation_policy.md](evaluation_policy.md) | Source of truth for prompts, dtype, attention, variants, target scope, cache policy, and coverage audits. |
 | Run concrete evaluation and DuckDB commands | [evaluation_runbook.md](evaluation_runbook.md) | Runnable commands for full/partial evaluation, remote result sync, DuckDB rebuild/append, and viewer startup. |
 | Evaluate a new model and submit results | [new_model_results_workflow.md](new_model_results_workflow.md) | End-to-end checklist from model research through model card review, full evaluation, audit, and result PRs. |
+| Evaluate existing models on a new dataset | [new_dataset_evaluation_workflow.md](new_dataset_evaluation_workflow.md) | Reproduce existing retrieval and reranker tasks in the same environment before running and accepting a new dataset wave. |
 | Understand benchmark scope | [benchmark_scope.md](benchmark_scope.md) | Compact explanation of Nano-set task layout, coverage, dataset locations, and intended use. |
 | Understand the Brazilian Portuguese suite | [nanomteb_br.md](nanomteb_br.md) | NanoMTEB-BR task list, provenance, evaluation command, viewer scope, and full-to-Nano rank validation. |
 
@@ -23,6 +24,7 @@ place and AGENTS.md can stay focused on repository-level guardrails.
 | Evaluation policy | [evaluation_policy.md](evaluation_policy.md) | Prompt/runtime choices, embedding variants, BM25/reranker settings, offline/cache policy, coverage audits. |
 | Evaluation commands | [evaluation_runbook.md](evaluation_runbook.md) | Copy-pasteable CLI workflows for evaluation, DuckDB rebuild, append, remote sync, and viewer launch. |
 | Model onboarding | [new_model_results_workflow.md](new_model_results_workflow.md) | New-model research, small validation, full runs, PR body generation, and submission sequence. |
+| New-dataset model wave | [new_dataset_evaluation_workflow.md](new_dataset_evaluation_workflow.md) | Existing-task reproduction gates, environment matching, retrieval/reranker evaluation, failure handling, and result acceptance. |
 | Result contribution | [contributing_results.md](contributing_results.md) | Result repository layout, `.json.xz` expectations, Hugging Face Dataset PR workflow, reviewer checklist. |
 | Model metadata | [model_cards.md](model_cards.md) | Static model-card schema and which model-specific settings belong in `config/model_cards/`. |
 | Model-specific runtime notes | [model_specific_benchmarking_notes.md](model_specific_benchmarking_notes.md) | Verified prompts, prompt names, attention choices, compatibility notes, and model-family exceptions. |
@@ -66,6 +68,10 @@ place and AGENTS.md can stay focused on repository-level guardrails.
    README structure.
 4. Use [create_benchmark_tasks_document.md](create_benchmark_tasks_document.md)
    for public task pages and task metadata JSON.
+5. After adding the dataset, use
+   [new_dataset_evaluation_workflow.md](new_dataset_evaluation_workflow.md) to
+   reproduce existing model and reranker scores before launching the result
+   wave.
 
 ### Update Viewer Or Leaderboard Infrastructure
 

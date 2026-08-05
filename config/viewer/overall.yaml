@@ -1,8 +1,8 @@
 overalls:
   - name: Overall
     label: Overall
-    task_manifest: overall_544
-    expected_task_count: 544
+    task_manifest: overall_550
+    expected_task_count: 550
     benchmarks: &overall_benchmarks
       - NanoMMTEB-v2
       - NanoRTEB
@@ -34,6 +34,7 @@ overalls:
       - NanoFaMTEB-v2
       - NanoMTEB-Polish
       - NanoMTEB-BR
+      - NanoSSRB
       - NanoRuMTEB
       - NanoMTEB-Scandinavian
       - NanoMTEB-Spanish
@@ -43,6 +44,6 @@ overalls:
       - NanoMIRACL
   - name: Overall (EN)
     label: Overall (EN)
-    task_manifest: overall_544
-    expected_task_count: 544
+    task_manifest: overall_550
+    expected_task_count: 550
     benchmarks: *overall_benchmarks

@@ -105,8 +105,8 @@ def test_viewer_config_uses_overall_scope_views() -> None:
     overall_en_task_keys = config.expected_task_keys_for_overall(overall_en)
     assert overall_task_keys is not None
     assert overall_en_task_keys is not None
-    assert len(overall_task_keys) == 544
-    assert len(overall_en_task_keys) == 544
+    assert len(overall_task_keys) == 550
+    assert len(overall_en_task_keys) == 550
     assert {
         "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::BRTaxQAR",
         "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::FaQuADIR",
@@ -114,6 +114,14 @@ def test_viewer_config_uses_overall_scope_views() -> None:
         "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::JurisTCU",
         "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::MedPTRetrieval",
         "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::Quati",
+    } <= overall_task_keys
+    assert {
+        "NanoSSRB::hakari-bench/NanoSSRB::Academic",
+        "NanoSSRB::hakari-bench/NanoSSRB::FinanceAndEconomics",
+        "NanoSSRB::hakari-bench/NanoSSRB::HumanResources",
+        "NanoSSRB::hakari-bench/NanoSSRB::LLMAgentAndTool",
+        "NanoSSRB::hakari-bench/NanoSSRB::ProductSearch",
+        "NanoSSRB::hakari-bench/NanoSSRB::ResumeSearch",
     } <= overall_task_keys
     assert sum("hakari-bench/NanoBEIR-en" in task_key for task_key in overall_task_keys) == 13
     assert not {

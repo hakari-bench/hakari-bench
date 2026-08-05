@@ -458,7 +458,6 @@ benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
-candidate_config: reranking_hybrid
 splits:
 - NanoTask
 metadata:

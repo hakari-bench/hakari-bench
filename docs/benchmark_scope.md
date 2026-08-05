@@ -9,7 +9,7 @@ fixed candidate subsets such as `bm25`, `harrier_oss_v1_270m`, and
 `reranking_hybrid`. This makes candidate generation and reranking comparable
 under the same metrics.
 
-The standard `--all` target currently evaluates 557 retrieval tasks across 35+
+The standard `--all` target currently evaluates 563 retrieval tasks across 35+
 benchmark
 groups and 43+ languages, including BEIR-style retrieval, MTEB/MMTEB language
 families, MIRACL, MLDR, code retrieval, long-context retrieval, and expert
@@ -21,11 +21,10 @@ search.
 The evaluation task count and the leaderboard Overall task count are
 intentionally different:
 
-- A standard `--all` evaluation runs and preserves results for all **557 tasks**.
-- The leaderboard uses a curated **544-task** Overall manifest that excludes
-  13 overlapping task copies. `NanoMTEB-BR` is included in both `--all` and
-  Overall. `NanoSSRB` is outside Overall and is not part of the standard
-  `--all` target.
+- A standard `--all` evaluation runs and preserves results for all **563 tasks**.
+- The leaderboard uses a curated **550-task** Overall manifest that excludes
+  13 overlapping task copies. `NanoMTEB-BR` and `NanoSSRB` are included in both
+  `--all` and Overall.
 
 The excluded copies are still valid evaluation artifacts and remain in the
 results dataset. They are omitted only from the Overall aggregate so that the
@@ -35,19 +34,19 @@ are `NanoIFIRFiQA`, `NanoIFIRNFCorpus`, `NanoIFIRScifact`,
 `NanoLegalBenchCorporateLobbying`, `NanoCUREv1`, `NanoNFCorpus`,
 `NanoSciFact`, `NanoWinoGrande`, `NanoSpartQA`, and `NanoTempReasonL1`.
 
-`NanoBEIR-en` is the English component of `MNanoBEIR`. It is part of the 557
+`NanoBEIR-en` is the English component of `MNanoBEIR`. It is part of the 563
 evaluation tasks and is not one of the 13 Overall exclusions. Referring to the
 same dataset through the `MNanoBEIR` collection does not create a second result
 row or cause it to be counted twice.
 
 The canonical exclusion rules live in
 [`config/viewer/benchmarks.yaml`](../config/viewer/benchmarks.yaml). Do not
-remove evaluation outputs merely to make their file count match the 544-task
+remove evaluation outputs merely to make their file count match the 550-task
 Overall count.
 
-`NanoSSRB` provides six semi-structured retrieval tasks. It can be evaluated
-explicitly with `--dataset NanoSSRB`, but it is intentionally excluded from
-both the standard `--all` target and the Overall manifest.
+`NanoSSRB` provides six semi-structured retrieval tasks. It is included in
+standard `--all` runs and in Overall, and can also be evaluated explicitly with
+`--dataset NanoSSRB` when filling only this benchmark's results.
 
 `NanoMTEB-BR` contributes six native Brazilian Portuguese Retrieval tasks to
 the complete evaluation target and Overall. See

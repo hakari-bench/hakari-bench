@@ -353,7 +353,7 @@
     anchor.href = url;
     anchor.target = "_blank";
     anchor.rel = "noopener noreferrer";
-    anchor.className = "break-all text-cyan-700 underline underline-offset-2";
+    anchor.className = "model-detail-external-link break-all text-cyan-700 underline underline-offset-2";
     anchor.textContent = text || url;
     return anchor;
   }
@@ -515,6 +515,14 @@
 
     document.addEventListener("click", (event) => {
       const link = closestElement(event.target, ".count-breakdown-task-link");
+      if (!link || !link.href) return;
+      event.preventDefault();
+      event.stopPropagation();
+      window.open(link.href, "_blank", "noopener,noreferrer");
+    });
+
+    document.addEventListener("click", (event) => {
+      const link = closestElement(event.target, ".model-detail-external-link");
       if (!link || !link.href) return;
       event.preventDefault();
       event.stopPropagation();

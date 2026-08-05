@@ -1762,7 +1762,6 @@ def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(
             corpus_config="corpus",
             queries_config="queries",
             qrels_config="qrels",
-            candidate_config="bm25",
         ),
         split_name="test",
         task_name="test",
@@ -1781,6 +1780,34 @@ def test_load_dataset_for_args_uses_candidate_subset_for_candidate_aware_models(
         ("bm25", "bm25", False),
         ("reranker", "bm25", True),
     ]
+
+
+def test_load_dataset_for_args_defaults_to_reranking_hybrid(monkeypatch) -> None:
+    from hakari_bench.cli import _load_dataset_for_args
+
+    candidate_subsets: list[str | None] = []
+
+    def fake_load_ir_dataset(
+        task: EvalTask,
+        *,
+        candidate_subset_name: str | None = None,
+        revision: str | None = None,
+        restrict_corpus_to_candidates: bool = False,
+    ) -> object:
+        _ = task, revision, restrict_corpus_to_candidates
+        candidate_subsets.append(candidate_subset_name)
+        return object()
+
+    monkeypatch.setattr("hakari_bench.cli.load_ir_dataset", fake_load_ir_dataset)
+    task = EvalTask(
+        dataset=NanoDatasetSpec(name="Toy", dataset_id="toy/data"),
+        split_name="test",
+        task_name="test",
+    )
+
+    _load_dataset_for_args(argparse.Namespace(model_type="reranker"), task)
+
+    assert candidate_subsets == ["reranking_hybrid"]
 
 
 def test_run_evaluate_returns_run_summary_payload(monkeypatch, tmp_path) -> None:

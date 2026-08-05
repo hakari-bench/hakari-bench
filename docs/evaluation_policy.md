@@ -38,6 +38,12 @@ viewer startup.
    priority order; earlier directories win duplicate model-task JSON conflicts.
 9. Audit result coverage before treating a leaderboard as final.
 
+When the target is a newly added dataset and the models already have leaderboard
+results, follow
+[`new_dataset_evaluation_workflow.md`](new_dataset_evaluation_workflow.md).
+Existing retrieval models and rerankers must each reproduce an existing task in
+the planned environment before their new-dataset results are accepted.
+
 ## Target Selection
 
 Use `--all` when the requested run should cover every standard built-in dataset
@@ -46,12 +52,11 @@ unless `--overwrite` is set, so `--all` can be used to fill missing benchmark
 coverage. Per-task evaluation output defaults to compressed `.json.xz` files;
 pass `--result-format json` only when a plain `.json` result tree is required:
 
-The standard `--all` target currently resolves to 557 tasks, including the 13
+The standard `--all` target currently resolves to 563 tasks, including the 13
 `NanoBEIR-en` tasks in `MNanoBEIR`. Do not apply the viewer's 13 duplicate-task
 exclusions during evaluation: those exclusions reduce only the leaderboard
-Overall aggregate to 544 tasks, while all 557 standard result artifacts must be
-retained. `NanoMTEB-BR` is included in both `--all` and Overall. `NanoSSRB` is
-an explicit-only diagnostic suite and is excluded from both `--all` and Overall.
+Overall aggregate to 550 tasks, while all 563 standard result artifacts must be
+retained. `NanoMTEB-BR` and `NanoSSRB` are included in both `--all` and Overall.
 See [`benchmark_scope.md`](benchmark_scope.md#evaluation-count-and-overall-count).
 
 ```bash
@@ -105,6 +110,12 @@ rows rerank the RRF top-100 and 101-candidate rows rerank the same top-100 plus
 the appended safeguard positive. DuckDB/report generation exposes both
 `reranking` and `reranking_without_safeguard` targets so the safeguard effect can
 be inspected separately.
+
+Dataset YAML does not select a candidate subset. Candidate selection has one
+runtime source of truth: `--candidate-ranking`, whose default is
+`reranking_hybrid`. Loading a requested candidate subset is mandatory; if that
+subset is absent for a dataset split, evaluation fails instead of silently
+continuing without candidates.
 
 ```bash
 # Pin a physical GPU for a single process. Inside the process the visible GPU is

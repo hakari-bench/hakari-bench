@@ -149,7 +149,6 @@ def _toy_task() -> EvalTask:
         corpus_config="corpus",
         queries_config="queries",
         qrels_config="qrels",
-        candidate_config="bm25",
     )
     return EvalTask(dataset=spec, split_name="test", task_name="test")
 
@@ -297,7 +296,7 @@ def test_load_ir_dataset_forces_redownload_for_local_dataset_paths(
     tmp_path: Path,
 ) -> None:
     task = EvalTask(
-        dataset=NanoDatasetSpec(name="NanoLocal", dataset_id=str(tmp_path), candidate_config="reranking_hybrid"),
+        dataset=NanoDatasetSpec(name="NanoLocal", dataset_id=str(tmp_path)),
         split_name="test",
         task_name="test",
     )
@@ -344,6 +343,40 @@ def test_load_ir_dataset_forces_redownload_for_local_dataset_paths(
         ("reranking_hybrid", force_redownload),
         ("corpus", force_redownload),
     ]
+
+
+def test_load_ir_dataset_fails_when_requested_candidate_subset_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    task = EvalTask(
+        dataset=NanoDatasetSpec(name="NanoMissingCandidates", dataset_id="test/missing-candidates"),
+        split_name="test",
+        task_name="test",
+    )
+
+    def fake_load_dataset(
+        dataset_id: str,
+        config_name: str,
+        *,
+        split: str,
+        **kwargs: object,
+    ) -> list[dict[str, object]]:
+        _ = dataset_id, split, kwargs
+        if config_name == "queries":
+            return [{"_id": "q1", "text": "query"}]
+        if config_name == "qrels":
+            return [{"query-id": "q1", "corpus-id": "d1"}]
+        if config_name == "reranking_hybrid":
+            raise ValueError("BuilderConfig 'reranking_hybrid' not found")
+        raise AssertionError(f"Unexpected config: {config_name}")
+
+    monkeypatch.setitem(sys.modules, "datasets", types.SimpleNamespace(load_dataset=fake_load_dataset))
+
+    with pytest.raises(
+        RuntimeError,
+        match="Candidate subset 'reranking_hybrid' is unavailable for test/missing-candidates split 'test'",
+    ):
+        load_ir_dataset(task, candidate_subset_name="reranking_hybrid")
 
 
 class FakeDenseModel:
