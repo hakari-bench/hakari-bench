@@ -147,8 +147,8 @@ cat > README.md <<'EOF'
 ---
 title: HAKARI-Bench Leaderboard
 emoji: ⚖️
-colorFrom: blue
-colorTo: gray
+colorFrom: yellow
+colorTo: red
 sdk: docker
 app_port: 7860
 pinned: true
