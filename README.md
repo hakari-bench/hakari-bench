@@ -1,12 +1,28 @@
-# ⚖️ HAKARI-Bench
+<h1 align="center">
+  <img src="https://storage.googleapis.com/secons-site-images/other/huggingface/bekko/hakari_bench_icon_128.png" alt="HAKARI-Bench" width="28" style="vertical-align: middle; margin-right: 10px; border-radius: 22%;"/> HAKARI-Bench
+</h1>
 
-> A Lightweight Benchmark for Comparing Retrieval Architectures and Efficiency
-> Settings under Unified Conditions
+<h3 align="center" style="border-bottom: none;">A Leaderboard for Information Retrieval Models Across Diverse Tasks</h3>
 
-<p align="left">
-  📊 <a href="https://huggingface.co/spaces/hakari-bench/leaderboard">🤗 Leaderboard</a> | 
-  📄 <a href="https://arxiv.org/abs/2606.22778">Paper: HAKARI-Bench</a>
+<p align="center">
+  <a href="https://huggingface.co/spaces/hakari-bench/leaderboard">
+    <img alt="HAKARI-Bench Leaderboard" src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Leaderboard-FFD21E">
+  </a>
+  <a href="https://arxiv.org/abs/2606.22778">
+    <img alt="HAKARI-Bench paper" src="https://img.shields.io/badge/arXiv-2606.22778-b31b1b.svg">
+  </a>
+  <a href="LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/hakari-bench/hakari-bench.svg?color=green">
+  </a>
 </p>
+
+<h4 align="center">
+  <a href="docs/quickstart.md">Quick Start</a> |
+  <a href="https://huggingface.co/spaces/hakari-bench/leaderboard">Leaderboard</a> |
+  <a href="docs/index.md">Documentation</a> |
+  <a href="https://arxiv.org/abs/2606.22778">Paper</a> |
+  <a href="#citation">Citation</a>
+</h4>
 
 HAKARI-Bench is a lightweight IR benchmark that rebuilds retrieval tasks as
 small Nano-sets, making model selection, regression checks, quantization,

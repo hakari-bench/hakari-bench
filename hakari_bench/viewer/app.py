@@ -85,6 +85,9 @@ from hakari_bench.viewer.variant_display import (
 )
 
 ASSETS_DIR = Path(__file__).with_name("assets")
+BRAND_ICON_URL = (
+    "https://storage.googleapis.com/secons-site-images/other/huggingface/bekko/hakari_bench_icon_128.png"
+)
 DEFAULT_FRAME_ANCESTORS = "https://huggingface.co https://*.huggingface.co"
 _FRAME_ANCESTOR_TOKEN = re.compile(
     r"^(?:'self'|'none'|\*|(?:https?://)?(?:\*\.)?[A-Za-z0-9.-]+(?::\d+)?)$"
@@ -175,17 +178,6 @@ _ICON_PATHS = {
     "github": (
         '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5a5.4 5.4 0 0 0-1-3.5c.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5a13.38 13.38 0 0 0-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>'
         '<path d="M9 18c-4.51 2-5-2-7-2"/>'
-    ),
-    "hakari-bench": (
-        '<circle cx="12" cy="5" r="2"/>'
-        '<path d="M12 7v11"/>'
-        '<path d="M7 21h10"/>'
-        '<path d="M9 18h6"/>'
-        '<path d="M5 10c2.7 0 5-1.1 7-3 2 1.9 4.3 3 7 3"/>'
-        '<path d="m5 10-2 6h4Z"/>'
-        '<path d="m19 10-2 6h4Z"/>'
-        '<path d="M3 16c.5 2 3.5 2 4 0"/>'
-        '<path d="M17 16c.5 2 3.5 2 4 0"/>'
     ),
     "info-simple": '<path d="M12 17v-6"/><path d="M12 7h.01"/>',
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
@@ -871,7 +863,7 @@ def _content_security_policy() -> str:
             "default-src 'self'",
             "script-src 'self'",
             "style-src 'self'",
-            "img-src 'self' data:",
+            "img-src 'self' data: https://storage.googleapis.com",
             "connect-src 'self'",
             "object-src 'none'",
             "frame-src 'none'",
@@ -928,8 +920,8 @@ def render_page(
       <div class="flex items-center justify-between gap-3">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
           <a id="hakari-home-link" href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
-            {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
-            <span>HAKARI-Bench leaderboard</span>
+            {_render_brand_icon()}
+            <span>HAKARI-Bench - A Leaderboard for Information Retrieval Models Across Diverse Tasks</span>
           </a>
         </h1>
         {header_actions}
@@ -1070,6 +1062,10 @@ def _render_theme_toggle() -> str:
         </button>"""
 
 
+def _render_brand_icon() -> str:
+    return f'<img src="{BRAND_ICON_URL}" alt="" class="hakari-brand-icon shrink-0" width="28" height="28">'
+
+
 def _render_docs_link() -> str:
     return f"""<a id="hakari-docs-link" href="/docs/" class="theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
           aria-label="Open documentation" title="Open documentation">
@@ -1095,7 +1091,7 @@ def _render_header_actions() -> str:
 def _render_docs_header() -> str:
     return f"""<header class="mb-5 flex items-center justify-between gap-3">
           <a href="/" class="docs-brand flex min-w-0 items-center gap-1.5 text-sm font-medium text-zinc-600" aria-label="Back to HAKARI-Bench leaderboard">
-            {_icon_svg("hakari-bench", class_name="hakari-icon section-heading-icon shrink-0")}
+            {_render_brand_icon()}
             <span>HAKARI-Bench</span>
           </a>
           <div class="flex shrink-0 items-center gap-2">

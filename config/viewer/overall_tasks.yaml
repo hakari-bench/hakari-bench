@@ -1,18 +1,18 @@
-# A complete HAKARI evaluation runs and preserves 551 task results. This Overall
-# manifest contains 538 task keys because it excludes these 13 overlapping Nano
+# A complete HAKARI evaluation runs and preserves 557 task results. This Overall
+# manifest contains 544 task keys because it excludes these 13 overlapping Nano
 # task copies so that the same underlying benchmark is not weighted twice:
 # - NanoIFIR: NanoIFIRFiQA, NanoIFIRNFCorpus, NanoIFIRScifact
 # - NanoLaw: NanoAILACasedocs, NanoAILAStatutes, NanoLegalSummarization,
 #   NanoLegalBenchCorporateLobbying
 # - NanoMedical: NanoCUREv1, NanoNFCorpus, NanoSciFact
 # - NanoRARb: NanoWinoGrande, NanoSpartQA, NanoTempReasonL1
-# The excluded task results remain part of the 551-task evaluation and results
+# The excluded task results remain part of the 557-task evaluation and results
 # dataset; they are omitted only from Overall. Whenever a Nano-set or its task
 # membership changes, update this comment, the manifest name and keys below,
 # config/viewer/overall.yaml, and config/viewer/benchmarks.yaml together so the
 # evaluation count, exclusion list, and Overall count remain accurate.
 task_manifests:
-  overall_538:
+  overall_544:
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::arguana
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::climatefever
     - MNanoBEIR::hakari-bench/NanoBEIR-ar::dbpedia
@@ -432,6 +432,12 @@ task_manifests:
     - NanoMTEB-Polish::hakari-bench/NanoMTEB-Polish::nq
     - NanoMTEB-Polish::hakari-bench/NanoMTEB-Polish::pugg
     - NanoMTEB-Polish::hakari-bench/NanoMTEB-Polish::quora
+    - NanoMTEB-BR::hakari-bench/NanoMTEB-BR::BRTaxQAR
+    - NanoMTEB-BR::hakari-bench/NanoMTEB-BR::FaQuADIR
+    - NanoMTEB-BR::hakari-bench/NanoMTEB-BR::FaqBacenRetrieval
+    - NanoMTEB-BR::hakari-bench/NanoMTEB-BR::JurisTCU
+    - NanoMTEB-BR::hakari-bench/NanoMTEB-BR::MedPTRetrieval
+    - NanoMTEB-BR::hakari-bench/NanoMTEB-BR::Quati
     - NanoMTEB-Scandinavian::hakari-bench/NanoMTEB-Scandinavian::dan_fever
     - NanoMTEB-Scandinavian::hakari-bench/NanoMTEB-Scandinavian::nor_quad
     - NanoMTEB-Scandinavian::hakari-bench/NanoMTEB-Scandinavian::snl

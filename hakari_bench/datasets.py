@@ -15,8 +15,6 @@ from hakari_bench.config_schema import (
     DatasetConfigModel,
     EvaluationScopeConfigModel,
 )
-from hakari_bench.defaults import DEFAULT_CANDIDATE_RANKING
-
 try:
     HfApi: Any = getattr(importlib.import_module("huggingface_hub"), "HfApi")
 except Exception:  # pragma: no cover
@@ -93,7 +91,6 @@ class NanoDatasetSpec:
     corpus_config: str = "corpus"
     queries_config: str = "queries"
     qrels_config: str = "qrels"
-    candidate_config: str | None = DEFAULT_CANDIDATE_RANKING
     benchmark_kind: str = "nano"
     splits: list[str] | None = None
     split_mapping: dict[str, str] | None = None
@@ -191,7 +188,6 @@ def _dataset_from_config(config: DatasetConfigModel) -> NanoDatasetSpec:
         corpus_config=config.corpus_config,
         queries_config=config.queries_config,
         qrels_config=config.qrels_config,
-        candidate_config=config.candidate_config,
         benchmark_kind=config.benchmark_kind,
         splits=list(config.splits) if config.splits is not None else None,
         split_mapping=dict(config.split_mapping) if config.split_mapping else None,

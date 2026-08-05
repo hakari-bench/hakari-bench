@@ -185,16 +185,16 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                     "textOverflow": "clip",
                     "whiteSpace": "normal",
                 }
-                section_icon_state = page.locator("h1 svg.section-heading-icon[data-icon='hakari-bench']").first.evaluate(
+                section_icon_state = page.locator("h1 img.hakari-brand-icon").first.evaluate(
                     """(el) => ({
                         width: parseFloat(getComputedStyle(el).width),
                         height: parseFloat(getComputedStyle(el).height),
-                        color: getComputedStyle(el).color,
+                        borderRadius: getComputedStyle(el).borderRadius,
                     })"""
                 )
-                assert section_icon_state["width"] == pytest.approx(14.0, abs=0.1)
-                assert section_icon_state["height"] == pytest.approx(14.0, abs=0.1)
-                assert section_icon_state["color"] != "rgb(0, 0, 0)"
+                assert section_icon_state["width"] == pytest.approx(28.0, abs=0.1)
+                assert section_icon_state["height"] == pytest.approx(28.0, abs=0.1)
+                assert section_icon_state["borderRadius"] == "22%"
                 assert page.locator("button", has_text="Variant impact").count() == 0
                 page.get_by_text("256d <- 384").wait_for(timeout=15_000)
                 compact_table_state = page.locator("tbody tr:not([hidden]) td").first.evaluate(

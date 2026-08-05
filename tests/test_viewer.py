@@ -105,8 +105,16 @@ def test_viewer_config_uses_overall_scope_views() -> None:
     overall_en_task_keys = config.expected_task_keys_for_overall(overall_en)
     assert overall_task_keys is not None
     assert overall_en_task_keys is not None
-    assert len(overall_task_keys) == 538
-    assert len(overall_en_task_keys) == 538
+    assert len(overall_task_keys) == 544
+    assert len(overall_en_task_keys) == 544
+    assert {
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::BRTaxQAR",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::FaQuADIR",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::FaqBacenRetrieval",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::JurisTCU",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::MedPTRetrieval",
+        "NanoMTEB-BR::hakari-bench/NanoMTEB-BR::Quati",
+    } <= overall_task_keys
     assert sum("hakari-bench/NanoBEIR-en" in task_key for task_key in overall_task_keys) == 13
     assert not {
         "NanoIFIR::hakari-bench/NanoIFIR::NanoIFIRFiQA",
@@ -1039,13 +1047,21 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
 
     assert response.status_code == 200
     assert "<title>HAKARI-Bench leaderboard</title>" in response.text
-    assert "HAKARI-Bench leaderboard" in response.text
+    assert (
+        "<span>HAKARI-Bench - A Leaderboard for Information Retrieval Models Across Diverse Tasks</span>"
+        in response.text
+    )
     assert '<div class="flex items-center justify-between gap-3">' in response.text
     assert '<h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">' in response.text
     assert 'id="hakari-home-link"' in response.text
     assert 'href="/"' in response.text
     assert 'aria-label="Refresh HAKARI-Bench leaderboard"' in response.text
-    assert 'data-icon="hakari-bench"' in response.text
+    assert (
+        '<img src="https://storage.googleapis.com/secons-site-images/other/huggingface/bekko/'
+        'hakari_bench_icon_128.png" alt="" class="hakari-brand-icon shrink-0" width="28" height="28">'
+        in response.text
+    )
+    assert 'data-icon="hakari-bench"' not in response.text
     assert 'id="hakari-github-link"' in response.text
     assert 'href="https://github.com/hakari-bench/hakari-bench"' in response.text
     assert 'target="_blank" rel="noopener noreferrer"' in response.text
@@ -1520,7 +1536,10 @@ def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: 
     assert "script-src 'self'" in response.headers["content-security-policy"]
     assert "style-src 'self'" in response.headers["content-security-policy"]
     assert "'unsafe-inline'" not in response.headers["content-security-policy"]
-    assert "img-src 'self' data:" in response.headers["content-security-policy"]
+    assert (
+        "img-src 'self' data: https://storage.googleapis.com"
+        in response.headers["content-security-policy"]
+    )
     assert "object-src 'none'" in response.headers["content-security-policy"]
     assert "frame-src 'none'" in response.headers["content-security-policy"]
     assert "form-action 'self'" in response.headers["content-security-policy"]
