@@ -5,7 +5,11 @@ fleet on a newly added HAKARI-Bench dataset. The central rule is that a new
 dataset run is accepted only after the evaluator can reproduce an existing task
 with nearly unchanged scores in the same software and hardware environment.
 Apply the gate independently to retrieval models and rerankers; success for one
-method does not validate another method.
+method does not validate another method. Treat BM25 as a required baseline entry
+for every new dataset result wave even when the request is phrased as evaluating
+all existing models or rerankers. BM25 is not part of the neural-model
+reproduction gate, but its per-task `.json.xz` results must still be evaluated,
+audited, and submitted.
 
 Use this workflow after the dataset itself, its fixed candidate subsets, and its
 built-in YAML definition have been reviewed. Dataset construction belongs in
@@ -37,7 +41,7 @@ tmp/NanoSSRB-evaluation.md
 Record the following for every model or logical model variant:
 
 - model ID and resolved revision;
-- method: dense, sparse, late-interaction, or reranker;
+- method: dense, sparse, late-interaction, reranker, or BM25 baseline;
 - reference result source and reference task;
 - command and output directory;
 - GPU model and device count, CUDA, PyTorch, Transformers, Sentence
@@ -69,6 +73,10 @@ Before using GPU time:
    that the current library defaults match an older run.
 5. Use the same output format and normal result path expected by the Hugging
    Face results repository.
+6. Add `bm25` to the expected result inventory separately from the model list.
+   Confirm that every task exposes the reviewed `bm25` candidate subset before
+   starting the wave. Do not let a model-type query that selects only dense,
+   sparse, reranker, and late-interaction rows silently omit the baseline.
 
 Capture the environment before and after a long wave. At minimum retain the
 output of `nvidia-smi`, `uv run python --version`, and the relevant package
@@ -97,6 +105,10 @@ of the intended code path.
 - For hosted or batch providers, reproduce a task through the same direct or
   batch materialization path intended for the new run, including the same
   tokenizer-based input truncation policy.
+- BM25 has no model weights or neural runtime to reproduce. Validate the BM25
+  loader on an existing task when the dataset/candidate schema changed, then
+  evaluate the new dataset from its fixed `bm25` candidate subset. Do not
+  silently substitute locally recomputed BM25 scores.
 
 One task is the minimum gate, not proof that every dataset interaction is
 equivalent. Add a second reference whenever the first result differs, the new
@@ -187,14 +199,14 @@ model identity.
 ## 5. Evaluate The New Dataset
 
 After a model passes its method-specific control, run the new dataset without
-changing the validated environment or score-affecting settings. NanoSSRB is an
-explicit-only diagnostic suite, so it requires the extended evaluation scope:
+changing the validated environment or score-affecting settings. NanoSSRB is a
+standard dataset and is included in `--all`; an explicit dataset run is useful
+while filling only its newly added results:
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 uv run --group tf4-fa2 hakari-bench evaluate dense \
   --model MODEL_ID \
   --dataset NanoSSRB \
-  --evaluation-scope all \
   --dtype bf16 \
   --attn-implementation sdpa
 ```
@@ -205,11 +217,24 @@ For rerankers:
 CUDA_VISIBLE_DEVICES=0 uv run --group tf4-fa2 hakari-bench evaluate reranker \
   --model RERANKER_ID \
   --dataset NanoSSRB \
-  --evaluation-scope all \
   --candidate-ranking reranking_hybrid \
   --dtype bf16 \
   --attn-implementation sdpa
 ```
+
+Evaluate the BM25 baseline independently of the neural-model queue. The normal
+submission baseline reads the fixed candidate ranking stored in the dataset:
+
+```bash
+uv run hakari-bench evaluate bm25 \
+  --dataset NanoSSRB \
+  --candidate-ranking bm25 \
+  --bm25-source dataset
+```
+
+Use `--bm25-source computed` only for an explicitly requested diagnostic or
+candidate-generation run. A computed run is not interchangeable with the
+published dataset-subset baseline and must not silently replace it.
 
 Use each model's validated settings rather than copying the example settings to
 the entire fleet. Preserve automatic dense variants and documented truncation
@@ -222,16 +247,18 @@ when intentionally replacing an invalid run.
 Before accepting the wave:
 
 1. confirm that every passed model has one base result for every new task;
-2. audit all expected dense, sparse, reranking, or late-interaction variants;
-3. verify that result JSON records the validated runtime, resolved revisions,
+2. confirm that `bm25` has one result for every new task, uses
+   `config.candidate_ranking = bm25`, and records the dataset BM25 source;
+3. audit all expected dense, sparse, reranking, or late-interaction variants;
+4. verify that result JSON records the validated runtime, resolved revisions,
    candidate metadata, package versions, and top-ranking artifacts;
-4. compare model ordering and score ranges with the existing leaderboard and
+5. compare model ordering and score ranges with the existing leaderboard and
    with models of similar capability;
-5. when a full-size parent benchmark or official leaderboard exists, match
+6. when a full-size parent benchmark or official leaderboard exists, match
    shared models and measure rank correlation between the full and Nano suites,
    as was done for NanoMTEB-BR;
-6. investigate outliers rather than deleting them solely for being surprising;
-7. keep failed-reproduction models out of the submitted new-dataset set and
+7. investigate outliers rather than deleting them solely for being surprising;
+8. keep failed-reproduction models out of the submitted new-dataset set and
    list them explicitly in the progress memo and review summary.
 
 A plausible cross-model trend is supporting evidence, not a replacement for
@@ -254,8 +281,13 @@ The review summary must state:
 - the environment and revisions used;
 - reproduction differences for each model or a linked audit table;
 - complete new-dataset task and variant counts;
+- the BM25 task count, source (`dataset` for submitted baselines), and mean
+  score, listed separately from the neural/hosted model count;
 - reranker candidate protocol;
 - every skipped model and why it could not be reproduced.
 
 Do not describe a wave as equivalent to existing leaderboard results if the
 control runs used materially different settings or failed the stated tolerance.
+Do not describe the model inventory as complete while omitting BM25 merely
+because BM25 is not a neural model. If BM25 is intentionally excluded, document
+the exception and its effect on baseline display and Borda calculations.

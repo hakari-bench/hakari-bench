@@ -4,12 +4,6 @@ benchmark_kind: nano
 corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
-evaluation_scope:
-  include_by_default: false
-  tags:
-  - structured_data
-  - experimental
-  reason: NanoSSRB is available for explicit evaluation but is not included in the --all target.
 splits:
 - Academic
 - FinanceAndEconomics
@@ -19,6 +13,7 @@ splits:
 - ResumeSearch
 metadata:
   language: en
+  primary_languages: [en]
   category: natural_language
   short_description: Nano benchmark for natural-language retrieval over semi-structured JSON records.
   description: NanoSSRB evaluates retrieval over JSON-serialized semi-structured objects across six domains, using natural-language queries that combine exact filters and semantic conditions.
@@ -30,31 +25,37 @@ metadata:
 task_metadata:
   Academic:
     language: en
+    primary_languages: [en]
     category: natural_language
     short_description: Semi-structured academic record retrieval.
     description: Retrieves academic profiles, research projects, collaborations, publications, workshops, and related JSON records from natural-language requirements.
   FinanceAndEconomics:
     language: en
+    primary_languages: [en]
     category: natural_language
     short_description: Semi-structured finance and economics retrieval.
     description: Retrieves banking, transaction, market, economic indicator, risk, insurance, and personal-finance JSON records.
   HumanResources:
     language: en
+    primary_languages: [en]
     category: natural_language
     short_description: Semi-structured human-resources retrieval.
     description: Retrieves employee, organization, role, payroll, benefits, policy, and workplace JSON records from exact and semantic conditions.
   LLMAgentAndTool:
     language: en
+    primary_languages: [en]
     category: natural_language
     short_description: Semi-structured LLM agent and tool retrieval.
     description: Retrieves LLM agents, tools, capabilities, sessions, security records, and tool-selection JSON records.
   ProductSearch:
     language: en
+    primary_languages: [en]
     category: natural_language
     short_description: Attribute-aware semi-structured product retrieval.
     description: Retrieves product JSON records using brand, category, numeric range, rating, availability, and semantic product requirements.
   ResumeSearch:
     language: en
+    primary_languages: [en]
     category: natural_language
     short_description: Semi-structured resume and candidate retrieval.
     description: Retrieves resume and candidate JSON records using experience, skills, education, certification, and role requirements.
