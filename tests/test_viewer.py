@@ -1056,7 +1056,12 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'id="hakari-home-link"' in response.text
     assert 'href="/"' in response.text
     assert 'aria-label="Refresh HAKARI-Bench leaderboard"' in response.text
-    assert 'data-icon="hakari-bench"' in response.text
+    assert (
+        '<img src="https://storage.googleapis.com/secons-site-images/other/huggingface/bekko/'
+        'hakari_bench_icon_128.png" alt="" class="hakari-brand-icon shrink-0" width="28" height="28">'
+        in response.text
+    )
+    assert 'data-icon="hakari-bench"' not in response.text
     assert 'id="hakari-github-link"' in response.text
     assert 'href="https://github.com/hakari-bench/hakari-bench"' in response.text
     assert 'target="_blank" rel="noopener noreferrer"' in response.text
@@ -1531,7 +1536,10 @@ def test_viewer_responses_include_security_headers(tmp_path: Path, monkeypatch: 
     assert "script-src 'self'" in response.headers["content-security-policy"]
     assert "style-src 'self'" in response.headers["content-security-policy"]
     assert "'unsafe-inline'" not in response.headers["content-security-policy"]
-    assert "img-src 'self' data:" in response.headers["content-security-policy"]
+    assert (
+        "img-src 'self' data: https://storage.googleapis.com"
+        in response.headers["content-security-policy"]
+    )
     assert "object-src 'none'" in response.headers["content-security-policy"]
     assert "frame-src 'none'" in response.headers["content-security-policy"]
     assert "form-action 'self'" in response.headers["content-security-policy"]

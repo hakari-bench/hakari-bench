@@ -91,9 +91,9 @@ components:
       The in-page title reads `HAKARI-Bench - A Leaderboard for Information
       Retrieval Models Across Diverse Tasks`; the browser document title
       remains the shorter `HAKARI-Bench leaderboard`.
-      The brand mark is a single-color inline SVG that follows the same
-      stroke-based icon style as header actions. The brand/title target links to
-      `/` so users can refresh back to the default leaderboard state.
+      The brand mark uses the square HAKARI-Bench app icon at 28px with a 22%
+      CSS border radius for an iOS-style rounded shape. The brand/title target
+      links to `/` so users can refresh back to the default leaderboard state.
   leaderboard-configuration:
     purpose: Select evaluation mode, benchmark scope, metrics, task facets, display,
       variants, and filters.
@@ -400,9 +400,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - In Filter results, Params sits above Length and uses compact numeric inputs
   narrow enough not to dominate the filter row
   in millions for Active Params and Total Params bounds.
-- Keep the HAKARI-Bench brand mark as a simple single-color balance icon with
-  `currentColor` stroke so it can inherit the viewer accent color in both
-  themes.
+- Keep the HAKARI-Bench brand mark at 28px with the same 22% rounded app-icon
+  treatment in the leaderboard and documentation headers.
 - Use a separate white SVG for the browser favicon, while keeping the in-page
   brand mark theme-aware.
 - Loading indicators should be animated but small. Initial page loading can be

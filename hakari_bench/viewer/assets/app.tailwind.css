@@ -278,6 +278,14 @@
     width: 0.875rem;
   }
 
+  .hakari-brand-icon {
+    display: block;
+    height: 1.75rem;
+    width: 1.75rem;
+    border-radius: 22%;
+    object-fit: cover;
+  }
+
   .theme-toggle {
     background-color: var(--hakari-surface-muted);
     border-color: transparent;
