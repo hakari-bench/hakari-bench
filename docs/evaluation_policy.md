@@ -38,6 +38,12 @@ viewer startup.
    priority order; earlier directories win duplicate model-task JSON conflicts.
 9. Audit result coverage before treating a leaderboard as final.
 
+When the target is a newly added dataset and the models already have leaderboard
+results, follow
+[`new_dataset_evaluation_workflow.md`](new_dataset_evaluation_workflow.md).
+Existing retrieval models and rerankers must each reproduce an existing task in
+the planned environment before their new-dataset results are accepted.
+
 ## Target Selection
 
 Use `--all` when the requested run should cover every standard built-in dataset
