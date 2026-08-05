@@ -446,7 +446,6 @@ def test_resolve_dataset_splits_uses_yaml_splits_without_network() -> None:
         corpus_config="corpus",
         queries_config="queries",
         qrels_config="qrels",
-        candidate_config="bm25",
         splits=["a", "b"],
     )
 
@@ -597,7 +596,6 @@ dataset_id: local/toy
 corpus_config: corpus
 queries_config: queries
 qrels_config: qrels
-candidate_config: bm25
 splits: [a]
 """.strip(),
         encoding="utf-8",

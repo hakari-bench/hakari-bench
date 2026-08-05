@@ -106,6 +106,12 @@ the appended safeguard positive. DuckDB/report generation exposes both
 `reranking` and `reranking_without_safeguard` targets so the safeguard effect can
 be inspected separately.
 
+Dataset YAML does not select a candidate subset. Candidate selection has one
+runtime source of truth: `--candidate-ranking`, whose default is
+`reranking_hybrid`. Loading a requested candidate subset is mandatory; if that
+subset is absent for a dataset split, evaluation fails instead of silently
+continuing without candidates.
+
 ```bash
 # Pin a physical GPU for a single process. Inside the process the visible GPU is
 # still addressed as cuda:0.

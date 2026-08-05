@@ -1190,7 +1190,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-de
   dataset_id: hakari-bench/NanoBEIR-de
   benchmark_kind: nanobeir
@@ -2395,7 +2394,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-es
   dataset_id: hakari-bench/NanoBEIR-es
   benchmark_kind: nanobeir
@@ -3604,7 +3602,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-fr
   dataset_id: hakari-bench/NanoBEIR-fr
   benchmark_kind: nanobeir
@@ -4808,7 +4805,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-it
   dataset_id: hakari-bench/NanoBEIR-it
   benchmark_kind: nanobeir
@@ -6018,7 +6014,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-ja
   dataset_id: hakari-bench/NanoBEIR-ja
   benchmark_kind: nanobeir
@@ -7212,7 +7207,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-ko
   dataset_id: hakari-bench/NanoBEIR-ko
   benchmark_kind: nanobeir
@@ -8401,7 +8395,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-no
   dataset_id: hakari-bench/NanoBEIR-no
   benchmark_kind: nanobeir
@@ -9704,7 +9697,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-pt
   dataset_id: hakari-bench/NanoBEIR-pt
   benchmark_kind: nanobeir
@@ -10931,7 +10923,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-sr
   dataset_id: hakari-bench/NanoBEIR-sr
   benchmark_kind: nanobeir
@@ -12277,7 +12268,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-sv
   dataset_id: hakari-bench/NanoBEIR-sv
   benchmark_kind: nanobeir
@@ -13522,7 +13512,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-th
   dataset_id: hakari-bench/NanoBEIR-th
   benchmark_kind: nanobeir
@@ -14712,7 +14701,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 - name: NanoBEIR-vi
   dataset_id: hakari-bench/NanoBEIR-vi
   benchmark_kind: nanobeir
@@ -15910,7 +15898,6 @@ datasets:
   corpus_config: corpus
   queries_config: queries
   qrels_config: qrels
-  candidate_config: bm25
 metadata:
   language: multilingual
   category: natural_language

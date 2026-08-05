@@ -431,7 +431,6 @@ def bm25_result_payload_from_task_metadata(*, task: Any, task_metadata: dict[str
             "corpus_config": task.dataset.corpus_config,
             "queries_config": task.dataset.queries_config,
             "qrels_config": task.dataset.qrels_config,
-            "candidate_config": task.dataset.candidate_config,
             "evaluation_scope": task.evaluation_scope.to_payload(),
         },
         "config": {
