@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://storage.googleapis.com/secons-site-images/other/huggingface/bekko/hakari_bench_icon_128.png" alt="HAKARI-Bench" width="28" style="vertical-align: middle; margin-right: 10px; border-radius: 22%;"/> HAKARI-Bench
+  <img src="https://storage.googleapis.com/secons-site-images/other/huggingface/bekko/hakari_bench_icon.png" alt="HAKARI-Bench" width="56" style="vertical-align: middle; margin-right: 10px; border-radius: 22%;"/> HAKARI-Bench
 </h1>
 
 <h3 align="center" style="border-bottom: none;">A Leaderboard for Information Retrieval Models Across Diverse Tasks</h3>
@@ -27,6 +27,11 @@
 HAKARI-Bench is a lightweight IR benchmark that rebuilds retrieval tasks as
 small Nano-sets, making model selection, regression checks, quantization,
 truncation, and reranking comparisons practical under the same conditions.
+
+Across 35+ IR benchmarks and 500+ tasks, HAKARI-Bench applies a consistent
+metric suite and unified evaluation conditions. This enables model comparison
+from multiple perspectives, including languages, domains, retrieval
+architectures, reranking methods, and efficiency settings.
 
 The name HAKARI refers to `⚖️ 秤` (hakari), the Japanese word for a weighing
 scale.
