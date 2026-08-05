@@ -166,9 +166,10 @@ def build_split(
     dense_score_batch_size: int,
     show_progress: bool,
 ) -> dict[str, Any]:
-    corpus_rows = list(load_dataset(source_dataset, "corpus", split=split))
-    query_rows = list(load_dataset(source_dataset, "queries", split=split))
-    qrel_rows = list(load_dataset(source_dataset, "qrels", split=split))
+    load_kwargs = source_load_kwargs(source_dataset)
+    corpus_rows = list(load_dataset(source_dataset, "corpus", split=split, **load_kwargs))
+    query_rows = list(load_dataset(source_dataset, "queries", split=split, **load_kwargs))
+    qrel_rows = list(load_dataset(source_dataset, "qrels", split=split, **load_kwargs))
     corpus = {str(row["_id"]): str(row["text"]) for row in corpus_rows}
     queries = {str(row["_id"]): str(row["text"]) for row in query_rows}
     qrels = qrels_by_query(qrel_rows)
@@ -228,6 +229,15 @@ def build_split(
         },
         HYBRID_CONFIG_NAME: hybrid_metadata,
     }
+
+
+def source_load_kwargs(source_dataset: str) -> dict[str, Any]:
+    if Path(source_dataset).exists():
+        return {
+            "download_mode": DownloadMode.FORCE_REDOWNLOAD,
+            "verification_mode": "no_checks",
+        }
+    return {}
 
 
 def rank_harrier_candidates(

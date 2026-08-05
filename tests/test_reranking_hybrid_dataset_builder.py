@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 from scripts import build_all_reranking_hybrid_nano_datasets as build_all
 from scripts import build_reranking_hybrid_nano_dataset as build_one
@@ -26,6 +27,14 @@ def test_all_dataset_builder_defaults_to_top500_sources_and_rrf100(monkeypatch) 
     assert args.dense_top_k == 500
     assert args.hybrid_top_k == 100
     assert args.rrf_k == 100
+
+
+def test_local_source_dataset_forces_redownload(tmp_path: Path) -> None:
+    assert build_one.source_load_kwargs(str(tmp_path)) == {
+        "download_mode": build_one.DownloadMode.FORCE_REDOWNLOAD,
+        "verification_mode": "no_checks",
+    }
+    assert build_one.source_load_kwargs("hakari-bench/NanoToy") == {}
 
 
 def test_rrf_hybrid_keeps_top100_when_positive_is_present() -> None:

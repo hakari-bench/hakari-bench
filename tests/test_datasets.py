@@ -46,6 +46,7 @@ def test_builtin_registry_contains_requested_benchmarks() -> None:
     assert registry.get_dataset("NanoMTEB-Misc").dataset_id == "hakari-bench/NanoMTEB-Misc"
     assert registry.get_dataset("NanoMTEB-BR").dataset_id == "hakari-bench/NanoMTEB-BR"
     assert registry.get_dataset("NanoMTEB-Polish").dataset_id == "hakari-bench/NanoMTEB-Polish"
+    assert registry.get_dataset("NanoSSRB").dataset_id == "hakari-bench/NanoSSRB"
     assert len(registry.get_collection("MNanoBEIR").datasets) == 14
     with pytest.raises(KeyError):
         registry.get_collection("NanoMTEB_Family")
@@ -65,6 +66,28 @@ def test_builtin_all_target_includes_all_557_evaluation_tasks() -> None:
     assert len(tasks) == 557
     assert sum(task.dataset_name == "NanoBEIR-en" for task in tasks) == 13
     assert sum(task.dataset_name == "NanoMTEB-BR" for task in tasks) == 6
+    assert sum(task.dataset_name == "NanoSSRB" for task in tasks) == 0
+
+
+def test_resolve_eval_tasks_for_nanossrb_uses_six_domain_splits() -> None:
+    registry = DatasetRegistry.load_builtin()
+
+    tasks = resolve_eval_tasks(
+        registry=registry,
+        dataset_values=["NanoSSRB"],
+        collection_values=[],
+        split_values=[],
+        explicit_dataset_selection=True,
+    )
+
+    assert [task.split_name for task in tasks] == [
+        "Academic",
+        "FinanceAndEconomics",
+        "HumanResources",
+        "LLMAgentAndTool",
+        "ProductSearch",
+        "ResumeSearch",
+    ]
 
 
 def test_resolve_eval_tasks_for_builtin_nanomteb_br_uses_declared_splits() -> None:

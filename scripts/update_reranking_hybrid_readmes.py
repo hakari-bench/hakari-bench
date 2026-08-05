@@ -16,6 +16,7 @@ HARRIER_CONFIG = "harrier_oss_v1_270m"
 HARRIER_MODEL_ID = "microsoft/harrier-oss-v1-270m"
 HYBRID_CONFIG = "reranking_hybrid"
 HAKARI_LINK = "[HAKARI-bench](https://github.com/hakari-bench/hakari-bench)"
+STRUCT_IR_DATASET_ID = "vec-ai/struct-ir"
 DEFAULT_TAGS = [
     "information-retrieval",
     "retrieval",
@@ -88,13 +89,20 @@ def render_readme(
     splits = sorted(str(split) for split in metadata.get("splits", {}))
     remote = parse_remote_readme(remote_readme or "")
     source_dataset = str(metadata.get("source_dataset") or f"hakari-bench/{dataset_name}")
+    dataset_id = canonical_dataset_id(dataset_name=dataset_name, source_dataset=source_dataset)
     frontmatter = render_frontmatter(dataset_dir=dataset_dir, splits=splits, remote_frontmatter=remote.frontmatter)
     source_links = source_links_for_dataset(
         dataset_name=dataset_name,
-        source_dataset=source_dataset,
+        source_dataset=dataset_id,
         remote_source_links=remote.source_links,
     )
     overview = remote.overview or f"{dataset_name} is a Nano-style retrieval dataset."
+    if dataset_name == "NanoSSRB":
+        overview = (
+            "NanoSSRB is a compact English benchmark for retrieving JSON-serialized, "
+            "semi-structured objects with natural-language queries that combine exact "
+            "and semantic conditions. It is derived from SSRB/Struct-IR."
+        )
     overview = normalize_hakari_link(overview)
     rows = [split_summary(dataset_dir=dataset_dir, split=split, split_metadata=metadata["splits"][split]) for split in splits]
     split_stat_rows = "\n".join(render_split_statistics_row(row) for row in rows)
@@ -106,6 +114,13 @@ def render_readme(
         f"{dataset_name} is a derived dataset. Users must comply with the licenses, terms, "
         "and attribution requirements of the upstream source datasets."
     )
+    if dataset_name == "NanoSSRB":
+        license_text = (
+            "NanoSSRB is derived from `vec-ai/struct-ir`, which is published under the "
+            "Apache-2.0 license. Users should retain upstream attribution and verify the "
+            "upstream license and terms for their intended use."
+        )
+    specific_documentation = dataset_specific_documentation(dataset_name)
 
     readme = f"""---
 {frontmatter}---
@@ -121,7 +136,7 @@ This dataset is a Nano-style retrieval dataset for {HAKARI_LINK}.
 ```python
 from datasets import load_dataset
 
-dataset_id = "{source_dataset}"
+dataset_id = "{dataset_id}"
 split = "{splits[0] if splits else 'SPLIT_NAME'}"
 
 queries = load_dataset(dataset_id, "queries", split=split)
@@ -142,6 +157,8 @@ This dataset uses six Hugging Face Datasets configs:
 - `reranking_hybrid`: RRF candidate lists built from `bm25` and `harrier_oss_v1_270m`
 
 Each config has the same Nano split names.
+
+{specific_documentation}
 
 ## Candidate Construction
 
@@ -187,12 +204,145 @@ Dense means `{HARRIER_MODEL_ID}` with the `web_search_query` prompt and cosine s
     return normalize_hakari_link(readme)
 
 
+def canonical_dataset_id(*, dataset_name: str, source_dataset: str) -> str:
+    """Return a publishable dataset id instead of leaking a local source path."""
+    if source_dataset.startswith(("/", "./", "../")):
+        return f"hakari-bench/{dataset_name}"
+    return source_dataset
+
+
+def dataset_specific_documentation(dataset_name: str) -> str:
+    if dataset_name != "NanoSSRB":
+        return ""
+    return """## Tasks
+
+NanoSSRB merges the 99 upstream schemas into six domain-level retrieval tasks:
+
+| Task | Retrieval scope |
+|---|---|
+| Academic | Academic profiles, research projects, collaborations, publications, and related records |
+| FinanceAndEconomics | Banking, transactions, markets, economic indicators, risk, and personal finance |
+| HumanResources | HR policies, employees, organizations, roles, and workplace records |
+| LLMAgentAndTool | LLM agents, tools, capabilities, and tool-selection records |
+| ProductSearch | Products and structured product attributes |
+| ResumeSearch | Resumes, experience, skills, education, and candidate requirements |
+
+The documents are JSON-serialized semi-structured objects, not ordinary prose
+passages. Queries are natural-language requests containing combinations of exact
+filters and semantic conditions.
+
+## Nano Construction
+
+NanoSSRB is built from the test queries and qrels of
+[`vec-ai/struct-ir`](https://huggingface.co/datasets/vec-ai/struct-ir), using the
+`strict-max5` policy:
+
+1. Group all 99 upstream schemas into their six source domains.
+2. Keep queries with one to five upstream positive documents. If a domain has
+   fewer than 200 such queries, fill only the shortfall with six-positive
+   queries. This policy does not truncate or rewrite the qrels of any retained
+   query.
+3. Select 200 queries per task with deterministic condition-stratified sampling,
+   balancing positive counts from one to five and providing per-schema coverage
+   whenever an eligible query exists.
+4. Include every positive document for every selected query, then fill each
+   corpus deterministically to 10,000 documents with schema-balanced upstream
+   negative-provenance records.
+5. Exclude empty rows, duplicate ids, and duplicate document text.
+
+The resulting dataset has 1,200 queries and 60,000 task-local corpus rows. Each
+task has exactly 200 queries and 10,000 documents; the exact qrels counts are
+reported in the split statistics table. No positive judgment is capped, and the construction audit found zero omitted
+upstream positive documents in the corresponding task corpus, preventing those
+omissions from becoming false negatives.
+
+`HumanResources` has 188 one-to-five-positive queries and therefore uses 12
+six-positive spillover queries. `ResumeSearch` has 194 and uses 6 spillover
+queries. The other four tasks require no spillover. `HumanResources` has eligible
+base-pool queries from 9 of its 10 schemas; `hr_policies_doc` has none, but still
+contributes corpus documents. These exceptions are explicit and deterministic.
+
+Sampling uses seed `17`. Candidate fusion uses seed `20260524`. The generator and
+audit implementation are maintained in
+[`hakari-bench`](https://github.com/hakari-bench/hakari-bench).
+
+## Variant Selection Rationale
+
+The strict-max5 base policy with the documented six-positive shortfall fill is
+the official NanoSSRB release. Two alternative
+sampling variants were generated and evaluated during development, but they are
+retained only as analysis artifacts:
+
+| Variant | Query and qrels policy | Decision |
+|---|---|---|
+| `strict-max5` plus shortfall fill | Keep queries with one to five upstream positives; add only enough six-positive queries to reach 200; preserve every positive | Selected for NanoSSRB |
+| `Cap5` | Allow queries with more than five positives, retain five, and remove omitted positive documents from the task corpus | Not selected |
+| `Max3` | Keep only queries with one to three upstream positives | Not selected |
+
+The selected policy preserves the complete upstream judgments for every retained
+query while tightly bounding relevance density. It provides both single-answer
+and multi-answer retrieval cases without rewriting qrels, and the audit found no
+omitted-positive false negatives. The 18 six-positive exceptions are the minimum
+needed to align all six tasks at 200 queries.
+
+`Cap5` covered some broader queries, but manual spot checks showed that many
+high-positive cases also contained clusters of near-duplicate synthetic records.
+For example, multiple records could describe effectively the same product,
+portfolio, payroll entry, workshop, or resume with small field-level changes.
+Capping a query with dozens of upstream positives at five and deleting the other
+positive documents changes both its relevance set and its retrieval corpus. Its
+higher candidate-ranking scores therefore cannot be interpreted solely as better
+query coverage. `Max3` avoids judgment rewriting but removes valid four- and
+five-positive queries and reduces the amount of relevance information available
+for evaluation.
+
+The selected policy favors judgment fidelity, reproducibility, and a clear
+evaluation contract over maximizing baseline scores. It does introduce a known
+scope limitation: except for the 18 documented six-positive spillovers, queries
+with more than five upstream positives are outside the official Nano-set. Broader set-retrieval behavior should be evaluated on the
+complete SSRB benchmark or in a separately documented analysis set.
+
+## Row Schema
+
+| Config | Columns |
+|---|---|
+| `queries` | `_id: string`, `text: string` |
+| `corpus` | `_id: string`, `text: string` |
+| `qrels` | `query-id: string`, `corpus-id: string` |
+| `bm25` | `query-id: string`, `corpus-ids: list[string]` |
+| `harrier_oss_v1_270m` | `query-id: string`, `corpus-ids: list[string]` |
+| `reranking_hybrid` | `query-id: string`, `corpus-ids: list[string]` |
+
+## Scope and Limitations
+
+- The source benchmark is LLM-generated and filtered, so results measure
+  retrieval on synthetic semi-structured records rather than naturally occurring
+  production data.
+- Corpus ids are task-local for evaluation purposes; the six tasks do not share
+  one common retrieval corpus.
+- BM25 and dense candidate subsets preserve their natural rankings and do not
+  force qrels positives into top 500. Only the hybrid reranking subset applies the
+  documented rank-101 safeguard.
+- NanoSSRB is intended for efficient model comparison and diagnostics. It does
+  not replace evaluation on the complete SSRB corpus.
+
+The upstream dataset is published under Apache-2.0. Please attribute
+[`vec-ai/struct-ir`](https://huggingface.co/datasets/vec-ai/struct-ir) and cite
+the associated SSRB work when using NanoSSRB."""
+
+
 def source_links_for_dataset(
     *,
     dataset_name: str,
     source_dataset: str,
     remote_source_links: Sequence[str],
 ) -> list[str]:
+    if dataset_name == "NanoSSRB":
+        return [
+            dataset_link_line(STRUCT_IR_DATASET_ID, label="Upstream SSRB/Struct-IR dataset"),
+            dataset_link_line(source_dataset, label="NanoSSRB dataset"),
+            f"- Generator and audit: {HAKARI_LINK}",
+        ]
     original_dataset = NANOBEIR_ORIGINAL_SOURCE_DATASETS.get(dataset_name)
     if original_dataset is None:
         return list(remote_source_links) or [dataset_link_line(source_dataset)]
