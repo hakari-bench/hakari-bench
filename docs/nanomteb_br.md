@@ -13,10 +13,11 @@ The built-in definition is
 ## Evaluation Scope
 
 NanoMTEB-BR contributes six tasks to `evaluate --all`. When introduced, it
-changed the complete built-in evaluation target from 551 to **557 tasks**. It
-is available as a dedicated viewer benchmark and a Portuguese language page.
+changed the complete built-in evaluation target from 551 to 557 tasks; the
+current target is **563 tasks** after adding NanoSSRB. NanoMTEB-BR is available
+as a dedicated viewer benchmark and a Portuguese language page.
 
-NanoMTEB-BR is included in the canonical 544-task Overall manifest. All six
+NanoMTEB-BR is included in the canonical 550-task Overall manifest. All six
 result files must be evaluated, stored, and submitted.
 
 | Task | Domain | Queries | Documents | Positive qrels |
