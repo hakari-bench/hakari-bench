@@ -503,7 +503,16 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - The article column itself carries the reading measure, so body copy fills the
   card from edge to edge. Do not cap individual paragraphs inside a wider card:
   a card visibly wider than its own text reads as broken, not as breathing room.
-  Extra width at large viewports goes to the outline rail, not to the card.
+  The card's own inset is modest for the same reason - it separates text from the
+  border and nothing more. Padding that competes with the text for width is the
+  first thing to cut when the column feels cramped.
+- The reading measure is the reason the page stops growing on very wide screens.
+  Leftover width becomes side margin on purpose; widening the prose column past
+  its measure would be the worse trade.
+- The outline rail appears as soon as it fits, at 1024px, and takes only the
+  width it needs (12rem). It is a navigation aid, so requiring an unusually wide
+  window before it appears trades real function for margin. Below that width it
+  falls back to a compact jump-link card above the article.
 - Do not set label text in all caps. Small uppercase labels with letter spacing
   fight the monospaced stack and read as shouting at this size; use sentence
   case at a small size and muted color instead.

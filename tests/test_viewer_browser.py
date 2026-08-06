@@ -872,6 +872,64 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                 browser.close()
 
 
+@pytest.mark.browser
+def test_docs_page_shows_the_outline_rail_on_a_normal_laptop_width(tmp_path: Path) -> None:
+    """The outline is a navigation aid, so it must not need an unusual window.
+
+    It also guards the article measure: the card is the reading column, so its
+    padding must not grow back into the width the text needs.
+    """
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+    # The outline only renders for articles with enough sections to navigate.
+    (tmp_path / "task_docs" / "docs" / "BenchA" / "index.md").write_text(
+        "# BenchA\n\n"
+        + "".join(
+            f"## Section {index}\n\nBody copy for section {index} of the layout test.\n\n"
+            for index in range(1, 6)
+        ),
+        encoding="utf-8",
+    )
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                measure_script = """() => {
+                    const article = document.querySelector(".benchmark-doc");
+                    const outline = document.querySelector(".doc-outline");
+                    const style = getComputedStyle(outline);
+                    return {
+                        outlineTop: Math.round(outline.getBoundingClientRect().top),
+                        articleTop: Math.round(article.getBoundingClientRect().top),
+                        outlinePosition: style.position,
+                        articleWidth: Math.round(article.getBoundingClientRect().width),
+                        articlePadding: Math.round(parseFloat(getComputedStyle(article).paddingLeft)),
+                    };
+                }"""
+
+                page = browser.new_page(viewport={"width": 1024, "height": 900})
+                page.goto(f"{base_url}/docs/benchmark-tasks/BenchA", wait_until="networkidle")
+                laptop = page.evaluate(measure_script)
+                page.close()
+
+                page = browser.new_page(viewport={"width": 900, "height": 900})
+                page.goto(f"{base_url}/docs/benchmark-tasks/BenchA", wait_until="networkidle")
+                narrow = page.evaluate(measure_script)
+                page.close()
+            finally:
+                browser.close()
+
+    # 1024px is a rail: the outline sits beside the article and sticks.
+    assert laptop["outlinePosition"] == "sticky"
+    assert laptop["outlineTop"] >= laptop["articleTop"]
+    assert laptop["articlePadding"] <= 24
+    assert laptop["articleWidth"] >= 700
+    # Below that it falls back to a card above the article.
+    assert narrow["outlinePosition"] == "static"
+    assert narrow["outlineTop"] < narrow["articleTop"]
+
+
 def _create_browser_test_app(tmp_path: Path):
     db_path = tmp_path / "results.duckdb"
     _write_browser_task_results(db_path)
