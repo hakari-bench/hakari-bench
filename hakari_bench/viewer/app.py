@@ -147,6 +147,7 @@ _ICON_PATHS = {
         '<path d="M8 17v-3"/>'
     ),
     "binary": '<path d="M6 20h4"/><path d="M14 10h4"/><path d="M6 14h2v6"/><path d="M14 4h2v6"/>',
+    "x": '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
     "book-open": (
         '<path d="M12 7v14"/>'
         '<path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>'
@@ -1251,13 +1252,13 @@ def render_doc_summary_modal() -> str:
         {_icon_svg("book-open", class_name="hakari-icon")}
         <span id="doc-summary-heading" class="break-all">Benchmark documentation</span>
       </h3>
-      <button type="submit" class="hakari-modal-close">Close</button>
+      <button type="submit" class="hakari-modal-close" aria-label="Close">{_icon_svg("x", class_name="hakari-icon")}</button>
     </div>
   </form>
   <div class="hakari-modal-body">
-    <p id="doc-summary-description" class="hakari-modal-text text-sm"></p>
-    <p class="mt-3 text-sm">
-      <a id="doc-summary-link" class="hakari-modal-link" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
+    <div id="doc-summary-description" class="hakari-modal-text text-sm"></div>
+    <p class="mt-4 text-sm">
+      <a id="doc-summary-link" class="hakari-modal-action" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
     </p>
   </div>
 </dialog>
@@ -1273,7 +1274,7 @@ def render_help_summary_modal() -> str:
         {_icon_svg("circle-help", class_name="hakari-icon")}
         <span id="help-summary-heading" class="break-all">Help</span>
       </h3>
-      <button type="submit" class="hakari-modal-close">Close</button>
+      <button type="submit" class="hakari-modal-close" aria-label="Close">{_icon_svg("x", class_name="hakari-icon")}</button>
     </div>
   </form>
   <div class="hakari-modal-body">
@@ -1472,7 +1473,7 @@ def _render_count_breakdown_modal(
         {_icon_svg("activity", class_name="hakari-icon")}
         <span id="count-breakdown-title">Result breakdown</span>
       </h3>
-      <button type="submit" class="hakari-modal-close">Close</button>
+      <button type="submit" class="hakari-modal-close" aria-label="Close">{_icon_svg("x", class_name="hakari-icon")}</button>
     </div>
   </form>
   <div class="hakari-modal-body">

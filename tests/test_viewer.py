@@ -1276,8 +1276,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".model-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
-    assert ".hakari-count-modal{width:min(92vw,48rem);max-height:92vh}" in css_response.text
-    assert ".hakari-count-modal .hakari-modal-body{max-height:calc(92vh - 4rem);overflow:auto}" in css_response.text
+    assert ".hakari-count-modal{width:min(92vw,52rem);max-height:88vh}" in css_response.text
+    assert ".hakari-modal[open]{display:flex;flex-direction:column}" in css_response.text
+    assert ".hakari-modal-body{flex:1 1 auto;overflow-y:auto" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200

@@ -453,6 +453,21 @@
       });
   }
 
+  // Help copy arrives as blank-line separated blocks. Rendering it as real
+  // paragraphs lets CSS control the gap; `white-space: pre-wrap` instead spends
+  // a whole (already generous) line height on every blank line.
+  function setModalParagraphs(container, text) {
+    container.replaceChildren();
+    for (const block of String(text || "").split(/\n\s*\n/)) {
+      const paragraph = block.trim();
+      if (!paragraph) continue;
+      const element = document.createElement("p");
+      element.className = "hakari-modal-paragraph";
+      element.textContent = paragraph;
+      container.append(element);
+    }
+  }
+
   window.__hakariBindModelDetails = () => {
     if (window.__hakariModelDetailsBound) return;
     window.__hakariModelDetailsBound = true;
@@ -469,7 +484,7 @@
       if (!modal || !heading || !description || !link) return;
       const docTitle = trigger.dataset.docTitle || "Benchmark documentation";
       heading.textContent = docTitle;
-      description.textContent = trigger.dataset.docDescription || "";
+      setModalParagraphs(description, trigger.dataset.docDescription);
       link.href = trigger.dataset.docUrl || "#";
       link.textContent = `Read the ${docTitle} overview`;
       if (typeof modal.showModal === "function") modal.showModal();
@@ -488,7 +503,7 @@
       if (!modal || !heading || !summary || !details || !tableContainer) return;
       heading.textContent = trigger.dataset.helpTitle || "";
       summary.textContent = trigger.dataset.helpSummary || "";
-      details.textContent = trigger.dataset.helpDetails || "";
+      setModalParagraphs(details, trigger.dataset.helpDetails);
       renderHelpSummaryTable(tableContainer, trigger.dataset.helpTable || "");
       if (typeof modal.showModal === "function") modal.showModal();
     });
@@ -857,7 +872,85 @@
     container.hidden = false;
   }
 
+  // Documentation pages render an on-this-page outline. Mark the section the
+  // reader is currently in so a long article still tells you where you are.
+  function bindDocOutline() {
+    const outline = document.querySelector(".doc-outline");
+    if (!outline || !("IntersectionObserver" in window)) return;
+    const links = new Map();
+    for (const link of outline.querySelectorAll(".doc-outline-link")) {
+      const id = decodeURIComponent((link.getAttribute("href") || "").slice(1));
+      const heading = id && document.getElementById(id);
+      if (heading) links.set(heading, link);
+    }
+    if (!links.size) return;
+    const visible = new Set();
+
+    function refresh() {
+      let active = null;
+      for (const heading of links.keys()) {
+        if (visible.has(heading)) {
+          active = heading;
+          break;
+        }
+      }
+      if (!active) {
+        for (const heading of links.keys()) {
+          if (heading.getBoundingClientRect().top <= 120) active = heading;
+        }
+      }
+      for (const [heading, link] of links) {
+        if (heading === active) {
+          link.setAttribute("aria-current", "true");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            visible.add(entry.target);
+          } else {
+            visible.delete(entry.target);
+          }
+        }
+        refresh();
+      },
+      { rootMargin: "-10% 0px -70% 0px" },
+    );
+    for (const heading of links.keys()) observer.observe(heading);
+    refresh();
+  }
+
+  // Wide documentation tables pan horizontally. Mark which side still has
+  // hidden columns so the wrapper can fade that edge.
+  function bindDocTableScrollHints() {
+    const wrappers = document.querySelectorAll(".doc-table-scroll");
+    if (!wrappers.length) return;
+    const update = (wrapper) => {
+      const scroller = wrapper.querySelector(".overflow-x-auto");
+      if (!scroller) return;
+      const left = scroller.scrollLeft > 1;
+      const right = scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 1;
+      wrapper.dataset.overflow = left && right ? "both" : left ? "left" : right ? "right" : "none";
+    };
+    for (const wrapper of wrappers) {
+      const scroller = wrapper.querySelector(".overflow-x-auto");
+      if (!scroller) continue;
+      scroller.addEventListener("scroll", () => update(wrapper), { passive: true });
+      update(wrapper);
+    }
+    window.addEventListener("resize", () => {
+      for (const wrapper of wrappers) update(wrapper);
+    });
+  }
+
   prepareInactiveFacetForm();
+  bindDocOutline();
+  bindDocTableScrollHints();
   window.__hakariApplyHashQueryState();
   window.__hakariBindThemeToggle();
   window.__hakariBindModelDetails();

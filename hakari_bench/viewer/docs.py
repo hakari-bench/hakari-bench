@@ -29,6 +29,15 @@ class BenchmarkDoc:
 
 
 @dataclass(frozen=True)
+class DocHeading:
+    """A documentation heading that carries an anchor id."""
+
+    level: int
+    text: str
+    slug: str
+
+
+@dataclass(frozen=True)
 class DocsPageChrome:
     """Shared head/header assets so documentation pages match the leaderboard.
 
@@ -248,7 +257,7 @@ class BenchmarkDocs:
         return metadata
 
 
-def _render_docs_document(*, chrome: DocsPageChrome, title: str, body_html: str) -> str:
+def _render_docs_document(*, chrome: DocsPageChrome, title: str, body_html: str, main_class: str = "docs-main") -> str:
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -260,8 +269,8 @@ def _render_docs_document(*, chrome: DocsPageChrome, title: str, body_html: str)
   <link rel="icon" type="image/png" href="{chrome.favicon_png_url}">
   <script src="{chrome.viewer_js_url}" defer></script>
 </head>
-<body class="bg-zinc-50 text-zinc-950">
-  <main class="mx-auto max-w-4xl px-4 py-6 sm:px-6">
+<body class="docs-page bg-zinc-50 text-zinc-950">
+  <main class="{main_class} mx-auto px-4 py-6 sm:px-6">
     {chrome.header_html}
     {body_html}
   </main>
@@ -271,17 +280,45 @@ def _render_docs_document(*, chrome: DocsPageChrome, title: str, body_html: str)
 
 def render_markdown_page(*, doc: BenchmarkDoc, chrome: DocsPageChrome) -> str:
     breadcrumb = _render_doc_breadcrumb(doc.url)
+    outline: list[DocHeading] = []
+    article_html = render_markdown_to_html(doc.markdown, base_url=doc.url, outline=outline)
     body = f"""{breadcrumb}
-    <article class="benchmark-doc border border-zinc-200 bg-white px-5 py-6 sm:px-7">
-      {render_markdown_to_html(doc.markdown, base_url=doc.url)}
-    </article>"""
+    <div class="docs-layout">
+      <article class="benchmark-doc border border-zinc-200 bg-white">
+        {article_html}
+      </article>
+      {_render_doc_outline(outline)}
+    </div>"""
     return _render_docs_document(chrome=chrome, title=f"{doc.title} - HAKARI-Bench docs", body_html=body)
+
+
+def _render_doc_outline(outline: Sequence[DocHeading]) -> str:
+    """Render the on-this-page navigation for a documentation article.
+
+    Short pages do not need it, so the outline only appears once an article has
+    enough sections that scrolling stops being a reliable way to navigate.
+    """
+    sections = [heading for heading in outline if heading.level == 2]
+    if len(sections) < 3:
+        return ""
+    items = "\n".join(
+        f"""<li class="doc-outline-item doc-outline-level-{heading.level}">"""
+        f"""<a class="doc-outline-link" href="#{escape(heading.slug, quote=True)}">{escape(heading.text)}</a>"""
+        "</li>"
+        for heading in outline
+    )
+    return f"""<nav class="doc-outline" aria-label="On this page">
+        <p class="doc-outline-heading">On this page</p>
+        <ul class="doc-outline-list">
+          {items}
+        </ul>
+      </nav>"""
 
 
 def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) -> str:
     items = "\n".join(
         f"""<li class="doc-list-item">
-          <a class="doc-list-link font-semibold underline-offset-2 hover:underline" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
+          <a class="doc-list-link font-semibold" href="{escape(doc.url, quote=True)}">{escape(doc.title)}</a>
         </li>"""
         for doc in docs
     )
@@ -292,19 +329,26 @@ def render_docs_index_page(*, docs: list[BenchmarkDoc], chrome: DocsPageChrome) 
         <li><span aria-current="page">Benchmark documentation</span></li>
       </ol>
     </nav>
-    <section class="mb-4">
-      <h2 class="text-lg font-semibold text-zinc-950">Paper</h2>
-      <p class="mt-1 text-sm text-zinc-600">
-        <a class="underline underline-offset-2" href="{escape(HAKARI_BENCH_PAPER_URL, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(HAKARI_BENCH_PAPER_TITLE)}</a>
+    <header class="doc-index-header">
+      <h1 class="doc-index-title">Benchmark documentation</h1>
+      <p class="doc-index-lead">Every Nano suite in HAKARI-Bench has a group page describing what it measures, and a page per task with dataset shape, retrieval profiles, and source references.</p>
+    </header>
+    <section class="doc-index-paper">
+      <p class="doc-index-paper-label">Paper</p>
+      <p class="doc-index-paper-title">
+        <a href="{escape(HAKARI_BENCH_PAPER_URL, quote=True)}" target="_blank" rel="noopener noreferrer">{escape(HAKARI_BENCH_PAPER_TITLE)}</a>
       </p>
     </section>
-    <header class="mb-4">
-      <h1 class="text-lg font-semibold text-zinc-950">Benchmark documentation</h1>
-    </header>
+    <h2 class="doc-index-section-title">Nano suites <span class="doc-index-count">{len(docs)}</span></h2>
     <ul class="doc-list">
       {items}
     </ul>"""
-    return _render_docs_document(chrome=chrome, title="Benchmark documentation - HAKARI-Bench docs", body_html=body)
+    return _render_docs_document(
+        chrome=chrome,
+        title="Benchmark documentation - HAKARI-Bench docs",
+        body_html=body,
+        main_class="docs-main docs-main-index",
+    )
 
 
 def _render_task_metadata_markdown(
@@ -577,7 +621,17 @@ def _format_optional_score(value: float | None) -> str:
     return "" if value is None else _format_score(value)
 
 
-def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
+def render_markdown_to_html(
+    markdown: str,
+    *,
+    base_url: str = "",
+    outline: list[DocHeading] | None = None,
+) -> str:
+    """Render documentation Markdown to HTML.
+
+    ``outline`` collects the h2/h3 headings that received an anchor id so the
+    caller can build on-this-page navigation without re-parsing the source.
+    """
     lines = markdown.splitlines()
     html: list[str] = []
     paragraph: list[str] = []
@@ -585,8 +639,11 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
     in_code = False
     code_lines: list[str] = []
     in_table = False
+    table_rows: list[list[str]] = []
+    table_class = ""
     details_level: int | None = None
     current_heading = ""
+    used_slugs: dict[str, int] = {}
 
     def flush_paragraph() -> None:
         nonlocal paragraph
@@ -601,10 +658,27 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
             in_list = False
 
     def close_table() -> None:
-        nonlocal in_table
-        if in_table:
-            html.append("</tbody></table></div>")
-            in_table = False
+        nonlocal in_table, table_rows, table_class
+        if not in_table:
+            return
+        numeric_columns = _numeric_table_columns(table_rows)
+        wrapping_columns = _wrapping_table_columns(table_rows)
+        html.append(f'<div class="doc-table-scroll"><div class="overflow-x-auto"><table{table_class}><tbody>')
+        for row in table_rows:
+            cells = ""
+            for index, cell in enumerate(row):
+                classes = []
+                if index in numeric_columns:
+                    classes.append("doc-table-number")
+                if index in wrapping_columns:
+                    classes.append("doc-table-wrap")
+                attr = f' class="{" ".join(classes)}"' if classes else ""
+                cells += f"<td{attr}>{_inline_markdown(cell, base_url=base_url)}</td>"
+            html.append(f"<tr>{cells}</tr>")
+        html.append("</tbody></table></div></div>")
+        in_table = False
+        table_rows = []
+        table_class = ""
 
     def close_details() -> None:
         nonlocal details_level
@@ -652,7 +726,19 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
                 details_level = level
                 continue
             current_heading = heading_text.lower()
-            html.append(f"<h{level}>{_inline_markdown(heading_text, base_url=base_url)}</h{level}>")
+            rendered_heading = _inline_markdown(heading_text, base_url=base_url)
+            if level not in {2, 3}:
+                html.append(f"<h{level}>{rendered_heading}</h{level}>")
+                continue
+            slug = _unique_heading_slug(heading_text, used_slugs)
+            if outline is not None:
+                outline.append(DocHeading(level=level, text=heading_text, slug=slug))
+            html.append(
+                f'<h{level} id="{escape(slug, quote=True)}" class="doc-heading">'
+                f"{rendered_heading}"
+                f'<a class="doc-heading-anchor" href="#{escape(slug, quote=True)}" aria-label="Link to this section">#</a>'
+                f"</h{level}>"
+            )
             continue
         if line.startswith(">"):
             flush_paragraph()
@@ -676,17 +762,14 @@ def render_markdown_to_html(markdown: str, *, base_url: str = "") -> str:
             close_list()
             if _is_table_separator(line):
                 continue
-            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-            row_html = "".join(f"<td>{_inline_markdown(cell, base_url=base_url)}</td>" for cell in cells)
             if not in_table:
                 table_class = (
                     ' class="benchmark-doc-example-table"'
                     if current_heading in {"example data", "representative snippets"}
                     else ""
                 )
-                html.append(f'<div class="overflow-x-auto"><table{table_class}><tbody>')
                 in_table = True
-            html.append(f"<tr>{row_html}</tr>")
+            table_rows.append([cell.strip() for cell in line.strip().strip("|").split("|")])
             continue
         close_table()
         paragraph.append(line)
@@ -928,6 +1011,53 @@ def _split_dataset_task_stem(stem: str) -> tuple[str, str]:
         return "", stem
     dataset, task = stem.rsplit("__", 1)
     return dataset, task
+
+
+_NUMERIC_CELL = re.compile(r"^-?[\d,]+(?:\.\d+)?%?$")
+
+
+def _numeric_table_columns(rows: list[list[str]]) -> set[int]:
+    """Return the column indexes whose body cells are all numeric.
+
+    Right-aligning those columns makes score and count tables comparable down
+    the column instead of ragged against the longest label.
+    """
+    if len(rows) < 2:
+        return set()
+    body = rows[1:]
+    width = max(len(row) for row in rows)
+    numeric: set[int] = set()
+    for index in range(width):
+        values = [row[index].strip() for row in body if index < len(row) and row[index].strip()]
+        if values and all(_NUMERIC_CELL.match(value) for value in values):
+            numeric.add(index)
+    return numeric
+
+
+_WRAPPING_CELL_CHARS = 32
+
+
+def _wrapping_table_columns(rows: list[list[str]]) -> set[int]:
+    """Return the column indexes that hold long text such as titles or URLs.
+
+    Everything else stays on one line; without this a single long URL column
+    pushes the whole table into horizontal scrolling.
+    """
+    if not rows:
+        return set()
+    width = max(len(row) for row in rows)
+    return {
+        index
+        for index in range(width)
+        if any(len(_plain_markdown(row[index])) > _WRAPPING_CELL_CHARS for row in rows[1:] if index < len(row))
+    }
+
+
+def _unique_heading_slug(text: str, used_slugs: dict[str, int]) -> str:
+    base = re.sub(r"[^a-z0-9]+", "-", _plain_markdown(text).lower()).strip("-") or "section"
+    count = used_slugs.get(base, 0)
+    used_slugs[base] = count + 1
+    return base if count == 0 else f"{base}-{count + 1}"
 
 
 def _normalize_doc_key(value: str) -> str:

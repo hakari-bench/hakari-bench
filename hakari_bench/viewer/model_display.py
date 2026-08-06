@@ -413,12 +413,15 @@ def render_model_detail_modal() -> str:
 <dialog id="model-detail-modal" class="hakari-modal">
   <form method="dialog">
     <div class="hakari-modal-header">
-      <h3 class="hakari-modal-title"><span>Model Details</span></h3>
-      <button type="submit" class="hakari-modal-close">Close</button>
+      <h3 class="hakari-modal-title">
+        <svg class="hakari-icon" data-icon="shapes" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/></svg>
+        <span>Model Details</span>
+      </h3>
+      <button type="submit" class="hakari-modal-close" aria-label="Close"><svg class="hakari-icon" data-icon="x" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
   </form>
   <div class="hakari-modal-body">
-    <a id="model-detail-title" class="hakari-modal-link break-all font-mono text-sm font-semibold" target="_blank" rel="noopener noreferrer"></a>
+    <a id="model-detail-title" class="model-detail-title hakari-modal-link break-all font-mono text-sm font-semibold" target="_blank" rel="noopener noreferrer"></a>
     <dl id="model-detail-fields" class="mt-3 grid grid-cols-[10rem_1fr] gap-x-3 gap-y-2 text-sm"></dl>
   </div>
 </dialog>
