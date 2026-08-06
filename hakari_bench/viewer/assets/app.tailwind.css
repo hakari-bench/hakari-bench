@@ -876,9 +876,14 @@
     background-color: var(--hakari-surface);
   }
 
+  /* The Model Name header sends the caret here, so focus has to be obvious
+     enough to find after the page scrolled or the panel just opened. */
   #filter-controls .viewer-text-input:focus {
-    border-color: var(--hakari-accent-border);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--hakari-accent) 22%, transparent);
+    border-color: var(--hakari-accent);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--hakari-accent) 26%, transparent),
+      0 1px 2px 0 rgb(15 23 42 / 0.08);
+    outline: none;
   }
 
   .benchmark-scope-divider {
@@ -1605,7 +1610,7 @@
 
 .hakari-modal {
   display: none;
-  width: min(92vw, 36rem);
+  width: min(94vw, 44rem);
   max-height: min(85vh, 46rem);
   padding: 0;
   border: 1px solid var(--hakari-border-strong);
@@ -1720,10 +1725,56 @@
   padding: 1rem 1.125rem 1.25rem;
 }
 
-/* Explanatory copy is the point of these dialogs, so it gets a reading
-   measure and near-primary contrast rather than the muted metadata tone. */
+/* The group a concept belongs to rides above the lead line as a quiet chip so
+   the dialog header can stay a short name. */
+.hakari-modal-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-radius: var(--hakari-radius-sm);
+  background-color: var(--hakari-accent-soft);
+  padding: 0.125rem 0.4375rem;
+  color: var(--hakari-accent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.hakari-modal-eyebrow:empty {
+  display: none;
+}
+
+/* The one-line answer reads as a GitHub-style tip callout: a reader who only
+   looks at one thing should look at this. */
+.hakari-modal-callout {
+  border-left: 3px solid var(--hakari-accent);
+  border-radius: 0 var(--hakari-radius-md) var(--hakari-radius-md) 0;
+  background-color: var(--hakari-accent-soft);
+  padding: 0.625rem 0.875rem 0.6875rem;
+}
+
+.hakari-modal-callout-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.25rem;
+  color: var(--hakari-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.hakari-modal-callout-label .hakari-icon {
+  height: 0.875rem;
+  width: 0.875rem;
+}
+
+/* Explanatory copy is the point of these dialogs, so it gets near-primary
+   contrast rather than the muted metadata tone. The dialog width sets the
+   reading measure; a narrower cap would only leave a ragged right gutter. */
 .hakari-modal-lead {
-  max-width: 64ch;
   color: var(--hakari-text);
   font-size: 0.9375rem;
   font-weight: 600;
@@ -1734,7 +1785,6 @@
    a deliberate margin rather than a full blank line at body line height. */
 .hakari-modal-text {
   margin-top: 0.75rem;
-  max-width: 64ch;
   color: color-mix(in srgb, var(--hakari-text) 82%, var(--hakari-text-muted));
   line-height: 1.6;
 }
@@ -1750,6 +1800,11 @@
 
 .hakari-modal-body > .hakari-modal-text:first-child {
   margin-top: 0;
+}
+
+/* The callout already separates itself, so the detail copy only needs space. */
+.hakari-modal-callout + .hakari-modal-text {
+  margin-top: 0.875rem;
 }
 
 .hakari-modal-lead + .hakari-modal-text {

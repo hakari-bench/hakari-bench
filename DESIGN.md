@@ -163,10 +163,19 @@ components:
       explanations never push the close control off screen. The header sits on the
       faint surface tint and pairs a small accent icon with the target concept
       name (not generic "Help"); the close control is a quiet icon-only ghost
-      button with an accessible "Close" label. Explanatory copy is the point of
-      these dialogs, so the body is set at a reading measure (~64ch) in
-      near-primary text color rather than the muted metadata tone; the lead line
-      is separated from the detail text by a hairline rule. viewer.js splits help
+      button with an accessible "Close" label. The header name stays short, so a
+      group name that a short title genuinely needs ("Benchmark scope",
+      "Getting started") rides above the lead line as a small uppercase accent
+      chip instead of being pushed into the title; do not add a chip that merely
+      restates where the trigger sits. The lead line answers "in one sentence,
+      what is this?" and is set as a GitHub-style tip callout - accent left rule,
+      accent-soft fill, and a lightbulb "In short" label - so a reader who only
+      looks at one thing looks at the right one. Explanatory copy is the point of
+      these dialogs, so the body is near-primary text color rather than the muted
+      metadata tone. The dialog is roughly 44rem wide and its own padding sets
+      the reading measure: capping paragraphs narrower than the dialog only
+      leaves a ragged right gutter, which reads as broken rather than as
+      breathing room. viewer.js splits help
       copy into real paragraphs instead of relying on `white-space: pre-wrap`, so
       the gap between paragraphs is a deliberate margin rather than a full blank
       line at body line height. A follow-through link
@@ -407,7 +416,11 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
-  such as Overall/Overall (EN) or Safeguard positives.
+  such as Overall/Overall (EN) or Safeguard positives. A section label such as
+  "Benchmark scope" also carries its own help for the section as a whole, since
+  the per-button help cannot explain what the group of buttons is.
+- The header question mark uses the same icon-button shell as the GitHub, docs,
+  and theme controls and sits first among them.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
 - In Filter results, Params sits above Length and uses compact numeric inputs
@@ -428,10 +441,33 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Tooltip-style hover text is only for very short labels.
 - Detailed explanations belong in modals, especially for controls that affect
   ranking semantics or filtering.
-- Modal headers should be the concept being explained, such as "Task facets",
-  "Dims", or "NanoRTEB", not generic labels like "Help".
+- Modal headers should be the short name of the concept being explained, such
+  as "Task facets", "Dims", "Overall", or "Borda Score" - not generic labels
+  like "Help", and not a descriptive sentence. When the short name would be
+  ambiguous on its own, put the group name in the eyebrow chip ("Benchmark
+  scope: Overall" becomes an "Overall" header under a "Benchmark scope" chip)
+  and let the lead callout carry the description. The trigger's `aria-label`
+  keeps both parts. A chip is for disambiguation only; a title that already
+  matches the column or control it opens from does not get one.
 - Help copy should start with a short explanation, then describe what the
   feature changes, what it filters or displays, and give examples when helpful.
+- Write help copy for someone who has never seen a retrieval leaderboard. Every
+  modal is read on its own, so explain the vocabulary it uses (nDCG@10, Borda,
+  Micro/Macro, RRF, quantization) inside that modal instead of assuming an
+  earlier one was read. Prefer a concrete example and a "when to use this" line
+  over exhaustive mechanics, and keep internal identifiers such as
+  `reranking_hybrid` to a single aside rather than the main explanation.
+- Help copy lives in `hakari_bench/viewer/help_text.py` as `HelpCopy` values, not
+  inline in the render functions, so the whole explanation set can be read and
+  edited as one document.
+- Three help surfaces exist, and each answers a different question. The header
+  question mark explains the page itself: what a row is, what a score means, and
+  in which order the controls apply. Control help explains one control. Score
+  column headers (Borda Score, Macro Mean, Micro Mean, Mean Score, Δ vs Base)
+  carry their own help, as do the model metadata columns (Active Params, Total
+  Params, Max Tokens, Dims), because those values are what a reader looks at
+  first and none of them is self-explanatory. A column header with a help icon
+  stops filling its cell so the icon stays beside its own label.
 - Model and task text filters should document multi-keyword matching. For
   example, `jina bge` matches rows containing either `jina` or `bge`; task
   filters work similarly, and short task names such as `nq` must be supported.
@@ -513,6 +549,13 @@ read as an analytical instrument rather than a general-purpose dashboard.
   Score (descending) and that column is the visible sort anchor. The rank index
   pins to the left alongside the model column; hidden/filtered rows are skipped so
   the numbers stay contiguous.
+- The Model Name header is a search affordance, not a sort control: it carries a
+  small magnifier, opens Filter results when that panel is collapsed, and puts
+  the caret in the Model input with its text selected. Alphabetical order answers
+  nothing on a leaderboard, while "where is this model?" is a constant question.
+  Because the caret can land off-screen or in a panel that just opened, the
+  focused filter input takes a clearly visible accent ring, not the default
+  hairline focus border.
 - Scroll axes are split: vertical scrolling is the browser/page, horizontal
   scrolling stays inside the table via an `overflow-x: auto` wrapper. This keeps
   the surrounding chrome (config panel, footer) fixed while only the table pans

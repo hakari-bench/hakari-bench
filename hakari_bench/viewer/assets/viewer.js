@@ -490,6 +490,24 @@
       if (typeof modal.showModal === "function") modal.showModal();
     });
 
+    // The Model Name header is a way into the model filter, not a sort control:
+    // it opens Filter results if collapsed and puts the caret in the input.
+    document.addEventListener("click", (event) => {
+      const trigger = closestElement(event.target, "[data-model-filter-focus]");
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const input = document.getElementById("model-filter-input");
+      if (!input) return;
+      const panel = document.getElementById("filter-controls-panel");
+      if (panel && !panel.open) panel.open = true;
+      if (typeof input.scrollIntoView === "function") {
+        input.scrollIntoView({ block: "nearest", inline: "nearest" });
+      }
+      input.focus({ preventScroll: true });
+      if (typeof input.select === "function") input.select();
+    });
+
     document.addEventListener("click", (event) => {
       const trigger = closestElement(event.target, ".help-summary-trigger");
       if (!trigger) return;
@@ -497,11 +515,15 @@
       event.stopPropagation();
       const modal = document.getElementById("help-summary-modal");
       const heading = document.getElementById("help-summary-heading");
+      const eyebrow = document.getElementById("help-summary-eyebrow");
       const summary = document.getElementById("help-summary-short");
       const details = document.getElementById("help-summary-details");
       const tableContainer = document.getElementById("help-summary-table-container");
-      if (!modal || !heading || !summary || !details || !tableContainer) return;
+      if (!modal || !heading || !eyebrow || !summary || !details || !tableContainer) return;
       heading.textContent = trigger.dataset.helpTitle || "";
+      // The dialog header stays a short concept name; the group a concept
+      // belongs to rides along as a chip above the lead line instead.
+      eyebrow.textContent = trigger.dataset.helpEyebrow || "";
       summary.textContent = trigger.dataset.helpSummary || "";
       setModalParagraphs(details, trigger.dataset.helpDetails);
       renderHelpSummaryTable(tableContainer, trigger.dataset.helpTable || "");
