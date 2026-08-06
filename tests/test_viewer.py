@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import logging
 import os
 import re
@@ -62,6 +63,23 @@ from hakari_bench.viewer.store import (
 from hakari_bench.viewer.state import FilterState
 from hakari_bench.viewer.state import normalize_query_state
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
+
+
+def _help_registries(html: str) -> list[dict[str, dict[str, object]]]:
+    payloads = re.findall(
+        r'<template data-help-copy-registry>(.*?)</template>',
+        html,
+        flags=re.DOTALL,
+    )
+    return [json.loads(payload) for payload in payloads]
+
+
+def _help_titles(html: str) -> set[str]:
+    return {
+        str(copy["title"])
+        for registry in _help_registries(html)
+        for copy in registry.values()
+    }
 
 
 def test_viewer_config_uses_overall_scope_views() -> None:
@@ -1884,7 +1902,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'id="help-summary-modal"' in response.text
     assert 'id="help-summary-eyebrow"' in response.text
     assert 'class="help-summary-trigger' in response.text
-    assert 'data-help-title="Overall" data-help-eyebrow="Benchmark scope"' in response.text
+    assert "Overall" in _help_titles(response.text)
     assert 'class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
     assert "Overall is the broadest scope." in response.text
     assert 'data-icon="book-open"' in response.text
@@ -3897,7 +3915,7 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert "Safeguard positives" in response.text
     assert 'type="checkbox" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "target=reranking_without_safeguard" in response.text
-    assert 'data-help-title="Safeguard positives"' in response.text
+    assert "Safeguard positives" in _help_titles(response.text)
     assert "reciprocal rank fusion merges the two rankings into a single top 100" in response.text
     assert "raw hybrid top-100" in response.text
     assert "appended at rank 101" in response.text
@@ -4559,11 +4577,25 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "Code 1" in response.text
     assert response.text.index("Code 1") < response.text.index("More languages")
     assert 'id="help-summary-table-container"' in response.text
-    assert "data-help-table=" in response.text
-    assert "&quot;code&quot;:&quot;JA&quot;" in response.text
-    assert "&quot;name&quot;:&quot;Japanese&quot;" in response.text
-    assert "&quot;code&quot;:&quot;category:code&quot;" in response.text
-    assert "&quot;name&quot;:&quot;Code tasks&quot;" in response.text
+    assert any("table" in copy for registry in _help_registries(response.text) for copy in registry.values())
+    assert any(
+        row.get("code") == "JA"
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+        for row in cast(list[dict[str, str]], copy.get("table", []))
+    )
+    assert any(
+        row.get("name") == "Japanese"
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+        for row in cast(list[dict[str, str]], copy.get("table", []))
+    )
+    assert any(
+        row.get("code") == "category:code" and row.get("name") == "Code tasks"
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+        for row in cast(list[dict[str, str]], copy.get("table", []))
+    )
     assert 'data-language-page="ja"' in response.text
     assert 'hx-push-url="/?view=BenchA&amp;lang_filter=en"' in response.text
     assert 'aria-label="Task facets"' in response.text
@@ -4947,13 +4979,16 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-icon="git-compare-arrows"' in response.text
     assert ">Sparse pruning</span>" in response.text
     assert "Other variants" not in response.text
-    assert 'data-help-title="Efficiency variants"' in response.text
-    assert 'data-help-title="Rescore"' in response.text
+    assert {"Efficiency variants", "Rescore"} <= _help_titles(response.text)
     assert '<span class="toggle-chip">\n            <label class="inline-flex cursor-pointer items-center gap-1">' in response.text
     assert "Enable Quantization together with Rescore to include the full-dimension int8_rescore and binary_rescore rows" in response.text
     assert "turning Rescore on while both Dims and Quantization are off enables both" in response.text
     assert "turning Rescore off again leaves them as they are" in response.text
-    assert "labelled like 512d or 512d &lt;- 1024" in response.text
+    assert any(
+        "labelled like 512d or 512d <- 1024" in str(copy["details"])
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+    )
     assert "int8 stores each dimension in one byte" in response.text
     assert "Sparse pruning applies to learned sparse encoders" in response.text
     assert "Model family" in response.text
@@ -7541,8 +7576,7 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     assert "Query length</span>" in response.text
     assert "Document length</span>" in response.text
     assert ">Length</span>" not in response.text
-    assert 'data-help-title="Query length"' in response.text
-    assert 'data-help-title="Document length"' in response.text
+    assert {"Query length", "Document length"} <= _help_titles(response.text)
     assert "the average number of characters per query in that task" in response.text
     assert "the average number of characters per document in that task" in response.text
     assert "Query string <=" not in response.text
@@ -7586,8 +7620,7 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
     assert "Total params (M)</span>" in response.text
     assert ">Params</span>" not in response.text
     assert ">Length</span>" not in response.text
-    assert 'data-help-title="Active params"' in response.text
-    assert 'data-help-title="Total params"' in response.text
+    assert {"Active params", "Total params"} <= _help_titles(response.text)
     assert "Active params here is the non-embedding parameter count" in response.text
     assert "Total params is the full parameter count of the model" in response.text
     assert "at most 500M non-embedding parameters" in response.text
@@ -8719,18 +8752,13 @@ def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
     assert leaderboard.status_code == 200
     # The page-level explanation lives in the header, next to the docs link.
     assert 'id="hakari-page-overview-help"' in page.text
-    assert 'data-help-title="HAKARI-Bench" data-help-eyebrow="Getting started"' in page.text
+    assert "HAKARI-Bench" in _help_titles(page.text)
     assert "Every row is one retrieval model" in page.text
     # The headline numbers explain themselves at the column they label.
-    assert 'data-help-title="Borda Score"' in leaderboard.text
-    assert 'data-help-title="Macro Mean"' in leaderboard.text
-    assert 'data-help-title="Micro Mean"' in leaderboard.text
-    assert 'data-help-eyebrow="Score column"' not in leaderboard.text
+    assert {"Borda Score", "Macro Mean", "Micro Mean"} <= _help_titles(leaderboard.text)
+    assert all(copy.get("eyebrow") != "Score column" for registry in _help_registries(leaderboard.text) for copy in registry.values())
     # Model metadata columns are as opaque as the score columns.
-    assert 'data-help-title="Active Params"' in leaderboard.text
-    assert 'data-help-title="Total Params"' in leaderboard.text
-    assert 'data-help-title="Max Tokens"' in leaderboard.text
-    assert 'data-help-title="Dims"' in leaderboard.text
+    assert {"Active Params", "Total Params", "Max Tokens", "Dims"} <= _help_titles(leaderboard.text)
     assert "1024 dimensions in float32 is 4KB per document" in leaderboard.text
     # Active Params is total minus the embedding table, which is NOT the MoE
     # per-token count; the help must not let a reader assume otherwise.
@@ -8741,8 +8769,12 @@ def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
     assert "In short" in leaderboard.text
     assert "100 x (N - rank) / (N - 1)" in leaderboard.text
     # Benchmark scope explains the whole NanoSet picker, not only its presets.
-    assert 'data-help-title="Benchmark scope"' in leaderboard.text
+    assert "Benchmark scope" in _help_titles(leaderboard.text)
     assert "Every button here is a Nano-set" in leaderboard.text
+    assert leaderboard.text.count("data-help-copy-registry>") == 1
+    assert "data-help-title=" not in leaderboard.text
+    assert "data-help-summary=" not in leaderboard.text
+    assert "data-help-details=" not in leaderboard.text
 
 
 def test_model_name_header_opens_the_model_filter_instead_of_sorting(tmp_path: Path) -> None:

@@ -7,6 +7,26 @@
     return target.closest(selector);
   }
 
+  const helpRegistryCache = new WeakMap();
+
+  function helpCopyForTrigger(trigger) {
+    const key = trigger.dataset.helpKey;
+    if (!key) return null;
+    for (const node of document.querySelectorAll("[data-help-copy-registry]")) {
+      let registry = helpRegistryCache.get(node);
+      if (!registry) {
+        try {
+          registry = JSON.parse((node.content ? node.content.textContent : node.textContent) || "{}");
+        } catch (_error) {
+          registry = {};
+        }
+        helpRegistryCache.set(node, registry);
+      }
+      if (registry[key]) return registry[key];
+    }
+    return null;
+  }
+
   document.addEventListener(
     "change",
     (event) => {
@@ -520,13 +540,17 @@
       const details = document.getElementById("help-summary-details");
       const tableContainer = document.getElementById("help-summary-table-container");
       if (!modal || !heading || !eyebrow || !summary || !details || !tableContainer) return;
-      heading.textContent = trigger.dataset.helpTitle || "";
+      const copy = helpCopyForTrigger(trigger);
+      heading.textContent = (copy && copy.title) || trigger.dataset.helpTitle || "";
       // The dialog header stays a short concept name; the group a concept
       // belongs to rides along as a chip above the lead line instead.
-      eyebrow.textContent = trigger.dataset.helpEyebrow || "";
-      summary.textContent = trigger.dataset.helpSummary || "";
-      setModalParagraphs(details, trigger.dataset.helpDetails);
-      renderHelpSummaryTable(tableContainer, trigger.dataset.helpTable || "");
+      eyebrow.textContent = (copy && copy.eyebrow) || trigger.dataset.helpEyebrow || "";
+      summary.textContent = (copy && copy.summary) || trigger.dataset.helpSummary || "";
+      setModalParagraphs(details, (copy && copy.details) || trigger.dataset.helpDetails);
+      renderHelpSummaryTable(
+        tableContainer,
+        copy && copy.table ? JSON.stringify(copy.table) : trigger.dataset.helpTable || "",
+      );
       if (typeof modal.showModal === "function") modal.showModal();
     });
 

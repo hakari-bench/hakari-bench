@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
+from contextvars import ContextVar
 import csv
 from datetime import datetime, timezone
-from functools import lru_cache
+from functools import lru_cache, wraps
 import hashlib
 from html import escape
 from io import StringIO
@@ -14,7 +15,7 @@ import os
 from pathlib import Path
 import re
 from time import perf_counter
-from typing import Iterable, Sequence, TypedDict, cast
+from typing import Callable, Iterable, ParamSpec, Sequence, TypedDict, cast
 from urllib.parse import quote, urlencode
 
 import duckdb
@@ -98,6 +99,53 @@ SECURITY_HEADERS = {
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
 }
+
+_RenderParams = ParamSpec("_RenderParams")
+_HELP_COPY_REGISTRY: ContextVar[dict[str, dict[str, object]] | None] = ContextVar(
+    "viewer_help_copy_registry",
+    default=None,
+)
+
+
+def _render_help_registry(registry: Mapping[str, Mapping[str, object]]) -> str:
+    payload = json.dumps(registry, ensure_ascii=False, separators=(",", ":"))
+    safe_payload = payload.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+    return f'<template data-help-copy-registry>{safe_payload}</template>'
+
+
+def _with_help_registry(renderer: Callable[_RenderParams, str]) -> Callable[_RenderParams, str]:
+    @wraps(renderer)
+    def wrapped(*args: _RenderParams.args, **kwargs: _RenderParams.kwargs) -> str:
+        token = _HELP_COPY_REGISTRY.set({})
+        try:
+            content = renderer(*args, **kwargs)
+            registry = _HELP_COPY_REGISTRY.get() or {}
+            registry_html = _render_help_registry(registry)
+            if "</body>" in content:
+                return content.replace("</body>", f"{registry_html}\n</body>", 1)
+            return f"{content}{registry_html}"
+        finally:
+            _HELP_COPY_REGISTRY.reset(token)
+
+    return wrapped
+
+
+def _register_help_copy(copy: help_text.HelpCopy, *, table_rows: list[dict[str, str]] | None = None) -> str:
+    payload: dict[str, object] = {
+        "title": copy.title,
+        "summary": copy.summary,
+        "details": copy.details,
+    }
+    if copy.eyebrow:
+        payload["eyebrow"] = copy.eyebrow
+    if table_rows:
+        payload["table"] = table_rows
+    canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    key = f"help-{hashlib.sha256(canonical.encode()).hexdigest()[:16]}"
+    registry = _HELP_COPY_REGISTRY.get()
+    if registry is not None:
+        registry[key] = payload
+    return key
 FOOTER_QUERY_TABLES = {"meta_database"}
 Z_SCORE_BUCKET_CLASSES = (
     "task-z-neutral",
@@ -889,6 +937,7 @@ def _frame_ancestors() -> str:
     return " ".join(tokens)
 
 
+@_with_help_registry
 def render_page(
     *,
     viewer_config: ViewerConfig,
@@ -1323,25 +1372,33 @@ def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
 
 
 def _render_help_copy(copy: help_text.HelpCopy, *, table_rows: list[dict[str, str]] | None = None) -> str:
-    table_attr = (
-        f' data-help-table="{escape(json.dumps(table_rows, separators=(",", ":")), quote=True)}"'
-        if table_rows
-        else ""
-    )
     return f"""<button type="button"
                     class="help-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
-                    {_help_data_attrs(copy)}{table_attr}
+                    {_help_data_attrs(copy, table_rows=table_rows)}
                     aria-label="{escape(_help_aria_label(copy), quote=True)}">{_icon_svg("circle-help")}</button>"""
 
 
-def _help_data_attrs(copy: help_text.HelpCopy) -> str:
-    eyebrow_attr = f' data-help-eyebrow="{escape(copy.eyebrow, quote=True)}"' if copy.eyebrow else ""
-    return (
-        f'data-help-title="{escape(copy.title, quote=True)}"'
-        f'{eyebrow_attr}'
-        f' data-help-summary="{escape(copy.summary, quote=True)}"'
-        f' data-help-details="{escape(copy.details, quote=True)}"'
-    )
+def _help_data_attrs(
+    copy: help_text.HelpCopy,
+    *,
+    table_rows: list[dict[str, str]] | None = None,
+) -> str:
+    if _HELP_COPY_REGISTRY.get() is None:
+        eyebrow_attr = f' data-help-eyebrow="{escape(copy.eyebrow, quote=True)}"' if copy.eyebrow else ""
+        table_attr = (
+            f' data-help-table="{escape(json.dumps(table_rows, separators=(",", ":")), quote=True)}"'
+            if table_rows
+            else ""
+        )
+        return (
+            f'data-help-title="{escape(copy.title, quote=True)}"'
+            f'{eyebrow_attr}'
+            f' data-help-summary="{escape(copy.summary, quote=True)}"'
+            f' data-help-details="{escape(copy.details, quote=True)}"'
+            f"{table_attr}"
+        )
+    key = _register_help_copy(copy, table_rows=table_rows)
+    return f'data-help-key="{key}"'
 
 
 def _help_aria_label(copy: help_text.HelpCopy) -> str:
@@ -1387,6 +1444,7 @@ def render_summary_cards(summary: ViewerSummary) -> str:
     """
 
 
+@_with_help_registry
 def render_leaderboard(
     *,
     result: LeaderboardResult,

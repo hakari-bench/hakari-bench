@@ -460,6 +460,10 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Help copy lives in `hakari_bench/viewer/help_text.py` as `HelpCopy` values, not
   inline in the render functions, so the whole explanation set can be read and
   edited as one document.
+- Each rendered response serializes its used help copy once in a deduplicated
+  page-local JSON registry. Help triggers carry only a compact registry key plus
+  their accessible label; do not repeat long help text in every trigger or add a
+  network request when a dialog opens.
 - Three help surfaces exist, and each answers a different question. The header
   question mark explains the page itself: what a row is, what a score means, and
   in which order the controls apply. Control help explains one control. Score

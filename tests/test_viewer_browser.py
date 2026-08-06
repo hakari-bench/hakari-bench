@@ -829,7 +829,7 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                             font_property,
                         )
 
-                help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
+                help_trigger = page.locator('#variant-controls button[data-help-key][aria-label="Rescore"]')
                 assert help_trigger.locator(
                     'xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " toggle-chip ")]'
                 ).count() == 1
