@@ -7626,7 +7626,20 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
     assert "at most 500M non-embedding parameters" in response.text
     assert 'name="active_params_max" value="100"' in response.text
     params_filter_section = response.text.split("Query length</span>", 1)[0]
-    assert params_filter_section.count("viewer-text-input w-20") >= 4
+    assert params_filter_section.count("viewer-text-input w-28") >= 2
+    assert 'placeholder="min"' in params_filter_section
+    assert 'placeholder="max"' in params_filter_section
+    for field_name in (
+        "active_params_min",
+        "active_params_max",
+        "total_params_min",
+        "total_params_max",
+        "query_len_min",
+        "query_len_max",
+        "doc_len_min",
+        "doc_len_max",
+    ):
+        assert re.search(rf'name="{field_name}"[^>]+class="viewer-text-input w-28', response.text, re.DOTALL)
     assert "model/small" in response.text
     assert "model/large" not in response.text
 

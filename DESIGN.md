@@ -424,8 +424,10 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
 - In Filter results, Params sits above Length and uses compact numeric inputs
-  narrow enough not to dominate the filter row
-  in millions for Active Params and Total Params bounds.
+  narrow enough not to dominate the filter row. Give all four range controls a
+  consistent 7rem input width and use only `min` / `max` as placeholders; the
+  visible row label and accessible input label carry the full field name. Params
+  bounds are in millions for Active Params and Total Params.
 - Keep the HAKARI-Bench brand mark at 28px with the same 22% rounded app-icon
   treatment in the leaderboard and documentation headers.
 - Use a separate white SVG for the browser favicon, while keeping the in-page

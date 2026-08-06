@@ -4049,7 +4049,7 @@ def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
 
 def _render_active_parameter_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_params_class = "text-cyan-700" if filter_state.active_params_min or filter_state.active_params_max else ""
@@ -4070,7 +4070,7 @@ def _render_active_parameter_filter_input(filter_state: FilterState) -> str:
 
 def _render_total_parameter_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     total_params_class = "text-cyan-700" if filter_state.total_params_min or filter_state.total_params_max else ""
@@ -4095,7 +4095,7 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
 
 def _render_query_length_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     query_length_class = "text-cyan-700" if filter_state.query_len_min or filter_state.query_len_max else ""
@@ -4116,7 +4116,7 @@ def _render_query_length_filter_input(filter_state: FilterState) -> str:
 
 def _render_document_length_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     document_length_class = "text-cyan-700" if filter_state.doc_len_min or filter_state.doc_len_max else ""
