@@ -1,0 +1,174 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoSSRB",
+    "backing_dataset": "NanoSSRB",
+    "dataset_id": "hakari-bench/NanoSSRB",
+    "task_name": "Academic",
+    "split_name": "Academic",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoSSRB/Academic.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/vec-ai/struct-ir"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 600
+    },
+    "positives_per_query": {
+      "average": 3.0,
+      "min": 1,
+      "median": 3.0,
+      "max": 5,
+      "multi_positive_queries": 160,
+      "multi_positive_query_percent": 80.0
+    },
+    "text_stats_chars": {
+      "query_mean": 298.49,
+      "document_mean": 900.0325
+    },
+    "bm25": {
+      "ndcg_at_10": 0.2975353394559196,
+      "hit_at_10": 0.61,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.2975353395,
+        "hit_at_10": 0.61,
+        "recall_at_100": 0.8433333333,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8433333333
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4909845285,
+        "hit_at_10": 0.785,
+        "recall_at_100": 0.9466666667,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9466666667
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4873402384,
+        "hit_at_10": 0.79,
+        "recall_at_100": 0.9433333333,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.025,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9433333333,
+        "safeguard_positive_rows": 5,
+        "rows_with_101_candidates": 5
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoSSRB",
+      "source_urls": [
+        {
+          "label": "SSRB paper",
+          "url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html"
+        },
+        {
+          "label": "Struct-IR dataset",
+          "url": "https://huggingface.co/datasets/vec-ai/struct-ir"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "SSRB: Direct Natural Language Querying to Massive Heterogeneous Semi-Structured Data",
+        "url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "vec-ai/struct-ir",
+        "url": "https://huggingface.co/datasets/vec-ai/struct-ir",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "Academic--research_grants--q--45193",
+        "document_id": "Academic--research_grants--p--34915",
+        "query": {
+          "text": "Find grants funded by the National Institutes of Health (NIH) with an amount greater than $500,000.",
+          "full_chars": 99,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"grant_title\": \"Advancing Population Health Through Big Data Analytics\", \"grant_number\": \"R01MH123456\", \"principal_investigator\": { \"name\": \"Dr. Alice Johnson\", \"institution\": \"Harvard University\" }, \"funding_agency\": \"NIH\", \"amount\": 750000.0, \"start_date\": \"2023-03-15\", \"end_date\": \"2028-03-14\", \"research_fields\": [ \"Public Health\", \"Data Science\", \"Epidemiology\", \"Bioinformatics\" ], \"objectives\": [ \"Develop novel machine learning models for disease prediction.\", \"Analyze large-scale health datasets to identify risk factors.\", \"Improve public health interventions through data-driven insights.\" ] }",
+          "full_chars": 728,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Academic--academic_profile--q--14168",
+        "document_id": "Academic--academic_profile--p--42913",
+        "query": {
+          "text": "I am looking for a professor at a top university who specializes in artificial intelligence and machine learning, particularly those with a focus on applications in healthcare. I'd prefer someone who has a strong publication record and has been awarded a PhD from a highly-regarded institution. Specifically, I need someone affiliated with an institution founded before 1950 and whose research interests include 'deep learning' but *not* 'natural language processing'. Furthermore, I’m interested in",
+          "full_chars": 737,
+          "limit_chars": 500,
+          "truncated": true
+        },
+        "positive_document": {
+          "text": "{ \"name\": \"Andrew Ng\", \"institution\": \"Stanford University\", \"department\": \"Computer Science\", \"research_interests\": [ \"Machine Learning\", \"Deep Learning\", \"Artificial Intelligence\", \"Healthcare AI\" ], \"publications\": [ { \"title\": \"Deep learning for medical image analysis\", \"year\": \"2023\" }, { \"title\": \"AI-powered diagnosis systems\", \"year\": \"2024\" } ], \"contact_email\": \"andrew.ng@stanford.edu\", \"office_location\": \"Gates Computer Science Building\", \"profile_url\": \"https://ai.stanford.edu/~ang/\", \"education\": [ { \"degree\": \"PhD\", \"institution\": \"MIT\", \"field\": \"Computer Science\" } ] }",
+          "full_chars": 802,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "Academic--academic_competi--q--28080",
+        "document_id": "Academic--academic_competi--p--5464",
+        "query": {
+          "text": "I'm a university student looking for design competitions with good prize money to help fund my final year project. I'd like to find competitions open to undergraduates and graduate students with submission deadlines in the next three months, and I'm particularly interested in competitions that appear challenging or innovative. Can you show me some relevant options? [[The current time is 2024-04-10]]",
+          "full_chars": 403,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"competition_title\": \"Global Innovation Design Challenge\", \"organizing_body\": \"IDEO Futures Foundation\", \"submission_deadline\": \"2024-07-15\", \"competition_date\": \"2024-08-20\", \"competition_type\": \"Design\", \"eligibility_criteria\": \"Currently enrolled undergraduate or graduate student at a university.\", \"prizes\": [ { \"type\": \"Cash Prize\", \"value\": \"$10,000\" }, { \"type\": \"Internship\", \"value\": \"Paid internship at IDEO\" } ], \"registration_url\": \"https://www.ideofutures.org/designchallenge\" }",
+          "full_chars": 610,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "source_dataset_id": "vec-ai/struct-ir",
+    "source_task": "Academic",
+    "example_count": 3
+  }
+}

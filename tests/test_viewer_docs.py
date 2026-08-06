@@ -695,12 +695,17 @@ def test_all_configured_benchmark_scopes_have_group_overviews() -> None:
 
     missing_overviews = [benchmark.name for benchmark in config.benchmarks if docs.group_doc(benchmark.name) is None]
     doc = docs.group_doc("NanoMTEB-BR")
+    nanossrb_doc = docs.group_doc("NanoSSRB")
 
     assert missing_overviews == []
     assert doc is not None
     assert doc.title == "NanoMTEB-BR"
     assert doc.url == "/docs/benchmark-tasks/NanoMTEB-BR"
     assert "Brazilian Portuguese" in doc.description
+    assert nanossrb_doc is not None
+    assert nanossrb_doc.title == "NanoSSRB"
+    assert nanossrb_doc.url == "/docs/benchmark-tasks/NanoSSRB"
+    assert "semi structured JSON records" in nanossrb_doc.description
 
 
 def test_nanomteb_br_task_columns_link_all_task_docs(tmp_path: Path) -> None:
