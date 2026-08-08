@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import logging
 import os
 import re
@@ -62,6 +63,23 @@ from hakari_bench.viewer.store import (
 from hakari_bench.viewer.state import FilterState
 from hakari_bench.viewer.state import normalize_query_state
 from hakari_bench.viewer.variant_display import VariantDisplayFlags
+
+
+def _help_registries(html: str) -> list[dict[str, dict[str, object]]]:
+    payloads = re.findall(
+        r'<template data-help-copy-registry>(.*?)</template>',
+        html,
+        flags=re.DOTALL,
+    )
+    return [json.loads(payload) for payload in payloads]
+
+
+def _help_titles(html: str) -> set[str]:
+    return {
+        str(copy["title"])
+        for registry in _help_registries(html)
+        for copy in registry.values()
+    }
 
 
 def test_viewer_config_uses_overall_scope_views() -> None:
@@ -1276,8 +1294,9 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert ".model-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".leaderboard-row:hover>td{background-color:color-mix" in css_response.text
     assert "z-index:1000" in css_response.text
-    assert ".hakari-count-modal{width:min(92vw,48rem);max-height:92vh}" in css_response.text
-    assert ".hakari-count-modal .hakari-modal-body{max-height:calc(92vh - 4rem);overflow:auto}" in css_response.text
+    assert ".hakari-count-modal{width:min(92vw,52rem);max-height:88vh}" in css_response.text
+    assert ".hakari-modal[open]{display:flex;flex-direction:column}" in css_response.text
+    assert ".hakari-modal-body{flex:1 1 auto;overflow-y:auto" in css_response.text
 
     htmx_response = client.get("/assets/htmx.min.js")
     assert htmx_response.status_code == 200
@@ -1874,17 +1893,18 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Choose the evaluation mode first" not in response.text
     assert "Language-focused MTEB/MMTEB-style Nano suites" not in response.text
     assert "Overall" in response.text
-    assert "Shows every benchmark family available in the viewer." in response.text
+    assert "Ranks models over every benchmark in the database" in response.text
     assert "Retrieval" in response.text
     assert "Reranking" in response.text
     assert 'data-icon="search"' in response.text
     assert 'data-icon="list-ordered"' in response.text
     assert "Safeguard positives" not in response.text
     assert 'id="help-summary-modal"' in response.text
+    assert 'id="help-summary-eyebrow"' in response.text
     assert 'class="help-summary-trigger' in response.text
-    assert 'data-help-title="Benchmark scope: Overall"' in response.text
+    assert "Overall" in _help_titles(response.text)
     assert 'class="control-button-group inline-flex items-center border text-[0.8125rem] leading-tight' in response.text
-    assert "Overall is the default and broadest leaderboard scope." in response.text
+    assert "Overall is the broadest scope." in response.text
     assert 'data-icon="book-open"' in response.text
     assert 'data-icon="circle-help"' in response.text
     assert 'data-icon="question-mark"' not in response.text
@@ -1895,9 +1915,10 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "hover:bg-cyan-50" not in doc_trigger_html
     assert "hover:border-cyan-600" not in doc_trigger_html
     assert 'data-icon="circle-help"' not in doc_trigger_html
-    assert "full-corpus retrieval results" in response.text
+    assert "ranks systems that search the entire document corpus" in response.text
     assert "reranking_hybrid candidate set" in response.text
-    assert "candidate-order baseline" in response.text
+    # The BM25 row in Reranking is a full-corpus retrieval score, not a rerank.
+    assert "The BM25 row here is not a reranked score." in response.text
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
@@ -3836,16 +3857,14 @@ def test_mnanobeir_scope_buttons_are_exclusive_in_combined_scopes() -> None:
     assert "bench=MNanoBEIR%3Alang_mean" in lang_html
     assert "bench=MNanoBEIR%3Atask_mean" not in lang_html
     assert "bench=BenchA" in lang_html
-    assert 'data-help-title="Benchmark scope: M-BEIR(task)"' in html
-    assert 'data-help-title="Benchmark scope: M-BEIR(lang)"' in html
-    assert "Shows 13 BEIR task means; each task score averages its 14 language results." in html
-    assert "Shows 14 language means; each language score averages its 13 BEIR tasks." in html
-    assert "M-BEIR evaluates 13 retrieval tasks in 14 languages, producing 182 raw result cells." in html
-    assert "The 13 visible task columns are breakdowns, not 13 ranking votes." in html
-    assert "The 14 visible language columns are breakdowns, not 14 ranking votes." in html
-    assert "With Micro scoring, all 182 raw M-BEIR cells contribute independently" in html
-    assert "With Macro scoring" in html
-    assert "M-BEIR contributes one final benchmark score" in html
+    assert 'data-help-title="M-BEIR(task)" data-help-eyebrow="Benchmark scope"' in html
+    assert 'data-help-title="M-BEIR(lang)" data-help-eyebrow="Benchmark scope"' in html
+    assert "Breaks M-BEIR down into 13 task columns" in html
+    assert "Breaks M-BEIR down into 14 language columns" in html
+    assert "M-BEIR runs 13 retrieval tasks in 14 languages, which produces 182 raw result cells per model." in html
+    assert "This choice changes the breakdown you see, not the weight M-BEIR carries." in html
+    assert "With Micro scoring all 182 raw cells still contribute individually" in html
+    assert "With Macro scoring M-BEIR is still averaged down to one benchmark score." in html
 
 
 def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path: Path) -> None:
@@ -3896,10 +3915,10 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert "Safeguard positives" in response.text
     assert 'type="checkbox" class="h-4 w-4 accent-cyan-700" checked' in response.text
     assert "target=reranking_without_safeguard" in response.text
-    assert 'data-help-title="Safeguard positives"' in response.text
-    assert "RRF over BM25 and dense candidate rankings" in response.text
-    assert "top-100 hybrid candidates" in response.text
-    assert "optional rank-101 safeguard positive" in response.text
+    assert "Safeguard positives" in _help_titles(response.text)
+    assert "reciprocal rank fusion merges the two rankings into a single top 100" in response.text
+    assert "raw hybrid top-100" in response.text
+    assert "appended at rank 101" in response.text
     assert "usually produced by BM25" not in response.text
     # Default sort is now Borda Score (desc); the bm25 baseline sorts by its score.
     table_body = response.text.split("<tbody>", 1)[1].split("</tbody>", 1)[0]
@@ -4558,11 +4577,25 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
     assert "Code 1" in response.text
     assert response.text.index("Code 1") < response.text.index("More languages")
     assert 'id="help-summary-table-container"' in response.text
-    assert "data-help-table=" in response.text
-    assert "&quot;code&quot;:&quot;JA&quot;" in response.text
-    assert "&quot;name&quot;:&quot;Japanese&quot;" in response.text
-    assert "&quot;code&quot;:&quot;category:code&quot;" in response.text
-    assert "&quot;name&quot;:&quot;Code tasks&quot;" in response.text
+    assert any("table" in copy for registry in _help_registries(response.text) for copy in registry.values())
+    assert any(
+        row.get("code") == "JA"
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+        for row in cast(list[dict[str, str]], copy.get("table", []))
+    )
+    assert any(
+        row.get("name") == "Japanese"
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+        for row in cast(list[dict[str, str]], copy.get("table", []))
+    )
+    assert any(
+        row.get("code") == "category:code" and row.get("name") == "Code tasks"
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+        for row in cast(list[dict[str, str]], copy.get("table", []))
+    )
     assert 'data-language-page="ja"' in response.text
     assert 'hx-push-url="/?view=BenchA&amp;lang_filter=en"' in response.text
     assert 'aria-label="Task facets"' in response.text
@@ -4946,22 +4979,29 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'data-icon="git-compare-arrows"' in response.text
     assert ">Sparse pruning</span>" in response.text
     assert "Other variants" not in response.text
-    assert 'data-help-title="Efficiency variants"' in response.text
-    assert 'data-help-title="Rescore"' in response.text
+    assert {"Efficiency variants", "Rescore"} <= _help_titles(response.text)
     assert '<span class="toggle-chip">\n            <label class="inline-flex cursor-pointer items-center gap-1">' in response.text
-    assert "Enable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows." in response.text
-    assert "When both Dims and Quantization are off, turning on Rescore enables both" in response.text
-    assert "Turning Rescore off leaves their state unchanged." in response.text
-    assert "Dims includes truncated dense embedding rows and uses short labels such as 512d or 512d &lt;- 1024" in response.text
-    assert "Quantization includes compressed numeric formats such as int8 and binary." in response.text
-    assert "Sparse pruning includes sparse encoder pruning variants" in response.text
+    assert "Enable Quantization together with Rescore to include the full-dimension int8_rescore and binary_rescore rows" in response.text
+    assert "turning Rescore on while both Dims and Quantization are off enables both" in response.text
+    assert "turning Rescore off again leaves them as they are" in response.text
+    assert any(
+        "labelled like 512d or 512d <- 1024" in str(copy["details"])
+        for registry in _help_registries(response.text)
+        for copy in registry.values()
+    )
+    assert "int8 stores each dimension in one byte" in response.text
+    assert "Sparse pruning applies to learned sparse encoders" in response.text
     assert "Model family" in response.text
     assert 'id="model-type-controls"' in response.text
     assert 'data-icon="shapes"' in response.text
-    assert response.text.index("Table display") < response.text.index("Efficiency variants")
-    assert response.text.index("Efficiency variants") < response.text.index("Filter results")
-    assert response.text.index("Table display") < response.text.index("Filter results")
-    assert response.text.index("Filter results") < response.text.index("Model family") < response.text.index('id="model-filter-input"')
+    assert response.text.index(">Table display</span>") < response.text.index(">Efficiency variants</span>")
+    assert response.text.index(">Efficiency variants</span>") < response.text.index(">Filter results</span>")
+    assert response.text.index(">Table display</span>") < response.text.index(">Filter results</span>")
+    assert (
+        response.text.index(">Filter results</span>")
+        < response.text.index(">Model family</span>")
+        < response.text.index('id="model-filter-input"')
+    )
     assert 'name="model_type_filter" value="__none_selected__"' in response.text
     assert "Filter results" in response.text
     assert 'data-icon="filter"' in response.text
@@ -5011,15 +5051,15 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         < response.text.index('name="total_params_min"')
         < response.text.index('name="doc_len_min"')
     )
-    assert "Filters leaderboard rows by model name." in response.text
+    assert "Keeps only rows whose model name matches your keywords." in response.text
     assert "jina bge keeps rows whose model name contains jina or bge" in response.text
-    assert "When Recalculate ranks from filters is enabled, it also changes the ranked model population" in response.text
+    assert "Enable Recalculate ranks from filters if you want the ranking recomputed" in response.text
     assert ">Task</span>" in response.text
     assert 'id="task-filter-input" type="search" name="task_filter"' in response.text
     assert 'name="query_len_min" value=""' in response.text
     assert 'aria-label="Query length minimum"' in response.text
     assert ">Task name</span>" not in response.text
-    assert "Filters task columns and task rows by benchmark" in response.text
+    assert "Keeps only the task columns or task rows whose names match your keywords." in response.text
     assert "arguana fever keeps task columns or task rows whose identifiers contain arguana or fever" in response.text
     assert "Short task names such as nq also work" in response.text
     assert "Recalculate ranks from filters" in response.text
@@ -5719,9 +5759,9 @@ def test_overall_task_filter_renders_single_task_mean_column(tmp_path: Path) -> 
         ("model/a", pytest.approx(55.0), pytest.approx(55.0), pytest.approx(55.0)),
         ("model/b", pytest.approx(55.0), pytest.approx(55.0), pytest.approx(55.0)),
     ]
-    assert "Macro Mean" not in head
-    assert "Micro Mean" not in head
-    assert "Mean Score" in head
+    assert 'data-column-key="macro_mean"' not in head
+    assert 'data-column-key="micro_mean"' not in head
+    assert 'data-column-key="mean_score"' in head
     assert body.count(">55.00</td>") >= 2
 
 
@@ -7316,11 +7356,20 @@ def test_leaderboard_service_can_rank_by_non_default_metric(tmp_path: Path) -> N
     assert response.status_code == 200
     assert "Score metric" in response.text
     assert "Acc@1" in response.text
-    assert response.text.index("nDCG@10") < response.text.index("nDCG@100")
-    assert response.text.index("nDCG@100") < response.text.index("Recall@10") < response.text.index("Recall@100")
-    assert response.text.index("Recall@100") < response.text.index("Acc@1") < response.text.index("Acc@10")
-    assert response.text.index("Acc@10") < response.text.index("Acc@100") < response.text.index("MRR@10")
-    assert response.text.index("MRR@10") < response.text.index("MAP@100")
+    # Metric names also appear inside the Score metric help copy, so check the
+    # order of the rendered metric buttons rather than of raw text positions.
+    metric_button_labels = re.findall(r">\s*([A-Za-z]+@\d+)\s*</button>", response.text)
+    assert metric_button_labels == [
+        "nDCG@10",
+        "nDCG@100",
+        "Recall@10",
+        "Recall@100",
+        "Acc@1",
+        "Acc@10",
+        "Acc@100",
+        "MRR@10",
+        "MAP@100",
+    ]
     assert "nDCG@10" in response.text
     assert "Acc@3" not in response.text
     assert "Acc@5" not in response.text
@@ -7527,10 +7576,9 @@ def test_viewer_renders_and_applies_task_length_filters(tmp_path: Path) -> None:
     assert "Query length</span>" in response.text
     assert "Document length</span>" in response.text
     assert ">Length</span>" not in response.text
-    assert 'data-help-title="Query length"' in response.text
-    assert 'data-help-title="Document length"' in response.text
-    assert "Query length bounds use task metadata measured in average characters per query." in response.text
-    assert "Document length bounds use task metadata measured in average characters per document." in response.text
+    assert {"Query length", "Document length"} <= _help_titles(response.text)
+    assert "the average number of characters per query in that task" in response.text
+    assert "the average number of characters per document in that task" in response.text
     assert "Query string <=" not in response.text
     assert "Doc string <=" not in response.text
     assert 'name="query_len_max" value="1000"' in response.text
@@ -7572,14 +7620,26 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
     assert "Total params (M)</span>" in response.text
     assert ">Params</span>" not in response.text
     assert ">Length</span>" not in response.text
-    assert 'data-help-title="Active params"' in response.text
-    assert 'data-help-title="Total params"' in response.text
-    assert "Active params is the parameter count considered active" in response.text
-    assert "Total params is the full model parameter count" in response.text
-    assert "at most 100M active parameters" in response.text
+    assert {"Active params", "Total params"} <= _help_titles(response.text)
+    assert "Active params here is the non-embedding parameter count" in response.text
+    assert "Total params is the full parameter count of the model" in response.text
+    assert "at most 500M non-embedding parameters" in response.text
     assert 'name="active_params_max" value="100"' in response.text
     params_filter_section = response.text.split("Query length</span>", 1)[0]
-    assert params_filter_section.count("viewer-text-input w-20") >= 4
+    assert params_filter_section.count("viewer-text-input w-28") >= 2
+    assert 'placeholder="min"' in params_filter_section
+    assert 'placeholder="max"' in params_filter_section
+    for field_name in (
+        "active_params_min",
+        "active_params_max",
+        "total_params_min",
+        "total_params_max",
+        "query_len_min",
+        "query_len_max",
+        "doc_len_min",
+        "doc_len_max",
+    ):
+        assert re.search(rf'name="{field_name}"[^>]+class="viewer-text-input w-28', response.text, re.DOTALL)
     assert "model/small" in response.text
     assert "model/large" not in response.text
 
@@ -8676,6 +8736,87 @@ benchmarks:
     assert response.status_code == 200
     assert '<link rel="canonical" href="/">' in response.text
     assert 'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja"' in response.text
+
+
+def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n",
+        encoding="utf-8",
+    )
+    client = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir))
+
+    page = client.get("/")
+    leaderboard = client.get("/leaderboard?view=Overall")
+
+    assert page.status_code == 200
+    assert leaderboard.status_code == 200
+    # The page-level explanation lives in the header, next to the docs link.
+    assert 'id="hakari-page-overview-help"' in page.text
+    assert "HAKARI-Bench" in _help_titles(page.text)
+    assert "Every row is one retrieval model" in page.text
+    # The headline numbers explain themselves at the column they label.
+    assert {"Borda Score", "Macro Mean", "Micro Mean"} <= _help_titles(leaderboard.text)
+    assert all(copy.get("eyebrow") != "Score column" for registry in _help_registries(leaderboard.text) for copy in registry.values())
+    # Model metadata columns are as opaque as the score columns.
+    assert {"Active Params", "Total Params", "Max Tokens", "Dims"} <= _help_titles(leaderboard.text)
+    assert "1024 dimensions in float32 is 4KB per document" in leaderboard.text
+    # Active Params is total minus the embedding table, which is NOT the MoE
+    # per-token count; the help must not let a reader assume otherwise.
+    assert "Total Params minus the input embedding parameters" in leaderboard.text
+    assert "this is not the mixture-of-experts sense of active parameters" in leaderboard.text
+    # The lead line reads as a tip callout, not as a bare bold paragraph.
+    assert 'class="hakari-modal-callout"' in leaderboard.text
+    assert "In short" in leaderboard.text
+    assert "100 x (N - rank) / (N - 1)" in leaderboard.text
+    # Benchmark scope explains the whole NanoSet picker, not only its presets.
+    assert "Benchmark scope" in _help_titles(leaderboard.text)
+    assert "Every button here is a Nano-set" in leaderboard.text
+    assert leaderboard.text.count("data-help-copy-registry>") == 1
+    assert "data-help-title=" not in leaderboard.text
+    assert "data-help-summary=" not in leaderboard.text
+    assert "data-help-details=" not in leaderboard.text
+
+
+def test_model_name_header_opens_the_model_filter_instead_of_sorting(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "a1", 0.80, 10, 12, 8192),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text(
+        "name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n",
+        encoding="utf-8",
+    )
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    response = TestClient(app).get("/leaderboard?view=Overall")
+
+    assert response.status_code == 200
+    head = response.text.split("<thead>", 1)[1].split("</thead>", 1)[0]
+    model_head = head.split('data-column-key="model_name"', 1)[1].split("</th>", 1)[0]
+    assert 'data-model-filter-focus="true"' in model_head
+    assert "sort=model_name" not in model_head
+    assert "hx-get" not in model_head
 
 
 def _write_task_results(

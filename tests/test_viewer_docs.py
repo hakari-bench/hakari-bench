@@ -292,9 +292,9 @@ def test_benchmark_docs_does_not_duplicate_existing_link_reference_sections(tmp_
     assert "### Hugging Face Links" not in doc.markdown
     assert doc.markdown.count("### Source Reference Table") == 1
     html = render_markdown_to_html(doc.markdown, base_url=doc.url)
-    assert "<h3>Public Sources</h3>" not in html
-    assert "<h3>Hugging Face Links</h3>" not in html
-    assert html.count("<h3>Source Reference Table</h3>") == 1
+    assert ">Public Sources<" not in html
+    assert ">Hugging Face Links<" not in html
+    assert html.count('<h3 id="source-reference-table"') == 1
 
 
 def test_benchmark_docs_renders_group_metadata_summary_from_task_docs_json(tmp_path: Path) -> None:
@@ -586,7 +586,7 @@ def test_markdown_renderer_collapses_machine_readable_metadata_by_default() -> N
     assert "Machine-Readable Metadata" in html
     assert "nano_set: NanoCoIR" in html
     assert "<details open" not in html
-    assert html.index("</details>") < html.index("<h2>References</h2>")
+    assert html.index("</details>") < html.index('<h2 id="references"')
     assert "<p>Visible references.</p>" in html
 
 
@@ -695,12 +695,17 @@ def test_all_configured_benchmark_scopes_have_group_overviews() -> None:
 
     missing_overviews = [benchmark.name for benchmark in config.benchmarks if docs.group_doc(benchmark.name) is None]
     doc = docs.group_doc("NanoMTEB-BR")
+    nanossrb_doc = docs.group_doc("NanoSSRB")
 
     assert missing_overviews == []
     assert doc is not None
     assert doc.title == "NanoMTEB-BR"
     assert doc.url == "/docs/benchmark-tasks/NanoMTEB-BR"
     assert "Brazilian Portuguese" in doc.description
+    assert nanossrb_doc is not None
+    assert nanossrb_doc.title == "NanoSSRB"
+    assert nanossrb_doc.url == "/docs/benchmark-tasks/NanoSSRB"
+    assert "semi structured JSON records" in nanossrb_doc.description
 
 
 def test_nanomteb_br_task_columns_link_all_task_docs(tmp_path: Path) -> None:
@@ -834,19 +839,18 @@ def test_docs_index_endpoint_lists_benchmark_docs(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert "Benchmark documentation" in response.text
-    assert ">Paper</h2>" in response.text
+    assert '<p class="doc-index-paper-label">Paper</p>' in response.text
     assert (
-        '<a class="underline underline-offset-2" href="http://arxiv.org/abs/2606.22778" '
-        'target="_blank" rel="noopener noreferrer">'
+        '<a href="http://arxiv.org/abs/2606.22778" target="_blank" rel="noopener noreferrer">'
         "HAKARI-Bench: A Lightweight Benchmark for Comparing Retrieval Architectures and Efficiency Settings under Unified Conditions</a>"
     ) in response.text
     assert '<a class="underline underline-offset-2" href="/">Top</a>' in response.text
     assert response.text.index(">Top</a>") < response.text.index(">Benchmark documentation</span>")
-    assert response.text.index(">Paper</h2>") < response.text.index(">Benchmark documentation</h1>")
+    assert response.text.index(">Benchmark documentation</h1>") < response.text.index(">Paper</p>")
     assert response.text.index('href="/docs/benchmark-tasks/MNanoBEIR"') < response.text.index(
         'href="/docs/benchmark-tasks/NanoLongEmbed"'
     )
-    assert 'class="doc-list-link font-semibold underline-offset-2 hover:underline" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
+    assert 'class="doc-list-link font-semibold" href="/docs/benchmark-tasks/NanoMIRACL"' in response.text
     assert 'href="/docs/benchmark-tasks/NanoBEIR-en"' not in response.text
     assert "LongEmbed overview." not in response.text
     assert "MIRACL overview." not in response.text

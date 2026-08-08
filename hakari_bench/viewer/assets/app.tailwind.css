@@ -510,25 +510,41 @@
   }
 
   .benchmark-doc h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 600;
-    line-height: 2rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
   }
 
   .benchmark-doc h2 {
     border-top: 1px solid var(--hakari-border);
-    font-size: 1.125rem;
+    font-size: 1.1875rem;
     font-weight: 600;
-    line-height: 1.75rem;
-    margin-top: 1.75rem;
-    padding-top: 1rem;
+    line-height: 1.35;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
   }
 
+  /* h3 subsections need a marker because their size is close to body copy. */
   .benchmark-doc h3 {
+    position: relative;
     font-size: 1rem;
     font-weight: 600;
-    line-height: 1.5rem;
-    margin-top: 1.5rem;
+    line-height: 1.4;
+    margin-top: 2rem;
+    padding-left: 0.75rem;
+    color: var(--hakari-text);
+  }
+
+  .benchmark-doc h3::before {
+    content: "";
+    position: absolute;
+    top: 0.2em;
+    bottom: 0.2em;
+    left: 0;
+    width: 3px;
+    border-radius: 9999px;
+    background-color: var(--hakari-accent);
   }
 
   .benchmark-doc p,
@@ -549,26 +565,35 @@
   .benchmark-doc h3 + table,
   .benchmark-doc h3 + blockquote,
   .benchmark-doc h3 + pre {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
   }
 
   .benchmark-doc p,
-  .benchmark-doc li,
+  .benchmark-doc li {
+    color: var(--hakari-text);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
   .benchmark-doc td {
     color: var(--hakari-text);
-    font-size: 0.875rem;
-    line-height: 1.55;
+    font-size: 0.8125rem;
+    line-height: 1.5;
   }
 
   .benchmark-doc blockquote {
     color: color-mix(in srgb, var(--hakari-text) 88%, var(--hakari-text-muted));
-    font-size: 0.875rem;
-    line-height: 1.55;
+    font-size: 0.9375rem;
+    line-height: 1.65;
   }
 
   .benchmark-doc ul {
     list-style: disc;
     padding-left: 1.25rem;
+  }
+
+  .benchmark-doc li + li {
+    margin-top: 0.25rem;
   }
 
   .benchmark-doc a {
@@ -583,7 +608,7 @@
 
   .benchmark-doc td {
     border-top: 1px solid var(--hakari-border);
-    padding: 0.375rem 0.5rem;
+    padding: 0.375rem 0.4375rem;
     vertical-align: top;
   }
 
@@ -851,9 +876,14 @@
     background-color: var(--hakari-surface);
   }
 
+  /* The Model Name header sends the caret here, so focus has to be obvious
+     enough to find after the page scrolled or the panel just opened. */
   #filter-controls .viewer-text-input:focus {
-    border-color: var(--hakari-accent-border);
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--hakari-accent) 22%, transparent);
+    border-color: var(--hakari-accent);
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--hakari-accent) 26%, transparent),
+      0 1px 2px 0 rgb(15 23 42 / 0.08);
+    outline: none;
   }
 
   .benchmark-scope-divider {
@@ -1164,33 +1194,260 @@
   border-top-color: transparent;
 }
 
-.doc-list {
+/* --- Documentation page shell ---------------------------------------- */
+
+/* The article column is sized to the reading measure so body copy fills the
+   card edge to edge. A card wider than its own text reads as broken. */
+.docs-main {
+  max-width: 48rem;
+}
+
+.docs-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Narrow viewports get the outline as a compact card above the article; wide
+   viewports get it as a sticky rail beside it. */
+.doc-outline {
+  order: -1;
   border: 1px solid var(--hakari-border);
   border-radius: var(--hakari-radius-lg);
-  background-color: var(--hakari-surface);
-  overflow: hidden;
+  background-color: var(--hakari-surface-faint);
+  padding: 0.75rem 0.875rem;
 }
 
-.doc-list-item + .doc-list-item {
-  border-top: 1px solid color-mix(in srgb, var(--hakari-border) 72%, transparent);
+.doc-outline-heading {
+  color: var(--hakari-text-faint);
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
-.doc-list-link {
+/* On the card layout the outline is a jump-link row, so it wraps instead of
+   spending one full line per section. */
+.doc-outline-list {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.25rem;
+}
+
+.doc-outline-level-3 {
+  display: none;
+}
+
+.doc-outline-link {
   display: block;
-  padding: 0.625rem 0.875rem;
-  color: var(--hakari-accent);
-  line-height: 1.25;
+  border-radius: var(--hakari-radius-sm);
+  padding: 0.1875rem 0.375rem;
+  color: var(--hakari-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
   transition:
     background-color 140ms ease,
     color 140ms ease;
 }
 
+.doc-outline-level-3 .doc-outline-link {
+  padding-left: 1.125rem;
+  color: var(--hakari-text-faint);
+}
+
+.doc-outline-link:hover {
+  background-color: var(--hakari-accent-soft);
+  color: var(--hakari-accent);
+}
+
+.doc-outline-link[aria-current="true"] {
+  background-color: var(--hakari-accent-soft);
+  color: var(--hakari-accent);
+  font-weight: 600;
+}
+
+/* The rail starts as early as it fits. Requiring a very wide window before the
+   outline appears trades a real navigation aid for margin. */
+@media (min-width: 1024px) {
+  /* The page footprint stays the same; the article column claims the width
+     back from the rail, the gap, and the card padding instead of leaving it
+     as inset. */
+  .docs-main {
+    max-width: 64rem;
+  }
+
+  .docs-layout {
+    display: grid;
+    gap: 1.75rem;
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) 12rem;
+  }
+
+  .doc-outline {
+    position: sticky;
+    top: 1.5rem;
+    order: 0;
+    border: 0;
+    border-left: 1px solid var(--hakari-border);
+    border-radius: 0;
+    background-color: transparent;
+    padding: 0.25rem 0 0.25rem 0.875rem;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+
+  .doc-outline-list {
+    flex-flow: column nowrap;
+    gap: 0.0625rem;
+  }
+
+  .doc-outline-level-3 {
+    display: block;
+  }
+}
+
+/* The index is a link grid rather than prose, so it uses the full width. */
+.docs-main-index {
+  max-width: 64rem;
+}
+
+@media (min-width: 1024px) {
+  .docs-main-index {
+    max-width: 72rem;
+  }
+}
+
+/* --- Documentation index --------------------------------------------- */
+
+.doc-index-header {
+  margin-bottom: 1rem;
+}
+
+.doc-index-title {
+  color: var(--hakari-text);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* Intro copy and the paper card share one column so the block reads as a
+   single left-aligned unit; only the suite grid uses the full width. */
+.doc-index-header,
+.doc-index-paper {
+  max-width: 54rem;
+}
+
+.doc-index-lead {
+  margin-top: 0.5rem;
+  color: var(--hakari-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.doc-index-paper {
+  border: 1px solid var(--hakari-border);
+  border-left: 3px solid var(--hakari-accent);
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-surface-faint);
+  padding: 0.625rem 0.875rem;
+}
+
+.doc-index-paper-label {
+  color: var(--hakari-text-faint);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.doc-index-paper-title {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.doc-index-paper-title a {
+  color: var(--hakari-accent);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+
+.doc-index-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.625rem;
+  color: var(--hakari-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.doc-index-count {
+  border-radius: 9999px;
+  background-color: var(--hakari-control-bg);
+  padding: 0.0625rem 0.5rem;
+  color: var(--hakari-text-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-list {
+  display: grid;
+  gap: 0.375rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+}
+
+.doc-list-link {
+  display: block;
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-surface);
+  padding: 0.5rem 0.75rem;
+  color: var(--hakari-accent);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
 .doc-list-link:hover {
-  background-color: color-mix(in srgb, var(--hakari-surface) 92%, var(--hakari-accent) 8%);
+  border-color: var(--hakari-accent-border);
+  background-color: var(--hakari-accent-soft);
   color: var(--hakari-accent-strong);
 }
 
 /* --- Documentation article ------------------------------------------- */
+
+/* The column itself carries the measure (see .docs-main), so body copy fills
+   the card instead of stopping short of its right edge. */
+.benchmark-doc {
+  padding: 1.75rem 1.5rem 2.25rem;
+}
+
+@media (max-width: 640px) {
+  .benchmark-doc {
+    padding: 1.25rem 1.125rem 1.75rem;
+  }
+}
+
+.benchmark-doc .doc-heading {
+  scroll-margin-top: 1.5rem;
+}
+
+.benchmark-doc .doc-heading-anchor {
+  margin-left: 0.375rem;
+  color: var(--hakari-text-faint);
+  font-weight: 400;
+  opacity: 0;
+  text-decoration: none;
+  transition: opacity 120ms ease;
+}
+
+.benchmark-doc .doc-heading:hover .doc-heading-anchor,
+.benchmark-doc .doc-heading-anchor:focus-visible {
+  opacity: 1;
+}
 
 .benchmark-doc table {
   min-width: 100%;
@@ -1199,22 +1456,128 @@
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Metadata tables are wide and mostly numeric. Let them scroll horizontally
+   instead of wrapping every short label onto five lines. */
+.benchmark-doc td {
+  white-space: nowrap;
+}
+
+.benchmark-doc table.benchmark-doc-example-table {
+  table-layout: fixed;
 }
 
 .benchmark-doc table.benchmark-doc-example-table td {
   font-size: 0.8125rem;
-  line-height: 1.45;
+  line-height: 1.55;
+  white-space: normal;
 }
 
+/* The values are what these tables are for, so headers give up width first:
+   they set small and wrap freely. Bottom alignment keeps short and tall labels
+   on one baseline so the wrapping does not read as stray padding. */
 .benchmark-doc tbody tr:first-child td {
   background-color: var(--hakari-surface-muted);
   color: var(--hakari-text);
+  font-size: 0.6875rem;
   font-weight: 600;
+  line-height: 1.3;
+  white-space: normal;
+  vertical-align: bottom;
   border-top: 0;
+}
+
+.benchmark-doc tbody tr:first-child td.doc-table-number {
+  min-width: 3.25rem;
+}
+
+.benchmark-doc td.doc-table-wrap {
+  min-width: 9rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.benchmark-doc td.doc-table-number {
+  text-align: right;
+}
+
+.benchmark-doc tbody tr:first-child td.doc-table-number {
+  text-align: right;
 }
 
 .benchmark-doc tbody tr:nth-child(2n) td {
   background-color: var(--hakari-surface-faint);
+}
+
+.benchmark-doc tbody tr:not(:first-child):hover td {
+  background-color: var(--hakari-row-hover);
+}
+
+/* Overlay scrollbars give no hint that columns continue past the edge, so the
+   wrapper fades whichever side still has content. viewer.js sets data-overflow. */
+.benchmark-doc .doc-table-scroll {
+  position: relative;
+  /* Tables buy back part of the card padding: the values are the point, and a
+     reading-width column alone cannot hold a nine-column metadata table. */
+  margin-inline: -1.25rem;
+}
+
+@media (max-width: 640px) {
+  .benchmark-doc .doc-table-scroll {
+    margin-inline: -0.5rem;
+  }
+}
+
+.benchmark-doc .doc-table-scroll::before,
+.benchmark-doc .doc-table-scroll::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0.5rem;
+  width: 2.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+
+.benchmark-doc .doc-table-scroll::before {
+  left: 0;
+  background: linear-gradient(to right, var(--hakari-surface), transparent);
+}
+
+.benchmark-doc .doc-table-scroll::after {
+  right: 0;
+  background: linear-gradient(to left, var(--hakari-surface), transparent);
+}
+
+.benchmark-doc .doc-table-scroll[data-overflow="left"]::before,
+.benchmark-doc .doc-table-scroll[data-overflow="both"]::before,
+.benchmark-doc .doc-table-scroll[data-overflow="right"]::after,
+.benchmark-doc .doc-table-scroll[data-overflow="both"]::after {
+  opacity: 1;
+}
+
+.benchmark-doc .overflow-x-auto {
+  max-width: 100%;
+  padding-bottom: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hakari-border-strong) transparent;
+}
+
+.benchmark-doc .overflow-x-auto::-webkit-scrollbar {
+  height: 0.5rem;
+}
+
+.benchmark-doc .overflow-x-auto::-webkit-scrollbar-track {
+  border-radius: 9999px;
+  background-color: var(--hakari-surface-faint);
+}
+
+.benchmark-doc .overflow-x-auto::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background-color: var(--hakari-border-strong);
 }
 
 .benchmark-doc blockquote {
@@ -1249,23 +1612,32 @@
 /* --- Help / detail modals (dialog) ----------------------------------- */
 
 .hakari-modal {
-  width: min(92vw, 42rem);
+  display: none;
+  width: min(94vw, 44rem);
+  max-height: min(85vh, 46rem);
   padding: 0;
   border: 1px solid var(--hakari-border-strong);
   border-radius: var(--hakari-radius-lg);
   background-color: var(--hakari-surface);
   color: var(--hakari-text);
   box-shadow: 0 1.5rem 3.5rem rgb(15 23 42 / 0.22);
+  overflow: hidden;
+}
+
+/* dialog[open] must regain a layout mode, and flex lets the body scroll
+   underneath a fixed header instead of the whole dialog overflowing. */
+.hakari-modal[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.hakari-modal > form {
+  flex: 0 0 auto;
 }
 
 .hakari-count-modal {
-  width: min(92vw, 48rem);
-  max-height: 92vh;
-}
-
-.hakari-count-modal .hakari-modal-body {
-  max-height: calc(92vh - 4rem);
-  overflow: auto;
+  width: min(92vw, 52rem);
+  max-height: 88vh;
 }
 
 :root.dark .hakari-modal {
@@ -1273,12 +1645,25 @@
 }
 
 .hakari-modal::backdrop {
-  background-color: rgb(15 23 42 / 0.34);
-  backdrop-filter: blur(2px);
+  background-color: rgb(15 23 42 / 0.42);
+  backdrop-filter: blur(4px);
 }
 
 :root.dark .hakari-modal::backdrop {
-  background-color: rgb(8 11 12 / 0.62);
+  background-color: rgb(8 11 12 / 0.68);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hakari-modal[open] {
+    animation: hakari-modal-in 160ms ease-out;
+  }
+}
+
+@keyframes hakari-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.99);
+  }
 }
 
 .hakari-modal-header {
@@ -1287,13 +1672,14 @@
   justify-content: space-between;
   gap: 0.75rem;
   border-bottom: 1px solid var(--hakari-border);
-  padding: 0.75rem 1rem;
+  background-color: var(--hakari-surface-faint);
+  padding: 0.6875rem 0.875rem 0.6875rem 1.125rem;
 }
 
 .hakari-modal-title {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   min-width: 0;
   font-size: 0.9375rem;
   font-weight: 600;
@@ -1310,16 +1696,24 @@
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 0.3rem;
+  justify-content: center;
+  height: 1.625rem;
+  width: 1.625rem;
   border: 0;
   border-radius: var(--hakari-radius-md);
-  background-color: var(--hakari-control-bg);
-  padding: 0.25rem 0.6rem;
-  color: var(--hakari-text-muted);
+  background-color: transparent;
+  padding: 0;
+  color: var(--hakari-text-faint);
   font-family: var(--hakari-font);
-  font-size: 0.8125rem;
-  font-weight: 500;
   cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.hakari-modal-close .hakari-icon {
+  height: 1rem;
+  width: 1rem;
 }
 
 .hakari-modal-close:hover,
@@ -1329,20 +1723,106 @@
 }
 
 .hakari-modal-body {
-  padding: 0.875rem 1rem 1.125rem;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 1rem 1.125rem 1.25rem;
 }
 
+/* The group a concept belongs to rides above the lead line as a quiet chip so
+   the dialog header can stay a short name. */
+.hakari-modal-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-radius: var(--hakari-radius-sm);
+  background-color: var(--hakari-accent-soft);
+  padding: 0.125rem 0.4375rem;
+  color: var(--hakari-accent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.hakari-modal-eyebrow:empty {
+  display: none;
+}
+
+/* The one-line answer reads as a GitHub-style tip callout: a reader who only
+   looks at one thing should look at this. */
+.hakari-modal-callout {
+  border-left: 3px solid var(--hakari-accent);
+  border-radius: 0 var(--hakari-radius-md) var(--hakari-radius-md) 0;
+  background-color: var(--hakari-accent-soft);
+  padding: 0.625rem 0.875rem 0.6875rem;
+}
+
+.hakari-modal-callout-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.25rem;
+  color: var(--hakari-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.hakari-modal-callout-label .hakari-icon {
+  height: 0.875rem;
+  width: 0.875rem;
+}
+
+/* Explanatory copy is the point of these dialogs, so it gets near-primary
+   contrast rather than the muted metadata tone. The dialog width sets the
+   reading measure; a narrower cap would only leave a ragged right gutter. */
 .hakari-modal-lead {
   color: var(--hakari-text);
-  font-weight: 500;
-  line-height: 1.5;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.6;
 }
 
+/* viewer.js splits help copy into real paragraphs, so the gap between them is
+   a deliberate margin rather than a full blank line at body line height. */
 .hakari-modal-text {
-  margin-top: 0.625rem;
-  color: var(--hakari-text-muted);
-  line-height: 1.55;
-  white-space: pre-wrap;
+  margin-top: 0.75rem;
+  color: color-mix(in srgb, var(--hakari-text) 82%, var(--hakari-text-muted));
+  line-height: 1.6;
+}
+
+.hakari-modal-paragraph + .hakari-modal-paragraph {
+  margin-top: 0.6875rem;
+}
+
+.hakari-modal-lead:empty,
+.hakari-modal-text:empty {
+  display: none;
+}
+
+.hakari-modal-body > .hakari-modal-text:first-child {
+  margin-top: 0;
+}
+
+/* The callout already separates itself, so the detail copy only needs space. */
+.hakari-modal-callout + .hakari-modal-text {
+  margin-top: 0.875rem;
+}
+
+.hakari-modal-lead + .hakari-modal-text {
+  margin-top: 0.875rem;
+  border-top: 1px solid color-mix(in srgb, var(--hakari-border) 60%, transparent);
+  padding-top: 0.875rem;
+}
+
+/* `break-all` is right for raw URLs but shreds prose titles mid-word, so
+   dialog headings and link labels only break when a token cannot fit. */
+.hakari-modal .hakari-modal-title span,
+.hakari-modal .model-detail-external-link,
+.hakari-modal .model-detail-title {
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 .hakari-modal-link {
@@ -1353,6 +1833,33 @@
 
 .hakari-modal-link:hover {
   text-decoration-color: var(--hakari-accent);
+}
+
+/* Primary follow-through out of a dialog reads as an action, not body copy. */
+.hakari-modal-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1px solid var(--hakari-border);
+  border-radius: var(--hakari-radius-md);
+  background-color: var(--hakari-control-bg);
+  padding: 0.3125rem 0.6875rem;
+  color: var(--hakari-accent);
+  font-weight: 500;
+  text-decoration-line: none;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.hakari-modal-action:hover {
+  border-color: var(--hakari-accent-border);
+  background-color: var(--hakari-accent-soft);
+}
+
+.hakari-modal-action::after {
+  content: "→";
+  color: var(--hakari-text-faint);
 }
 
 @media (prefers-color-scheme: dark) {

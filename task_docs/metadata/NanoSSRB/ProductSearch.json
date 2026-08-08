@@ -1,0 +1,174 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoSSRB",
+    "backing_dataset": "NanoSSRB",
+    "dataset_id": "hakari-bench/NanoSSRB",
+    "task_name": "ProductSearch",
+    "split_name": "ProductSearch",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoSSRB/ProductSearch.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/vec-ai/struct-ir"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 600
+    },
+    "positives_per_query": {
+      "average": 3.0,
+      "min": 1,
+      "median": 3.0,
+      "max": 5,
+      "multi_positive_queries": 160,
+      "multi_positive_query_percent": 80.0
+    },
+    "text_stats_chars": {
+      "query_mean": 231.545,
+      "document_mean": 628.3668
+    },
+    "bm25": {
+      "ndcg_at_10": 0.38385546888733635,
+      "hit_at_10": 0.725,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3838554689,
+        "hit_at_10": 0.725,
+        "recall_at_100": 0.8783333333,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8783333333
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.5304790916,
+        "hit_at_10": 0.805,
+        "recall_at_100": 0.9583333333,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9583333333
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.5132109534,
+        "hit_at_10": 0.82,
+        "recall_at_100": 0.9633333333,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.02,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9633333333,
+        "safeguard_positive_rows": 4,
+        "rows_with_101_candidates": 4
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoSSRB",
+      "source_urls": [
+        {
+          "label": "SSRB paper",
+          "url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html"
+        },
+        {
+          "label": "Struct-IR dataset",
+          "url": "https://huggingface.co/datasets/vec-ai/struct-ir"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "SSRB: Direct Natural Language Querying to Massive Heterogeneous Semi-Structured Data",
+        "url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "vec-ai/struct-ir",
+        "url": "https://huggingface.co/datasets/vec-ai/struct-ir",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "product_search--restaurant_searc--q--63688",
+        "document_id": "product_search--restaurant_searc--p--36113",
+        "query": {
+          "text": "Find restaurants that serve Italian cuisine and are open on Sundays.",
+          "full_chars": 68,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"cuisine_type\": \"Italian\", \"menu_items\": [ { \"name\": \"Spaghetti Carbonara\", \"price\": 15.99 }, { \"name\": \"Margherita Pizza\", \"price\": 12.5 } ], \"opening_hours\": { \"Monday\": \"11:00 AM - 10:00 PM\", \"Tuesday\": \"11:00 AM - 10:00 PM\", \"Wednesday\": \"11:00 AM - 10:00 PM\", \"Thursday\": \"11:00 AM - 10:00 PM\", \"Friday\": \"11:00 AM - 11:00 PM\", \"Saturday\": \"11:00 AM - 11:00 PM\", \"Sunday\": \"12:00 PM - 9:00 PM\" }, \"location\": \"123 Main Street, Anytown\", \"product_id\": null, \"product_name\": null, \"brand\": null, \"category\": null, \"price\": null, \"availability\": null, \"rating\": 4.5, \"reviews\": [ { \"review_text\": \"Great Italian food!\", \"reviewer_name\": \"John Doe\" } ], \"release_date\": null, \"attributes\": null }",
+          "full_chars": 943,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "product_search--books_search--q--55306",
+        "document_id": "product_search--books_search--p--37835",
+        "query": {
+          "text": "Find me a thriller or mystery novel published after January 1, 2010, and written by a popular author. I'm looking for something really gripping.",
+          "full_chars": 144,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"author\": \"Gillian Flynn\", \"publisher\": \"Crown\", \"publication_date\": \"2012-06-05\", \"genre\": [ \"thriller\", \"mystery\", \"psychological thriller\" ], \"product_id\": \"978-0307588371\", \"product_name\": \"Gone Girl\", \"brand\": null, \"category\": \"Books\", \"price\": 12.99, \"availability\": true, \"rating\": 4.5, \"reviews\": [ { \"review_text\": \"A truly gripping and suspenseful read!\", \"reviewer_name\": \"Jane Doe\" } ], \"release_date\": \"2012-06-05\", \"attributes\": null }",
+          "full_chars": 580,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "product_search--automotive_searc--q--17978",
+        "document_id": "product_search--automotive_searc--p--23937",
+        "query": {
+          "text": "I'm looking for a reliable family car with good gas mileage and safety features for commuting and weekend trips. I need a vehicle that's a sedan or SUV, with at least 5 seats, a price under $35,000, and a good safety rating. I also prefer something relatively new, released after 2020, and ideally from a well-regarded brand known for longevity. I'm not really interested in electric vehicles at this time.",
+          "full_chars": 406,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"product_id\": \"FMLY-CR-2024\", \"product_name\": \"ComfortRide Family Sedan\", \"brand\": \"AutoNova\", \"category\": \"Sedan\", \"engine_type\": \"Petrol\", \"vehicle_type\": \"Sedan\", \"fuel_efficiency\": 32.5, \"seat_capacity\": 5, \"price\": 32000.0, \"availability\": true, \"rating\": 4.5, \"release_date\": \"2024-03-15\", \"attributes\": { \"color\": \"Silver\", \"safety_features\": [ \"ABS\", \"Airbags\", \"Lane Departure Warning\" ] }, \"reviews\": [ { \"review_text\": \"Great car for families, very comfortable and fuel efficient!\", \"reviewer_name\": \"Jane Doe\" } ] }",
+          "full_chars": 693,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "source_dataset_id": "vec-ai/struct-ir",
+    "source_task": "ProductSearch",
+    "example_count": 3
+  }
+}

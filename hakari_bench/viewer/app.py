@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator, Mapping
 from contextlib import asynccontextmanager
+from contextvars import ContextVar
 import csv
 from datetime import datetime, timezone
-from functools import lru_cache
+from functools import lru_cache, wraps
 import hashlib
 from html import escape
 from io import StringIO
@@ -14,13 +15,14 @@ import os
 from pathlib import Path
 import re
 from time import perf_counter
-from typing import Iterable, Sequence, TypedDict, cast
+from typing import Callable, Iterable, ParamSpec, Sequence, TypedDict, cast
 from urllib.parse import quote, urlencode
 
 import duckdb
 from fastapi import Request
 from pydantic import BaseModel, ConfigDict
 
+from hakari_bench.viewer import help_text
 from hakari_bench.viewer.config import (
     CLEAR_SCOPE_NAME,
     CUSTOM_SCOPE_NAME,
@@ -97,6 +99,53 @@ SECURITY_HEADERS = {
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
 }
+
+_RenderParams = ParamSpec("_RenderParams")
+_HELP_COPY_REGISTRY: ContextVar[dict[str, dict[str, object]] | None] = ContextVar(
+    "viewer_help_copy_registry",
+    default=None,
+)
+
+
+def _render_help_registry(registry: Mapping[str, Mapping[str, object]]) -> str:
+    payload = json.dumps(registry, ensure_ascii=False, separators=(",", ":"))
+    safe_payload = payload.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e")
+    return f'<template data-help-copy-registry>{safe_payload}</template>'
+
+
+def _with_help_registry(renderer: Callable[_RenderParams, str]) -> Callable[_RenderParams, str]:
+    @wraps(renderer)
+    def wrapped(*args: _RenderParams.args, **kwargs: _RenderParams.kwargs) -> str:
+        token = _HELP_COPY_REGISTRY.set({})
+        try:
+            content = renderer(*args, **kwargs)
+            registry = _HELP_COPY_REGISTRY.get() or {}
+            registry_html = _render_help_registry(registry)
+            if "</body>" in content:
+                return content.replace("</body>", f"{registry_html}\n</body>", 1)
+            return f"{content}{registry_html}"
+        finally:
+            _HELP_COPY_REGISTRY.reset(token)
+
+    return wrapped
+
+
+def _register_help_copy(copy: help_text.HelpCopy, *, table_rows: list[dict[str, str]] | None = None) -> str:
+    payload: dict[str, object] = {
+        "title": copy.title,
+        "summary": copy.summary,
+        "details": copy.details,
+    }
+    if copy.eyebrow:
+        payload["eyebrow"] = copy.eyebrow
+    if table_rows:
+        payload["table"] = table_rows
+    canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    key = f"help-{hashlib.sha256(canonical.encode()).hexdigest()[:16]}"
+    registry = _HELP_COPY_REGISTRY.get()
+    if registry is not None:
+        registry[key] = payload
+    return key
 FOOTER_QUERY_TABLES = {"meta_database"}
 Z_SCORE_BUCKET_CLASSES = (
     "task-z-neutral",
@@ -147,6 +196,7 @@ _ICON_PATHS = {
         '<path d="M8 17v-3"/>'
     ),
     "binary": '<path d="M6 20h4"/><path d="M14 10h4"/><path d="M6 14h2v6"/><path d="M14 4h2v6"/>',
+    "x": '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
     "book-open": (
         '<path d="M12 7v14"/>'
         '<path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>'
@@ -183,6 +233,11 @@ _ICON_PATHS = {
     "languages": '<path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/>',
     "layers": '<path d="m12.83 2.18 8.5 4.73a1 1 0 0 1 0 1.75l-8.5 4.73a1.7 1.7 0 0 1-1.66 0l-8.5-4.73a1 1 0 0 1 0-1.75l8.5-4.73a1.7 1.7 0 0 1 1.66 0Z"/><path d="m22 12.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 5.1a1.7 1.7 0 0 1-1.66 0L2 17.5"/>',
     "sigma": '<path d="M18 7V4H6l6 8-6 8h12v-3"/>',
+    "lightbulb": (
+        '<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5a6 6 0 0 0-12 0c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/>'
+        '<path d="M9 18h6"/>'
+        '<path d="M10 22h4"/>'
+    ),
     "list-filter": '<path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/>',
     "list-ordered": '<path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/>',
     "message-square-text": '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/><path d="M7 11h10"/><path d="M7 15h6"/><path d="M7 7h8"/>',
@@ -882,6 +937,7 @@ def _frame_ancestors() -> str:
     return " ".join(tokens)
 
 
+@_with_help_registry
 def render_page(
     *,
     viewer_config: ViewerConfig,
@@ -1082,10 +1138,27 @@ def _render_github_link() -> str:
 
 def _render_header_actions() -> str:
     return f"""<div class="flex shrink-0 items-center gap-2">
+          {_render_page_overview_help()}
           {_render_github_link()}
           {_render_docs_link()}
           {_render_theme_toggle()}
         </div>"""
+
+
+def _render_page_overview_help() -> str:
+    """Header entry point that explains the page itself.
+
+    Everything else on the page explains one control. A first-time reader needs
+    the layer above that: what a row is, what a score means, and in which order
+    the controls apply.
+    """
+    copy = help_text.PAGE_OVERVIEW
+    label = _help_aria_label(copy)
+    return f"""<button id="hakari-page-overview-help" type="button"
+          class="help-summary-trigger theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
+          {_help_data_attrs(copy)}
+          title="{escape(label, quote=True)}"
+          aria-label="{escape(label, quote=True)}">{_icon_svg("circle-help", class_name="hakari-icon")}</button>"""
 
 
 def _render_docs_header() -> str:
@@ -1251,13 +1324,13 @@ def render_doc_summary_modal() -> str:
         {_icon_svg("book-open", class_name="hakari-icon")}
         <span id="doc-summary-heading" class="break-all">Benchmark documentation</span>
       </h3>
-      <button type="submit" class="hakari-modal-close">Close</button>
+      <button type="submit" class="hakari-modal-close" aria-label="Close">{_icon_svg("x", class_name="hakari-icon")}</button>
     </div>
   </form>
   <div class="hakari-modal-body">
-    <p id="doc-summary-description" class="hakari-modal-text text-sm"></p>
-    <p class="mt-3 text-sm">
-      <a id="doc-summary-link" class="hakari-modal-link" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
+    <div id="doc-summary-description" class="hakari-modal-text text-sm"></div>
+    <p class="mt-4 text-sm">
+      <a id="doc-summary-link" class="hakari-modal-action" href="#" target="_blank" rel="noopener noreferrer">Read the benchmark overview</a>
     </p>
   </div>
 </dialog>
@@ -1273,11 +1346,15 @@ def render_help_summary_modal() -> str:
         {_icon_svg("circle-help", class_name="hakari-icon")}
         <span id="help-summary-heading" class="break-all">Help</span>
       </h3>
-      <button type="submit" class="hakari-modal-close">Close</button>
+      <button type="submit" class="hakari-modal-close" aria-label="Close">{_icon_svg("x", class_name="hakari-icon")}</button>
     </div>
   </form>
   <div class="hakari-modal-body">
-    <p id="help-summary-short" class="hakari-modal-lead text-sm"></p>
+    <p id="help-summary-eyebrow" class="hakari-modal-eyebrow"></p>
+    <div class="hakari-modal-callout">
+      <p class="hakari-modal-callout-label">{_icon_svg("lightbulb", class_name="hakari-icon")}<span>In short</span></p>
+      <p id="help-summary-short" class="hakari-modal-lead text-sm"></p>
+    </div>
     <p id="help-summary-details" class="hakari-modal-text text-sm"></p>
     <div id="help-summary-table-container" class="mt-3 overflow-x-auto" hidden></div>
   </div>
@@ -1294,35 +1371,40 @@ def _render_doc_summary_trigger(*, doc: BenchmarkDoc, label: str) -> str:
                   aria-label="{escape(label, quote=True)}">{_icon_svg("book-open")}</button>"""
 
 
-def _render_help_tooltip(
-    title: str,
-    summary: str | None = None,
-    details: str | None = None,
+def _render_help_copy(copy: help_text.HelpCopy, *, table_rows: list[dict[str, str]] | None = None) -> str:
+    return f"""<button type="button"
+                    class="help-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
+                    {_help_data_attrs(copy, table_rows=table_rows)}
+                    aria-label="{escape(_help_aria_label(copy), quote=True)}">{_icon_svg("circle-help")}</button>"""
+
+
+def _help_data_attrs(
+    copy: help_text.HelpCopy,
     *,
     table_rows: list[dict[str, str]] | None = None,
 ) -> str:
-    summary = summary or _first_sentence(title)
-    details = details or title
-    table_attr = (
-        f' data-help-table="{escape(json.dumps(table_rows, separators=(",", ":")), quote=True)}"'
-        if table_rows
-        else ""
-    )
-    return f"""<button type="button"
-                    class="help-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 cursor-pointer items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600 hover:border-cyan-600 hover:text-cyan-700"
-                    data-help-title="{escape(title, quote=True)}"
-                    data-help-summary="{escape(summary, quote=True)}"
-                    data-help-details="{escape(details, quote=True)}"
-                    {table_attr}
-                    aria-label="{escape(title, quote=True)}">{_icon_svg("circle-help")}</button>"""
+    if _HELP_COPY_REGISTRY.get() is None:
+        eyebrow_attr = f' data-help-eyebrow="{escape(copy.eyebrow, quote=True)}"' if copy.eyebrow else ""
+        table_attr = (
+            f' data-help-table="{escape(json.dumps(table_rows, separators=(",", ":")), quote=True)}"'
+            if table_rows
+            else ""
+        )
+        return (
+            f'data-help-title="{escape(copy.title, quote=True)}"'
+            f'{eyebrow_attr}'
+            f' data-help-summary="{escape(copy.summary, quote=True)}"'
+            f' data-help-details="{escape(copy.details, quote=True)}"'
+            f"{table_attr}"
+        )
+    key = _register_help_copy(copy, table_rows=table_rows)
+    return f'data-help-key="{key}"'
 
 
-def _first_sentence(text: str) -> str:
-    stripped = text.strip()
-    if not stripped:
-        return ""
-    match = re.search(r"(?<=[.!?])\s+", stripped)
-    return stripped[: match.start()].strip() if match else stripped
+def _help_aria_label(copy: help_text.HelpCopy) -> str:
+    """Screen readers get the group name the eyebrow chip carries visually."""
+
+    return f"{copy.eyebrow}: {copy.title}" if copy.eyebrow else copy.title
 
 
 def render_summary_cards(summary: ViewerSummary) -> str:
@@ -1362,6 +1444,7 @@ def render_summary_cards(summary: ViewerSummary) -> str:
     """
 
 
+@_with_help_registry
 def render_leaderboard(
     *,
     result: LeaderboardResult,
@@ -1472,7 +1555,7 @@ def _render_count_breakdown_modal(
         {_icon_svg("activity", class_name="hakari-icon")}
         <span id="count-breakdown-title">Result breakdown</span>
       </h3>
-      <button type="submit" class="hakari-modal-close">Close</button>
+      <button type="submit" class="hakari-modal-close" aria-label="Close">{_icon_svg("x", class_name="hakari-icon")}</button>
     </div>
   </form>
   <div class="hakari-modal-body">
@@ -1481,7 +1564,7 @@ def _render_count_breakdown_modal(
           section_id="count-breakdown-shown",
           title="Visible rows",
           count=len(visible_rows),
-          description="Rows currently visible after the selected result set and all active text, facet, and range filters.",
+          description="Rows you can see right now: the ranked models above, minus everything hidden by the filters in Filter results.",
           rows=visible_rows,
           model_views=model_views,
       )}
@@ -1489,7 +1572,7 @@ def _render_count_breakdown_modal(
           section_id="count-breakdown-complete",
           title="Complete models",
           count=len(result.rows),
-          description="Complete rows for the selected evaluation mode, benchmark scope, task facets, variant display, and pre-ranking range filters before row visibility filters.",
+          description="Models that have a result for every task in the current scope, which is the population the ranking is computed over. Models missing even one task are left out so the comparison stays fair, and hiding rows with filters does not change this number.",
           rows=result.rows,
           model_views=model_views,
       )}
@@ -1586,7 +1669,7 @@ def _render_task_breakdown_section(
     return f"""
       <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" data-count-breakdown-loaded="true"{hidden_attr} class="pt-2">
         <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
-        <p class="mt-1 text-sm text-zinc-600">Tasks in the selected evaluation mode, benchmark scope, task facets, and task-length range filters. Linked tasks have verified local documentation and open in a new tab.</p>
+        <p class="mt-1 text-sm text-zinc-600">Every task each model above had to complete for its score, after the current evaluation mode, benchmark scope, task facets, and task-length ranges. Linked tasks have documentation and open in a new tab.</p>
         {task_body}
       </section>
     """
@@ -2658,7 +2741,7 @@ def render_tabs(
                             query_payload=selection_query_payload,
                             doc=doc,
                             benchmark_name=selection_key,
-                            help_content=_mnanobeir_scope_help(score_group),
+                            help_content=help_text.mnanobeir_scope(score_group),
                             extra_class="mnanobeir-scope-option",
                         )
                     )
@@ -2691,7 +2774,7 @@ def render_tabs(
                         query_payload=group_query_payload,
                         doc=doc,
                         benchmark_name=view_name,
-                        help_content=_mnanobeir_scope_help(score_group),
+                        help_content=help_text.mnanobeir_scope(score_group),
                         extra_class="mnanobeir-scope-option",
                     )
                 )
@@ -2756,6 +2839,7 @@ def render_tabs(
             <div class="mb-1.5 flex flex-wrap items-center gap-2">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="database", text="Benchmark scope")}
+                {_render_help_copy(help_text.BENCHMARK_SCOPE)}
               </span>
               <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
             </div>
@@ -2781,8 +2865,7 @@ def _render_scope_button(
 ) -> str:
     active = view_name == result.view_name and view_name != CLEAR_SCOPE_NAME
     classes = _control_button_classes(active=active)
-    title, summary, details = _scope_preset_help(view_name)
-    help_icon = _render_button_help_icon(title=title, summary=summary, details=details)
+    help_icon = _render_button_help_icon(help_text.scope_preset(view_name))
     label_html = (
         f"""{_icon_svg("eraser")}<span>{escape(view_label)}</span>"""
         if view_name == CLEAR_SCOPE_NAME
@@ -2809,7 +2892,7 @@ def _render_benchmark_view_button(
     query_payload: QueryState,
     doc: BenchmarkDoc | None,
     benchmark_name: str | None = None,
-    help_content: tuple[str, str, str] | None = None,
+    help_content: help_text.HelpCopy | None = None,
     extra_class: str = "",
 ) -> str:
     classes = _control_button_classes(active=active)
@@ -2836,8 +2919,7 @@ def _render_benchmark_view_button(
     if doc is not None:
         icon_triggers.append(_render_doc_summary_trigger(doc=doc, label=f"{doc.title} overview"))
     if help_content is not None:
-        title, summary, details = help_content
-        icon_triggers.append(_render_button_help_icon(title=title, summary=summary, details=details))
+        icon_triggers.append(_render_button_help_icon(help_content))
     return f"""<span class="control-button-group doc-label-group{group_class} inline-flex items-center border text-[0.8125rem] leading-tight {classes}" data-doc-label-group="benchmark">
               <button type="button" class="py-1 pl-2 pr-0 text-left"
                 {data_attr}
@@ -2861,29 +2943,6 @@ def _render_mnanobeir_scope_group(buttons: list[str]) -> str:
               </span>"""
 
 
-def _mnanobeir_scope_help(score_group: str) -> tuple[str, str, str]:
-    matrix_note = (
-        "M-BEIR evaluates 13 retrieval tasks in 14 languages, producing 182 raw result cells. "
-        "The viewer summarizes them into 13 task columns or 14 language columns so the table "
-        "does not expand to 182 columns."
-    )
-    ranking_note = (
-        "With Micro scoring, all 182 raw M-BEIR cells contribute independently, just like raw "
-        "task results from other benchmarks. With Macro scoring, the visible breakdowns are "
-        "averaged and M-BEIR contributes one final benchmark score. Changing this scope changes "
-        "the breakdown axis, not which raw cells Micro uses or M-BEIR's one-benchmark Macro weight."
-    )
-    if score_group == "lang_mean":
-        return (
-            "Benchmark scope: M-BEIR(lang)",
-            "Shows 14 language means; each language score averages its 13 BEIR tasks.",
-            f"{matrix_note}\n\nM-BEIR(lang) displays one column per language, such as M-BEIR-ja, M-BEIR-de, or M-BEIR-fr. Each column is the mean of all 13 retrieval tasks for that language. The 14 visible language columns are breakdowns, not 14 ranking votes. Choose this view to compare language coverage and per-language robustness.\n\n{ranking_note}\n\nM-BEIR(task) is the alternative view: it displays 13 task means, averaging the 14 languages inside each task.",
-        )
-    return (
-        "Benchmark scope: M-BEIR(task)",
-        "Shows 13 BEIR task means; each task score averages its 14 language results.",
-        f"{matrix_note}\n\nM-BEIR(task) displays one column per retrieval task, such as M-BEIR-arguana, M-BEIR-fever, or M-BEIR-scifact. Each column is the mean of that task across all 14 languages. The 13 visible task columns are breakdowns, not 13 ranking votes. Choose this view to compare retrieval-task behavior while averaging over languages.\n\n{ranking_note}\n\nM-BEIR(lang) is the alternative view: it displays 14 language means, averaging the 13 tasks inside each language.",
-    )
 
 
 def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
@@ -3008,41 +3067,11 @@ def _ordered_benchmark_selection(selected: list[str], available_views: list[str]
     return ordered
 
 
-def _render_button_help_icon(*, title: str, summary: str, details: str) -> str:
+def _render_button_help_icon(copy: help_text.HelpCopy) -> str:
     return f"""<button type="button"
                     class="help-summary-trigger inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-[9px] leading-none text-zinc-600"
-                    data-help-title="{escape(title, quote=True)}"
-                    data-help-summary="{escape(summary, quote=True)}"
-                    data-help-details="{escape(details, quote=True)}"
-                    aria-label="{escape(title, quote=True)}">{_icon_svg("circle-help")}</button>"""
-
-
-def _scope_preset_help(view_name: str) -> tuple[str, str, str]:
-    help_text = {
-        "Overall": (
-            "Benchmark scope: Overall",
-            "Shows every benchmark family available in the viewer.",
-            "Overall is the default and broadest leaderboard scope. It includes multilingual, language-specific, and domain-specific NanoSets before any task facet, model, task, or variant filters are applied.\n\nUse Overall when you want a comprehensive ranking across the full current HAKARI-Bench database. Pair it with Micro when you want every raw task row to contribute equally, or Macro when you want each NanoSet to contribute equally.",
-        ),
-        "Overall (EN)": (
-            "Benchmark scope: Overall (EN)",
-            "Shows the full benchmark scope filtered to English task facets.",
-            "Overall (EN) uses the same benchmark families as Overall, then applies the EN task facet. It is the English-focused counterpart to the broad Overall leaderboard, not a smaller curated subset.\n\nUse Overall (EN) when you want English task comparisons while keeping the same Micro and Macro score controls. Selecting it switches Task facets to EN so multilingual suites contribute their English slices.",
-        ),
-        CLEAR_SCOPE_NAME: (
-            "Benchmark scope: Clear",
-            "Clears every NanoSet selection.",
-            "Clear resets the page to empty Custom selection. No benchmark tasks are selected, Task facets return to All languages/categories, and the leaderboard table shows no rows.\n\nClear is an action, not a selected scope state. After pressing it, the URL remains view=Custom with no bench parameters so the next NanoSet toggle starts from a clean custom set.",
-        ),
-    }
-    return help_text.get(
-        view_name,
-        (
-            f"Benchmark scope: {view_name}",
-            f"Shows the {view_name} scope from the viewer configuration.",
-            "Benchmark scope chooses the tasks that are eligible for the leaderboard before row filters are applied.\n\nUse this control first when you want to compare models on a specific benchmark family, then refine the result with task facets, model filters, task filters, and variant controls.",
-        ),
-    )
+                    {_help_data_attrs(copy)}
+                    aria-label="{escape(_help_aria_label(copy), quote=True)}">{_icon_svg("circle-help")}</button>"""
 
 
 def _render_score_aggregation_group(
@@ -3094,11 +3123,7 @@ def _render_score_aggregation_group(
             <div class="flex min-w-0 flex-wrap items-center gap-2" aria-label="{escape(score_aria_label, quote=True)}">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="sigma", text="Score")}
-                {_render_help_tooltip(
-                  "Score aggregation",
-                  "Chooses between raw task weighting and grouped NanoSet weighting.",
-                  "Micro is the default score: every raw task result gets equal weight. M-BEIR therefore contributes all 182 cells in its 13-task x 14-language matrix. Task columns always selects Micro.\n\nMacro is the grouped score: tasks are summarized into one score per NanoSet, then each NanoSet gets equal weight regardless of its raw task count. M-BEIR contributes one benchmark score. Grouped columns always selects Macro. While either column mode is active, the incompatible Score choice is disabled.\n\nM-BEIR still shows only 13 task means or 14 language means as compact breakdown columns in both table modes; those visible summaries do not replace Micro's 182 raw inputs.",
-                )}
+                {_render_help_copy(help_text.SCORE_AGGREGATION)}
               </span>
               {''.join(buttons)}
             </div>
@@ -3173,11 +3198,7 @@ def _render_target_group(
         )
         query_payload["target"] = toggle_target
         query = urlencode(query_payload, doseq=True)
-        safeguard_help = _render_help_tooltip(
-            "Safeguard positives",
-            "Keeps reranking comparable by using the safeguarded hybrid candidate set.",
-            "This option applies only in Reranking mode. Reranking rows do not search the full corpus; they score or reorder the fixed reranking_hybrid candidate set.\n\nHybrid means RRF over BM25 and dense candidate rankings: BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them into the top-100 hybrid candidates for each query.\n\nWhen Safeguard positives is enabled, a query whose top-100 hybrid candidates contain no qrels-positive document gets an optional rank-101 safeguard positive appended. This keeps reranking scores from being dominated by candidate lists where the model had no relevant document to promote.\n\nTurn it off only when you intentionally want to inspect reranking on the raw hybrid top-100 without the appended safeguard positive.",
-        )
+        safeguard_help = _render_help_copy(help_text.SAFEGUARD_POSITIVES)
         safeguard_toggle = f"""
                 <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
                   <label class="inline-flex items-center gap-2 py-1 pl-2 pr-0">
@@ -3192,11 +3213,7 @@ def _render_target_group(
     return f"""
             <div class="flex min-w-0 flex-wrap items-center gap-2">
               {''.join(buttons)}
-              {_render_help_tooltip(
-                  "Evaluation mode",
-                  "Switches the leaderboard between retrieval runs and reranking runs.",
-                  "Evaluation mode chooses which result family is shown before the benchmark scope and filters are applied.\n\nRetrieval shows full-corpus retrieval results. Dense, BM25, sparse, and late-interaction models retrieve directly from the corpus and are compared as retrieval systems.\n\nReranking shows materialized rerank scores on the reranking_hybrid candidate set. The candidate set is built from RRF over BM25 and dense candidate rankings, with an optional safeguard positive. Use Reranking to compare how models reorder that fixed hybrid candidate pool. BM25 appears as a candidate-order baseline, not as a cross-encoder reranker.",
-              )}
+              {_render_help_copy(help_text.EVALUATION_MODE)}
               {safeguard_toggle}
             </div>
             """
@@ -3238,11 +3255,7 @@ def _render_metric_group(
             <div class="flex min-w-0 flex-wrap items-center gap-2">
               <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
                 {_control_label(icon="bar-chart-3", text="Metric")}
-                {_render_help_tooltip(
-                  "Score metric",
-                  "Changes the metric used for model means, Borda ranks, and task columns.",
-                  "Score metric selects which evaluation score is used throughout the current leaderboard.\n\nThe selected metric affects model means, Borda rank calculations, sortable task columns, and exported CSV scores. nDCG@10 is the default because it is the primary ranking-quality metric for the benchmark.\n\nRecall metrics are useful when you care about candidate coverage, especially before reranking. Accuracy, MRR, and MAP views are diagnostic alternatives for tasks where those metrics are available.",
-                )}
+                {_render_help_copy(help_text.SCORE_METRIC)}
               </span>
               {''.join(buttons)}
             </div>
@@ -3440,10 +3453,8 @@ def render_language_pages(
       <{wrapper_tag} class="{wrapper_class}" aria-label="Task facets">
         <span class="control-label-group inline-flex items-center gap-1 px-2 py-1 text-[0.8125rem]">
           {_control_label(icon="languages", text="Task facets")}
-          {_render_help_tooltip(
-              "Task facets",
-              "Filters tasks inside the selected benchmark scope by language or category.",
-              "Task facets narrows the tasks that are included after you choose a benchmark scope.\n\nFor multilingual suites such as MNanoBEIR, each language page filters the task set to one language-specific slice, such as Japanese or German. Code filters to tasks whose metadata category is code. The All languages button removes that task facet filter.\n\nThis is different from Benchmark scope: scope chooses the benchmark family, while Task facets filters the tasks inside that family.",
+          {_render_help_copy(
+              help_text.TASK_FACETS,
               table_rows=_task_facet_help_table_rows(result.available_languages),
           )}
         </span>
@@ -3561,11 +3572,7 @@ def render_display_controls(
         {column_hidden_html}
         <div class="mb-1.5 flex flex-wrap items-center gap-2">
           {_control_label(icon="table-properties", text="Table display")}
-          {_render_help_tooltip(
-              "Table display",
-              "Changes which columns and per-task annotations are visible.",
-              "Table display controls how much detail appears in the result table. Task columns and Grouped columns are mutually exclusive.\n\nTask columns shows one score column per raw task for ordinary benchmarks and fixes Score to Micro. Grouped columns shows benchmark groups such as JMTEB-v2 or IFIR and fixes Score to Macro. M-BEIR is compact in both modes: task scope shows 13 language-averaged task columns such as M-BEIR-arguana, while language scope shows 14 task-averaged language columns such as M-BEIR-ar. Micro nevertheless uses all 182 raw matrix cells; Macro averages M-BEIR into one benchmark score.\n\nSTD adds standard-deviation deltas. Task ranks shows the rank for whichever Task or Grouped columns are active.",
-          )}
+          {_render_help_copy(help_text.TABLE_DISPLAY)}
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <span class="column-mode-group" role="group" aria-label="Score columns: choose Task or Grouped" data-column-mode-group="score-columns">
@@ -3602,11 +3609,7 @@ def render_display_controls(
         {variant_hidden_html}
         <div class="mb-1.5 flex flex-wrap items-center gap-2">
           {_control_label(icon="git-compare-arrows", text="Efficiency variants")}
-          {_render_help_tooltip(
-              "Efficiency variants",
-              "Adds non-base rows that compare quality against storage, dimension, and reranking trade-offs.",
-              "Efficiency variants are additional result rows for the same source model. They are hidden by default so the base leaderboard stays compact.\n\nDims includes truncated dense embedding rows and uses short labels such as 512d or 512d <- 1024. Quantization includes compressed numeric formats such as int8 and binary. Rescore is additive to Quantization: it includes full-dimension rescore rows, while enabling Dims as well also includes truncated rescore rows. Sparse pruning includes sparse encoder pruning variants that cap active query or document dimensions, with compact labels such as q32d and d256d when available. It only includes variants whose names match sparse max-active-dims or max-dims settings.\n\nUse this panel when you want to compare a model's base score with smaller, faster, or compressed alternatives.",
-          )}
+          {_render_help_copy(help_text.EFFICIENCY_VARIANTS)}
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <label class="toggle-chip">
@@ -3622,11 +3625,7 @@ def render_display_controls(
               <input type="checkbox" name="rescore" value="1"{rescore_checked}>
               <span>Rescore</span>
             </label>
-            {_render_help_tooltip(
-                "Rescore",
-                "Refines candidates retrieved with compressed embeddings using higher-precision scores.",
-                "Rescore runs the initial retrieval with int8 or binary embeddings, then recomputes candidate scores with the original higher-precision embeddings. This can recover retrieval quality while keeping the first pass compact.\n\nEnable Quantization with Rescore to include full-dimension int8_rescore and binary_rescore rows. Enable Dims as well to also include truncated-dimension rescore rows. When both Dims and Quantization are off, turning on Rescore enables both so results appear immediately. Turning Rescore off leaves their state unchanged. A restored URL containing Rescore alone, or Dims with Rescore but without Quantization, still has no matching result rows.",
-            )}
+            {_render_help_copy(help_text.RESCORE)}
           </span>
           <label class="toggle-chip">
             <input type="checkbox" name="other_variant" value="1"{other_variant_checked}>
@@ -3907,11 +3906,7 @@ def render_controls(
             <span class="details-chevron inline-flex h-4 w-4 shrink-0 items-center justify-center text-zinc-500">{_icon_svg("chevron-right")}</span>
             <span class="inline-flex items-center gap-1">
               {_control_label(icon="filter", text="Filter results")}
-              {_render_help_tooltip(
-                  "Filter results",
-                  "Narrows the models, tasks, and variant rows shown in the current leaderboard.",
-                  "Filter results applies filters after Evaluation mode, Benchmark scope, Task facets, and Efficiency variants have selected the candidate result set.\n\nModel, Task, Dims, Params, and Length text or numeric filters are applied when you press Enter. Checkbox and facet filters update automatically. These controls can hide rows and task columns from the table, and they also affect CSV download.\n\nBy default, text and facet filters keep rank context within the current evaluation mode, benchmark scope, task facets, and variant selection. Enable Recalculate ranks from filters when you want those filters to recompute ranks and means. Params and Length range filters narrow the ranked model or task population after they are submitted.",
-              )}
+              {_render_help_copy(help_text.FILTER_RESULTS)}
             </span>
           </span>
         </summary>
@@ -3934,11 +3929,7 @@ def render_controls(
                 <div class="flex min-w-64 flex-1 flex-col gap-2">
               <label class="flex min-w-64 flex-1 items-center gap-2">
                 <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Model</span>
-                {_render_help_tooltip(
-                    "Model filter",
-                    "Filters leaderboard rows by model name.",
-                    "Model filter searches the displayed model names and hides rows that do not match.\n\nYou can search for multiple model-name keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, jina bge keeps rows whose model name contains jina or bge.\n\nModel keywords under 3 characters are ignored to avoid accidental broad matches. By default this filter changes which model rows are visible. When Recalculate ranks from filters is enabled, it also changes the ranked model population. It does not change the selected benchmark scope or which task columns are available.",
-                )}
+                {_render_help_copy(help_text.MODEL_FILTER)}
                 <input id="model-filter-input" type="search" name="model_filter" value="{escape(filter_state.model_filter)}"
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
@@ -3950,11 +3941,7 @@ def render_controls(
                 <div class="flex min-w-64 flex-1 flex-col gap-2">
               <label class="flex min-w-64 flex-1 items-center gap-2">
                 <span class="shrink-0 whitespace-nowrap font-medium text-zinc-800">Task</span>
-                {_render_help_tooltip(
-                    "Task filter",
-                    "Filters task columns and task rows by benchmark, dataset, split, or task name.",
-                    "Task filter searches task identifiers such as benchmark name, dataset name, split name, task name, and task key.\n\nYou can search for multiple task keywords by separating them with spaces. The terms are matched as OR conditions with partial, case-insensitive matching. For example, arguana fever keeps task columns or task rows whose identifiers contain arguana or fever. Short task names such as nq also work because task keywords are accepted from 2 characters.\n\nWhen Task columns or Grouped columns are visible, matching columns remain and non-matching columns are hidden. The underlying model ranking keeps its original context unless Recalculate ranks from filters is enabled. One-character task keywords are ignored.",
-                )}
+                {_render_help_copy(help_text.TASK_FILTER)}
                 <input id="task-filter-input" type="search" name="task_filter" value="{escape(filter_state.task_filter)}"
                        class="viewer-text-input w-72 max-w-full border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none focus:border-cyan-700"
                        autocomplete="off">
@@ -3966,20 +3953,12 @@ def render_controls(
               </div>
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="shield-check", text="License filters")}
-                {_render_help_tooltip(
-                    "License filters",
-                    "Filters rows by reviewed license-use buckets.",
-                    "License buckets are derived from model-card metadata. Commercial includes permissive licenses and proprietary terms that permit commercial use with conditions, including the MIT-licensed BM25 baseline. Non-commercial includes licenses such as CC BY-NC. N/A is for rows where this classification does not apply. Unknown keeps rows without reviewed license metadata.",
-                )}
+                {_render_help_copy(help_text.LICENSE_FILTERS)}
                 {_render_commercial_filter_controls(options=commercial_options, selected_values=selected_commercial)}
               </div>
               <div class="flex flex-wrap items-center gap-2">
                 {_control_label(icon="cpu", text="Run metadata")}
-                {_render_help_tooltip(
-                    "Run metadata filters",
-                    "Filters rows by recorded evaluation metadata such as dtype, attention, and prompt use.",
-                    "Run metadata describes how a result was produced. Dtype indicates numeric precision such as bf16 or fp32. Attention records the attention implementation when available. Prompt records whether query or document prompts were used.\n\nThese filters do not change the benchmark scope or task definition. They help audit comparability between runs and isolate results produced with a specific runtime configuration.",
-                )}
+                {_render_help_copy(help_text.RUN_METADATA_FILTERS)}
                 {_render_filter_details(name="dtype_filter", summary="Dtype", icon="type", options=dtype_options, selected_values=selected_dtypes, all_query=dtype_all_query, none_query=dtype_none_query)}
                 {_render_filter_details(name="attn_filter", summary="Attention", icon="scan-eye", options=attn_options, selected_values=selected_attn, all_query=attn_all_query, none_query=attn_none_query)}
                 {_render_filter_details(name="prompt_filter", summary="Prompt", icon="message-square-text", options=prompt_options, selected_values=selected_prompts, all_query=prompt_all_query, none_query=prompt_none_query)}
@@ -3989,11 +3968,7 @@ def render_controls(
                   <input type="hidden" name="rank_filtered" value="0">
                   <input type="checkbox" name="rank_filtered" value="1" class="h-4 w-4 accent-cyan-700"{rank_filtered_checked}>
                   {_control_label(icon="sigma", text="Recalculate ranks from filters")}
-                  {_render_help_tooltip(
-                      "Recalculate ranks from filters",
-                      "Recomputes ranking numbers using only the currently filtered result set.",
-                      "When this is enabled, Borda ranks, mean ranks, task counts, and visible means are recalculated after the active text, model-family, license, runtime, efficiency, and task filters are applied.\n\nParams and Length range filters already narrow the ranked model or task population whenever they are set.\n\nUse it when you want to answer a local question, such as which model is best among dense models only, or which model wins on a specific task family. Leave it off when you want text and facet filters to keep their rank context from the current evaluation mode, benchmark scope, task facets, and variant selection.",
-                  )}
+                  {_render_help_copy(help_text.RANK_FILTERED)}
                 </label>
               </div>
             </div>
@@ -4037,11 +4012,7 @@ def _render_model_type_controls(
         <input type="hidden" name="model_type_filter" value="{FILTER_NONE_VALUE}">
         <span class="inline-flex items-center gap-1">
           {_control_label(icon="shapes", text="Model family")}
-          {_render_help_tooltip(
-              "Model family",
-              "Filters rows by the retrieval or reranking family recorded for each model result.",
-              "Model family separates model rows by how the result was produced.\n\nDense models use dense embeddings. BM25 rows use lexical BM25 baselines. Sparse rows use learned sparse retrieval. Late interaction rows use token-level interaction methods such as ColBERT-style scoring. Reranker rows are shown only in Reranking mode.\n\nReranking mode can also include dense or late-interaction candidate-rerank rows and the BM25 candidate-order baseline, so use this filter when you want to compare one family or hide families that are not relevant to the current analysis.",
-          )}
+          {_render_help_copy(help_text.MODEL_FAMILY)}
         </span>
         {''.join(checkboxes)}
       </fieldset>
@@ -4078,21 +4049,14 @@ def _render_parameter_filter_inputs(filter_state: FilterState) -> str:
 
 def _render_active_parameter_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     active_params_class = "text-cyan-700" if filter_state.active_params_min or filter_state.active_params_max else ""
     return _render_range_filter_control(
         icon="cpu",
         label="Active params (M)",
-        help_title="Active params",
-        help_summary="Filters model rows by active parameter count in millions.",
-        help_details=(
-            "Active params is the parameter count considered active for a model row, measured in millions. "
-            "For example, max 100 keeps rows with at most 100M active parameters.\n\n"
-            "Rows without active-parameter metadata are excluded when either bound is set. "
-            "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
-        ),
+        help_copy=help_text.ACTIVE_PARAMS,
         min_name="active_params_min",
         min_value=filter_state.active_params_min,
         min_aria_label="Active params minimum in millions",
@@ -4106,21 +4070,14 @@ def _render_active_parameter_filter_input(filter_state: FilterState) -> str:
 
 def _render_total_parameter_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-20 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     total_params_class = "text-cyan-700" if filter_state.total_params_min or filter_state.total_params_max else ""
     return _render_range_filter_control(
         icon="cpu",
         label="Total params (M)",
-        help_title="Total params",
-        help_summary="Filters model rows by total parameter count in millions.",
-        help_details=(
-            "Total params is the full model parameter count recorded for a model row, measured in millions. "
-            "It can differ from active params for architectures or serving setups where not all parameters are active.\n\n"
-            "Rows without total-parameter metadata are excluded when either bound is set. "
-            "This range narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
-        ),
+        help_copy=help_text.TOTAL_PARAMS,
         min_name="total_params_min",
         min_value=filter_state.total_params_min,
         min_aria_label="Total params minimum in millions",
@@ -4138,21 +4095,14 @@ def _render_task_length_filter_inputs(filter_state: FilterState) -> str:
 
 def _render_query_length_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     query_length_class = "text-cyan-700" if filter_state.query_len_min or filter_state.query_len_max else ""
     return _render_range_filter_control(
         icon="ruler",
         label="Query length",
-        help_title="Query length",
-        help_summary="Filters tasks by average query string length.",
-        help_details=(
-            "Query length bounds use task metadata measured in average characters per query. "
-            "For example, max 120 keeps tasks with relatively short queries.\n\n"
-            "Tasks without query-length metadata are excluded when either bound is set. "
-            "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
-        ),
+        help_copy=help_text.QUERY_LENGTH,
         min_name="query_len_min",
         min_value=filter_state.query_len_min,
         min_aria_label="Query length minimum",
@@ -4166,21 +4116,14 @@ def _render_query_length_filter_input(filter_state: FilterState) -> str:
 
 def _render_document_length_filter_input(filter_state: FilterState) -> str:
     input_class = (
-        "viewer-text-input w-24 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
+        "viewer-text-input w-28 border border-zinc-300 bg-white px-2 py-1 text-[0.8125rem] text-zinc-900 outline-none "
         "focus:border-cyan-700"
     )
     document_length_class = "text-cyan-700" if filter_state.doc_len_min or filter_state.doc_len_max else ""
     return _render_range_filter_control(
         icon="ruler",
         label="Document length",
-        help_title="Document length",
-        help_summary="Filters tasks by average document string length.",
-        help_details=(
-            "Document length bounds use task metadata measured in average characters per document. "
-            "For example, max 2000 keeps tasks whose documents are relatively short on average.\n\n"
-            "Tasks without document-length metadata are excluded when either bound is set. "
-            "This range narrows the ranked task population immediately, even when Recalculate ranks from filters is off."
-        ),
+        help_copy=help_text.DOCUMENT_LENGTH,
         min_name="doc_len_min",
         min_value=filter_state.doc_len_min,
         min_aria_label="Document length minimum",
@@ -4196,9 +4139,7 @@ def _render_range_filter_control(
     *,
     icon: str,
     label: str,
-    help_title: str,
-    help_summary: str,
-    help_details: str,
+    help_copy: help_text.HelpCopy,
     min_name: str,
     min_value: str,
     min_aria_label: str,
@@ -4212,7 +4153,7 @@ def _render_range_filter_control(
       <div class="range-filter-control inline-flex min-w-0 items-center gap-1.5">
         <span class="inline-flex items-center gap-1 whitespace-nowrap">
           {_control_label(icon=icon, text=label, extra_class=extra_class)}
-          {_render_help_tooltip(help_title, help_summary, help_details)}
+          {_render_help_copy(help_copy)}
         </span>
         <span class="inline-flex items-center gap-1 whitespace-nowrap">
           <input type="number" min="0" step="any" name="{escape(min_name)}" value="{escape(min_value)}"
@@ -4251,6 +4192,22 @@ def render_score_groups(*, result: LeaderboardResult, sort: str, direction: str,
                 </button>"""
         )
     return f"""<nav class="mb-4 flex flex-wrap gap-2" aria-label="Score groups">{''.join(buttons)}</nav>"""
+
+
+# Columns whose header carries a help modal. These values are the first thing a
+# reader looks at and none of them is self-explanatory, so the explanation sits
+# at the column instead of only in the control behind it.
+COLUMN_HELP = {
+    "borda_score": help_text.BORDA_SCORE_COLUMN,
+    "macro_mean": help_text.MACRO_MEAN_COLUMN,
+    "micro_mean": help_text.MICRO_MEAN_COLUMN,
+    "mean_score": help_text.MEAN_SCORE_COLUMN,
+    "base_score_delta_percent": help_text.DELTA_VS_BASE_COLUMN,
+    "active_parameters": help_text.ACTIVE_PARAMS_COLUMN,
+    "total_parameters": help_text.TOTAL_PARAMS_COLUMN,
+    "max_seq_length": help_text.MAX_TOKENS_COLUMN,
+    "embedding_dim": help_text.DIMS_COLUMN,
+}
 
 
 def render_table_head(
@@ -4373,17 +4330,37 @@ def render_table_head(
                  </span>"""
         else:
             label_markup = escape(label)
-            if sortable:
+            column_help = COLUMN_HELP.get(key)
+            # A help icon has to sit next to its own label, so the label stops
+            # filling the cell as soon as one follows it.
+            width_class = "min-w-0" if column_help is not None else "w-full min-w-0 flex-1"
+            if key == "model_name":
+                # Sorting a leaderboard alphabetically answers nothing; looking
+                # for one model does. The header opens the model filter instead.
                 header_content = f"""
-                 <button type="button" class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left hover:text-cyan-700"
+                 <button type="button" class="inline-flex {width_class} items-center gap-1 {justify} text-left hover:text-cyan-700"
+                         data-model-filter-focus="true"
+                         title="Search models"
+                         aria-label="Search models by name">
+                   <span class="{label_class}"{label_attrs}>{label_markup}</span>
+                   {_icon_svg("search", class_name="hakari-icon h-3 w-3 shrink-0")}
+                 </button>"""
+            elif sortable:
+                header_content = f"""
+                 <button type="button" class="inline-flex {width_class} items-center gap-0.5 {justify} text-left hover:text-cyan-700"
                          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                          {_leaderboard_control_hx_attrs()}>
                    <span class="{label_class}"{label_attrs}>{label_markup}</span>{indicator}
                  </button>"""
             else:
                 header_content = f"""
-                 <span class="inline-flex w-full min-w-0 flex-1 items-center gap-0.5 {justify} text-left">
+                 <span class="inline-flex {width_class} items-center gap-0.5 {justify} text-left">
                    <span class="{label_class}"{label_attrs}>{label_markup}</span>
+                 </span>"""
+            if column_help is not None:
+                header_content = f"""
+                 <span class="inline-flex w-full min-w-0 flex-1 items-center gap-1 {justify}">
+                   {header_content}{_render_help_copy(column_help)}
                  </span>"""
         heads.append(
             f"""<th scope="col" data-column-key="{escape(key, quote=True)}" class="bg-zinc-100 py-1 text-[0.6875rem] font-normal text-zinc-600 {text_align} {th_spacing} {sticky}">
@@ -4953,11 +4930,7 @@ def _render_dim_filter_bounds(*, selected_filters: tuple[str, ...]) -> str:
           <div id="dim-filter-range-hidden" class="hidden" data-dim-range-hidden>{hidden_inputs}</div>
           <span class="inline-flex items-center gap-1 whitespace-nowrap">
             {_control_label(icon="ruler", text="Dims", extra_class=active_class)}
-            {_render_help_tooltip(
-                "Dims",
-                "Filters rows by embedding dimensions.",
-                "Dims filters dense embedding result rows by their recorded embedding dimension.\n\nMin and max are inclusive. An empty max means no upper bound. Rows without dimension metadata are excluded when either bound is set.",
-            )}
+            {_render_help_copy(help_text.DIMS_FILTER)}
           </span>
           <span class="inline-flex items-center gap-1 whitespace-nowrap">
             <input type="number" min="0" step="1" value="{escape(min_value)}" placeholder="min"
@@ -4996,11 +4969,7 @@ def _render_quant_filter_checkboxes(*, options: list[tuple[str, str]], selected_
         <div class="filter-detail-body range-filter-control inline-flex min-h-[1.875rem] min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
           <span class="inline-flex items-center gap-1 whitespace-nowrap">
             {_control_label(icon="binary", text="Quantization")}
-            {_render_help_tooltip(
-                "Quantization",
-                "Filters rows by embedding numeric format.",
-                "Quantization filters base and compressed embedding result rows by recorded numeric format.\n\nOriginal keeps unquantized rows. int8 and binary keep compressed variants when those rows are included by the Efficiency variants controls.",
-            )}
+            {_render_help_copy(help_text.QUANTIZATION_FILTER)}
           </span>
           <input type="hidden" name="quant_filter" value="{FILTER_NONE_VALUE}">
           <div class="inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">

@@ -409,6 +409,24 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 hover_state = {"before": hover_before, "after": hover_after}
                 assert hover_state["after"] != hover_state["before"]
 
+                # The Model Name header opens Filter results and focuses the input.
+                page.locator("#filter-controls-panel").evaluate("(el) => { el.open = false; }")
+                page.locator("th[data-column-key='model_name'] [data-model-filter-focus]").first.click()
+                model_filter_state = page.evaluate(
+                    """() => {
+                        const input = document.getElementById("model-filter-input");
+                        const style = getComputedStyle(input);
+                        return {
+                            panelOpen: document.getElementById("filter-controls-panel").open,
+                            focused: document.activeElement === input,
+                            boxShadow: style.boxShadow,
+                        };
+                    }"""
+                )
+                assert model_filter_state["panelOpen"] is True
+                assert model_filter_state["focused"] is True
+                assert model_filter_state["boxShadow"] != "none"
+
                 page.locator("#filter-controls-panel").evaluate("(el) => { el.open = true; }")
                 rank_filtered_checkbox = page.locator("#filter-controls input[type='checkbox'][name='rank_filtered']")
                 help_trigger = page.locator("#filter-controls .refine-results-actions .help-summary-trigger").first
@@ -430,7 +448,9 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert help_modal_state["details"]
                 assert help_trigger.evaluate("(el) => getComputedStyle(el).cursor") == "pointer"
                 assert rank_filtered_checkbox.is_checked() is False
-                help_tooltip_style = page.locator(".help-summary-trigger svg[data-icon='circle-help']").first.evaluate(
+                help_tooltip_style = page.locator(
+                    "nav[aria-label='Leaderboard configuration'] .help-summary-trigger svg[data-icon='circle-help']"
+                ).first.evaluate(
                     """(el) => ({
                         parentBorderRadius: getComputedStyle(el.parentElement).borderRadius,
                         height: parseFloat(getComputedStyle(el).height),
@@ -442,6 +462,27 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert help_tooltip_style["height"] == pytest.approx(14.0, abs=0.1)
                 assert help_tooltip_style["width"] >= 12.0
                 assert help_tooltip_style["stroke"] != "none"
+                page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
+
+                # The header help explains the page itself, and the score column
+                # headers explain the numbers a reader lands on first.
+                page.locator("#hakari-page-overview-help").click()
+                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
+                assert page.locator("#help-summary-heading").inner_text() == "HAKARI-Bench"
+                assert page.locator("#help-summary-eyebrow").inner_text() == "GETTING STARTED"
+                page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
+                page.locator("th[data-column-key='borda_score'] .help-summary-trigger").first.click()
+                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
+                assert page.locator("#help-summary-heading").inner_text() == "Borda Score"
+                assert page.locator("#help-summary-eyebrow").is_visible() is False
+                help_body_gap = page.locator("#help-summary-details").evaluate(
+                    """(el) => {
+                        const modal = el.closest(".hakari-modal");
+                        return modal.getBoundingClientRect().right - el.getBoundingClientRect().right;
+                    }"""
+                )
+                # Body copy should stop at the dialog padding, not well short of it.
+                assert help_body_gap < 32
                 page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
 
                 doc_trigger = page.locator(".doc-summary-trigger").first
@@ -788,14 +829,14 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                             font_property,
                         )
 
-                help_trigger = page.locator('#variant-controls button[data-help-title="Rescore"]')
+                help_trigger = page.locator('#variant-controls button[data-help-key][aria-label="Rescore"]')
                 assert help_trigger.locator(
                     'xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " toggle-chip ")]'
                 ).count() == 1
                 help_trigger.click()
                 page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
                 assert page.locator("#help-summary-heading").inner_text() == "Rescore"
-                assert "Enable Quantization with Rescore" in page.locator("#help-summary-details").inner_text()
+                assert "Enable Quantization together with Rescore" in page.locator("#help-summary-details").inner_text()
                 assert page.locator('#variant-controls input[name="rescore"]').is_checked()
                 page.locator("#help-summary-modal").evaluate("modal => modal.close()")
 
@@ -829,6 +870,64 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                 assert visible_variants() == {None, "truncate_dim_256"}
             finally:
                 browser.close()
+
+
+@pytest.mark.browser
+def test_docs_page_shows_the_outline_rail_on_a_normal_laptop_width(tmp_path: Path) -> None:
+    """The outline is a navigation aid, so it must not need an unusual window.
+
+    It also guards the article measure: the card is the reading column, so its
+    padding must not grow back into the width the text needs.
+    """
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    app = _create_browser_test_app(tmp_path)
+    # The outline only renders for articles with enough sections to navigate.
+    (tmp_path / "task_docs" / "docs" / "BenchA" / "index.md").write_text(
+        "# BenchA\n\n"
+        + "".join(
+            f"## Section {index}\n\nBody copy for section {index} of the layout test.\n\n"
+            for index in range(1, 6)
+        ),
+        encoding="utf-8",
+    )
+
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                measure_script = """() => {
+                    const article = document.querySelector(".benchmark-doc");
+                    const outline = document.querySelector(".doc-outline");
+                    const style = getComputedStyle(outline);
+                    return {
+                        outlineTop: Math.round(outline.getBoundingClientRect().top),
+                        articleTop: Math.round(article.getBoundingClientRect().top),
+                        outlinePosition: style.position,
+                        articleWidth: Math.round(article.getBoundingClientRect().width),
+                        articlePadding: Math.round(parseFloat(getComputedStyle(article).paddingLeft)),
+                    };
+                }"""
+
+                page = browser.new_page(viewport={"width": 1024, "height": 900})
+                page.goto(f"{base_url}/docs/benchmark-tasks/BenchA", wait_until="networkidle")
+                laptop = page.evaluate(measure_script)
+                page.close()
+
+                page = browser.new_page(viewport={"width": 900, "height": 900})
+                page.goto(f"{base_url}/docs/benchmark-tasks/BenchA", wait_until="networkidle")
+                narrow = page.evaluate(measure_script)
+                page.close()
+            finally:
+                browser.close()
+
+    # 1024px is a rail: the outline sits beside the article and sticks.
+    assert laptop["outlinePosition"] == "sticky"
+    assert laptop["outlineTop"] >= laptop["articleTop"]
+    assert laptop["articlePadding"] <= 24
+    assert laptop["articleWidth"] >= 700
+    # Below that it falls back to a card above the article.
+    assert narrow["outlinePosition"] == "static"
+    assert narrow["outlineTop"] < narrow["articleTop"]
 
 
 def _create_browser_test_app(tmp_path: Path):

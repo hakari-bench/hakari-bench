@@ -1,0 +1,174 @@
+{
+  "task_metadata": {
+    "schema_version": 1,
+    "document_status": "first_pass",
+    "nano_set": "NanoSSRB",
+    "backing_dataset": "NanoSSRB",
+    "dataset_id": "hakari-bench/NanoSSRB",
+    "task_name": "LLMAgentAndTool",
+    "split_name": "LLMAgentAndTool",
+    "language": "en",
+    "category": "natural_language",
+    "document_path": "task_docs/docs/NanoSSRB/LLMAgentAndTool.md",
+    "source_research": {
+      "primary_source_type": "benchmark_paper",
+      "paper_pdf_or_html_checked": true,
+      "paper_url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html",
+      "additional_source_urls": [
+        "https://huggingface.co/datasets/vec-ai/struct-ir"
+      ]
+    },
+    "counts": {
+      "queries": 200,
+      "documents": 10000,
+      "positive_qrels": 600
+    },
+    "positives_per_query": {
+      "average": 3.0,
+      "min": 1,
+      "median": 3.0,
+      "max": 5,
+      "multi_positive_queries": 160,
+      "multi_positive_query_percent": 80.0
+    },
+    "text_stats_chars": {
+      "query_mean": 361.675,
+      "document_mean": 589.6438
+    },
+    "bm25": {
+      "ndcg_at_10": 0.35820428252915076,
+      "hit_at_10": 0.67,
+      "source": "dataset_candidate_subset"
+    },
+    "candidate_subsets": {
+      "bm25": {
+        "config": "bm25",
+        "label": "BM25",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.3582042825,
+        "hit_at_10": 0.67,
+        "recall_at_100": 0.8616666667,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8616666667
+      },
+      "dense": {
+        "config": "harrier_oss_v1_270m",
+        "label": "Dense",
+        "source": "dataset_candidate_subset",
+        "top_k": 500,
+        "ndcg_at_10": 0.4170889379,
+        "hit_at_10": 0.73,
+        "recall_at_100": 0.8366666667,
+        "candidate_count_min": 500,
+        "candidate_count_max": 500,
+        "candidate_count_mean": 500.0,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.8366666667
+      },
+      "reranking_hybrid": {
+        "config": "reranking_hybrid",
+        "label": "Reranking hybrid",
+        "source": "dataset_candidate_subset",
+        "top_k": 100,
+        "ndcg_at_10": 0.4726974626,
+        "hit_at_10": 0.775,
+        "recall_at_100": 0.9066666667,
+        "candidate_count_min": 100,
+        "candidate_count_max": 101,
+        "candidate_count_mean": 100.07,
+        "query_count": 200,
+        "query_coverage": 1.0,
+        "relevant_coverage_at_100": 0.9066666667,
+        "safeguard_positive_rows": 14,
+        "rows_with_101_candidates": 14
+      }
+    },
+    "links": {
+      "nano_dataset": "https://huggingface.co/datasets/hakari-bench/NanoSSRB",
+      "source_urls": [
+        {
+          "label": "SSRB paper",
+          "url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html"
+        },
+        {
+          "label": "Struct-IR dataset",
+          "url": "https://huggingface.co/datasets/vec-ai/struct-ir"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "SSRB: Direct Natural Language Querying to Massive Heterogeneous Semi-Structured Data",
+        "url": "https://papers.neurips.cc/paper_files/paper/2025/hash/631bbd89466337712564872840a401be-Abstract-Datasets_and_Benchmarks_Track.html",
+        "year": 2025,
+        "is_paper": true,
+        "source_confidence": "definitive_paper_link"
+      },
+      {
+        "title": "vec-ai/struct-ir",
+        "url": "https://huggingface.co/datasets/vec-ai/struct-ir",
+        "is_paper": false,
+        "source_confidence": "probably_correct"
+      }
+    ],
+    "examples": [
+      {
+        "query_id": "llm_agent_and_tool--sentiment_analys--q--51545",
+        "document_id": "llm_agent_and_tool--sentiment_analys--p--10673",
+        "query": {
+          "text": "Find sentiment analysis results from the 'roberta-large' model with a confidence score greater than 0.8 and a sentiment score between 0.5 and 1.0, specifically looking for positive sentiments.",
+          "full_chars": 192,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"analysis_id\": \"a123b456c789\", \"text_content\": \"This new feature is absolutely amazing! I've been waiting for this for ages and it's exceeded my expectations. RoBERTa-large really nailed the positive sentiment here.\", \"sentiment_score\": 0.95, \"sentiment_label\": \"positive\", \"analysis_timestamp\": \"2024-02-15T10:30:00Z\", \"model_used\": \"RoBERTa-large\", \"confidence_score\": 0.98 }",
+          "full_chars": 407,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "llm_agent_and_tool--content_generati--q--54187",
+        "document_id": "llm_agent_and_tool--content_generati--p--15067",
+        "query": {
+          "text": "Find content generations created by user 'user123' that had a temperature setting greater than 0.7.",
+          "full_chars": 99,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"generation_id\": \"gen-789012\", \"user_id\": \"user123\", \"prompt\": \"Short test prompt\", \"generated_content\": \"This is a short response generated with high temperature.\", \"temperature\": 0.9, \"max_tokens\": 100, \"generation_timestamp\": \"2024-01-08T14:30:00Z\" }",
+          "full_chars": 283,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      },
+      {
+        "query_id": "llm_agent_and_tool--api_usage_analyt--q--66390",
+        "document_id": "llm_agent_and_tool--api_usage_analyt--p--42435",
+        "query": {
+          "text": "Find API requests made to the '/summarize' endpoint with a response time between 200 and 500 milliseconds. I am interested in requests that processed a relatively small amount of data, so exclude requests where the response size exceeds 1000 bytes.",
+          "full_chars": 248,
+          "limit_chars": 500,
+          "truncated": false
+        },
+        "positive_document": {
+          "text": "{ \"api_key_id\": \"key-12345\", \"request_id\": \"req-67890\", \"endpoint\": \"/summarize\", \"request_timestamp\": \"2024-01-26T10:00:00Z\", \"response_time\": 350.5, \"request_size\": 150, \"response_size\": 500, \"status_code\": 200 }",
+          "full_chars": 246,
+          "limit_chars": 1000,
+          "truncated": false
+        }
+      }
+    ],
+    "source_dataset_id": "vec-ai/struct-ir",
+    "source_task": "LLMAgentAndTool",
+    "example_count": 3
+  }
+}

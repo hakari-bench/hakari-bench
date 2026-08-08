@@ -158,17 +158,38 @@ components:
   help-modal:
     purpose: Explain technical controls without adding permanent copy to the page.
     treatment: Shared `.hakari-modal` shell on surface color with a strong border,
-      soft shadow, and a blurred dimmed backdrop. The header pairs a small accent
-      icon with the target concept name (not generic "Help"); the close control is
-      a quiet ghost chip. Body uses a stronger lead line over muted detail text.
-      Help, benchmark-doc summary, and model-detail dialogs all reuse this shell.
+      soft shadow, and a blurred dimmed backdrop. The dialog is a column flex box
+      capped at 85vh: the header stays fixed while only the body scrolls, so long
+      explanations never push the close control off screen. The header sits on the
+      faint surface tint and pairs a small accent icon with the target concept
+      name (not generic "Help"); the close control is a quiet icon-only ghost
+      button with an accessible "Close" label. The header name stays short, so a
+      group name that a short title genuinely needs ("Benchmark scope",
+      "Getting started") rides above the lead line as a small uppercase accent
+      chip instead of being pushed into the title; do not add a chip that merely
+      restates where the trigger sits. The lead line answers "in one sentence,
+      what is this?" and is set as a GitHub-style tip callout - accent left rule,
+      accent-soft fill, and a lightbulb "In short" label - so a reader who only
+      looks at one thing looks at the right one. Explanatory copy is the point of
+      these dialogs, so the body is near-primary text color rather than the muted
+      metadata tone. The dialog is roughly 44rem wide and its own padding sets
+      the reading measure: capping paragraphs narrower than the dialog only
+      leaves a ragged right gutter, which reads as broken rather than as
+      breathing room. viewer.js splits help
+      copy into real paragraphs instead of relying on `white-space: pre-wrap`, so
+      the gap between paragraphs is a deliberate margin rather than a full blank
+      line at body line height. A follow-through link
+      out of a dialog uses the `.hakari-modal-action` chip, not bare underlined
+      body copy. Help, benchmark-doc summary, count-breakdown, and model-detail
+      dialogs all reuse this shell.
   docs-page:
     purpose: Standalone benchmark and task documentation rendered from Markdown.
     treatment: Shares the leaderboard chrome (brand mark linking home, GitHub link,
       theme toggle) and loads viewer.js so theme choice persists. Article sits on a
-      surface card; tables get a header row, light row striping, and a rounded
-      border; inline code reads as a subtle chip. The index lists groups as a
-      compact single-column list of clickable rows without summaries.
+      surface card beside a sticky "On this page" outline; tables get a header row,
+      light row striping, and a rounded border; inline code reads as a subtle chip.
+      The index leads with its own title, carries the paper reference in an accent
+      card below it, and lists groups as a responsive grid of compact link cards.
   leaderboard-table:
     purpose: The primary product surface.
     treatment: Dense, sticky model-name column, compact row heights, borders only where
@@ -332,7 +353,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
 ## Typography
 
 - Preserve the current font sizes unless the user explicitly asks for a sizing
-  change. The table density depends on predictable text metrics.
+  change. The table density depends on predictable text metrics. The standalone
+  documentation pages are the deliberate exception; see Documentation Pages.
 - Use the monospaced stack for model names, task names, scores, labels, and
   compact controls. This supports scanning and numeric comparison.
 - Table headers use a compact 11px regular weight. Standard columns and
@@ -394,12 +416,18 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
-  such as Overall/Overall (EN) or Safeguard positives.
+  such as Overall/Overall (EN) or Safeguard positives. A section label such as
+  "Benchmark scope" also carries its own help for the section as a whole, since
+  the per-button help cannot explain what the group of buttons is.
+- The header question mark uses the same icon-button shell as the GitHub, docs,
+  and theme controls and sits first among them.
 - Use icons where they shorten recognition: table, calendar, docs, language,
   filters, metric, retrieval, and reranking.
 - In Filter results, Params sits above Length and uses compact numeric inputs
-  narrow enough not to dominate the filter row
-  in millions for Active Params and Total Params bounds.
+  narrow enough not to dominate the filter row. Give all four range controls a
+  consistent 7rem input width and use only `min` / `max` as placeholders; the
+  visible row label and accessible input label carry the full field name. Params
+  bounds are in millions for Active Params and Total Params.
 - Keep the HAKARI-Bench brand mark at 28px with the same 22% rounded app-icon
   treatment in the leaderboard and documentation headers.
 - Use a separate white SVG for the browser favicon, while keeping the in-page
@@ -415,10 +443,37 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Tooltip-style hover text is only for very short labels.
 - Detailed explanations belong in modals, especially for controls that affect
   ranking semantics or filtering.
-- Modal headers should be the concept being explained, such as "Task facets",
-  "Dims", or "NanoRTEB", not generic labels like "Help".
+- Modal headers should be the short name of the concept being explained, such
+  as "Task facets", "Dims", "Overall", or "Borda Score" - not generic labels
+  like "Help", and not a descriptive sentence. When the short name would be
+  ambiguous on its own, put the group name in the eyebrow chip ("Benchmark
+  scope: Overall" becomes an "Overall" header under a "Benchmark scope" chip)
+  and let the lead callout carry the description. The trigger's `aria-label`
+  keeps both parts. A chip is for disambiguation only; a title that already
+  matches the column or control it opens from does not get one.
 - Help copy should start with a short explanation, then describe what the
   feature changes, what it filters or displays, and give examples when helpful.
+- Write help copy for someone who has never seen a retrieval leaderboard. Every
+  modal is read on its own, so explain the vocabulary it uses (nDCG@10, Borda,
+  Micro/Macro, RRF, quantization) inside that modal instead of assuming an
+  earlier one was read. Prefer a concrete example and a "when to use this" line
+  over exhaustive mechanics, and keep internal identifiers such as
+  `reranking_hybrid` to a single aside rather than the main explanation.
+- Help copy lives in `hakari_bench/viewer/help_text.py` as `HelpCopy` values, not
+  inline in the render functions, so the whole explanation set can be read and
+  edited as one document.
+- Each rendered response serializes its used help copy once in a deduplicated
+  page-local JSON registry. Help triggers carry only a compact registry key plus
+  their accessible label; do not repeat long help text in every trigger or add a
+  network request when a dialog opens.
+- Three help surfaces exist, and each answers a different question. The header
+  question mark explains the page itself: what a row is, what a score means, and
+  in which order the controls apply. Control help explains one control. Score
+  column headers (Borda Score, Macro Mean, Micro Mean, Mean Score, Δ vs Base)
+  carry their own help, as do the model metadata columns (Active Params, Total
+  Params, Max Tokens, Dims), because those values are what a reader looks at
+  first and none of them is self-explanatory. A column header with a help icon
+  stops filling its cell so the icon stays beside its own label.
 - Model and task text filters should document multi-keyword matching. For
   example, `jina bge` matches rows containing either `jina` or `bge`; task
   filters work similarly, and short task names such as `nq` must be supported.
@@ -442,12 +497,61 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Documentation body copy, list items, and table data use the primary text token
   in each theme. Reserve muted text for card summaries, captions, and secondary
   notes so long-form docs keep strong contrast in both light and dark themes.
+- Docs are the one place that departs from the leaderboard's compact type scale.
+  These pages are read, not scanned: body copy is 15px at 1.65 line height.
+  Keep leading tighter here than typical prose guidance suggests: that guidance
+  assumes a proportional face, and the monospaced stack fits fewer characters
+  per line and already tracks well, so 1.7-1.8 reads as loose rather than airy.
+- The article column itself carries the reading measure, so body copy fills the
+  card from edge to edge. Do not cap individual paragraphs inside a wider card:
+  a card visibly wider than its own text reads as broken, not as breathing room.
+  The card's own inset is modest for the same reason - it separates text from the
+  border and nothing more. Padding that competes with the text for width is the
+  first thing to cut when the column feels cramped.
+- The reading measure is the reason the page stops growing on very wide screens.
+  Leftover width becomes side margin on purpose; widening the prose column past
+  its measure would be the worse trade.
+- The outline rail appears as soon as it fits, at 1024px, and takes only the
+  width it needs (12rem). It is a navigation aid, so requiring an unusually wide
+  window before it appears trades real function for margin. Below that width it
+  falls back to a compact jump-link card above the article.
+- Do not set label text in all caps. Small uppercase labels with letter spacing
+  fight the monospaced stack and read as shouting at this size; use sentence
+  case at a small size and muted color instead.
+- Keep the heading levels visibly distinct. h2 opens a section with a rule above
+  it and generous space; h3 is close to body size, so it carries a short accent
+  bar on its left edge instead of relying on weight alone.
+- h2 and h3 headings carry anchor ids and reveal a `#` link on hover so sections
+  can be linked directly.
+- Group and task pages are long. Give any article with three or more sections an
+  "On this page" outline: a sticky rail on the right from 1180px up, and a
+  wrapping jump-link card above the article below that width. The outline marks
+  the section currently in view.
 - Render documentation tables with a distinct header row, light row striping, and
   a rounded border so dense metadata stays scannable. Inline code should read as a
   subtle bordered chip, and code blocks use the faint code background.
-- The docs index is a compact single-column list of clickable rows. Do not show
-  summaries on the index; keep longer explanations on the group pages so the
-  index stays fast to scan.
+- Table cells stay on one line and numeric columns are right-aligned with
+  tabular figures, so scores and counts compare down the column. Only columns
+  holding long text such as titles or URLs wrap. Never let a short label wrap
+  onto five lines to avoid horizontal scrolling.
+- The values are what these tables are read for, so headers give up width
+  first: header cells set at 11px, wrap freely over several lines, and align to
+  the bottom of the row so short and tall labels share one baseline. Do not widen
+  a numeric column just to keep `Reranking hybrid nDCG@10` on one line.
+- Task identifiers must not break mid-token. Columns wrap only when their
+  content exceeds the wrap threshold, which is set above the longest task
+  identifier so `legal_bench_corporate_lobbying` stays on one line.
+- Tables may reclaim part of the card's horizontal padding. A reading-width
+  column cannot hold a nine-column metadata table, and the numbers matter more
+  than the card's inner margin.
+- Tables that exceed the column pan inside their own `.doc-table-scroll`
+  wrapper. Because overlay scrollbars give no hint that columns continue,
+  viewer.js sets `data-overflow` on the wrapper and the side that still has
+  hidden content fades. Do not rely on the scrollbar alone.
+- The docs index leads with its own heading, then the paper reference, then the
+  suite list as a responsive grid of compact link cards. Do not show summaries on
+  the index; keep longer explanations on the group pages so the index stays fast
+  to scan and fits within roughly one screen.
 
 ## Leaderboard Table
 
@@ -460,6 +564,13 @@ read as an analytical instrument rather than a general-purpose dashboard.
   Score (descending) and that column is the visible sort anchor. The rank index
   pins to the left alongside the model column; hidden/filtered rows are skipped so
   the numbers stay contiguous.
+- The Model Name header is a search affordance, not a sort control: it carries a
+  small magnifier, opens Filter results when that panel is collapsed, and puts
+  the caret in the Model input with its text selected. Alphabetical order answers
+  nothing on a leaderboard, while "where is this model?" is a constant question.
+  Because the caret can land off-screen or in a panel that just opened, the
+  focused filter input takes a clearly visible accent ring, not the default
+  hairline focus border.
 - Scroll axes are split: vertical scrolling is the browser/page, horizontal
   scrolling stays inside the table via an `overflow-x: auto` wrapper. This keeps
   the surrounding chrome (config panel, footer) fixed while only the table pans
