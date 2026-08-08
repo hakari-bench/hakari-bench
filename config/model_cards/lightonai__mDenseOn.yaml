@@ -1,0 +1,66 @@
+id: lightonai/mDenseOn
+source:
+  type: huggingface
+  name: lightonai/mDenseOn
+  revision_requested: a5fdb000f7a21da96c3bddde3a782ef777316df3
+  revision: a5fdb000f7a21da96c3bddde3a782ef777316df3
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/lightonai/mDenseOn
+links:
+  huggingface: https://huggingface.co/lightonai/mDenseOn
+  github: https://github.com/lightonai/mdenseon-mlateon
+  papers:
+  - title: 'DenseOn with the LateOn: Fully Open Dense and Late-Interaction Models for Multilingual, Long-Context, and Code Search'
+    url: https://arxiv.org/abs/2607.27178
+parameters:
+  total: 306939648
+  trainable: 306939648
+  input_embedding: 196608000
+  active: 110331648
+embedding:
+  truncate_dims: null
+  output_dimension: 768
+  mrl_support: false
+  pooling: cls
+  include_prompt: true
+runtime:
+  max_seq_length: 8192
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 20
+    official_supported_languages:
+    - en
+    - fr
+    - de
+    - it
+    - es
+    - pt
+    - sv
+    - 'no'
+    - ar
+target:
+  all: true
+  evaluation_scope: standard
+notes:
+- The pinned checkpoint metadata requires SentenceTransformers 5.4.1 and Transformers 5.6.2; the older framework versions shown in the model-card prose do not load the current checkpoint format.
