@@ -145,6 +145,15 @@ def _patch_pylate_dense_missing_activation_function() -> None:
     dense_cls.from_sentence_transformers = staticmethod(from_sentence_transformers)
 
 
+def _patch_pylate_text_length_compat(model: Any) -> None:
+    """Bridge the SentenceTransformers 5.4 input-length method rename for PyLate."""
+    if callable(getattr(model, "_text_length", None)):
+        return
+    input_length = getattr(model, "_input_length", None)
+    if callable(input_length):
+        model._text_length = input_length
+
+
 def _import_auto_tokenizer() -> Any:
     return getattr(importlib.import_module("transformers"), "AutoTokenizer")
 
@@ -1067,6 +1076,7 @@ def load_model(config: ModelLoadConfig) -> Any:
                 do_query_expansion=config.late_interaction_do_query_expansion,
                 attend_to_expansion_tokens=config.late_interaction_attend_to_expansion_tokens,
             )
+        _patch_pylate_text_length_compat(model)
         _set_model_dtype(model, config.dtype)
         _set_attn_implementation(model, attn_implementation)
         return model

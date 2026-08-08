@@ -137,6 +137,9 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
             calls.append({"model_name_or_path": model_name_or_path, **kwargs})
             self.projection = torch.nn.Linear(2, 2)
 
+        def _input_length(self, inputs: object) -> int:
+            return 7
+
     monkeypatch.setattr("hakari_bench.models._import_pylate_colbert", lambda: FakeColBERT)
 
     model = load_model(
@@ -157,6 +160,7 @@ def test_load_model_passes_late_interaction_options(monkeypatch: pytest.MonkeyPa
 
     assert isinstance(model, FakeColBERT)
     assert model.projection.weight.dtype is torch.float32
+    assert model._text_length("example") == 7
     assert calls == [
         {
             "model_name_or_path": "lightonai/GTE-ModernColBERT-v1",
