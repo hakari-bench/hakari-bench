@@ -1,0 +1,61 @@
+id: lightonai/DenseOn
+source:
+  type: huggingface
+  name: lightonai/DenseOn
+  revision: cb9947ebccb33862d24e3c7ca2edb25e51acd887
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/lightonai/DenseOn
+links:
+  huggingface: https://huggingface.co/lightonai/DenseOn
+  github: https://github.com/lightonai/pylate
+  papers:
+  - title: 'DenseOn with the LateOn: Open State-of-the-Art Single and Multi-Vector Models'
+    url: https://huggingface.co/blog/lightonai/denseon-lateon
+parameters:
+  total: 149014272
+  input_embedding: 38682624
+  active: 110331648
+embedding:
+  truncate_dims: null
+  output_dimension: 768
+  mrl_support: false
+  pooling: cls
+  include_prompt: true
+runtime:
+  max_seq_length: 512
+  dtype: fp32
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: english_only
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_english_only
+    evaluated_language_count: 1
+  languages:
+  - en
+target:
+  all: true
+  evaluation_scope: standard
+notes:
+- >-
+  The pinned SentenceTransformers checkpoint defines CLS pooling,
+  768-dimensional embeddings, and the `query: ` and `document: ` prompt
+  registry entries.
+- SDPA is made explicit to preserve the Transformers ModernBERT default because
+  the official model card does not request a different attention backend.
