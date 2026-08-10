@@ -1,0 +1,61 @@
+id: perplexity-ai/pplx-embed-v1-late-0.6b
+source:
+  type: huggingface
+  name: perplexity-ai/pplx-embed-v1-late-0.6b
+  revision: f47f3a745228a39ec262ba1613dd9d2bd5d7b3f8
+method: late-interaction
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/perplexity-ai/pplx-embed-v1-late-0.6b
+links:
+  huggingface: https://huggingface.co/perplexity-ai/pplx-embed-v1-late-0.6b
+  papers:
+  - title: Diffusion-Pretrained Dense and Contextual Embeddings
+    url: https://arxiv.org/abs/2602.11151
+parameters:
+  total: 595909632
+  trainable: 595909632
+  input_embedding: 155311104
+  active: 440598528
+embedding:
+  truncate_dims: null
+  output_dimension: 128
+runtime:
+  max_seq_length: 511
+  dtype: fp32
+  trust_remote_code: true
+  remote_code_approved: true
+  attn_implementation: sdpa
+  backend_library: pylate
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_prefix: '[Q] '
+  document_prefix: '[D] '
+  query_length: 32
+  document_length: 512
+  do_query_expansion: true
+  attend_to_expansion_tokens: true
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: official_multilingual_miracl_evaluation
+    evaluated_language_count: 18
+target:
+  all: true
+  evaluation_scope: standard
+notes:
+- The pinned checkpoint's SentenceTransformers configuration defines the
+  prefixes, q32/d512 lengths, 128-dimensional output, query expansion, and
+  expansion-token attention.
+- The official PyLate example requires remote code. The pinned remote code was
+  reviewed before enabling it.

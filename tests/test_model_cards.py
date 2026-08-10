@@ -791,6 +791,7 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "jinaai/jina-embeddings-v3": 1024,
         "jinaai/jina-embeddings-v5-text-nano": 768,
         "jinaai/jina-embeddings-v5-text-small": 1024,
+        "jinaai/jina-colbert-v2": 128,
         "mixedbread-ai/mxbai-embed-xsmall-v1": 384,
         "nomic-ai/nomic-embed-text-v1.5": 768,
         "nomic-ai/nomic-embed-text-v2-moe": 768,
