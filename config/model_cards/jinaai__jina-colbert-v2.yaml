@@ -1,0 +1,74 @@
+id: jinaai/jina-colbert-v2
+source:
+  type: huggingface
+  name: jinaai/jina-colbert-v2
+  revision: 4552c4dc1ffd7d7a635b6a41a1077fe9c9cdd974
+method: late-interaction
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/jinaai/jina-colbert-v2
+links:
+  huggingface: https://huggingface.co/jinaai/jina-colbert-v2
+  papers:
+  - title: 'Jina-ColBERT-v2: A General-Purpose Multilingual Late Interaction Retriever'
+    url: https://aclanthology.org/2024.mrl-1.11/
+parameters:
+  total: 559497216
+  trainable: 559497216
+  input_embedding: 256004096
+  active: 303493120
+embedding:
+  truncate_dims:
+  - 96
+  - 64
+  output_dimension: 128
+  mrl_support: true
+runtime:
+  max_seq_length: 300
+  dtype: bf16
+  trust_remote_code: true
+  remote_code_approved: true
+  attn_implementation: eager
+  backend_library: pylate
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_prefix: '[QueryMarker]'
+  document_prefix: '[DocumentMarker]'
+  query_length: 32
+  document_length: 300
+  do_query_expansion: true
+  attend_to_expansion_tokens: true
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 94
+target:
+  all: true
+  evaluation_scope: standard
+notes:
+- The official PyLate example defines the marker prefixes, expansion-token
+  attention, and remote-code requirement; artifact.metadata defines q32/d300.
+- The backbone supports an 8,192-token context, while the official ColBERT
+  evaluation artifact configures 300 document tokens; this card preserves that
+  official retrieval setting rather than shortening it for resource pressure.
+- The official model card documents 128-, 96-, and 64-dimensional Matryoshka
+  variants. The separate 96/64 checkpoints are equivalent prefix truncations,
+  so this card evaluates both derived dimensions.
+- >-
+  The standard Transformers attention dispatch is kept on `eager` because the
+  external XLM-R class does not advertise native `flash_attention_2` support.
+  The pinned checkpoint's own `use_flash_attn: true` path uses FlashAttention 2
+  when the package is installed, matching the official model card.
+- The reproduced compatibility environment uses Transformers 4.57.6,
+  SentenceTransformers 5.4.1, PyLate 1.3.4, and FlashAttention 2.8.3.

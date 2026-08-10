@@ -638,6 +638,8 @@ The current best NanoBEIR-en options measured in this repository are:
 | `colbert-ir/colbertv2.0` | `bf16`, `sdpa` | none | `[unused0]` / `[unused1]` | `32` / `512` | `false` | Required for the Stanford ColBERT marker-token path; the fallback adapter inserts these as token IDs after CLS. |
 | `mixedbread-ai/mxbai-edge-colbert-v0-17m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | README/PyLate config defaults are q48/d512/no expansion; NanoBEIR-en primary exact score improved with q40/d512 over the default query length while keeping document length at 512. |
 | `mixedbread-ai/mxbai-edge-colbert-v0-32m` | `fp32`, `sdpa` | none | `[Q] ` / `[D] ` | `40` / `512` | `false` | Evaluated with the same optimized mxbai-edge ColBERT option as the 17m checkpoint for apples-to-apples full Nano-set coverage. |
+| `perplexity-ai/pplx-embed-v1-late-0.6b` | `fp32`, `sdpa`, Transformers 5.12.1 + PyLate 1.4.0 | none | `[Q] ` / `[D] ` | `32` / `512` | `true` | The pinned SentenceTransformers config enables query expansion and expansion-token attention. NanoBEIR-en reproduced at 0.677272, within 0.0052 of the existing ColBERT-Zero result used as the official model-card reference. |
+| `jinaai/jina-colbert-v2` | `bf16`, `eager` standard dispatch; checkpoint-native FlashAttention, Transformers 4.57.6 + PyLate 1.3.4 | none | `[QueryMarker]` / `[DocumentMarker]` | `32` / `300` | `true` | The official PyLate example and artifact metadata define these options. NanoBEIR-en reached 0.651298 and correlated with the 12 common official BEIR task scores at Pearson 0.9300 / Spearman 0.9161. Evaluate the documented 96- and 64-dimensional Matryoshka variants too. |
 
 Example for the highest-scoring ColBERT-Zero option:
 
@@ -674,6 +676,14 @@ Compatibility notes:
 - The local evaluator aliases PyLate's renamed `_input_length` helper to
   `_text_length` before encoding. With that compatibility shim, NanoMIRACL/en
   succeeded with `tf5-sdpa`.
+- `jinaai/jina-colbert-v2` uses external XLM-R code whose class does not
+  advertise Transformers-native `flash_attention_2` dispatch. Passing that
+  dispatch value fails before model loading. Keep the standard dispatch on
+  `eager` and install FlashAttention so the pinned checkpoint's own
+  `use_flash_attn: true` implementation follows the official model card.
+- `perplexity-ai/pplx-embed-v1-late-0.6b` stores its complete late-interaction
+  contract in `config_sentence_transformers.json`; do not disable query
+  expansion or expansion-token attention merely to reduce evaluation cost.
 
 ## OpenAI Embedding Models
 
