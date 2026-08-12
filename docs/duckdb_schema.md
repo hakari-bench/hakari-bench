@@ -464,8 +464,8 @@ category, citations, and dataset statistics.
 | `citation_count` | `INTEGER` | Number of citation records. |
 | `reference_count` | `INTEGER` | Number of references. |
 | `has_bibtex` | `BOOLEAN` | Whether metadata has BibTeX. |
-| `query_count` | `INTEGER` | Number of sampled or configured queries. |
-| `document_count` | `INTEGER` | Number of sampled or configured documents. |
+| `query_count` | `INTEGER` | Number of sampled or configured queries. Non-null for repository-managed built-in tasks; custom or legacy data may be null. |
+| `document_count` | `INTEGER` | Number of sampled or configured documents. Non-null for repository-managed built-in tasks; custom or legacy data may be null. |
 | `query_mean_chars` | `DOUBLE` | Mean query text length. |
 | `document_mean_chars` | `DOUBLE` | Mean document text length. |
 

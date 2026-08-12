@@ -132,8 +132,13 @@ task_metadata:
 | `citation_keys` | list of strings | recommended | Keys used by `bibtex` and downstream citation rendering. Keep unique within the metadata block. |
 | `references` | list of reference objects | recommended | Structured source records. Each reference must include `is_paper` and `source_confidence`. |
 | `bibtex` | string | recommended | BibTeX entries for the citation keys. Keep entries consistent with `references`. |
-| `query_text_stats` | text stats object | task-level when available | Character-count summary for queries. |
-| `document_text_stats` | text stats object | task-level when available | Character-count summary for corpus documents. |
+| `query_text_stats` | text stats object | required for repository-managed built-in tasks | Character-count summary measured from the task's query table. |
+| `document_text_stats` | text stats object | required for repository-managed built-in tasks | Character-count summary measured from the task's corpus table. |
+
+`validate_builtin_metadata()` rejects a built-in task when either text-stats
+object is absent. Custom or inferred external dataset specs may omit them, but
+repository-managed YAML must keep them populated so DuckDB task dimensions and
+viewer length filters never silently receive `NULL` metadata.
 
 ### Reference Object
 

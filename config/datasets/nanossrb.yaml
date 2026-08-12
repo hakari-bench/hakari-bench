@@ -29,33 +29,45 @@ task_metadata:
     category: natural_language
     short_description: Semi-structured academic record retrieval.
     description: Retrieves academic profiles, research projects, collaborations, publications, workshops, and related JSON records from natural-language requirements.
+    query_text_stats: {count: 200, min_chars: 69, max_chars: 841, mean_chars: 298.49, median_chars: 296.0}
+    document_text_stats: {count: 10000, min_chars: 240, max_chars: 5481, mean_chars: 900.0325, median_chars: 855.0}
   FinanceAndEconomics:
     language: en
     primary_languages: [en]
     category: natural_language
     short_description: Semi-structured finance and economics retrieval.
     description: Retrieves banking, transaction, market, economic indicator, risk, insurance, and personal-finance JSON records.
+    query_text_stats: {count: 200, min_chars: 62, max_chars: 831, mean_chars: 314.1, median_chars: 309.0}
+    document_text_stats: {count: 10000, min_chars: 126, max_chars: 2268, mean_chars: 555.7129, median_chars: 505.0}
   HumanResources:
     language: en
     primary_languages: [en]
     category: natural_language
     short_description: Semi-structured human-resources retrieval.
     description: Retrieves employee, organization, role, payroll, benefits, policy, and workplace JSON records from exact and semantic conditions.
+    query_text_stats: {count: 200, min_chars: 85, max_chars: 740, mean_chars: 321.405, median_chars: 310.0}
+    document_text_stats: {count: 10000, min_chars: 186, max_chars: 1438, mean_chars: 358.5395, median_chars: 343.5}
   LLMAgentAndTool:
     language: en
     primary_languages: [en]
     category: natural_language
     short_description: Semi-structured LLM agent and tool retrieval.
     description: Retrieves LLM agents, tools, capabilities, sessions, security records, and tool-selection JSON records.
+    query_text_stats: {count: 200, min_chars: 77, max_chars: 793, mean_chars: 361.675, median_chars: 332.0}
+    document_text_stats: {count: 10000, min_chars: 113, max_chars: 3700, mean_chars: 589.6438, median_chars: 506.0}
   ProductSearch:
     language: en
     primary_languages: [en]
     category: natural_language
     short_description: Attribute-aware semi-structured product retrieval.
     description: Retrieves product JSON records using brand, category, numeric range, rating, availability, and semantic product requirements.
+    query_text_stats: {count: 200, min_chars: 44, max_chars: 587, mean_chars: 231.545, median_chars: 209.5}
+    document_text_stats: {count: 10000, min_chars: 160, max_chars: 1995, mean_chars: 628.3668, median_chars: 632.0}
   ResumeSearch:
     language: en
     primary_languages: [en]
     category: natural_language
     short_description: Semi-structured resume and candidate retrieval.
     description: Retrieves resume and candidate JSON records using experience, skills, education, certification, and role requirements.
+    query_text_stats: {count: 200, min_chars: 89, max_chars: 1058, mean_chars: 442.96, median_chars: 407.0}
+    document_text_stats: {count: 10000, min_chars: 371, max_chars: 2865, mean_chars: 1356.2153, median_chars: 1371.0}

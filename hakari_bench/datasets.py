@@ -128,6 +128,18 @@ class NanoDatasetSpec:
             errors.extend(_validate_metadata_mapping(metadata, context=f"{self.name}/{task_name} metadata"))
         return errors
 
+    def validate_task_text_stats(self) -> list[str]:
+        errors: list[str] = []
+        split_names = self.splits or list((self.effective_split_mapping or {}).values())
+        for split_name in split_names:
+            task_name = _task_name_for_split(self, split_name)
+            metadata = self.metadata_for_task(split_name=split_name, task_name=task_name)
+            context = f"{self.name}/{task_name} metadata"
+            for stats_key in ("query_text_stats", "document_text_stats"):
+                if stats_key not in metadata:
+                    errors.append(f"{context} is missing {stats_key}.")
+        return errors
+
 
 @dataclass(frozen=True)
 class DatasetCollectionSpec:
@@ -497,6 +509,7 @@ def validate_builtin_metadata() -> list[str]:
     )
     for dataset in datasets:
         errors.extend(dataset.validate_metadata())
+        errors.extend(dataset.validate_task_text_stats())
         task_metadata = dataset.task_metadata or {}
         for split_name in dataset.splits or list((dataset.effective_split_mapping or {}).values()):
             task_name = _task_name_for_split(dataset, split_name)

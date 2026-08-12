@@ -726,6 +726,44 @@ def test_builtin_metadata_is_complete_and_valid() -> None:
     assert errors == []
 
 
+def test_metadata_validation_requires_text_stats_for_declared_tasks() -> None:
+    spec = NanoDatasetSpec(
+        name="Toy",
+        dataset_id="local/toy",
+        splits=["complete", "missing"],
+        metadata={
+            "language": "en",
+            "category": "natural_language",
+            "short_description": "Toy retrieval group.",
+            "description": "Toy dataset used to verify required task text statistics.",
+        },
+        task_metadata={
+            "complete": {
+                "query_text_stats": {
+                    "count": 2,
+                    "min_chars": 3,
+                    "max_chars": 5,
+                    "mean_chars": 4.0,
+                    "median_chars": 4.0,
+                },
+                "document_text_stats": {
+                    "count": 3,
+                    "min_chars": 8,
+                    "max_chars": 10,
+                    "mean_chars": 9.0,
+                    "median_chars": 9.0,
+                },
+            },
+            "missing": {},
+        },
+    )
+
+    assert spec.validate_task_text_stats() == [
+        "Toy/missing metadata is missing query_text_stats.",
+        "Toy/missing metadata is missing document_text_stats.",
+    ]
+
+
 def test_metadata_validation_rejects_unknown_category() -> None:
     spec = NanoDatasetSpec(
         name="Toy",

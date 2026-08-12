@@ -64,6 +64,8 @@ task_metadata:
         url: https://arxiv.org/abs/2505.15916
         is_paper: true
         source_confidence: definitive_paper_link
+    query_text_stats: {count: 200, min_chars: 40, max_chars: 429, mean_chars: 131.385, median_chars: 120.5}
+    document_text_stats: {count: 461, min_chars: 200, max_chars: 1170527, mean_chars: 30656.509761388286, median_chars: 4511.0}
   FaQuADIR:
     language: pt
     primary_languages: [pt]
@@ -82,6 +84,8 @@ task_metadata:
         url: https://doi.org/10.1109/BRACIS.2019.00084
         is_paper: true
         source_confidence: definitive_paper_link
+    query_text_stats: {count: 200, min_chars: 13, max_chars: 295, mean_chars: 62.3, median_chars: 57.0}
+    document_text_stats: {count: 243, min_chars: 302, max_chars: 1913, mean_chars: 825.6296296296297, median_chars: 772.0}
   FaqBacenRetrieval:
     language: pt
     primary_languages: [pt]
@@ -100,6 +104,8 @@ task_metadata:
         url: https://arxiv.org/abs/2311.11331
         is_paper: true
         source_confidence: definitive_paper_link
+    query_text_stats: {count: 200, min_chars: 12, max_chars: 205, mean_chars: 70.52, median_chars: 66.0}
+    document_text_stats: {count: 1654, min_chars: 4, max_chars: 11401, mean_chars: 518.8307134220073, median_chars: 400.0}
   JurisTCU:
     language: pt
     primary_languages: [pt]
@@ -119,6 +125,8 @@ task_metadata:
         url: https://doi.org/10.1007/s10579-025-09881-w
         is_paper: true
         source_confidence: definitive_paper_link
+    query_text_stats: {count: 150, min_chars: 14, max_chars: 199, mean_chars: 61.39333333333333, median_chars: 50.0}
+    document_text_stats: {count: 10000, min_chars: 46, max_chars: 2926, mean_chars: 314.6, median_chars: 285.0}
   MedPTRetrieval:
     language: pt
     primary_languages: [pt]
@@ -137,6 +145,8 @@ task_metadata:
         url: https://arxiv.org/abs/2511.11878
         is_paper: true
         source_confidence: definitive_paper_link
+    query_text_stats: {count: 200, min_chars: 27, max_chars: 1080, mean_chars: 151.965, median_chars: 112.5}
+    document_text_stats: {count: 500, min_chars: 29, max_chars: 3697, mean_chars: 368.208, median_chars: 278.0}
   Quati:
     language: pt
     primary_languages: [pt]
@@ -156,3 +166,5 @@ task_metadata:
         url: https://aclanthology.org/2024.stil-1.19/
         is_paper: true
         source_confidence: definitive_paper_link
+    query_text_stats: {count: 49, min_chars: 24, max_chars: 90, mean_chars: 48.57142857142857, median_chars: 47.0}
+    document_text_stats: {count: 10000, min_chars: 268, max_chars: 1474, mean_chars: 1108.5628, median_chars: 1181.0}
