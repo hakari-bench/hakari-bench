@@ -1,12 +1,29 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal, cast
 
 from hakari_bench.models import ModelLoadConfig
 
 
+SentenceTransformerBackend = Literal["torch", "onnx", "openvino"]
+_SUPPORTED_BACKENDS = frozenset({"torch", "onnx", "openvino"})
+
+
+def _parse_backend(value: object) -> SentenceTransformerBackend:
+    backend = str(value)
+    if backend not in _SUPPORTED_BACKENDS:
+        raise ValueError(f"Unsupported SentenceTransformer backend: {backend}")
+    return cast(SentenceTransformerBackend, backend)
+
+
 class QuantizedSentenceTransformerBackend:
-    def __init__(self, model: Any, *, backend: str, model_kwargs: dict[str, Any]) -> None:
+    def __init__(
+        self,
+        model: Any,
+        *,
+        backend: SentenceTransformerBackend,
+        model_kwargs: dict[str, Any],
+    ) -> None:
         self.model = model
         self.backend = backend
         self.model_kwargs = dict(model_kwargs)
@@ -39,7 +56,7 @@ def load_model(config: ModelLoadConfig) -> QuantizedSentenceTransformerBackend:
     from sentence_transformers import SentenceTransformer
 
     kwargs = dict(config.model_loader_kwargs or {})
-    backend = str(kwargs.pop("backend"))
+    backend = _parse_backend(kwargs.pop("backend"))
     model_kwargs = dict(kwargs.pop("model_kwargs", {}))
     if kwargs:
         names = ", ".join(sorted(kwargs))
