@@ -1,0 +1,110 @@
+id: microsoft/harrier-oss-v1-27b
+source:
+  type: huggingface
+  name: microsoft/harrier-oss-v1-27b
+  revision: 0c0fc62f6d8af9e8604cb818c412301b103a0093
+method: dense
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/microsoft/harrier-oss-v1-27b
+links:
+  huggingface: https://huggingface.co/microsoft/harrier-oss-v1-27b
+parameters:
+  total: 27009346304
+  trainable: 27009346304
+  input_embedding: 1409630208
+  active: 25599716096
+embedding:
+  output_dimension: 5376
+  mrl_support: false
+  pooling: last_token
+  normalize: true
+  include_prompt: true
+  truncate_dims: null
+runtime:
+  max_seq_length: 32768
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: web_search_query
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    english_score: 0.704
+    non_english_mean_score: 0.725
+    high_non_english_score_threshold: 0.6
+    high_non_english_language_count: 23
+    high_non_english_family_count: 16
+    evaluated_language_count: 24
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-BR
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoSSRB
+  - hakari-bench/NanoVNMTEB
+notes:
+- The official embedding model card documents a 32,768-token maximum even though
+  the underlying Gemma 3 configuration exposes 131,072 positions; use 32,768 for
+  comparable embedding evaluation.
+- Microsoft does not document Matryoshka or arbitrary output-dimension support
+  for Harrier, so HAKARI does not create truncation variants for this model.
