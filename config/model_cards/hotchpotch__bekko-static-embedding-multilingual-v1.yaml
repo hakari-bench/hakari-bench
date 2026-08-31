@@ -1,0 +1,63 @@
+id: hotchpotch/bekko-static-embedding-multilingual-v1
+source:
+  type: huggingface
+  name: hotchpotch/bekko-static-embedding-multilingual-v1
+  revision: 48e94648fd2e28dfb9ac57e8759c559fafa836d6
+method: dense
+license:
+  id: unknown
+  label: Unknown
+  type: unknown
+  commercial_use: unknown
+  source: huggingface_model_card
+  source_url: https://huggingface.co/hotchpotch/bekko-static-embedding-multilingual-v1
+links:
+  huggingface: https://huggingface.co/hotchpotch/bekko-static-embedding-multilingual-v1
+parameters:
+  total: 204800000
+  trainable: 204800000
+  input_embedding: 204800000
+  active: 0
+embedding:
+  truncate_dims:
+  - 32
+  - 64
+  - 128
+  - 256
+  - 512
+  output_dimension: 1024
+  mrl_support: true
+  normalize: true
+runtime:
+  dtype: fp32
+  trust_remote_code: false
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 20
+target:
+  all: true
+  evaluation_scope: standard
+notes:
+- The checkpoint contains a single 200,000 by 1,024 StaticEmbedding table and
+  has no finite SentenceTransformers `max_seq_length` setting. The official
+  card states that training used 512 tokens and the tokenizer permits up to
+  32,768 inference tokens.
+- The official checkpoint stores empty query and document prompts, so benchmark
+  evaluation intentionally uses no retrieval prefix.
+- The official README lists 32, 64, 128, 256, 512, and 1,024 as supported
+  dimensions. The native 1,024-dimensional output is represented by `base`;
+  only lower dimensions are listed as derived truncation variants.
+- The checkpoint was created with SentenceTransformers 5.6.0 and Transformers
+  5.14.1; the reproduction environment uses those versions.
+- Revision `48e94648fd2e28dfb9ac57e8759c559fafa836d6` is the formal v1 checkpoint
+  trained with Multiple Negatives Ranking Loss on the complete selected public
+  Bekko unsupervised corpus.
