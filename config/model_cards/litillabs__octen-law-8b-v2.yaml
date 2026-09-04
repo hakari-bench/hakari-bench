@@ -1,0 +1,96 @@
+id: litillabs/octen-law-8b-v2
+source:
+  type: huggingface
+  name: litillabs/octen-law-8b-v2
+  revision_requested: de09ddfc3911e92a2e053b1a1a2e34e60d624287
+  revision: de09ddfc3911e92a2e053b1a1a2e34e60d624287
+method: dense
+license:
+  id: openmdw-1.1
+  label: OpenMDW License Agreement 1.1
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: huggingface_model_card
+  source_url: https://huggingface.co/litillabs/octen-law-8b-v2
+links:
+  huggingface: https://huggingface.co/litillabs/octen-law-8b-v2
+parameters:
+  total: 7952683008
+  trainable: 7952683008
+  input_embedding: 536870912
+  active: 7415812096
+embedding:
+  truncate_dims: null
+  output_dimension: 4096
+  mrl_support: false
+  pooling: mean
+  normalize: true
+  include_prompt: true
+runtime:
+  max_seq_length: 32768
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 34
+    official_supported_languages:
+    - ar
+    - as
+    - bn
+    - bg
+    - zh
+    - da
+    - nl
+    - en
+    - fi
+    - fr
+    - de
+    - hi
+    - id
+    - it
+    - ja
+    - ko
+    - ms
+    - mr
+    - ne
+    - "no"
+    - fa
+    - pt
+    - ro
+    - ru
+    - es
+    - sw
+    - sv
+    - ta
+    - te
+    - th
+    - uk
+    - ur
+    - vi
+target:
+  datasets:
+  - hakari-bench/NanoLaw
+  evaluation_scope: standard
+notice: >-
+  Legal-domain derivative of NVIDIA Nemotron-3-Embed-8B-BF16. OpenMDW-1.1
+  permits commercial use subject to its model-license terms. Retrieval output
+  is not legal advice and authorities should be independently verified.
+notes: >-
+  The model was contrastively post-trained on public LegalPincite examples and
+  safely merged into the exact base revision. It uses the stored Sentence
+  Transformers query and document prompt names, mean pooling, L2 normalization,
+  and no documented Matryoshka truncation. The pinned NanoLaw evaluation used
+  SDPA because FlashAttention-2 was unavailable in the evaluation image.
