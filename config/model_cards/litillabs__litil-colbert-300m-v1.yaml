@@ -1,0 +1,62 @@
+id: litillabs/litil-colbert-300m-v1
+source:
+  type: huggingface
+  name: litillabs/litil-colbert-300m-v1
+  revision: c1ae2f7a764f1c594d65eeb9f2f67126f6e8e030
+method: late-interaction
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/litillabs/litil-colbert-300m-v1
+links:
+  huggingface: https://huggingface.co/litillabs/litil-colbert-300m-v1
+  papers:
+  - title: 'DenseOn with the LateOn: We Get You, Text Embeddings Need to Be Long Enough'
+    url: https://arxiv.org/abs/2607.27178
+parameters:
+  total: 311758080
+  input_embedding: 196609536
+  active: 115148544
+embedding:
+  truncate_dims: null
+  output_dimension: 128
+runtime:
+  max_seq_length: 8192
+  dtype: fp32
+  trust_remote_code: false
+  backend_library: pylate
+late_interaction:
+  architecture: colbert
+  scoring: maxsim
+  query_prefix: '[Q] '
+  document_prefix: '[D] '
+  query_length: 1024
+  document_length: 8192
+  do_query_expansion: false
+  attend_to_expansion_tokens: false
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 3
+target:
+  datasets:
+  - hakari-bench/NanoLaw
+  evaluation_scope: standard
+notes:
+- Full-parameter fine-tune of lightonai/mLateOn (revision
+  35391e36392085d72a93d232f6122607a234ad7a) for legal retrieval in German,
+  Chinese and English. Architecture, prefixes, 128-dimensional output and
+  query-expansion settings are unchanged from the base.
+- The checkpoint configuration declares a 1024-token query length and an
+  8192-token document length; the query length was chosen on the developer's
+  own development data.
