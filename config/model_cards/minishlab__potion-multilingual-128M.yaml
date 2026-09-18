@@ -1,0 +1,57 @@
+id: minishlab/potion-multilingual-128M
+source:
+  type: huggingface
+  name: minishlab/potion-multilingual-128M
+  revision_requested: 73908c3438cf03b6a01bcb9611d62b23d0726f08
+  revision: 73908c3438cf03b6a01bcb9611d62b23d0726f08
+method: dense
+parameters:
+  total: 128090368
+  trainable: 128090368
+  input_embedding: 128090368
+  active: 0
+embedding:
+  truncate_dims: null
+  output_dimension: 256
+  normalize: true
+  mrl_support: false
+runtime:
+  dtype: bf16
+  trust_remote_code: false
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+target:
+  all: true
+  evaluation_scope: standard
+license:
+  id: mit
+  label: MIT
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/minishlab/potion-multilingual-128M
+links:
+  huggingface: https://huggingface.co/minishlab/potion-multilingual-128M
+  github: https://github.com/MinishLab/model2vec
+language_support:
+  category: multilingual
+  evidence:
+    benchmarks:
+    - NanoMIRACL
+    - MNanoBEIR
+    score_target: all
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+    evaluated_language_count: 20
+notes:
+- The official card describes a 101-language Tokenlearn-distilled static embedding
+  model with 256-dimensional output.
+- No Matryoshka or supported prefix-truncation dimensions are documented in the official
+  card or checkpoint configuration; evaluate the native dimension and default quantized/rescore
+  variants.
+- SentenceTransformers loads StaticEmbedding followed by Normalize, with empty query/document
+  prompts and no finite maximum sequence length. Attention settings and remote code
+  are not required.
+- Evaluation uses the HAKARI default BF16 inference dtype, verified for both parameters
+  and encoded output. The upstream safetensors checkpoint stores FP32 weights.
