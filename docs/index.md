@@ -29,6 +29,7 @@ place and AGENTS.md can stay focused on repository-level guardrails.
 | Model metadata | [model_cards.md](model_cards.md) | Static model-card schema and which model-specific settings belong in `config/model_cards/`. |
 | Model-specific runtime notes | [model_specific_benchmarking_notes.md](model_specific_benchmarking_notes.md) | Verified prompts, prompt names, attention choices, compatibility notes, and model-family exceptions. |
 | Custom backends | [custom_model_backends.md](custom_model_backends.md) | Loader contract, backend kwargs, metadata, secrets handling, and examples for non-standard model APIs. |
+| TypeSafe Jev reranking | [typesafe_reranker_evaluation.md](typesafe_reranker_evaluation.md) | `pointwise` / `listwise` API modes, commands, limits, metadata, and comparison caveats. |
 | Late interaction | [late_interaction_evaluation.md](late_interaction_evaluation.md) | PyLate/ColBERT workflow, reviewed cards, prefixes, token lengths, expansion-token attention, validation. |
 | OpenAI embeddings | [openai_embedding_evaluation.md](openai_embedding_evaluation.md) | OpenAI loader setup, API keys, dimensions, token limits, concurrency, and batch-evaluation pointers. |
 | Batch inference | [batch_inference.md](batch_inference.md) | Register/fetch/materialize workflow for offline embedding providers and normal HAKARI result JSON output. |

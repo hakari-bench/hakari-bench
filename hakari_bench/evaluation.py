@@ -6,6 +6,7 @@ import os
 import re
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from collections.abc import Iterator, Mapping, Sequence
 from typing import Any, Literal, cast
@@ -454,13 +455,15 @@ def evaluate_reranker_task(
             score_kwargs=score_kwargs or {},
         )
     else:
-        rankings = {}
-        for query_id, query_text in dataset.queries.items():
-            candidate_ids = [doc_id for doc_id in dataset.candidates.get(query_id, []) if doc_id in dataset.corpus]
+        candidates = dataset.candidates
+
+        def rank_query(item: tuple[str, str]) -> tuple[str, list[str]]:
+            query_id, query_text = item
+            candidate_ids = [doc_id for doc_id in candidates.get(query_id, []) if doc_id in dataset.corpus]
             if rerank_top_n is not None:
                 candidate_ids = candidate_ids[:rerank_top_n]
             candidate_ids = _shuffle_reranker_candidate_ids(query_id=query_id, candidate_ids=candidate_ids)
-            rankings[query_id] = _rank_with_reranker_model(
+            ranked = _rank_with_reranker_model(
                 model,
                 query=query_text,
                 candidate_ids=candidate_ids,
@@ -469,6 +472,15 @@ def evaluate_reranker_task(
                 show_progress=show_progress,
                 score_kwargs=score_kwargs or {},
             )
+            return query_id, ranked
+
+        # Rank-only backends opt in; local models remain sequential by default.
+        query_concurrency = getattr(model, "query_concurrency", 1)
+        if query_concurrency > 1:
+            with ThreadPoolExecutor(max_workers=query_concurrency) as executor:
+                rankings = dict(executor.map(rank_query, dataset.queries.items()))
+        else:
+            rankings = dict(map(rank_query, dataset.queries.items()))
     score_seconds = time.perf_counter() - score_start
 
     metric_start = time.perf_counter()

@@ -1,21 +1,27 @@
 from __future__ import annotations
 
 import asyncio
+import copy
+import hashlib
 import importlib
 import importlib.metadata
 import inspect
+import math
 import os
 import platform
 import string
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from threading import Thread
+from threading import Lock, Thread
 from typing import Any
 
 import numpy as np
+import orjson
 import torch
+import urllib3
 
 from hakari_bench.model_protocols import validate_model_capabilities
 
@@ -983,6 +989,482 @@ def _gemini_embedding_tokenizer() -> Any:
         ) from exc
 
 
+class TypeSafeMaxTokensError(RuntimeError):
+    """The provider rejected the context; it did not report a token count."""
+
+
+class TypeSafeRerankerAdapter:
+    """Noul reranker with one request per pair or one shared state per query.
+
+    Expose only rank: the evaluator's predict path chunks candidates, which
+    would silently change the meaning of the listwise experiment.
+    """
+
+    INSTRUCTIONS = "Does {document} help answer `query`? Prefer passages with the specific facts needed."
+    POINTWISE_INSTRUCTIONS = (
+        "Does this candidate document help answer the query? "
+        "Prefer passages that contain the specific facts needed."
+    )
+    CRITERIA = {
+        "true": "Contains specific information that answers or is necessary for answering the query",
+        "false": "Unrelated, only tangentially related, or lacks the needed facts",
+    }
+    SPLIT_TOKENIZER = "jhu-clsp/mmBERT-base"
+    SPLIT_TOKENIZER_REVISION = "c5955035435e2bf121cde7f3c8863ef52ff35d82"
+    SPLIT_TOKENIZER_MAX_LENGTH = 65536
+    SPLIT_SHUFFLE_SEED = "hakari-typesafe-listwise-chunk-v1"
+
+    def __init__(
+        self,
+        *,
+        model_name: str,
+        mode: str = "listwise",
+        max_concurrency: int | None = None,
+        timeout: float = 180.0,
+        max_retries: int = 8,
+        api_key_env: str = "TYPESAFE_API_KEY",
+        dotenv_path: str | None = ".env",
+        split_state_token_budget: int = 26000,
+        split_request_token_budget: int = 48000,
+        split_tokenizer_name: str = SPLIT_TOKENIZER,
+        split_tokenizer_revision: str | None = None,
+        task_instructions: dict[str, str] | None = None,
+        document_max_tokens: int | None = 4000,
+    ) -> None:
+        if mode not in {"pointwise", "listwise"}:
+            raise ValueError("TypeSafe mode must be 'pointwise' or 'listwise'.")
+        if max_concurrency is None:
+            max_concurrency = 4 if mode == "listwise" else 20
+        if isinstance(max_concurrency, bool) or not isinstance(max_concurrency, int) or max_concurrency <= 0:
+            raise ValueError("TypeSafe max_concurrency must be a positive integer.")
+        if isinstance(max_retries, bool) or not isinstance(max_retries, int) or max_retries < 0:
+            raise ValueError("TypeSafe max_retries must be a nonnegative integer.")
+        if not math.isfinite(timeout) or timeout <= 0:
+            raise ValueError("TypeSafe timeout must be positive and finite.")
+        if not isinstance(split_tokenizer_name, str) or not split_tokenizer_name.strip():
+            raise ValueError("TypeSafe split_tokenizer_name must be a nonempty string.")
+        if split_tokenizer_revision is not None and (
+            not isinstance(split_tokenizer_revision, str) or not split_tokenizer_revision.strip()
+        ):
+            raise ValueError("TypeSafe split_tokenizer_revision must be a nonempty string or null.")
+        for name, value in (
+            ("split_state_token_budget", split_state_token_budget),
+            ("split_request_token_budget", split_request_token_budget),
+        ):
+            if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+                raise ValueError(f"TypeSafe {name} must be a positive integer.")
+        if task_instructions is not None and not isinstance(task_instructions, dict):
+            raise ValueError("TypeSafe task_instructions must be an object.")
+        for key, template in (task_instructions or {}).items():
+            if not isinstance(key, str) or not key or not isinstance(template, str) or not template.strip():
+                raise ValueError("TypeSafe task instructions require nonempty string keys and values.")
+            if "{document}" not in template:
+                raise ValueError("TypeSafe task instructions must include {document}.")
+            try:
+                template.format(document="`documents.doc_0`")
+            except (KeyError, ValueError, IndexError, AttributeError) as exc:
+                raise ValueError("TypeSafe instruction templates only support {document}.") from exc
+        if task_instructions and mode != "listwise":
+            raise ValueError("TypeSafe task instructions require listwise mode.")
+        if document_max_tokens is not None and (
+            isinstance(document_max_tokens, bool) or not isinstance(document_max_tokens, int) or document_max_tokens <= 0
+        ):
+            raise ValueError("TypeSafe document_max_tokens must be a positive integer or null.")
+        self.document_max_tokens = document_max_tokens
+        self.task_instructions = dict(task_instructions or {})
+        self.instruction_task: str | None = None
+        self.instructions_template = self.POINTWISE_INSTRUCTIONS if mode == "pointwise" else self.INSTRUCTIONS
+        if dotenv_path:
+            _load_dotenv_file(Path(dotenv_path))
+        api_key = os.environ.get(api_key_env)
+        if not api_key:
+            raise ValueError(f"Set {api_key_env} to use the TypeSafe reranker.")
+        self.model_name = model_name
+        self.mode = mode
+        self.max_concurrency = max_concurrency
+        self.query_concurrency = max_concurrency if mode == "listwise" else 1
+        self._tokenizer_lock = Lock()
+        self.timeout = timeout
+        self.max_retries = max_retries
+        self.split_state_token_budget = split_state_token_budget
+        self.split_request_token_budget = split_request_token_budget
+        self.split_tokenizer_name = split_tokenizer_name
+        self.split_tokenizer_revision = split_tokenizer_revision or (
+            self.SPLIT_TOKENIZER_REVISION if split_tokenizer_name == self.SPLIT_TOKENIZER else None
+        )
+        self._split_tokenizer: Any = None
+        self._api_key = api_key
+        self._http = urllib3.PoolManager(maxsize=max_concurrency, block=True)
+        self._lock = Lock()
+        self.reset_task_statistics()
+
+    def configure_task(self, full_task_name: str) -> None:
+        """Select before starting a task's query workers; never match by suffix."""
+        self.instruction_task = full_task_name
+        default = self.POINTWISE_INSTRUCTIONS if self.mode == "pointwise" else self.INSTRUCTIONS
+        self.instructions_template = self.task_instructions.get(full_task_name, default)
+
+    def reset_task_statistics(self) -> None:
+        """Called by the result writer before an uncached task."""
+        with self._lock:
+            self._usage = {"requests": 0, "retries": 0, "input_tokens": 0, "output_tokens": 0, "max_tokens_errors": 0}
+            self._resolved_models: set[str] = set()
+            self._split_queries: list[dict[str, Any]] = []
+            self._rank_calls = 0
+            self._truncation_events: list[dict[str, int]] = []
+
+    def metadata(self) -> dict[str, Any]:
+        with self._lock:
+            return {
+                "backend_library": "urllib3",
+                "provider": "typesafe",
+                "api_endpoint": "https://api.typesafe.ai/v1/systemone",
+                "model": self.model_name,
+                "mode": self.mode,
+                "query_concurrency": self.query_concurrency,
+                "primitive": "noul",
+                "instructions_template": self.instructions_template,
+                "instruction_task": self.instruction_task,
+                "instruction_source": "task_override" if self.instruction_task in self.task_instructions else "default",
+                "criteria": dict(self.CRITERIA),
+                "max_concurrency": self.max_concurrency,
+                "timeout": self.timeout,
+                "max_retries": self.max_retries,
+                "truncation": "document_token_prefix" if self.document_max_tokens is not None else "none",
+                "document_truncation": {
+                    "max_tokens": self.document_max_tokens,
+                    "tokenizer": self.split_tokenizer_name,
+                    "tokenizer_revision": self.split_tokenizer_revision,
+                    "side": "right",
+                    "scope": "candidate_occurrences_per_task",
+                    "truncated_documents": len(self._truncation_events),
+                    "events": copy.deepcopy(self._truncation_events),
+                },
+                "tie_break": "stable_input_order",
+                "usage_scope": "task",
+                "usage": dict(self._usage),
+                "resolved_models": sorted(self._resolved_models),
+                "listwise_splitting": {
+                    "policy": "estimated_budget_then_halve_on_max_tokens_exceeded",
+                    "tokenizer": self.split_tokenizer_name,
+                    "tokenizer_revision": self.split_tokenizer_revision,
+                    "tokenizer_max_length": self.SPLIT_TOKENIZER_MAX_LENGTH,
+                    "estimates_are_provider_tokens": False,
+                    "state_token_budget": self.split_state_token_budget,
+                    "request_token_budget": self.split_request_token_budget,
+                    "retry_budget_factor": 0.5,
+                    "chunk_order": "deterministic_hash_shuffle",
+                    "shuffle_seed": self.SPLIT_SHUFFLE_SEED,
+                    "merge": "raw_noul_descending_stable_original_input_order",
+                    "queries": copy.deepcopy(self._split_queries),
+                },
+            }
+
+    def rank(self, query: str, documents: list[str]) -> list[dict[str, int]]:
+        if not documents:
+            return []
+        with self._lock:
+            query_index = self._rank_calls
+            self._rank_calls += 1
+        documents = self._truncate_documents(documents, query_index=query_index)
+        if self.mode == "listwise":
+            scores = self._score_listwise(query, documents, query_index=query_index)
+        else:
+            def score_document(document: str) -> float:
+                return self._request(
+                    state={"query": query, "document": document},
+                    references={"relevant": "`document`"},
+                )[0]
+
+            with ThreadPoolExecutor(max_workers=self.max_concurrency) as executor:
+                # map preserves input order regardless of network completion.
+                scores = list(executor.map(score_document, documents))
+        order = sorted(range(len(documents)), key=lambda index: -scores[index])
+        # Return ordered indices without scores so the generic rank parser
+        # preserves our tie order instead of re-sorting ties by corpus ID.
+        return [{"corpus_id": index} for index in order]
+
+    def _get_split_tokenizer(self) -> Any:
+        # Caller holds _tokenizer_lock (tokenizer configuration is mutable).
+        if self._split_tokenizer is None:
+            self._split_tokenizer = _import_auto_tokenizer().from_pretrained(
+                self.split_tokenizer_name, revision=self.split_tokenizer_revision,
+                model_max_length=self.SPLIT_TOKENIZER_MAX_LENGTH, trust_remote_code=False,
+            )
+            self._split_tokenizer.model_max_length = self.SPLIT_TOKENIZER_MAX_LENGTH
+        return self._split_tokenizer
+
+    def _split_token_length(self, text: str) -> int:
+        with self._tokenizer_lock:
+            return len(self._get_split_tokenizer().encode(text, add_special_tokens=False, truncation=False, verbose=False))
+
+    def _truncate_documents(self, documents: list[str], *, query_index: int) -> list[str]:
+        if self.document_max_tokens is None:
+            return documents
+        prepared = []
+        events = []
+        for index, text in enumerate(documents):
+            with self._tokenizer_lock:
+                tokenizer = self._get_split_tokenizer()
+                tokens = tokenizer.encode(text, add_special_tokens=False, truncation=False, verbose=False)
+                original_tokens = len(tokens)
+                if original_tokens > self.document_max_tokens:
+                    tokens = tokens[:self.document_max_tokens]
+                    while True:
+                        text = tokenizer.decode(tokens, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+                        sent_tokens = len(tokenizer.encode(text, add_special_tokens=False, truncation=False, verbose=False))
+                        if sent_tokens <= self.document_max_tokens:
+                            break
+                        # Decoding/re-encoding can change token boundaries.
+                        tokens = tokens[:max(0, len(tokens) - max(1, sent_tokens - self.document_max_tokens))]
+                    events.append({
+                        "query_index": query_index, "document_index": index,
+                        "original_tokens": original_tokens, "sent_tokens": sent_tokens,
+                    })
+                prepared.append(text)
+        if events:
+            with self._lock:
+                self._truncation_events.extend(events)
+            print(
+                f"TypeSafe query {query_index}: truncated {len(events)} documents to "
+                f"at most {self.document_max_tokens} {self.split_tokenizer_name} tokens.",
+                file=sys.stderr,
+            )
+        return prepared
+
+    def _estimate_listwise_tokens(self, query: str, indices: list[int], lengths: list[int]) -> dict[str, int]:
+        # Count document bodies once and estimate JSON/question scaffolding.
+        # These counts are a heuristic, not the provider's tokenization.
+        state = {"query": query, "documents": {f"doc_{i}": "" for i in indices}}
+        state_tokens = self._split_token_length(orjson.dumps(state).decode()) + sum(lengths[i] for i in indices)
+        questions = [self._noul_question(f"`documents.doc_{i}`") for i in indices]
+        question_lengths = [self._split_token_length(orjson.dumps(question).decode()) for question in questions]
+        return {
+            "state_plus_longest_question": state_tokens + max(question_lengths),
+            "request": state_tokens + sum(question_lengths),
+        }
+
+    @staticmethod
+    def _balanced_document_chunks(indices: list[int], lengths: list[int], count: int) -> list[list[int]]:
+        base, remainder = divmod(len(indices), count)
+        capacities = [base + (i >= count - remainder) for i in range(count)]
+        chunks: list[list[int]] = [[] for _ in range(count)]
+        totals = [0] * count
+        # Longest first, then lowest current token load, under balanced count
+        # quotas. Sorting each chunk restores the original candidate order.
+        for index in sorted(indices, key=lambda i: (-lengths[i], i)):
+            target = min(
+                (i for i in range(count) if len(chunks[i]) < capacities[i]),
+                key=lambda i: (totals[i], len(chunks[i]), i),
+            )
+            chunks[target].append(index)
+            totals[target] += lengths[index]
+        return [sorted(chunk) for chunk in chunks]
+
+    def _shuffle_chunk(self, indices: list[int], query: str) -> list[int]:
+        # Independent of document lengths and chunk-processing order. Original
+        # indices remain the identity used to map every returned score back.
+        query_hash = hashlib.sha256(query.encode()).hexdigest()
+        return sorted(indices, key=lambda i: hashlib.sha256(
+            f"{self.SPLIT_SHUFFLE_SEED}:{query_hash}:{i}".encode(),
+        ).digest())
+
+    def _score_listwise(self, query: str, documents: list[str], *, query_index: int) -> list[float]:
+        scores = [0.0] * len(documents)
+        lengths = [self._split_token_length(document) for document in documents]
+        trace: dict[str, Any] | None = None
+
+        def ensure_trace() -> dict[str, Any]:
+            nonlocal trace
+            if trace is None:
+                trace = dict[str, Any](
+                    query_index=query_index,
+                    query_sha256=hashlib.sha256(query.encode()).hexdigest(),
+                    original_document_count=len(documents), document_token_lengths=lengths,
+                    events=[], final_chunks=[], status="running",
+                )
+                with self._lock:
+                    self._split_queries.append(trace)
+            return trace
+
+        def fits(estimate: dict[str, int], state_budget: int, request_budget: int) -> bool:
+            return (
+                estimate["state_plus_longest_question"] <= state_budget
+                and estimate["request"] <= request_budget
+            )
+
+        def split_chunk(
+            indices: list[int], depth: int, state_budget: int, request_budget: int, reason: str,
+        ) -> None:
+            current_trace = ensure_trace()
+            estimate = self._estimate_listwise_tokens(query, indices, lengths)
+            if len(indices) == 1:
+                current_trace["unsplittable_document_index"] = indices[0]
+                raise TypeSafeMaxTokensError(
+                    f"TypeSafe {reason} for a single document (index {indices[0]}) and query; "
+                    f"estimated tokens {estimate} exceed the available context or budget "
+                    f"({state_budget}/{request_budget}). Cannot split further after configured document preprocessing."
+                )
+            count = min(len(indices), max(
+                2, math.ceil(estimate["state_plus_longest_question"] / state_budget),
+                math.ceil(estimate["request"] / request_budget),
+            ))
+            # Check each child, because query and question overhead is repeated
+            # and average length alone cannot guarantee a per-request budget.
+            while True:
+                chunks = [self._shuffle_chunk(chunk, query) for chunk in
+                          self._balanced_document_chunks(indices, lengths, count)]
+                estimates = [self._estimate_listwise_tokens(query, chunk, lengths) for chunk in chunks]
+                if all(fits(value, state_budget, request_budget) for value in estimates) or count == len(indices):
+                    break
+                count += 1
+            event = {
+                "reason": reason, "error_type": reason if reason == "max_tokens_exceeded" else None,
+                "depth": depth, "document_indices": indices, "estimated_tokens": estimate,
+                "state_token_budget": state_budget, "request_token_budget": request_budget,
+                "chunk_document_counts": [len(chunk) for chunk in chunks],
+                "chunk_document_indices": chunks, "chunk_estimated_tokens": estimates,
+            }
+            current_trace["events"].append(event)
+            print(
+                f"TypeSafe listwise query {query_index}: {reason}; "
+                f"splitting {len(indices)} documents into {event['chunk_document_counts']} "
+                f"using {self.split_tokenizer_name} estimates, budgets "
+                f"{state_budget}/{request_budget} (depth {depth}).",
+                file=sys.stderr,
+            )
+            for chunk in chunks:
+                score_chunk(chunk, depth + 1, state_budget, request_budget)
+
+        def score_chunk(indices: list[int], depth: int, state_budget: int, request_budget: int) -> None:
+            estimate = self._estimate_listwise_tokens(query, indices, lengths)
+            if not fits(estimate, state_budget, request_budget):
+                split_chunk(indices, depth, state_budget, request_budget, "estimated_token_budget")
+                return
+            keyed_documents = {f"doc_{i}": documents[i] for i in indices}
+            try:
+                chunk_scores = self._request(
+                    state={"query": query, "documents": keyed_documents},
+                    references={key: f"`documents.{key}`" for key in keyed_documents},
+                )
+            except TypeSafeMaxTokensError:
+                split_chunk(indices, depth, max(1, state_budget // 2), max(1, request_budget // 2),
+                            "max_tokens_exceeded")
+                return
+            for index, score in zip(indices, chunk_scores, strict=True):
+                scores[index] = score
+            if trace is not None:
+                trace["final_chunks"].append({
+                    "document_indices": indices, "depth": depth, "estimated_tokens": estimate,
+                    "state_token_budget": state_budget, "request_token_budget": request_budget,
+                })
+
+        try:
+            score_chunk(list(range(len(documents))), 0, self.split_state_token_budget, self.split_request_token_budget)
+        except Exception:
+            if trace is not None:
+                trace["status"] = "failed"
+            raise
+        if trace is not None:
+            trace["status"] = "merged"
+        return scores
+
+    def _noul_question(self, reference: str) -> dict[str, Any]:
+        return {
+            "type": "noul",
+            "instructions": self.instructions_template.format(document=reference),
+            "criteria": self.CRITERIA,
+        }
+
+    def _request(self, *, state: dict[str, Any], references: dict[str, str]) -> list[float]:
+        payload = {
+            "model": self.model_name,
+            "state": state,
+            "questions": {key: self._noul_question(reference) for key, reference in references.items()},
+        }
+        retries = urllib3.Retry(
+            total=self.max_retries,
+            allowed_methods=frozenset({"POST"}),
+            status_forcelist=(429, 500, 502, 503, 504, 529),
+            backoff_factor=0.5,
+            backoff_jitter=0.2,
+            respect_retry_after_header=True,
+            raise_on_status=False,
+        )
+        response = self._http.request(
+            "POST",
+            "https://api.typesafe.ai/v1/systemone",
+            body=orjson.dumps(payload),
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {self._api_key}"},
+            timeout=self.timeout,
+            retries=retries,
+            redirect=False,
+        )
+        if response.status != 200:
+            try:
+                error = orjson.loads(response.data)
+            except orjson.JSONDecodeError:
+                error = None
+            detail = error.get("detail") if isinstance(error, dict) else None
+            if response.status in {400, 422} and isinstance(detail, dict) and detail.get("error_type") == "max_tokens_exceeded":
+                with self._lock:
+                    self._usage["max_tokens_errors"] += 1
+                raise TypeSafeMaxTokensError(f"TypeSafe request failed with HTTP {response.status}: max_tokens_exceeded.")
+            raise RuntimeError(f"TypeSafe request failed with HTTP {response.status}.")
+        try:
+            data = orjson.loads(response.data)
+        except orjson.JSONDecodeError as exc:
+            raise ValueError("TypeSafe returned invalid JSON.") from exc
+        if not isinstance(data, dict):
+            raise ValueError("TypeSafe response must be an object.")
+        answers = data.get("answers")
+        if not isinstance(answers, dict) or set(answers) != set(references):
+            raise ValueError("TypeSafe Noul answers must match every requested document exactly.")
+        scores = []
+        for key in references:
+            answer = answers[key]
+            value = answer.get("noul") if isinstance(answer, dict) else None
+            if (
+                not isinstance(answer, dict) or answer.get("type") != "noul"
+                or isinstance(value, bool) or not isinstance(value, int | float)
+                or not math.isfinite(value) or not 0 <= value <= 1
+            ):
+                raise ValueError(f"TypeSafe returned an invalid Noul answer for {key}.")
+            scores.append(float(value))
+        resolved_model = data.get("model")
+        usage = data.get("usage")
+        if not isinstance(resolved_model, str) or not resolved_model or not isinstance(usage, dict):
+            raise ValueError("TypeSafe response is missing model or usage metadata.")
+        for field in ("input_tokens", "output_tokens"):
+            value = usage.get(field)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(f"TypeSafe response has invalid {field} usage.")
+        with self._lock:
+            self._resolved_models.add(resolved_model)
+            self._usage["requests"] += 1
+            self._usage["retries"] += len(getattr(getattr(response, "retries", None), "history", ()))
+            self._usage["input_tokens"] += usage["input_tokens"]
+            self._usage["output_tokens"] += usage["output_tokens"]
+        return scores
+
+
+def load_typesafe_reranker_model(config: ModelLoadConfig) -> TypeSafeRerankerAdapter:
+    if config.model_type != "reranker":
+        raise ValueError("The built-in TypeSafe model loader supports evaluate reranker only.")
+    if config.max_seq_length is not None:
+        raise ValueError("TypeSafe uses document_max_tokens in --model-loader-kwargs-json, not --model-max-seq-length.")
+    kwargs = dict(config.model_loader_kwargs or {})
+    allowed = {
+        "mode", "max_concurrency", "timeout", "max_retries", "api_key_env", "dotenv_path",
+        "split_state_token_budget", "split_request_token_budget",
+        "split_tokenizer_name", "split_tokenizer_revision", "task_instructions", "document_max_tokens",
+    }
+    unknown = sorted(set(kwargs) - allowed)
+    if unknown:
+        raise ValueError(f"Unsupported TypeSafe loader kwargs: {', '.join(unknown)}")
+    return TypeSafeRerankerAdapter(model_name=config.model_name_or_path, **kwargs)
+
+
 def load_openai_embedding_model(config: ModelLoadConfig) -> OpenAIEmbeddingAdapter:
     if config.model_type != "dense":
         raise ValueError("The built-in OpenAI model loader supports evaluate dense only.")
@@ -1142,6 +1624,8 @@ def _import_loader_factory(loader: str) -> Any:
         return load_openai_embedding_model
     if loader == "gemini":
         return load_gemini_embedding_model
+    if loader == "typesafe":
+        return load_typesafe_reranker_model
     module_name, separator, attr_name = loader.partition(":")
     if not separator or not module_name or not attr_name:
         raise ValueError("--model-loader must use 'module:function' syntax.")
@@ -1451,6 +1935,9 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         payload["loader"] = model_loader
     if backend_metadata:
         payload["backend_metadata"] = _redact_sensitive_payload(backend_metadata)
+    if backend_metadata.get("provider") == "typesafe":
+        # These are provider-controlled and are not reported by the API.
+        payload.update(device=None, dtype=None, attn_implementation=None)
     if args.model_type == "late-interaction":
         payload["late_interaction"] = {
             "architecture": "colbert",

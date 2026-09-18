@@ -365,6 +365,23 @@ from `build-candidates bm25` when generating candidate subsets.
 
 ## Attention And Runtime Choices
 
+Hosted Jev reranking uses `--model-loader typesafe` and
+`--typesafe-mode pointwise|listwise`. Pin a versioned model ID and compare modes with the
+same candidates, document token limit, full qrels, and deterministic candidate shuffle. `listwise`
+changes the state visible to each question, so it is not merely a transport
+optimization. Listwise evaluation splits candidates before sending when estimated
+state plus longest-question length exceeds 26000 tokens (request budget 48000),
+using a configurable tokenizer, defaulting to mmBERT with 65536 counting length
+and no truncation during length measurement. Jev preprocessing first limits each
+document to 4000 tokens by default in both modes (`document_max_tokens`; null
+disables). The tokenizer, limit, and actual truncation events are recorded.
+Earlier full-text results are a different configuration when any document exceeds
+this limit. It balances candidate counts and token totals, shuffles each
+chunk deterministically, and merges raw Noul scores. On `max_tokens_exceeded`,
+it halves the affected chunk's budgets and repartitions recursively. It records the changed context,
+split history, and final chunks in result metadata. Documents are never
+truncated by this fallback. See [TypeSafe reranker evaluation](typesafe_reranker_evaluation.md).
+
 - Prefer the attention implementation officially recommended by the model author
   or model card. Use `--attn-implementation sdpa`, `--flash-attn2`, or
   `--attn-implementation flash_attention_2` explicitly when that is the intended
