@@ -606,13 +606,16 @@ def test_static_model_cards_include_language_support_evidence() -> None:
             assert all(isinstance(language, str) and language for language in language_support["languages"])
         evidence = language_support.get("evidence")
         assert isinstance(evidence, dict)
-        assert evidence["benchmarks"] == ["NanoMIRACL", "MNanoBEIR"]
-        assert evidence["score_target"] == "all"
+        if "source_url" in evidence:
+            assert evidence["source_url"].startswith("https://")
+        else:
+            assert set(evidence["benchmarks"]) == {"NanoMIRACL", "MNanoBEIR"}
+            assert evidence["score_target"] == "all"
+            assert evidence["evaluated_language_count"] > 0
         assert evidence["classification_policy"] == (
             "model identity first; use broad score evidence only for models without explicit language identity"
         )
         assert evidence["classification_reason"]
-        assert evidence["evaluated_language_count"] > 0
 
 
 def test_static_model_cards_include_license_metadata() -> None:

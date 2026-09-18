@@ -28,6 +28,7 @@ from hakari_bench.evaluation import (
     evaluate_late_interaction_task,
     evaluate_reranker_task,
 )
+from hakari_bench.models import collect_model_metadata
 
 TIMING_KEYS = [
     "query_embedding_seconds",
@@ -200,6 +201,12 @@ def run_or_load_task(
     dataset_load_finished_at = datetime.now(timezone.utc)
     started_at = datetime.now(timezone.utc)
     start = time.perf_counter()
+    configure_task = getattr(model, "configure_task", None)
+    if callable(configure_task):
+        configure_task(f"{task.dataset.name}/{task.task_name}")
+    reset_task_statistics = getattr(model, "reset_task_statistics", None)
+    if callable(reset_task_statistics):
+        reset_task_statistics()
     bm25_payload: dict[str, Any] | None = None
     late_interaction_payload: dict[str, Any] | None = None
     payload_model_metadata = model_metadata
@@ -301,6 +308,10 @@ def run_or_load_task(
             corpus_encode_kwargs=getattr(args, "document_encode_kwargs", {}),
         )
     elapsed = time.perf_counter() - start
+    if callable(reset_task_statistics):
+        # Hosted backends can now report the actual model IDs and token usage
+        # from this task, rather than only the metadata available at load time.
+        payload_model_metadata = collect_model_metadata(model, args)
     finished_at = datetime.now(timezone.utc)
     total_elapsed = time.perf_counter() - total_start
 

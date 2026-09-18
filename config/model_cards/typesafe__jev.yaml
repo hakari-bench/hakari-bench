@@ -1,0 +1,49 @@
+id: typesafe/jev
+display_name: TypeSafe Jev
+source:
+  type: typesafe
+  name: jev-1.13.0
+method: reranker
+license:
+  id: typesafe-master-customer-agreement
+  label: TypeSafe Master Customer Agreement
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: provider_terms
+  source_url: https://typesafe.ai/legal/mca
+parameters:
+  total: null
+  trainable: null
+  input_embedding: null
+  active: null
+runtime:
+  trust_remote_code: false
+  backend_library: urllib3
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://docs.typesafe.ai/models
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: provider_documents_non_english_support
+target:
+  evaluation_scope: standard
+notice: >-
+  TypeSafe MCA section 2.3(f) prohibits publishing benchmarks or performance
+  information; confirm applicable contractual permission before publishing results.
+  Hosted judgment model integrated as a Noul reranker. HAKARI defaults to listwise
+  scoring and a 4,000-token document limit measured with mmBERT.
+notes:
+- "Reviewed against https://docs.typesafe.ai/models.md on 2026-09-18. Provider: https://typesafe.ai/. Evaluation workflow: docs/typesafe_reranker_evaluation.md."
+- "Jev is a System One model that returns typed judgments. HAKARI ranks documents by their Noul relevance probabilities; the hosted API is POST https://api.typesafe.ai/v1/systemone."
+- "The API model is pinned to jev-1.13.0; typesafe/jev is the HAKARI identity. API-returned versions are recorded in model.backend_metadata.resolved_models."
+- "from-model-card automatically selects the typesafe loader. Set TYPESAFE_API_KEY in the environment or .env; no model weights or GPU are required."
+- "Default listwise uses shared candidate context with independent per-document questions and four concurrent queries. Pointwise uses independent query/document requests with 20 concurrent requests. These defaults and overrides are recorded per result."
+- 'Default listwise instruction: Does {document} help answer `query`? Prefer passages with the specific facts needed.'
+- 'Default pointwise instruction: Does this candidate document help answer the query? Prefer passages that contain the specific facts needed.'
+- 'Noul true criterion: Contains specific information that answers or is necessary for answering the query. False criterion: Unrelated, only tangentially related, or lacks the needed facts.'
+- "Both modes retain the first 4000 document tokens by default, using jhu-clsp/mmBERT-base at revision c5955035435e2bf121cde7f3c8863ef52ff35d82. document_max_tokens in loader kwargs changes the limit; null disables it. Queries are not truncated."
+- "Provider limits are 64k tokens per request and 32k for state plus the longest question. HAKARI estimates 26000/48000 state/request budgets with a configurable proxy tokenizer, recursively splits oversized collections, shuffles each chunk deterministically, and merges raw Noul scores."
+- "English is the primary training language; the provider supports other languages including CJK but warns that accuracy differs."
+- "Model parameter counts, provider dtype, and attention implementation are not disclosed here. The MIT license of the TypeSafe skill is not a license for Jev."
+- "License reviewed on 2026-09-18: https://typesafe.ai/legal/mca. Sections 2.1-2.2 grant conditional API access and integration into customer applications for end users; this is a proprietary hosted-service agreement, not an open-weight model license."
+- "MCA section 2.3 restricts standalone resale/sublicensing, distillation or imitation/competing model development, reverse engineering, and publication of benchmarks or performance information (2.3(f)). Section 15.14 gives the Order precedence in conflicts; account-specific Orders or permissions were not reviewed."

@@ -275,7 +275,8 @@ def _add_evaluate_model_args(parser: argparse.ArgumentParser) -> None:
         default=None,
         help=(
             "Optional built-in or custom model loader. Use 'openai' or 'gemini' for hosted embeddings, "
-            "or module:function for a custom callable that receives ModelLoadConfig and returns an object matching the "
+            "'typesafe' for Jev reranking, or module:function for a custom callable that receives "
+            "ModelLoadConfig and returns an object matching the "
             "evaluation method's duck-typed interface."
         ),
     )
@@ -431,6 +432,19 @@ def _add_prompt_args(parser: argparse.ArgumentParser) -> None:
 
 
 def _add_reranker_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--typesafe-task-instructions-json", default=None,
+        help="Listwise instruction templates keyed by exact Dataset/task name, e.g. NanoBEIR-en/msmarco; use {document}.",
+    )
+    parser.add_argument(
+        "--typesafe-mode",
+        choices=["pointwise", "listwise"],
+        default=None,
+        help=(
+            "TypeSafe scoring mode: pointwise scores each document independently; "
+            "listwise scores each document using all candidates as shared context (default: listwise)."
+        ),
+    )
     parser.add_argument(
         "--reranker-init-kwargs-json",
         default=None,
@@ -657,6 +671,37 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error("--model-loader gemini requires evaluate dense.")
         if args.model_loader == "gemini" and args.encode_devices:
             parser.error("--encode-devices is not supported with --model-loader gemini.")
+        if getattr(args, "typesafe_mode", None) is not None and args.model_loader != "typesafe":
+            parser.error("--typesafe-mode requires --model-loader typesafe.")
+        task_instructions_json = getattr(args, "typesafe_task_instructions_json", None)
+        if task_instructions_json is not None:
+            if args.model_loader != "typesafe":
+                parser.error("--typesafe-task-instructions-json requires --model-loader typesafe.")
+            try:
+                overrides = json.loads(task_instructions_json)
+            except ValueError:
+                parser.error("--typesafe-task-instructions-json must be valid JSON.")
+            if not isinstance(overrides, dict):
+                parser.error("--typesafe-task-instructions-json must be an object.")
+            if "task_instructions" in args.model_loader_kwargs:
+                parser.error("Specify task instructions only once.")
+            args.model_loader_kwargs["task_instructions"] = overrides
+        if args.model_loader == "typesafe":
+            if args.model_type != "reranker":
+                parser.error("--model-loader typesafe requires evaluate reranker.")
+            if args.cross_encoder_kwargs or args.reranker_score_kwargs:
+                parser.error("TypeSafe uses --model-loader-kwargs-json, not CrossEncoder init/inference kwargs.")
+            if args.model_max_seq_length is not None:
+                parser.error("TypeSafe uses document_max_tokens in --model-loader-kwargs-json, not --model-max-seq-length.")
+            mode = getattr(args, "typesafe_mode", None)
+            kwargs_mode = args.model_loader_kwargs.get("mode")
+            if mode is not None and kwargs_mode is not None and mode != kwargs_mode:
+                parser.error("--typesafe-mode conflicts with model loader kwargs mode.")
+            args.typesafe_mode = mode or kwargs_mode or "listwise"
+            if args.typesafe_mode not in {"pointwise", "listwise"}:
+                parser.error("TypeSafe mode must be 'pointwise' or 'listwise'.")
+            args.model_loader_kwargs["mode"] = args.typesafe_mode
+            _apply_model_identity(args)
     if args.command == "build-candidates":
         try:
             _apply_build_candidates_params_json(args)
@@ -886,7 +931,7 @@ def _apply_model_card_args(args: argparse.Namespace, *, provided_options: set[st
     args.model = str(source_name or model_id)
     args.model_alias = model_id
     args.model_revision = _model_card_revision(source)
-    if isinstance(source, dict) and source.get("type") in {"openai", "gemini"}:
+    if isinstance(source, dict) and source.get("type") in {"openai", "gemini", "typesafe"}:
         args.model_loader = str(source["type"])
     runtime = card.get("runtime")
     if isinstance(runtime, dict):
@@ -1049,6 +1094,10 @@ def _apply_model_identity(args: argparse.Namespace) -> None:
     model = getattr(args, "model", None)
     alias = getattr(args, "model_alias", None)
     if not model:
+        return
+    if getattr(args, "model_loader", None) == "typesafe":
+        args.model_id = alias or "typesafe/jev"
+        args.model_source = {"type": "typesafe", "name": model}
         return
     if getattr(args, "model_loader", None) in {"openai", "gemini"}:
         source_type = str(args.model_loader)
@@ -2055,6 +2104,23 @@ def _batch_summary(metadata: Any) -> dict[str, Any]:
     }
 
 
+def _warn_unmatched_typesafe_tasks(args: argparse.Namespace, tasks: list[EvalTask]) -> None:
+    if args.model_loader != "typesafe":
+        return
+    selected = {f"{task.dataset.name}/{task.task_name}" for task in tasks}
+    overrides = args.model_loader_kwargs.get("task_instructions", {})
+    if not isinstance(overrides, dict):
+        raise ValueError("TypeSafe task_instructions must be an object.")
+    for name in overrides:
+        if name not in selected:
+            print(
+                f"Warning: TypeSafe instruction task {name!r} does not exactly match any selected task; "
+                "it may not exist or may not be selected. Override will not be applied. "
+                "Use the full Dataset/task name (e.g. NanoBEIR-en/msmarco).",
+                file=sys.stderr,
+            )
+
+
 def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     run_started_at = datetime.now(timezone.utc)
     run_start = time.perf_counter()
@@ -2068,6 +2134,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         evaluation_scope=args.evaluation_scope,
         explicit_dataset_selection=_has_explicit_dataset_selection(args),
     )
+    _warn_unmatched_typesafe_tasks(args, tasks)
     output_dir = Path(args.output_dir)
     pending_tasks = [
         task
@@ -2203,7 +2270,7 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
 def _warn_if_missing_attention_implementation(args: argparse.Namespace) -> None:
     if args.model_type == "bm25":
         return
-    if getattr(args, "model_loader", None) in {"openai", "gemini"}:
+    if getattr(args, "model_loader", None) in {"openai", "gemini", "typesafe"}:
         return
     if args.flash_attn2 or args.attn_implementation is not None:
         return

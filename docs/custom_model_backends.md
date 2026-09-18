@@ -18,6 +18,14 @@ library, an internal wrapper, or a hosted embedding/reranker API.
 
 ## Loader Contract
 
+The built-in `--model-loader typesafe` integrates hosted Jev reranking. Use
+`--typesafe-mode pointwise` for one request per query/document pair, or `listwise` for
+all candidates in one shared state, with recorded mmBERT-guided splitting and
+score merging when estimated budgets or API token limits are exceeded. The
+tokenizer is configurable; mmBERT is the default. See
+[TypeSafe reranker evaluation](typesafe_reranker_evaluation.md) for commands,
+limits, comparison policy, and runtime metadata.
+
 Pass a loader with `--model-loader module:function`. The callable receives a
 `hakari_bench.models.ModelLoadConfig` and returns any Python object matching the
 method interface.

@@ -232,7 +232,11 @@ Allowed categories are:
 | `english_only` | `English only` | The model identity or training/evaluation intent is English-only. Include `languages: [en]`, even when weak transfer scores exist. |
 | `english_plus` | language list such as `ja, en` | The model has explicit limited-language intent, such as Japanese plus English. Include the reviewed list in `languages`. |
 
-The `evidence` mapping records why the classification was chosen:
+The `evidence` mapping records why the classification was chosen. For classifications
+based only on official documentation, record `source_url` and the classification
+policy/reason; omit benchmark fields and evaluated language counts.
+
+For score-based evidence:
 
 - `benchmarks`: currently `NanoMIRACL` and `MNanoBEIR` for score evidence.
 - `score_target`: usually `all`, matching retrieval mode in the result DB.
@@ -335,3 +339,8 @@ languages, computes per-language mean scores, and writes a conservative
 classification. The generated value is an initial review aid; update it manually
 when the model card, paper, or model family gives a clearer language identity
 than the score-only heuristic.
+
+Hosted sources with `source.type: openai`, `gemini`, or `typesafe` select their
+built-in loader when evaluated with `from-model-card`. The reviewed Jev card is
+`config/model_cards/typesafe__jev.yaml`; its versioned API model name belongs in
+`source.name`, while the stable benchmark identity remains `typesafe/jev`.

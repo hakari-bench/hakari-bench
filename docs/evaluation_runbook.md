@@ -163,7 +163,11 @@ changing model maximum sequence length.
 
 ## Custom Model Backends
 
-The built-in loaders use SentenceTransformers for dense, sparse, and reranker
+For hosted Jev, use `--model-loader typesafe --typesafe-mode pointwise` or
+`--typesafe-mode listwise`. Runnable comparisons and authentication setup are in
+[TypeSafe reranker evaluation](typesafe_reranker_evaluation.md).
+
+The default loaders use SentenceTransformers for dense, sparse, and reranker
 evaluation, and PyLate for late-interaction evaluation. When a model needs to
 be evaluated through another Python library or a hosted embedding/reranker API,
 pass a custom loader with `--model-loader module:function`.
