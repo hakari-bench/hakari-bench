@@ -1252,3 +1252,23 @@ def test_grouped_columns_use_group_docs_for_multi_task_benchmarks(tmp_path: Path
     ]:
         assert f'data-doc-title="{title}"' in grouped_head
         assert f'data-doc-url="/docs/benchmark-tasks/{benchmark}"' in grouped_head
+
+
+def test_mnanobeir_documentation_includes_english_tasks() -> None:
+    root = Path(__file__).resolve().parents[1] / "task_docs"
+    docs = BenchmarkDocs(root / "docs", metadata_dir=root / "metadata")
+    group = docs.group_doc("MNanoBEIR")
+    assert group is not None
+    assert "| Task pages | 182 |" in group.markdown
+    assert "| `en` | 13 |" in group.markdown
+    english_pages = sorted((root / "docs" / "NanoBEIR-en").glob("Nano*.md"))
+    assert len(english_pages) == 13
+    for page in english_pages:
+        task = docs.task_doc(
+            view_name="MNanoBEIR",
+            metric_column=f"MNanoBEIR::hakari-bench/NanoBEIR-en::{page.stem}",
+        )
+        assert task is not None
+        assert task.url == f"/docs/benchmark-tasks/MNanoBEIR/NanoBEIR-en__{page.stem}"
+        assert f"[en](NanoBEIR-en__{page.stem}.md)" in group.markdown
+        assert docs.route_doc(benchmark="NanoBEIR-en", task=page.stem) is not None
