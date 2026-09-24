@@ -6,6 +6,7 @@ import lzma
 import sys
 import types
 from pathlib import Path
+from typing import cast
 
 import numpy as np
 import pytest
@@ -1913,6 +1914,31 @@ def test_evaluate_reranker_task_scores_predict_pairs_per_query_before_rank_api()
     assert model.predict_calls[0]["batch_size"] == 2
     assert model.predict_calls[1]["batch_size"] == 2
     assert model.rank_calls == []
+
+
+@pytest.mark.parametrize("batch_size,expected_sizes", [(16, [16] * 6 + [4]), (32, [32, 32, 32, 4]), (64, [64, 36]), (128, [100])])
+def test_evaluate_reranker_task_honors_pair_batch_size(batch_size: int, expected_sizes: list[int]) -> None:
+    model = FakePredictAndRankReranker()
+    corpus = {"d0": "cat doc", **{f"d{i}": f"other doc {i}" for i in range(1, 100)}}
+    queries = {"q1": "cat query", "q2": "cat query"}
+    dataset = LoadedIrDataset(
+        corpus=corpus, queries=queries,
+        candidates={query_id: list(corpus) for query_id in queries},
+        qrels={query_id: {"d0"} for query_id in queries},
+        evaluator_name="ToyData_test",
+    )
+
+    result = evaluate_reranker_task(
+        model=model, dataset=dataset, batch_size=batch_size, show_progress=False, rerank_top_n=100,
+    )
+
+    assert [len(cast(list[list[str]], call["pairs"])) for call in model.predict_calls] == expected_sizes * 2
+    assert all(call["batch_size"] == batch_size for call in model.predict_calls)
+    for offset in (0, len(expected_sizes)):
+        pairs = [pair for call in model.predict_calls[offset : offset + len(expected_sizes)] for pair in cast(list[list[str]], call["pairs"])]
+        assert len(pairs) == 100
+        assert {pair[1] for pair in pairs} == set(dataset.corpus.values())
+    assert result.metrics["ToyData_test_reranker_ndcg@10"] == pytest.approx(1.0)
 
 
 def test_evaluate_reranker_task_randomizes_candidate_order_for_predict_ties() -> None:

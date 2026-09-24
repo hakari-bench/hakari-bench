@@ -65,6 +65,15 @@ def predict(self, pairs, **kwargs): ...
 def __call__(self, pairs, **kwargs): ...
 ```
 
+For rerankers exposing `predict` or a callable scoring interface, HAKARI groups
+pairs by query and sends up to `--batch-size` pairs per call (default 32, with no
+fixed upper cap). For example, `--batch-size 128 --rerank-top-k 100` sends all
+100 selected candidates for each query in one call. The backend still determines
+whether it scores those candidates jointly or independently. Smaller batches
+change the available context for listwise scoring, so scores from separate
+chunks must be comparable. Rank-only backends receive all selected documents
+for each query in one `rank` call and manage their own internal batching.
+
 Late-interaction backends must expose:
 
 ```python
@@ -76,6 +85,111 @@ already used by HAKARI-Bench: one token-embedding matrix per input text.
 
 These are structural interfaces. Backends do not need to inherit from a HAKARI
 base class.
+
+## Selecting the Reranker `rank` Path
+
+The evaluator selects the interface automatically. A callable `predict` method
+or a callable model object takes precedence over `rank`, even when both exist.
+There is no CLI flag to force `rank`. The standard CrossEncoder therefore uses
+the pair-scoring path. To select `rank`, return an object with a `rank` method
+but no callable `predict` or `__call__` from your custom loader.
+
+### Adapting a Listwise Reranker
+
+Use the rank-only interface for listwise rerankers that compare candidates in a
+shared context. If your model already satisfies this contract, the loader can
+return it directly. Otherwise, write an adapter that exposes only `rank` and
+translates between the model's native interface and HAKARI's ranking format.
+Increasing `--batch-size` on the `predict` path is not a robust substitute:
+queries with more candidates than the batch size would still be split by the
+evaluator, changing the context available to the model.
+
+The adapter should:
+
+- Accept one query and all selected documents in `rank(query, documents)`.
+  `--rerank-top-k` controls candidate selection before this call; `rank` receives
+  the selected candidates, not the full corpus.
+- Keep candidate identities tied to their positions in the input list, including
+  when documents contain identical text. Return every input position exactly
+  once as an integer `corpus_id`.
+- Return entries in ranked order without `score` when the model produces a
+  permutation. If returning numeric scores, make them comparable across all
+  candidates; HAKARI sorts them in descending order. Omit scores to preserve an
+  adapter-defined tie order.
+- Handle context limits internally when necessary. Define any splitting,
+  overlapping windows, and ranking or score merging explicitly. A rank-only
+  interface avoids evaluator-side splitting but does not guarantee that all
+  candidates fit in one model request.
+- Record model settings, context limits, splitting, and merging choices through
+  `metadata()` so the result explains how the ranking was produced. See
+  [Metadata and Secrets](#metadata-and-secrets).
+
+Avoid exposing `predict` or forwarding it through a generic `__getattr__` on
+the adapter, and do not make the adapter callable: either would select the
+pair-scoring path instead. A `rank` signature accepting only `query` and
+`documents` is sufficient; HAKARI filters unsupported keyword arguments.
+
+The built-in `TypeSafeRerankerAdapter` in `hakari_bench/models.py` demonstrates
+this design for Jev. It exposes only `rank`, constructs shared candidate context
+in listwise mode, manages token-budget splitting and score merging internally,
+and returns ordered `corpus_id` entries without scores to preserve its tie order.
+Its metadata records the splitting policy and query-level diagnostics. These
+are Jev-specific implementation choices; other listwise adapters should use
+policies appropriate to their model. See
+[TypeSafe Jev reranker evaluation](typesafe_reranker_evaluation.md).
+
+### Wrapping an Existing `rank` Method
+
+For example, save this wrapper as `rank_backend.py` in the repository root to
+call the built-in CrossEncoder through its `rank` interface:
+
+```python
+from dataclasses import replace
+
+from hakari_bench.models import ModelLoadConfig, load_model as load_builtin_model
+
+
+class RankOnlyBackend:
+    def __init__(self, model):
+        self.model = model
+
+    def rank(self, query, documents, **kwargs):
+        return self.model.rank(query, documents, **kwargs)
+
+
+def load_model(config: ModelLoadConfig):
+    model = load_builtin_model(
+        replace(config, model_loader=None, model_loader_kwargs=None)
+    )
+    return RankOnlyBackend(model)
+```
+
+Run it with your model ID:
+
+```bash
+PYTHONPATH="$PWD" uv run hakari-bench evaluate reranker \
+  --model YOUR_CROSS_ENCODER_MODEL \
+  --model-loader rank_backend:load_model \
+  --dataset NanoBEIR-en --split NanoHotpotQA \
+  --rerank-top-k 100 --batch-size 128 \
+  --results-dir output/rank-interface
+```
+
+HAKARI passes the selected, deterministically shuffled documents together to
+`rank`, forwarding supported kwargs including `batch_size`, `top_k=None`, and
+`return_documents=False`. A backend may still batch internally. Calling
+CrossEncoder's `rank` does not turn a pairwise model into a listwise model.
+For a custom listwise model, implement the joint ranking inside `rank` instead.
+
+Return one entry per document with an integer `corpus_id` indexing the input
+`documents`. Entries with numeric `score` values are sorted by descending score;
+without scores, return entries in the desired ranking order. When invoking
+`evaluate_reranker_task` directly from Python, pass the same rank-only object as
+`model` to select this path.
+
+The built-in TypeSafe adapter already exposes only `rank`; use
+`--model-loader typesafe --typesafe-mode listwise` to select its listwise mode.
+See [the TypeSafe commands](typesafe_reranker_evaluation.md#commands).
 
 ## Passing Backend Kwargs
 

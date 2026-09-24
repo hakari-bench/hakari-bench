@@ -84,9 +84,13 @@ shuffled by HAKARI before the adapter sees them. Equal scores retain that
 shuffled order, independently of response completion order. Synthetic document
 keys keep arbitrary corpus IDs out of the prompts and handle duplicate text.
 
-The adapter exposes `rank`, not `predict`: the existing evaluator chunks
-`predict` calls into at most 32 pairs, which would change the shared state in
-`listwise`. `--batch-size` therefore does not partition Jev requests. Use
+The adapter exposes `rank`, not `predict`: the evaluator chunks
+`predict` calls according to `--batch-size` (default 32), which would change the
+shared state in `listwise`. The evaluator prioritizes `predict` or a callable
+model over `rank`, so exposing only `rank` is intentional. Developers integrating
+other listwise models should follow the
+[listwise adapter contract](custom_model_backends.md#adapting-a-listwise-reranker).
+`--batch-size` therefore does not partition Jev requests. Use
 `max_concurrency` to control parallelism: `listwise` processes up to four queries
 concurrently by default, while `pointwise` processes one query at a time with up
 to 20 concurrent document requests. Split chunks within one listwise query are
