@@ -1217,7 +1217,7 @@ def _rank_all_with_reranker_model(
             candidate_ids = candidate_ids[:rerank_top_n]
         candidate_ids = _shuffle_reranker_candidate_ids(query_id=query_id, candidate_ids=candidate_ids)
         query_scores: list[float] = []
-        pair_chunk_size = min(max(batch_size, 1), 32)
+        pair_chunk_size = max(batch_size, 1)
         for offset in range(0, len(candidate_ids), pair_chunk_size):
             candidate_chunk = candidate_ids[offset : offset + pair_chunk_size]
             pairs = [[query_text, dataset.corpus[doc_id]] for doc_id in candidate_chunk]
