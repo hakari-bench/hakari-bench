@@ -261,9 +261,10 @@ the documented context explicitly. SDPA is supported by the official
 Transformers implementation; the model card does not prescribe an attention
 backend.
 
-The validated environment used SentenceTransformers 6.1.0 and Transformers
-5.19.0.dev0 from commit `e598fbad926d80bc356c0c4d96532030e3dfdb62`, with torch
-2.9.1 and Python 3.12. Transformers 5.18.0 did not recognize the architecture.
+The corrected text-only rerun uses SentenceTransformers 6.1.0 and Transformers
+5.19.0.dev0 from commit `a96730c8c97b8efbf35bbaf7f5da33ec99231a49` (latest
+official main when the rerun began), with torch 2.9.1 and Python 3.12.
+Transformers 5.18.0 did not recognize the architecture.
 Use a dedicated environment with model support; these notes do not change the
 project's dependency requirements or lockfile.
 
@@ -322,8 +323,9 @@ The recorded loader kwargs describe the fixed text-only settings used by this
 loader. All 20 base/truncation/quantization/rescore conditions are evaluated
 from a single encoding pass per task.
 
+The initial submission to
 [Results Dataset PR #43](https://huggingface.co/datasets/hakari-bench/results/discussions/43)
-contains 563 task files. The first 561 tasks loaded the full checkpoint and used
+contained 563 task files. The first 561 tasks loaded the full checkpoint and used
 text inputs; `touche2020_vn` and `treccovid_vn` were resumed with the text-only
 loader after a YouTube URL triggered video loading. CPU float32 checks found
 identical full-versus-text-only embeddings for English, Japanese, and code
@@ -336,10 +338,13 @@ An independent runtime audit subsequently found that the original runner's
 redundant global bf16 cast also rounded FP32 RoPE frequency buffers retained by
 the official loader. This changed embeddings and task rankings. The loader now
 skips that cast when floating parameters already have the requested dtype,
-preserving those buffers. The original 561 full-checkpoint task results in PR
-#43 require reevaluation before they can be considered validated; the two
-resumed tasks used a custom loader that bypassed the redundant cast. Equivalent
-full-versus-text-only CPU embeddings do not validate this separate bf16 issue.
+preserving those buffers. The original 561 full-checkpoint task results were
+invalidated by this audit; the two resumed tasks used a custom loader that
+bypassed the redundant cast. Equivalent full-versus-text-only CPU embeddings
+do not validate this separate bf16 issue. The corrected rerun reevaluates all
+563 tasks with the text-only loader, the latest pinned Transformers commit above,
+SDPA, bf16, batch 16, and the original dataset revisions. Use PR #43's validation
+status to distinguish original files from the corrected replacement.
 
 ## hotchpotch Bekko Embeddings
 
