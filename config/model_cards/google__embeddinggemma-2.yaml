@@ -1,0 +1,47 @@
+id: google/embeddinggemma-2
+source:
+  type: huggingface
+  name: google/embeddinggemma-2
+  revision: 914f7f89142e33e77833254d9c9b90c3cef7303b
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/google/embeddinggemma-2
+links:
+  huggingface: https://huggingface.co/google/embeddinggemma-2
+parameters:
+  total: 271002624
+  trainable: 271002624
+  input_embedding: 134217728
+  active: 136784896
+embedding:
+  output_dimension: 768
+  truncate_dims: [128, 256, 512]
+  mrl_support: true
+  normalize: true
+runtime:
+  max_seq_length: 8192
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: SearchQuery
+  document_prompt_name: Document
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/google/embeddinggemma-2
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+notes:
+  - The official supported context is 8192 tokens. The published tokenizer uses an effectively unlimited sentinel, so set the documented context explicitly.
+  - CPU text encoding was validated with SentenceTransformers 6.1.0 and Transformers commit e598fbad926d80bc356c0c4d96532030e3dfdb62. Transformers 5.18.0 does not recognize this architecture.
+  - SDPA is supported by the official Transformers implementation; the model card does not prescribe an attention backend.
+  - Parameter counts are measured from the text embedding encoder only, with vision_config and audio_config set to null. Active parameters equal total minus input embedding parameters; vision and audio encoder parameters are excluded.
+  - Text retrieval requires input modality detection restricted to text to prevent media URLs from being loaded as video or images. Use the text-only custom loader documented in docs/model_specific_benchmarking_notes.md; the default from-model-card loader does not apply these settings.

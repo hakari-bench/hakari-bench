@@ -1825,12 +1825,15 @@ def _is_pylate_sentence_transformers_module_conversion_error(exc: Exception) -> 
 
 def _set_model_dtype(model: Any, dtype: str) -> None:
     torch_dtype = resolve_torch_dtype(dtype)
-    if isinstance(model, torch.nn.Module):
-        model.to(dtype=torch_dtype)
+    module = model if isinstance(model, torch.nn.Module) else getattr(model, "model", None)
+    if not isinstance(module, torch.nn.Module):
         return
-    inner_model = getattr(model, "model", None)
-    if isinstance(inner_model, torch.nn.Module):
-        inner_model.to(dtype=torch_dtype)
+    floating_parameters = [parameter for parameter in module.parameters() if parameter.is_floating_point()]
+    if floating_parameters and all(parameter.dtype == torch_dtype for parameter in floating_parameters):
+        # Transformers loaders may deliberately retain FP32 buffers (e.g. RoPE
+        # frequencies). A redundant global cast would permanently round them.
+        return
+    module.to(dtype=torch_dtype)
 
 
 def _set_attn_implementation(model: Any, attn_implementation: str | None) -> None:

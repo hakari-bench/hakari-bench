@@ -247,6 +247,100 @@ Truncation notes:
 - Use `--embedding-variant truncate:512,256,128` when measuring dimensional
   trade-offs.
 
+## Google EmbeddingGemma 2
+
+The reviewed card is
+[`google__embeddinggemma-2.yaml`](../config/model_cards/google__embeddinggemma-2.yaml).
+It pins revision `914f7f89142e33e77833254d9c9b90c3cef7303b`, the
+`SearchQuery` / `Document` prompts, bf16, SDPA, an 8192-token context, and
+128/256/512-dimensional truncation below the native 768-dimensional output.
+The official [model card](https://huggingface.co/google/embeddinggemma-2)
+documents text-only encoder loading and the supported context. The published
+tokenizer instead contains an effectively unlimited length sentinel, so set
+the documented context explicitly. SDPA is supported by the official
+Transformers implementation; the model card does not prescribe an attention
+backend.
+
+The validated environment used SentenceTransformers 6.1.0 and Transformers
+5.19.0.dev0 from commit `e598fbad926d80bc356c0c4d96532030e3dfdb62`, with torch
+2.9.1 and Python 3.12. Transformers 5.18.0 did not recognize the architecture.
+Use a dedicated environment with model support; these notes do not change the
+project's dependency requirements or lockfile.
+
+For text retrieval, omit vision and audio encoders using
+`config_kwargs={"vision_config": None, "audio_config": None}`. The measured
+text embedding encoder has 271,002,624 total/trainable parameters and
+134,217,728 input embedding parameters. HAKARI's active parameter convention
+is total minus input embedding parameters, giving 136,784,896 active parameters.
+These counts exclude the vision and audio encoders.
+
+SentenceTransformers 6.1.0 can classify strings resembling media URLs as image
+or video inputs even when the benchmark supplies text. Restrict its input
+formatter to text for this IR benchmark. The default `from-model-card` loader
+does not apply selective encoder loading or this restriction; use a custom
+loader with `evaluate dense`. Save the following as
+`tmp/embeddinggemma2_text_loader.py` in the checkout:
+
+```python
+from sentence_transformers import SentenceTransformer
+from hakari_bench.models import resolve_torch_dtype
+
+
+def load_model(config):
+    model = SentenceTransformer(
+        config.model_name_or_path,
+        revision=config.model_revision,
+        device=config.device,
+        config_kwargs={"vision_config": None, "audio_config": None},
+        model_kwargs={
+            "torch_dtype": resolve_torch_dtype(config.dtype),
+            "attn_implementation": config.attn_implementation or "sdpa",
+        },
+    )
+    if config.max_seq_length is not None:
+        model.max_seq_length = config.max_seq_length
+    model[0].input_formatter.supported_modalities = ["text"]
+    return model
+```
+
+With the dedicated environment activated, run:
+
+```bash
+CUDA_VISIBLE_DEVICES=1 PYTHONPATH=tmp uv run --no-project python -c \
+  'from hakari_bench.cli import main; main()' evaluate dense \
+  --model google/embeddinggemma-2 \
+  --model-revision 914f7f89142e33e77833254d9c9b90c3cef7303b \
+  --model-loader embeddinggemma2_text_loader:load_model \
+  --model-loader-kwargs-json '{"config_kwargs":{"vision_config":null,"audio_config":null},"input_modalities":["text"]}' \
+  --all --dtype bf16 --attn-implementation sdpa \
+  --device cuda:0 --batch-size 16 --model-max-seq-length 8192 \
+  --query-prompt-name SearchQuery --document-prompt-name Document \
+  --embedding-variant truncate:128,256,512
+```
+
+The recorded loader kwargs describe the fixed text-only settings used by this
+loader. All 20 base/truncation/quantization/rescore conditions are evaluated
+from a single encoding pass per task.
+
+[Results Dataset PR #43](https://huggingface.co/datasets/hakari-bench/results/discussions/43)
+contains 563 task files. The first 561 tasks loaded the full checkpoint and used
+text inputs; `touche2020_vn` and `treccovid_vn` were resumed with the text-only
+loader after a YouTube URL triggered video loading. CPU float32 checks found
+identical full-versus-text-only embeddings for English, Japanese, and code
+samples, and confirmed URL strings matched explicit text inputs. Parameter
+metadata was regenerated to report text encoder size for all submitted results;
+scores, timings, and original runtime configuration were preserved with
+regeneration provenance. All 563 tasks have the same 20 conditions.
+
+An independent runtime audit subsequently found that the original runner's
+redundant global bf16 cast also rounded FP32 RoPE frequency buffers retained by
+the official loader. This changed embeddings and task rankings. The loader now
+skips that cast when floating parameters already have the requested dtype,
+preserving those buffers. The original 561 full-checkpoint task results in PR
+#43 require reevaluation before they can be considered validated; the two
+resumed tasks used a custom loader that bypassed the redundant cast. Equivalent
+full-versus-text-only CPU embeddings do not validate this separate bf16 issue.
+
 ## hotchpotch Bekko Embeddings
 
 Applies to:
