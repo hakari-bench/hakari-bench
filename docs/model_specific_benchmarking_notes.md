@@ -247,6 +247,172 @@ Truncation notes:
 - Use `--embedding-variant truncate:512,256,128` when measuring dimensional
   trade-offs.
 
+## Google EmbeddingGemma 2
+
+The reviewed card is
+[`google__embeddinggemma-2.yaml`](../config/model_cards/google__embeddinggemma-2.yaml).
+It pins revision `914f7f89142e33e77833254d9c9b90c3cef7303b`, the
+`SearchQuery` / `Document` prompts, bf16, SDPA, an 8192-token context, and
+128/256/512-dimensional truncation below the native 768-dimensional output.
+The official [model card](https://huggingface.co/google/embeddinggemma-2)
+documents text-only encoder loading and the supported context. The published
+tokenizer instead contains an effectively unlimited length sentinel, so set
+the documented context explicitly. SDPA is supported by the official
+Transformers implementation; the model card does not prescribe an attention
+backend.
+
+The completed FlexAttention evaluation uses SentenceTransformers 6.1.0 and
+Transformers 5.19.0.dev0 from commit
+`a96730c8c97b8efbf35bbaf7f5da33ec99231a49`, torch 2.14.1 / CUDA 13.0 and
+Python 3.12. SDPA was used for the earlier diagnostic runs.
+Transformers 5.18.0 did not recognize the architecture.
+Use a dedicated environment with model support; these notes do not change the
+project's dependency requirements or lockfile.
+
+For text retrieval, omit vision and audio encoders using
+`config_kwargs={"vision_config": None, "audio_config": None}`. The measured
+text embedding encoder has 271,002,624 total/trainable parameters and
+134,217,728 input embedding parameters. HAKARI's active parameter convention
+is total minus input embedding parameters, giving 136,784,896 active parameters.
+These counts exclude the vision and audio encoders.
+
+SentenceTransformers 6.1.0 can classify strings resembling media URLs as image
+or video inputs even when the benchmark supplies text. Restrict its input
+formatter to text for this IR benchmark. The default `from-model-card` loader
+does not apply selective encoder loading or this restriction; use a custom
+loader with `evaluate dense`. Save the following as
+`tmp/embeddinggemma2_text_loader.py` in the checkout:
+
+```python
+from sentence_transformers import SentenceTransformer
+from hakari_bench.models import resolve_torch_dtype
+
+
+def load_model(config):
+    model = SentenceTransformer(
+        config.model_name_or_path,
+        revision=config.model_revision,
+        device=config.device,
+        config_kwargs={"vision_config": None, "audio_config": None},
+        model_kwargs={
+            "torch_dtype": resolve_torch_dtype(config.dtype),
+            "attn_implementation": config.attn_implementation or "sdpa",
+        },
+    )
+    if config.max_seq_length is not None:
+        model.max_seq_length = config.max_seq_length
+    model[0].input_formatter.supported_modalities = ["text"]
+    return model
+```
+
+With the dedicated environment activated, run:
+
+```bash
+CUDA_VISIBLE_DEVICES=1 PYTHONPATH=tmp uv run --no-project python -c \
+  'from hakari_bench.cli import main; main()' evaluate dense \
+  --model google/embeddinggemma-2 \
+  --model-revision 914f7f89142e33e77833254d9c9b90c3cef7303b \
+  --model-loader embeddinggemma2_text_loader:load_model \
+  --model-loader-kwargs-json '{"config_kwargs":{"vision_config":null,"audio_config":null},"input_modalities":["text"]}' \
+  --all --dtype bf16 --attn-implementation sdpa \
+  --device cuda:0 --batch-size 16 --model-max-seq-length 8192 \
+  --query-prompt-name SearchQuery --document-prompt-name Document \
+  --embedding-variant truncate:128,256,512
+```
+
+The recorded loader kwargs describe the fixed text-only settings used by this
+loader. All 20 base/truncation/quantization/rescore conditions are evaluated
+from a single encoding pass per task.
+
+The initial submission to
+[Results Dataset PR #43](https://huggingface.co/datasets/hakari-bench/results/discussions/43)
+contained 563 task files. The first 561 tasks loaded the full checkpoint and used
+text inputs; `touche2020_vn` and `treccovid_vn` were resumed with the text-only
+loader after a YouTube URL triggered video loading. CPU float32 checks found
+identical full-versus-text-only embeddings for English, Japanese, and code
+samples, and confirmed URL strings matched explicit text inputs. Parameter
+metadata was regenerated to report text encoder size for all submitted results;
+scores, timings, and original runtime configuration were preserved with
+regeneration provenance. All 563 tasks have the same 20 conditions.
+
+An independent runtime audit subsequently found that the original runner's
+redundant global bf16 cast also rounded FP32 RoPE frequency buffers retained by
+the official loader. This changed embeddings and task rankings. The loader now
+skips that cast when floating parameters already have the requested dtype,
+preserving those buffers. The original 561 full-checkpoint task results were
+invalidated by this audit; the two resumed tasks used a custom loader that
+bypassed the redundant cast. Equivalent full-versus-text-only CPU embeddings
+do not validate this separate bf16 issue. The complete replacement evaluates all 563 standard tasks and six extended
+NanoDAPFAM FullText tasks with text-only loading and FlexAttention. All 569
+tasks have 20 embedding conditions and use the original pinned dataset revisions.
+The 550-task standard Overall excludes the six extended FullText tasks; their
+scores are reported separately in PR #43. Original local SDPA results remain
+available separately.
+
+### FlexAttention reproduction
+
+The completed run used an RTX PRO 6000 Blackwell Max-Q (SM120). Default Flex
+kernel tiles exceeded its shared-memory limit; the following Triton options
+were validated: `BLOCK_M=16`, `BLOCK_N=32`, `num_stages=1`, `num_warps=4`,
+`BACKEND=TRITON`. Save this wrapper as `tmp/embeddinggemma2_flex_loader.py`
+alongside the text-only loader above:
+
+```python
+import torch
+
+from embeddinggemma2_text_loader import load_model as load_text_model
+
+
+def load_model(config):
+    torch._dynamo.config.recompile_limit = 256
+    torch._dynamo.config.accumulated_recompile_limit = 2048
+    torch._dynamo.config.fail_on_recompile_limit_hit = True
+    model = load_text_model(config)
+    options = {
+        "BLOCK_M": 16,
+        "BLOCK_N": 32,
+        "num_stages": 1,
+        "num_warps": 4,
+        "BACKEND": "TRITON",
+    }
+    options.update(config.model_loader_kwargs.get("kernel_options", {}))
+    original_forward = model[0].auto_model.forward
+
+    def tuned_forward(*args, **kwargs):
+        kwargs["kernel_options"] = options
+        return original_forward(*args, **kwargs)
+
+    model[0].auto_model.forward = tuned_forward
+    return model
+```
+
+The default Dynamo recompilation limit was exhausted by variable input shapes
+in an initial MLDR English trial, causing an unfused fallback. That trial was
+stopped and discarded. Raising the limits and failing when they are exhausted
+prevents accepting results from this fallback; the completed run had none of
+these warnings. The static model card keeps SDPA as its portable default;
+reproducing these Flex results requires the wrapper and dedicated environment.
+
+Use the earlier dense command with the following replacements:
+
+```bash
+--model-loader embeddinggemma2_flex_loader:load_model \
+--model-loader-kwargs-json '{"config_kwargs":{"vision_config":null,"audio_config":null},"input_modalities":["text"],"kernel_options":{"BLOCK_M":16,"BLOCK_N":32,"num_stages":1,"num_warps":4,"BACKEND":"TRITON"}}' \
+--attn-implementation flex_attention \
+--results-dir output/embeddinggemma2-flex/hakari-results
+```
+
+The measured run selected explicit task lists for each dataset at its original
+revision, instead of `--all`, to pin all 50 dataset revisions. Include all 18
+NanoDAPFAM tasks explicitly when reproducing the extended track. The completed
+English MLDR Flex trial was reused; the other 568 tasks were evaluated in the
+new result root. Each condition shares the task's single encoding pass.
+
+English MLDR nDCG@10 ×100 was 57.2295 for Flex / torch 2.14.1 versus 56.7163 for
+corrected SDPA / torch 2.9.1. Evaluation time, including compilation, was
+652.7 seconds versus 1203.3 seconds (~1.84× faster). Both torch and attention
+changed, so this comparison does not isolate the attention backend's effect.
+
 ## hotchpotch Bekko Embeddings
 
 Applies to:
