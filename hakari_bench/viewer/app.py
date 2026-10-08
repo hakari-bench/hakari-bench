@@ -146,6 +146,8 @@ def _register_help_copy(copy: help_text.HelpCopy, *, table_rows: list[dict[str, 
     if registry is not None:
         registry[key] = payload
     return key
+
+
 FOOTER_QUERY_TABLES = {"meta_database"}
 Z_SCORE_BUCKET_CLASSES = (
     "task-z-neutral",
@@ -370,7 +372,9 @@ def create_app(
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_score"),
         direction: str = Query(default="desc", pattern="^(asc|desc)$"),
-        target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
+        target: str = Query(
+            default="all", pattern="^(all|reranking|reranking_without_safeguard)$"
+        ),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
@@ -426,7 +430,9 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
-                columns=columns,
+                columns=columns
+                if columns is not None or task_scores or task_ranks or task_filter
+                else ["grouped"],
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -535,7 +541,9 @@ def create_app(
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_score"),
         direction: str = Query(default="desc", pattern="^(asc|desc)$"),
-        target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
+        target: str = Query(
+            default="all", pattern="^(all|reranking|reranking_without_safeguard)$"
+        ),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
@@ -580,7 +588,9 @@ def create_app(
         ).lower():
             query = request.url.query
             return RedirectResponse(url=f"/?{query}" if query else "/")
-        with timed_operation("viewer.http.request", route="leaderboard") as request_timing:
+        with timed_operation(
+            "viewer.http.request", route="leaderboard"
+        ) as request_timing:
             state_query = normalize_query_state(
                 viewer_config=viewer_config,
                 view=view,
@@ -595,7 +605,9 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
-                columns=columns,
+                columns=columns
+                if columns is not None or task_scores or task_ranks or task_filter
+                else ["grouped"],
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -705,7 +717,9 @@ def create_app(
         view: str = Query(default=viewer_config.overall.name),
         sort: str = Query(default="borda_score"),
         direction: str = Query(default="desc", pattern="^(asc|desc)$"),
-        target: str = Query(default="all", pattern="^(all|reranking|reranking_without_safeguard)$"),
+        target: str = Query(
+            default="all", pattern="^(all|reranking|reranking_without_safeguard)$"
+        ),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
@@ -741,7 +755,9 @@ def create_app(
         doc_len_min: str = Query(default=""),
         doc_len_max: str = Query(default=""),
     ) -> Response:
-        with timed_operation("viewer.http.request", route="leaderboard_csv") as request_timing:
+        with timed_operation(
+            "viewer.http.request", route="leaderboard_csv"
+        ) as request_timing:
             store.ensure_current()
             state_query = normalize_query_state(
                 viewer_config=viewer_config,
@@ -757,7 +773,9 @@ def create_app(
                 truncate=truncate,
                 rescore=rescore,
                 other_variant=other_variant,
-                columns=columns,
+                columns=columns
+                if columns is not None or task_scores or task_ranks or task_filter
+                else ["grouped"],
                 task_scores=task_scores,
                 task_z_scores=task_z_scores,
                 task_ranks=task_ranks,
@@ -816,7 +834,9 @@ def _duckdb_sync_blocks_leaderboard(store: LocalDuckDbStore, status: DuckDbSyncS
     return status.active
 
 
-def _normalize_query_state_from_params(viewer_config: ViewerConfig, params: Mapping[str, object]) -> QueryState:
+def _normalize_query_state_from_params(
+    viewer_config: ViewerConfig, params: Mapping[str, object]
+) -> QueryState:
     return normalize_query_state(
         viewer_config=viewer_config,
         view=_query_param_string(params, "view", viewer_config.overall.name),
@@ -831,7 +851,15 @@ def _normalize_query_state_from_params(viewer_config: ViewerConfig, params: Mapp
         truncate=_query_param_bool(params, "truncate"),
         rescore=_query_param_bool(params, "rescore"),
         other_variant=_query_param_bool(params, "other_variant"),
-        columns=_query_param_list(params, "columns"),
+        columns=_query_param_list(params, "columns")
+        or (
+            None
+            if any(
+                _query_param_bool(params, key) for key in ("task_scores", "task_ranks")
+            )
+            or _query_param_string(params, "task_filter", "")
+            else ["grouped"]
+        ),
         task_scores=_query_param_bool(params, "task_scores"),
         task_z_scores=_query_param_bool(params, "task_z_scores"),
         task_ranks=_query_param_bool(params, "task_ranks"),
@@ -957,7 +985,7 @@ def render_page(
     footer = _render_page_footer(latest_update=latest_update, database_label=database_label, initial_loading=True)
     header_actions = _render_header_actions()
     return f"""<!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -966,21 +994,31 @@ def render_page(
   <link rel="stylesheet" href="{css_url}">
   <link rel="icon" type="image/svg+xml" href="{favicon_svg_url}">
   <link rel="icon" type="image/png" href="{favicon_url}">
-  <meta name="htmx-config" content='{{"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false}}'>
+  <meta name="htmx-config" content='{{"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false,"historyCacheSize":0,"attributesToSettle":["class","width","height"]}}'>
   <script src="{htmx_url}"></script>
   <script src="{viewer_js_url}" defer></script>
 </head>
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 pt-2 pb-4 sm:px-6">
-    <header class="mb-2">
+    <header class="hakari-header">
       <div class="flex items-center justify-between gap-3">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
           <a id="hakari-home-link" href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
             {_render_brand_icon()}
-            <span>HAKARI-Bench - A Leaderboard for Information Retrieval Models Across Diverse Tasks</span>
+            <span>HAKARI-Bench</span>
           </a>
         </h1>
         {header_actions}
+      </div>
+      <div class="hakari-intro">
+        <h2>Find the right model for your search.</h2>
+        <p class="hakari-intro-subtitle">A multilingual benchmark for retrieval and reranking models</p>
+        <p>HAKARI-Bench compares how well models <strong>find relevant documents</strong> across languages and domains.
+          <strong>Retrieval</strong> models search a collection of documents; <strong>reranking</strong> models
+          reorder search results to put the best matches first.</p>
+        <p>Explore scores by benchmark below. Higher Borda scores mean better rankings across the selected tasks.
+          Only models with results for every selected task are compared. Open Settings to customize the comparison.</p>
+        <a href="/docs/">How the benchmark works &rarr;</a>
       </div>
     </header>
     <section
@@ -2825,11 +2863,13 @@ def render_tabs(
         else ""
     )
     return f"""
-    <nav class="mb-3 border border-zinc-200 bg-white p-1.5 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
+    {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+    <details id="leaderboard-settings" class="leaderboard-settings">
+      <summary>Settings <span>Scores, benchmarks, columns &amp; filters</span></summary>
+      <nav class="p-1.5 text-[0.8125rem] text-zinc-700" aria-label="Leaderboard configuration">
       <div class="grid gap-1.5">
         <div class="border border-zinc-200 bg-white p-1.5">
           <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-            {_render_target_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
             {_render_score_aggregation_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
             {_render_metric_group(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
           </div>
@@ -2841,10 +2881,10 @@ def render_tabs(
                 {_control_label(icon="database", text="Benchmark scope")}
                 {_render_help_copy(help_text.BENCHMARK_SCOPE)}
               </span>
-              <div class="flex flex-wrap gap-2">{''.join(preset_buttons)}</div>
+              <div class="flex flex-wrap gap-2">{"".join(preset_buttons)}</div>
             </div>
             <div class="benchmark-scope-divider mb-1.5 border-t border-zinc-200" aria-hidden="true"></div>
-            <div class="flex min-w-0 flex-wrap gap-2">{''.join(suite_buttons)}</div>
+            <div class="flex min-w-0 flex-wrap gap-2">{"".join(suite_buttons)}</div>
             {task_facets_section}
           </div>
         </div>
@@ -2852,6 +2892,7 @@ def render_tabs(
         {render_controls(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, plot_state=plot_state)}
       </div>
     </nav>
+    </details>
     """
 
 
@@ -2941,8 +2982,6 @@ def _render_mnanobeir_scope_group(buttons: list[str]) -> str:
                 <span class="column-mode-or" aria-hidden="true">or</span>
                 {buttons[1]}
               </span>"""
-
-
 
 
 def _available_view_names_with_clear(available_views: list[str]) -> list[str]:
@@ -3167,9 +3206,9 @@ def _render_target_group(
     buttons = []
     for target, label, icon in target_options:
         active = result.score_target == "all" if target == "all" else result.score_target != "all"
-        classes = _control_button_classes(active=active)
+        current_attr = ' aria-current="page"' if active else ""
         tab_sort = "borda_score" if sort.startswith("metric:") else sort
-        tab_direction = "asc" if sort.startswith("metric:") else direction
+        tab_direction = "desc" if sort.startswith("metric:") else direction
         query_payload = _apply_plot_state(
             state_payload(result=result, sort=tab_sort, direction=tab_direction, filter_state=filter_state),
             plot_state,
@@ -3180,7 +3219,7 @@ def _render_target_group(
             query_payload["target"] = target
         query = urlencode(query_payload, doseq=True)
         buttons.append(
-            f"""<button type="button" class="inline-flex items-center gap-1.5 border px-2 py-1 text-[0.8125rem] leading-tight {classes}"
+            f"""<button type="button" class="evaluation-tab"{current_attr}
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   {_leaderboard_control_hx_attrs()}>
                   {_icon_svg(icon)}
@@ -3211,11 +3250,11 @@ def _render_target_group(
                 </span>
         """
     return f"""
-            <div class="flex min-w-0 flex-wrap items-center gap-2">
-              {''.join(buttons)}
+            <nav class="evaluation-tabs" aria-label="Evaluation mode">
+              {"".join(buttons)}
               {_render_help_copy(help_text.EVALUATION_MODE)}
               {safeguard_toggle}
-            </div>
+            </nav>
             """
 
 
@@ -3570,6 +3609,7 @@ def render_display_controls(
             {_leaderboard_control_hx_attrs()}
             hx-trigger="change, submit">
         {column_hidden_html}
+        <input type="hidden" name="columns" value="none">
         <div class="mb-1.5 flex flex-wrap items-center gap-2">
           {_control_label(icon="table-properties", text="Table display")}
           {_render_help_copy(help_text.TABLE_DISPLAY)}
@@ -4409,15 +4449,24 @@ def render_table_body(
         else:
             visible_index += 1
             index_label = str(visible_index)
-        borda_score_cell = _render_borda_score_cell(result=result, row=row)
-        mean_cells = _render_mean_cells(result=result, row=row)
+        borda_score_cell = _score_cell_sort_attributes(
+            _render_borda_score_cell(result=result, row=row), keys=["borda_score"], sort=sort,
+        )
+        mean_keys = ["macro_mean", "micro_mean"] if result.is_overall and not (result.rank_filtered and result.task_filter) else ["mean_score"]
+        mean_cells = _score_cell_sort_attributes(
+            _render_mean_cells(result=result, row=row), keys=mean_keys, sort=sort,
+        )
+        metric_cells = _score_cell_sort_attributes(
+            _render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels),
+            keys=[f"metric:{column}" for column in result.metric_columns], sort=sort,
+        )
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
               <td class="leaderboard-col-index sticky z-10 bg-inherit px-1.5 py-1 text-right tabular-nums text-zinc-500">{index_label}</td>
               {render_model_name_cell(row, model_views[row.model_name], score_bar_width=score_bar_widths.get(row.model_name), score_bar_target=score_bar_target)}
               {borda_score_cell}
               {mean_cells}
-              {_render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels)}
+              {metric_cells}
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
@@ -4429,6 +4478,18 @@ def render_table_body(
             </tr>"""
         )
     return f"<tbody>{''.join(body_rows)}</tbody>"
+
+
+def _score_cell_sort_attributes(markup: str, *, keys: list[str], sort: str) -> str:
+    """Attach score identity and current sort emphasis to generated cells."""
+    score_keys = iter(keys)
+
+    def attributes(match: re.Match[str]) -> str:
+        key = next(score_keys)
+        active = ' data-score-sort="active"' if key == sort else ""
+        return f'<td data-score-key="{escape(key, quote=True)}"{active}'
+
+    return re.sub(r"<td\b", attributes, markup)
 
 
 def _leaderboard_table_colspan(result: LeaderboardResult) -> int:

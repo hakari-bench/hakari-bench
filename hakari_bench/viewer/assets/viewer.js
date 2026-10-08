@@ -7,6 +7,24 @@
     return target.closest(selector);
   }
 
+  // Keep Settings open while its controls replace the leaderboard panel.
+  let settingsOpen = false;
+  document.addEventListener("click", (event) => {
+    const summary = closestElement(event.target, "#leaderboard-settings > summary");
+    if (summary) settingsOpen = !summary.parentElement.open;
+  });
+  document.addEventListener("htmx:beforeRequest", (event) => {
+    if (!event.detail.target || event.detail.target.id !== "leaderboard-panel") return;
+    const settings = document.getElementById("leaderboard-settings");
+    if (settings && settings.open) settingsOpen = true;
+  });
+  document.addEventListener("htmx:beforeSwap", (event) => {
+    if (!settingsOpen || typeof event.detail.serverResponse !== "string") return;
+    event.detail.serverResponse = event.detail.serverResponse.replace(
+      '<details id="leaderboard-settings"', '<details open id="leaderboard-settings"',
+    );
+  });
+
   const helpRegistryCache = new WeakMap();
 
   function helpCopyForTrigger(trigger) {
@@ -519,6 +537,8 @@
       event.stopPropagation();
       const input = document.getElementById("model-filter-input");
       if (!input) return;
+      const settings = document.getElementById("leaderboard-settings");
+      if (settings) settings.open = true;
       const panel = document.getElementById("filter-controls-panel");
       if (panel && !panel.open) panel.open = true;
       if (typeof input.scrollIntoView === "function") {

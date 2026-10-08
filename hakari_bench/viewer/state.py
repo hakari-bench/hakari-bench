@@ -224,6 +224,8 @@ def normalize_query_state(
         query["score"] = score_aggregation
     if column_mode is not None:
         query["columns"] = column_mode
+    elif columns and "none" in columns:
+        query["columns"] = "none"
     if metric and metric != "ndcg@10":
         query["metric"] = metric.strip().casefold()
     if group:
@@ -372,6 +374,8 @@ def state_payload(
         query_payload["bench"] = list(selected_benchmarks)
     if result.show_task_scores:
         query_payload["columns"] = "grouped" if result.score_aggregation == "macro" else "task"
+    else:
+        query_payload["columns"] = "none"
     if result.show_task_z_scores:
         query_payload["task_z_scores"] = "1"
     if result.show_task_ranks:

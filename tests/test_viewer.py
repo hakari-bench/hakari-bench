@@ -1074,7 +1074,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert response.status_code == 200
     assert "<title>HAKARI-Bench leaderboard</title>" in response.text
     assert (
-        "<span>HAKARI-Bench - A Leaderboard for Information Retrieval Models Across Diverse Tasks</span>"
+        "<span>HAKARI-Bench</span>"
         in response.text
     )
     assert '<div class="flex items-center justify-between gap-3">' in response.text
@@ -1116,7 +1116,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert re.search(r'<link rel="icon" type="image/png" href="/assets/favicon\.png\?v=[0-9a-f]{12}">', response.text)
     assert (
         '<meta name="htmx-config" content=\'{"allowEval":false,"allowScriptTags":false,'
-        '"includeIndicatorStyles":false}\'>'
+        '"includeIndicatorStyles":false,"historyCacheSize":0,"attributesToSettle":["class","width","height"]}\'>'
     ) in response.text
     assert re.search(r'<script src="/assets/htmx\.min\.js\?v=[0-9a-f]{12}"></script>', response.text)
     assert re.search(r'<script src="/assets/viewer\.js\?v=[0-9a-f]{12}" defer></script>', response.text)
@@ -1137,7 +1137,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'hx-sync="#leaderboard-panel:replace"' in response.text
     assert "https://cdn.tailwindcss.com" not in response.text
     assert "https://unpkg.com/htmx.org" not in response.text
-    assert 'hx-get="/leaderboard"' in response.text
+    assert 'hx-get="/leaderboard?score=macro&amp;columns=grouped"' in response.text
     assert "<footer" in response.text
     assert (
         '<footer id="hakari-page-footer" '
@@ -1255,7 +1255,7 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert css_response.headers["content-type"].startswith("text/css")
     assert "prefers-color-scheme:dark" in css_response.text
     assert ":root.dark" in css_response.text
-    assert "JetBrains Mono" in css_response.text
+    assert "system-ui" in css_response.text
     assert ".theme-toggle" in css_response.text
     assert ".leaderboard-initial-loading" in css_response.text
     assert "min-height:clamp(18rem,42vh,28rem)" in css_response.text
@@ -1922,7 +1922,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert 'data-leaderboard-control="true"' in response.text
     assert response.text.count('hx-indicator="#leaderboard-loading-toast"') >= 6
     assert response.text.count('hx-sync="#leaderboard-panel:replace"') >= 6
-    assert 'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;target=reranking"' in response.text
+    assert 'hx-get="/leaderboard?view=NanoMTEB-Japanese&amp;score=macro&amp;columns=grouped&amp;target=reranking"' in response.text
     scope_section = response.text.split("Benchmark scope", 1)[1].split("Efficiency variants", 1)[0]
     assert "MTEB-Japanese" in scope_section
     assert "RTEB" in scope_section
@@ -2162,7 +2162,7 @@ def test_benchmark_scope_buttons_toggle_custom_selection_and_reset_languages() -
     assert "lang_filter=en" in overall_en_button
     assert 'data-icon="eraser"' in clear_button
     assert 'data-icon="rotate-ccw"' not in clear_button
-    assert 'hx-get="/leaderboard?sort=borda_rank&amp;direction=asc&amp;view=Custom"' in clear_button
+    assert 'hx-get="/leaderboard?sort=borda_rank&amp;direction=asc&amp;columns=none&amp;view=Custom"' in clear_button
     assert "lang_filter=" not in clear_button
     assert "border-cyan-700" not in clear_button
     assert html.index(">Clear</span>") < html.index("benchmark-scope-divider") < html.index('data-benchmark-toggle="BenchA"')
@@ -3922,7 +3922,7 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert "usually produced by BM25" not in response.text
     # Default sort is now Borda Score (desc); the bm25 baseline sorts by its score.
     table_body = response.text.split("<tbody>", 1)[1].split("</tbody>", 1)[0]
-    assert table_body.index("model/b") < table_body.index("model/a") < table_body.index("bm25")
+    assert table_body.index("model/b") < table_body.index("bm25") < table_body.index("model/a")
 
 
 def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: Path) -> None:
@@ -4597,7 +4597,7 @@ def test_viewer_renders_language_pages_and_scrollable_language_filter(tmp_path: 
         for row in cast(list[dict[str, str]], copy.get("table", []))
     )
     assert 'data-language-page="ja"' in response.text
-    assert 'hx-push-url="/?view=BenchA&amp;lang_filter=en"' in response.text
+    assert 'hx-push-url="/?view=BenchA&amp;score=macro&amp;columns=grouped&amp;lang_filter=en"' in response.text
     assert 'aria-label="Task facets"' in response.text
     scope_panel = response.text.split('data-benchmark-task-scope="true"', 1)[1].split(
         "Table display", 1
@@ -4964,8 +4964,8 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
         headers={"HX-Request": "true"},
     )
 
-    assert verbose_default_response.headers["hx-push-url"] == "/?model_filter=model%2Fb"
-    assert concise_default_response.headers["hx-push-url"] == "/?model_filter=model%2Fb"
+    assert verbose_default_response.headers["hx-push-url"] == "/?score=macro&columns=grouped&model_filter=model%2Fb"
+    assert concise_default_response.headers["hx-push-url"] == "/?score=macro&columns=grouped&model_filter=model%2Fb"
     assert verbose_default_response.text == concise_default_response.text
     assert verbose_grouped_response.headers["hx-push-url"] == "/?score=macro&columns=grouped"
     assert 'name="columns" value="grouped" checked' in verbose_grouped_response.text
@@ -7108,7 +7108,7 @@ def test_std_display_applies_to_overall_macro_and_micro_means(tmp_path: Path) ->
     assert variant_row.micro_mean_z == pytest.approx(0.5)
 
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
-    response = TestClient(app).get("/leaderboard?view=Overall&score=micro&truncate=1&task_z_scores=1")
+    response = TestClient(app).get("/leaderboard?view=Overall&columns=none&score=micro&truncate=1&task_z_scores=1")
 
     assert response.status_code == 200
     assert "Macro Mean" in response.text
@@ -7141,7 +7141,7 @@ def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_
     app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
     client = TestClient(app)
 
-    default_response = client.get("/leaderboard?view=BenchA")
+    default_response = client.get("/leaderboard?view=BenchA&columns=none")
 
     assert default_response.status_code == 200
     assert 'name="columns" value="task" data-column-mode-toggle>' in default_response.text
@@ -7151,7 +7151,7 @@ def test_std_display_is_default_off_and_can_be_enabled_without_task_columns(tmp_
     assert "task-z-score" not in default_response.text
     assert "metric%3Aa1" not in default_response.text
 
-    enabled_response = client.get("/leaderboard?view=BenchA&task_z_scores=1")
+    enabled_response = client.get("/leaderboard?view=BenchA&columns=none&task_z_scores=1")
 
     assert enabled_response.status_code == 200
     assert 'name="task_z_scores" value="1" checked' in enabled_response.text
@@ -8444,7 +8444,7 @@ def test_viewer_leaderboard_endpoint_renders_htmx_table(tmp_path: Path) -> None:
     assert "Macro Mean" in response.text
     assert "model/a" in response.text
     assert 'hx-get="/leaderboard?' in response.text
-    assert 'href="/leaderboard.csv?sort=borda_rank&amp;direction=asc"' in response.text
+    assert 'href="/leaderboard.csv?sort=borda_rank&amp;direction=asc&amp;score=macro&amp;columns=grouped"' in response.text
     assert "Download CSV" in response.text
     assert 'data-icon="file-spreadsheet"' in response.text
     assert 'aria-label="Download visible leaderboard as CSV"' in response.text
@@ -8491,7 +8491,7 @@ def test_viewer_task_breakdown_endpoint_renders_task_docs_lazily(tmp_path: Path)
     assert 'data-count-breakdown-url="/leaderboard/task-breakdown?view=BenchA' in leaderboard_response.text
     assert 'data-count-breakdown-loaded="false"' in leaderboard_response.text
 
-    task_response = client.get("/leaderboard/task-breakdown?view=BenchA&sort=borda_score&direction=desc")
+    task_response = client.get("/leaderboard/task-breakdown?view=BenchA&columns=none&sort=borda_score&direction=desc")
 
     assert task_response.status_code == 200
     assert 'id="count-breakdown-tasks"' in task_response.text
@@ -8735,7 +8735,7 @@ benchmarks:
 
     assert response.status_code == 200
     assert '<link rel="canonical" href="/">' in response.text
-    assert 'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja"' in response.text
+    assert 'hx-get="/leaderboard?view=MNanoBEIR&amp;sort=metric%3ANanoBEIR-ja&amp;score=macro&amp;columns=grouped"' in response.text
 
 
 def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
@@ -8763,6 +8763,28 @@ def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
 
     assert page.status_code == 200
     assert leaderboard.status_code == 200
+    assert 'class="hakari-intro"' in page.text
+    assert "find relevant documents" in page.text
+    assert 'id="leaderboard-settings"' in leaderboard.text
+    assert not re.search(
+        r'<details[^>]*id="leaderboard-settings"[^>]*\bopen\b', leaderboard.text
+    )
+    assert 'aria-label="Evaluation mode"' in leaderboard.text
+    assert 'aria-current="page"' in leaderboard.text
+    assert leaderboard.text.index(
+        'aria-label="Evaluation mode"'
+    ) < leaderboard.text.index('id="leaderboard-settings"')
+    assert 'value="grouped" checked' in leaderboard.text
+    assert 'value="task" checked' not in leaderboard.text
+    hidden_columns = client.get("/leaderboard?columns=none")
+    assert 'value="grouped" checked' not in hidden_columns.text
+    assert "columns=none" in hidden_columns.text
+    assert 'data-score-key="borda_score" data-score-sort="active"' in leaderboard.text
+    sorted_mean = client.get("/leaderboard?sort=macro_mean")
+    assert 'data-score-key="macro_mean" data-score-sort="active"' in sorted_mean.text
+    assert 'data-score-key="borda_score" data-score-sort="active"' not in sorted_mean.text
+    sorted_group = client.get("/leaderboard?sort=metric:BenchA")
+    assert 'data-score-key="metric:BenchA" data-score-sort="active"' in sorted_group.text
     # The page-level explanation lives in the header, next to the docs link.
     assert 'id="hakari-page-overview-help"' in page.text
     assert "HAKARI-Bench" in _help_titles(page.text)

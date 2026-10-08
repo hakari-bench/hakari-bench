@@ -34,10 +34,8 @@
     --hakari-radius-sm: 4px;
     --hakari-radius-md: 6px;
     --hakari-radius-lg: 8px;
-    --hakari-font:
-      "JetBrains Mono", "Fira Code", "SFMono-Regular", "Cascadia Code",
-      "Roboto Mono", "Noto Sans Mono", "Yu Gothic UI", "Meiryo",
-      ui-monospace, monospace;
+    --hakari-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Noto Sans", "Yu Gothic UI", Meiryo, sans-serif;
   }
 
   :root.light {
@@ -50,19 +48,19 @@
     --hakari-surface: #2b3133;
     --hakari-surface-muted: #343d40;
     --hakari-surface-faint: #252c2e;
-    --hakari-border: #435358;
-    --hakari-border-strong: #5b7880;
+    --hakari-border: #30363d;
+    --hakari-border-strong: #465566;
     --hakari-grid: rgb(0 208 255 / 0.08);
-    --hakari-text: #f1fbff;
-    --hakari-text-muted: #abb9bd;
-    --hakari-text-faint: #768589;
-    --hakari-accent: #00d0ff;
-    --hakari-accent-strong: #a8f0ff;
+    --hakari-text: #e3e8ef;
+    --hakari-text-muted: #939da8;
+    --hakari-text-faint: #7d8793;
+    --hakari-accent: #449dff;
+    --hakari-accent-strong: #79b8ff;
     --hakari-accent-soft: rgb(0 208 255 / 0.11);
-    --hakari-accent-border: #5b7880;
-    --hakari-control-bg: #30383a;
-    --hakari-control-hover: #344044;
-    --hakari-control-active: #30454b;
+    --hakari-accent-border: #465566;
+    --hakari-control-bg: #161b22;
+    --hakari-control-hover: #212936;
+    --hakari-control-active: #223044;
     --hakari-warn-bg: rgb(239 208 106 / 0.11);
     --hakari-warn-border: #8f7431;
     --hakari-warn-text: #efd06a;
@@ -81,19 +79,19 @@
       --hakari-surface: #2b3133;
       --hakari-surface-muted: #343d40;
       --hakari-surface-faint: #252c2e;
-      --hakari-border: #435358;
-      --hakari-border-strong: #5b7880;
+      --hakari-border: #30363d;
+      --hakari-border-strong: #465566;
       --hakari-grid: rgb(0 208 255 / 0.08);
-      --hakari-text: #f1fbff;
-      --hakari-text-muted: #abb9bd;
-      --hakari-text-faint: #768589;
-      --hakari-accent: #00d0ff;
-      --hakari-accent-strong: #a8f0ff;
+      --hakari-text: #e3e8ef;
+      --hakari-text-muted: #939da8;
+      --hakari-text-faint: #7d8793;
+      --hakari-accent: #449dff;
+      --hakari-accent-strong: #79b8ff;
       --hakari-accent-soft: rgb(0 208 255 / 0.11);
-      --hakari-accent-border: #5b7880;
-      --hakari-control-bg: #30383a;
-      --hakari-control-hover: #344044;
-      --hakari-control-active: #30454b;
+      --hakari-accent-border: #465566;
+      --hakari-control-bg: #161b22;
+      --hakari-control-hover: #212936;
+      --hakari-control-active: #223044;
       --hakari-warn-bg: rgb(239 208 106 / 0.11);
       --hakari-warn-border: #8f7431;
       --hakari-warn-text: #efd06a;
@@ -2069,3 +2067,44 @@
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.45);
   }
 }
+
+/* The overview and mode navigation frame the leaderboard; detailed controls
+   stay accessible without competing with the results. */
+.hakari-header { padding-top: 1rem; }
+.hakari-intro { max-width: 960px; margin: 2rem auto 2.25rem; text-align: center; }
+.hakari-intro h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 750; line-height: 1.2; letter-spacing: -0.035em; }
+.hakari-intro p { color: var(--hakari-text-muted); font-size: 1rem; line-height: 1.7; margin-top: 1rem; }
+.hakari-intro .hakari-intro-subtitle { font-size: 1.125rem; margin-top: .65rem; }
+.hakari-intro strong { color: var(--hakari-text); font-weight: 600; }
+.hakari-intro a { display: inline-block; margin-top: 1rem; color: var(--hakari-accent); font-weight: 600; }
+.evaluation-tabs { display: flex; justify-content: center; flex-wrap: wrap; align-items: center; gap: 1rem; border-bottom: 1px solid var(--hakari-border); margin-bottom: 1.25rem; }
+.evaluation-tab { border-radius: 0; display: inline-flex; align-items: center; gap: .5rem; padding: .8rem 1.5rem; font-size: 1.125rem; font-weight: 600; color: var(--hakari-text-muted); border-bottom: 3px solid transparent; }
+.evaluation-tab:hover { color: var(--hakari-accent); }
+.evaluation-tab[aria-current="page"] { color: var(--hakari-accent); border-bottom-color: var(--hakari-accent); }
+.leaderboard-settings { border: 1px solid var(--hakari-border); border-radius: 6px; background: var(--hakari-surface); margin-bottom: 1.25rem; }
+.leaderboard-settings > summary { cursor: pointer; padding: .75rem 1rem; font-size: .9375rem; font-weight: 600; }
+.leaderboard-settings > summary span { margin-left: .75rem; color: var(--hakari-text-muted); font-size: .8125rem; font-weight: 400; }
+.leaderboard-settings > nav { padding: .75rem; border-top: 1px solid var(--hakari-border); }
+.leaderboard-table { font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.leaderboard-table :is(th, td) { padding-top: .25rem; padding-bottom: .25rem; }
+.leaderboard-table .model-detail-trigger { font-size: .8125rem; line-height: 1.35; font-weight: 500; color: var(--hakari-text); }
+@media (max-width: 640px) {
+  .hakari-intro { margin: 1.5rem auto; text-align: left; }
+  .leaderboard-settings > summary span { display: block; margin: .25rem 0 0; }
+}
+
+.leaderboard-table thead th { font-size: .8125rem; }
+
+.leaderboard-table tbody td { color: var(--hakari-text-muted); }
+.leaderboard-table tbody td[data-score-sort="active"] { color: var(--hakari-text); font-weight: 700; }
+.leaderboard-table tbody td.leaderboard-col-index { color: var(--hakari-text); }
+:root.dark .model-score-bar { opacity: .07; }
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .model-score-bar { opacity: .07; }
+}
+
+.leaderboard-table tbody tr.leaderboard-row td { border-bottom: 1px solid var(--hakari-border); }
+
+.leaderboard-table thead th,
+.leaderboard-table thead button[data-leaderboard-control],
+.leaderboard-table thead button[data-model-filter-focus] { color: var(--hakari-text); }

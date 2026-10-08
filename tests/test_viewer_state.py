@@ -738,6 +738,7 @@ def test_state_payload_round_trips_display_and_filter_state() -> None:
     )
 
     assert query == {
+        "columns": "none",
         "view": "BenchA",
         "sort": "mean_score",
         "quantization": "1",
