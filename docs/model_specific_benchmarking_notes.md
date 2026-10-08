@@ -261,9 +261,10 @@ the documented context explicitly. SDPA is supported by the official
 Transformers implementation; the model card does not prescribe an attention
 backend.
 
-The corrected text-only rerun uses SentenceTransformers 6.1.0 and Transformers
-5.19.0.dev0 from commit `a96730c8c97b8efbf35bbaf7f5da33ec99231a49` (latest
-official main when the rerun began), with torch 2.9.1 and Python 3.12.
+The completed FlexAttention evaluation uses SentenceTransformers 6.1.0 and
+Transformers 5.19.0.dev0 from commit
+`a96730c8c97b8efbf35bbaf7f5da33ec99231a49`, torch 2.14.1 / CUDA 13.0 and
+Python 3.12. SDPA was used for the earlier diagnostic runs.
 Transformers 5.18.0 did not recognize the architecture.
 Use a dedicated environment with model support; these notes do not change the
 project's dependency requirements or lockfile.
@@ -341,10 +342,76 @@ skips that cast when floating parameters already have the requested dtype,
 preserving those buffers. The original 561 full-checkpoint task results were
 invalidated by this audit; the two resumed tasks used a custom loader that
 bypassed the redundant cast. Equivalent full-versus-text-only CPU embeddings
-do not validate this separate bf16 issue. The corrected rerun reevaluates all
-563 tasks with the text-only loader, the latest pinned Transformers commit above,
-SDPA, bf16, batch 16, and the original dataset revisions. Use PR #43's validation
-status to distinguish original files from the corrected replacement.
+do not validate this separate bf16 issue. The complete replacement evaluates all 563 standard tasks and six extended
+NanoDAPFAM FullText tasks with text-only loading and FlexAttention. All 569
+tasks have 20 embedding conditions and use the original pinned dataset revisions.
+The 550-task standard Overall excludes the six extended FullText tasks; their
+scores are reported separately in PR #43. Original local SDPA results remain
+available separately.
+
+### FlexAttention reproduction
+
+The completed run used an RTX PRO 6000 Blackwell Max-Q (SM120). Default Flex
+kernel tiles exceeded its shared-memory limit; the following Triton options
+were validated: `BLOCK_M=16`, `BLOCK_N=32`, `num_stages=1`, `num_warps=4`,
+`BACKEND=TRITON`. Save this wrapper as `tmp/embeddinggemma2_flex_loader.py`
+alongside the text-only loader above:
+
+```python
+import torch
+
+from embeddinggemma2_text_loader import load_model as load_text_model
+
+
+def load_model(config):
+    torch._dynamo.config.recompile_limit = 256
+    torch._dynamo.config.accumulated_recompile_limit = 2048
+    torch._dynamo.config.fail_on_recompile_limit_hit = True
+    model = load_text_model(config)
+    options = {
+        "BLOCK_M": 16,
+        "BLOCK_N": 32,
+        "num_stages": 1,
+        "num_warps": 4,
+        "BACKEND": "TRITON",
+    }
+    options.update(config.model_loader_kwargs.get("kernel_options", {}))
+    original_forward = model[0].auto_model.forward
+
+    def tuned_forward(*args, **kwargs):
+        kwargs["kernel_options"] = options
+        return original_forward(*args, **kwargs)
+
+    model[0].auto_model.forward = tuned_forward
+    return model
+```
+
+The default Dynamo recompilation limit was exhausted by variable input shapes
+in an initial MLDR English trial, causing an unfused fallback. That trial was
+stopped and discarded. Raising the limits and failing when they are exhausted
+prevents accepting results from this fallback; the completed run had none of
+these warnings. The static model card keeps SDPA as its portable default;
+reproducing these Flex results requires the wrapper and dedicated environment.
+
+Use the earlier dense command with the following replacements:
+
+```bash
+--model-loader embeddinggemma2_flex_loader:load_model \
+--model-loader-kwargs-json '{"config_kwargs":{"vision_config":null,"audio_config":null},"input_modalities":["text"],"kernel_options":{"BLOCK_M":16,"BLOCK_N":32,"num_stages":1,"num_warps":4,"BACKEND":"TRITON"}}' \
+--attn-implementation flex_attention \
+--results-dir output/embeddinggemma2-flex/hakari-results
+```
+
+The measured run selected explicit task lists for each dataset at its original
+revision, instead of `--all`, to pin all 50 dataset revisions. Include all 18
+NanoDAPFAM tasks explicitly when reproducing the extended track. The completed
+English MLDR Flex trial was reused; the other 568 tasks were evaluated in the
+new result root. Each condition shares the task's single encoding pass.
+
+English MLDR nDCG@10 ×100 was 57.2295 for Flex / torch 2.14.1 versus 56.7163 for
+corrected SDPA / torch 2.9.1. Evaluation time, including compilation, was
+652.7 seconds versus 1203.3 seconds (~1.84× faster). Both torch and attention
+changed, so this comparison does not isolate the attention backend's effect.
 
 ## hotchpotch Bekko Embeddings
 

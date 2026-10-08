@@ -42,7 +42,8 @@ language_support:
 notes:
   - The official supported context is 8192 tokens. The published tokenizer uses an effectively unlimited sentinel, so set the documented context explicitly.
   - CPU text encoding was validated with SentenceTransformers 6.1.0 and Transformers commit e598fbad926d80bc356c0c4d96532030e3dfdb62. Transformers 5.18.0 does not recognize this architecture.
-  - The corrected text-only rerun uses Transformers commit a96730c8c97b8efbf35bbaf7f5da33ec99231a49 (latest official main at rerun start), SDPA and batch 16. Preserve the official loader's FP32 RoPE buffers.
+  - The completed text-only evaluation uses Transformers commit a96730c8c97b8efbf35bbaf7f5da33ec99231a49, torch 2.14.1 / CUDA 13.0, FlexAttention and batch 16. Preserve the official loader's FP32 RoPE buffers.
+  - SDPA remains the portable card default. FlexAttention reproduction requires the custom wrapper, Triton kernel options and Dynamo limits documented in docs/model_specific_benchmarking_notes.md. The completed run includes 563 standard tasks plus six extended NanoDAPFAM FullText tasks, each with 20 conditions.
   - SDPA is supported by the official Transformers implementation; the model card does not prescribe an attention backend.
   - Parameter counts are measured from the text embedding encoder only, with vision_config and audio_config set to null. Active parameters equal total minus input embedding parameters; vision and audio encoder parameters are excluded.
   - Text retrieval requires input modality detection restricted to text to prevent media URLs from being loaded as video or images. Use the text-only custom loader documented in docs/model_specific_benchmarking_notes.md; the default from-model-card loader does not apply these settings.
