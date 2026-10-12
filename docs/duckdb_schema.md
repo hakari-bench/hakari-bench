@@ -2027,3 +2027,11 @@ length range filters are ranking-population filters whenever they are set.
 The table emphasizes only the score column selected by `sort` with brighter,
 bold text. This applies to Borda, mean, and individual task/group score columns;
 metadata sorts do not emphasize a score column. Score values are unchanged.
+
+The viewer uses a fixed dark theme with blue accents. The overview introduces retrieval and reranking side by side; theme preferences and the light-theme toggle are no longer used.
+
+The header overview statistics load with the leaderboard response via an HTMX out-of-band update.
+They are independent of active filters: dataset groups and expected tasks refer to the primary Overall configuration,
+and retrieval/reranking counts are distinct base model names eligible for its complete task set, using the same
+leaderboard eligibility and reranking safeguard rules. The overview is cached by database modification time and size.
+Placeholders reserve space until loading completes.

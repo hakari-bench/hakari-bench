@@ -1097,10 +1097,10 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'href="/docs/"' in response.text
     assert 'aria-label="Open documentation"' in response.text
     assert 'data-icon="book-open"' in response.text
-    assert 'id="hakari-theme-toggle"' in response.text
-    assert 'aria-label="Toggle color theme"' in response.text
-    assert 'data-icon="moon"' in response.text
-    assert 'data-icon="sun"' in response.text
+    assert 'id="hakari-theme-toggle"' not in response.text
+    assert '<html lang="en" class="dark" data-theme="dark">' in response.text
+    assert 'Search models.<br><span>Measured across languages.</span>' in response.text
+    assert 'class="hakari-capabilities"' in response.text
     assert response.text.index('id="hakari-github-link"') < response.text.index('id="hakari-docs-link"')
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-Bench leaderboard</p>' not in response.text
     assert "WIP: This leaderboard" not in response.text
@@ -1253,7 +1253,7 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     css_response = client.get("/assets/app.css")
     assert css_response.status_code == 200
     assert css_response.headers["content-type"].startswith("text/css")
-    assert "prefers-color-scheme:dark" in css_response.text
+    assert "color-scheme:dark" in css_response.text
     assert ":root.dark" in css_response.text
     assert "system-ui" in css_response.text
     assert ".theme-toggle" in css_response.text
@@ -1288,7 +1288,7 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert "top:2px;bottom:2px;left:2px;border:0;display:block;width:calc(100% - 2px);height:calc(100% - 4px)" in css_response.text
     assert "background-color:transparent;color:var(--hakari-accent);opacity:.1;pointer-events:none" in css_response.text
     assert ":root.dark .model-score-bar{opacity:.13}" in css_response.text
-    assert ":root:not(.light) .model-score-bar{opacity:.13}" in css_response.text
+    assert "prefers-color-scheme" not in css_response.text
     assert ".leaderboard-col-model:hover .model-score-bar,.leaderboard-row:hover .model-score-bar{opacity:.28}" in css_response.text
     assert ".model-score-bar::-webkit-progress-value{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
     assert ".model-score-bar::-moz-progress-bar{background-color:var(--hakari-accent);border-radius:0 4px 4px 0}" in css_response.text
@@ -1313,10 +1313,10 @@ def test_viewer_serves_static_assets_from_assets_dir(tmp_path: Path) -> None:
     assert 'event.key !== "Enter"' in viewer_js_response.text
     assert "#filter-controls input[type='search'], #filter-controls input[type='number']" in viewer_js_response.text
     assert "form.requestSubmit()" in viewer_js_response.text
-    assert "window.__hakariApplyTheme" in viewer_js_response.text
-    assert "window.__hakariBindThemeToggle" in viewer_js_response.text
-    assert "window.__hakariSyncThemeToggle" in viewer_js_response.text
-    assert 'window.matchMedia("(prefers-color-scheme: dark)")' in viewer_js_response.text
+    assert "window.__hakariApplyTheme" not in viewer_js_response.text
+    assert "window.__hakariBindThemeToggle" not in viewer_js_response.text
+    assert "window.__hakariSyncThemeToggle" not in viewer_js_response.text
+    assert 'document.documentElement.classList.add("dark")' in viewer_js_response.text
     assert "window.__hakariShowTooltip" in viewer_js_response.text
     assert "window.__hakariHideTooltip" in viewer_js_response.text
     assert "window.__hakariPositionTooltip" in viewer_js_response.text
@@ -7176,13 +7176,13 @@ def test_task_z_score_heatmap_uses_quarter_sigma_buckets() -> None:
     assert _z_score_bucket_class(-2.0) == "task-z-neg-200"
 
 
-def test_task_z_score_heatmap_css_defines_light_and_dark_buckets() -> None:
+def test_task_z_score_heatmap_css_defines_dark_buckets() -> None:
     css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
 
     for direction in ("pos", "neg"):
         for bucket in ("025", "050", "075", "100", "125", "150", "175", "200"):
             selector = f".task-z-{direction}-{bucket}"
-            assert css_source.count(selector) == 3
+            assert css_source.count(selector) == 2
 
 
 def test_task_z_score_text_css_uses_intuitive_positive_negative_colors() -> None:
@@ -7220,18 +7220,18 @@ def test_variant_badge_css_uses_visible_shared_background() -> None:
     assert re.search(shared_badge_selector, css_source, flags=re.DOTALL)
 
 
-def test_light_theme_tokens_keep_control_contrast() -> None:
+def test_dark_theme_tokens_keep_control_contrast() -> None:
     css_source = Path("hakari_bench/viewer/assets/app.tailwind.css").read_text(encoding="utf-8")
 
     expected_tokens = {
-        "--hakari-surface-muted": "#e0f1f5",
-        "--hakari-surface-faint": "#edf8fb",
-        "--hakari-border": "#a9ccd6",
-        "--hakari-text-muted": "#52626b",
-        "--hakari-text-faint": "#6f7f87",
-        "--hakari-control-bg": "#e3f2f6",
-        "--hakari-control-hover": "#d5eaf0",
-        "--hakari-control-active": "#c3e0e9",
+        "--hakari-surface-muted": "#203040",
+        "--hakari-surface-faint": "#121d29",
+        "--hakari-border": "#2a3949",
+        "--hakari-text-muted": "#939da8",
+        "--hakari-text-faint": "#7d8793",
+        "--hakari-control-bg": "#161b22",
+        "--hakari-control-hover": "#212936",
+        "--hakari-control-active": "#223044",
     }
     for token, value in expected_tokens.items():
         assert re.search(rf"{token}: {value};", css_source)
@@ -9222,3 +9222,23 @@ def test_frame_ancestors_rejects_crlf_token(monkeypatch: pytest.MonkeyPatch) -> 
         "https://huggingface.co\r\nContent-Type: text/html",
     )
     assert viewer_app._frame_ancestors() == viewer_app.DEFAULT_FRAME_ANCESTORS
+
+
+def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    db_path = tmp_path / "results.duckdb"
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    client = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir))
+    initial = client.get("/")
+    assert 'id="hakari-overview-stats"' in initial.text
+    assert 'aria-busy="true"' in initial.text
+    assert "Models evaluated on all tasks" in initial.text
+    response = client.get("/leaderboard", params={"model_filter": "no-match"})
+    assert 'id="hakari-overview-stats" hx-swap-oob="outerHTML"' in response.text
+    assert 'aria-busy="false"' in response.text
+    assert "Retrieval models" in response.text
+    assert "Reranking models" in response.text

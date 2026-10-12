@@ -813,7 +813,7 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                     '#leaderboard-panel [data-model-metadata*="truncate_dim_256_binary_rescore"]'
                 ).first.locator("xpath=ancestor::tr")
                 assert "rescore" in truncated_rescore_row.inner_text()
-                for theme in ("light", "dark"):
+                for theme in ("dark",):
                     page.evaluate(
                         "theme => { document.documentElement.classList.remove('light', 'dark'); "
                         "document.documentElement.classList.add(theme); }",
@@ -1294,8 +1294,18 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
             browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
             try:
                 page = browser.new_page(viewport={"width": 1280, "height": 900})
+                page.emulate_media(color_scheme="light")
+                page.add_init_script("localStorage.setItem('hakari-theme', 'light')")
                 page.goto(base_url)
+                assert page.locator("html").get_attribute("data-theme") == "dark"
+                assert page.evaluate("getComputedStyle(document.documentElement).colorScheme") == "dark"
+                assert page.locator("#hakari-theme-toggle").count() == 0
                 page.wait_for_selector(".leaderboard-table")
+                page.wait_for_function("document.querySelector('#hakari-overview-stats').getAttribute('aria-busy') === 'false'")
+                overview_text = page.locator("#hakari-overview-stats").inner_text()
+                assert "Dataset groups" in overview_text
+                assert "Retrieval models" in overview_text
+                assert "—" not in overview_text
                 assert page.get_by_label("Grouped columns", exact=True).is_checked()
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
                 page.locator("#leaderboard-settings > summary").click()
@@ -1316,7 +1326,8 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                     page.get_by_role("button", name="Reranking", exact=True).click()
                 page.wait_for_function("document.querySelector('.evaluation-tab[aria-current=page]').textContent.includes('Reranking')")
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
+                assert page.locator("#hakari-overview-stats").inner_text() == overview_text
                 page.set_viewport_size({"width": 390, "height": 844})
-                assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+                page.wait_for_function("document.documentElement.scrollWidth <= innerWidth")
             finally:
                 browser.close()

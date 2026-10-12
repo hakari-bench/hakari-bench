@@ -535,6 +535,21 @@ def create_app(
         )
         return result, sort, direction, filter_state
 
+    @lru_cache(maxsize=1)
+    def overview_stats(database_version: tuple[int, int]) -> str:
+        service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
+        retrieval = service.get_leaderboard(viewer_config.overall.name, score_target="all")
+        reranking = service.get_leaderboard(viewer_config.overall.name, score_target="reranking")
+        return render_overview_stats(
+            counts=(
+                len(viewer_config.overall.benchmark_names),
+                retrieval.expected_tasks,
+                len({row.model_name for row in retrieval.rows}),
+                len({row.model_name for row in reranking.rows}),
+            ),
+            swap_oob=True,
+        )
+
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
         request: Request,
@@ -663,7 +678,9 @@ def create_app(
                     plot_x=query_string(state_query.get("chart_x", "active_parameters")),
                     plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
                 )
-                content = f"{content}\n{_render_footer_update(store=store)}"
+                database_stat = store.path.stat() if store.path.exists() else None
+                version = (database_stat.st_mtime_ns, database_stat.st_size) if database_stat else (0, 0)
+                content = f"{content}\n{_render_footer_update(store=store)}\n{overview_stats(version)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
             render_ms = _elapsed_ms(render_started)
             request_timing["view"] = result.view_name
@@ -985,7 +1002,7 @@ def render_page(
     footer = _render_page_footer(latest_update=latest_update, database_label=database_label, initial_loading=True)
     header_actions = _render_header_actions()
     return f"""<!doctype html>
-<html lang="en">
+<html lang="en" class="dark" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1011,14 +1028,22 @@ def render_page(
         {header_actions}
       </div>
       <div class="hakari-intro">
-        <h2>Find the right model for your search.</h2>
-        <p class="hakari-intro-subtitle">A multilingual benchmark for retrieval and reranking models</p>
-        <p>HAKARI-Bench compares how well models <strong>find relevant documents</strong> across languages and domains.
-          <strong>Retrieval</strong> models search a collection of documents; <strong>reranking</strong> models
-          reorder search results to put the best matches first.</p>
-        <p>Explore scores by benchmark below. Higher Borda scores mean better rankings across the selected tasks.
-          Only models with results for every selected task are compared. Open Settings to customize the comparison.</p>
-        <a href="/docs/">How the benchmark works &rarr;</a>
+        <div class="hakari-intro-title">
+          <p class="hakari-eyebrow">HAKARI-Bench<span>.</span></p>
+          <h2>Search models.<br><span>Measured across languages.</span></h2>
+          {render_overview_stats()}
+        </div>
+        <div class="hakari-intro-details">
+          <h3>Find the right model<br>for <span>your search.</span></h3>
+          <p class="hakari-intro-subtitle">Compare how well models find relevant documents across languages and domains.</p>
+          <div class="hakari-capabilities">
+            <div><h4>Retrieval</h4><p>Find relevant documents in a collection.</p></div>
+            <div><h4>Reranking</h4><p>Put the best search results first.</p></div>
+            <div><h4>Compare</h4><p>Explore scores by benchmark and task.</p></div>
+          </div>
+          <p class="hakari-ranking-note">Higher Borda scores mean better rankings. Only models with results for every selected task are compared.</p>
+          <a href="/docs/">How the benchmark works &rarr;</a>
+        </div>
       </div>
     </header>
     <section
@@ -1148,14 +1173,6 @@ def render_global_tooltip() -> str:
     """
 
 
-def _render_theme_toggle() -> str:
-    return f"""<button id="hakari-theme-toggle" type="button" class="theme-toggle grid h-8 w-8 shrink-0 place-items-center border"
-          aria-label="Toggle color theme" aria-pressed="false" title="Toggle color theme">
-          <span class="theme-toggle-icon-light">{_icon_svg("moon", class_name="hakari-icon")}</span>
-          <span class="theme-toggle-icon-dark">{_icon_svg("sun", class_name="hakari-icon")}</span>
-        </button>"""
-
-
 def _render_brand_icon() -> str:
     return f'<img src="{BRAND_ICON_URL}" alt="" class="hakari-brand-icon shrink-0" width="28" height="28">'
 
@@ -1179,7 +1196,6 @@ def _render_header_actions() -> str:
           {_render_page_overview_help()}
           {_render_github_link()}
           {_render_docs_link()}
-          {_render_theme_toggle()}
         </div>"""
 
 
@@ -1207,8 +1223,7 @@ def _render_docs_header() -> str:
           </a>
           <div class="flex shrink-0 items-center gap-2">
             {_render_github_link()}
-            {_render_theme_toggle()}
-          </div>
+            </div>
         </header>"""
 
 
@@ -1443,6 +1458,23 @@ def _help_aria_label(copy: help_text.HelpCopy) -> str:
     """Screen readers get the group name the eyebrow chip carries visually."""
 
     return f"{copy.eyebrow}: {copy.title}" if copy.eyebrow else copy.title
+
+
+def render_overview_stats(
+    *, counts: tuple[int, int, int, int] | None = None, swap_oob: bool = False
+) -> str:
+    labels = ("Dataset groups", "Tasks", "Retrieval models", "Reranking models")
+    values = tuple(f"{count:,}" for count in counts) if counts is not None else ("—",) * 4
+    items = "".join(
+        f'<div><dt>{label}</dt><dd>{value}</dd></div>'
+        for label, value in zip(labels, values, strict=True)
+    )
+    oob = ' hx-swap-oob="outerHTML"' if swap_oob else ""
+    busy = "true" if counts is None else "false"
+    return f"""<div id="hakari-overview-stats"{oob} aria-busy="{busy}" aria-live="polite">
+      <dl class="hakari-stats">{items}</dl>
+      <p class="hakari-stats-note">Models evaluated on all tasks · benchmark-wide totals</p>
+    </div>"""
 
 
 def render_summary_cards(summary: ViewerSummary) -> str:
