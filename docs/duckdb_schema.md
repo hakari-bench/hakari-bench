@@ -2078,3 +2078,9 @@ network transfer; they are not public Space latency guarantees. Default task
 SQL orders by model, variant (base first), benchmark, task key, trust setting,
 and score so representative model metadata and column documentation keys remain
 reproducible across snapshot builds.
+
+The visible HAKARI-Bench Leaderboard title navigates to `/`, discarding query/hash
+state and restoring default Retrieval/Macro/Grouped display and empty filters.
+It requests a cleared parent hash when embedded in Hugging Face. This reloads the
+page through the usual database synchronization policy; it does not delete
+DuckDB files or invalidate valid initial-view snapshots.

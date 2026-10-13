@@ -677,3 +677,8 @@ than additional introductory paragraphs. Keep overview links small with SVG icon
 
 These current rules supersede older light/dark parity, monospace, and theme-toggle
 examples below when they conflict.
+
+The visible overview title links to `/` with a full document navigation, restoring
+default Retrieval, Grouped columns, collapsed Settings, and cleared filters. In
+the Hugging Face iframe, clear the parent URL hash before navigation. Preserve
+the title's existing colors and typography; underline it on hover.
