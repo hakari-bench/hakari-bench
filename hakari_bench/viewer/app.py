@@ -14,6 +14,7 @@ import math
 import os
 from pathlib import Path
 import re
+import threading
 from time import perf_counter
 from typing import Callable, Iterable, ParamSpec, Sequence, TypedDict, cast
 from urllib.parse import quote, urlencode
@@ -300,7 +301,10 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(_app: object) -> AsyncIterator[None]:
+        from hakari_bench.viewer.snapshots import warm_initial_snapshots
+
         store.start_background_sync()
+        threading.Thread(target=warm_initial_snapshots, args=(store, viewer_config), daemon=True).start()
         yield
 
     app = FastAPI(title="HAKARI-Bench leaderboard", docs_url=None, redoc_url=None, lifespan=lifespan)

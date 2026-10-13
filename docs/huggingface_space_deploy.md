@@ -154,6 +154,7 @@ app_port: 7860
 pinned: true
 license: mit
 fullWidth: true
+header: mini
 short_description: Lightweight multilingual IR benchmark & leaderboard
 ---
 

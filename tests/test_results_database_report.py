@@ -4749,6 +4749,7 @@ def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path)
         "task_diagnostics.parquet",
         "task_results.parquet",
         "viewer_filter_values.parquet",
+        "viewer_initial_snapshots.parquet",
         "viewer_leaderboard_language_options.parquet",
         "viewer_leaderboard_rows.parquet",
         "viewer_task_results.parquet",

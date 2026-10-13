@@ -530,14 +530,14 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
     assert [(record.embedding_variant_name, record.quantization) for record in cross_variant_records] == [
         (None, None),
         ("quantize_uint8_docs", "uint8"),
-        ("truncate_dim_384", None),
         ("truncate_dim_256_quantize_int8_docs", "int8"),
+        ("truncate_dim_384", None),
     ]
     assert [record.embedding_variant_name for record in rescore_records] == [None]
     assert [record.embedding_variant_name for record in quantization_rescore_records] == [
         None,
-        "quantize_uint8_docs",
         "binary_rescore",
+        "quantize_uint8_docs",
     ]
     assert [record.embedding_variant_name for record in truncate_rescore_records] == [
         None,
@@ -545,11 +545,11 @@ def test_task_results_repository_pushes_variant_display_flags_into_sql(tmp_path:
     ]
     assert [record.embedding_variant_name for record in all_rescore_records] == [
         None,
-        "quantize_uint8_docs",
-        "truncate_dim_384",
-        "truncate_dim_256_quantize_int8_docs",
         "binary_rescore",
+        "quantize_uint8_docs",
         "truncate_dim_256_binary_rescore",
+        "truncate_dim_256_quantize_int8_docs",
+        "truncate_dim_384",
     ]
     assert [record.embedding_variant_name for record in other_records] == [
         None,
