@@ -60,7 +60,7 @@ from hakari_bench.viewer.model_display import (
     render_model_name_cell,
 )
 from hakari_bench.viewer.model_types import is_bm25_model, model_type_filter_key
-from hakari_bench.viewer.observability import timed_operation
+from hakari_bench.viewer.observability import log_event, timed_operation
 from hakari_bench.viewer.state import (
     FilterState,
     PLOT_AXIS_FIELDS,
@@ -299,12 +299,23 @@ def create_app(
         group_names=viewer_config.benchmark_names,
     )
 
-    @asynccontextmanager
-    async def lifespan(_app: object) -> AsyncIterator[None]:
+    # Keep the last known totals available while a replacement database syncs.
+    overview_counts: tuple[int, int, int, int] | None = None
+
+    def warm_startup_cache() -> None:
         from hakari_bench.viewer.snapshots import warm_initial_snapshots
 
+        warm_initial_snapshots(store, viewer_config)
+        if store.path.exists():
+            try:
+                overview_stats(database_version())
+            except Exception as exc:
+                log_event("viewer.overview.warmup", error_type=type(exc).__name__)
+
+    @asynccontextmanager
+    async def lifespan(_app: object) -> AsyncIterator[None]:
         store.start_background_sync()
-        threading.Thread(target=warm_initial_snapshots, args=(store, viewer_config), daemon=True).start()
+        threading.Thread(target=warm_startup_cache, daemon=True).start()
         yield
 
     app = FastAPI(title="HAKARI-Bench leaderboard", docs_url=None, redoc_url=None, lifespan=lifespan)
@@ -477,6 +488,7 @@ def create_app(
                     initial_query=initial_query,
                     benchmark_docs=benchmark_docs,
                     database_label="",
+                    overview_counts=overview_counts,
                 )
             request_timing["view"] = query_string(initial_query.get("view", viewer_config.overall.name))
             return content
@@ -540,20 +552,34 @@ def create_app(
         )
         return result, sort, direction, filter_state
 
-    @lru_cache(maxsize=1)
-    def overview_stats(database_version: tuple[int, int]) -> str:
-        service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
-        retrieval = service.get_leaderboard(viewer_config.overall.name, score_target="all")
-        reranking = service.get_leaderboard(viewer_config.overall.name, score_target="reranking")
-        return render_overview_stats(
-            counts=(
+    def database_version() -> tuple[int, int]:
+        stat = store.path.stat() if store.path.exists() else None
+        return (stat.st_mtime_ns, stat.st_size) if stat else (0, 0)
+
+    overview_lock = threading.Lock()
+    overview_version: tuple[int, int] | None = None
+
+    def overview_stats(version: tuple[int, int]) -> str:
+        nonlocal overview_counts, overview_version
+        # Startup warmup and the first request can race. Serialize publication
+        # and cache by source version so replacement DBs refresh these totals.
+        with overview_lock:
+            if overview_version == version and overview_counts is not None:
+                return render_overview_stats(counts=overview_counts, swap_oob=True)
+            service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
+            retrieval = service.get_leaderboard(viewer_config.overall.name, score_target="all")
+            reranking = service.get_leaderboard(viewer_config.overall.name, score_target="reranking")
+            counts = (
                 len(viewer_config.overall.benchmark_names),
                 retrieval.expected_tasks,
                 len({row.model_name for row in retrieval.rows}),
                 len({row.model_name for row in reranking.rows}),
-            ),
-            swap_oob=True,
-        )
+            )
+            # Do not label totals from a concurrently replaced DB as current.
+            if database_version() == version:
+                overview_counts = counts
+                overview_version = version
+            return render_overview_stats(counts=counts, swap_oob=True)
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
@@ -683,8 +709,7 @@ def create_app(
                     plot_x=query_string(state_query.get("chart_x", "active_parameters")),
                     plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
                 )
-                database_stat = store.path.stat() if store.path.exists() else None
-                version = (database_stat.st_mtime_ns, database_stat.st_size) if database_stat else (0, 0)
+                version = database_version()
                 content = f"{content}\n{_render_footer_update(store=store)}\n{overview_stats(version)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
             render_ms = _elapsed_ms(render_started)
@@ -996,6 +1021,7 @@ def render_page(
     initial_query: QueryState | None = None,
     benchmark_docs: BenchmarkDocs | None = None,
     database_label: str = "",
+    overview_counts: tuple[int, int, int, int] | None = None,
 ) -> str:
     query = urlencode(initial_query or {}, doseq=True)
     css_url = _asset_url("app.css")
@@ -1035,7 +1061,7 @@ def render_page(
       <div class="hakari-intro">
         <h2><a id="hakari-home-link" href="/">HAKARI-Bench <span>Leaderboard</span></a></h2>
         <h3>A lightweight benchmark for multilingual retrieval and reranking</h3>
-        {render_overview_stats()}
+        {render_overview_stats(counts=overview_counts)}
         <div class="hakari-intro-links">
           <a href="/docs/">{_icon_svg("book-open")}<span>Evaluation guide</span></a>
           <a href="https://arxiv.org/abs/2606.22778" target="_blank" rel="noopener noreferrer">{_icon_svg("file-text")}<span>Paper</span></a>

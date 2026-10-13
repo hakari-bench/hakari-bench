@@ -9226,7 +9226,7 @@ def test_frame_ancestors_rejects_crlf_token(monkeypatch: pytest.MonkeyPatch) -> 
     assert viewer_app._frame_ancestors() == viewer_app.DEFAULT_FRAME_ANCESTORS
 
 
-def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path) -> None:
+def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from fastapi.testclient import TestClient
 
     db_path = tmp_path / "results.duckdb"
@@ -9234,6 +9234,14 @@ def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path) -> None
     config_dir.mkdir()
     (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
     (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n", encoding="utf-8")
+    calls = []
+    original = LeaderboardService.get_leaderboard
+
+    def counted(service, *args, **kwargs):
+        calls.append(kwargs.get("score_target"))
+        return original(service, *args, **kwargs)
+
+    monkeypatch.setattr(LeaderboardService, "get_leaderboard", counted)
     client = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir))
     initial = client.get("/")
     assert 'id="hakari-overview-stats"' in initial.text
@@ -9244,3 +9252,23 @@ def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path) -> None
     assert 'aria-busy="false"' in response.text
     assert "Retrieval" in response.text
     assert "Reranking" in response.text
+    refreshed = client.get("/")
+    assert 'id="hakari-overview-stats" aria-busy="false"' in refreshed.text
+    assert "<strong>1 dataset groups</strong>" in refreshed.text
+    assert "— models" not in refreshed.text
+    assert len(calls) == 3  # Filtered table plus the two benchmark-wide totals.
+    client.get("/leaderboard", params={"model_filter": "other-filter"})
+    assert len(calls) == 4  # Only the table; overview totals stay in memory.
+    empty_result = original(LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir)), "Overall")
+
+    def counted_replacement(service, *args, **kwargs):
+        calls.append(kwargs.get("score_target"))
+        return empty_result
+
+    monkeypatch.setattr(LeaderboardService, "get_leaderboard", counted_replacement)
+    with duckdb.connect(str(db_path)) as con:
+        con.execute("CREATE TABLE cache_version_test (value INTEGER)")
+    assert 'id="hakari-overview-stats" aria-busy="false"' in client.get("/").text
+    assert len(calls) == 4  # Root does not query even during a source change.
+    client.get("/leaderboard")
+    assert len(calls) == 7  # Replacement database refreshes both totals.

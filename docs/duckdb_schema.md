@@ -2084,3 +2084,16 @@ state and restoring default Retrieval/Macro/Grouped display and empty filters.
 It requests a cleared parent hash when embedded in Hugging Face. This reloads the
 page through the usual database synchronization policy; it does not delete
 DuckDB files or invalidate valid initial-view snapshots.
+
+### Overview totals in the initial page
+
+The application retains benchmark-wide dataset-group, task, and complete-model
+counts in process memory, separately from the selected table filters. The root
+HTML reads these totals without opening DuckDB or waiting for the leaderboard.
+Startup first syncs the database and warms the existing initial snapshots, then
+loads the overview totals through those snapshots. Before the first successful
+load, the page uses dashes. Later page loads include the known totals immediately.
+A source file version change (mtime and size) refreshes the totals on the next
+leaderboard request; the last known totals remain visible during sync. A lock
+prevents duplicate startup/request computations and totals are only published
+when the source version remains unchanged. No extra persistent cache is needed.
