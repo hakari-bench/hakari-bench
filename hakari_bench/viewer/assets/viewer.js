@@ -7,6 +7,15 @@
     return target.closest(selector);
   }
 
+  // Full home navigation resets query state and the Hugging Face parent hash.
+  document.addEventListener("click", (event) => {
+    if (!closestElement(event.target, "#hakari-home-link")) return;
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    if (window.parent !== window) {
+      window.parent.postMessage({ queryString: "", hash: "" }, "https://huggingface.co");
+    }
+  });
+
   // Keep Settings open while its controls replace the leaderboard panel.
   let pendingOverviewTarget = null;
   function focusEvaluationTab(target) {

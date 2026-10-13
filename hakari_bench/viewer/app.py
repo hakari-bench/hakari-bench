@@ -1025,7 +1025,7 @@ def render_page(
     <header class="hakari-header">
       <div class="hidden" aria-hidden="true">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
-          <a id="hakari-home-link" href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
+          <a href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
             {_render_brand_icon()}
             <span>HAKARI-Bench</span>
           </a>
@@ -1033,7 +1033,7 @@ def render_page(
         {header_actions}
       </div>
       <div class="hakari-intro">
-        <h2>HAKARI-Bench <span>Leaderboard</span></h2>
+        <h2><a id="hakari-home-link" href="/">HAKARI-Bench <span>Leaderboard</span></a></h2>
         <h3>A lightweight benchmark for multilingual retrieval and reranking</h3>
         {render_overview_stats()}
         <div class="hakari-intro-links">
