@@ -37,6 +37,7 @@ from hakari_bench.viewer.model_types import (
     model_type_filter_key,
 )
 from hakari_bench.viewer.observability import log_event, timed_operation
+from hakari_bench.viewer.snapshots import cached_initial_leaderboard
 from hakari_bench.viewer.text_match import (
     active_filter_terms,
     text_matches_filter_terms,
@@ -268,6 +269,7 @@ class LeaderboardService:
             for overall in config.overalls
         }
 
+    @cached_initial_leaderboard
     def get_leaderboard(
         self,
         view_name: str,

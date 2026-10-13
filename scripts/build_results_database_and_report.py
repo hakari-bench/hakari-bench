@@ -252,6 +252,7 @@ WAREHOUSE_TABLES = (
     "viewer_task_results",
     "viewer_filter_values",
     "viewer_leaderboard_rows",
+    "viewer_initial_snapshots",
     "viewer_leaderboard_language_options",
     "model_scores",
     "borda_task_scores",
@@ -3679,6 +3680,7 @@ def write_duckdb_streaming_results(
         _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
         _create_viewer_filter_values_table(con)
+        con.execute("CREATE TABLE viewer_initial_snapshots (cache_key VARCHAR PRIMARY KEY, payload VARCHAR)")
         _create_empty_viewer_leaderboard_rows_table(con)
         _create_empty_viewer_leaderboard_language_options_table(con)
         _create_empty_model_score_tables(con)
@@ -4370,6 +4372,7 @@ def write_duckdb(
         _create_canonical_dimension_tables(con)
         _create_viewer_task_results_table(con)
         _create_viewer_filter_values_table(con)
+        con.execute("CREATE TABLE viewer_initial_snapshots (cache_key VARCHAR PRIMARY KEY, payload VARCHAR)")
         _create_empty_viewer_leaderboard_rows_table(con)
         _create_empty_viewer_leaderboard_language_options_table(con)
         score_rows = [row for view_rows in standings.values() for row in view_rows]
@@ -4728,6 +4731,8 @@ def _rebuild_duckdb_cached_tables(con: duckdb.DuckDBPyConnection) -> None:
     _create_canonical_dimension_tables(con)
     _create_viewer_task_results_table(con)
     _create_viewer_filter_values_table(con)
+    con.execute("DROP TABLE IF EXISTS viewer_initial_snapshots")
+    con.execute("CREATE TABLE viewer_initial_snapshots (cache_key VARCHAR PRIMARY KEY, payload VARCHAR)")
     _create_empty_viewer_leaderboard_rows_table(con)
     _create_empty_viewer_leaderboard_language_options_table(con)
     if _duckdb_table_exists(con, "model_scores"):
@@ -5814,6 +5819,10 @@ def build_viewer_leaderboard_mart(
         )
     finally:
         con.close()
+
+    from hakari_bench.viewer.snapshots import build_initial_snapshots
+
+    build_initial_snapshots(db_path, viewer_config)
 
 
 def _viewer_leaderboard_mart_rows_from_service(
