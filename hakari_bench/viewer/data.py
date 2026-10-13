@@ -42,6 +42,7 @@ VIEWER_QUERY_TABLES = {
     "dim_metric",
     "fact_metric_score",
     "fact_task_score",
+    "viewer_initial_snapshots",
     "viewer_leaderboard_rows",
     "viewer_leaderboard_language_options",
 }
@@ -581,6 +582,9 @@ class TaskResultsRepository:
                   {variant_filter}
                   {facet_filter}
                   {target_filter}
+                ORDER BY tr.model_name, embedding_variant_name NULLS FIRST,
+                         tr.benchmark, tr.task_key, trust_remote_code NULLS FIRST,
+                         tr.score DESC
             """  # nosec B608
             query_params.extend(facet_params)
             query_params.append(score_target)

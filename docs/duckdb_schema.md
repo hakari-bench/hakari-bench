@@ -1243,6 +1243,32 @@ If an older database has these length or category columns only in
 and the `query_len_min`, `query_len_max`, `doc_len_min`, and `doc_len_max`
 viewer filters still work.
 
+`viewer_initial_snapshots` is an optional initial-view cache for the default
+Overall Retrieval (`all`) and Reranking (`reranking`) tabs. It stores the complete
+serialized `LeaderboardResult`, including Macro standings, Grouped column
+scores and labels, task breakdowns, and filter choices. A second snapshot for
+each target preserves the no-column Micro result used by overview counts.
+Snapshots are calculated with the existing dynamic service, not by substituting
+Micro standings for Macro Borda ranks.
+
+The table has `cache_key VARCHAR PRIMARY KEY` and `payload VARCHAR`. Its key
+contains the snapshot format version, a SHA-256 fingerprint of the viewer
+configuration (including task manifests and group definitions) and model-card
+metadata, plus the complete default request except sort and direction. Sorting
+and sorted-column promotion remain request-time operations. Any non-default
+filter, variant flag, metric, scope, or display option uses the existing path.
+A configuration/model-card mismatch also bypasses the snapshot.
+
+Warehouse builds materialize these four snapshots. Older downloaded databases
+are supported by a companion `<database-stem>.leaderboard-cache.duckdb`, prepared
+in a background thread after initial database synchronization. Companion keys
+also contain the source file modification timestamp and size, invalidating
+results when the database is replaced. Missing/unwritable cache files fall back
+to dynamic computation. The source database is never modified by the viewer.
+On a cold installation, snapshot preparation still costs one dynamic calculation
+per initial view; subsequent requests and process restarts reuse the persisted
+result. The snapshot table survives slim viewer-cache installation.
+
 `viewer_leaderboard_rows` is generated from `viewer_task_results` and stores
 complete leaderboard rows for common no-filter display modes. Configured
 overall rows in this mart use the default raw-task `score=micro` semantics.
@@ -2039,3 +2065,16 @@ Placeholders reserve space until loading completes.
 The overview displays dataset-group and expected-task totals inline in its description, and eligible model totals alongside the Retrieval and Reranking explanations. All four values retain the benchmark-wide semantics above.
 
 The overview mode buttons reuse the current evaluation tabs to switch targets, preserve active filters, and focus the selected tab after its response settles.
+
+### Initial-view snapshot validation
+
+A local comparison on the latest remote cache (550 tasks, 77 Retrieval and 79
+Reranking complete models) returned identical full results for dynamic and
+snapshot paths. Retrieval Grouped/Macro took 1.800 s dynamically and 0.023 s
+from the embedded snapshot; Reranking took 2.971 s and 0.022 s. English-filtered
+requests remained dynamic (0.741/0.735 s Retrieval, 0.923/0.890 s Reranking).
+These are service timings on one local machine, excluding HTML rendering and
+network transfer; they are not public Space latency guarantees. Default task
+SQL orders by model, variant (base first), benchmark, task key, trust setting,
+and score so representative model metadata and column documentation keys remain
+reproducible across snapshot builds.
