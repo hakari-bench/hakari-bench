@@ -216,6 +216,7 @@ _ICON_PATHS = {
     "database": '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>',
     "eraser": '<path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/>',
     "eye": '<path d="M2.06 12.35a1 1 0 0 1 0-.7C3.42 7.7 7.16 5 12 5s8.58 2.7 9.94 6.65a1 1 0 0 1 0 .7C20.58 16.3 16.84 19 12 19s-8.58-2.7-9.94-6.65"/><circle cx="12" cy="12" r="3"/>',
+    "file-text": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/>',
     "file-spreadsheet": (
         '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>'
         '<path d="M14 2v4a2 2 0 0 0 2 2h4"/>'
@@ -1018,7 +1019,7 @@ def render_page(
 <body class="bg-zinc-50 text-zinc-950">
   <main class="mx-auto max-w-[1600px] px-4 pt-2 pb-4 sm:px-6">
     <header class="hakari-header">
-      <div class="flex items-center justify-between gap-3">
+      <div class="hidden" aria-hidden="true">
         <h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">
           <a id="hakari-home-link" href="/" class="inline-flex min-w-0 items-center gap-1.5 hover:text-cyan-700" aria-label="Refresh HAKARI-Bench leaderboard">
             {_render_brand_icon()}
@@ -1028,21 +1029,14 @@ def render_page(
         {header_actions}
       </div>
       <div class="hakari-intro">
-        <div class="hakari-intro-title">
-          <p class="hakari-eyebrow">HAKARI-Bench<span>.</span></p>
-          <h2>Search models.<br><span>Measured across languages.</span></h2>
-          {render_overview_stats()}
-        </div>
-        <div class="hakari-intro-details">
-          <h3>Find the right model<br>for <span>your search.</span></h3>
-          <p class="hakari-intro-subtitle">Compare how well models find relevant documents across languages and domains.</p>
-          <div class="hakari-capabilities">
-            <div><h4>Retrieval</h4><p>Find relevant documents in a collection.</p></div>
-            <div><h4>Reranking</h4><p>Put the best search results first.</p></div>
-            <div><h4>Compare</h4><p>Explore scores by benchmark and task.</p></div>
-          </div>
-          <p class="hakari-ranking-note">Higher Borda scores mean better rankings. Only models with results for every selected task are compared.</p>
-          <a href="/docs/">How the benchmark works &rarr;</a>
+        <h2>HAKARI-Bench <span>Leaderboard</span></h2>
+        <h3>A lightweight benchmark for multilingual retrieval and reranking</h3>
+        {render_overview_stats()}
+        <div class="hakari-intro-links">
+          <a href="/docs/">{_icon_svg("book-open")}<span>Evaluation guide</span></a>
+          <a href="https://arxiv.org/abs/2606.22778" target="_blank" rel="noopener noreferrer">{_icon_svg("file-text")}<span>Paper</span></a>
+          <a href="https://github.com/hakari-bench/hakari-bench" target="_blank" rel="noopener noreferrer">{_icon_svg("github")}<span>GitHub</span></a>
+          <a href="https://huggingface.co/hakari-bench" target="_blank" rel="noopener noreferrer">{_icon_svg("database")}<span>Datasets</span></a>
         </div>
       </div>
     </header>
@@ -1463,18 +1457,26 @@ def _help_aria_label(copy: help_text.HelpCopy) -> str:
 def render_overview_stats(
     *, counts: tuple[int, int, int, int] | None = None, swap_oob: bool = False
 ) -> str:
-    labels = ("Dataset groups", "Tasks", "Retrieval models", "Reranking models")
     values = tuple(f"{count:,}" for count in counts) if counts is not None else ("—",) * 4
-    items = "".join(
-        f'<div><dt>{label}</dt><dd>{value}</dd></div>'
-        for label, value in zip(labels, values, strict=True)
-    )
+    groups, tasks, retrieval, reranking = values
     oob = ' hx-swap-oob="outerHTML"' if swap_oob else ""
     busy = "true" if counts is None else "false"
     return f"""<div id="hakari-overview-stats"{oob} aria-busy="{busy}" aria-live="polite">
-      <dl class="hakari-stats">{items}</dl>
-      <p class="hakari-stats-note">Models evaluated on all tasks · benchmark-wide totals</p>
+      <p class="hakari-intro-subtitle">HAKARI-Bench evaluates <strong>dense embeddings, learned sparse retrieval,
+        late interaction, and cross-encoder rerankers</strong>, alongside BM25, across
+        <strong>{groups} dataset groups</strong> and <strong>{tasks} tasks</strong>.
+        Models are evaluated using common tasks and metrics on compact datasets (Nano-sets).
+        Results include base model performance and changes in retrieval quality from dimensionality reduction,
+        int8/binary quantization, and float rescoring.
+        Filter by language or dataset to compare results relevant to your use case.</p>
+      <div class="hakari-capabilities">
+        <div><h4><button type="button" class="hakari-mode-link" data-overview-target="all">{_icon_svg("search")}Retrieval <span class="hakari-model-count">{retrieval} models</span></button></h4>
+          <p>Dense, sparse, late interaction, and BM25 search over the full corpus.</p></div>
+        <div><h4><button type="button" class="hakari-mode-link" data-overview-target="reranking">{_icon_svg("list-ordered")}Reranking <span class="hakari-model-count">{reranking} models</span></button></h4>
+          <p>Cross-encoders and other models reorder a shared candidate set.</p></div>
+      </div>
     </div>"""
+
 
 
 def render_summary_cards(summary: ViewerSummary) -> str:
@@ -3251,7 +3253,7 @@ def _render_target_group(
             query_payload["target"] = target
         query = urlencode(query_payload, doseq=True)
         buttons.append(
-            f"""<button type="button" class="evaluation-tab"{current_attr}
+            f"""<button type="button" class="evaluation-tab" data-evaluation-target="{target}"{current_attr}
                   hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
                   {_leaderboard_control_hx_attrs()}>
                   {_icon_svg(icon)}

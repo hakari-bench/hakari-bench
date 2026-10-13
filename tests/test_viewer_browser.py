@@ -470,13 +470,8 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert help_tooltip_style["stroke"] != "none"
                 page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
 
-                # The header help explains the page itself, and the score column
-                # headers explain the numbers a reader lands on first.
-                page.locator("#hakari-page-overview-help").click()
-                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
-                assert page.locator("#help-summary-heading").inner_text() == "HAKARI-Bench"
-                assert page.locator("#help-summary-eyebrow").inner_text() == "GETTING STARTED"
-                page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
+                assert not page.locator("#hakari-page-overview-help").is_visible()
+                # Score column headers explain the numbers in the table.
                 page.locator("th[data-column-key='borda_score'] .help-summary-trigger").first.click()
                 page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
                 assert page.locator("#help-summary-heading").inner_text() == "Borda Score"
@@ -1303,9 +1298,16 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 page.wait_for_selector(".leaderboard-table")
                 page.wait_for_function("document.querySelector('#hakari-overview-stats').getAttribute('aria-busy') === 'false'")
                 overview_text = page.locator("#hakari-overview-stats").inner_text()
-                assert "Dataset groups" in overview_text
-                assert "Retrieval models" in overview_text
+                assert "dataset groups" in overview_text
+                assert "Retrieval" in overview_text
                 assert "—" not in overview_text
+                page.locator("[data-overview-target=reranking]").click()
+                page.wait_for_function("() => document.activeElement?.dataset.evaluationTarget === 'reranking'")
+                assert page.locator(".evaluation-tab[aria-current=page]").get_attribute("data-evaluation-target") == "reranking"
+                page.locator("[data-overview-target=all]").click()
+                page.wait_for_function("() => document.activeElement?.dataset.evaluationTarget === 'all'")
+                assert page.locator(".evaluation-tab[aria-current=page]").get_attribute("data-evaluation-target") == "all"
+
                 assert page.get_by_label("Grouped columns", exact=True).is_checked()
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
                 page.locator("#leaderboard-settings > summary").click()

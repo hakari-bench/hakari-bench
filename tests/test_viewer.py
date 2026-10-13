@@ -1077,7 +1077,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
         "<span>HAKARI-Bench</span>"
         in response.text
     )
-    assert '<div class="flex items-center justify-between gap-3">' in response.text
+    assert '<div class="hidden" aria-hidden="true">' in response.text
     assert '<h1 class="flex min-w-0 items-center gap-1.5 text-sm text-zinc-600">' in response.text
     assert 'id="hakari-home-link"' in response.text
     assert 'href="/"' in response.text
@@ -1099,7 +1099,9 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'data-icon="book-open"' in response.text
     assert 'id="hakari-theme-toggle"' not in response.text
     assert '<html lang="en" class="dark" data-theme="dark">' in response.text
-    assert 'Search models.<br><span>Measured across languages.</span>' in response.text
+    assert '<h2>HAKARI-Bench <span>Leaderboard</span></h2>' in response.text
+    assert "dense embeddings, learned sparse retrieval," in response.text
+    assert "late interaction, and cross-encoder rerankers" in response.text
     assert 'class="hakari-capabilities"' in response.text
     assert response.text.index('id="hakari-github-link"') < response.text.index('id="hakari-docs-link"')
     assert '<p class="text-sm font-medium text-cyan-700">HAKARI-Bench leaderboard</p>' not in response.text
@@ -8764,7 +8766,7 @@ def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
     assert page.status_code == 200
     assert leaderboard.status_code == 200
     assert 'class="hakari-intro"' in page.text
-    assert "find relevant documents" in page.text
+    assert "compact datasets (Nano-sets)" in page.text
     assert 'id="leaderboard-settings"' in leaderboard.text
     assert not re.search(
         r'<details[^>]*id="leaderboard-settings"[^>]*\bopen\b', leaderboard.text
@@ -9236,9 +9238,9 @@ def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path) -> None
     initial = client.get("/")
     assert 'id="hakari-overview-stats"' in initial.text
     assert 'aria-busy="true"' in initial.text
-    assert "Models evaluated on all tasks" in initial.text
+    assert "Model counts include models evaluated on all tasks" not in initial.text
     response = client.get("/leaderboard", params={"model_filter": "no-match"})
     assert 'id="hakari-overview-stats" hx-swap-oob="outerHTML"' in response.text
     assert 'aria-busy="false"' in response.text
-    assert "Retrieval models" in response.text
-    assert "Reranking models" in response.text
+    assert "Retrieval" in response.text
+    assert "Reranking" in response.text

@@ -2035,3 +2035,7 @@ They are independent of active filters: dataset groups and expected tasks refer 
 and retrieval/reranking counts are distinct base model names eligible for its complete task set, using the same
 leaderboard eligibility and reranking safeguard rules. The overview is cached by database modification time and size.
 Placeholders reserve space until loading completes.
+
+The overview displays dataset-group and expected-task totals inline in its description, and eligible model totals alongside the Retrieval and Reranking explanations. All four values retain the benchmark-wide semantics above.
+
+The overview mode buttons reuse the current evaluation tabs to switch targets, preserve active filters, and focus the selected tab after its response settles.

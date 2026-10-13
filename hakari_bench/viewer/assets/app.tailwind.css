@@ -1889,20 +1889,20 @@
 /* The overview and mode navigation frame the leaderboard; detailed controls
    stay accessible without competing with the results. */
 .hakari-header { padding-top: .5rem; }
-.hakari-intro { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3rem; padding: 1.25rem 0 1.5rem; margin-bottom: .5rem; border-bottom: 1px solid var(--hakari-border); }
+.hakari-intro { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: 3rem; padding: 1.25rem 0 1.5rem; margin-bottom: .5rem; border-bottom: 1px solid var(--hakari-border); }
 .hakari-eyebrow { font-size: 1rem; font-weight: 750; margin-bottom: 1rem; }
 .hakari-eyebrow span, .hakari-intro h2 span, .hakari-intro h3 span { color: #82baff; }
-.hakari-intro h2 { font-size: clamp(2rem, 3vw, 3rem); font-weight: 750; line-height: 1.08; letter-spacing: -.045em; }
-.hakari-intro h3 { font-size: clamp(1.35rem, 1.8vw, 1.8rem); font-weight: 700; line-height: 1.15; letter-spacing: -.035em; }
+.hakari-intro h2 { font-size: clamp(1.75rem, 2.6vw, 2.625rem); font-weight: 750; line-height: 1.08; letter-spacing: -.045em; }
+.hakari-intro h3 { font-size: clamp(1.125rem, 1.4vw, 1.375rem); font-weight: 700; line-height: 1.15; letter-spacing: -.035em; }
 .hakari-intro p { color: var(--hakari-text-muted); line-height: 1.45; }
 .hakari-intro .hakari-eyebrow { color: var(--hakari-text); }
-.hakari-intro-subtitle { margin-top: .5rem; font-size: .875rem; max-width: 34rem; }
+.hakari-intro-subtitle { margin-top: .5rem; font-size: .8125rem; max-width: 46rem; }
 .hakari-capabilities { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
 .hakari-capabilities > div { border-top: 2px solid #82baff; padding-top: .5rem; }
 .hakari-capabilities > div:nth-child(2) { border-color: #60a5fa; }
 .hakari-capabilities > div:nth-child(3) { border-color: #a5cfff; }
 .hakari-capabilities h4 { color: #82baff; font-size: .9375rem; font-weight: 650; margin-bottom: .35rem; }
-.hakari-capabilities p { font-size: .8125rem; }
+.hakari-capabilities p { font-size: .75rem; }
 .hakari-ranking-note { font-size: .75rem; margin-top: .75rem; }
 .hakari-intro a { display: inline-block; margin-top: .5rem; color: var(--hakari-text-muted); text-decoration: underline; text-underline-offset: 4px; font-size: .875rem; }
 .hakari-intro a:hover { color: var(--hakari-accent-strong); }
@@ -1947,12 +1947,38 @@
 .leaderboard-table thead button[data-model-filter-focus] { color: var(--hakari-text); }
 
 .hakari-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 1.5rem; }
-.hakari-stats > div { padding: 0 1rem; border-left: 1px solid var(--hakari-border-strong); display: flex; flex-direction: column-reverse; gap: .25rem; }
+.hakari-stats > div { padding: 0 1rem; border-left: 1px solid var(--hakari-border-strong); display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: .25rem; }
 .hakari-stats > div:first-child { padding-left: 0; border-left: 0; }
-.hakari-stats dt { font-size: .75rem; color: var(--hakari-text-muted); }
+.hakari-stats dt { min-height: 2.5em; font-size: .75rem; color: var(--hakari-text-muted); }
 .hakari-stats dd { font-size: 1.5rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; color: var(--hakari-text); }
 .hakari-intro .hakari-stats-note { margin-top: .75rem; font-size: .6875rem; }
 @media (max-width: 480px) {
   .hakari-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 1rem; margin-top: 1rem; }
   .hakari-stats > div:nth-child(3) { border-left: 0; padding-left: 0; }
 }
+
+.hakari-intro-subtitle strong { color: var(--hakari-text); font-weight: 600; }
+.hakari-intro-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: .5rem; }
+.hakari-intro-links a { margin-top: 0; font-size: .75rem; }
+.hakari-intro-title, .hakari-intro-details { min-width: 0; }
+
+.hakari-intro { display: block; padding-top: .75rem; }
+.hakari-intro h2 { font-size: clamp(1.5rem, 2.4vw, 2.25rem); line-height: 1.2; }
+.hakari-intro h3 { margin-top: .5rem; font-size: 1rem; color: var(--hakari-text-muted); font-weight: 700; letter-spacing: 0; }
+.hakari-intro-subtitle { max-width: none; margin-top: 1rem; font-size: .875rem; line-height: 1.65; }
+.hakari-capabilities { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 58rem; gap: 2rem; }
+.hakari-capabilities p { font-size: .8125rem; }
+.hakari-capabilities h4 { display: flex; align-items: baseline; flex-wrap: wrap; gap: .75rem; }
+.hakari-model-count { font-size: .8125rem; font-weight: 500; color: var(--hakari-text-muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) {
+  .hakari-intro h2 { font-size: 1.375rem; }
+  .hakari-capabilities { gap: 1rem; }
+}
+
+.hakari-intro-links a { display: inline-flex; align-items: center; gap: .35rem; }
+.hakari-intro-links .hakari-icon { width: .875rem; height: .875rem; }
+.hakari-capabilities h4 .hakari-icon { width: 1rem; height: 1rem; align-self: center; }
+
+.hakari-mode-link { display: inline-flex; align-items: center; gap: .6rem; color: inherit; font: inherit; text-align: left; cursor: pointer; border: 0; background: transparent; padding: 0; }
+.hakari-mode-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.hakari-mode-link:focus-visible { outline: 2px solid var(--hakari-accent); outline-offset: 4px; }
