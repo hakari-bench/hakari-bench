@@ -7,6 +7,51 @@
     return target.closest(selector);
   }
 
+  // Keep Settings open while its controls replace the leaderboard panel.
+  let pendingOverviewTarget = null;
+  function focusEvaluationTab(target) {
+    const tab = document.querySelector('.evaluation-tab[data-evaluation-target="' + target + '"]');
+    if (!tab) return;
+    tab.focus({ preventScroll: true });
+    tab.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-overview-target]");
+    if (!link) return;
+    const target = link.dataset.overviewTarget;
+    const tab = document.querySelector('.evaluation-tab[data-evaluation-target="' + target + '"]');
+    if (!tab) return;
+    if (tab.getAttribute("aria-current") === "page") {
+      focusEvaluationTab(target);
+    } else {
+      pendingOverviewTarget = target;
+      tab.click();
+    }
+  });
+  document.addEventListener("htmx:afterSettle", (event) => {
+    if (!pendingOverviewTarget || event.target.id !== "leaderboard-panel") return;
+    const target = pendingOverviewTarget;
+    pendingOverviewTarget = null;
+    focusEvaluationTab(target);
+  });
+
+  let settingsOpen = false;
+  document.addEventListener("click", (event) => {
+    const summary = closestElement(event.target, "#leaderboard-settings > summary");
+    if (summary) settingsOpen = !summary.parentElement.open;
+  });
+  document.addEventListener("htmx:beforeRequest", (event) => {
+    if (!event.detail.target || event.detail.target.id !== "leaderboard-panel") return;
+    const settings = document.getElementById("leaderboard-settings");
+    if (settings && settings.open) settingsOpen = true;
+  });
+  document.addEventListener("htmx:beforeSwap", (event) => {
+    if (!settingsOpen || typeof event.detail.serverResponse !== "string") return;
+    event.detail.serverResponse = event.detail.serverResponse.replace(
+      '<details id="leaderboard-settings"', '<details open id="leaderboard-settings"',
+    );
+  });
+
   const helpRegistryCache = new WeakMap();
 
   function helpCopyForTrigger(trigger) {
@@ -56,72 +101,9 @@
     true,
   );
 
-  const themeStorageKey = "hakari-theme";
-  const themeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-
-  function storedTheme() {
-    try {
-      const value = window.localStorage.getItem(themeStorageKey);
-      return value === "dark" || value === "light" ? value : null;
-    } catch (_error) {
-      return null;
-    }
-  }
-
-  function storeTheme(theme) {
-    try {
-      window.localStorage.setItem(themeStorageKey, theme);
-    } catch (_error) {
-      // Theme switching should still work when storage is unavailable.
-    }
-  }
-
-  function effectiveTheme() {
-    const root = document.documentElement;
-    if (root.classList.contains("dark")) return "dark";
-    if (root.classList.contains("light")) return "light";
-    return themeQuery && themeQuery.matches ? "dark" : "light";
-  }
-
-  window.__hakariApplyTheme = (theme, persist) => {
-    const root = document.documentElement;
-    root.classList.toggle("dark", theme === "dark");
-    root.classList.toggle("light", theme === "light");
-    root.dataset.theme = theme;
-    root.style.colorScheme = theme;
-    if (persist) storeTheme(theme);
-    window.__hakariSyncThemeToggle();
-  };
-
-  window.__hakariSyncThemeToggle = () => {
-    const button = document.getElementById("hakari-theme-toggle");
-    if (!button) return;
-    const theme = effectiveTheme();
-    const isDark = theme === "dark";
-    const label = isDark ? "Switch to light theme" : "Switch to dark theme";
-    button.setAttribute("aria-label", label);
-    button.setAttribute("aria-pressed", String(isDark));
-    button.setAttribute("title", label);
-  };
-
-  window.__hakariBindThemeToggle = () => {
-    const button = document.getElementById("hakari-theme-toggle");
-    if (!button || button.dataset.themeToggleBound === "true") return;
-    button.dataset.themeToggleBound = "true";
-    button.addEventListener("click", () => {
-      const nextTheme = effectiveTheme() === "dark" ? "light" : "dark";
-      window.__hakariApplyTheme(nextTheme, true);
-    });
-    window.__hakariSyncThemeToggle();
-  };
-
-  const initialStoredTheme = storedTheme();
-  if (initialStoredTheme) window.__hakariApplyTheme(initialStoredTheme, false);
-  if (themeQuery) {
-    themeQuery.addEventListener("change", () => {
-      if (!storedTheme()) window.__hakariSyncThemeToggle();
-    });
-  }
+  document.documentElement.classList.remove("light");
+  document.documentElement.classList.add("dark");
+  document.documentElement.dataset.theme = "dark";
 
   function paramsFrom(value) {
     const raw = (value || "").replace(/^[#?]/, "");
@@ -519,6 +501,8 @@
       event.stopPropagation();
       const input = document.getElementById("model-filter-input");
       if (!input) return;
+      const settings = document.getElementById("leaderboard-settings");
+      if (settings) settings.open = true;
       const panel = document.getElementById("filter-controls-panel");
       if (panel && !panel.open) panel.open = true;
       if (typeof input.scrollIntoView === "function") {
@@ -998,9 +982,7 @@
   bindDocOutline();
   bindDocTableScrollHints();
   window.__hakariApplyHashQueryState();
-  window.__hakariBindThemeToggle();
   window.__hakariBindModelDetails();
-  document.addEventListener("DOMContentLoaded", window.__hakariBindThemeToggle, { once: true });
   document.addEventListener("DOMContentLoaded", window.__hakariSyncHashQueryStateToParent, { once: true });
   document.addEventListener("htmx:beforeRequest", (event) => window.__hakariSetLeaderboardPending(event, true));
   document.addEventListener("htmx:afterRequest", (event) => window.__hakariSetLeaderboardPending(event, false));

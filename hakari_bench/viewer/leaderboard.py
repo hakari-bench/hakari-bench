@@ -728,7 +728,7 @@ class LeaderboardService:
                 metric_score_group = ScoreGroupConfig(
                     name="task_scores", label="Task Scores", group_by="task_key"
                 )
-            task_breakdowns = _task_breakdowns(rows)
+            task_breakdowns = _task_breakdowns(column_source_rows if column_source_rows is not None else rows)
             with timed_operation(
                 "viewer.leaderboard.phase", operation="metric_columns", view=view_name
             ) as phase_timing:

@@ -2,44 +2,22 @@
 version: alpha
 name: HAKARI-Bench-viewer-design
 description: >-
-  A dense benchmark management interface for comparing retrieval, reranking,
-  BM25, sparse, late-interaction, compression, and language/task trade-offs. The
-  UI should feel quiet, technical, and trustworthy: compact controls, high
-  information density, rounded low-border surfaces, light/dark parity, and
-  subtle cyan interaction cues. The table is the product.
+  A compact dark-only retrieval benchmark leaderboard with blue accents,
+  a factual overview, grouped score columns, and collapsible settings.
+  The table is the product.
 colors:
-  light:
-    bg: "#f7fdff"
-    surface: "#ffffff"
-    surface-muted: "#e0f1f5"
-    surface-faint: "#edf8fb"
-    border: "#a9ccd6"
-    border-strong: "#85bdcc"
-    text: "#243036"
-    text-muted: "#52626b"
-    text-faint: "#6f7f87"
-    accent: "#0077aa"
-    accent-strong: "#005f88"
-    accent-soft: "rgb(0 119 170 / 0.10)"
-    control-bg: "#e3f2f6"
-    control-hover: "#d5eaf0"
-    control-active: "#c3e0e9"
-    warn-bg: "#fff6df"
-    warn-text: "#a96b00"
-    danger: "#ff5888"
-    variant: "#765aa8"
   dark:
-    bg: "#202628"
-    surface: "#2b3133"
-    surface-muted: "#343d40"
-    surface-faint: "#252c2e"
-    border: "#435358"
-    border-strong: "#5b7880"
-    text: "#f1fbff"
-    text-muted: "#abb9bd"
-    text-faint: "#768589"
-    accent: "#00d0ff"
-    accent-strong: "#a8f0ff"
+    bg: "#0e1721"
+    surface: "#17222f"
+    surface-muted: "#203040"
+    surface-faint: "#121d29"
+    border: "#2a3949"
+    border-strong: "#465566"
+    text: "#e3e8ef"
+    text-muted: "#939da8"
+    text-faint: "#7d8793"
+    accent: "#449dff"
+    accent-strong: "#79b8ff"
     accent-soft: "rgb(0 208 255 / 0.11)"
     control-bg: "#30383a"
     control-hover: "#344044"
@@ -49,10 +27,7 @@ colors:
     danger: "#ff5888"
     variant: "#b99cff"
 typography:
-  family: >-
-    "JetBrains Mono", "Fira Code", "SFMono-Regular", "Cascadia Code",
-    "Roboto Mono", "Noto Sans Mono", "Yu Gothic UI", "Meiryo",
-    ui-monospace, monospace
+  family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
   base:
     fontSize: current viewer default
     lineHeight: current viewer default
@@ -680,3 +655,25 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Do not make active/hover states shift layout.
 - Do not use hard borders everywhere; reserve them for table readability and
   controls that need precise separation.
+
+
+## Current leaderboard overview and navigation
+
+The viewer is dark-only; stored light preferences are ignored. Use a single-column
+overview with a one-line “HAKARI-Bench Leaderboard” title and a bold descriptive
+subtitle. The redundant top logo/action row is hidden. Describe dense, sparse,
+late interaction, cross-encoder, and BM25 evaluation rather than adding slogans.
+
+Render benchmark-wide dataset-group and task totals in bold within the overview
+paragraph after loading. Show eligible model counts alongside the Retrieval and
+Reranking explanations. Their buttons activate the corresponding evaluation tab,
+preserve filters, then scroll and focus the tab after the response settles.
+
+Use square underline tabs, grouped score columns by default, and collapsed Settings.
+Table/model text is 13px with 4px vertical cell padding. Column labels, ranks, and
+model names use the primary text color; only the actively sorted score is bold.
+Overview details about model eligibility and Borda belong in table help, rather
+than additional introductory paragraphs. Keep overview links small with SVG icons.
+
+These current rules supersede older light/dark parity, monospace, and theme-toggle
+examples below when they conflict.

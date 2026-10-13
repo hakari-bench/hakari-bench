@@ -883,6 +883,17 @@ columns disabled by default to avoid expanding the table to every raw task.
 
 ### Embedding Variants
 
+The viewer opens in Retrieval mode with Grouped columns enabled and Macro
+aggregation. Grouped columns use the existing benchmark/component summary
+queries and caches. The lazy task breakdown retains source task rows so
+individual task documentation remains accessible in grouped mode. Retrieval and Reranking are the primary navigation tabs;
+score, metric, scope, display, variant, and filter controls live in the initially
+collapsed Settings panel. Its open state is retained during HTMX updates.
+`columns=none` explicitly disables score columns and is preserved in links,
+forms, and CSV exports. Task columns (`columns=task`) still selects Micro;
+Grouped columns (`columns=grouped`) selects Macro. Legacy `task_scores` and
+`task_ranks` requests keep their task display behavior.
+
 By default, the viewer displays base results only:
 
 ```sql
@@ -2012,3 +2023,19 @@ length range filters are ranking-population filters whenever they are set.
 10. Default sort should be `borda_rank ASC`. Metric-column sorts should place
    missing values after present values and promote the selected metric to the
    first displayed metric-column position.
+
+The table emphasizes only the score column selected by `sort` with brighter,
+bold text. This applies to Borda, mean, and individual task/group score columns;
+metadata sorts do not emphasize a score column. Score values are unchanged.
+
+The viewer uses a fixed dark theme with blue accents. The overview introduces retrieval and reranking side by side; theme preferences and the light-theme toggle are no longer used.
+
+The header overview statistics load with the leaderboard response via an HTMX out-of-band update.
+They are independent of active filters: dataset groups and expected tasks refer to the primary Overall configuration,
+and retrieval/reranking counts are distinct base model names eligible for its complete task set, using the same
+leaderboard eligibility and reranking safeguard rules. The overview is cached by database modification time and size.
+Placeholders reserve space until loading completes.
+
+The overview displays dataset-group and expected-task totals inline in its description, and eligible model totals alongside the Retrieval and Reranking explanations. All four values retain the benchmark-wide semantics above.
+
+The overview mode buttons reuse the current evaluation tabs to switch targets, preserve active filters, and focus the selected tab after its response settles.

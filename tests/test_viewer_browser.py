@@ -88,7 +88,7 @@ def test_iframe_hash_replaces_stale_query_without_changing_top_level_merge_seman
                 query_only_iframe = page.frame_locator("#viewer")
                 query_only_iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
                 query_only = parse_qs(urlparse(leaderboard_requests[-1]).query)
-                assert query_only == {"quantization": ["1"]}
+                assert query_only == {"quantization": ["1"], "score": ["macro"], "columns": ["grouped"]}
                 assert query_only_iframe.locator(
                     '#variant-controls input[name="quantization"]'
                 ).is_checked() is True
@@ -115,6 +115,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 )
                 page.goto(f"{base_url}/#view=Overall&quantization=1&truncate=1&task_z_scores=1", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                page.locator("#leaderboard-settings > summary").click()
 
                 assert leaderboard_requests
                 assert "view=Overall" not in leaderboard_requests[0]
@@ -131,6 +132,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 model_filter.press("Enter")
                 page.wait_for_url(lambda url: "model_filter=model%2Fa" in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#leaderboard-panel.htmx-settling").wait_for(state="detached", timeout=15_000)
                 compact_search = page.evaluate("() => window.location.search")
                 assert "model_filter=model%2Fa" in compact_search
                 assert "view=Overall" not in compact_search
@@ -142,11 +144,13 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 model_filter.press("Enter")
                 page.wait_for_url(lambda url: "model_filter=" not in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#leaderboard-panel.htmx-settling").wait_for(state="detached", timeout=15_000)
                 task_columns = page.locator('#column-controls input[name="columns"][value="task"]')
                 grouped_columns = page.locator('#column-controls input[name="columns"][value="grouped"]')
                 page.locator("#column-controls label", has_text="Task columns").click()
                 page.wait_for_url(lambda url: "columns=task" in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#leaderboard-panel.htmx-settling").wait_for(state="detached", timeout=15_000)
                 assert task_columns.is_checked() is True
                 assert grouped_columns.is_checked() is False
                 assert page.locator('[aria-label="Score aggregation: Micro (locked by Task columns)"]').count() == 1
@@ -155,6 +159,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 task_table.locator('th[data-column-key="metric:a2"] button').click()
                 page.wait_for_url(lambda url: "sort=metric%3Aa2" in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#leaderboard-panel.htmx-settling").wait_for(state="detached", timeout=15_000)
                 first_task_metric = task_table.locator('thead th[data-column-key^="metric:"]').first
                 assert first_task_metric.get_attribute("data-column-key") == "metric:a2"
                 task_score_bars = task_table.locator('.model-score-bar[data-score-bar-target="metric:a2"]')
@@ -169,6 +174,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                     timeout=15_000,
                 )
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#leaderboard-panel.htmx-settling").wait_for(state="detached", timeout=15_000)
                 assert task_columns.is_checked() is False
                 assert grouped_columns.is_checked() is True
                 assert page.locator('[aria-label="Score aggregation: Macro (locked by Grouped columns)"]').count() == 1
@@ -348,7 +354,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert long_model_layout["rankCellPosition"] == "sticky"
                 assert long_model_layout["bordaScoreFontSize"] == pytest.approx(long_model_layout["modelButtonFontSize"], abs=0.1)
                 assert long_model_layout["bordaScoreTextAlign"] == "left"
-                assert long_model_layout["modelButtonLineHeight"] == pytest.approx(16.25, abs=0.25)
+                assert long_model_layout["modelButtonLineHeight"] == pytest.approx(17.55, abs=0.25)
                 assert long_model_layout["modelButtonOverflowWrap"] == "anywhere"
                 assert long_model_layout["modelButtonWhiteSpace"] == "normal"
                 assert long_model_layout["modelButtonTextOverflow"] == "clip"
@@ -464,13 +470,8 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert help_tooltip_style["stroke"] != "none"
                 page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
 
-                # The header help explains the page itself, and the score column
-                # headers explain the numbers a reader lands on first.
-                page.locator("#hakari-page-overview-help").click()
-                page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
-                assert page.locator("#help-summary-heading").inner_text() == "HAKARI-Bench"
-                assert page.locator("#help-summary-eyebrow").inner_text() == "GETTING STARTED"
-                page.locator("#help-summary-modal").evaluate("(modal) => modal.close()")
+                assert not page.locator("#hakari-page-overview-help").is_visible()
+                # Score column headers explain the numbers in the table.
                 page.locator("th[data-column-key='borda_score'] .help-summary-trigger").first.click()
                 page.locator("#help-summary-modal[open]").wait_for(timeout=3_000)
                 assert page.locator("#help-summary-heading").inner_text() == "Borda Score"
@@ -528,6 +529,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 page.locator("#model-detail-modal").evaluate("(modal) => modal.close()")
                 page.get_by_role("button", name="AR 1").click()
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
+                page.locator("#leaderboard-panel.htmx-settling").wait_for(state="detached", timeout=15_000)
                 ar_button = page.get_by_role("button", name="AR 1")
                 assert "border-cyan-700" in (ar_button.get_attribute("class") or "")
 
@@ -630,6 +632,8 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                         if uses_hash
                         else parse_qs(urlparse(page.url).query)
                     )
+                    if not uses_hash and "columns" not in expected_query:
+                        expected_query = {"score": ["macro"], "columns": ["grouped"], **expected_query}
                     assert restored_query == expected_query, path
 
                 assert page.locator('#variant-controls input[name="quantization"]').is_checked() is True
@@ -651,6 +655,7 @@ def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
                 page.goto(f"{base_url}/", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                page.locator("#leaderboard-settings > summary").click()
                 page.get_by_role("tab", name="Chart").click()
                 page.wait_for_url(lambda url: "result_view=chart" in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
@@ -667,6 +672,8 @@ def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 chart_query = parse_qs(urlparse(page.url).query)
                 assert chart_query == {
+                    "score": ["macro"],
+                    "columns": ["grouped"],
                     "result_view": ["chart"],
                     "chart_x": ["quantization"],
                     "quantization": ["1"],
@@ -675,8 +682,11 @@ def test_viewer_browser_ui_controls_preserve_only_effective_state(tmp_path: Path
                 page.get_by_role("tab", name="Table").click()
                 page.wait_for_url(lambda url: "result_view=" not in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
-                assert parse_qs(urlparse(page.url).query) == {"quantization": ["1"]}
+                assert parse_qs(urlparse(page.url).query) == {"quantization": ["1"], "score": ["macro"], "columns": ["grouped"]}
 
+                page.locator("#column-controls label", has_text="Task columns").click()
+                page.wait_for_url(lambda url: "columns=task" in url, timeout=15_000)
+                page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 page.locator("#column-controls label", has_text="Task ranks").click()
                 page.wait_for_url(
                     lambda url: "task_ranks=1" in url and "columns=task" in url,
@@ -745,6 +755,7 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                 page = browser.new_page(viewport={"width": 1280, "height": 800})
                 page.goto(f"{base_url}/", wait_until="domcontentloaded")
                 page.wait_for_selector("#leaderboard-panel table", timeout=15_000)
+                page.locator("#leaderboard-settings > summary").click()
                 assert page.locator('#leaderboard-panel th[data-column-key="rescore"]').count() == 0
 
                 def visible_variants() -> set[str | None]:
@@ -763,6 +774,8 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
 
                 toggle("rescore")
                 assert parse_qs(urlparse(page.url).query) == {
+                    "score": ["macro"],
+                    "columns": ["grouped"],
                     "quantization": ["1"],
                     "truncate": ["1"],
                     "rescore": ["1"],
@@ -795,7 +808,7 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                     '#leaderboard-panel [data-model-metadata*="truncate_dim_256_binary_rescore"]'
                 ).first.locator("xpath=ancestor::tr")
                 assert "rescore" in truncated_rescore_row.inner_text()
-                for theme in ("light", "dark"):
+                for theme in ("dark",):
                     page.evaluate(
                         "theme => { document.documentElement.classList.remove('light', 'dark'); "
                         "document.documentElement.classList.add(theme); }",
@@ -847,6 +860,8 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
                 )
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
                 assert parse_qs(urlparse(page.url).query) == {
+                    "score": ["macro"],
+                    "columns": ["grouped"],
                     "quantization": ["1"],
                     "truncate": ["1"],
                 }
@@ -863,6 +878,8 @@ def test_viewer_browser_rescore_requires_quantization_and_dims_expands_its_scope
 
                 toggle("rescore")
                 assert parse_qs(urlparse(page.url).query) == {
+                    "score": ["macro"],
+                    "columns": ["grouped"],
                     "truncate": ["1"],
                     "rescore": ["1"],
                 }
@@ -1262,3 +1279,57 @@ def _launch_chromium_or_skip(playwright: Any, playwright_error: type[Exception])
                 "or `uv run tox -e browser`."
             )
         raise
+
+
+@pytest.mark.browser
+def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> None:
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    with _serve_app(_create_browser_test_app(tmp_path)) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 900})
+                page.emulate_media(color_scheme="light")
+                page.add_init_script("localStorage.setItem('hakari-theme', 'light')")
+                page.goto(base_url)
+                assert page.locator("html").get_attribute("data-theme") == "dark"
+                assert page.evaluate("getComputedStyle(document.documentElement).colorScheme") == "dark"
+                assert page.locator("#hakari-theme-toggle").count() == 0
+                page.wait_for_selector(".leaderboard-table")
+                page.wait_for_function("document.querySelector('#hakari-overview-stats').getAttribute('aria-busy') === 'false'")
+                overview_text = page.locator("#hakari-overview-stats").inner_text()
+                assert "dataset groups" in overview_text
+                assert "Retrieval" in overview_text
+                assert "—" not in overview_text
+                page.locator("[data-overview-target=reranking]").click()
+                page.wait_for_function("() => document.activeElement?.dataset.evaluationTarget === 'reranking'")
+                assert page.locator(".evaluation-tab[aria-current=page]").get_attribute("data-evaluation-target") == "reranking"
+                page.locator("[data-overview-target=all]").click()
+                page.wait_for_function("() => document.activeElement?.dataset.evaluationTarget === 'all'")
+                assert page.locator(".evaluation-tab[aria-current=page]").get_attribute("data-evaluation-target") == "all"
+
+                assert page.get_by_label("Grouped columns", exact=True).is_checked()
+                assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
+                page.locator("#leaderboard-settings > summary").click()
+                with page.expect_response(lambda response: "/leaderboard?" in response.url):
+                    page.get_by_text("Task columns", exact=True).click()
+                page.wait_for_function("document.querySelector('#column-controls input[value=task]').checked")
+                assert page.locator("#leaderboard-settings").evaluate("el => el.open")
+                with page.expect_response(lambda response: "/leaderboard?" in response.url):
+                    page.get_by_text("Task columns", exact=True).click()
+                page.wait_for_function("!document.querySelector('#column-controls input[value=task]').checked")
+                assert not page.get_by_label("Grouped columns", exact=True).is_checked()
+                page.locator("#leaderboard-settings > summary").click()
+                page.locator("th[data-column-key='model_name'] [data-model-filter-focus]").first.click()
+                assert page.locator("#leaderboard-settings").evaluate("el => el.open")
+                assert page.locator("#model-filter-input").evaluate("el => document.activeElement === el")
+                page.locator("#leaderboard-settings > summary").click()
+                with page.expect_response(lambda response: "/leaderboard?" in response.url):
+                    page.get_by_role("button", name="Reranking", exact=True).click()
+                page.wait_for_function("document.querySelector('.evaluation-tab[aria-current=page]').textContent.includes('Reranking')")
+                assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
+                assert page.locator("#hakari-overview-stats").inner_text() == overview_text
+                page.set_viewport_size({"width": 390, "height": 844})
+                page.wait_for_function("document.documentElement.scrollWidth <= innerWidth")
+            finally:
+                browser.close()
