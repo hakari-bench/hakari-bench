@@ -1099,7 +1099,7 @@ def test_index_renders_leaderboard_without_analysis_navigation(tmp_path: Path) -
     assert 'data-icon="book-open"' in response.text
     assert 'id="hakari-theme-toggle"' not in response.text
     assert '<html lang="en" class="dark" data-theme="dark">' in response.text
-    assert '<h2>HAKARI-Bench <span>Leaderboard</span></h2>' in response.text
+    assert '<h2><a id="hakari-home-link" href="/">HAKARI-Bench <span>Leaderboard</span></a></h2>' in response.text
     assert "dense embeddings, learned sparse retrieval," in response.text
     assert "late interaction, and cross-encoder rerankers" in response.text
     assert 'class="hakari-capabilities"' in response.text

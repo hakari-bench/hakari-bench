@@ -82,6 +82,15 @@ def test_iframe_hash_replaces_stale_query_without_changing_top_level_merge_seman
                 assert iframe.locator('#variant-controls input[name="quantization"]').is_checked() is False
                 assert iframe.locator('#variant-controls input[name="rescore"]').is_checked() is True
 
+                # The visible title clears iframe state, and asks the HF parent
+                # to clear its hash before performing a full document navigation.
+                page.evaluate("window.__homeMessages = []; window.postMessage = (message, origin) => window.__homeMessages.push({message, origin})")
+                iframe.get_by_role("link", name="HAKARI-Bench Leaderboard", exact=True).click()
+                iframe.locator("#leaderboard-panel table").first.wait_for(timeout=15_000)
+                page.wait_for_function("document.querySelector('#viewer').contentWindow.location.search.includes('columns=grouped')")
+                assert iframe.locator('#variant-controls input[name="rescore"]').is_checked() is False
+                assert page.evaluate("window.__homeMessages.some(entry => entry.origin === 'https://huggingface.co' && entry.message.hash === '' && entry.message.queryString === '')")
+
                 # An iframe without hash state still restores its query normally.
                 leaderboard_requests.clear()
                 page.goto(f"{base_url}/__test_embed_query_only", wait_until="domcontentloaded")
@@ -1329,6 +1338,13 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 page.wait_for_function("document.querySelector('.evaluation-tab[aria-current=page]').textContent.includes('Reranking')")
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
                 assert page.locator("#hakari-overview-stats").inner_text() == overview_text
+                # Home navigation reloads the document and restores defaults.
+                with page.expect_request(lambda request: request.resource_type == "document" and request.url == base_url + "/"):
+                    page.get_by_role("link", name="HAKARI-Bench Leaderboard", exact=True).click()
+                page.wait_for_selector(".leaderboard-table")
+                page.wait_for_function("document.querySelector('.evaluation-tab[aria-current=page]').dataset.evaluationTarget === 'all'")
+                assert page.get_by_label("Grouped columns", exact=True).is_checked()
+                assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
                 page.set_viewport_size({"width": 390, "height": 844})
                 page.wait_for_function("document.documentElement.scrollWidth <= innerWidth")
             finally:

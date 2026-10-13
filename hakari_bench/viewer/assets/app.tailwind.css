@@ -1982,3 +1982,6 @@
 .hakari-mode-link { display: inline-flex; align-items: center; gap: .6rem; color: inherit; font: inherit; text-align: left; cursor: pointer; border: 0; background: transparent; padding: 0; }
 .hakari-mode-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .hakari-mode-link:focus-visible { outline: 2px solid var(--hakari-accent); outline-offset: 4px; }
+
+.hakari-intro h2 a { color: inherit; text-decoration: none; }
+.hakari-intro h2 a:hover { text-decoration: underline; text-underline-offset: .15em; }
