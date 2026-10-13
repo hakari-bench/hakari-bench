@@ -1338,6 +1338,9 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 page.wait_for_function("document.querySelector('.evaluation-tab[aria-current=page]').textContent.includes('Reranking')")
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
                 assert page.locator("#hakari-overview-stats").inner_text() == overview_text
+                assert page.locator("#hakari-home-link").evaluate(
+                    "el => getComputedStyle(el).fontSize === getComputedStyle(el.closest('h2')).fontSize && getComputedStyle(el).fontWeight === getComputedStyle(el.closest('h2')).fontWeight"
+                )
                 # Home navigation reloads the document and restores defaults.
                 with page.expect_request(lambda request: request.resource_type == "document" and request.url == base_url + "/"):
                     page.get_by_role("link", name="HAKARI-Bench Leaderboard", exact=True).click()
