@@ -1310,6 +1310,11 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 assert "dataset groups" in overview_text
                 assert "Retrieval" in overview_text
                 assert "—" not in overview_text
+                # Navigation must receive known totals in the document itself,
+                # before any subsequent HTMX table response arrives.
+                initial_html = page.request.get(base_url).text()
+                assert 'id="hakari-overview-stats" aria-busy="false"' in initial_html
+                assert "— models" not in initial_html
                 page.locator("[data-overview-target=reranking]").click()
                 page.wait_for_function("() => document.activeElement?.dataset.evaluationTarget === 'reranking'")
                 assert page.locator(".evaluation-tab[aria-current=page]").get_attribute("data-evaluation-target") == "reranking"

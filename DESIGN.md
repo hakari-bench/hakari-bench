@@ -682,3 +682,7 @@ The visible overview title links to `/` with a full document navigation, restori
 default Retrieval, Grouped columns, collapsed Settings, and cleared filters. In
 the Hugging Face iframe, clear the parent URL hash before navigation. Preserve
 the title's existing colors and typography; underline it on hover.
+
+Overview totals use the latest in-process counts in the initial HTML; dashes are
+reserved for the first load before startup warmup or a leaderboard request has
+populated them. Table filters do not change these benchmark-wide totals.
