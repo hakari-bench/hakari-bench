@@ -18,6 +18,7 @@ from hakari_bench.models import (
     ModelLoadConfig,
     OpenAIEmbeddingAdapter,
     _patch_pylate_dense_missing_activation_function,
+    _set_model_dtype,
     collect_model_metadata,
     load_model,
     load_gemini_embedding_model,
@@ -32,6 +33,25 @@ def test_resolve_torch_dtype_defaults_to_bf16() -> None:
     assert resolve_torch_dtype("bf16") is torch.bfloat16
     assert resolve_torch_dtype("fp16") is torch.float16
     assert resolve_torch_dtype("fp32") is torch.float32
+
+
+@pytest.mark.parametrize("wrapped", [False, True])
+def test_set_model_dtype_preserves_float32_buffers_in_already_loaded_model(wrapped: bool) -> None:
+    module = torch.nn.Linear(2, 2, dtype=torch.bfloat16)
+    frequencies = torch.tensor([0.123456789, 0.987654321], dtype=torch.float32)
+    module.register_buffer("inv_freq", frequencies.clone())
+    model = SimpleNamespace(model=module) if wrapped else module
+
+    _set_model_dtype(model, "bf16")
+
+    assert module.inv_freq.dtype == torch.float32
+    torch.testing.assert_close(module.inv_freq, frequencies, rtol=0, atol=0)
+
+
+def test_set_model_dtype_converts_parameters_when_needed() -> None:
+    module = torch.nn.Linear(2, 2, dtype=torch.float32)
+    _set_model_dtype(module, "bf16")
+    assert all(parameter.dtype == torch.bfloat16 for parameter in module.parameters())
 
 
 def test_resolve_attn_implementation_rejects_flash_attn_conflict() -> None:
