@@ -664,10 +664,17 @@ overview with a one-line “HAKARI-Bench Leaderboard” title and a bold descrip
 subtitle. The redundant top logo/action row is hidden. Describe dense, sparse,
 late interaction, cross-encoder, and BM25 evaluation rather than adding slogans.
 
-Render benchmark-wide dataset-group and task totals in bold within the overview
+Render language-scope dataset-group and task totals in bold within the overview
 paragraph after loading. Show eligible model counts alongside the Retrieval and
-Reranking explanations. Their buttons activate the corresponding evaluation tab,
-preserve filters, then scroll and focus the tab after the response settles.
+Reranking explanations. These are non-interactive explanations without top borders.
+
+Place the compact Multilingual / English switch immediately to the left of
+Evaluation guide in the overview link row, outside Settings. Match the links
+with 12px regular text, a thin border, and a bright blue active fill. Update
+the switch out of band with each leaderboard response to preserve filter state. Multilingual clears Task facets;
+English selects En + Code (a union). Preserve other filters, score settings, and
+the evaluation tab. Derive the active segment from actual facets, so custom
+selections leave both segments inactive and URL restoration remains consistent.
 
 Use square underline tabs, grouped score columns by default, and collapsed Settings.
 Table/model text is 13px with 4px vertical cell padding. Column labels, ranks, and
@@ -685,4 +692,8 @@ the title's existing colors and typography; underline it on hover.
 
 Overview totals use the latest in-process counts in the initial HTML; dashes are
 reserved for the first load before startup warmup or a leaderboard request has
-populated them. Table filters do not change these benchmark-wide totals.
+populated them. Cache totals independently for Multilingual and English. English
+shows dataset groups, raw task counts, and eligible model counts for En + Code;
+other table filters do not change these scope-wide totals. Mark the table scope
+as “Overall (English)” when English is selected. The status task count and task
+breakdown always count underlying tasks, rather than Macro aggregation groups.

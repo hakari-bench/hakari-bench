@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict
-from functools import wraps
+from functools import lru_cache, wraps
 import hashlib
 import inspect
 import json
@@ -22,6 +22,11 @@ P = ParamSpec("P")
 _LOCK = threading.RLock()
 SNAPSHOT_VERSION = 1
 TABLE = "viewer_initial_snapshots"
+
+
+@lru_cache(maxsize=64)
+def _computation_lock(source: Path, key: str) -> Any:
+    return threading.RLock()
 
 
 def _fingerprint(service: LeaderboardService) -> str:
@@ -87,6 +92,7 @@ def cached_initial_leaderboard(
         view = request.pop("view_name")
         sort, direction = request.pop("sort"), request.pop("direction")
         allowed = {
+            "language_filters",
             "score_target",
             "score_aggregation",
             "column_mode",
@@ -98,6 +104,7 @@ def cached_initial_leaderboard(
             and bool(service.config.overalls)
             and view == service.config.overall.name
             and request["score_target"] in {"all", "reranking"}
+            and frozenset(request["language_filters"]) in {frozenset(), frozenset({"en", "category:code"})}
             and (
                 (
                     request["score_aggregation"] == "macro"
@@ -128,8 +135,11 @@ def cached_initial_leaderboard(
         local_key = f"{stat.st_mtime_ns}:{stat.st_size}:{key}"
         companion = source.with_suffix(".leaderboard-cache.duckdb")
         with _LOCK:
+            computation_lock = _computation_lock(source, local_key)
+        with computation_lock:
             try:
-                payload = _read(source, key) or _read(companion, local_key)
+                with _LOCK:
+                    payload = _read(source, key) or _read(companion, local_key)
             except (duckdb.Error, OSError):
                 payload = None
             log_event(
@@ -143,7 +153,8 @@ def cached_initial_leaderboard(
                 result = cast(Callable[..., LeaderboardResult], function)(**canonical)
                 payload = result.model_dump_json()
                 try:
-                    _write(companion, local_key, payload)
+                    with _LOCK:
+                        _write(companion, local_key, payload)
                 except (duckdb.Error, OSError) as exc:
                     log_event(
                         "viewer.leaderboard.snapshot_write",
@@ -171,34 +182,38 @@ def build_initial_snapshots(path: Path, config: Any) -> None:
     service = LeaderboardService(duckdb_path=path, config=config, use_precomputed=False)
     signature = inspect.signature(service.get_leaderboard)
     payloads = []
-    for target in ("all", "reranking"):
-        for grouped in (True, False):
-            request: dict[str, Any] = dict(
-                score_target=target,
-                score_aggregation="macro" if grouped else "micro",
-                column_mode="grouped" if grouped else None,
-                show_task_scores=grouped,
-            )
-            bound = signature.bind(config.overall.name, **request)
-            bound.apply_defaults()
-            options = dict(bound.arguments)
-            view = options.pop("view_name")
-            options.pop("sort")
-            options.pop("direction")
-            key = (
-                _fingerprint(service)
-                + ":"
-                + json.dumps(dict(view=view, **options), sort_keys=True)
-            )
-            result = service.get_leaderboard(view, **request)
-            payloads.append((key, result.model_dump_json()))
+    for languages in ((), ("en", "category:code")):
+        for target in ("all", "reranking"):
+            for grouped in (True, False):
+                request: dict[str, Any] = dict(
+                    language_filters=languages,
+                    score_target=target,
+                    score_aggregation="macro" if grouped else "micro",
+                    column_mode="grouped" if grouped else None,
+                    show_task_scores=grouped,
+                )
+                bound = signature.bind(config.overall.name, **request)
+                bound.apply_defaults()
+                options = dict(bound.arguments)
+                view = options.pop("view_name")
+                options.pop("sort")
+                options.pop("direction")
+                key = (
+                    _fingerprint(service)
+                    + ":"
+                    + json.dumps(dict(view=view, **options), sort_keys=True)
+                )
+                result = service.get_leaderboard(view, **request)
+                payloads.append((key, result.model_dump_json()))
     with duckdb.connect(str(path)) as con:
         con.execute("DROP TABLE IF EXISTS viewer_initial_snapshots")
     for key, payload in payloads:
         _write(path, key, payload)
 
 
-def warm_initial_snapshots(store: Any, config: Any) -> None:
+def warm_initial_snapshots(
+    store: Any, config: Any, *, language_scopes: tuple[tuple[str, ...], ...] = ((), ("en", "category:code"))
+) -> None:
     """Prepare older downloaded DBs without changing the source database."""
     from hakari_bench.viewer.leaderboard import LeaderboardService, ScoreTarget
 
@@ -207,16 +222,18 @@ def warm_initial_snapshots(store: Any, config: Any) -> None:
         if not store.path.exists():
             return
         service = LeaderboardService(duckdb_path=store.path, config=config)
-        for target in ("all", "reranking"):
-            service.get_leaderboard(
-                config.overall.name,
-                score_target=cast(ScoreTarget, target),
-                score_aggregation="macro",
-                column_mode="grouped",
-                show_task_scores=True,
-            )
-            service.get_leaderboard(
-                config.overall.name, score_target=cast(ScoreTarget, target)
-            )
+        for languages in language_scopes:
+            for target in ("all", "reranking"):
+                service.get_leaderboard(
+                    config.overall.name,
+                    language_filters=languages,
+                    score_target=cast(ScoreTarget, target),
+                    score_aggregation="macro",
+                    column_mode="grouped",
+                    show_task_scores=True,
+                )
+                service.get_leaderboard(
+                    config.overall.name, score_target=cast(ScoreTarget, target), language_filters=languages
+                )
     except Exception as exc:
         log_event("viewer.leaderboard.snapshot_warmup", error_type=type(exc).__name__)

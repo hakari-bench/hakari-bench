@@ -31,6 +31,33 @@ uv run hakari-bench evaluate dense \
   --device cuda:0
 ```
 
+To evaluate only English and code tasks across the standard benchmark, use:
+
+```bash
+uv run hakari-bench evaluate dense --model MODEL_NAME --all --english
+```
+
+Equivalent forms:
+
+```bash
+uv run hakari-bench evaluate dense --model MODEL_NAME --all --lang en,code
+```
+
+```bash
+uv run hakari-bench evaluate dense --model MODEL_NAME --all --lang en code
+```
+
+`--lang` accepts repeated, space-separated, or comma-separated language codes.
+Selections are a union; `code` (also `category:code`) includes code-search tasks.
+`--english` adds both `en` and `code` to any explicit languages. Task metadata
+uses `primary_languages` when present, otherwise `languages` or `language`.
+Filtering happens after dataset/split and evaluation-scope expansion and before
+loading datasets or models. It also applies to sparse, late-interaction,
+reranker, BM25, batch registration, and candidate-building commands. A filter
+that matches no tasks fails rather than launching a run. Dataset selection and
+standard/extended task inclusion rules still apply; language selection does not
+apply the leaderboard's duplicate-task exclusions.
+
 Per-task outputs default to compressed JSON files:
 
 ```text

@@ -69,6 +69,12 @@ uv run hakari-bench evaluate reranker \
 Use `--dataset` or `--collection` only for intentionally narrower runs. `--all`
 is mutually exclusive with `--dataset`, `--collection`, and `--split`.
 
+Use `--all --english` (equivalent to `--all --lang en,code`) for English
+and code-search coverage. `--lang` accepts a union of repeated, comma-separated,
+or space-separated codes. Language filtering runs before dataset/model loading
+and does not override task inclusion scope or duplicate-result policy. See the
+[runbook](evaluation_runbook.md) for syntax and metadata matching rules.
+
 Target expansion uses `--evaluation-scope standard` by default. Dataset YAML may
 mark an entire dataset or individual tasks with `include_by_default: false`;
 those tasks are skipped by normal `--all`, `--dataset`, and `--collection`

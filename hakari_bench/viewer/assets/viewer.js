@@ -17,33 +17,6 @@
   });
 
   // Keep Settings open while its controls replace the leaderboard panel.
-  let pendingOverviewTarget = null;
-  function focusEvaluationTab(target) {
-    const tab = document.querySelector('.evaluation-tab[data-evaluation-target="' + target + '"]');
-    if (!tab) return;
-    tab.focus({ preventScroll: true });
-    tab.scrollIntoView({ block: "center", behavior: "smooth" });
-  }
-  document.addEventListener("click", (event) => {
-    const link = event.target.closest("[data-overview-target]");
-    if (!link) return;
-    const target = link.dataset.overviewTarget;
-    const tab = document.querySelector('.evaluation-tab[data-evaluation-target="' + target + '"]');
-    if (!tab) return;
-    if (tab.getAttribute("aria-current") === "page") {
-      focusEvaluationTab(target);
-    } else {
-      pendingOverviewTarget = target;
-      tab.click();
-    }
-  });
-  document.addEventListener("htmx:afterSettle", (event) => {
-    if (!pendingOverviewTarget || event.target.id !== "leaderboard-panel") return;
-    const target = pendingOverviewTarget;
-    pendingOverviewTarget = null;
-    focusEvaluationTab(target);
-  });
-
   let settingsOpen = false;
   document.addEventListener("click", (event) => {
     const summary = closestElement(event.target, "#leaderboard-settings > summary");

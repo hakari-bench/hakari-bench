@@ -1898,9 +1898,7 @@
 .hakari-intro .hakari-eyebrow { color: var(--hakari-text); }
 .hakari-intro-subtitle { margin-top: .5rem; font-size: .8125rem; max-width: 46rem; }
 .hakari-capabilities { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
-.hakari-capabilities > div { border-top: 2px solid #82baff; padding-top: .5rem; }
-.hakari-capabilities > div:nth-child(2) { border-color: #60a5fa; }
-.hakari-capabilities > div:nth-child(3) { border-color: #a5cfff; }
+.hakari-capabilities > div { padding-top: 0; }
 .hakari-capabilities h4 { color: #82baff; font-size: .9375rem; font-weight: 650; margin-bottom: .35rem; }
 .hakari-capabilities p { font-size: .75rem; }
 .hakari-ranking-note { font-size: .75rem; margin-top: .75rem; }
@@ -1958,7 +1956,7 @@
 }
 
 .hakari-intro-subtitle strong { color: var(--hakari-text); font-weight: 600; }
-.hakari-intro-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: .5rem; }
+.hakari-intro-links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: .5rem; }
 .hakari-intro-links a { margin-top: 0; font-size: .75rem; }
 .hakari-intro-title, .hakari-intro-details { min-width: 0; }
 
@@ -1979,9 +1977,13 @@
 .hakari-intro-links .hakari-icon { width: .875rem; height: .875rem; }
 .hakari-capabilities h4 .hakari-icon { width: 1rem; height: 1rem; align-self: center; }
 
-.hakari-mode-link { display: inline-flex; align-items: center; gap: .6rem; color: inherit; font: inherit; text-align: left; cursor: pointer; border: 0; background: transparent; padding: 0; }
-.hakari-mode-link:hover { text-decoration: underline; text-underline-offset: 4px; }
-.hakari-mode-link:focus-visible { outline: 2px solid var(--hakari-accent); outline-offset: 4px; }
+.hakari-mode-label { display: inline-flex; align-items: center; gap: .6rem; color: inherit; font: inherit; text-align: left; border: 0; background: transparent; padding: 0; }
 
 .hakari-intro h2 a { display: inline; font: inherit; letter-spacing: inherit; color: inherit; text-decoration: none; }
 .hakari-intro h2 a:hover { text-decoration: underline; text-underline-offset: .15em; }
+
+.language-scope-switch { display: inline-flex; gap: .125rem; padding: .125rem; margin: 0; border: 1px solid var(--hakari-border); border-radius: .3rem; background: var(--hakari-surface); }
+.language-scope-switch button { padding: .125rem .5rem; border-radius: .2rem; color: var(--hakari-text-muted); font-size: .75rem; font-weight: 400; line-height: 1.4; cursor: pointer; }
+.language-scope-switch button:hover { color: var(--hakari-text); background: var(--hakari-control-bg); }
+.language-scope-switch button[aria-pressed="true"] { background: #82baff; color: #0b1826; }
+.language-scope-switch button:focus-visible { outline: 2px solid var(--hakari-accent); outline-offset: 2px; }

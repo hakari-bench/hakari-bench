@@ -656,6 +656,7 @@ class LeaderboardService:
                     rows = _filter_rows_by_task_terms(rows, ranking_task_filter_terms)
                     phase_timing["task_score_count"] = len(rows)
                     phase_timing["term_count"] = len(ranking_task_filter_terms)
+            task_breakdowns = _task_breakdowns(rows)
             metric_score_group = None if column_mode == "task" else selected_score_group
             column_source_rows = list(rows) if column_mode is not None else None
             should_show_task_scores = (
@@ -730,7 +731,6 @@ class LeaderboardService:
                 metric_score_group = ScoreGroupConfig(
                     name="task_scores", label="Task Scores", group_by="task_key"
                 )
-            task_breakdowns = _task_breakdowns(column_source_rows if column_source_rows is not None else rows)
             with timed_operation(
                 "viewer.leaderboard.phase", operation="metric_columns", view=view_name
             ) as phase_timing:
