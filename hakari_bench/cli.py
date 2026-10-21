@@ -399,6 +399,11 @@ def _add_dataset_args(parser: argparse.ArgumentParser, *, action: str) -> None:
             "'all' includes extended tasks as well."
         ),
     )
+    parser.add_argument(
+        "--lang", action="extend", nargs="+", default=[],
+        help="Filter tasks by language code or code category (union). Repeat, space- or comma-separate: --lang en,code.",
+    )
+    parser.add_argument("--english", action="store_true", help="Evaluate English and code tasks; shorthand for --lang en,code.")
     parser.add_argument("--dataset-revision", default=None, help=f"Hugging Face dataset revision to {verb}.")
 
 
@@ -1597,6 +1602,8 @@ def run_batch_dense_register(args: argparse.Namespace) -> dict[str, Any]:
         split_values=args.split,
         evaluation_scope=args.evaluation_scope,
         explicit_dataset_selection=_has_explicit_dataset_selection(args),
+        language_values=getattr(args, "lang", []),
+        english=getattr(args, "english", False),
     )
     if args.provider not in {"openai", "gemini"}:
         raise ValueError(f"Unsupported dense batch provider: {args.provider}")
@@ -2133,6 +2140,8 @@ def run_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         split_values=args.split,
         evaluation_scope=args.evaluation_scope,
         explicit_dataset_selection=_has_explicit_dataset_selection(args),
+        language_values=getattr(args, "lang", []),
+        english=getattr(args, "english", False),
     )
     _warn_unmatched_typesafe_tasks(args, tasks)
     output_dir = Path(args.output_dir)
@@ -2312,6 +2321,8 @@ def run_build_bm25(args: argparse.Namespace) -> dict[str, Any]:
         split_values=args.split,
         evaluation_scope=args.evaluation_scope,
         explicit_dataset_selection=_has_explicit_dataset_selection(args),
+        language_values=getattr(args, "lang", []),
+        english=getattr(args, "english", False),
     )
     config = bm25_config_from_args(args)
     results: list[BM25BuildResult] = []

@@ -1986,3 +1986,13 @@ def test_run_build_bm25_returns_candidate_summary(monkeypatch, tmp_path) -> None
     assert "output_dir" not in payload
     assert payload["config"]["bm25"]["top_k"] == 10
     assert "override" not in payload["config"]["bm25"]
+
+
+def test_evaluation_language_arguments() -> None:
+    for method in ("dense", "sparse", "reranker", "late-interaction", "bm25"):
+        base = ["evaluate", method, "--all"]
+        if method != "bm25":
+            base += ["--model", "example/model"]
+        assert parse_args([*base, "--lang", "en,code"]).lang == ["en,code"]
+        assert parse_args([*base, "--lang", "en", "code"]).lang == ["en", "code"]
+        assert parse_args([*base, "--english"]).english is True

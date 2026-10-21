@@ -1255,11 +1255,19 @@ The table has `cache_key VARCHAR PRIMARY KEY` and `payload VARCHAR`. Its key
 contains the snapshot format version, a SHA-256 fingerprint of the viewer
 configuration (including task manifests and group definitions) and model-card
 metadata, plus the complete default request except sort and direction. Sorting
-and sorted-column promotion remain request-time operations. Any non-default
-filter, variant flag, metric, scope, or display option uses the existing path.
+and sorted-column promotion remain request-time operations. Apart from the
+English preset below, non-default filters, variant flags, metrics, scopes, and
+display options use the existing path.
 A configuration/model-card mismatch also bypasses the snapshot.
 
-Warehouse builds materialize these four snapshots. Older downloaded databases
+Warehouse builds materialize eight snapshots: the four existing unfiltered
+requests and the same four with `language_filters=("en", "category:code")`.
+English is the union of the existing En and Code Task facets, evaluated before
+model completeness, ranking, and Macro grouping. It can therefore include models
+that have complete English/code coverage but incomplete multilingual coverage.
+Other language selections retain the dynamic path.
+
+Older downloaded databases
 are supported by a companion `<database-stem>.leaderboard-cache.duckdb`, prepared
 in a background thread after initial database synchronization. Companion keys
 also contain the source file modification timestamp and size, invalidating
@@ -2097,3 +2105,31 @@ A source file version change (mtime and size) refreshes the totals on the next
 leaderboard request; the last known totals remain visible during sync. A lock
 prevents duplicate startup/request computations and totals are only published
 when the source version remains unchanged. No extra persistent cache is needed.
+
+
+### Multilingual / English navigation
+
+The language-scope switch sits immediately to the left of Evaluation guide in
+the overview link row, outside Settings. Its initial controls are disabled until
+the first leaderboard response supplies their state and URLs via an HTMX
+outerHTML out-of-band swap; subsequent responses update them the same way.
+It writes the existing repeated `lang_filter` URL parameter: English selects
+`en` and `category:code`, while Multilingual clears it. Task facets and restored
+URLs drive the same state; other selections leave neither preset active. Other
+filters and the evaluation mode are preserved. The overview's model counts
+remain benchmark-wide and are plain, non-interactive text.
+
+Startup warms Multilingual and publishes overview totals before warming English,
+so preparing a missing English cache does not delay the totals. It uses embedded snapshots when available and the
+source-versioned sidecar cache for older databases. No source database rebuild
+is required to use the new scope. Building the warehouse embeds English
+snapshots too, avoiding the first dynamic calculation on future deployments.
+
+
+On the refreshed remote database checked on 2026-10-21, repeated English
+Grouped/Macro service calls took 24–25 ms from the sidecar snapshot, compared
+with 695 ms (Retrieval) and 829 ms (Reranking) dynamically. Unfiltered snapshot
+calls remained 16–20 ms. These are local service timings, excluding HTTP and
+browser rendering. Cache generation uses a per-request lock: an English cache
+miss does not hold the shared DuckDB I/O lock during aggregation, so it cannot
+block an already cached Multilingual request for the duration of that work.

@@ -666,8 +666,15 @@ late interaction, cross-encoder, and BM25 evaluation rather than adding slogans.
 
 Render benchmark-wide dataset-group and task totals in bold within the overview
 paragraph after loading. Show eligible model counts alongside the Retrieval and
-Reranking explanations. Their buttons activate the corresponding evaluation tab,
-preserve filters, then scroll and focus the tab after the response settles.
+Reranking explanations. These are non-interactive explanations without top borders.
+
+Place the compact Multilingual / English switch immediately to the left of
+Evaluation guide in the overview link row, outside Settings. Match the links
+with 12px regular text, a thin border, and a bright blue active fill. Update
+the switch out of band with each leaderboard response to preserve filter state. Multilingual clears Task facets;
+English selects En + Code (a union). Preserve other filters, score settings, and
+the evaluation tab. Derive the active segment from actual facets, so custom
+selections leave both segments inactive and URL restoration remains consistent.
 
 Use square underline tabs, grouped score columns by default, and collapsed Settings.
 Table/model text is 13px with 4px vertical cell padding. Column labels, ranks, and

@@ -305,12 +305,13 @@ def create_app(
     def warm_startup_cache() -> None:
         from hakari_bench.viewer.snapshots import warm_initial_snapshots
 
-        warm_initial_snapshots(store, viewer_config)
+        warm_initial_snapshots(store, viewer_config, language_scopes=((),))
         if store.path.exists():
             try:
                 overview_stats(database_version())
             except Exception as exc:
                 log_event("viewer.overview.warmup", error_type=type(exc).__name__)
+        warm_initial_snapshots(store, viewer_config, language_scopes=(("en", "category:code"),))
 
     @asynccontextmanager
     async def lifespan(_app: object) -> AsyncIterator[None]:
@@ -1063,6 +1064,7 @@ def render_page(
         <h3>A lightweight benchmark for multilingual retrieval and reranking</h3>
         {render_overview_stats(counts=overview_counts)}
         <div class="hakari-intro-links">
+          {render_language_scope_switch()}
           <a href="/docs/">{_icon_svg("book-open")}<span>Evaluation guide</span></a>
           <a href="https://arxiv.org/abs/2606.22778" target="_blank" rel="noopener noreferrer">{_icon_svg("file-text")}<span>Paper</span></a>
           <a href="https://github.com/hakari-bench/hakari-bench" target="_blank" rel="noopener noreferrer">{_icon_svg("github")}<span>GitHub</span></a>
@@ -1500,9 +1502,9 @@ def render_overview_stats(
         int8/binary quantization, and float rescoring.
         Filter by language or dataset to compare results relevant to your use case.</p>
       <div class="hakari-capabilities">
-        <div><h4><button type="button" class="hakari-mode-link" data-overview-target="all">{_icon_svg("search")}Retrieval <span class="hakari-model-count">{retrieval} models</span></button></h4>
+        <div><h4><span class="hakari-mode-label">{_icon_svg("search")}Retrieval <span class="hakari-model-count">{retrieval} models</span></span></h4>
           <p>Dense, sparse, late interaction, and BM25 search over the full corpus.</p></div>
-        <div><h4><button type="button" class="hakari-mode-link" data-overview-target="reranking">{_icon_svg("list-ordered")}Reranking <span class="hakari-model-count">{reranking} models</span></button></h4>
+        <div><h4><span class="hakari-mode-label">{_icon_svg("list-ordered")}Reranking <span class="hakari-model-count">{reranking} models</span></span></h4>
           <p>Cross-encoders and other models reorder a shared candidate set.</p></div>
       </div>
     </div>"""
@@ -1597,6 +1599,7 @@ def render_leaderboard(
     )
     return f"""
 <div>
+  {render_language_scope_switch(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state, swap_oob=True)}
   {render_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, filter_context=filter_context, benchmark_docs=benchmark_docs, plot_state=plot_state)}
   <div class="mb-2 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-600" data-shown-count="{shown_count}">
     <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -2749,6 +2752,43 @@ def _score_target_display(score_target: str) -> tuple[str, str]:
     if score_target == "all":
         return "search", "Retrieval"
     return "list-ordered", "Reranking"
+
+
+def render_language_scope_switch(
+    *,
+    result: LeaderboardResult | None = None,
+    sort: str = "borda_score",
+    direction: str = "desc",
+    filter_state: FilterState | None = None,
+    plot_state: QueryState | None = None,
+    swap_oob: bool = False,
+) -> str:
+    filter_state = filter_state or FilterState()
+    buttons = []
+    for key, label, languages in (
+        ("multilingual", "Multilingual", ()),
+        ("english", "English", ("en", "category:code")),
+    ):
+        if result is None:
+            buttons.append(f'<button type="button" data-language-scope="{key}" aria-pressed="false" disabled>{label}</button>')
+            continue
+        active = set(filter_state.language_filters) == set(languages)
+        payload = state_payload(
+            result=result,
+            sort="borda_score" if sort.startswith("metric:") else sort,
+            direction="desc" if sort.startswith("metric:") else direction,
+            filter_state=_filter_state_with_languages(filter_state, languages),
+        )
+        if result.view_name == "Overall (EN)":
+            payload.pop("view", None)
+        payload = _apply_plot_state(payload, plot_state)
+        query = urlencode(payload, doseq=True)
+        buttons.append(f'''<button type="button" data-language-scope="{key}" aria-pressed="{str(active).lower()}"
+          hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(payload)}"
+          {_leaderboard_control_hx_attrs()}>{label}</button>''')
+    oob = ' hx-swap-oob="outerHTML"' if swap_oob else ""
+    return f'''<nav id="hakari-language-scope" class="language-scope-switch" aria-label="Leaderboard language scope"{oob}>
+      {"".join(buttons)}</nav>'''
 
 
 def render_tabs(
