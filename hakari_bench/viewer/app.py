@@ -300,18 +300,18 @@ def create_app(
     )
 
     # Keep the last known totals available while a replacement database syncs.
-    overview_counts: tuple[int, int, int, int] | None = None
+    overview_counts_by_scope: dict[tuple[str, ...], tuple[int, int, int, int]] = {}
 
     def warm_startup_cache() -> None:
         from hakari_bench.viewer.snapshots import warm_initial_snapshots
 
-        warm_initial_snapshots(store, viewer_config, language_scopes=((),))
-        if store.path.exists():
-            try:
-                overview_stats(database_version())
-            except Exception as exc:
-                log_event("viewer.overview.warmup", error_type=type(exc).__name__)
-        warm_initial_snapshots(store, viewer_config, language_scopes=(("en", "category:code"),))
+        for languages in ((), ("en", "category:code")):
+            warm_initial_snapshots(store, viewer_config, language_scopes=(languages,))
+            if store.path.exists():
+                try:
+                    overview_stats(database_version(), languages)
+                except Exception as exc:
+                    log_event("viewer.overview.warmup", error_type=type(exc).__name__)
 
     @asynccontextmanager
     async def lifespan(_app: object) -> AsyncIterator[None]:
@@ -489,7 +489,7 @@ def create_app(
                     initial_query=initial_query,
                     benchmark_docs=benchmark_docs,
                     database_label="",
-                    overview_counts=overview_counts,
+                    overview_counts=overview_counts_by_scope.get(_overview_scope(query_values(initial_query.get("lang_filter")))),
                 )
             request_timing["view"] = query_string(initial_query.get("view", viewer_config.overall.name))
             return content
@@ -558,29 +558,30 @@ def create_app(
         return (stat.st_mtime_ns, stat.st_size) if stat else (0, 0)
 
     overview_lock = threading.Lock()
-    overview_version: tuple[int, int] | None = None
+    overview_versions: dict[tuple[str, ...], tuple[int, int]] = {}
 
-    def overview_stats(version: tuple[int, int]) -> str:
-        nonlocal overview_counts, overview_version
+    def overview_stats(version: tuple[int, int], languages: tuple[str, ...] = ()) -> str:
+        scope = _overview_scope(languages)
         # Startup warmup and the first request can race. Serialize publication
         # and cache by source version so replacement DBs refresh these totals.
         with overview_lock:
-            if overview_version == version and overview_counts is not None:
-                return render_overview_stats(counts=overview_counts, swap_oob=True)
+            if overview_versions.get(scope) == version and scope in overview_counts_by_scope:
+                return render_overview_stats(counts=overview_counts_by_scope[scope], english=bool(scope), swap_oob=True)
             service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
-            retrieval = service.get_leaderboard(viewer_config.overall.name, score_target="all")
-            reranking = service.get_leaderboard(viewer_config.overall.name, score_target="reranking")
+            retrieval = service.get_leaderboard(viewer_config.overall.name, score_target="all", language_filters=scope)
+            reranking = service.get_leaderboard(viewer_config.overall.name, score_target="reranking", language_filters=scope)
             counts = (
-                len(viewer_config.overall.benchmark_names),
-                retrieval.expected_tasks,
+                len({task.doc_key.split("::", 1)[0] for task in retrieval.task_breakdowns})
+                if scope else len(viewer_config.overall.benchmark_names),
+                _display_task_count(retrieval),
                 len({row.model_name for row in retrieval.rows}),
                 len({row.model_name for row in reranking.rows}),
             )
             # Do not label totals from a concurrently replaced DB as current.
             if database_version() == version:
-                overview_counts = counts
-                overview_version = version
-            return render_overview_stats(counts=counts, swap_oob=True)
+                overview_counts_by_scope[scope] = counts
+                overview_versions[scope] = version
+            return render_overview_stats(counts=counts, english=bool(scope), swap_oob=True)
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
@@ -711,7 +712,7 @@ def create_app(
                     plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
                 )
                 version = database_version()
-                content = f"{content}\n{_render_footer_update(store=store)}\n{overview_stats(version)}"
+                content = f"{content}\n{_render_footer_update(store=store)}\n{overview_stats(version, filter_state.language_filters)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
             render_ms = _elapsed_ms(render_started)
             request_timing["view"] = result.view_name
@@ -1062,7 +1063,7 @@ def render_page(
       <div class="hakari-intro">
         <h2><a id="hakari-home-link" href="/">HAKARI-Bench <span>Leaderboard</span></a></h2>
         <h3>A lightweight benchmark for multilingual retrieval and reranking</h3>
-        {render_overview_stats(counts=overview_counts)}
+        {render_overview_stats(counts=overview_counts, english=bool(_overview_scope(query_values((initial_query or {}).get("lang_filter")))))}
         <div class="hakari-intro-links">
           {render_language_scope_switch()}
           <a href="/docs/">{_icon_svg("book-open")}<span>Evaluation guide</span></a>
@@ -1486,17 +1487,26 @@ def _help_aria_label(copy: help_text.HelpCopy) -> str:
     return f"{copy.eyebrow}: {copy.title}" if copy.eyebrow else copy.title
 
 
+def _overview_scope(languages: list[str] | tuple[str, ...]) -> tuple[str, ...]:
+    return ("en", "category:code") if set(languages) == {"en", "category:code"} else ()
+
+
+def _display_task_count(result: LeaderboardResult) -> int:
+    return len(result.task_breakdowns) if result.task_breakdowns else result.expected_tasks
+
+
 def render_overview_stats(
-    *, counts: tuple[int, int, int, int] | None = None, swap_oob: bool = False
+    *, counts: tuple[int, int, int, int] | None = None, english: bool = False, swap_oob: bool = False
 ) -> str:
     values = tuple(f"{count:,}" for count in counts) if counts is not None else ("—",) * 4
     groups, tasks, retrieval, reranking = values
     oob = ' hx-swap-oob="outerHTML"' if swap_oob else ""
     busy = "true" if counts is None else "false"
+    scope_label = " in the English and code scope" if english else ""
     return f"""<div id="hakari-overview-stats"{oob} aria-busy="{busy}" aria-live="polite">
       <p class="hakari-intro-subtitle">HAKARI-Bench evaluates <strong>dense embeddings, learned sparse retrieval,
         late interaction, and cross-encoder rerankers</strong>, alongside BM25, across
-        <strong>{groups} dataset groups</strong> and <strong>{tasks} tasks</strong>.
+        <strong>{groups} dataset groups</strong> and <strong>{tasks} tasks</strong>{scope_label}.
         Models are evaluated using common tasks and metrics on compact datasets (Nano-sets).
         Results include base model performance and changes in retrieval quality from dimensionality reduction,
         int8/binary quantization, and float rescoring.
@@ -1606,7 +1616,7 @@ def render_leaderboard(
       {render_result_view_tabs(result=result, sort=sort, direction=direction, filter_state=filter_state, result_view=result_view, plot_y=plot_y, plot_x=plot_x, plot_size=plot_size, plot_color=plot_color)}
       <span class="inline-flex items-center gap-1 font-medium text-zinc-600">
         {_icon_svg("database", class_name="hakari-icon h-3.5 w-3.5 shrink-0")}
-        <span>{escape(result.view_label)}</span>
+        <span>{escape(result.view_label)}{" (English)" if _overview_scope(filter_state.language_filters) else ""}</span>
       </span>
       <span class="text-zinc-400">/</span>
       <span class="inline-flex items-center gap-1 text-zinc-600">
@@ -1639,7 +1649,7 @@ def _render_status_count_buttons(*, result: LeaderboardResult, shown_count: int,
         <span class="text-zinc-400">/</span>
         <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="complete">{len(result.rows)} complete models</button>
         <span class="text-zinc-400">/</span>
-        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="tasks" data-count-breakdown-url="{task_breakdown_url}">{result.expected_tasks} tasks</button>
+        <button type="button" class="leaderboard-status-count-trigger underline underline-offset-2 hover:text-cyan-700" data-count-breakdown-trigger="tasks" data-count-breakdown-url="{task_breakdown_url}">{_display_task_count(result)} tasks</button>
       </span>
     """
 
@@ -1725,7 +1735,7 @@ def _render_status_model_list(*, rows: list[LeaderboardRow], model_views: dict[s
 
 
 def render_task_breakdown_loading_section(*, result: LeaderboardResult | None = None, query: str = "") -> str:
-    expected_tasks = result.expected_tasks if result is not None else 0
+    expected_tasks = _display_task_count(result) if result is not None else 0
     url_attr = f' data-count-breakdown-url="{_task_breakdown_url(query)}"' if query else ""
     return f"""
       <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" hidden data-count-breakdown-loaded="false"{url_attr} class="pt-2">
@@ -1773,7 +1783,7 @@ def _render_task_breakdown_section(
     hidden_attr = " hidden" if hidden else ""
     return f"""
       <section id="count-breakdown-tasks" data-count-breakdown-section="tasks" data-count-breakdown-title="Tasks" data-count-breakdown-loaded="true"{hidden_attr} class="pt-2">
-        <h4 class="font-semibold text-zinc-900">Tasks: {result.expected_tasks}</h4>
+        <h4 class="font-semibold text-zinc-900">Tasks: {_display_task_count(result)}</h4>
         <p class="mt-1 text-sm text-zinc-600">Every task each model above had to complete for its score, after the current evaluation mode, benchmark scope, task facets, and task-length ranges. Linked tasks have documentation and open in a new tab.</p>
         {task_body}
       </section>
@@ -4368,6 +4378,11 @@ def render_table_head(
         overrides=result.metric_column_labels,
         parent_label=result.view_name,
     )
+    if set(filter_state.language_filters or result.selected_languages) == {"en", "category:code"}:
+        metric_labels = {
+            column: label.replace("M-BEIR", "BEIR", 1) if label.startswith("M-BEIR") else label
+            for column, label in metric_labels.items()
+        }
     columns = [
         ("model_name", "Model Name", "asc", "left", False, ""),
         ("borda_score", "Borda Score", "desc", "right", False, ""),
@@ -5409,8 +5424,9 @@ def _metric_column_label_markup(label: str) -> str:
 
 
 def _metric_column_header_parts(label: str) -> tuple[str, str]:
-    if label.startswith("M-BEIR-"):
-        return "M-BEIR", label.removeprefix("M-BEIR-")
+    for prefix in ("M-BEIR", "BEIR"):
+        if label.startswith(f"{prefix}-"):
+            return prefix, label.removeprefix(f"{prefix}-")
     parts = [part for part in label.split("::") if part]
     if len(parts) >= 3:
         group_label = parts[-2].rsplit("/", 1)[-1]

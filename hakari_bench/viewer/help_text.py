@@ -40,7 +40,7 @@ PAGE_OVERVIEW = HelpCopy(
     title="HAKARI-Bench",
     eyebrow="Getting started",
     summary=(
-        "Every row is one retrieval model, and every score is how well it ranked relevant "
+        "Each row is a model evaluated in Retrieval or Reranking mode. Scores show how well it ranked relevant "
         "documents across hundreds of small retrieval tasks."
     ),
     details=(
@@ -55,7 +55,10 @@ PAGE_OVERVIEW = HelpCopy(
         "nothing relevant was found. Borda Score, the default sort, is a ranking-based score instead "
         "of an average score; Macro Mean and Micro Mean are two ways of averaging the same per-task "
         "numbers. Each of those column headers has its own help icon.\n\n"
-        "The controls above the table apply from top to bottom. Evaluation mode picks full-corpus "
+        "The Multilingual / English switch selects the language scope: English includes English and code "
+        "tasks, while Multilingual clears language and category facets. Overview counts follow this "
+        "preset within Overall; the counts above the table also follow your benchmark and task filters.\n\n"
+        "Open Settings to adjust the controls. Evaluation mode picks full-corpus "
         "retrieval or reranking of a fixed candidate list. Score and Metric decide how task scores are "
         "averaged and which metric is averaged. Benchmark scope picks which benchmark families count. "
         "Task facets narrows those tasks by language or category. Table display adds per-task columns, "
@@ -78,7 +81,8 @@ EVALUATION_MODE = HelpCopy(
         "their own: dense embedding models, BM25, learned sparse models, and late-interaction "
         "(ColBERT-style) models. It answers the question 'which model finds the relevant documents in "
         "the first place?'\n\n"
-        "Reranking ranks models that never search the corpus. Every query starts from the same fixed "
+        "Reranking evaluates models by reordering candidates rather than searching the corpus. "
+        "Every query starts from the same fixed "
         "list of 100 candidate documents and the model only reorders it. It answers a different "
         "question: 'given a candidate list, which model pulls the best documents to the top?'\n\n"
         "That candidate list is built once per query and shared by every model in this mode. BM25 "
@@ -116,27 +120,28 @@ SAFEGUARD_POSITIVES = HelpCopy(
 
 SCORE_AGGREGATION = HelpCopy(
     title="Score aggregation",
-    summary="Chooses whether every task counts equally (Micro) or every benchmark counts equally (Macro).",
+    summary="Chooses raw-task weighting (Micro) or configured group aggregation (Macro).",
     details=(
         "A model's average is built from its per-task scores. Micro and Macro differ only in what gets "
         "one vote.\n\n"
-        "Micro, the default, averages all raw tasks equally, so a benchmark with many tasks pulls the "
-        "average harder. M-BEIR alone contributes all 182 cells of its 13-task x 14-language matrix. "
-        "Macro first averages the tasks inside each benchmark into a single benchmark score and then "
-        "averages those benchmarks, so a 182-task suite and a 5-task suite have exactly the same "
-        "influence.\n\n"
-        "Pick Micro when you want a straight average over everything that was measured, and Macro when "
-        "you do not want one large suite to decide the ranking. In the Overall scope both averages stay "
+        "The initial view uses Grouped columns with Macro. Micro averages all raw tasks equally, so a benchmark with many tasks pulls the "
+        "average harder. In Multilingual scope, M-BEIR contributes 182 cells from its "
+        "13-task x 14-language matrix; facets restrict that contribution to the selected tasks. "
+        "Macro averages configured groups before ranking. Most benchmarks contribute one mean; "
+        "M-BEIR uses its configured task or language groups. Macro Mean then gives each benchmark "
+        "equal weight, regardless of its raw task count.\n\n"
+        "Pick Micro to rank on individual tasks, or Macro to compare configured group means before "
+        "ranking. In the Overall scope both averages stay "
         "visible side by side as the Macro Mean and Micro Mean columns, so this switch decides which of "
-        "them counts as the model's single headline score: the Mean Score used in every other scope, the "
-        "mean-based rank, and the STD delta on the mean. The default Borda Score ranking is computed from "
-        "per-task ranks and does not change with this switch.\n\n"
+        "them counts as the model's headline mean: Mean Score where shown, the "
+        "mean-based rank, and the STD delta on the mean. Borda Score can change too: Micro ranks "
+        "models on raw tasks, while Macro ranks them on configured group means.\n\n"
         "Table display and Score are linked, because per-task columns only make sense with per-task "
         "weighting: Task columns forces Micro and Grouped columns forces Macro, and while either is "
         "active the incompatible Score choice is disabled.\n\n"
-        "M-BEIR is displayed as 13 task means or 14 language means so the table does not grow to 182 "
-        "columns. Those compact columns are a display summary only: Micro still averages all 182 raw "
-        "cells underneath."
+        "In Multilingual scope, M-BEIR can be displayed as 13 task means or 14 language means. "
+        "Micro still uses its raw task scores underneath. English scope keeps only its English slice "
+        "and labels those columns BEIR; all counts and means use the selected tasks."
     ),
 )
 
@@ -168,12 +173,12 @@ BENCHMARK_SCOPE = HelpCopy(
     title="Benchmark scope",
     summary="Chooses which benchmark families the leaderboard scores are computed from.",
     details=(
-        "Every button here is a Nano-set: a compact rebuild of a public retrieval benchmark, with up to "
+        "Every benchmark button here selects a Nano-set or collection: a compact rebuild of a public retrieval benchmark, with up to "
         "roughly 50 to 200 queries and a corpus capped at about 10K documents per task, so that all "
         "models can realistically be run on all of them. They cover multilingual suites, single-language suites, and domain-specific sets "
         "such as code, law, medicine, and long documents.\n\n"
-        "Overall, the default, uses every benchmark in the database and gives the broadest ranking. "
-        "Overall (EN) is the same set restricted to English tasks. Selecting individual benchmark "
+        "Overall, the default, uses the configured benchmark set. The English switch restricts it to "
+        "English and code tasks; Multilingual removes that language/category restriction. Selecting individual benchmark "
         "buttons instead builds a custom scope from just those benchmarks, and you can select several at "
         "once. Clear removes every selection and empties the table so you can start a fresh custom set.\n\n"
         "Scope is the first control that decides which tasks exist at all. Task facets then narrows "
@@ -190,7 +195,7 @@ _SCOPE_PRESET_HELP = {
     "Overall": HelpCopy(
         title="Overall",
         eyebrow="Benchmark scope",
-        summary="Ranks models over every benchmark in the database, which is the default view of this page.",
+        summary="Ranks models over the configured Overall benchmark set, subject to the selected task facets.",
         details=(
             "Overall is the broadest scope. It includes the multilingual, single-language, and "
             "domain-specific Nano-sets together, before any task facet, model, task, or variant filter is "
@@ -206,7 +211,9 @@ _SCOPE_PRESET_HELP = {
         eyebrow="Benchmark scope",
         summary="Uses the same benchmarks as Overall, restricted to English tasks.",
         details=(
-            "Overall (EN) keeps the full benchmark set of Overall and then applies the EN task facet, so "
+            "This legacy preset applies only the En task facet. The English switch above the table instead "
+            "selects En + Code, so the two selections can include different tasks. "
+            "Overall (EN) keeps the benchmark set of Overall and then applies the En task facet, so "
             "multilingual suites contribute only their English slices. It is an English view of the whole "
             "benchmark, not a separate curated subset.\n\n"
             "Use it when your application is English-only and multilingual tasks would otherwise move the "
@@ -309,7 +316,9 @@ TASK_FACETS = HelpCopy(
         "Benchmark scope decides which benchmarks are counted; Task facets narrows the tasks inside "
         "them. Selecting JA, for example, keeps only Japanese tasks from every selected benchmark and "
         "recomputes all scores from that subset. Code keeps only tasks whose metadata marks them as code "
-        "retrieval. All languages removes the facet again.\n\n"
+        "retrieval. Selecting multiple facets includes tasks matching any selected facet. "
+        "English selects En + Code, including tasks in either category; Multilingual clears all "
+        "language and category facets. All languages does the same within Task facets.\n\n"
         "The number on each button is how many tasks that facet has in the current scope, and the table "
         "below lists every available facet with its full name. Facets with few tasks give noisier "
         "rankings, so read a 5-task language differently from a 200-task one.\n\n"
@@ -606,12 +615,14 @@ QUANTIZATION_FILTER = HelpCopy(
 
 BORDA_SCORE_COLUMN = HelpCopy(
     title="Borda Score",
-    summary="Ranks models by how they place against each other on every task, not by their raw average.",
+    summary="Ranks models by their relative positions on the selected scoring units: raw tasks or configured groups.",
     details=(
-        "For each task the models are ranked by score, and each model earns points from its position: "
+        "Micro uses raw task scores; Macro averages configured groups before ranking models. "
+        "For each scoring unit the models are ranked by score, and each model earns points from its position: "
         "100 for first place, 0 for last, and a proportional value in between, following "
-        "100 x (N - rank) / (N - 1) for N models. A model's Borda Score is the mean of those per-task "
-        "points, so it always sits between 0 and 100 and is a ranking score, not a quality score.\n\n"
+        "100 x (N - rank) / (N - 1) for N models. A model's Borda Score is the mean of those "
+        "points across the selected scoring units, so it always sits between 0 and 100 and is a ranking "
+        "score, not an average retrieval metric.\n\n"
         "Why it is the default sort: raw scores are not comparable across tasks. Some tasks are easy and "
         "everyone scores 0.9, others are hard and everyone scores 0.2, and averaging them lets a handful "
         "of high-variance tasks dominate. Borda asks the more robust question, 'how often does this model "
@@ -648,8 +659,8 @@ MICRO_MEAN_COLUMN = HelpCopy(
     summary="The model's plain average over every task in scope, with each task counting once.",
     details=(
         "Micro Mean averages all raw task scores equally, so benchmarks contribute in proportion to how "
-        "many tasks they contain. M-BEIR alone contributes all 182 cells of its 13-task x 14-language "
-        "matrix.\n\n"
+        "many tasks they contain in the selected scope. In Multilingual scope, M-BEIR contributes "
+        "182 cells from its 13-task x 14-language matrix; English keeps only its English slice.\n\n"
         "It is the straightforward 'average over everything that was measured' number, and it is the one "
         "to use when the task mix of the benchmark already reflects what you care about.\n\n"
         "The value is the selected metric multiplied by 100, nDCG@10 by default. Compare it with Macro "

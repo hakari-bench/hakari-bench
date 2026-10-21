@@ -1750,6 +1750,20 @@ benchmarks:
         "MNanoBEIR::arguana": "M-BEIR-arguana",
         "MNanoBEIR::fever": "M-BEIR-fever",
     }
+    macro_without_columns = service.get_leaderboard(
+        "Custom", selected_benchmarks=("MNanoBEIR:task_mean", "NanoJMTEB-v2", "NanoIFIR"),
+        score_aggregation="macro",
+    )
+    assert macro_without_columns.task_breakdowns == task_grouped_result.task_breakdowns
+    multilingual_head = render_table_head(result=task_grouped_result, sort="borda_score", direction="desc")
+    english_head = render_table_head(
+        result=task_grouped_result, sort="borda_score", direction="desc",
+        filter_state=FilterState(language_filters=("en", "category:code")),
+    )
+    assert 'font-normal">M-BEIR</span>' in multilingual_head
+    assert 'font-normal">BEIR</span>' in english_head
+    assert 'font-normal">M-BEIR</span>' not in english_head
+    assert 'font-normal">arguana</span>' in english_head
     assert task_grouped_result.rows[0].metric_values["MNanoBEIR::arguana"] == pytest.approx(60.0)
     assert task_grouped_result.rows[0].metric_values["MNanoBEIR::fever"] == pytest.approx(60.0)
     assert task_grouped_result.rows[0].mean_score == pytest.approx(200.0 / 3.0)
@@ -1895,7 +1909,7 @@ def test_leaderboard_renders_grouped_benchmark_picker_and_sticky_columns(tmp_pat
     assert "Choose the evaluation mode first" not in response.text
     assert "Language-focused MTEB/MMTEB-style Nano suites" not in response.text
     assert "Overall" in response.text
-    assert "Ranks models over every benchmark in the database" in response.text
+    assert "Ranks models over the configured Overall benchmark set" in response.text
     assert "Retrieval" in response.text
     assert "Reranking" in response.text
     assert 'data-icon="search"' in response.text
@@ -8790,7 +8804,7 @@ def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
     # The page-level explanation lives in the header, next to the docs link.
     assert 'id="hakari-page-overview-help"' in page.text
     assert "HAKARI-Bench" in _help_titles(page.text)
-    assert "Every row is one retrieval model" in page.text
+    assert "Each row is a model evaluated in Retrieval or Reranking mode" in page.text
     # The headline numbers explain themselves at the column they label.
     assert {"Borda Score", "Macro Mean", "Micro Mean"} <= _help_titles(leaderboard.text)
     assert all(copy.get("eyebrow") != "Score column" for registry in _help_registries(leaderboard.text) for copy in registry.values())
@@ -8807,7 +8821,7 @@ def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
     assert "100 x (N - rank) / (N - 1)" in leaderboard.text
     # Benchmark scope explains the whole NanoSet picker, not only its presets.
     assert "Benchmark scope" in _help_titles(leaderboard.text)
-    assert "Every button here is a Nano-set" in leaderboard.text
+    assert "Every benchmark button here selects a Nano-set or collection" in leaderboard.text
     assert leaderboard.text.count("data-help-copy-registry>") == 1
     assert "data-help-title=" not in leaderboard.text
     assert "data-help-summary=" not in leaderboard.text
@@ -9272,3 +9286,63 @@ def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path, monkeyp
     assert len(calls) == 4  # Root does not query even during a source change.
     client.get("/leaderboard")
     assert len(calls) == 7  # Replacement database refreshes both totals.
+
+
+def test_english_scope_updates_overview_status_and_reuses_its_totals(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from hakari_bench.viewer.leaderboard import TaskBreakdown
+
+    db_path = tmp_path / "results.duckdb"
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n  - name: BenchB\n")
+    (config_dir / "overall.yaml").write_text("name: Overall\nlabel: Overall\nbenchmarks:\n  - BenchA\n  - BenchB\n")
+    config = load_viewer_config(config_dir)
+    base = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("Overall")
+    tasks = [TaskBreakdown(key=key, label=key, doc_key=key) for key in (
+        "BenchA::data::en", "BenchA::data::code", "BenchB::data::ja",
+    )]
+    calls = []
+
+    def scoped_result(service, *args, **kwargs):
+        languages = tuple(kwargs.get("language_filters", ()))
+        calls.append(languages)
+        english = bool(languages)
+        return base.model_copy(update={
+            "expected_tasks": 1 if english else 2,
+            "task_breakdowns": tasks[:2] if english else tasks,
+            "selected_languages": languages,
+        })
+
+    monkeypatch.setattr(LeaderboardService, "get_leaderboard", scoped_result)
+    client = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir))
+    multi = client.get("/leaderboard").text
+    assert "<strong>2 dataset groups</strong> and <strong>3 tasks</strong>" in multi
+    assert ">3 tasks</button>" in multi
+    english_params = [("lang_filter", "en"), ("lang_filter", "category:code")]
+    english = client.get("/leaderboard", params=english_params).text
+    assert "<strong>1 dataset groups</strong> and <strong>2 tasks</strong>" in english
+    assert "in the English and code scope" in english
+    assert "Overall (English)" in english
+    assert ">2 tasks</button>" in english
+    assert "Tasks: 2</h4>" in english
+    assert len(calls) == 6
+    assert "<strong>1 dataset groups</strong>" in client.get("/", params=english_params).text
+    assert "<strong>2 dataset groups</strong>" in client.get("/").text
+    assert len(calls) == 6  # Initial HTML uses the matching in-memory scope.
+    client.get("/leaderboard", params=english_params + [("model_filter", "no-match")])
+    assert len(calls) == 7  # English totals are reused independently of table filters.
+    assert "<strong>2 dataset groups</strong>" in client.get("/leaderboard").text
+    assert len(calls) == 8
+
+
+def test_viewer_help_matches_language_presets_and_default_grouped_scoring() -> None:
+    from hakari_bench.viewer import help_text
+
+    assert "English selects En + Code" in help_text.TASK_FACETS.details
+    assert "Multilingual clears" in help_text.TASK_FACETS.details
+    assert "English and code tasks" in help_text.BENCHMARK_SCOPE.details
+    assert "Micro, the default" not in help_text.SCORE_AGGREGATION.details
+    assert "Grouped columns with Macro" in help_text.SCORE_AGGREGATION.details
+    assert "Borda Score can change" in help_text.SCORE_AGGREGATION.details
+    assert "before ranking" in help_text.BORDA_SCORE_COLUMN.details
+    assert "selected scope" in help_text.MICRO_MEAN_COLUMN.details

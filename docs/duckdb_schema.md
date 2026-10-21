@@ -2065,14 +2065,16 @@ metadata sorts do not emphasize a score column. Score values are unchanged.
 The viewer uses a fixed dark theme with blue accents. The overview introduces retrieval and reranking side by side; theme preferences and the light-theme toggle are no longer used.
 
 The header overview statistics load with the leaderboard response via an HTMX out-of-band update.
-They are independent of active filters: dataset groups and expected tasks refer to the primary Overall configuration,
-and retrieval/reranking counts are distinct base model names eligible for its complete task set, using the same
-leaderboard eligibility and reranking safeguard rules. The overview is cached by database modification time and size.
+They follow the selected Multilingual or English scope, independently of other table filters.
+Dataset groups and raw tasks refer to that scope within the primary Overall configuration;
+retrieval/reranking counts are distinct base model names eligible for its complete task set,
+using the same leaderboard eligibility and reranking safeguard rules. The overview is cached
+by scope, database modification time, and size.
 Placeholders reserve space until loading completes.
 
-The overview displays dataset-group and expected-task totals inline in its description, and eligible model totals alongside the Retrieval and Reranking explanations. All four values retain the benchmark-wide semantics above.
+The overview displays dataset-group and raw-task totals inline in its description, and eligible model totals alongside the Retrieval and Reranking explanations. All four values follow the scope semantics above.
 
-The overview mode buttons reuse the current evaluation tabs to switch targets, preserve active filters, and focus the selected tab after its response settles.
+The overview mode labels are non-interactive; the evaluation tabs switch targets while preserving active filters.
 
 ### Initial-view snapshot validation
 
@@ -2095,8 +2097,8 @@ DuckDB files or invalidate valid initial-view snapshots.
 
 ### Overview totals in the initial page
 
-The application retains benchmark-wide dataset-group, task, and complete-model
-counts in process memory, separately from the selected table filters. The root
+The application retains scope-wide dataset-group, task, and complete-model
+counts in process memory, separately from other selected table filters. The root
 HTML reads these totals without opening DuckDB or waiting for the leaderboard.
 Startup first syncs the database and warms the existing initial snapshots, then
 loads the overview totals through those snapshots. Before the first successful
@@ -2117,7 +2119,7 @@ It writes the existing repeated `lang_filter` URL parameter: English selects
 `en` and `category:code`, while Multilingual clears it. Task facets and restored
 URLs drive the same state; other selections leave neither preset active. Other
 filters and the evaluation mode are preserved. The overview's model counts
-remain benchmark-wide and are plain, non-interactive text.
+follow the selected language scope and are plain, non-interactive text.
 
 Startup warms Multilingual and publishes overview totals before warming English,
 so preparing a missing English cache does not delay the totals. It uses embedded snapshots when available and the
@@ -2133,3 +2135,31 @@ calls remained 16–20 ms. These are local service timings, excluding HTTP and
 browser rendering. Cache generation uses a per-request lock: an English cache
 miss does not hold the shared DuckDB I/O lock during aggregation, so it cannot
 block an already cached Multilingual request for the duration of that work.
+
+In English scope (En + Code), table headers display `BEIR` in place of
+`M-BEIR`, retaining the task subheading. This is a presentation-only alias;
+column keys, calculations, persisted snapshots, and CSV labels are unchanged.
+
+
+Overview totals are cached in memory separately for Multilingual and English
+(En + Code), keyed by source database version. Startup warms and publishes
+Multilingual first, then English. Initial HTML reuses the matching scope's last
+known totals, and leaderboard responses update the overview out of band. Other
+table filters do not alter these scope-wide totals. English counts come from
+the existing cached Micro snapshots, including distinct task benchmark keys for
+dataset groups; no extra SQL or index is needed. The table scope label includes
+“(English)”. Status counts and task-breakdown headings count underlying task
+entries before score aggregation; `expected_tasks` remains the number of scoring
+contributions used for ranking and completeness. Task breakdowns are captured
+before Macro grouping even when score columns are hidden. The persisted initial
+snapshots already contain underlying task entries, so their format is unchanged.
+
+
+Viewer help describes the current Grouped/Macro initial view. The English
+navigation preset selects En + Code, while the legacy Overall (EN) scope applies
+only En; these are distinct selections. Facet counts, task lists, and Micro
+explanations refer to underlying tasks after scope filters. Borda help reflects
+the dynamic query: Micro ranks raw tasks and Macro ranks configured group means,
+so changing aggregation can change Borda standings. Overview counts follow the
+language preset within Overall; table counts additionally follow the selected
+benchmark scope and task filters.

@@ -1333,6 +1333,9 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 english.click()
                 page.wait_for_selector('[data-language-scope="english"][aria-pressed="true"]')
                 assert parse_qs(urlparse(page.url).query)["lang_filter"] == ["en", "category:code"]
+                assert "in the English and code scope" in page.locator("#hakari-overview-stats").inner_text()
+                assert "Overall (English)" in page.locator("#leaderboard-panel").inner_text()
+
                 page.reload()
                 page.wait_for_selector('[data-language-scope="english"][aria-pressed="true"]')
                 page.locator('.evaluation-tab[data-evaluation-target="reranking"]').click()
