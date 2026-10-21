@@ -1596,12 +1596,13 @@ def test_evaluate_dense_task_uses_single_pipeline_path_for_all_embedding_variant
     pipeline_calls: list[list[str]] = []
     original_apply_pipeline = evaluation_module._apply_embedding_pipeline_pair
 
-    def apply_pipeline_spy(*, query_embeddings, corpus_embeddings, steps):
+    def apply_pipeline_spy(*, query_embeddings, corpus_embeddings, steps, sparse_truncation_cache=None):
         pipeline_calls.append([str(step["type"]) for step in steps])
         return original_apply_pipeline(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
             steps=steps,
+            sparse_truncation_cache=sparse_truncation_cache,
         )
 
     monkeypatch.setattr(evaluation_module, "_apply_embedding_pipeline_pair", apply_pipeline_spy)
@@ -3336,3 +3337,90 @@ def test_run_or_load_task_requires_dataset_bm25_source_candidates(tmp_path: Path
             model_metadata={"id": "bm25"},
             dataset_loader=lambda _: _toy_dataset_without_candidates(),
         )
+
+
+@pytest.mark.parametrize("max_active_dims", [1, 2, 8])
+def test_torch_sparse_truncation_matches_scipy_for_ties_duplicates_and_empty_rows(max_active_dims) -> None:
+    # COO input is intentionally unsorted and has duplicate coordinates. Equal
+    # absolute weights must keep lower column IDs, including negative weights.
+    indices = torch.tensor([[3, 0, 3, 0, 2, 3, 0, 2], [4, 3, 1, 1, 2, 2, 1, 4]])
+    values = torch.tensor([2.0, -3.0, -2.0, 1.0, 0.0, 2.0, 2.0, 4.0])
+    embeddings = torch.sparse_coo_tensor(indices, values, (5, 7))
+    expected = evaluation_module._limit_sparse_active_dims(
+        evaluation_module._to_scipy_csr_matrix(embeddings), max_active_dims=max_active_dims
+    )
+    actual = evaluation_module._limit_sparse_active_dims(embeddings, max_active_dims=max_active_dims).coalesce()
+    torch.testing.assert_close(actual.to_dense(), torch.from_numpy(expected.toarray()), rtol=0, atol=0)
+    assert actual.is_coalesced()
+    assert actual.dtype == embeddings.dtype
+    assert actual.device == embeddings.device
+
+
+@pytest.mark.parametrize("model_class", [FakeSparseModel, FakeSentenceTransformersSparseModel])
+def test_sparse_variant_grid_reuses_truncation_only_within_task(monkeypatch, model_class) -> None:
+    calls = []
+    original = evaluation_module._limit_sparse_active_dims
+
+    def tracked_limit(embeddings, *, max_active_dims):
+        calls.append((int(embeddings.shape[0]), max_active_dims))
+        return original(embeddings, max_active_dims=max_active_dims)
+
+    monkeypatch.setattr(evaluation_module, "_limit_sparse_active_dims", tracked_limit)
+    variants = [
+        _pipeline_variant(
+            f"q{q}_d{d}",
+            _truncate_sparse_max_dims_step(q, target="query"),
+            _truncate_sparse_max_dims_step(d, target="corpus"),
+        )
+        for q in [1, 2]
+        for d in [1, 2]
+    ]
+    baseline = None
+    for _ in range(2):
+        calls.clear()
+        result = evaluate_dense_task(
+            model=model_class(),
+            dataset=_toy_dataset(),
+            batch_size=4,
+            show_progress=False,
+            query_prompt=None,
+            corpus_prompt=None,
+            query_prompt_name=None,
+            corpus_prompt_name=None,
+            embedding_variants=variants,
+        )
+        assert len(result.embedding_evaluations) == 5
+        assert sorted(calls) == [(2, 1), (2, 2), (3, 1), (3, 2)]
+        baseline = result
+
+    with monkeypatch.context() as context:
+        context.setattr(
+            evaluation_module._SparseTruncationCache,
+            "limit",
+            lambda self, embeddings, *, max_active_dims: original(embeddings, max_active_dims=max_active_dims),
+        )
+        uncached = evaluate_dense_task(
+            model=model_class(),
+            dataset=_toy_dataset(),
+            batch_size=4,
+            show_progress=False,
+            query_prompt=None,
+            corpus_prompt=None,
+            query_prompt_name=None,
+            corpus_prompt_name=None,
+            embedding_variants=variants,
+        )
+    assert baseline is not None
+    assert baseline.top_rankings == uncached.top_rankings
+    assert baseline.metrics == uncached.metrics
+
+
+def test_sparse_truncation_cache_distinguishes_inputs_and_budgets() -> None:
+    cache = evaluation_module._SparseTruncationCache()
+    first = torch.tensor([[1.0, -3.0, 2.0]]).to_sparse()
+    second = torch.tensor([[4.0, 1.0, 2.0]]).to_sparse()
+    for source, budget in [(first, 1), (second, 1), (first, 2), (first, 1)]:
+        expected = evaluation_module._limit_sparse_active_dims(source, max_active_dims=budget)
+        actual = cache.limit(source, max_active_dims=budget)
+        assert torch.equal(expected.indices(), actual.indices())
+        assert torch.equal(expected.values(), actual.values())
