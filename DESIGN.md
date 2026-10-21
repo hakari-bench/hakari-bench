@@ -664,7 +664,7 @@ overview with a one-line “HAKARI-Bench Leaderboard” title and a bold descrip
 subtitle. The redundant top logo/action row is hidden. Describe dense, sparse,
 late interaction, cross-encoder, and BM25 evaluation rather than adding slogans.
 
-Render benchmark-wide dataset-group and task totals in bold within the overview
+Render language-scope dataset-group and task totals in bold within the overview
 paragraph after loading. Show eligible model counts alongside the Retrieval and
 Reranking explanations. These are non-interactive explanations without top borders.
 
@@ -692,4 +692,8 @@ the title's existing colors and typography; underline it on hover.
 
 Overview totals use the latest in-process counts in the initial HTML; dashes are
 reserved for the first load before startup warmup or a leaderboard request has
-populated them. Table filters do not change these benchmark-wide totals.
+populated them. Cache totals independently for Multilingual and English. English
+shows dataset groups, raw task counts, and eligible model counts for En + Code;
+other table filters do not change these scope-wide totals. Mark the table scope
+as “Overall (English)” when English is selected. The status task count and task
+breakdown always count underlying tasks, rather than Macro aggregation groups.
