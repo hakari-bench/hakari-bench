@@ -1315,12 +1315,34 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 initial_html = page.request.get(base_url).text()
                 assert 'id="hakari-overview-stats" aria-busy="false"' in initial_html
                 assert "— models" not in initial_html
-                page.locator("[data-overview-target=reranking]").click()
-                page.wait_for_function("() => document.activeElement?.dataset.evaluationTarget === 'reranking'")
-                assert page.locator(".evaluation-tab[aria-current=page]").get_attribute("data-evaluation-target") == "reranking"
-                page.locator("[data-overview-target=all]").click()
-                page.wait_for_function("() => document.activeElement?.dataset.evaluationTarget === 'all'")
-                assert page.locator(".evaluation-tab[aria-current=page]").get_attribute("data-evaluation-target") == "all"
+                assert page.locator("[data-overview-target]").count() == 0
+                assert page.locator(".hakari-capabilities button").count() == 0
+                multilingual = page.get_by_role("button", name="Multilingual", exact=True)
+                english = page.get_by_role("button", name="English", exact=True)
+                assert multilingual.get_attribute("aria-pressed") == "true"
+                assert page.locator(".hakari-intro-links #hakari-language-scope").count() == 1
+                assert page.locator("#leaderboard-panel #hakari-language-scope").count() == 0
+                switch_box = page.locator("#hakari-language-scope").bounding_box()
+                guide_box = page.get_by_role("link", name="Evaluation guide", exact=True).bounding_box()
+                assert switch_box and guide_box
+                assert switch_box["x"] + switch_box["width"] <= guide_box["x"]
+                assert abs((switch_box["y"] + switch_box["height"] / 2) - (guide_box["y"] + guide_box["height"] / 2)) <= 2
+                assert switch_box["height"] <= 28
+                assert multilingual.evaluate("el => getComputedStyle(el).fontSize") == "12px"
+                assert multilingual.evaluate("el => getComputedStyle(el).fontWeight") == "400"
+                english.click()
+                page.wait_for_selector('[data-language-scope="english"][aria-pressed="true"]')
+                assert parse_qs(urlparse(page.url).query)["lang_filter"] == ["en", "category:code"]
+                page.reload()
+                page.wait_for_selector('[data-language-scope="english"][aria-pressed="true"]')
+                page.locator('.evaluation-tab[data-evaluation-target="reranking"]').click()
+                page.wait_for_selector('.evaluation-tab[data-evaluation-target="reranking"][aria-current="page"]')
+                assert page.get_by_role("button", name="English", exact=True).get_attribute("aria-pressed") == "true"
+                page.get_by_role("button", name="Multilingual", exact=True).click()
+                page.wait_for_selector('[data-language-scope="multilingual"][aria-pressed="true"]')
+                assert "lang_filter" not in parse_qs(urlparse(page.url).query)
+                page.locator('.evaluation-tab[data-evaluation-target="all"]').click()
+                page.wait_for_selector('.evaluation-tab[data-evaluation-target="all"][aria-current="page"]')
 
                 assert page.get_by_label("Grouped columns", exact=True).is_checked()
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
@@ -1350,7 +1372,7 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 with page.expect_request(lambda request: request.resource_type == "document" and request.url == base_url + "/"):
                     page.get_by_role("link", name="HAKARI-Bench Leaderboard", exact=True).click()
                 page.wait_for_selector(".leaderboard-table")
-                page.wait_for_function("document.querySelector('.evaluation-tab[aria-current=page]').dataset.evaluationTarget === 'all'")
+                page.wait_for_selector('.evaluation-tab[data-evaluation-target="all"][aria-current="page"]')
                 assert page.get_by_label("Grouped columns", exact=True).is_checked()
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
                 page.set_viewport_size({"width": 390, "height": 844})

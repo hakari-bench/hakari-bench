@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -961,3 +962,19 @@ def test_reference_source_confidence_labels_are_documented() -> None:
         "human_verified",
     }
     assert "AI agents must not assign this label" in REFERENCE_SOURCE_CONFIDENCE_LABELS["human_verified"]
+
+
+@pytest.mark.parametrize("languages", [["en,code"], ["en", "code"]])
+def test_resolve_eval_tasks_language_union(languages: list[str]) -> None:
+    registry = DatasetRegistry.load_builtin()
+    options: dict[str, Any] = dict(registry=registry, dataset_values=["NanoBEIR-en", "NanoCoIR", "NanoBEIR-ja"], collection_values=[], split_values=[])
+    all_tasks = resolve_eval_tasks(**options)
+    selected = resolve_eval_tasks(**options, language_values=languages)
+    assert selected
+    assert all(task.dataset_name != "NanoBEIR-ja" for task in selected)
+    assert {task.dataset_name for task in selected} == {"NanoBEIR-en", "NanoCoIR"}
+    assert len(selected) < len(all_tasks)
+    assert resolve_eval_tasks(**options, english=True) == selected
+    assert resolve_eval_tasks(**options, language_values=["category:code"]) == resolve_eval_tasks(**options, language_values=["code"])
+    with pytest.raises(ValueError, match="No evaluation tasks"):
+        resolve_eval_tasks(**options, language_values=["zz"])

@@ -599,6 +599,8 @@ def resolve_eval_tasks(
     split_values: list[str] | None,
     evaluation_scope: EvaluationScopeMode = "standard",
     explicit_dataset_selection: bool = False,
+    language_values: list[str] | None = None,
+    english: bool = False,
 ) -> list[EvalTask]:
     if evaluation_scope not in EVALUATION_SCOPES:
         raise ValueError(f"Unknown evaluation scope '{evaluation_scope}'. Available: {list(EVALUATION_SCOPES)}")
@@ -608,6 +610,9 @@ def resolve_eval_tasks(
         dataset_specs.extend(registry.get_dataset(dataset_name) for dataset_name in collection.datasets)
     dataset_specs.extend(registry.get_dataset(dataset_name) for dataset_name in parse_csv_values(dataset_values))
 
+    selected_languages = {value.lower().removeprefix("category:") for value in parse_csv_values(language_values)}
+    if english:
+        selected_languages.update(("en", "code"))
     selected_splits = parse_csv_values(split_values)
     tasks: list[EvalTask] = []
     for spec in dataset_specs:
@@ -630,6 +635,14 @@ def resolve_eval_tasks(
                 and not task.evaluation_scope.include_by_default
             ):
                 continue
+            if selected_languages:
+                metadata = task.metadata
+                languages = metadata.get("primary_languages") or metadata.get("languages") or [metadata.get("language")]
+                facets = {str(language).lower() for language in languages}
+                if metadata.get("category") == "code":
+                    facets.add("code")
+                if not selected_languages.intersection(facets):
+                    continue
             tasks.append(task)
 
     deduped: list[EvalTask] = []
