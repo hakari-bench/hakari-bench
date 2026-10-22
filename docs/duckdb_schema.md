@@ -826,6 +826,13 @@ expanding when a newer DuckDB contains an additional task. Adding a standard
 Nano-set or task requires updating the manifest and its configured expected
 count in `config/viewer/overall.yaml` deliberately.
 
+The precomputed leaderboard path applies the same manifest to its task
+breakdown. Header totals and the lazy task list therefore exclude stored tasks
+outside Overall (for example, the six NanoDAPFAM `ToFullText` tasks), just as
+the scored table does. Initial-view snapshot version 2 invalidates older cached
+payloads whose breakdowns could include those extra tasks; the source DuckDB
+and evaluation results do not need rebuilding.
+
 1. Apply benchmark filtering and `excluded_tasks`.
 2. Apply embedding variant display settings.
 3. For configured Overall manifests, use their fixed task set; otherwise build

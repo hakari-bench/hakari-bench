@@ -510,6 +510,11 @@ class LeaderboardService:
                         benchmarks=benchmarks,
                         config=self.config,
                     )
+                    if expected_task_keys is not None:
+                        task_breakdowns = [
+                            task for task in task_breakdowns
+                            if task.key in expected_task_keys
+                        ]
                     sorted_rows = sort_rows(rows, sort=sort, direction=direction)
                     request_timing["task_score_count"] = None
                     request_timing["leaderboard_row_count"] = len(sorted_rows)
