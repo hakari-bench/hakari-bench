@@ -1,0 +1,53 @@
+id: lightonai/SlideOn
+source:
+  type: huggingface
+  name: lightonai/SlideOn
+  revision: 370c600e9886afc43ff8026695261e56ecfaa011
+  revision_requested: 370c600e9886afc43ff8026695261e56ecfaa011
+method: sparse
+embedding:
+  output_dimension: 32768
+  truncate_dims: null
+  pooling: max_relu
+runtime:
+  dtype: bf16
+  attn_implementation: flash_attention_2
+  max_seq_length: 8192
+  trust_remote_code: true
+  remote_code_approved: true
+  backend_library: sentence-transformers
+  similarity_fn_name: dot
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: english_only
+  evidence:
+    source_url: https://huggingface.co/lightonai/SlideOn
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: official_model_identity
+  languages:
+  - en
+target:
+  all: true
+  evaluation_scope: standard
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/lightonai/SlideOn
+links:
+  huggingface: https://huggingface.co/lightonai/SlideOn
+  github: https://github.com/lightonai/slideon-mslideon
+notes:
+- Use --model-loader examples.custom_backends.slideon_loader:load_model to preserve
+  the upstream FP32 sparse head with a bf16 backbone.
+- Remote slideon.py and modeling_slideon.py reviewed at the pinned revision; no external
+  training package is required.
+- Learned latent features are not vocabulary tokens. Keep raw dot-product scoring
+  and default unpruned base vectors.
+- Retain 8192-token query and document limits; task-specific preprocessing inserts
+  prefixes internally.

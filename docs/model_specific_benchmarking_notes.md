@@ -981,3 +981,101 @@ Use the matching model card for the other Sentence Transformers models. A
 execute with 512-token inputs, but retrieval quality dropped relative to the
 documented Sentence Transformers lengths. A follow-up rerun at the documented
 lengths reproduced the remote DuckDB scores with only small numerical drift.
+
+## UltraBERT-Embed-150M
+
+For `dmis-lab/UltraBERT-Embed-150M`, use the reviewed card
+`config/model_cards/dmis-lab__UltraBERT-Embed-150M.yaml`. The pinned checkpoint
+uses CLS pooling with 768-dimensional embeddings, a 32768-token maximum, the
+`query` retrieval instruction, and an empty `document` prompt. No Matryoshka
+truncation dimensions are documented, so keep the standard full-dimension
+quantization/rescore variants without adding truncation variants.
+
+The [official model card](https://huggingface.co/dmis-lab/UltraBERT-Embed-150M)
+recommends FlashAttention 2 and supports native loading with Transformers
+5.20 or later. A Python 3.12 environment with Transformers 5.20.1,
+SentenceTransformers 6.1.0, Torch 2.9.1/CUDA 12.8, and FlashAttention 2.8.3
+successfully evaluated all 165 English/code tasks selected by `--all --english`
+in bf16, including the initial NanoArguAna validation. All five standard dense
+representations have complete coverage.
+Remote code is unnecessary with this runtime. Keep the model's FP32 rotary
+frequency buffers intact when loading bf16 weights.
+
+Use a separate environment for these newer Transformers/SentenceTransformers
+versions if the default environment needs to remain unchanged. Run the English
+and code subset with the reviewed card and the same environment:
+
+```bash
+OMP_NUM_THREADS=8 uv run --no-project --python /path/to/venv/bin/python \
+  python -m hakari_bench.cli evaluate from-model-card \
+  --model-card config/model_cards/dmis-lab__UltraBERT-Embed-150M.yaml \
+  --all --english --device cuda:0 --batch-size 32
+```
+
+Run from the repository root. Reduce batch size before changing the model's
+maximum sequence length if a long-document task exhausts GPU memory.
+
+## SlideOn and mSlideOn
+
+`lightonai/SlideOn` (English) and `lightonai/mSlideOn` (multilingual) are
+learned sparse retrievers, not dense or late-interaction evaluation backends.
+Use `evaluate sparse`, or the reviewed model cards
+`config/model_cards/lightonai__SlideOn.yaml` and
+`config/model_cards/lightonai__mSlideOn.yaml`. Both return 32768-dimensional
+nonnegative learned latent features and use raw dot-product scoring. These
+features are not tokenizer vocabulary entries. Keep the native 8192-token
+query and document limits, the checkpoint's task preprocessing, and the
+unpruned base vectors. The standard post-encode sparse-budget variants can be
+computed without re-encoding. Do not apply dense truncation or quantization.
+
+The remote `slideon.py` and `modeling_slideon.py` were reviewed at revisions
+`370c600e9886afc43ff8026695261e56ecfaa011` (SlideOn) and
+`ef8016025bfd0ea10e44ee27c4038a5852b1018a` (mSlideOn). Loading requires
+`trust_remote_code`; the flat checkpoints include their inference code and do
+not require the upstream training package or PyLate. The official cards require
+SentenceTransformers `>=6.1,<6.2` and Transformers `>=5.3,<6`. The isolated
+UltraBERT environment with SentenceTransformers 6.1.0, Transformers 5.20.1,
+Torch 2.9.1/CUDA 12.8, and FlashAttention 2.8.3 also passed SlideOn/mSlideOn
+encoding and NanoArguAna smoke evaluations.
+
+Use `examples.custom_backends.slideon_loader:load_model` to preserve the
+upstream mixed precision: bf16 backbone and projections, with the sparse head
+retained in FP32. The ordinary HAKARI post-load dtype normalization would
+otherwise cast this intentionally FP32 head. The model's own forward applies
+its prescribed BF16 head autocast and FP16 retrieval-weight rounding. The
+custom loader changes loading only, retaining the upstream inference path.
+
+```bash
+PYTHONPATH=$PWD OMP_NUM_THREADS=8 \
+  uv run --no-project --python /path/to/venv/bin/python \
+  python -m hakari_bench.cli evaluate from-model-card \
+  --model-card config/model_cards/lightonai__mSlideOn.yaml \
+  --params-json '{"model":{"loader":"examples.custom_backends.slideon_loader:load_model"}}' \
+  --all --device cuda:0 --batch-size 8
+```
+
+For SlideOn, replace the card with `lightonai__SlideOn.yaml` and add
+`--english`. `from-model-card` accepts a custom loader through `--params-json`;
+it does not accept the direct `--model-loader` flag. Query/document prompt
+names are stored in the cards. SlideOn uses its saved textual retrieval
+prompts; mSlideOn uses empty SentenceTransformers prompts and inserts its
+query/document marker token internally. Do not manually add either prefix.
+
+The completed evaluation used all 563 tasks for mSlideOn and the 165-task
+English/code scope for SlideOn, with all 17 standard sparse representations.
+The query budgets are 8/16/24/32 nonzero features crossed with document budgets
+64/128/256/512; the latent feature space remains 32768-dimensional.
+
+On Torch 2.9.1/CUDA 12.8, SlideOn's unpruned sparse matrix multiplication
+exhausted cuSPARSE SpGEMM resources on three NanoDAPFAM tasks:
+`NanoDAPFAMAllTitlAbsClmToTitlAbsClm`,
+`NanoDAPFAMInTitlAbsClmToTitlAbsClm`, and
+`NanoDAPFAMOutTitlAbsClmToTitlAbsClm`. Re-evaluate these tasks with
+`--retrieval-score-device cpu`; model encoding still runs on the selected GPU.
+Keep the same maximum length, precision, batch size, and variant grid. Record
+this scoring-device exception in result submissions; CPU and GPU accumulation
+can differ slightly numerically.
+
+Sources: [SlideOn](https://huggingface.co/lightonai/SlideOn),
+[mSlideOn](https://huggingface.co/lightonai/mSlideOn), and the
+[official technical article](https://huggingface.co/blog/lightonai/slideon-mslideon).

@@ -342,6 +342,7 @@ def evaluate_dense_task(
 
     variant_score_seconds = 0.0
     variant_metric_seconds = 0.0
+    sparse_truncation_cache = _SparseTruncationCache()
     for variant in embedding_variants or []:
         noop_truncate_dim = _noop_truncate_variant_dim(
             variant=variant,
@@ -355,6 +356,7 @@ def evaluate_dense_task(
             query_embeddings=query_embeddings,
             corpus_embeddings=corpus_embeddings,
             variant=variant,
+            sparse_truncation_cache=sparse_truncation_cache,
         )
         variant_scoring = _score_embedding_distances(
             query_ids=query_ids,
@@ -1953,11 +1955,28 @@ def _postprocess_transform(steps: list[dict[str, Any]]) -> dict[str, Any]:
     return {"type": "pipeline", "steps": steps}
 
 
+class _SparseTruncationCache:
+    """Reuse independent query/document truncations within one task only."""
+
+    def __init__(self) -> None:
+        self._entries: dict[tuple[int, int], tuple[Any, Any]] = {}
+
+    def limit(self, embeddings: Any, *, max_active_dims: int) -> Any:
+        key = (id(embeddings), max_active_dims)
+        if key not in self._entries:
+            result = _limit_sparse_active_dims(embeddings, max_active_dims=max_active_dims)
+            # Retain the source too, so Python cannot reuse its id for a
+            # different intermediate tensor in a later pipeline.
+            self._entries[key] = (embeddings, result)
+        return self._entries[key][1]
+
+
 def _apply_embedding_variant_pair(
     *,
     query_embeddings: Any,
     corpus_embeddings: Any,
     variant: dict[str, Any],
+    sparse_truncation_cache: _SparseTruncationCache | None = None,
 ) -> tuple[Any, Any]:
     transform = variant.get("transform", {})
     if transform.get("type") != "pipeline":
@@ -1969,6 +1988,7 @@ def _apply_embedding_variant_pair(
         query_embeddings=query_embeddings,
         corpus_embeddings=corpus_embeddings,
         steps=steps,
+        sparse_truncation_cache=sparse_truncation_cache,
     )
 
 
@@ -2019,6 +2039,7 @@ def _apply_embedding_pipeline_pair(
     query_embeddings: Any,
     corpus_embeddings: Any,
     steps: list[dict[str, Any]],
+    sparse_truncation_cache: _SparseTruncationCache | None = None,
 ) -> tuple[Any, Any]:
     # Keep every derived evaluation on this single post-encode pipeline path.
     # Cross variants such as truncate+quantize should reuse the one model
@@ -2030,6 +2051,7 @@ def _apply_embedding_pipeline_pair(
             query_embeddings=current_query_embeddings,
             corpus_embeddings=current_corpus_embeddings,
             step=step,
+            sparse_truncation_cache=sparse_truncation_cache,
         )
     return current_query_embeddings, current_corpus_embeddings
 
@@ -2039,6 +2061,7 @@ def _apply_embedding_pipeline_step_pair(
     query_embeddings: Any,
     corpus_embeddings: Any,
     step: dict[str, Any],
+    sparse_truncation_cache: _SparseTruncationCache | None = None,
 ) -> tuple[Any, Any]:
     step_type = step.get("type")
     if step_type == "truncate":
@@ -2050,23 +2073,24 @@ def _apply_embedding_pipeline_step_pair(
             raise ValueError(f"Unsupported normalize algorithm: {algorithm}")
         return _normalize_embeddings(query_embeddings), _normalize_embeddings(corpus_embeddings)
     if step_type == "truncate_sparse_max_dims":
+        limit = sparse_truncation_cache.limit if sparse_truncation_cache is not None else _limit_sparse_active_dims
         max_dims = int(step.get("parameters", {}).get("max_dims"))
         target = str(step.get("parameters", {}).get("target") or "query_and_corpus")
         if target == "query":
             return (
-                _limit_sparse_active_dims(query_embeddings, max_active_dims=max_dims),
+                limit(query_embeddings, max_active_dims=max_dims),
                 corpus_embeddings,
             )
         if target == "corpus":
             return (
                 query_embeddings,
-                _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_dims),
+                limit(corpus_embeddings, max_active_dims=max_dims),
             )
         if target != "query_and_corpus":
             raise ValueError(f"Unsupported sparse truncation target: {target}")
         return (
-            _limit_sparse_active_dims(query_embeddings, max_active_dims=max_dims),
-            _limit_sparse_active_dims(corpus_embeddings, max_active_dims=max_dims),
+            limit(query_embeddings, max_active_dims=max_dims),
+            limit(corpus_embeddings, max_active_dims=max_dims),
         )
     if step_type == "quantize":
         parameters = step.get("parameters", {})
@@ -2175,23 +2199,26 @@ def _limit_torch_sparse_active_dims(embeddings: torch.Tensor, *, max_active_dims
         return matrix.clone()
 
     row_indices = matrix.indices()[0]
-    col_indices = matrix.indices()[1]
     values = matrix.values()
+    # Coalesced COO entries are sorted by row and column. Find each row once
+    # instead of scanning all nonzero entries for every row.
+    row_offsets = torch.cat(
+        [row_indices.new_zeros(1), torch.bincount(row_indices, minlength=int(matrix.shape[0])).cumsum(0)]
+    ).tolist()
     selected_indices: list[torch.Tensor] = []
     selected_values: list[torch.Tensor] = []
-    for row_index in range(int(matrix.shape[0])):
-        row_mask = row_indices == row_index
-        row_positions = torch.nonzero(row_mask, as_tuple=False).flatten()
-        if row_positions.numel() > max_active_dims:
-            row_cols = col_indices.index_select(0, row_positions)
-            row_values = values.index_select(0, row_positions)
-            column_order = torch.argsort(row_cols, stable=True)
-            row_positions = row_positions.index_select(0, column_order)
-            row_values = row_values.index_select(0, column_order)
+    for start, end in zip(row_offsets, row_offsets[1:]):
+        if start == end:
+            continue
+        if end - start > max_active_dims:
+            row_values = values[start:end]
             value_order = torch.argsort(torch.abs(row_values), descending=True, stable=True)[:max_active_dims]
-            row_positions = torch.sort(row_positions.index_select(0, value_order)).values
-        selected_indices.append(matrix.indices().index_select(1, row_positions))
-        selected_values.append(values.index_select(0, row_positions))
+            row_positions = torch.sort(value_order).values + start
+            selected_indices.append(matrix.indices().index_select(1, row_positions))
+            selected_values.append(values.index_select(0, row_positions))
+        else:
+            selected_indices.append(matrix.indices()[:, start:end])
+            selected_values.append(values[start:end])
 
     if selected_indices:
         indices = torch.cat(selected_indices, dim=1)
