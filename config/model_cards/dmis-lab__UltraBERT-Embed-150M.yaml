@@ -1,0 +1,60 @@
+id: dmis-lab/UltraBERT-Embed-150M
+source:
+  type: huggingface
+  name: dmis-lab/UltraBERT-Embed-150M
+  revision_requested: b06b36724c5417a1ec1b7863dd4fa542b74e4899
+  revision: b06b36724c5417a1ec1b7863dd4fa542b74e4899
+method: dense
+parameters:
+  total: 151032576
+  trainable: 151032576
+  input_embedding: 37748736
+  active: 113283840
+embedding:
+  truncate_dims: null
+  output_dimension: 768
+  mrl_support: false
+  pooling: cls
+  include_prompt: true
+runtime:
+  max_seq_length: 32768
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+target:
+  all: true
+  evaluation_scope: standard
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/dmis-lab/UltraBERT-Embed-150M
+links:
+  huggingface: https://huggingface.co/dmis-lab/UltraBERT-Embed-150M
+  papers:
+  - title: 'UltraBERT: Beyond the Limit of BERT Pre-Training'
+    url: https://arxiv.org/abs/2610.15028
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: english_only
+  languages:
+  - en
+  evidence:
+    source_url: https://huggingface.co/dmis-lab/UltraBERT-Embed-150M
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: official_model_card_english_text_and_code
+notes:
+- The official checkpoint uses the query retrieval instruction and an empty document
+  prompt.
+- Transformers 5.20.1 and SentenceTransformers 6.1.0 load the pinned checkpoint natively
+  without remote code; FlashAttention 2 is recommended upstream. Preserve the default
+  32768-token maximum sequence length.
+- No Matryoshka truncation dimensions are documented; evaluate base and the standard
+  full-dimension quantized/rescore variants.
