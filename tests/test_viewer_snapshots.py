@@ -131,6 +131,13 @@ def test_snapshot_configuration_invalidation_and_filter_fallback(
         raise AssertionError("Dynamic path")
 
     monkeypatch.setattr(LeaderboardService, "_load_task_scores", fail)
+    from hakari_bench.viewer import snapshots
+
+    with monkeypatch.context() as patch:
+        patch.setattr(snapshots, "SNAPSHOT_VERSION", snapshots.SNAPSHOT_VERSION + 1)
+        with pytest.raises(AssertionError, match="Dynamic path"):
+            service.get_leaderboard("Overall", **options)
+
     changed = config.model_copy(
         update={"benchmarks": [BenchmarkConfig(name="BenchA", excluded_tasks=["a1"])]}
     )

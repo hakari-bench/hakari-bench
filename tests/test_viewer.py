@@ -4374,7 +4374,10 @@ def test_leaderboard_uses_configured_task_manifest_not_newer_database_tasks() ->
     assert [row.mean_score for row in result] == [85.0, 65.0]
 
 
-def test_overall_service_uses_task_manifest_to_ignore_newer_database_tasks(tmp_path: Path) -> None:
+@pytest.mark.parametrize("precomputed", [False, True])
+def test_overall_service_uses_task_manifest_to_ignore_newer_database_tasks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, precomputed: bool,
+) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
         db_path,
@@ -4400,6 +4403,13 @@ def test_overall_service_uses_task_manifest_to_ignore_newer_database_tasks(tmp_p
         task_manifests={"current": frozenset({"a1", "a2"})},
     )
 
+    if precomputed:
+        dynamic = LeaderboardService(duckdb_path=db_path, config=config, use_precomputed=False).get_leaderboard("Overall")
+        monkeypatch.setattr(
+            "hakari_bench.viewer.leaderboard._load_precomputed_leaderboard_rows",
+            lambda **kwargs: (dynamic.rows, 2, []),
+        )
+
     result = LeaderboardService(duckdb_path=db_path, config=config).get_leaderboard("Overall")
 
     assert result.expected_tasks == 2
@@ -4407,6 +4417,17 @@ def test_overall_service_uses_task_manifest_to_ignore_newer_database_tasks(tmp_p
         ("model/538", 2, 85.0),
         ("model/539", 2, 65.0),
     ]
+
+    assert {task.key for task in result.task_breakdowns} == {"a1", "a2"}
+
+    # The header uses the Micro precomputed path even when the table is Macro.
+    monkeypatch.setattr("hakari_bench.viewer.app.load_viewer_config", lambda _path: config)
+    client = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path))))
+    response = client.get("/leaderboard", params={"score": "macro", "columns": "grouped"})
+    assert response.status_code == 200
+    assert "<strong>2 tasks</strong>" in response.text
+    assert ">2 tasks</button>" in response.text
+    assert "<strong>3 tasks</strong>" not in response.text
 
 
 def test_leaderboard_language_filter_recomputes_ranking_for_matching_tasks(tmp_path: Path) -> None:

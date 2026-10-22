@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 P = ParamSpec("P")
 _LOCK = threading.RLock()
-SNAPSHOT_VERSION = 1
+SNAPSHOT_VERSION = 2
 TABLE = "viewer_initial_snapshots"
 
 
