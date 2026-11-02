@@ -47,6 +47,12 @@ needed to render the current leaderboard surfaces.
 
 ## Generation
 
+Runtime and viewer dependencies use DuckDB 1.5.x (`>=1.5.6,<1.6`), with
+`uv.lock` selecting 1.5.6. The upper bound also applies to tox's independently
+resolved environment, so CI stays on the same release series as local runs.
+Moving to a newer series requires an explicit dependency and compatibility
+review.
+
 Build the DuckDB database from benchmark JSON output:
 
 ```bash
