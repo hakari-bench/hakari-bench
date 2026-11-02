@@ -1,0 +1,44 @@
+id: nvidia/Nemotron-3.5-Embed-1B-BF16
+source:
+  type: huggingface
+  name: nvidia/Nemotron-3.5-Embed-1B-BF16
+  revision: e24ca1e346bcc53572bd7bdc02b3e8ebf66c197c
+method: dense
+license:
+  id: openmdw-1.1
+  label: OpenMDW License Agreement 1.1
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: huggingface_model_card
+  source_url: https://huggingface.co/nvidia/Nemotron-3.5-Embed-1B-BF16
+links:
+  huggingface: https://huggingface.co/nvidia/Nemotron-3.5-Embed-1B-BF16
+runtime:
+  max_seq_length: 32768
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+embedding:
+  output_dimension: 2048
+  truncate_dims: [1024, 512]
+  pooling: mean
+  normalize: true
+  include_prompt: true
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/nvidia/Nemotron-3.5-Embed-1B-BF16
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  evaluation_scope: standard
+notes: >-
+  Official examples use SentenceTransformers 6.1.0 with the image extra and
+  FlashAttention 2. Evaluation uses Transformers 5.12.1, the upstream training
+  and evaluation version. The model maximum is 32768 tokens.
+  Upstream documents normalized prefix truncation, including 1024 and 512 dimensions.

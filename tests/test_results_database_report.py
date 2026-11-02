@@ -25,6 +25,18 @@ from hakari_bench.warehouse_schema import (
 from scripts import build_results_database_and_report as report
 
 
+@pytest.mark.parametrize("table_name, expected", [("existing", True), ("missing", False)])
+def test_table_exists_leaves_connection_ready_for_arrow_registration(table_name: str, expected: bool) -> None:
+    con = duckdb.connect()
+    try:
+        con.execute("CREATE TABLE existing (value INTEGER)")
+        assert report._duckdb_table_exists(con, table_name) is expected
+        report._insert_duckdb_rows(con, "existing", ("value",), [(42,)])
+        assert con.execute("SELECT value FROM existing").fetchall() == [(42,)]
+    finally:
+        con.close()
+
+
 def test_nanomteb_japanese_is_a_ranked_benchmark() -> None:
     assert "NanoJMTEB-v2" in report.TARGET_BENCHMARKS
     assert report.benchmark_name("hakari-bench/NanoJMTEB-v2", "NanoJMTEB-v2") == "NanoJMTEB-v2"
