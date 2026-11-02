@@ -113,6 +113,11 @@ Append uses `fact_metric_score` plus `dim_metric` as the canonical metric store;
 if a legacy `metrics_long` table is present it is still maintained, but append
 does not require that table.
 
+Catalog checks during append fully consume their query results before the
+connection registers Arrow data. This is required by DuckDB 2.0 as well as
+being compatible with DuckDB 1.5; reading only the scalar row with `fetchone()`
+leaves an unfinished result that blocks the next Arrow registration in 2.0.
+
 ```bash
 uv run python scripts/build_results_database_and_report.py \
   --append-results-dir output/new_model_results \
