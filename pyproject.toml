@@ -30,7 +30,7 @@ classifiers = [
 dependencies = [
     "bm25s>=0.3.6",
     "datasets>=4.8.4",
-    "duckdb>=1.5.2",
+    "duckdb>=1.5.6,<1.6",
     "fast-langdetect>=1.0.0",
     "huggingface-hub[cli]>=0.34,<2",
     "nltk>=3.9.4,<3.10",
@@ -125,7 +125,7 @@ dev = [
     "ty>=0.0.32,<0.0.33",
 ]
 viewer = [
-    "duckdb>=1.5.2",
+    "duckdb>=1.5.6,<1.6",
     "fastapi>=0.136.1",
     "pydantic>=2.13.3",
     "pyyaml>=6.0.3",

@@ -5065,15 +5065,17 @@ def _read_previous_source_hashes(db_path: Path) -> dict[str, str | None]:
 
 
 def _duckdb_table_exists(con: duckdb.DuckDBPyConnection, table_name: str) -> bool:
-    row = con.execute(
+    rows = con.execute(
         """
         SELECT count(*)
         FROM information_schema.tables
         WHERE table_name = ?
         """,
         [table_name],
-    ).fetchone()
-    return bool(row is not None and row[0])
+    ).fetchall()
+    # DuckDB 2 requires a fully consumed result before registering Arrow data
+    # on this connection; fetchone() leaves even this scalar result unfinished.
+    return bool(rows and rows[0][0])
 
 
 def _create_ingestion_state_tables(

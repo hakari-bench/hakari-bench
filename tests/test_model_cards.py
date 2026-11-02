@@ -800,6 +800,8 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "mixedbread-ai/mxbai-embed-xsmall-v1": 384,
         "nomic-ai/nomic-embed-text-v1.5": 768,
         "nomic-ai/nomic-embed-text-v2-moe": 768,
+        "nvidia/Nemotron-3.5-Embed-8B-BF16": 4096,
+        "nvidia/Nemotron-3.5-Embed-1B-BF16": 2048,
         "openai/text-embedding-3-large": 3072,
         "openai/text-embedding-3-small": 1536,
         "perplexity-ai/pplx-embed-v1-4B": 2560,

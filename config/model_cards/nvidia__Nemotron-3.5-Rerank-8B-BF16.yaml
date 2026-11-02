@@ -1,0 +1,33 @@
+id: nvidia/Nemotron-3.5-Rerank-8B-BF16
+source:
+  type: huggingface
+  name: nvidia/Nemotron-3.5-Rerank-8B-BF16
+  revision: f88f8d9104726747791283ab156d2fcdb29e90a7
+method: reranker
+license:
+  id: openmdw-1.1
+  label: OpenMDW License Agreement 1.1
+  type: proprietary
+  commercial_use: permitted_with_terms
+  source: huggingface_model_card
+  source_url: https://huggingface.co/nvidia/Nemotron-3.5-Rerank-8B-BF16
+links:
+  huggingface: https://huggingface.co/nvidia/Nemotron-3.5-Rerank-8B-BF16
+runtime:
+  max_seq_length: 32768
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/nvidia/Nemotron-3.5-Rerank-8B-BF16
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  evaluation_scope: standard
+notes: >-
+  Official examples use SentenceTransformers 6.1.0 with the image extra and
+  FlashAttention 2. Evaluation uses Transformers 5.12.1, the upstream training
+  and evaluation version. The model maximum is 32768 tokens.
