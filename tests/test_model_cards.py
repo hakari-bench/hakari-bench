@@ -786,6 +786,7 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "Qwen/Qwen3-Embedding-4B": 2560,
         "Qwen/Qwen3-Embedding-8B": 4096,
         "Snowflake/snowflake-arctic-embed-l-v2.0": 1024,
+        "geevec-ai/geevec-embeddings-1.0-lite": 4096,
         "google/embeddinggemma-300m": 768,
         "google/embeddinggemma-2": 768,
         "google/gemini-embedding-2": 3072,
