@@ -65,6 +65,30 @@ has been superseded by a newer validation.
 | `hotchpotch/bekko-embedding-v1-a8m` | dense | `tf4-fa2` |
 | `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` | dense | `tf5-sdpa` |
 
+## GeeVec Embeddings 1.0 Lite
+
+For `geevec-ai/geevec-embeddings-1.0-lite`, use the upstream default
+`general` domain for both queries and documents. The full evaluation uses
+BF16, Flash Attention 2, cosine similarity, and last-token pooling at revision
+`3c6073ded5dbe6eda5e8caed080400c61d5476b3`.
+
+The checkpoint has no configured SentenceTransformers prompts. Set the query
+prompt explicitly to `Instruct: Given a question, retrieve passages that answer
+the question.\nQuery: `, with an actual newline before `Query: `, and leave
+documents unprefixed. Evaluate the native 4096 dimensions and the documented
+2048, 1024, 512, and 256 truncations, including the standard quantization and
+rescore variants at every dimension.
+
+Retain the shipped SentenceTransformers maximum sequence length of 40960.
+The upstream README advertises a 32768-token context; this discrepancy is
+intentional in the recorded evaluation settings, which preserve the loaded
+checkpoint configuration. Start with batch size 16 and use batch size 1 for
+long-document tasks. The full 563-task run completed without OOM using batch
+16 for 512 tasks and batch 1 for 51 tasks.
+
+References: the pinned [model card](https://huggingface.co/geevec-ai/geevec-embeddings-1.0-lite/blob/3c6073ded5dbe6eda5e8caed080400c61d5476b3/README.md)
+and the reviewed HAKARI model card under `config/model_cards/`.
+
 ## cl-nagoya/ruri-v3
 
 Applies to:
