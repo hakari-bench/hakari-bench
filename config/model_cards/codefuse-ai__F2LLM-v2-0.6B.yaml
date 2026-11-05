@@ -1,0 +1,105 @@
+id: codefuse-ai/F2LLM-v2-0.6B
+source:
+  type: huggingface
+  name: codefuse-ai/F2LLM-v2-0.6B
+  revision: 8786315a8711c242ee03ec67c74dd9ad0a61e2cf
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/codefuse-ai/F2LLM-v2-0.6B
+links:
+  huggingface: https://huggingface.co/codefuse-ai/F2LLM-v2-0.6B
+embedding:
+  output_dimension: 1024
+  truncate_dims:
+  - 512
+  - 256
+  - 128
+  - 64
+  - 32
+  - 16
+  - 8
+runtime:
+  dtype: bf16
+  trust_remote_code: true
+  attn_implementation: flash_attention_2
+  max_seq_length: 40960
+  backend_library: sentence-transformers
+  remote_code_approved: true
+prompts:
+  query_prompt: 'Instruct: Given a question, retrieve passages that can help answer
+    the question.
+
+    Query: '
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/codefuse-ai/F2LLM-v2-0.6B
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-BR
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoSSRB
+  - hakari-bench/NanoVNMTEB
+notes:
+- Preserve the native 40960-token context and official retrieval query instruction.
+- Evaluate all documented MRL dimensions down to 8 and default quantization/rescore
+  variants.
+parameters:
+  total: 596049920
+  trainable: 596049920
+  input_embedding: 155582464
+  active: 440467456
