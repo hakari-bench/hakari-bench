@@ -1103,3 +1103,31 @@ can differ slightly numerically.
 Sources: [SlideOn](https://huggingface.co/lightonai/SlideOn),
 [mSlideOn](https://huggingface.co/lightonai/mSlideOn), and the
 [official technical article](https://huggingface.co/blog/lightonai/slideon-mslideon).
+
+## F2LLM-v2-0.6B and pplx-embed-v2-late-0.6b
+
+F2LLM-v2-0.6B uses the official retrieval instruction recorded in its model
+card, BF16 with FlashAttention 2, and the shipped 40960-token maximum. Evaluate
+1024-dimensional base embeddings plus every documented MRL dimension down to
+8; the dense CLI adds quantization and rescore variants (40 categories total).
+
+pplx-embed-v2-late-0.6b requires the native SentenceTransformers >=6
+`MultiVectorEncoder` and Transformers >=5.4. Use the reusable adapter rather
+than PyLate: native role encoding preserves first-position `[Q]`/`[D]` markers
+and document punctuation masking. The evaluated checkpoint uses FP32, SDPA,
+1024 query tokens and 4096 document tokens, without query expansion or
+truncation variants. Install the optimized FLA and causal-conv1d kernels for
+its linear-attention backbone. The native and HAKARI MaxSim scores agreed
+within 2.4e-7 in the preflight validation.
+
+```bash
+hakari-bench evaluate from-model-card \
+  --model-card config/model_cards/perplexity-ai__pplx-embed-v2-late-0.6b.yaml \
+  --model-loader examples.custom_backends.pplx_multivector:load_model \
+  --all --batch-size 8 --device cuda:0 \
+  --late-interaction-exact-doc-batch-size 16 \
+  --late-interaction-exact-query-batch-size 2
+```
+
+The custom loader is an explicit CLI option; the model card alone does not
+select it. Reduce batch size for long documents without shortening context.

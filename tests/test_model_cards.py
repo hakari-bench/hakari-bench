@@ -781,6 +781,7 @@ def test_static_qwen3_embedding_4b_card_matches_official_embedding_metadata() ->
 def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
     cards = model_cards.load_model_cards(Path("config/model_cards"))
     known_base_dims = {
+        "codefuse-ai/F2LLM-v2-0.6B": 1024,
         "KaLM-Embedding/KaLM-embedding-multilingual-mini-instruct-v2.5": 896,
         "Qwen/Qwen3-Embedding-0.6B": 1024,
         "Qwen/Qwen3-Embedding-4B": 2560,
