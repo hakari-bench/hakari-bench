@@ -11,6 +11,58 @@ use the verified note and preserve the attention implementation in result
 metadata so slow default-attention runs are not mistaken for intentional
 baselines.
 
+## Mixedbread Rerank v2
+
+Applies to `mixedbread-ai/mxbai-rerank-base-v2` and
+`mixedbread-ai/mxbai-rerank-large-v2`.
+
+Use bf16 and Transformers 4.x with Flash Attention 2, following the
+[author's runtime preference](https://github.com/mixedbread-ai/mxbai-rerank).
+Both checkpoints support 32768 input tokens. Keep that context limit;
+reduce the batch size or padded token budget for memory pressure.
+The upstream Sentence Transformers modules supply the query/document chat
+template and the `1` minus `0` logit score. Do not add embedding prompts.
+
+Use the compatibility loader for long-document benchmarks:
+
+```bash
+uv run --group tf4-fa2 hakari-bench evaluate reranker \
+  --model mixedbread-ai/mxbai-rerank-base-v2 \
+  --model-revision 3ea9d4dffa7d12a4f366be8e275c349de9fc9865 \
+  --model-loader hakari_bench.model_loaders:load_mxbai_rerank_v2 \
+  --model-loader-kwargs-json '{"max_batch_tokens":131072}' \
+  --dtype bf16 --flash-attn2 --device cuda:0 --batch-size 32 --all
+```
+
+For large, use model revision `ca7e1ee484c37c0ddd8d178a9a5c33cec575c5e6`.
+When using `evaluate from-model-card`, also pass the compatibility loader
+explicitly; model cards currently do not select custom Python loaders.
+
+The standard CrossEncoder path in Sentence Transformers 5.4.1 truncates the
+rendered chat from the right. On oversized pairs this discards the final
+relevance instruction and assistant marker, silently scoring document
+continuation instead of relevance. The loader reserves the checkpoint's
+suffix, following the
+[official input construction](https://github.com/mixedbread-ai/mxbai-rerank/blob/main/mxbai_rerank/mxbai_rerank_v2.py).
+Inputs that fit retain the native template and token IDs. Oversized queries
+are limited to three quarters of the content budget to leave document space.
+This policy is recorded in backend metadata, including per-task truncation
+and OOM retry counts.
+
+The loader also computes only final-token logits, disables the KV cache,
+limits each batch by its padded token count, and halves batches on CUDA OOM.
+An individual pair that still fails is reported as an error.
+It never applies a raw character limit. Long inputs occur in NanoLongEmbed,
+NanoBRIGHT, NanoMLDR, legal tasks, and several other datasets.
+
+Validation on two RTX 5090 GPUs confirmed bf16 execution for both models on
+real NanoNarrativeQA, NanoBrightStackoverflowLong, and NanoMLDR/en samples,
+including 32768-token inputs. Short-input scores matched the native
+CrossEncoder exactly within each runtime. A four-pair 32768-token synthetic
+batch used about 5.8 GB for base and 11.8 GB for large with bf16 SDPA.
+The diagnostic fp32 SDPA run exceeded 32 GB on a single long pair, so fp32
+is not the fallback for this wave.
+
 ## NanoMIRACL/en Runtime Matrix
 
 On 2026-05-09, these models were revalidated on NanoMIRACL/en with a separate
