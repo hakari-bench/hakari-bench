@@ -116,9 +116,11 @@ ones that search rerankers were not trained for.
   update the tables below.
 - Rebuild the DuckDB after changing the manifest so that the precomputed
   Overall Reranking rows and initial-view snapshots use the new task set. The
-  `viewer_leaderboard_rows` mart stores both scopes, keyed by
-  `reranking_task_scope` (`focus` and `all`), so `Reranking-focused` and
-  `All tasks` are both served from precomputed rows. Until the rebuild, the
+  `viewer_leaderboard_rows` mart (Micro) stores both scopes, keyed by
+  `reranking_task_scope` (`focus` and `all`), and `viewer_initial_snapshots`
+  holds the default Grouped/Macro display for both scopes, so
+  `Reranking-focused` and `All tasks` are both served from precomputed data.
+  Until the rebuild, the
   viewer computes any scope whose stored task count no longer matches
   dynamically, which is correct but slower.
 - The viewer help text describes the selection loosely (roughly two thirds of
