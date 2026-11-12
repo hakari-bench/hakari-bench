@@ -97,6 +97,7 @@ def cached_initial_leaderboard(
             "score_aggregation",
             "column_mode",
             "show_task_scores",
+            "reranking_task_scope",
         }
         eligible = (
             service.use_precomputed
@@ -173,6 +174,16 @@ def cached_initial_leaderboard(
     return wrapped
 
 
+def _snapshot_targets(config: Any) -> list[tuple[str, str]]:
+    """Return the (score target, reranking task scope) pairs that get snapshots."""
+    from hakari_bench.viewer.config import effective_reranking_task_scope
+
+    targets = [("all", "focus"), ("reranking", "focus")]
+    if effective_reranking_task_scope(config.overall, score_target="reranking") == "focus":
+        targets.append(("reranking", "all"))
+    return targets
+
+
 def build_initial_snapshots(path: Path, config: Any) -> None:
     """Materialize both default tabs using exactly the dynamic calculation."""
     from hakari_bench.viewer.leaderboard import LeaderboardService
@@ -183,11 +194,12 @@ def build_initial_snapshots(path: Path, config: Any) -> None:
     signature = inspect.signature(service.get_leaderboard)
     payloads = []
     for languages in ((), ("en", "category:code")):
-        for target in ("all", "reranking"):
+        for target, task_scope in _snapshot_targets(config):
             for grouped in (True, False):
                 request: dict[str, Any] = dict(
                     language_filters=languages,
                     score_target=target,
+                    reranking_task_scope=task_scope,
                     score_aggregation="macro" if grouped else "micro",
                     column_mode="grouped" if grouped else None,
                     show_task_scores=grouped,
@@ -215,6 +227,7 @@ def warm_initial_snapshots(
     store: Any, config: Any, *, language_scopes: tuple[tuple[str, ...], ...] = ((), ("en", "category:code"))
 ) -> None:
     """Prepare older downloaded DBs without changing the source database."""
+    from hakari_bench.viewer.config import RerankingTaskScope
     from hakari_bench.viewer.leaderboard import LeaderboardService, ScoreTarget
 
     try:
@@ -223,17 +236,21 @@ def warm_initial_snapshots(
             return
         service = LeaderboardService(duckdb_path=store.path, config=config)
         for languages in language_scopes:
-            for target in ("all", "reranking"):
+            for target, task_scope in _snapshot_targets(config):
                 service.get_leaderboard(
                     config.overall.name,
                     language_filters=languages,
                     score_target=cast(ScoreTarget, target),
+                    reranking_task_scope=cast(RerankingTaskScope, task_scope),
                     score_aggregation="macro",
                     column_mode="grouped",
                     show_task_scores=True,
                 )
                 service.get_leaderboard(
-                    config.overall.name, score_target=cast(ScoreTarget, target), language_filters=languages
+                    config.overall.name,
+                    score_target=cast(ScoreTarget, target),
+                    reranking_task_scope=cast(RerankingTaskScope, task_scope),
+                    language_filters=languages,
                 )
     except Exception as exc:
         log_event("viewer.leaderboard.snapshot_warmup", error_type=type(exc).__name__)
