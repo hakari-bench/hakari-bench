@@ -18,10 +18,13 @@ from hakari_bench.viewer.config import (
     LanguageFilterMode,
     OverallBenchmarkConfig,
     OverallConfig,
+    RerankingTaskScope,
     ScoreAggregation,
     ScoreGroupConfig,
+    ScoreTarget,
     ViewerConfig,
     benchmark_name_from_selection_key,
+    effective_reranking_task_scope,
     normalize_benchmark_selection_values,
 )
 from hakari_bench.viewer.data import (
@@ -45,7 +48,6 @@ from hakari_bench.viewer.text_match import (
 from hakari_bench.viewer.variant_display import VariantDisplayFlags, include_variant_row
 
 SortDirection = Literal["asc", "desc"]
-ScoreTarget = Literal["all", "reranking", "reranking_without_safeguard"]
 ColumnMode = Literal["task", "grouped"]
 DEFAULT_MODEL_CARDS_PATH = Path("config/model_cards")
 TASK_CATEGORY_FACET_PREFIX = "category:"
@@ -204,6 +206,8 @@ class LeaderboardResult(BaseModel):
     is_overall: bool
     score_target: ScoreTarget = "all"
     score_aggregation: ScoreAggregation = "micro"
+    reranking_task_scope: RerankingTaskScope = "focus"
+    reranking_focus_available: bool = False
     selected_score_metric: str = "ndcg@10"
     available_score_metrics: list[str] = Field(default_factory=lambda: ["ndcg@10"])
     expected_tasks: int
@@ -264,10 +268,31 @@ class LeaderboardService:
         self.use_precomputed = use_precomputed
         self.task_results_repository = TaskResultsRepository(duckdb_path)
         self.model_card_parameters = _load_model_card_parameters(model_cards_path)
-        self.expected_task_keys_by_overall = {
-            overall.name: config.expected_task_keys_for_overall(overall)
-            for overall in config.overalls
-        }
+        self._expected_task_keys_cache: dict[tuple[str, RerankingTaskScope], frozenset[str] | None] = {}
+
+    def _expected_task_keys_for_view(
+        self,
+        view_name: str,
+        *,
+        score_target: ScoreTarget,
+        reranking_task_scope: RerankingTaskScope,
+    ) -> frozenset[str] | None:
+        overall = self.config.overall_for_view(view_name)
+        if overall is None:
+            return None
+        scope = effective_reranking_task_scope(
+            overall,
+            score_target=score_target,
+            reranking_task_scope=reranking_task_scope,
+        )
+        cache_key = (overall.name, scope)
+        if cache_key not in self._expected_task_keys_cache:
+            self._expected_task_keys_cache[cache_key] = self.config.expected_task_keys_for_overall(
+                overall,
+                score_target="all" if scope == "all" else "reranking",
+                reranking_task_scope=scope,
+            )
+        return self._expected_task_keys_cache[cache_key]
 
     @cached_initial_leaderboard
     def get_leaderboard(
@@ -286,6 +311,7 @@ class LeaderboardService:
         include_other_variants: bool = False,
         language_filters: tuple[str, ...] = (),
         column_mode: ColumnMode | None = None,
+        reranking_task_scope: RerankingTaskScope = "focus",
         show_task_scores: bool = False,
         show_task_z_scores: bool = False,
         show_task_ranks: bool = False,
@@ -370,6 +396,15 @@ class LeaderboardService:
                 score_metric, available_score_metrics
             )
             is_overall = overall is not None
+            configured_overall = self.config.overall_for_view(view_name)
+            reranking_focus_available = (
+                effective_reranking_task_scope(configured_overall, score_target=score_target) == "focus"
+            )
+            effective_task_scope = effective_reranking_task_scope(
+                configured_overall,
+                score_target=score_target,
+                reranking_task_scope=reranking_task_scope,
+            )
             selected_benchmark_names = (
                 tuple(self.config.selection_keys_for_overall(overall))
                 if overall is not None
@@ -403,6 +438,8 @@ class LeaderboardService:
                     is_overall=True,
                     score_target=score_target,
                     score_aggregation=score_aggregation,
+                    reranking_task_scope=reranking_task_scope,
+                    reranking_focus_available=reranking_focus_available,
                     selected_score_metric=selected_score_metric,
                     available_score_metrics=available_score_metrics,
                     expected_tasks=0,
@@ -458,10 +495,15 @@ class LeaderboardService:
                     duckdb_path=self.duckdb_path,
                     view_name=view_name,
                     score_target=score_target,
+                    reranking_task_scope=effective_task_scope,
                     score_aggregation=score_aggregation,
                     variant_flags=include_flags,
                 )
-                expected_task_keys = self.expected_task_keys_by_overall.get(view_name)
+                expected_task_keys = self._expected_task_keys_for_view(
+                    view_name,
+                    score_target=score_target,
+                    reranking_task_scope=reranking_task_scope,
+                )
                 if (
                     precomputed is not None
                     and expected_task_keys is not None
@@ -525,6 +567,8 @@ class LeaderboardService:
                         is_overall=is_overall,
                         score_target=score_target,
                         score_aggregation=score_aggregation,
+                        reranking_task_scope=reranking_task_scope,
+                        reranking_focus_available=reranking_focus_available,
                         selected_score_metric=selected_score_metric,
                         available_score_metrics=available_score_metrics,
                         expected_tasks=expected_tasks,
@@ -574,7 +618,11 @@ class LeaderboardService:
                 phase_timing["task_score_count"] = len(rows)
             rows = _exclude_configured_tasks(rows, self.config)
             expected_task_keys = (
-                self.expected_task_keys_by_overall.get(view_name)
+                self._expected_task_keys_for_view(
+                    view_name,
+                    score_target=score_target,
+                    reranking_task_scope=reranking_task_scope,
+                )
                 if overall is not None
                 else None
             )
@@ -810,6 +858,8 @@ class LeaderboardService:
                 is_overall=is_overall,
                 score_target=score_target,
                 score_aggregation=score_aggregation,
+                reranking_task_scope=reranking_task_scope,
+                reranking_focus_available=reranking_focus_available,
                 selected_score_metric=selected_score_metric,
                 available_score_metrics=available_score_metrics,
                 expected_tasks=(
@@ -1398,6 +1448,7 @@ def _load_precomputed_leaderboard_rows(
     duckdb_path: Path,
     view_name: str,
     score_target: ScoreTarget,
+    reranking_task_scope: RerankingTaskScope = "all",
     score_aggregation: ScoreAggregation,
     variant_flags: VariantDisplayFlags,
 ) -> tuple[list[LeaderboardRow], int, list[LanguageOption]] | None:
@@ -1409,6 +1460,10 @@ def _load_precomputed_leaderboard_rows(
             return None
         leaderboard_columns = _table_columns(con, "viewer_leaderboard_rows")
         model_type_expr = "model_type" if "model_type" in leaderboard_columns else "NULL AS model_type"
+        # Marts built before the reranking task scope existed hold only full-manifest rows;
+        # the caller's expected-task check rejects them for the focus scope.
+        scope_clause = "AND reranking_task_scope = ?" if "reranking_task_scope" in leaderboard_columns else ""
+        scope_params = [reranking_task_scope] if scope_clause else []
         rows = con.execute(
             f"""
             SELECT
@@ -1441,6 +1496,7 @@ def _load_precomputed_leaderboard_rows(
               AND include_truncate_variants = ?
               AND include_rescore_variants = ?
               AND include_other_variants = ?
+              {scope_clause}
             """,
             [
                 view_name,
@@ -1449,16 +1505,22 @@ def _load_precomputed_leaderboard_rows(
                 variant_flags.truncate,
                 variant_flags.rescore,
                 variant_flags.other,
+                *scope_params,
             ],
         ).fetchall()
         language_options: list[LanguageOption] = []
         if _table_exists(con, "viewer_leaderboard_language_options"):
+            language_scope_clause = (
+                "AND reranking_task_scope = ?"
+                if "reranking_task_scope" in _table_columns(con, "viewer_leaderboard_language_options")
+                else ""
+            )
             language_options = [
                 LanguageOption(
                     code=str(row[0]), label=str(row[1]), task_count=int(row[2])
                 )
                 for row in con.execute(
-                    """
+                    f"""
                     SELECT code, label, task_count
                     FROM viewer_leaderboard_language_options
                     WHERE view_name = ?
@@ -1467,6 +1529,7 @@ def _load_precomputed_leaderboard_rows(
                       AND include_truncate_variants = ?
                       AND include_rescore_variants = ?
                       AND include_other_variants = ?
+                      {language_scope_clause}
                     ORDER BY task_count DESC, lower(label), code
                     """,
                     [
@@ -1476,6 +1539,7 @@ def _load_precomputed_leaderboard_rows(
                         variant_flags.truncate,
                         variant_flags.rescore,
                         variant_flags.other,
+                        *([reranking_task_scope] if language_scope_clause else []),
                     ],
                 ).fetchall()
             ]

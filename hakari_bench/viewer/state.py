@@ -9,7 +9,9 @@ from hakari_bench.viewer.config import (
     CUSTOM_SCOPE_NAME,
     ScoreAggregation,
     ViewerConfig,
+    effective_reranking_task_scope,
     normalize_benchmark_selection_values,
+    reranking_task_scope_from_query,
 )
 from hakari_bench.viewer.leaderboard import LeaderboardResult, SORT_COLUMNS
 from hakari_bench.viewer.variant_display import variant_display_flags_from_values
@@ -102,6 +104,8 @@ def canonical_query_state(query: Mapping[str, QueryValue], *, viewer_config: Vie
         canonical.pop("direction", None)
     if canonical.get("task_z_scores") == "0":
         canonical.pop("task_z_scores", None)
+    if query_string(canonical.get("target", "all")) == "all" or canonical.get("rerank_tasks") != "all":
+        canonical.pop("rerank_tasks", None)
 
     column_mode = optional_query_string(canonical.get("columns"))
     if column_mode == "task":
@@ -131,6 +135,7 @@ def normalize_query_state(
     direction: str,
     target: str = "all",
     score: str = "micro",
+    rerank_tasks: str = "focus",
     group: str | None,
     variants: bool,
     quantization: bool,
@@ -220,6 +225,10 @@ def normalize_query_state(
         query["bench"] = selected_benchmarks
     if target != "all":
         query["target"] = target
+        # rerank_tasks only survives on views whose Tasks switch is shown.
+        focus_scope = effective_reranking_task_scope(viewer_config.overall_for_view(view), score_target="reranking")
+        if focus_scope == "focus" and reranking_task_scope_from_query(rerank_tasks) == "all":
+            query["rerank_tasks"] = "all"
     if score_aggregation != "micro":
         query["score"] = score_aggregation
     if column_mode is not None:
@@ -362,6 +371,8 @@ def state_payload(
         query_payload["direction"] = direction
     if result.score_target != "all":
         query_payload["target"] = result.score_target
+        if result.reranking_focus_available and result.reranking_task_scope == "all":
+            query_payload["rerank_tasks"] = "all"
     if result.score_aggregation != "micro":
         query_payload["score"] = result.score_aggregation
     if result.selected_score_metric != "ndcg@10":

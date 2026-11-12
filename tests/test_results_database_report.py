@@ -15,6 +15,7 @@ import pytest
 from pydantic import ValidationError
 
 from hakari_bench.viewer.config import BenchmarkConfig, OverallConfig, ScoreGroupConfig, ViewerConfig
+from hakari_bench.viewer.leaderboard import LeaderboardService
 from hakari_bench.warehouse_schema import (
     DatasetMetadataRow,
     MetricLongRow,
@@ -4532,12 +4533,21 @@ def test_overall_en_cached_mart_rows_match_service_path_with_language_filter(tmp
 
     assert cached_rows == service_rows
     assert cached_languages == service_languages
+    columns = report.VIEWER_LEADERBOARD_ROW_COLUMNS
+    records = [dict(zip(columns, row, strict=True)) for row in cached_rows]
     base_rows = [
         row
-        for row in cached_rows
-        if row[1] == "all" and not row[2] and not row[3] and not row[4] and not row[5]
+        for row in records
+        if row["score_target"] == "all"
+        and not row["include_quantization_variants"]
+        and not row["include_truncate_variants"]
+        and not row["include_rescore_variants"]
+        and not row["include_other_variants"]
     ]
-    assert [(row[0], row[6], row[9], row[12], row[15]) for row in base_rows] == [
+    assert [
+        (row["view_name"], row["expected_tasks"], row["model_name"], row["mean_score"], row["task_count"])
+        for row in base_rows
+    ] == [
         ("Overall (EN)", 1, "example/model", 80.0, 1)
     ]
 
@@ -4678,6 +4688,66 @@ def test_cached_viewer_leaderboard_mart_rows_match_service_path(tmp_path: Path) 
         viewer_config=viewer_config,
         view_names=["Overall", "BenchA"],
     )
+
+    focus_config = ViewerConfig(
+        benchmarks=viewer_config.benchmarks,
+        overalls=[
+            OverallConfig(
+                name="Overall",
+                label="Overall",
+                benchmarks=["BenchA"],
+                task_manifest="all_tasks",
+                expected_task_count=2,
+                reranking_task_manifest="rerank_focus",
+                reranking_expected_task_count=1,
+            )
+        ],
+        task_manifests={
+            "all_tasks": frozenset({"BenchA::bench/a::task1", "BenchA::bench/a::task2"}),
+            "rerank_focus": frozenset({"BenchA::bench/a::task1"}),
+        },
+    )
+    focus_cached_rows, _ = report._viewer_leaderboard_mart_rows_from_cached_records(
+        db_path,
+        viewer_config=focus_config,
+        view_names=["Overall"],
+    )
+    focus_service_rows, _ = report._viewer_leaderboard_mart_rows_from_service(
+        db_path,
+        viewer_config=focus_config,
+        view_names=["Overall"],
+    )
+    assert focus_cached_rows == focus_service_rows
+    expected_tasks_index = report.VIEWER_LEADERBOARD_ROW_COLUMNS.index("expected_tasks")
+    assert {(row[1], row[2], row[expected_tasks_index]) for row in focus_cached_rows} == {
+        ("all", "all", 2),
+        ("reranking", "focus", 1),
+        ("reranking", "all", 2),
+    }
+
+    # Both reranking task scopes must be served from the mart, not recomputed per request.
+    report.build_viewer_leaderboard_mart(db_path, viewer_config=focus_config, view_names=["Overall"])
+    con = duckdb.connect(str(db_path))
+    try:
+        con.execute(
+            "UPDATE viewer_leaderboard_rows SET mean_score = 12.5, micro_mean = 12.5, macro_mean = 12.5 "
+            "WHERE score_target = 'reranking' AND reranking_task_scope = 'all'"
+        )
+        con.execute(
+            "UPDATE viewer_leaderboard_rows SET mean_score = 7.5, micro_mean = 7.5, macro_mean = 7.5 "
+            "WHERE score_target = 'reranking' AND reranking_task_scope = 'focus'"
+        )
+        # The default focus request is snapshot-cached at build time; drop it to read the mart.
+        con.execute("DROP TABLE IF EXISTS viewer_initial_snapshots")
+    finally:
+        con.close()
+    service = LeaderboardService(duckdb_path=db_path, config=focus_config, model_cards_path=None)
+    all_scope = service.get_leaderboard("Overall", score_target="reranking", reranking_task_scope="all")
+    focus_scope = service.get_leaderboard("Overall", score_target="reranking")
+    assert all_scope.expected_tasks == 2
+    assert {row.mean_score for row in all_scope.rows if row.model_name != "bm25"} == {12.5}
+    assert focus_scope.expected_tasks == 1
+    assert {row.mean_score for row in focus_scope.rows if row.model_name != "bm25"} == {7.5}
 
 
 def test_export_duckdb_tables_to_parquet_writes_canonical_tables(tmp_path: Path) -> None:

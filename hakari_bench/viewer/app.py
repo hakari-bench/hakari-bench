@@ -32,6 +32,7 @@ from hakari_bench.viewer.config import (
     benchmark_name_from_selection_key,
     benchmark_selection_key,
     load_viewer_config,
+    reranking_task_scope_from_query,
     split_benchmark_selection_key,
 )
 from hakari_bench.viewer.docs import BenchmarkDoc, BenchmarkDocs, DocsPageChrome, render_docs_index_page, render_markdown_page
@@ -300,16 +301,19 @@ def create_app(
     )
 
     # Keep the last known totals available while a replacement database syncs.
-    overview_counts_by_scope: dict[tuple[str, ...], tuple[int, int, int, int]] = {}
+    # The overview always describes the default page (Multilingual, default
+    # task scopes) so it stays fixed while visitors change filters and tabs.
+    overview_cache: dict[str, tuple[int, int, int, int]] = {}
+    overview_versions: dict[str, tuple[int, int]] = {}
 
     def warm_startup_cache() -> None:
         from hakari_bench.viewer.snapshots import warm_initial_snapshots
 
         for languages in ((), ("en", "category:code")):
             warm_initial_snapshots(store, viewer_config, language_scopes=(languages,))
-            if store.path.exists():
+            if store.path.exists() and not languages:
                 try:
-                    overview_stats(database_version(), languages)
+                    overview_stats(database_version())
                 except Exception as exc:
                     log_event("viewer.overview.warmup", error_type=type(exc).__name__)
 
@@ -392,6 +396,7 @@ def create_app(
         target: str = Query(
             default="all", pattern="^(all|reranking|reranking_without_safeguard)$"
         ),
+        rerank_tasks: str = Query(default="focus", pattern="^(focus|all)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
@@ -439,6 +444,7 @@ def create_app(
                 sort=sort,
                 direction=direction,
                 target=target,
+                rerank_tasks=rerank_tasks,
                 score=score,
                 metric=metric,
                 group=group,
@@ -489,7 +495,7 @@ def create_app(
                     initial_query=initial_query,
                     benchmark_docs=benchmark_docs,
                     database_label="",
-                    overview_counts=overview_counts_by_scope.get(_overview_scope(query_values(initial_query.get("lang_filter")))),
+                    overview_counts=overview_cache.get("counts"),
                 )
             request_timing["view"] = query_string(initial_query.get("view", viewer_config.overall.name))
             return content
@@ -514,6 +520,7 @@ def create_app(
             direction=cast(SortDirection, direction),
             score_target=cast(ScoreTarget, target),
             score_aggregation=cast(ScoreAggregation, score),
+            reranking_task_scope=reranking_task_scope_from_query(state_query.get("rerank_tasks")),
             score_metric=score_metric,
             score_group_name=group,
             include_quantization_variants=display_flags.quantization,
@@ -558,30 +565,27 @@ def create_app(
         return (stat.st_mtime_ns, stat.st_size) if stat else (0, 0)
 
     overview_lock = threading.Lock()
-    overview_versions: dict[tuple[str, ...], tuple[int, int]] = {}
 
-    def overview_stats(version: tuple[int, int], languages: tuple[str, ...] = ()) -> str:
-        scope = _overview_scope(languages)
+    def overview_stats(version: tuple[int, int]) -> str:
         # Startup warmup and the first request can race. Serialize publication
         # and cache by source version so replacement DBs refresh these totals.
         with overview_lock:
-            if overview_versions.get(scope) == version and scope in overview_counts_by_scope:
-                return render_overview_stats(counts=overview_counts_by_scope[scope], english=bool(scope), swap_oob=True)
+            if overview_versions.get("counts") == version and "counts" in overview_cache:
+                return render_overview_stats(counts=overview_cache["counts"], swap_oob=True)
             service = LeaderboardService(duckdb_path=store.path, config=viewer_config)
-            retrieval = service.get_leaderboard(viewer_config.overall.name, score_target="all", language_filters=scope)
-            reranking = service.get_leaderboard(viewer_config.overall.name, score_target="reranking", language_filters=scope)
+            retrieval = service.get_leaderboard(viewer_config.overall.name, score_target="all")
+            reranking = service.get_leaderboard(viewer_config.overall.name, score_target="reranking")
             counts = (
-                len({task.doc_key.split("::", 1)[0] for task in retrieval.task_breakdowns})
-                if scope else len(viewer_config.overall.benchmark_names),
+                len(viewer_config.overall.benchmark_names),
                 _display_task_count(retrieval),
                 len({row.model_name for row in retrieval.rows}),
                 len({row.model_name for row in reranking.rows}),
             )
             # Do not label totals from a concurrently replaced DB as current.
             if database_version() == version:
-                overview_counts_by_scope[scope] = counts
-                overview_versions[scope] = version
-            return render_overview_stats(counts=counts, english=bool(scope), swap_oob=True)
+                overview_cache["counts"] = counts
+                overview_versions["counts"] = version
+            return render_overview_stats(counts=counts, swap_oob=True)
 
     @app.get("/leaderboard", response_class=HTMLResponse)
     def leaderboard(
@@ -592,6 +596,7 @@ def create_app(
         target: str = Query(
             default="all", pattern="^(all|reranking|reranking_without_safeguard)$"
         ),
+        rerank_tasks: str = Query(default="focus", pattern="^(focus|all)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
@@ -645,6 +650,7 @@ def create_app(
                 sort=sort,
                 direction=direction,
                 target=target,
+                rerank_tasks=rerank_tasks,
                 score=score,
                 metric=metric,
                 group=group,
@@ -712,7 +718,7 @@ def create_app(
                     plot_color=query_string(state_query.get("chart_color", "embedding_dim")),
                 )
                 version = database_version()
-                content = f"{content}\n{_render_footer_update(store=store)}\n{overview_stats(version, filter_state.language_filters)}"
+                content = f"{content}\n{_render_footer_update(store=store)}\n{overview_stats(version)}"
                 render_timing["leaderboard_row_count"] = len(result.rows)
             render_ms = _elapsed_ms(render_started)
             request_timing["view"] = result.view_name
@@ -769,6 +775,7 @@ def create_app(
         target: str = Query(
             default="all", pattern="^(all|reranking|reranking_without_safeguard)$"
         ),
+        rerank_tasks: str = Query(default="focus", pattern="^(focus|all)$"),
         score: str = Query(default="micro", pattern="^(macro|micro)$"),
         metric: str = Query(default="ndcg@10"),
         group: str | None = Query(default=None),
@@ -814,6 +821,7 @@ def create_app(
                 sort=sort,
                 direction=direction,
                 target=target,
+                rerank_tasks=rerank_tasks,
                 score=score,
                 metric=metric,
                 group=group,
@@ -860,7 +868,11 @@ def create_app(
                 render_timing["leaderboard_row_count"] = len(result.rows)
             render_ms = _elapsed_ms(render_started)
             request_timing["view"] = result.view_name
-            filename = _csv_filename(view=result.view_name, target=result.score_target)
+            filename = _csv_filename(
+                view=result.view_name,
+                target=result.score_target,
+                task_scope=result.reranking_task_scope if result.reranking_focus_available else None,
+            )
             return Response(
                 content=content,
                 media_type="text/csv; charset=utf-8",
@@ -892,6 +904,7 @@ def _normalize_query_state_from_params(
         sort=_query_param_string(params, "sort", "borda_score"),
         direction=_query_param_string(params, "direction", "desc"),
         target=_query_param_string(params, "target", "all"),
+        rerank_tasks=_query_param_string(params, "rerank_tasks", "focus"),
         score=_query_param_string(params, "score", "micro"),
         metric=_query_param_string(params, "metric", "ndcg@10"),
         group=_query_param_optional_string(params, "group"),
@@ -1063,7 +1076,7 @@ def render_page(
       <div class="hakari-intro">
         <h2><a id="hakari-home-link" href="/">HAKARI-Bench <span>Leaderboard</span></a></h2>
         <h3>A lightweight benchmark for multilingual retrieval and reranking</h3>
-        {render_overview_stats(counts=overview_counts, english=bool(_overview_scope(query_values((initial_query or {}).get("lang_filter")))))}
+        {render_overview_stats(counts=overview_counts)}
         <div class="hakari-intro-links">
           {render_language_scope_switch()}
           <a href="/docs/">{_icon_svg("book-open")}<span>Evaluation guide</span></a>
@@ -1495,18 +1508,15 @@ def _display_task_count(result: LeaderboardResult) -> int:
     return len(result.task_breakdowns) if result.task_breakdowns else result.expected_tasks
 
 
-def render_overview_stats(
-    *, counts: tuple[int, int, int, int] | None = None, english: bool = False, swap_oob: bool = False
-) -> str:
+def render_overview_stats(*, counts: tuple[int, int, int, int] | None = None, swap_oob: bool = False) -> str:
     values = tuple(f"{count:,}" for count in counts) if counts is not None else ("—",) * 4
     groups, tasks, retrieval, reranking = values
     oob = ' hx-swap-oob="outerHTML"' if swap_oob else ""
     busy = "true" if counts is None else "false"
-    scope_label = " in the English and code scope" if english else ""
     return f"""<div id="hakari-overview-stats"{oob} aria-busy="{busy}" aria-live="polite">
       <p class="hakari-intro-subtitle">HAKARI-Bench evaluates <strong>dense embeddings, learned sparse retrieval,
         late interaction, and cross-encoder rerankers</strong>, alongside BM25, across
-        <strong>{groups} dataset groups</strong> and <strong>{tasks} tasks</strong>{scope_label}.
+        <strong>{groups} dataset groups</strong> and <strong>{tasks} tasks</strong>.
         Models are evaluated using common tasks and metrics on compact datasets (Nano-sets).
         Results include base model performance and changes in retrieval quality from dimensionality reduction,
         int8/binary quantization, and float rescoring.
@@ -3340,35 +3350,80 @@ def _render_target_group(
                   <span>{escape(label)}</span>
                 </button>"""
         )
-    safeguard_toggle = ""
-    if result.score_target != "all":
-        safeguard_enabled = result.score_target == "reranking"
-        toggle_target = "reranking_without_safeguard" if safeguard_enabled else "reranking"
-        checked_attr = " checked" if safeguard_enabled else ""
-        query_payload = _apply_plot_state(
-            state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state),
-            plot_state,
-        )
-        query_payload["target"] = toggle_target
-        query = urlencode(query_payload, doseq=True)
-        safeguard_help = _render_help_copy(help_text.SAFEGUARD_POSITIVES)
-        safeguard_toggle = f"""
-                <span class="control-button-group inline-flex items-center border border-zinc-300 bg-white text-[0.8125rem] leading-tight text-zinc-700 hover:border-cyan-500 hover:text-cyan-700">
-                  <label class="inline-flex items-center gap-2 py-1 pl-2 pr-0">
-                    <input type="checkbox" class="h-4 w-4 accent-cyan-700"{checked_attr}
-                      hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
-                      {_leaderboard_control_hx_attrs()}>
-                    <span>Safeguard positives</span>
-                  </label>
-                  <span class="inline-flex items-center pl-1 pr-2">{safeguard_help}</span>
-                </span>
-        """
     return f"""
             <nav class="evaluation-tabs" aria-label="Evaluation mode">
               {"".join(buttons)}
               {_render_help_copy(help_text.EVALUATION_MODE)}
-              {safeguard_toggle}
             </nav>
+            {_render_reranking_options(result=result, sort=sort, direction=direction, filter_state=filter_state, plot_state=plot_state)}
+            """
+
+
+def _render_reranking_options(
+    *,
+    result: LeaderboardResult,
+    sort: str,
+    direction: str,
+    filter_state: FilterState,
+    plot_state: QueryState | None = None,
+) -> str:
+    if result.score_target == "all":
+        return ""
+
+    def payload() -> QueryState:
+        return _apply_plot_state(
+            state_payload(result=result, sort=sort, direction=direction, filter_state=filter_state),
+            plot_state,
+        )
+
+    groups = []
+    if result.reranking_focus_available:
+        scope_buttons = []
+        for scope, label in (("focus", "Reranking-focused"), ("all", "All tasks")):
+            query_payload = payload()
+            if scope == "all":
+                query_payload["rerank_tasks"] = "all"
+            else:
+                query_payload.pop("rerank_tasks", None)
+            query = urlencode(query_payload, doseq=True)
+            pressed = str(result.reranking_task_scope == scope).lower()
+            scope_buttons.append(
+                f"""<button type="button" data-reranking-task-scope="{scope}" aria-pressed="{pressed}"
+                    hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                    {_leaderboard_control_hx_attrs()}>{label}</button>"""
+            )
+        groups.append(
+            f"""<div class="reranking-option" role="group" aria-labelledby="reranking-option-tasks">
+                <span id="reranking-option-tasks" class="reranking-option-label">Tasks</span>
+                <span class="reranking-option-switch">
+                  {"".join(scope_buttons)}
+                  <span class="reranking-option-help">{_render_help_copy(help_text.RERANKING_FOCUS_TASKS)}</span>
+                </span>
+              </div>"""
+        )
+
+    safeguard_enabled = result.score_target == "reranking"
+    query_payload = payload()
+    query_payload["target"] = "reranking_without_safeguard" if safeguard_enabled else "reranking"
+    query = urlencode(query_payload, doseq=True)
+    checked_attr = " checked" if safeguard_enabled else ""
+    groups.append(
+        f"""<div class="reranking-option" role="group" aria-labelledby="reranking-option-candidates">
+                <span id="reranking-option-candidates" class="reranking-option-label">Candidates</span>
+                <label class="toggle-chip reranking-option-chip">
+                  <input type="checkbox" data-safeguard-toggle{checked_attr}
+                    hx-get="{_leaderboard_url(query)}" hx-push-url="{_page_url(query_payload)}"
+                    {_leaderboard_control_hx_attrs()}>
+                  {_icon_svg("shield-check")}
+                  <span>Safeguard positives</span>
+                  {_render_help_copy(help_text.SAFEGUARD_POSITIVES)}
+                </label>
+              </div>"""
+    )
+    return f"""
+            <section class="reranking-options" aria-label="Reranking settings" data-reranking-options>
+              {"".join(groups)}
+            </section>
             """
 
 
@@ -4068,7 +4123,7 @@ def render_controls(
               data-filters-active={str(filter_state.filters_active).lower()}
               hx-get="/leaderboard" hx-push-url="true"
               {_leaderboard_control_hx_attrs()}
-              hx-trigger="change from:input[type='checkbox'], submit">
+              hx-trigger="change from:#filter-controls input[type='checkbox'], submit">
           {filter_hidden_html}
         <div class="grid gap-2">
           <div class="min-w-0">
@@ -4780,10 +4835,12 @@ def _csv_metric_headers(*, result: LeaderboardResult, metric_labels: dict[str, s
     return headers
 
 
-def _csv_filename(*, view: str, target: str) -> str:
+def _csv_filename(*, view: str, target: str, task_scope: str | None = None) -> str:
     slug = "".join(char if char.isalnum() or char in {"-", "_"} else "_" for char in view).strip("_") or "leaderboard"
     target_slug = "".join(char if char.isalnum() or char in {"-", "_"} else "_" for char in target).strip("_") or "all"
-    return f"hakari_bench_{slug}_{target_slug}.csv"
+    # Reranking on Overall can rank different task sets; keep the exports distinguishable.
+    scope_slug = f"_{task_scope}_tasks" if task_scope else ""
+    return f"hakari_bench_{slug}_{target_slug}{scope_slug}.csv"
 
 
 def _csv_record_for_row(

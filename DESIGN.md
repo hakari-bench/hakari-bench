@@ -391,7 +391,8 @@ read as an analytical instrument rather than a general-purpose dashboard.
 - Non-clickable labels such as "Benchmark scope", "Task facets", and "Metric"
   should not adopt button styling.
 - Help icons belong inside the control they explain when the scope is local,
-  such as Overall/Overall (EN) or Safeguard positives. A section label such as
+  such as Overall/Overall (EN), Safeguard positives, or the Reranking Tasks
+  switch. A section label such as
   "Benchmark scope" also carries its own help for the section as a whole, since
   the per-button help cannot explain what the group of buttons is.
 - The header question mark uses the same icon-button shell as the GitHub, docs,
@@ -664,7 +665,7 @@ overview with a one-line “HAKARI-Bench Leaderboard” title and a bold descrip
 subtitle. The redundant top logo/action row is hidden. Describe dense, sparse,
 late interaction, cross-encoder, and BM25 evaluation rather than adding slogans.
 
-Render language-scope dataset-group and task totals in bold within the overview
+Render the default-page dataset-group and task totals in bold within the overview
 paragraph after loading. Show eligible model counts alongside the Retrieval and
 Reranking explanations. These are non-interactive explanations without top borders.
 
@@ -682,6 +683,17 @@ model names use the primary text color; only the actively sorted score is bold.
 Overview details about model eligibility and Borda belong in table help, rather
 than additional introductory paragraphs. Keep overview links small with SVG icons.
 
+Reranking-only settings live in a compact bordered row directly below the
+evaluation tabs, never inside the tab strip, and the row is absent in Retrieval.
+Each group pairs a small uppercase muted label with its control. `Tasks` is a
+segmented switch (`Reranking-focused` / `All tasks`) styled like the
+Multilingual / English switch, with its help icon inside the switch; it only
+appears on the Overall views that configure a reranking manifest. `Candidates`
+holds the `Safeguard positives` toggle chip with a shield icon and its help icon
+inside the chip. Do not show task counts in the segments, because language and
+task facets change them; the status bar reports the active count. The row wraps
+on narrow screens.
+
 These current rules supersede older light/dark parity, monospace, and theme-toggle
 examples below when they conflict.
 
@@ -692,8 +704,8 @@ the title's existing colors and typography; underline it on hover.
 
 Overview totals use the latest in-process counts in the initial HTML; dashes are
 reserved for the first load before startup warmup or a leaderboard request has
-populated them. Cache totals independently for Multilingual and English. English
-shows dataset groups, raw task counts, and eligible model counts for En + Code;
-other table filters do not change these scope-wide totals. Mark the table scope
+populated them. The overview always describes the default page and stays fixed:
+the language switch, evaluation tab, Reranking settings, and table filters never
+change it. The table status bar carries the scope-specific counts. Mark the table scope
 as “Overall (English)” when English is selected. The status task count and task
 breakdown always count underlying tasks, rather than Macro aggregation groups.
