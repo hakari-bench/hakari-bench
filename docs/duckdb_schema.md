@@ -1279,6 +1279,13 @@ Overall Retrieval (`all`) and Reranking (`reranking`) tabs. It stores the comple
 serialized `LeaderboardResult`, including Macro standings, Grouped column
 scores and labels, task breakdowns, and filter choices. A second snapshot for
 each target preserves the no-column Micro result used by overview counts.
+When the primary Overall configures a reranking manifest, Reranking gets
+snapshots for both task scopes: the default reranking-focused set and
+`rerank_tasks=all` (`reranking_task_scope = 'all'`). The Grouped/Macro default
+display cannot use the Micro-only `viewer_leaderboard_rows` mart, so these
+snapshots are what keep `All tasks` as fast as the default. Startup warmup
+computes any missing scope into the sidecar cache for DuckDB builds that predate
+it. `reranking_without_safeguard` is not snapshotted and stays dynamic.
 Snapshots are calculated with the existing dynamic service, not by substituting
 Micro standings for Macro Borda ranks.
 

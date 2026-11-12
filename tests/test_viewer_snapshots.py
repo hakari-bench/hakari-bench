@@ -262,3 +262,54 @@ def test_english_warmup_does_not_block_cached_multilingual(tmp_path: Path, monke
         finally:
             release.set()
         english.result(timeout=5)
+
+
+@pytest.mark.parametrize("task_scope", ["focus", "all"])
+def test_embedded_snapshot_covers_both_reranking_task_scopes(tmp_path: Path, monkeypatch, task_scope: str) -> None:
+    from hakari_bench.viewer.snapshots import build_initial_snapshots
+
+    path = tmp_path / "results.duckdb"
+    rows = [
+        (model, "BenchA", "bench/a", "BenchA", task, task, f"BenchA::{task}", score, 10, 12, 8192)
+        for model, score in (("model/a", 0.9), ("model/b", 0.8))
+        for task in ("a1", "a2")
+    ]
+    _write_task_results(path, rows)
+    with duckdb.connect(str(path)) as con:
+        con.execute("INSERT INTO viewer_task_results SELECT * REPLACE ('reranking' AS score_target) FROM viewer_task_results")
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[
+            OverallConfig(
+                benchmarks=["BenchA"],
+                task_manifest="all_tasks",
+                expected_task_count=2,
+                reranking_task_manifest="rerank_focus",
+                reranking_expected_task_count=1,
+            )
+        ],
+        task_manifests={
+            "all_tasks": frozenset({"BenchA::a1", "BenchA::a2"}),
+            "rerank_focus": frozenset({"BenchA::a1"}),
+        },
+    )
+    options: dict[str, Any] = dict(
+        score_target="reranking",
+        reranking_task_scope=task_scope,
+        score_aggregation="macro",
+        column_mode="grouped",
+        show_task_scores=True,
+    )
+    expected = LeaderboardService(duckdb_path=path, config=config, use_precomputed=False).get_leaderboard(
+        "Overall", **options
+    )
+    # Grouped mode scores one benchmark group; the breakdown lists the underlying tasks.
+    assert len(expected.task_breakdowns) == (1 if task_scope == "focus" else 2)
+    build_initial_snapshots(path, config)
+
+    def fail(*args, **kwargs):
+        raise AssertionError("Both reranking task scopes must use embedded snapshots")
+
+    monkeypatch.setattr(LeaderboardService, "_load_task_scores", fail)
+    assert LeaderboardService(duckdb_path=path, config=config).get_leaderboard("Overall", **options) == expected
+    assert not path.with_suffix(".leaderboard-cache.duckdb").exists()
