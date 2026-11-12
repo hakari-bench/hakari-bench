@@ -44,6 +44,14 @@ The canonical exclusion rules live in
 remove evaluation outputs merely to make their file count match the 550-task
 Overall count.
 
+In Reranking mode the Overall views default to a narrower **359-task**
+reranking-focused subset of the 550-task manifest. It keeps tasks whose query
+is an information need and whose relevant document satisfies it, and leaves out
+retrieval-shaped tasks such as counterargument, citation, duplicate-question,
+bitext, and multiple-choice reasoning tasks. See
+[reranking_focus_tasks.md](reranking_focus_tasks.md) for the rules and task
+tables.
+
 `NanoSSRB` provides six semi-structured retrieval tasks. It is included in
 standard `--all` runs and in Overall, and can also be evaluated explicitly with
 `--dataset NanoSSRB` when filling only this benchmark's results.

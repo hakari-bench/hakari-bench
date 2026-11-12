@@ -111,6 +111,9 @@ under `config/datasets/`, and dataset collection definitions live under
 - [`docs/leaderboard_metrics.md`](docs/leaderboard_metrics.md): visible
   leaderboard metric policy and rationale for top-10 quality and top-100
   candidate-retention metrics.
+- [`docs/reranking_focus_tasks.md`](docs/reranking_focus_tasks.md): rules for
+  the reranking-focused Overall task set used by default in Reranking mode,
+  excluded task families, per-task decisions, and manifest maintenance.
 - [`docs/duckdb_schema.md`](docs/duckdb_schema.md): DuckDB warehouse schema,
   viewer SQL semantics, score targets, variant handling, and query recipes.
 - [`docs/huggingface_space_deploy.md`](docs/huggingface_space_deploy.md):

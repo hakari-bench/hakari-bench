@@ -3,6 +3,8 @@ overalls:
     label: Overall
     task_manifest: overall_550
     expected_task_count: 550
+    reranking_task_manifest: reranking_focus_359
+    reranking_expected_task_count: 359
     benchmarks: &overall_benchmarks
       - NanoMMTEB-v2
       - NanoRTEB
@@ -46,4 +48,6 @@ overalls:
     label: Overall (EN)
     task_manifest: overall_550
     expected_task_count: 550
+    reranking_task_manifest: reranking_focus_359
+    reranking_expected_task_count: 359
     benchmarks: *overall_benchmarks

@@ -3929,7 +3929,8 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     assert 'data-icon="list-ordered"' in response.text
     assert "Reranking" in response.text
     assert "Safeguard positives" in response.text
-    assert 'type="checkbox" class="h-4 w-4 accent-cyan-700" checked' in response.text
+    assert 'data-reranking-options' in response.text
+    assert 'data-safeguard-toggle checked' in response.text
     assert "target=reranking_without_safeguard" in response.text
     assert "Safeguard positives" in _help_titles(response.text)
     assert "reciprocal rank fusion merges the two rankings into a single top 100" in response.text
@@ -3939,6 +3940,182 @@ def test_leaderboard_target_reranking_uses_default_hybrid_rerank_scores(tmp_path
     # Default sort is now Borda Score (desc); the bm25 baseline sorts by its score.
     table_body = response.text.split("<tbody>", 1)[1].split("</tbody>", 1)[0]
     assert table_body.index("model/b") < table_body.index("bm25") < table_body.index("model/a")
+
+
+def _write_reranking_focus_fixture(tmp_path: Path) -> tuple[Path, Path]:
+    db_path = tmp_path / "results.duckdb"
+    _write_task_results(
+        db_path,
+        [
+            ("model/a", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.90, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.80, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "a1", "a1", "BenchA::a1", 0.60, 0, 0, None),
+            ("model/a", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.40, 10, 12, 8192),
+            ("model/b", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.30, 10, 12, 8192),
+            ("bm25", "BenchA", "bench/a", "BenchA", "a2", "a2", "BenchA::a2", 0.10, 0, 0, None),
+        ],
+        task_diagnostics_rows=[
+            ("model/a", "BenchA", "bench/a", "a1", "BenchA::a1", 0.90, 0.20, -0.70, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+            ("model/b", "BenchA", "bench/a", "a1", "BenchA::a1", 0.80, 0.90, 0.10, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+            ("model/a", "BenchA", "bench/a", "a2", "BenchA::a2", 0.40, 0.95, 0.55, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+            ("model/b", "BenchA", "bench/a", "a2", "BenchA::a2", 0.30, 0.10, -0.20, "available", 101, "dataset_candidate_subset", "reranking_hybrid", "dataset", 1.0, 1.0),
+        ],
+    )
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text(
+        """
+overalls:
+  - name: Overall
+    label: Overall
+    task_manifest: all_tasks
+    expected_task_count: 2
+    reranking_task_manifest: rerank_focus
+    reranking_expected_task_count: 1
+    benchmarks:
+      - BenchA
+""".strip(),
+        encoding="utf-8",
+    )
+    (config_dir / "overall_tasks.yaml").write_text(
+        """
+task_manifests:
+  all_tasks:
+    - BenchA::a1
+    - BenchA::a2
+  rerank_focus:
+    - BenchA::a1
+""".strip(),
+        encoding="utf-8",
+    )
+    return db_path, config_dir
+
+
+def test_overall_reranking_defaults_to_reranking_focus_task_manifest(tmp_path: Path) -> None:
+    db_path, config_dir = _write_reranking_focus_fixture(tmp_path)
+    service = LeaderboardService(duckdb_path=db_path, config=load_viewer_config(config_dir))
+
+    retrieval = service.get_leaderboard("Overall")
+    focus = service.get_leaderboard("Overall", score_target="reranking")
+    all_tasks = service.get_leaderboard("Overall", score_target="reranking", reranking_task_scope="all")
+    without_safeguard = service.get_leaderboard("Overall", score_target="reranking_without_safeguard")
+
+    assert retrieval.expected_tasks == 2
+    assert focus.expected_tasks == 1
+    assert focus.reranking_task_scope == "focus"
+    assert [row.model_name for row in focus.rows] == ["model/b", "bm25", "model/a"]
+    assert {task.key for task in focus.task_breakdowns} == {"BenchA::a1"}
+    assert all_tasks.expected_tasks == 2
+    assert all_tasks.reranking_task_scope == "all"
+    assert {row.model_name: row.mean_score for row in all_tasks.rows}["model/a"] == pytest.approx(57.5)
+    assert without_safeguard.expected_tasks == 1
+    # Benchmark views are never narrowed by the Overall reranking manifest.
+    assert service.get_leaderboard("BenchA", score_target="reranking").expected_tasks == 2
+
+
+def test_overall_reranking_focus_toggle_round_trips_through_url(tmp_path: Path) -> None:
+    db_path, config_dir = _write_reranking_focus_fixture(tmp_path)
+    client = TestClient(create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir))
+
+    focus = client.get("/leaderboard", params={"target": "reranking"})
+    assert focus.status_code == 200
+    assert "Reranking-focused tasks" in focus.text
+    assert "rerank_tasks=all" in focus.text
+    assert ">1 tasks</button>" in focus.text
+    assert 'data-reranking-task-scope="focus" aria-pressed="true"' in focus.text
+    assert 'data-reranking-task-scope="all" aria-pressed="false"' in focus.text
+
+    all_tasks = client.get("/leaderboard", params={"target": "reranking", "rerank_tasks": "all"})
+    assert all_tasks.status_code == 200
+    assert ">2 tasks</button>" in all_tasks.text
+    assert 'data-reranking-task-scope="all" aria-pressed="true"' in all_tasks.text
+
+    focus_csv = client.get("/leaderboard.csv", params={"target": "reranking"})
+    all_csv = client.get("/leaderboard.csv", params={"target": "reranking", "rerank_tasks": "all"})
+    assert 'filename="hakari_bench_Overall_reranking_focus_tasks.csv"' in focus_csv.headers["content-disposition"]
+    assert 'filename="hakari_bench_Overall_reranking_all_tasks.csv"' in all_csv.headers["content-disposition"]
+
+    single_view = client.get("/leaderboard", params={"view": "BenchA", "target": "reranking", "rerank_tasks": "all"})
+    assert single_view.status_code == 200
+    assert "data-reranking-task-scope" not in single_view.text
+    assert "rerank_tasks=all" not in single_view.text
+
+    retrieval = client.get("/leaderboard", params={"rerank_tasks": "all"})
+    assert "Reranking-focused tasks" not in retrieval.text
+    assert "data-reranking-options" not in retrieval.text
+    assert "rerank_tasks=all" not in retrieval.text
+
+
+def test_normalize_query_state_keeps_rerank_tasks_only_for_reranking_targets() -> None:
+    config = ViewerConfig(
+        benchmarks=[BenchmarkConfig(name="BenchA")],
+        overalls=[
+            OverallConfig(
+                name="Overall",
+                label="Overall",
+                benchmarks=["BenchA"],
+                task_manifest="all_tasks",
+                expected_task_count=2,
+                reranking_task_manifest="rerank_focus",
+                reranking_expected_task_count=1,
+            )
+        ],
+        task_manifests={
+            "all_tasks": frozenset({"BenchA::a::t1", "BenchA::a::t2"}),
+            "rerank_focus": frozenset({"BenchA::a::t1"}),
+        },
+    )
+    common: dict[str, Any] = dict(
+        viewer_config=config,
+        view="Overall",
+        sort="borda_score",
+        direction="desc",
+        group=None,
+        variants=False,
+        quantization=False,
+        truncate=False,
+        rescore=False,
+        other_variant=False,
+        filters=False,
+        dim_filter=None,
+        quant_filter=None,
+    )
+
+    assert normalize_query_state(**common, target="reranking", rerank_tasks="all")["rerank_tasks"] == "all"
+    assert "rerank_tasks" not in normalize_query_state(**common, target="reranking", rerank_tasks="focus")
+    assert "rerank_tasks" not in normalize_query_state(**common, target="reranking", rerank_tasks="bogus")
+    assert "rerank_tasks" not in normalize_query_state(**common, target="all", rerank_tasks="all")
+    # Views without a Tasks switch drop the hidden scope so it cannot resurface later.
+    single_view: dict[str, Any] = {**common, "view": "BenchA"}
+    assert "rerank_tasks" not in normalize_query_state(**single_view, target="reranking", rerank_tasks="all")
+
+
+def test_viewer_config_rejects_reranking_manifest_count_mismatch(tmp_path: Path) -> None:
+    _db_path, config_dir = _write_reranking_focus_fixture(tmp_path)
+    overall_path = config_dir / "overall.yaml"
+    overall_path.write_text(
+        overall_path.read_text(encoding="utf-8").replace(
+            "reranking_expected_task_count: 1", "reranking_expected_task_count: 2"
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="reranking task manifest"):
+        load_viewer_config(config_dir)
+
+
+def test_repository_reranking_focus_manifest_is_subset_of_overall_manifest() -> None:
+    config = load_viewer_config(Path("config/viewer"))
+    overall = config.overall
+
+    full = config.expected_task_keys_for_overall(overall)
+    focus = config.expected_task_keys_for_overall(overall, score_target="reranking")
+
+    assert full is not None and focus is not None
+    assert len(full) == 550
+    assert len(focus) == 359
+    assert focus < full
 
 
 def test_leaderboard_target_reranking_can_include_embedding_variants(tmp_path: Path) -> None:
@@ -5066,7 +5243,7 @@ def test_viewer_can_include_embedding_variants_in_ranking(tmp_path: Path) -> Non
     assert 'id="filter-controls"' in response.text
     assert 'id="facet-filters"' not in response.text
     assert "input changed delay:300ms from:.dim-bound-input" not in response.text
-    assert "hx-trigger=\"change from:input[type='checkbox'], submit\"" in response.text
+    assert "hx-trigger=\"change from:#filter-controls input[type='checkbox'], submit\"" in response.text
     assert 'hx-include="#display-controls"' not in response.text
     assert 'data-icon="list-filter"' not in response.text
     assert ">Dims</span>" in response.text
@@ -9309,7 +9486,7 @@ def test_overview_stats_wait_for_load_and_ignore_filters(tmp_path: Path, monkeyp
     assert len(calls) == 7  # Replacement database refreshes both totals.
 
 
-def test_english_scope_updates_overview_status_and_reuses_its_totals(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_overview_totals_stay_fixed_while_english_scope_updates_status(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from hakari_bench.viewer.leaderboard import TaskBreakdown
 
     db_path = tmp_path / "results.duckdb"
@@ -9340,20 +9517,22 @@ def test_english_scope_updates_overview_status_and_reuses_its_totals(tmp_path: P
     assert "<strong>2 dataset groups</strong> and <strong>3 tasks</strong>" in multi
     assert ">3 tasks</button>" in multi
     english_params = [("lang_filter", "en"), ("lang_filter", "category:code")]
+    assert len(calls) == 3  # Table plus the two default-page totals.
     english = client.get("/leaderboard", params=english_params).text
-    assert "<strong>1 dataset groups</strong> and <strong>2 tasks</strong>" in english
-    assert "in the English and code scope" in english
+    # The overview describes the default page and does not follow the language switch.
+    assert "<strong>2 dataset groups</strong> and <strong>3 tasks</strong>" in english
+    assert "in the English and code scope" not in english
     assert "Overall (English)" in english
     assert ">2 tasks</button>" in english
     assert "Tasks: 2</h4>" in english
-    assert len(calls) == 6
-    assert "<strong>1 dataset groups</strong>" in client.get("/", params=english_params).text
+    assert len(calls) == 4  # Only the English table; totals stay in memory.
+    assert "<strong>2 dataset groups</strong>" in client.get("/", params=english_params).text
     assert "<strong>2 dataset groups</strong>" in client.get("/").text
-    assert len(calls) == 6  # Initial HTML uses the matching in-memory scope.
+    assert len(calls) == 4
     client.get("/leaderboard", params=english_params + [("model_filter", "no-match")])
-    assert len(calls) == 7  # English totals are reused independently of table filters.
+    assert len(calls) == 5
     assert "<strong>2 dataset groups</strong>" in client.get("/leaderboard").text
-    assert len(calls) == 8
+    assert len(calls) == 6
 
 
 def test_viewer_help_matches_language_presets_and_default_grouped_scoring() -> None:

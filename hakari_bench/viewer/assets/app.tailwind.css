@@ -1908,6 +1908,17 @@
 .evaluation-tab { border-radius: 0; display: inline-flex; justify-content: center; flex: 1; align-items: center; gap: .5rem; padding: .6rem 1rem; font-size: 1rem; font-weight: 600; color: var(--hakari-text-muted); border-bottom: 3px solid transparent; }
 .evaluation-tab:hover { color: var(--hakari-accent); }
 .evaluation-tab[aria-current="page"] { color: #82baff; border-bottom-color: #82baff; }
+.reranking-options { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; margin: -.25rem 0 .75rem; padding: .4rem .75rem; border: 1px solid var(--hakari-border); border-radius: 6px; background: var(--hakari-surface-faint); }
+.reranking-option { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; }
+.reranking-option-label { color: var(--hakari-text-faint); font-size: .6875rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.reranking-option-switch { display: inline-flex; align-items: center; gap: .125rem; padding: .125rem; border: 1px solid var(--hakari-border); border-radius: .3rem; background: var(--hakari-surface); }
+.reranking-option-switch button[data-reranking-task-scope] { padding: .125rem .55rem; border-radius: .2rem; color: var(--hakari-text-muted); font-size: .75rem; font-weight: 400; line-height: 1.4; cursor: pointer; }
+.reranking-option-switch button[data-reranking-task-scope]:hover { color: var(--hakari-text); background: var(--hakari-control-bg); }
+.reranking-option-switch button[data-reranking-task-scope][aria-pressed="true"] { background: #82baff; color: #0b1826; }
+.reranking-option-switch button[data-reranking-task-scope]:focus-visible { outline: 2px solid var(--hakari-accent); outline-offset: 2px; }
+.reranking-option-help { display: inline-flex; align-items: center; padding: 0 .3rem 0 .2rem; }
+.reranking-option-chip { font-size: .75rem; }
+.reranking-option-chip .hakari-icon { width: .85rem; height: .85rem; }
 @media (max-width: 900px) {
   .hakari-intro { grid-template-columns: 1fr; gap: 1rem; padding: 1rem 0; }
   .hakari-eyebrow { margin-bottom: .5rem; }
@@ -1917,6 +1928,8 @@
   .hakari-capabilities h4 { font-size: 1rem; }
   .evaluation-tabs { gap: .5rem; }
   .evaluation-tab { padding: .8rem .5rem; }
+  .reranking-options { gap: .5rem; padding: .5rem; }
+  .reranking-option { flex-wrap: wrap; }
 }
 .leaderboard-settings { border: 1px solid var(--hakari-border); border-radius: 6px; background: var(--hakari-surface); margin-bottom: .75rem; }
 .leaderboard-settings > summary { cursor: pointer; padding: .5rem .75rem; font-size: .9375rem; font-weight: 600; }

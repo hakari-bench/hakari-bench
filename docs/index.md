@@ -38,6 +38,7 @@ place and AGENTS.md can stay focused on repository-level guardrails.
 | Generated Nano README | [NanoREADME.template.md](NanoREADME.template.md) | Hugging Face dataset-card template and fill checklist for generated Nano dataset READMEs. |
 | Task documentation | [create_benchmark_tasks_document.md](create_benchmark_tasks_document.md) | Public task page policy, metadata JSON, examples, leakage notes, group index pages, prose quality review. |
 | Dataset citation metadata | [dataset_citation_metadata.md](dataset_citation_metadata.md) | YAML citation/source metadata, reference confidence labels, language/category fields, citation audits. |
+| Reranking task scope | [reranking_focus_tasks.md](reranking_focus_tasks.md) | Rules for the reranking-focused Overall task set, excluded task families, per-task decisions, and manifest maintenance. |
 | Leaderboard metrics | [leaderboard_metrics.md](leaderboard_metrics.md) | Visible metric policy and rationale for nDCG, MRR, recall, accuracy, MAP, and stored top-ranking artifacts. |
 | DuckDB warehouse and viewer semantics | [duckdb_schema.md](duckdb_schema.md) | Schema contract, tables, score targets, variants, viewer SQL, semantic rules, query recipes. |
 | Space deployment | [huggingface_space_deploy.md](huggingface_space_deploy.md) | Public Hugging Face Space operations, DuckDB publishing, image refresh, verification, rollback. |
