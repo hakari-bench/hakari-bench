@@ -1333,7 +1333,7 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 english.click()
                 page.wait_for_selector('[data-language-scope="english"][aria-pressed="true"]')
                 assert parse_qs(urlparse(page.url).query)["lang_filter"] == ["en", "category:code"]
-                assert "in the English and code scope" in page.locator("#hakari-overview-stats").inner_text()
+                assert page.locator("#hakari-overview-stats").inner_text() == overview_text
                 assert "Overall (English)" in page.locator("#leaderboard-panel").inner_text()
 
                 page.reload()
@@ -1380,5 +1380,67 @@ def test_grouped_default_settings_and_evaluation_navigation(tmp_path: Path) -> N
                 assert not page.locator("#leaderboard-settings").evaluate("el => el.open")
                 page.set_viewport_size({"width": 390, "height": 844})
                 page.wait_for_function("document.documentElement.scrollWidth <= innerWidth")
+            finally:
+                browser.close()
+
+
+@pytest.mark.browser
+def test_reranking_options_switch_task_scope_and_safeguard(tmp_path: Path) -> None:
+    # Task counts per scope are covered by the unit tests; this fixture has no
+    # reranking rows, so the browser check is limited to toggle state and URL.
+    playwright_sync = pytest.importorskip("playwright.sync_api")
+    db_path = tmp_path / "results.duckdb"
+    _write_browser_task_results(db_path)
+    config_dir = tmp_path / "config"
+    config_dir.mkdir()
+    (config_dir / "benchmarks.yaml").write_text("benchmarks:\n  - name: BenchA\n", encoding="utf-8")
+    (config_dir / "overall.yaml").write_text(
+        "overalls:\n"
+        "  - name: Overall\n    label: Overall\n"
+        "    task_manifest: all_tasks\n    expected_task_count: 2\n"
+        "    reranking_task_manifest: rerank_focus\n    reranking_expected_task_count: 1\n"
+        "    benchmarks:\n      - BenchA\n",
+        encoding="utf-8",
+    )
+    (config_dir / "overall_tasks.yaml").write_text(
+        "task_manifests:\n  all_tasks:\n    - a1\n    - a2\n  rerank_focus:\n    - a1\n",
+        encoding="utf-8",
+    )
+    app = create_app(store=LocalDuckDbStore(DuckDbLocation(local_path=db_path)), config_dir=config_dir)
+    with _serve_app(app) as base_url:
+        with playwright_sync.sync_playwright() as playwright:
+            browser = _launch_chromium_or_skip(playwright, playwright_sync.Error)
+            try:
+                page = browser.new_page(viewport={"width": 1280, "height": 900})
+                page.goto(base_url)
+                page.wait_for_selector(".leaderboard-table, .leaderboard-status")
+                assert page.locator("[data-reranking-options]").count() == 0
+
+                page.locator('.evaluation-tab[data-evaluation-target="reranking"]').click()
+                page.wait_for_selector('.evaluation-tab[data-evaluation-target="reranking"][aria-current="page"]')
+                page.wait_for_selector('[data-reranking-task-scope="focus"][aria-pressed="true"]')
+                assert page.locator("[data-safeguard-toggle]").is_checked()
+                assert "rerank_tasks" not in parse_qs(urlparse(page.url).query)
+
+                with page.expect_response(lambda response: "/leaderboard?" in response.url):
+                    page.locator('[data-reranking-task-scope="all"]').click()
+                page.wait_for_selector('[data-reranking-task-scope="all"][aria-pressed="true"]')
+                assert parse_qs(urlparse(page.url).query)["rerank_tasks"] == ["all"]
+
+                with page.expect_response(lambda response: "/leaderboard?" in response.url):
+                    page.locator(".reranking-option-chip").click()
+                page.wait_for_selector("[data-safeguard-toggle]:not(:checked)")
+                query = parse_qs(urlparse(page.url).query)
+                assert query["target"] == ["reranking_without_safeguard"]
+                assert query["rerank_tasks"] == ["all"]
+
+                page.reload()
+                page.wait_for_selector('[data-reranking-task-scope="all"][aria-pressed="true"]')
+                assert not page.locator("[data-safeguard-toggle]").is_checked()
+
+                page.locator('.evaluation-tab[data-evaluation-target="all"]').click()
+                page.wait_for_selector('.evaluation-tab[data-evaluation-target="all"][aria-current="page"]')
+                assert "rerank_tasks" not in parse_qs(urlparse(page.url).query)
+                assert page.locator("[data-reranking-options]").count() == 0
             finally:
                 browser.close()

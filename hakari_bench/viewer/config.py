@@ -10,6 +10,8 @@ from pydantic import BaseModel, ConfigDict, Field
 ScoreGroupKey = Literal["task_key", "dataset_name", "dataset_id", "split_name", "benchmark", "task_name"]
 LanguageFilterMode = Literal["languages", "primary_language"]
 ScoreAggregation = Literal["macro", "micro"]
+ScoreTarget = Literal["all", "reranking", "reranking_without_safeguard"]
+RerankingTaskScope = Literal["focus", "all"]
 CUSTOM_SCOPE_NAME = "Custom"
 CLEAR_SCOPE_NAME = "Clear"
 BENCHMARK_SELECTION_SEPARATOR = ":"
@@ -70,6 +72,8 @@ class OverallConfig(BaseModel):
     benchmarks: list[str | OverallBenchmarkConfig] = Field(default_factory=list)
     task_manifest: str | None = None
     expected_task_count: int | None = Field(default=None, ge=1)
+    reranking_task_manifest: str | None = None
+    reranking_expected_task_count: int | None = Field(default=None, ge=1)
 
     @property
     def benchmark_components(self) -> list[OverallBenchmarkConfig]:
@@ -184,30 +188,69 @@ class ViewerConfig(BaseModel):
     def selection_keys_for_overall(self, overall: OverallConfig) -> list[str]:
         return [self.selection_key_for_component(component) for component in overall.benchmark_components]
 
-    def expected_task_keys_for_overall(self, overall: OverallConfig) -> frozenset[str] | None:
+    def expected_task_keys_for_overall(
+        self,
+        overall: OverallConfig,
+        *,
+        score_target: ScoreTarget = "all",
+        reranking_task_scope: RerankingTaskScope = "focus",
+    ) -> frozenset[str] | None:
         """Return the configured fixed task universe for an Overall scope.
 
         The manifest is intentionally independent of whichever result files
         happen to be present in a DuckDB. Adding a standard task or Nano-set
         therefore requires an explicit manifest and count update.
+
+        Reranking targets default to the reranking-focused manifest when one is
+        configured; ``reranking_task_scope="all"`` restores the full manifest.
         """
 
+        if (
+            effective_reranking_task_scope(
+                overall,
+                score_target=score_target,
+                reranking_task_scope=reranking_task_scope,
+            )
+            == "focus"
+        ):
+            assert overall.reranking_task_manifest is not None
+            return self._manifest_task_keys(
+                overall,
+                manifest_name=overall.reranking_task_manifest,
+                expected_count=overall.reranking_expected_task_count,
+                label="reranking task manifest",
+                count_field="reranking_expected_task_count",
+            )
         if overall.task_manifest is None:
             return None
-        if overall.expected_task_count is None:
-            raise ValueError(
-                f"Overall '{overall.name}' sets task_manifest but no expected_task_count."
-            )
-        task_keys = self.task_manifests.get(overall.task_manifest)
+        return self._manifest_task_keys(
+            overall,
+            manifest_name=overall.task_manifest,
+            expected_count=overall.expected_task_count,
+            label="task manifest",
+            count_field="expected_task_count",
+        )
+
+    def _manifest_task_keys(
+        self,
+        overall: OverallConfig,
+        *,
+        manifest_name: str,
+        expected_count: int | None,
+        label: str,
+        count_field: str,
+    ) -> frozenset[str]:
+        if expected_count is None:
+            raise ValueError(f"Overall '{overall.name}' sets a {label} but no {count_field}.")
+        task_keys = self.task_manifests.get(manifest_name)
         if task_keys is None:
             raise ValueError(
-                f"Overall '{overall.name}' references unknown task manifest "
-                f"'{overall.task_manifest}'."
+                f"Overall '{overall.name}' references unknown {label} '{manifest_name}'."
             )
-        if len(task_keys) != overall.expected_task_count:
+        if len(task_keys) != expected_count:
             raise ValueError(
-                f"Overall '{overall.name}' task manifest has {len(task_keys)} tasks, "
-                f"but expected_task_count is {overall.expected_task_count}. "
+                f"Overall '{overall.name}' {label} has {len(task_keys)} tasks, "
+                f"but {count_field} is {expected_count}. "
                 "Update config/viewer/overall.yaml and its task manifest when changing the standard Nano-set scope."
             )
         return task_keys
@@ -247,8 +290,17 @@ def load_viewer_config(config_dir: Path = Path("config/viewer")) -> ViewerConfig
         task_manifests=task_manifests,
     )
     for overall in viewer_config.overalls:
-        if overall.task_manifest is not None:
-            viewer_config.expected_task_keys_for_overall(overall)
+        full_task_keys = viewer_config.expected_task_keys_for_overall(overall)
+        focus_task_keys = viewer_config.expected_task_keys_for_overall(overall, score_target="reranking")
+        if (
+            overall.reranking_task_manifest is not None
+            and full_task_keys is not None
+            and focus_task_keys is not None
+            and not focus_task_keys <= full_task_keys
+        ):
+            raise ValueError(
+                f"Overall '{overall.name}' reranking task manifest contains tasks outside its task manifest."
+            )
     return viewer_config
 
 
@@ -294,3 +346,31 @@ def benchmark_selection_key(benchmark_name: str, group_name: str) -> str:
 def split_benchmark_selection_key(selection_key: str) -> tuple[str, str | None]:
     benchmark_name, separator, group_name = selection_key.partition(BENCHMARK_SELECTION_SEPARATOR)
     return benchmark_name, group_name if separator and group_name else None
+
+
+def effective_reranking_task_scope(
+    overall: OverallConfig | None,
+    *,
+    score_target: ScoreTarget,
+    reranking_task_scope: RerankingTaskScope = "focus",
+) -> RerankingTaskScope:
+    """Return the task scope that actually applies to a leaderboard request.
+
+    Only reranking targets on an Overall with a reranking manifest can be
+    narrowed; every other request uses its full task set and reports ``"all"``.
+    """
+
+    if (
+        score_target != "all"
+        and reranking_task_scope == "focus"
+        and overall is not None
+        and overall.reranking_task_manifest is not None
+    ):
+        return "focus"
+    return "all"
+
+
+def reranking_task_scope_from_query(value: object) -> RerankingTaskScope:
+    """Parse the ``rerank_tasks`` query value; anything but ``"all"`` is focus."""
+
+    return "all" if value == "all" else "focus"

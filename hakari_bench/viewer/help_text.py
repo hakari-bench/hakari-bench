@@ -56,8 +56,9 @@ PAGE_OVERVIEW = HelpCopy(
         "of an average score; Macro Mean and Micro Mean are two ways of averaging the same per-task "
         "numbers. Each of those column headers has its own help icon.\n\n"
         "The Multilingual / English switch selects the language scope: English includes English and code "
-        "tasks, while Multilingual clears language and category facets. Overview counts follow this "
-        "preset within Overall; the counts above the table also follow your benchmark and task filters.\n\n"
+        "tasks, while Multilingual clears language and category facets. The overview counts at the top "
+        "describe the default page and stay fixed; the counts above the table follow your language, "
+        "benchmark, and task filters.\n\n"
         "Open Settings to adjust the controls. Evaluation mode picks full-corpus "
         "retrieval or reranking of a fixed candidate list. Score and Metric decide how task scores are "
         "averaged and which metric is averaged. Benchmark scope picks which benchmark families count. "
@@ -114,6 +115,31 @@ SAFEGUARD_POSITIVES = HelpCopy(
         "Turn it off when you want the unmodified picture: how rerankers behave on the raw hybrid "
         "top-100, including the queries where success was impossible. Scores drop, and results from the "
         "two settings should not be mixed inside one comparison."
+    ),
+)
+
+
+RERANKING_FOCUS_TASKS = HelpCopy(
+    title="Reranking-focused tasks",
+    summary="Limits the Overall reranking leaderboard to tasks that model a real search need.",
+    details=(
+        "This Tasks setting appears below the tabs only in Reranking mode on the Overall views. "
+        "Reranking-focused is the default.\n\n"
+        "With Reranking-focused selected, Overall ranks models on roughly two thirds of the standard "
+        "tasks. These are tasks where a query expresses an information need and the relevant document "
+        "is a source that satisfies it: web and Wikipedia search, question answering, FAQ, fact "
+        "verification, domain search in law, medicine, finance and science, and reasoning-heavy "
+        "retrieval such as BRIGHT.\n\n"
+        "Tasks that mostly borrow the retrieval format are generally left out: counterargument and "
+        "citation prediction, duplicate-question detection, multiple-choice reasoning converted to "
+        "retrieval, bitext and code-transformation pairs, synthetic long-context probes, "
+        "summary-to-source and document-to-document matching, and synthetic-query sets. Tasks with "
+        "very long queries are usually left out as well, unless they come from a benchmark built for "
+        "reasoning-heavy retrieval. Some Nano-sets therefore drop out completely, which also removes "
+        "them from the Macro average.\n\n"
+        "The line between the two groups is a judgment call, so treat this as a curated view rather "
+        "than a strict definition. Choose All tasks to rank on every standard task. The selection "
+        "rules and the current task list are in docs/reranking_focus_tasks.md."
     ),
 )
 

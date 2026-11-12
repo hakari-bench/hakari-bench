@@ -12,7 +12,8 @@ from hakari_bench.models import ModelLoadConfig, resolve_torch_dtype
 
 class NativeMultiVectorBackend:
     def __init__(self, config: ModelLoadConfig) -> None:
-        from sentence_transformers import MultiVectorEncoder
+        # ST6-only class; the supported ST5 baseline used for type checking lacks it.
+        from sentence_transformers import MultiVectorEncoder  # ty: ignore[unresolved-import]
 
         self.model = MultiVectorEncoder(
             config.model_name_or_path,

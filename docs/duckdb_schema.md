@@ -280,7 +280,7 @@ The web viewer exposes the leaderboard query surface over the DuckDB file:
 
 | UI surface | source tables | semantics |
 | --- | --- | --- |
-| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores. The `reranking_hybrid` candidate set is the RRF top-100 over BM25 and dense candidate rankings; BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them. The BM25 row shown in Reranking is the BM25 `score_target = 'all'` full-corpus retrieval row, appended as a lexical reference point; it is neither a rerank of the candidate set nor the source of that candidate set, and it is omitted for `@100` metrics. The Reranking safeguard toggle switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive when a query's hybrid top-100 has no qrels-positive candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
+| Leaderboard | `viewer_task_results`, `fact_metric_score` | Computes Borda and mean scores from complete model-task matrices for the selected YAML view. The `Evaluation mode` selector filters `score_target`; `Retrieval` uses `score_target = 'all'`, and `Reranking` uses materialized `reranking_hybrid` rerank scores. The `reranking_hybrid` candidate set is the RRF top-100 over BM25 and dense candidate rankings; BM25 contributes lexical candidates, the dense retriever contributes semantic candidates, and reciprocal rank fusion combines them. The BM25 row shown in Reranking is the BM25 `score_target = 'all'` full-corpus retrieval row, appended as a lexical reference point; it is neither a rerank of the candidate set nor the source of that candidate set, and it is omitted for `@100` metrics. Reranking mode shows a settings row below the evaluation tabs. Its `Candidates` toggle, `Safeguard positives`, switches between `score_target = 'reranking'`, which keeps the optional rank-101 positive when a query's hybrid top-100 has no qrels-positive candidate, and `score_target = 'reranking_without_safeguard'`, which removes that safeguard before recomputing metrics. On the Overall views, its `Tasks` switch defaults to `Reranking-focused`, which restricts the complete-model task set to the configured reranking manifest; `All tasks` adds `rerank_tasks=all` and uses the full Overall manifest. The default JSON metrics are `nDCG@10` and `acc@100`; other viewer metrics are computed from embedded top-ranking artifacts during DuckDB creation. It uses `viewer_task_results.score` for `nDCG@10` and joins `fact_task_score` to `fact_metric_score` for other displayed metrics. Base rows are used unless the user explicitly enables variant categories; reranking can include embedding variants when their candidate-rerank artifact rows are available. |
 | Task breakdown modal | same as Leaderboard | The main leaderboard fragment renders a lightweight placeholder for the task-count modal. The task list and task-document links are loaded lazily from `/leaderboard/task-breakdown` with the same normalized query parameters, so normal table loads do not re-resolve hundreds of Markdown task docs. |
 
 The page header reads `meta_database.built_at_utc` for the latest available
@@ -837,6 +837,19 @@ expanding when a newer DuckDB contains an additional task. Adding a standard
 Nano-set or task requires updating the manifest and its configured expected
 count in `config/viewer/overall.yaml` deliberately.
 
+In Reranking mode (`score_target = 'reranking'` or
+`'reranking_without_safeguard'`), the built-in Overall views default to the
+smaller `reranking_task_manifest` configured in `config/viewer/overall.yaml`
+(currently `reranking_focus_359`, 359 tasks). The URL parameter
+`rerank_tasks=all` selects the full Overall manifest instead; it is only kept
+in the URL when the target is a reranking target, and the default
+(`rerank_tasks=focus`) is omitted. Retrieval mode, single benchmark views, and
+Custom scopes ignore the reranking manifest. The selection rules for this task
+set are in [reranking_focus_tasks.md](reranking_focus_tasks.md). DuckDB builds
+precompute the Overall Reranking rows with the reranking manifest; when the
+manifest and a stored precomputed row disagree on the task count, the viewer
+falls back to the dynamic calculation.
+
 The precomputed leaderboard path applies the same manifest to its task
 breakdown. Header totals and the lazy task list therefore exclude stored tasks
 outside Overall (for example, the six NanoDAPFAM `ToFullText` tasks), just as
@@ -1309,7 +1322,7 @@ their task facet semantics are computed from the current viewer configuration.
 `score=macro` overall leaderboards and `Custom` `bench=` selections, including
 empty Custom, are computed dynamically from `viewer_task_results` so the Nano-set
 aggregation policy is always applied from the current YAML configuration. It is keyed by
-`view_name`, `score_target`, and the four display
+`view_name`, `score_target`, `reranking_task_scope`, and the four display
 flags
 `include_quantization_variants`, `include_truncate_variants`,
 `include_rescore_variants`, and `include_other_variants`. The last flag backs
@@ -1320,6 +1333,14 @@ aggregation, custom `bench=` selection, and non-implicit language filters are
 not active. Those interactive, macro, custom, and ad hoc language-filter cases
 still fall back to the normal `LeaderboardService` computation from task-score
 rows.
+Reranking rows are materialized for both task scopes on Overall views that
+configure a reranking manifest: `reranking_task_scope = 'focus'` holds the
+default reranking-focused standings and `'all'` holds the full-manifest
+standings selected by `rerank_tasks=all`. Every other view and target is stored
+once with `reranking_task_scope = 'all'`. Builds made before this column existed
+hold only full-manifest rows; the viewer then rejects them for the focus scope
+because `expected_tasks` does not match the reranking manifest, and computes the
+focus standings dynamically until the DuckDB is rebuilt.
 For `score_target = 'reranking'`, the viewer uses this mart only when the
 materialized rows already include a BM25 baseline row. Older DuckDB builds that
 lack that row fall back to dynamic task-score computation so Borda and mean ranks
@@ -1329,6 +1350,7 @@ are recalculated with BM25 in the reranking population.
 | --- | --- | --- |
 | `view_name` | `VARCHAR` | Viewer tab or overall view name. |
 | `score_target` | `VARCHAR` | Leaderboard target, such as `all` or `reranking`. |
+| `reranking_task_scope` | `VARCHAR` | `focus` for reranking-focused Overall standings, otherwise `all`. |
 | `include_quantization_variants` | `BOOLEAN` | Whether quantization variants were included in this materialized view. |
 | `include_truncate_variants` | `BOOLEAN` | Whether truncation variants were included. |
 | `include_rescore_variants` | `BOOLEAN` | Whether rescore variants were included. |
@@ -2083,14 +2105,15 @@ metadata sorts do not emphasize a score column. Score values are unchanged.
 The viewer uses a fixed dark theme with blue accents. The overview introduces retrieval and reranking side by side; theme preferences and the light-theme toggle are no longer used.
 
 The header overview statistics load with the leaderboard response via an HTMX out-of-band update.
-They follow the selected Multilingual or English scope, independently of other table filters.
-Dataset groups and raw tasks refer to that scope within the primary Overall configuration;
-retrieval/reranking counts are distinct base model names eligible for its complete task set,
-using the same leaderboard eligibility and reranking safeguard rules. The overview is cached
-by scope, database modification time, and size.
+They always describe the default page (Multilingual, primary Overall, default reranking
+safeguard and task scope) and do not follow the language switch, evaluation tab, or any
+table filter. Dataset groups and raw tasks refer to the primary Overall configuration;
+retrieval/reranking counts are distinct base model names eligible for the complete task set
+that each default tab shows, so the Reranking count uses the reranking-focused manifest. The
+overview is cached by database modification time and size.
 Placeholders reserve space until loading completes.
 
-The overview displays dataset-group and raw-task totals inline in its description, and eligible model totals alongside the Retrieval and Reranking explanations. All four values follow the scope semantics above.
+The overview displays dataset-group and raw-task totals inline in its description, and eligible model totals alongside the Retrieval and Reranking explanations. All four values use the fixed default-page semantics above.
 
 The overview mode labels are non-interactive; the evaluation tabs switch targets while preserving active filters.
 
@@ -2136,8 +2159,8 @@ outerHTML out-of-band swap; subsequent responses update them the same way.
 It writes the existing repeated `lang_filter` URL parameter: English selects
 `en` and `category:code`, while Multilingual clears it. Task facets and restored
 URLs drive the same state; other selections leave neither preset active. Other
-filters and the evaluation mode are preserved. The overview's model counts
-follow the selected language scope and are plain, non-interactive text.
+filters and the evaluation mode are preserved. The overview's counts stay fixed
+to the default page and are plain, non-interactive text.
 
 Startup warms Multilingual and publishes overview totals before warming English,
 so preparing a missing English cache does not delay the totals. It uses embedded snapshots when available and the
@@ -2159,13 +2182,11 @@ In English scope (En + Code), table headers display `BEIR` in place of
 column keys, calculations, persisted snapshots, and CSV labels are unchanged.
 
 
-Overview totals are cached in memory separately for Multilingual and English
-(En + Code), keyed by source database version. Startup warms and publishes
-Multilingual first, then English. Initial HTML reuses the matching scope's last
-known totals, and leaderboard responses update the overview out of band. Other
-table filters do not alter these scope-wide totals. English counts come from
-the existing cached Micro snapshots, including distinct task benchmark keys for
-dataset groups; no extra SQL or index is needed. The table scope label includes
+Overview totals are cached in memory once, for the default page, keyed by
+source database version. Startup warms and publishes them with the Multilingual
+snapshots. Initial HTML reuses the last known totals, and leaderboard responses
+re-send the same totals out of band so a replaced database refreshes them. The
+language switch and table filters never alter them. The table scope label includes
 “(English)”. Status counts and task-breakdown headings count underlying task
 entries before score aggregation; `expected_tasks` remains the number of scoring
 contributions used for ranking and completeness. Task breakdowns are captured
@@ -2178,6 +2199,6 @@ navigation preset selects En + Code, while the legacy Overall (EN) scope applies
 only En; these are distinct selections. Facet counts, task lists, and Micro
 explanations refer to underlying tasks after scope filters. Borda help reflects
 the dynamic query: Micro ranks raw tasks and Macro ranks configured group means,
-so changing aggregation can change Borda standings. Overview counts follow the
-language preset within Overall; table counts additionally follow the selected
-benchmark scope and task filters.
+so changing aggregation can change Borda standings. Overview counts stay fixed to
+the default page; table counts follow the language preset, the selected
+benchmark scope, and task filters.

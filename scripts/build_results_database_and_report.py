@@ -29,7 +29,14 @@ import pyarrow as pa
 from hakari_bench.datasets import DatasetRegistry
 from hakari_bench.metrics import compute_ir_metrics
 from hakari_bench.model_cards import load_model_cards, model_card_yaml_paths
-from hakari_bench.viewer.config import BenchmarkConfig, ViewerConfig, load_viewer_config
+from hakari_bench.viewer.config import (
+    BenchmarkConfig,
+    RerankingTaskScope,
+    ScoreTarget,
+    ViewerConfig,
+    effective_reranking_task_scope,
+    load_viewer_config,
+)
 from hakari_bench.viewer.store import (
     DEFAULT_HF_DUCKDB_PATH,
     HuggingFaceDuckDbSource,
@@ -5698,6 +5705,7 @@ def _create_viewer_filter_values_table(con: duckdb.DuckDBPyConnection) -> None:
 VIEWER_LEADERBOARD_ROW_COLUMNS = (
     "view_name",
     "score_target",
+    "reranking_task_scope",
     "include_quantization_variants",
     "include_truncate_variants",
     "include_rescore_variants",
@@ -5730,6 +5738,7 @@ VIEWER_LEADERBOARD_ROW_COLUMNS = (
 VIEWER_LEADERBOARD_LANGUAGE_COLUMNS = (
     "view_name",
     "score_target",
+    "reranking_task_scope",
     "include_quantization_variants",
     "include_truncate_variants",
     "include_rescore_variants",
@@ -5746,6 +5755,7 @@ def _create_empty_viewer_leaderboard_rows_table(con: duckdb.DuckDBPyConnection) 
         CREATE TABLE viewer_leaderboard_rows (
             view_name VARCHAR,
             score_target VARCHAR,
+            reranking_task_scope VARCHAR,
             include_quantization_variants BOOLEAN,
             include_truncate_variants BOOLEAN,
             include_rescore_variants BOOLEAN,
@@ -5783,6 +5793,7 @@ def _create_empty_viewer_leaderboard_language_options_table(con: duckdb.DuckDBPy
         CREATE TABLE viewer_leaderboard_language_options (
             view_name VARCHAR,
             score_target VARCHAR,
+            reranking_task_scope VARCHAR,
             include_quantization_variants BOOLEAN,
             include_truncate_variants BOOLEAN,
             include_rescore_variants BOOLEAN,
@@ -5827,6 +5838,20 @@ def build_viewer_leaderboard_mart(
     build_initial_snapshots(db_path, viewer_config)
 
 
+def _viewer_leaderboard_mart_targets(
+    viewer_config: ViewerConfig,
+    view_name: str,
+) -> list[tuple[ScoreTarget, RerankingTaskScope]]:
+    """Return the (score target, task scope) pairs precomputed for one view."""
+
+    overall = viewer_config.overall_for_view(view_name)
+    targets: list[tuple[ScoreTarget, RerankingTaskScope]] = [("all", "all")]
+    if effective_reranking_task_scope(overall, score_target="reranking") == "focus":
+        targets.append(("reranking", "focus"))
+    targets.append(("reranking", "all"))
+    return targets
+
+
 def _viewer_leaderboard_mart_rows_from_service(
     db_path: Path,
     *,
@@ -5838,11 +5863,12 @@ def _viewer_leaderboard_mart_rows_from_service(
     mart_rows: list[tuple[Any, ...]] = []
     language_rows: list[tuple[Any, ...]] = []
     for view_name in view_names or viewer_config.view_names:
-        for score_target in ("all", "reranking"):
+        for score_target, task_scope in _viewer_leaderboard_mart_targets(viewer_config, view_name):
             for quantization, truncate, rescore, other in display_flag_sets:
                 result = service.get_leaderboard(
                     view_name,
                     score_target=score_target,
+                    reranking_task_scope=task_scope,
                     score_aggregation="micro",
                     include_quantization_variants=quantization,
                     include_truncate_variants=truncate,
@@ -5854,6 +5880,7 @@ def _viewer_leaderboard_mart_rows_from_service(
                     (
                         view_name,
                         score_target,
+                        task_scope,
                         quantization,
                         truncate,
                         rescore,
@@ -5868,6 +5895,7 @@ def _viewer_leaderboard_mart_rows_from_service(
                     (
                         view_name,
                         score_target,
+                        task_scope,
                         quantization,
                         truncate,
                         rescore,
@@ -5947,114 +5975,126 @@ def _viewer_leaderboard_mart_rows_from_cached_records(
                     include_any_variants=False,
                     variant_flags=VariantDisplayFlags(),
                 )
-            for quantization, truncate, rescore, other in display_flag_sets:
-                variant_flags = VariantDisplayFlags(
-                    quantization=quantization,
-                    truncate=truncate,
-                    rescore=rescore,
-                    other=other,
-                )
-                include_any_variants = variant_flags.any_enabled
-                rows = _task_scores_from_records(
-                    records,
-                    include_any_variants=include_any_variants,
-                    variant_flags=variant_flags,
-                )
-                if score_target == "all":
-                    rows = _exclude_reranker_task_scores(rows)
-                elif score_target == "reranking":
-                    rows = _append_missing_bm25_task_scores(rows, bm25_task_scores)
-                rows = _exclude_configured_tasks(rows, viewer_config)
-                expected_task_keys = (
-                    viewer_config.expected_task_keys_for_overall(overall)
-                    if overall is not None
-                    else None
-                )
-                if expected_task_keys is not None:
-                    rows = [row for row in rows if row.task_key in expected_task_keys]
-                available_languages = _language_options(
-                    rows,
-                    policy=language_filter_policy,
-                )
-                precomputed_language_filters = _precomputed_language_filters_for_view(view_name)
-                if precomputed_language_filters:
-                    rows = _filter_rows_by_languages(
+            task_scopes = [
+                task_scope
+                for target, task_scope in _viewer_leaderboard_mart_targets(viewer_config, view_name)
+                if target == score_target
+            ]
+            for task_scope in task_scopes:
+                for quantization, truncate, rescore, other in display_flag_sets:
+                    variant_flags = VariantDisplayFlags(
+                        quantization=quantization,
+                        truncate=truncate,
+                        rescore=rescore,
+                        other=other,
+                    )
+                    include_any_variants = variant_flags.any_enabled
+                    rows = _task_scores_from_records(
+                        records,
+                        include_any_variants=include_any_variants,
+                        variant_flags=variant_flags,
+                    )
+                    if score_target == "all":
+                        rows = _exclude_reranker_task_scores(rows)
+                    elif score_target == "reranking":
+                        rows = _append_missing_bm25_task_scores(rows, bm25_task_scores)
+                    rows = _exclude_configured_tasks(rows, viewer_config)
+                    expected_task_keys = (
+                        viewer_config.expected_task_keys_for_overall(
+                            overall,
+                            score_target=score_target,
+                            reranking_task_scope=task_scope,
+                        )
+                        if overall is not None
+                        else None
+                    )
+                    if expected_task_keys is not None:
+                        rows = [row for row in rows if row.task_key in expected_task_keys]
+                    available_languages = _language_options(
                         rows,
-                        precomputed_language_filters,
                         policy=language_filter_policy,
                     )
-                metric_score_group = None
-                if overall is not None:
-                    if expected_task_keys is not None and not precomputed_language_filters:
-                        rows = _filter_rows_to_complete_models(rows, expected_task_keys)
-                    metric_score_group = _overall_metric_score_group(
-                        overall,
-                        score_aggregation="micro",
+                    precomputed_language_filters = _precomputed_language_filters_for_view(view_name)
+                    if precomputed_language_filters:
+                        rows = _filter_rows_by_languages(
+                            rows,
+                            precomputed_language_filters,
+                            policy=language_filter_policy,
+                        )
+                    metric_score_group = None
+                    if overall is not None:
+                        if expected_task_keys is not None and not precomputed_language_filters:
+                            rows = _filter_rows_to_complete_models(rows, expected_task_keys)
+                        metric_score_group = _overall_metric_score_group(
+                            overall,
+                            score_aggregation="micro",
+                        )
+                    elif selected_score_group is not None:
+                        rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
+                        metric_score_group = selected_score_group
+                    leaderboard_rows = compute_leaderboard_rows(
+                        rows,
+                        is_overall=is_overall,
+                        expected_task_keys=expected_task_keys,
+                        score_group=metric_score_group,
+                        metric_columns=[],
+                        overall_score_aggregation="micro",
                     )
-                elif selected_score_group is not None:
-                    rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
-                    metric_score_group = selected_score_group
-                leaderboard_rows = compute_leaderboard_rows(
-                    rows,
-                    is_overall=is_overall,
-                    expected_task_keys=expected_task_keys,
-                    score_group=metric_score_group,
-                    metric_columns=[],
-                    overall_score_aggregation="micro",
-                )
-                sorted_rows = sort_rows(leaderboard_rows, sort="borda_rank", direction="asc")
-                expected_tasks = (
-                    len(expected_task_keys)
-                    if expected_task_keys is not None
-                    else len({row.task_key for row in rows})
-                )
-                language_rows.extend(
-                    (
-                        view_name,
-                        score_target,
-                        quantization,
-                        truncate,
-                        rescore,
-                        other,
-                        option.code,
-                        option.label,
-                        option.task_count,
+                    sorted_rows = sort_rows(leaderboard_rows, sort="borda_rank", direction="asc")
+                    expected_tasks = (
+                        len(expected_task_keys)
+                        if expected_task_keys is not None
+                        else len({row.task_key for row in rows})
                     )
-                    for option in available_languages
-                )
-                mart_rows.extend(
-                    (
-                        view_name,
-                        score_target,
-                        quantization,
-                        truncate,
-                        rescore,
-                        other,
-                        expected_tasks,
-                        row.borda_rank,
-                        row.mean_rank,
-                        row.model_name,
-                        row.model_type,
-                        row.borda_score,
-                        row.mean_score,
-                        row.macro_mean,
-                        row.micro_mean,
-                        row.task_count,
-                        row.active_parameters,
-                        row.total_parameters,
-                        row.max_seq_length,
-                        row.dtype,
-                        row.attn_implementation,
-                        row.prompt_summary,
-                        row.trust_remote_code,
-                        row.embedding_variant_name,
-                        row.embedding_dim,
-                        row.quantization,
-                        row.source_model_name,
-                        row.base_score_delta_percent,
+                    language_rows.extend(
+                        (
+                            view_name,
+                            score_target,
+                            task_scope,
+                            quantization,
+                            truncate,
+                            rescore,
+                            other,
+                            option.code,
+                            option.label,
+                            option.task_count,
+                        )
+                        for option in available_languages
                     )
-                    for row in sorted_rows
-                )
+                    mart_rows.extend(
+                        (
+                            view_name,
+                            score_target,
+                            task_scope,
+                            quantization,
+                            truncate,
+                            rescore,
+                            other,
+                            expected_tasks,
+                            row.borda_rank,
+                            row.mean_rank,
+                            row.model_name,
+                            row.model_type,
+                            row.borda_score,
+                            row.mean_score,
+                            row.macro_mean,
+                            row.micro_mean,
+                            row.task_count,
+                            row.active_parameters,
+                            row.total_parameters,
+                            row.max_seq_length,
+                            row.dtype,
+                            row.attn_implementation,
+                            row.prompt_summary,
+                            row.trust_remote_code,
+                            row.embedding_variant_name,
+                            row.embedding_dim,
+                            row.quantization,
+                            row.source_model_name,
+                            row.base_score_delta_percent,
+                        )
+                        for row in sorted_rows
+                    )
     return mart_rows, language_rows
 
 
