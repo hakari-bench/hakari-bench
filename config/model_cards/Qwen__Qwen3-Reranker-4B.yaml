@@ -1,0 +1,110 @@
+id: Qwen/Qwen3-Reranker-4B
+source:
+  type: huggingface
+  name: Qwen/Qwen3-Reranker-4B
+  revision: 22e683669bc0f0bd69640a1354a6d0aebcfeede5
+method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Qwen/Qwen3-Reranker-4B
+links:
+  huggingface: https://huggingface.co/Qwen/Qwen3-Reranker-4B
+  github: https://github.com/QwenLM/Qwen3-Embedding
+  papers:
+  - title: 'Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation
+      Models'
+    url: https://arxiv.org/abs/2506.05176
+parameters:
+  total: 4021784576
+  trainable: 4021784576
+  input_embedding: 388272640
+  active: 3633511936
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 40960
+  dtype: bf16
+  quantization: fp8
+  trust_remote_code: true
+  remote_code_approved: true
+  backend_library: vllm
+  backend_version: 0.33.0
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/Qwen/Qwen3-Reranker-4B
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-BR
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoSSRB
+  - hakari-bench/NanoVNMTEB
+notes:
+- Evaluated through a vLLM 0.33.0 pooling server with dynamic FP8 weights
+  (--quantization fp8, bf16 activations). The CausalLM checkpoint is converted by
+  scripts/convert_qwen3_reranker_seqcls.py into a one-label SequenceClassification
+  checkpoint whose head is lm_head["yes"] - lm_head["no"], which returns the same
+  score as the original yes/no logit difference.
+- Pass --model-loader hakari_bench.vllm_reranker:load_model with the server endpoint
+  in --model-loader-kwargs-json explicitly, including with evaluate from-model-card.
+  Server flags and validation are in docs/model_specific_benchmarking_notes.md.
+- FP8 stays close to bf16. On the 196 tasks also run with the native bf16
+  CrossEncoder, mean nDCG@10 was 0.7645 (FP8) versus 0.7647 (bf16), with a mean
+  absolute per-task delta of 0.0059, at about 4.4x less GPU time.
+- Pairs longer than 40960 tokens keep the chat-template prefix, instruction, query,
+  and assistant suffix and truncate only the document tail, following the official
+  input construction. The native CrossEncoder instead cuts the suffix the score is
+  read from.

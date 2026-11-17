@@ -26,6 +26,14 @@ tokenizer is configurable; mmBERT is the default. See
 [TypeSafe reranker evaluation](typesafe_reranker_evaluation.md) for commands,
 limits, comparison policy, and runtime metadata.
 
+`--model-loader hakari_bench.vllm_reranker:load_model` scores reranker pairs
+through a vLLM pooling server (`/classify`) that hosts a one-label
+SequenceClassification checkpoint. The client renders each pair with the
+original checkpoint's Sentence Transformers chat template and prompt, sends
+token IDs, and truncates only the document when a pair exceeds the context.
+See [Qwen3-Reranker-4B through vLLM FP8](model_specific_benchmarking_notes.md#qwen3-reranker-4b-through-vllm-fp8)
+for the conversion, server flags, and validation.
+
 Pass a loader with `--model-loader module:function`. The callable receives a
 `hakari_bench.models.ModelLoadConfig` and returns any Python object matching the
 method interface.
