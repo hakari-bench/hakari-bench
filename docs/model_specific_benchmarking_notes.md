@@ -291,6 +291,156 @@ Truncation notes:
 - Use `--embedding-variant truncate:2048,1536,1024,768,512,256,128,64,32`
   when measuring dimensional trade-offs for `Qwen/Qwen3-Embedding-4B`.
 
+## Qwen Qwen3 Reranker
+
+Applies to `Qwen/Qwen3-Reranker-0.6B` and `Qwen/Qwen3-Reranker-4B`.
+
+The upstream Sentence Transformers configuration is a CrossEncoder with the
+default prompt name `query` (`Given a web search query, retrieve relevant
+passages that answer the query`), a chat template, and a `LogitScore` module
+that returns `logit("yes") - logit("no")` at the last position (token IDs
+9693 and 2152) with no activation. Do not add other prompts. Both checkpoints
+support 40960 tokens; keep that limit.
+
+`Qwen/Qwen3-Reranker-0.6B` was published from the native CrossEncoder in bf16
+with Flash Attention 2. Most of its task files used
+`HAKARI_RERANKER_DOCUMENT_MAX_CHARS=20000`, which is recorded in each result.
+
+### Qwen3-Reranker-4B through vLLM FP8
+
+`Qwen/Qwen3-Reranker-4B` is evaluated through a vLLM server with dynamic FP8
+weights (`--quantization fp8`, bf16 activations), because the native bf16
+CrossEncoder needs several GPU-days for the full task set. Validation below
+shows the FP8 scores stay close to bf16. Results keep the logical model ID
+`Qwen/Qwen3-Reranker-4B` and record the backend under `model.backend_metadata`
+(`backend_library: vllm`, server version, served checkpoint, and launch flags).
+
+1. Convert the CausalLM checkpoint into a one-label SequenceClassification
+   checkpoint whose head is `lm_head["yes"] - lm_head["no"]`. Since
+   `logits = norm(h) @ lm_head.T`, the head returns the same score from the
+   same final hidden state, so vLLM can serve it as a last-token classifier:
+
+   ```bash
+   uv run python scripts/convert_qwen3_reranker_seqcls.py Qwen/Qwen3-Reranker-4B \
+     output/models/Qwen3-Reranker-4B-seqcls \
+     --revision 22e683669bc0f0bd69640a1354a6d0aebcfeede5
+   ```
+
+   The script reads `lm_head`, so untied checkpoints such as
+   Qwen3-Reranker-8B also convert correctly.
+
+2. Start one server per GPU from a separate environment with
+   `vllm==0.33.0`:
+
+   ```bash
+   CUDA_VISIBLE_DEVICES=0 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+   vllm serve output/models/Qwen3-Reranker-4B-seqcls \
+     --served-model-name Qwen3-Reranker-4B-seqcls-fp8 \
+     --runner pooling --quantization fp8 --dtype bfloat16 \
+     --max-model-len 40960 --max-num-batched-tokens 32768 --max-num-seqs 256 \
+     --gpu-memory-utilization 0.70 --seed 0 \
+     --pooler-config '{"seq_pooling_type":"LAST","use_activation":false}' \
+     --host 127.0.0.1 --port 8100
+   ```
+
+   Chunked prefill is enabled, so 40960-token inputs fit in 32768-token
+   scheduler steps. On an RTX 5090 this leaves about 108k KV-cache tokens,
+   enough for two full-length inputs at once. Peak use was a steady 24.0 GB
+   while scoring 100-candidate queries from NanoNarrativeQA and
+   NanoBrightStackoverflowLong, where up to 175 pairs were truncated at
+   40960 tokens. The FP8 path uses more activation memory than vLLM profiles.
+   With `--max-num-batched-tokens 65536 --gpu-memory-utilization 0.90`, the
+   engine ran out of memory on long NanoLongEmbed pairs and the server exited.
+   At 0.80, a server grew to 31.6 GB and logged an allocator OOM retry.
+
+3. Evaluate with the vLLM reranker client:
+
+   ```bash
+   uv run hakari-bench evaluate reranker \
+     --model Qwen/Qwen3-Reranker-4B \
+     --model-revision 22e683669bc0f0bd69640a1354a6d0aebcfeede5 \
+     --model-loader hakari_bench.vllm_reranker:load_model \
+     --model-loader-kwargs-json '{"endpoint":"http://127.0.0.1:8100","served_model":"Qwen3-Reranker-4B-seqcls-fp8","server_launch":{"quantization":"fp8"}}' \
+     --trust-remote-code --batch-size 1024 --all
+   ```
+
+   `--model` names the original checkpoint. The client loads its tokenizer,
+   chat template, and Sentence Transformers prompt from there, and counts
+   parameters from a meta-device copy of the model. Pass the launch flags in
+   `server_launch`, because the server does not report its quantization. Use a
+   batch size of at least the candidate count so each query is one `predict`
+   call. The client splits requests by `max_request_tokens` (default 262144)
+   and sends `concurrency` (default 4) requests in parallel.
+
+Long inputs: the client renders each pair with the checkpoint chat template
+and tokenizes it locally, then sends token IDs, so the server never truncates
+or re-templates. Pairs within 40960 tokens are token-identical to the native
+CrossEncoder. Longer pairs are handled differently on purpose. The CrossEncoder
+truncates the rendered chat from the right, which removes the
+`<|im_end|>`/assistant suffix that the yes/no score is read from (the same
+failure as in Mixedbread Rerank v2). The client keeps the template prefix,
+instruction, query, and suffix, and truncates only the document tail. This
+follows the
+[official Qwen3-Reranker input construction](https://huggingface.co/Qwen/Qwen3-Reranker-4B).
+An oversized query is limited to three quarters of the content budget. No
+character limit is applied. Per-task `truncated_pairs`, `truncated_queries`,
+and `max_input_tokens` are recorded in backend metadata.
+
+Validation (2026-11-14, RTX 5090, `tmp/vllm-qwen3rr/validate.py`) used 1303
+real candidate pairs from NanoJMTEB-v2/mintaka_ja, NanoMIRACL/ar,
+NanoBEIR-ar/hotpotqa, and NanoCoIR/NanoCosQA:
+
+| Comparison | Pearson | Mean abs diff / std | Top-1 agreement per query |
+| --- | ---: | ---: | ---: |
+| Client token IDs vs CrossEncoder preprocessing | 0 mismatches | | |
+| vLLM bf16 vs CrossEncoder bf16 | 0.99978 | 0.016 | 13/13 |
+| vLLM FP8 vs CrossEncoder bf16 | 0.99596 | 0.068 | 13/13 |
+| vLLM FP8 vs vLLM bf16, 48 long NanoNarrativeQA/NanoMLDR-en pairs (25 truncated to 40960 tokens) | 0.99024 | 0.130 | 4/4 |
+
+The vLLM FP8 path scored the short pairs about 4.7x faster than the bf16
+CrossEncoder. On the first three tasks, nDCG@10 for FP8 versus the native bf16
+CrossEncoder was 0.6091 versus 0.6149 on mintaka_ja, 0.7600 versus 0.7644 on
+mintaka_es, and 0.7192 versus 0.7164 on mintaka_fr, at 20 s versus 130 s per
+task.
+
+Full-run comparison (2026-11-17) on the 196 tasks that the earlier native bf16
+CrossEncoder run completed: mean nDCG@10 was 0.7647 (bf16) versus 0.7645
+(FP8), a mean delta of -0.0002 and a mean absolute delta of 0.0059. 124 tasks
+moved by at most 0.005 and 166 by at most 0.01. On those tasks FP8 took 8.5
+GPU-hours versus 37.6 for bf16 (4.4x in aggregate, 6.1x median per task).
+All 563 FP8 tasks took 122.7 GPU-hours on two RTX 5090s. NanoNarrativeQA
+alone took 22.2 hours: 17158 of its 20011 pairs were truncated to 40960
+tokens.
+
+The largest per-task deltas were rechecked through an unquantized vLLM bf16
+server (same SeqCls checkpoint and client, `--quantization` omitted) to
+separate quantization from the serving path:
+
+| Task | CrossEncoder bf16 | vLLM bf16 | vLLM FP8 |
+| --- | ---: | ---: | ---: |
+| NanoMMTEB-v2/spart_qa | 0.2426 | 0.2477 | 0.3041 |
+| NanoRARb/NanoSpartQA | 0.2514 | 0.2612 | 0.3126 |
+| NanoBEIR-th/msmarco | 0.5843 | 0.5715 | 0.5453 |
+| NanoBEIR-sr/msmarco | 0.5044 | 0.4862 | 0.4679 |
+| NanoBEIR-ar/msmarco | 0.4622 | 0.4705 | 0.4951 |
+| NanoBEIR-sv/msmarco | 0.5386 | 0.5312 | 0.5666 |
+| NanoBEIR-it/msmarco | 0.5545 | 0.5789 | 0.5799 |
+
+vLLM bf16 stays near the CrossEncoder on SpartQA, so the about +0.06 SpartQA
+gain comes from FP8 rounding and not from templating or truncation. SpartQA
+is a low-scoring spatial-reasoning task whose candidates score close
+together, so small score perturbations reorder the top 10 (FP8 kept 8.6 of the
+bf16 top-10 documents per query on average). The NanoBEIR msmarco splits have
+few relevant documents per query and move by up to 0.024 even between the two
+bf16 paths, so their deltas are mostly ranking noise.
+
+The client resends a `/classify` request up to three times on
+`urllib3.exceptions.ProtocolError`. Tokenizing a long query's candidates can
+leave a pooled connection idle past the server keep-alive, and the next
+request then fails with `RemoteDisconnected` (seen once, on a NanoLongEmbed
+task). The request is not processed when the connection drops, so a resend
+only repeats it.
+
 ## Google EmbeddingGemma
 
 Applies to:
