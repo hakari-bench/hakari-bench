@@ -291,6 +291,45 @@ Truncation notes:
 - Use `--embedding-variant truncate:2048,1536,1024,768,512,256,128,64,32`
   when measuring dimensional trade-offs for `Qwen/Qwen3-Embedding-4B`.
 
+## Octen Embedding
+
+Applies to:
+
+- `Octen/Octen-Embedding-0.6B` (revision
+  `b54faa2ba2ae9eb618f88526cec6dae3287eb5f8`)
+- `Octen/Octen-Embedding-8B` (revision
+  `88695e4f8ed87b4ce08df2fea6ff25bfe0f9875b`)
+
+Both are Qwen3-Embedding derivatives. Use the shipped Sentence Transformers
+prompt names `query` and `document`. The query prompt is the Qwen3 web-search
+instruction. The document prompt is a single space, which matches the official
+MTEB wrapper. The MTEB wrapper uses RTEB-only task prompts; HAKARI follows the
+built-in prompts, as for Qwen3-Embedding.
+
+```bash
+uv run hakari-bench evaluate from-model-card \
+  --model-card config/model_cards/Octen__Octen-Embedding-8B.yaml \
+  --all --batch-size 8 --device cuda:0
+```
+
+Runtime notes:
+
+- BF16 with FlashAttention 2. FlashAttention 2 and SDPA embeddings matched
+  within 0.003, and manual last-token pooling matched Sentence Transformers
+  within 0.005. Neither model documents MRL dimensions, so runs cover the base
+  embedding plus the default int8, binary, and rescore variants.
+- 0.6B keeps the native 32768-token Sentence Transformers maximum. MTEB caps
+  inference at 18480 tokens. Its weights and configs are identical to the
+  MTEB-pinned revision `1a00a4e8`; only the README differs.
+- 8B uses 40960 tokens, from the README details and config. The README
+  model-list table says 32768. The weights were updated on 2026-01-06, after
+  the MTEB-pinned revision `2030603c`.
+- The 8B README Known Issues section suggests a `"- "` prefix for unprefixed
+  documents. The shipped config and the MTEB wrapper use `" "`, which HAKARI
+  follows. In validation, `"- "` changed similarities by at most 0.031.
+- Batch size was reduced, down to 1, for long tasks and on OOM. The context was
+  never shortened.
+
 ## Qwen Qwen3 Reranker
 
 Applies to `Qwen/Qwen3-Reranker-0.6B` and `Qwen/Qwen3-Reranker-4B`.
@@ -895,6 +934,9 @@ Applies to:
   `769f3a064aa4113a97d9b19c2417cb67a8cf5f30`)
 - `BidirLM/BidirLM-0.6B-Embedding` (revision
   `f6279763d6bd59ff963897965f29fed0b447ed3c`)
+- `BidirLM/BidirLM-1B-Embedding` (revision
+  `8b9661377d17cc1c41f8c02df4a6e90487c5a7f9`, equal to the MTEB-pinned
+  revision)
 
 The shipped Sentence Transformers query and document prompts are empty, but
 the official MTEB implementation
@@ -932,8 +974,13 @@ Runtime notes:
 - The architecture rejects explicit SDPA. FlashAttention 2 was validated
   against the eager reference attention.
 - 512 tokens is the shipped Sentence Transformers maximum, not an ad hoc
-  benchmark truncation. The architectures support 32768 (270M) and 40960
-  (0.6B) tokens; evaluating at those lengths is a separate experiment.
+  benchmark truncation. The architectures support 32768 (270M and 1B) and
+  40960 (0.6B) tokens; evaluating at those lengths is a separate experiment.
+- BidirLM-1B uses a Gemma3 backbone, and its remote code differs from 270M and
+  0.6B. It always builds dense packed attention masks, which the
+  FlashAttention 2 varlen path does not use, so they only cost memory.
+  FlashAttention 2 matched eager attention, batch and single inputs matched,
+  and independent mean pooling matched, all within one bf16 ULP.
 - Neither model documents Matryoshka dimensions. Runs cover the base embedding
   plus the default int8, binary, and rescore variants.
 
@@ -1362,6 +1409,21 @@ F2LLM-v2-0.6B uses the official retrieval instruction recorded in its model
 card, BF16 with FlashAttention 2, and the shipped 40960-token maximum. Evaluate
 1024-dimensional base embeddings plus every documented MRL dimension down to
 8; the dense CLI adds quantization and rescore variants (40 categories total).
+
+F2LLM-v2-1.7B (revision `c5650fe0573b810008b5fbf79f51ff9bfa1f2e83`) and
+F2LLM-v2-4B (revision `3e5652543fb453386a9bba24d82702da4f3a0427`) ship the same
+Sentence Transformers configuration and use the same settings. Their MRL
+dimensions are the powers of two below the native output, down to 8, from the
+official figure 5. That is 2048 native plus 1024 through 8 for 1.7B (45
+categories), and 2560 native plus 2048 through 8 for 4B (50 categories). The
+upstream example scores matched within 0.004. Long tasks ran at batch size 1
+without shortening the 40960-token context.
+
+```bash
+uv run hakari-bench evaluate from-model-card \
+  --model-card config/model_cards/codefuse-ai__F2LLM-v2-4B.yaml \
+  --all --batch-size 8 --device cuda:0
+```
 
 pplx-embed-v2-late-0.6b requires the native SentenceTransformers >=6
 `MultiVectorEncoder` and Transformers >=5.4. Use the reusable adapter rather
