@@ -1,0 +1,113 @@
+id: BidirLM/BidirLM-270M-Embedding
+source:
+  type: huggingface
+  name: BidirLM/BidirLM-270M-Embedding
+  revision: 769f3a064aa4113a97d9b19c2417cb67a8cf5f30
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/BidirLM/BidirLM-270M-Embedding
+links:
+  huggingface: https://huggingface.co/BidirLM/BidirLM-270M-Embedding
+  papers:
+  - title: 'BidirLM: From Text to Omnimodal Bidirectional Encoders by Adapting and
+      Composing Causal LLMs'
+    url: https://arxiv.org/abs/2604.02045
+embedding:
+  output_dimension: 640
+  truncate_dims: null
+  pooling: mean
+  include_prompt: true
+runtime:
+  dtype: bf16
+  trust_remote_code: true
+  remote_code_approved: true
+  attn_implementation: flash_attention_2
+  max_seq_length: 512
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt: 'Instruct: Given a query, retrieve documents that answer the query.
+
+    Query:'
+  document_prompt: ''
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/BidirLM/BidirLM-270M-Embedding
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-BR
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoSSRB
+  - hakari-bench/NanoVNMTEB
+notes:
+- Use Transformers >=5 on the pinned main revision; the separate transformers-v4 branch
+  has a different implementation.
+- Preserve the shipped SentenceTransformers maximum of 512 tokens. Architectural capacity
+  is 32768; changing the evaluation limit is a separate experiment.
+- The full run overrides query_prompt with the official MTEB source-task instruction
+  where available (242 tasks); 321 tasks use the generic retrieval instruction recorded
+  here. Documents have no instruction.
+- No documented MRL dimensions. Evaluate the base and all four default dense quantization/rescore
+  variants.
+- The pinned custom architecture supports FlashAttention 2; Transformers rejects the
+  sdpa selection.
+parameters:
+  total: 268098176
+  trainable: 268098176
+  input_embedding: 167772160
+  active: 100326016

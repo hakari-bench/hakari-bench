@@ -887,6 +887,56 @@ uv run hakari-bench evaluate dense \
 No Matryoshka/truncate dimensions were found in the model cards or Sentence
 Transformers configs checked for these models.
 
+## BidirLM Embeddings
+
+Applies to:
+
+- `BidirLM/BidirLM-270M-Embedding` (revision
+  `769f3a064aa4113a97d9b19c2417cb67a8cf5f30`)
+- `BidirLM/BidirLM-0.6B-Embedding` (revision
+  `f6279763d6bd59ff963897965f29fed0b447ed3c`)
+
+The shipped Sentence Transformers query and document prompts are empty, but
+the official MTEB implementation
+([`bidirlm_models.py`](https://raw.githubusercontent.com/embeddings-benchmark/mteb/main/mteb/models/model_implementations/bidirlm_models.py))
+uses task-specific instructions. Each task therefore passes `--query-prompt`
+with the official instruction for its YAML `source_task` (242 tasks, plus
+MNanoBEIR aliases and MIRACL/MLDR mappings). The other 321 tasks use the
+generic retrieval instruction from the model card. Documents get an explicitly
+empty prompt:
+
+```text
+Instruct: Given a query, retrieve documents that answer the query.
+Query:
+```
+
+There is no space after the final colon. Keep the per-task instructions; do
+not replace them all with the generic one.
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model BidirLM/BidirLM-0.6B-Embedding \
+  --model-revision f6279763d6bd59ff963897965f29fed0b447ed3c \
+  --dataset DATASET --split TASK \
+  --dtype bf16 --trust-remote-code --attn-implementation flash_attention_2 \
+  --model-max-seq-length 512 --batch-size 32 \
+  --query-prompt "$OFFICIAL_OR_GENERIC_INSTRUCTION" --document-prompt ''
+```
+
+Runtime notes:
+
+- The pinned main-branch remote code requires Transformers 5. The
+  `transformers-v4` branch is a different implementation; do not substitute it.
+  The published runs used Transformers 5.22.1, Sentence Transformers 6.2.0,
+  and torch 2.9.1.
+- The architecture rejects explicit SDPA. FlashAttention 2 was validated
+  against the eager reference attention.
+- 512 tokens is the shipped Sentence Transformers maximum, not an ad hoc
+  benchmark truncation. The architectures support 32768 (270M) and 40960
+  (0.6B) tokens; evaluating at those lengths is a separate experiment.
+- Neither model documents Matryoshka dimensions. Runs cover the base embedding
+  plus the default int8, binary, and rescore variants.
+
 ## Perplexity pplx Embed
 
 Applies to:
