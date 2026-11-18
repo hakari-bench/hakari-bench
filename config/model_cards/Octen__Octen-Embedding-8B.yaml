@@ -1,0 +1,105 @@
+id: Octen/Octen-Embedding-8B
+source:
+  type: huggingface
+  name: Octen/Octen-Embedding-8B
+  revision: 88695e4f8ed87b4ce08df2fea6ff25bfe0f9875b
+method: dense
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Octen/Octen-Embedding-8B
+links:
+  huggingface: https://huggingface.co/Octen/Octen-Embedding-8B
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 40960
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/Octen/Octen-Embedding-8B
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-BR
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoSSRB
+  - hakari-bench/NanoVNMTEB
+notes:
+- Use the shipped Sentence Transformers prompts. The query prompt is the web-search
+  retrieval instruction and the document prompt is a single space. The official
+  MTEB wrapper uses RTEB-only task prompts; HAKARI uses the built-in prompts as for
+  Qwen3-Embedding.
+- The README Known Issues section suggests a "- " prefix for unprefixed documents.
+  The shipped Sentence Transformers config and the official MTEB wrapper use a
+  single space, which HAKARI follows; the "- " variant changed validation
+  similarities by at most 0.031.
+- Native Sentence Transformers max is 40960 (README details and config; the
+  README model-list table says 32768). Weights were updated on 2026-01-06, after
+  the MTEB-pinned revision 2030603c.
+- No documented MRL dimensions. Evaluate the base and all four default dense
+  quantization/rescore variants.
+parameters:
+  total: 7567295488
+  trainable: 7567295488
+  input_embedding: 621219840
+  active: 6946075648

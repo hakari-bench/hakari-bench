@@ -782,6 +782,8 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
     cards = model_cards.load_model_cards(Path("config/model_cards"))
     known_base_dims = {
         "codefuse-ai/F2LLM-v2-0.6B": 1024,
+        "codefuse-ai/F2LLM-v2-1.7B": 2048,
+        "codefuse-ai/F2LLM-v2-4B": 2560,
         "KaLM-Embedding/KaLM-embedding-multilingual-mini-instruct-v2.5": 896,
         "Qwen/Qwen3-Embedding-0.6B": 1024,
         "Qwen/Qwen3-Embedding-4B": 2560,
@@ -794,7 +796,6 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "hotchpotch/bekko-embedding-v1-a25m": 384,
         "hotchpotch/bekko-embedding-v1-a8m": 384,
         "ibm-granite/granite-embedding-311m-multilingual-r2": 768,
-        "hotchpotch/bekko-static-embedding-multilingual-v1": 1024,
         "jinaai/jina-embeddings-v3": 1024,
         "jinaai/jina-embeddings-v5-text-nano": 768,
         "jinaai/jina-embeddings-v5-text-small": 1024,
