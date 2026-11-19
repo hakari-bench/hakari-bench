@@ -1,0 +1,66 @@
+id: hotchpotch/bekko-static-embedding-v1
+source:
+  type: huggingface
+  name: hotchpotch/bekko-static-embedding-v1
+  revision: 76c36707a7814a747914ed05168420696a8123d0
+method: dense
+license:
+  id: unknown
+  label: Unknown
+  type: unknown
+  commercial_use: unknown
+  source: huggingface_model_card
+  source_url: https://huggingface.co/hotchpotch/bekko-static-embedding-v1
+links:
+  huggingface: https://huggingface.co/hotchpotch/bekko-static-embedding-v1
+parameters:
+  total: 204800000
+  trainable: 204800000
+  input_embedding: 204800000
+  active: 0
+embedding:
+  output_dimension: 1024
+  mrl_support: true
+  truncate_dims:
+  - 32
+  - 64
+  - 128
+  - 256
+  - 512
+runtime:
+  dtype: fp16
+  trust_remote_code: false
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/hotchpotch/bekko-static-embedding-v1
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  all: true
+  evaluation_scope: standard
+notes:
+- Renamed from hotchpotch/bekko-static-embedding-multilingual-v1 on 2026-09-14; the
+  model remains multilingual. The formal delivery stores the 200,000 by 1,024
+  StaticEmbedding table in FP16; the tokenizer, architecture, and training run are
+  unchanged.
+- Evaluate with --dtype fp16. Parameters and encoded outputs were verified as
+  torch.float16 at all six widths. At native width, FP16 storage scored within 0.002
+  nDCG@10 x 100 of FP32 storage under matched FP32 compute.
+- The checkpoint is a single StaticEmbedding module with no Normalize module and no
+  finite SentenceTransformers max_seq_length. Training used 512 tokens; the tokenizer
+  permits up to 32,768 inference tokens. Attention settings and remote code are not
+  required.
+- The shipped query and document prompts are empty, so evaluation uses no retrieval
+  prefix.
+- The README lists 32, 64, 128, 256, 512, and 1,024 as supported truncate_dim values.
+  The native 1,024-dimensional output is the base result; only lower dimensions are
+  truncation variants, each with the default quantization/rescore variants (30
+  conditions).
+- The bundled ONNX/OpenVINO FP16 and INT8 graphs load through the repository's
+  bekko_static_backend.py remote code and are not used by the standard evaluation.
+- The Hugging Face repository is private, and its card does not grant a public
+  distribution license.
