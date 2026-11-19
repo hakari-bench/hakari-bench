@@ -735,6 +735,34 @@ Truncation notes:
   Matryoshka dims `256,128,64`; use the same prompt text and runtime settings
   as `hotchpotch/bekko-embedding-small-beta-unir-v8`.
 
+### Bekko Static Embedding v1
+
+`hotchpotch/bekko-static-embedding-v1` (revision
+`76c36707a7814a747914ed05168420696a8123d0`) is a 1024-dimensional
+StaticEmbedding model, renamed on 2026-09-14 from
+`hotchpotch/bekko-static-embedding-multilingual-v1`. Its results were
+republished under the new name in results PR #41. The prompt-name guidance above
+does not apply: the shipped query and document prompts are empty, so no prefix
+is used.
+
+```bash
+uv run hakari-bench evaluate dense \
+  --model hotchpotch/bekko-static-embedding-v1 \
+  --model-revision 76c36707a7814a747914ed05168420696a8123d0 \
+  --dtype fp16 \
+  --embedding-variant truncate:512,256,128,64,32 \
+  --all
+```
+
+- Use `--dtype fp16`. The formal delivery stores the table in FP16, and the
+  evaluated parameters and outputs were verified as `torch.float16`.
+- There is no finite Sentence Transformers `max_seq_length` and no attention
+  setting or remote code. The bundled ONNX/OpenVINO graphs need the
+  repository's remote-code loader and are not part of the standard run.
+- Truncate dims `512,256,128,64,32` are the documented MRL widths below the
+  native 1024. With the default quantized and rescore variants, that gives 30
+  conditions per task.
+
 ## Jina Embeddings v5
 
 Applies to:

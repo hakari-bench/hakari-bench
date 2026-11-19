@@ -795,6 +795,7 @@ def test_static_model_card_truncate_dims_exclude_base_dimension() -> None:
         "google/gemini-embedding-2": 3072,
         "hotchpotch/bekko-embedding-v1-a25m": 384,
         "hotchpotch/bekko-embedding-v1-a8m": 384,
+        "hotchpotch/bekko-static-embedding-v1": 1024,
         "ibm-granite/granite-embedding-311m-multilingual-r2": 768,
         "jinaai/jina-embeddings-v3": 1024,
         "jinaai/jina-embeddings-v5-text-nano": 768,
