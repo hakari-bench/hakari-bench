@@ -328,10 +328,21 @@ exist. The ideal flow is:
 This makes review easier because maintainers can see the model-card/runtime
 metadata and the `.json.xz` result payloads together.
 
+A GitHub PR that adds or changes model cards for a model is merged only
+together with that model's results in `hakari-bench/results`. Link a results
+PR that is merged or ready to merge. A card-only PR can stay open while results
+are prepared, but a smoke run on a few tasks is not enough. The card must match
+the settings of a full `--all` evaluation whose `.json.xz` files are under
+review. For example, results PR
+[#52](https://huggingface.co/datasets/hakari-bench/results/discussions/52)
+(`Qwen/Qwen3-Reranker-4B`, 563 reranker tasks) has a generated body. That body
+covers reproducibility, command, and submitter notes, and links code PR
+[#23](https://github.com/hakari-bench/hakari-bench/pull/23), which links back.
+
 ## 8. Submit `.json.xz` Files To The Results Repository
 
 Submit one model result directory per PR when possible. The canonical path in
-the private Hugging Face dataset repository is:
+the public Hugging Face dataset repository is:
 
 ```text
 hakari-results/{model_dir}/{dataset_id_or_name}/{task}.json.xz
