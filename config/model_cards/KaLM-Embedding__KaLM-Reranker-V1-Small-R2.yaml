@@ -1,0 +1,38 @@
+id: KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+source:
+  type: huggingface
+  name: KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+  revision: b0ff01bcd174b4bf868955921a9d40537c2f45f7
+method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+links:
+  huggingface: https://huggingface.co/KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+  papers:
+  - title: 'KaLM-Reranker-V1: Fast but Not Late Interaction for Compressed Document Reranking'
+    url: https://arxiv.org/abs/2606.22807
+runtime:
+  backend_library: sentence-transformers
+  dtype: bf16
+  attn_implementation: sdpa
+  trust_remote_code: true
+  remote_code_approved: true
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-en
+notes: >-
+  The checkpoint uses a custom PyTorch CrossEncoder module and requires
+  sentence-transformers>=5.6,<6 and transformers>=5.3,<6. It uses the
+  checkpoint's default retrieval prompt, 4x document token pooling,
+  512-token query limit and 1024-token document limit.
