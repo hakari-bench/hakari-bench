@@ -1,0 +1,95 @@
+id: KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+source:
+  type: huggingface
+  name: KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+  revision: b0ff01bcd174b4bf868955921a9d40537c2f45f7
+method: reranker
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+links:
+  huggingface: https://huggingface.co/KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+  papers:
+  - title: 'KaLM-Reranker-V1: Fast but Not Late Interaction for Compressed Document Reranking'
+    url: https://arxiv.org/abs/2606.22807
+parameters:
+  total: 2115977456
+  trainable: 2115977456
+  input_embedding: 301989888
+  active: 1813987568
+embedding:
+  truncate_dims: null
+runtime:
+  max_seq_length: 1024
+  backend_library: sentence-transformers
+  dtype: bf16
+  attn_implementation: sdpa
+  trust_remote_code: true
+  remote_code_approved: true
+language_support:
+  category: multilingual
+  evidence:
+    source_url: https://huggingface.co/KaLM-Embedding/KaLM-Reranker-V1-Small-R2
+    classification_policy: model identity first; use broad score evidence only for models without explicit language identity
+    classification_reason: model_identity_multilingual_or_bilingual
+target:
+  datasets:
+  - hakari-bench/NanoBEIR-ar
+  - hakari-bench/NanoBEIR-de
+  - hakari-bench/NanoBEIR-en
+  - hakari-bench/NanoBEIR-es
+  - hakari-bench/NanoBEIR-fr
+  - hakari-bench/NanoBEIR-it
+  - hakari-bench/NanoBEIR-ja
+  - hakari-bench/NanoBEIR-ko
+  - hakari-bench/NanoBEIR-no
+  - hakari-bench/NanoBEIR-pt
+  - hakari-bench/NanoBEIR-sr
+  - hakari-bench/NanoBEIR-sv
+  - hakari-bench/NanoBEIR-th
+  - hakari-bench/NanoBEIR-vi
+  - hakari-bench/NanoBIRCO
+  - hakari-bench/NanoBRIGHT
+  - hakari-bench/NanoBuiltBench
+  - hakari-bench/NanoCMTEB
+  - hakari-bench/NanoChemTEB
+  - hakari-bench/NanoCoIR
+  - hakari-bench/NanoCodeRAG
+  - hakari-bench/NanoDAPFAM
+  - hakari-bench/NanoFaMTEB-v2
+  - hakari-bench/NanoIFIR
+  - hakari-bench/NanoIndicQA
+  - hakari-bench/NanoJMTEB-v2
+  - hakari-bench/NanoLaw
+  - hakari-bench/NanoLongEmbed
+  - hakari-bench/NanoMIRACL
+  - hakari-bench/NanoMLDR
+  - hakari-bench/NanoMMTEB-v2
+  - hakari-bench/NanoMTEB-BR
+  - hakari-bench/NanoMTEB-Dutch
+  - hakari-bench/NanoMTEB-French
+  - hakari-bench/NanoMTEB-German
+  - hakari-bench/NanoMTEB-Korean
+  - hakari-bench/NanoMTEB-Misc
+  - hakari-bench/NanoMTEB-Polish
+  - hakari-bench/NanoMTEB-Scandinavian
+  - hakari-bench/NanoMTEB-Spanish
+  - hakari-bench/NanoMTEB-Thai
+  - hakari-bench/NanoMTEB-v2
+  - hakari-bench/NanoMedical
+  - hakari-bench/NanoMuPLeR
+  - hakari-bench/NanoR2MED
+  - hakari-bench/NanoRARb
+  - hakari-bench/NanoRTEB
+  - hakari-bench/NanoRuMTEB
+  - hakari-bench/NanoSSRB
+  - hakari-bench/NanoVNMTEB
+notes: >-
+  The checkpoint uses a custom PyTorch CrossEncoder module and requires
+  sentence-transformers>=5.6,<6 and transformers>=5.3,<6. It uses the
+  checkpoint's default retrieval prompt, 4x document token pooling,
+  512-token query limit and 1024-token document limit.
