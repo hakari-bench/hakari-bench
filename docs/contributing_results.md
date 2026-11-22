@@ -1,9 +1,9 @@
 # Contributing Result Files
 
-This document is the submission guide for contributing HAKARI-Bench evaluation result files to the private Hugging Face dataset repository `hakari-bench/results`. It explains the expected `hakari-results/{model_dir}/...json.xz` layout, what contributors must check before running evaluations, what metadata reviewers need, how to generate a PR body, and how to open or manually prepare a Hugging Face Dataset pull request. Coding agents should use this file when searching for result contribution workflow, result repository layout, `.json.xz` review requirements, model result PRs, dataset PR refs, staging commits, result submission checklist, or reviewer expectations for reproducible benchmark uploads.
+This document is the submission guide for contributing HAKARI-Bench evaluation result files to the public Hugging Face dataset repository `hakari-bench/results`. It explains the expected `hakari-results/{model_dir}/...json.xz` layout, what contributors must check before running evaluations, what metadata reviewers need, how to generate a PR body, and how to open or manually prepare a Hugging Face Dataset pull request. Coding agents should use this file when searching for result contribution workflow, result repository layout, `.json.xz` review requirements, model result PRs, dataset PR refs, staging commits, result submission checklist, or reviewer expectations for reproducible benchmark uploads.
 
 This document defines how external benchmark runs should be submitted to the
-private Hugging Face dataset repository `hakari-bench/results`.
+public Hugging Face dataset repository `hakari-bench/results`.
 
 The goal is to keep contributed model results reviewable, reproducible, and
 easy to merge into the main HAKARI-Bench result warehouse.
@@ -419,3 +419,11 @@ Reviewers should check:
 
 After merge, rebuild the result DuckDB or leaderboard artifacts from
 `hakari-bench/results` before publishing comparisons.
+
+Model cards for the same model belong in a GitHub code PR, which is merged only
+together with the results PR. Do not merge a card-only GitHub PR while its
+results are missing. See
+[GitHub code PR](new_model_results_workflow.md#7-open-the-github-code-pr) for
+the policy, and results PR
+[#52](https://huggingface.co/datasets/hakari-bench/results/discussions/52) for
+an example.
