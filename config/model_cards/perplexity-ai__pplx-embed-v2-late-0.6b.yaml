@@ -89,9 +89,17 @@ notes:
 - Native role encoders preserve first-position [Q]/[D] markers, document punctuation
   masking, and query/document limits of 1024/4096; do not use PyLate marker placement.
 - FP32 follows checkpoint precision. No documented truncation variants.
+- >-
+  Parameter counts come from the loaded checkpoint. The Qwen3.5 backbone has a
+  248320 x 1024 input embedding table (254279680 parameters), and the checkpoint
+  also bundles a 100592896-parameter vision encoder that text retrieval does not
+  use. Following the standard rule, active parameters are total minus input
+  embedding parameters, so the vision encoder is still included.
 parameters:
   total: 594452672
   trainable: 594452672
+  input_embedding: 254279680
+  active: 340172992
 late_interaction:
   query_length: 1024
   document_length: 4096

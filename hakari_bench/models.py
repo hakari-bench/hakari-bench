@@ -2113,10 +2113,16 @@ def _static_embedding_weight(model: Any) -> Any | None:
 
 
 def _first_sentence_transformer_module(model: Any) -> Any | None:
-    try:
-        return model[0]
-    except Exception:
-        return None
+    # Custom loader wrappers usually keep the SentenceTransformers-style model
+    # under ``.model``; attribute forwarding does not make the wrapper indexable.
+    for candidate in (model, getattr(model, "model", None)):
+        if candidate is None:
+            continue
+        try:
+            return candidate[0]
+        except Exception:
+            continue
+    return None
 
 
 def _named_parameters(model: Any) -> list[tuple[str, torch.nn.Parameter]] | None:

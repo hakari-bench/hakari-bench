@@ -853,6 +853,23 @@ def test_collect_model_metadata_counts_active_parameters_from_st_model_attribute
     assert metadata["active_parameters"] == 18
 
 
+def test_collect_model_metadata_counts_active_parameters_through_custom_backend_wrapper() -> None:
+    class Wrapper:
+        """Custom loader wrapper that forwards attributes but is not indexable."""
+
+        def __init__(self) -> None:
+            self.model = _FakeSentenceTransformerLike(backbone_attr="model")
+
+        def __getattr__(self, name: str) -> Any:
+            return getattr(self.model, name)
+
+    metadata = collect_model_metadata(Wrapper(), _metadata_args())
+
+    assert metadata["total_parameters"] == 38
+    assert metadata["embedding_parameters"] == 20
+    assert metadata["active_parameters"] == 18
+
+
 def test_collect_model_metadata_counts_static_embedding_table_as_input_embeddings() -> None:
     model = _FakeStaticSentenceTransformerLike()
     args = _metadata_args()
