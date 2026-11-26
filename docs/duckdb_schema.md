@@ -166,7 +166,9 @@ The input files are:
   using filenames such as `BAAI__bge-m3.yaml` for model id `BAAI/bge-m3`.
   Result JSON remains the primary source; model-card parameters are applied only
   when the model id matches, the total parameter count matches, and the result
-  JSON is missing the derived value. `--model-cards-path` may also point at a
+  JSON is missing the derived value. A card with `parameters.non_text` replaces
+  the result's active parameter count, so active counts exclude non-text
+  (vision/audio) modules for results measured before that rule. `--model-cards-path` may also point at a
   legacy aggregate YAML file with a top-level `models` list. See
   `docs/model_cards.md` for the generation workflow.
 - `artifacts.top_rankings` inside each task result JSON: per-query top-100

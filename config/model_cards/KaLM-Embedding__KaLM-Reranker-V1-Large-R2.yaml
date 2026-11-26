@@ -20,7 +20,8 @@ parameters:
   total: 7508928880
   trainable: 7508928880
   input_embedding: 671088640
-  active: 6837840240
+  non_text: 419816304
+  active: 6418023936
 embedding:
   truncate_dims: null
 runtime:

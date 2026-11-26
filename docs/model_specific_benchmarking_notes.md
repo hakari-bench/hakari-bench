@@ -538,8 +538,9 @@ For text retrieval, omit vision and audio encoders using
 `config_kwargs={"vision_config": None, "audio_config": None}`. The measured
 text embedding encoder has 271,002,624 total/trainable parameters and
 134,217,728 input embedding parameters. HAKARI's active parameter convention
-is total minus input embedding parameters, giving 136,784,896 active parameters.
-These counts exclude the vision and audio encoders.
+counts the text path only (total minus input embedding and non-text
+parameters), giving 136,784,896 active parameters. The vision and audio
+encoders are not loaded, so they are outside these counts.
 
 SentenceTransformers 6.1.0 can classify strings resembling media URLs as image
 or video inputs even when the benchmark supplies text. Restrict its input

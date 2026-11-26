@@ -2937,6 +2937,15 @@ def _with_model_card_metadata(model: dict[str, Any], *, model_cards: dict[str, d
         return updated
     active_parameters = _int_or_none(model.get("active_parameters"))
     card_active_parameters = _int_or_none(parameters.get("active"))
+    card_non_text_parameters = _int_or_none(parameters.get("non_text"))
+    if card_non_text_parameters is not None and card_active_parameters is not None:
+        # The card records reviewed non-text (vision/audio) parameters, so its
+        # active count supersedes results measured before they were excluded.
+        updated["non_text_parameters"] = card_non_text_parameters
+        if active_parameters is not None and active_parameters != card_active_parameters:
+            updated["active_parameters"] = card_active_parameters
+            updated["transformer_parameters"] = card_active_parameters
+            active_parameters = card_active_parameters
     if (
         active_parameters is not None
         and card_active_parameters is not None

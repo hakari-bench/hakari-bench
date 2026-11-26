@@ -13,6 +13,12 @@ license:
   source_url: https://huggingface.co/nvidia/Nemotron-3.5-Rerank-8B-BF16
 links:
   huggingface: https://huggingface.co/nvidia/Nemotron-3.5-Rerank-8B-BF16
+parameters:
+  total: 8381159424
+  trainable: 8381159424
+  input_embedding: 536870912
+  non_text: 428472320
+  active: 7415816192
 runtime:
   max_seq_length: 32768
   dtype: bf16

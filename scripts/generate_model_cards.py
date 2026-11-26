@@ -90,6 +90,7 @@ def main() -> None:
     parser.add_argument("--total-parameters", type=int, default=None)
     parser.add_argument("--trainable-parameters", type=int, default=None)
     parser.add_argument("--input-embedding-parameters", type=int, default=None)
+    parser.add_argument("--non-text-parameters", type=int, default=None)
     parser.add_argument("--active-parameters", type=int, default=None)
     parser.add_argument("--max-seq-length", type=int, default=None)
     args = parser.parse_args()
@@ -102,6 +103,7 @@ def main() -> None:
         total_parameters=args.total_parameters,
         trainable_parameters=args.trainable_parameters,
         input_embedding_parameters=args.input_embedding_parameters,
+        non_text_parameters=args.non_text_parameters,
         active_parameters=args.active_parameters,
         max_seq_length=args.max_seq_length,
     )

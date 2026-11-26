@@ -13,6 +13,12 @@ license:
   source_url: https://huggingface.co/nvidia/Nemotron-3.5-Embed-1B-BF16
 links:
   huggingface: https://huggingface.co/nvidia/Nemotron-3.5-Embed-1B-BF16
+parameters:
+  total: 1554710528
+  trainable: 1554710528
+  input_embedding: 268435456
+  non_text: 413792256
+  active: 872482816
 runtime:
   max_seq_length: 32768
   dtype: bf16
