@@ -22,8 +22,8 @@ links:
     url: https://arxiv.org/abs/2004.12832
 parameters:
   total: 109580544
-  input_embedding: 0
-  active: 109580544
+  input_embedding: 23440896
+  active: 86139648
 embedding:
   truncate_dims: null
 runtime:

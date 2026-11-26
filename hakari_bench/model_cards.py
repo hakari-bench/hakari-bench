@@ -87,6 +87,7 @@ class ModelCardOverrides:
     total_parameters: int | None = None
     trainable_parameters: int | None = None
     input_embedding_parameters: int | None = None
+    non_text_parameters: int | None = None
     active_parameters: int | None = None
     max_seq_length: int | None = None
 
@@ -179,6 +180,7 @@ def model_card_from_metadata(
             overrides.input_embedding_parameters,
             metadata.get("embedding_parameters"),
         ),
+        "non_text": _override_or_metadata(overrides.non_text_parameters, metadata.get("non_text_parameters")),
         "active": _override_or_metadata(overrides.active_parameters, metadata.get("active_parameters")),
     }
     runtime = {
@@ -384,6 +386,35 @@ def write_evaluation_model_card(*, args: Any, model_metadata: dict[str, Any]) ->
         target=target_from_args(args),
     )
     return write_model_card(card, output_dir=output_dir, overwrite=True)
+
+
+_PARAMETER_KEYS = ("total", "trainable", "input_embedding", "non_text", "active")
+
+
+def replace_model_card_parameters_text(text: str, parameters: dict[str, int]) -> str:
+    """Replace a card's top-level ``parameters`` block, preserving other YAML text.
+
+    A missing block is inserted before the first ``embedding``/``runtime`` key (or appended).
+    """
+    block_lines = ["parameters:\n"]
+    for key in _PARAMETER_KEYS:
+        if parameters.get(key) is not None:
+            block_lines.append(f"  {key}: {int(parameters[key])}\n")
+    block = "".join(block_lines)
+    lines = text.splitlines(keepends=True)
+    start = next((index for index, line in enumerate(lines) if line.rstrip("\n") == "parameters:"), None)
+    if start is not None:
+        end = start + 1
+        while end < len(lines) and (lines[end].startswith((" ", "\t")) or not lines[end].strip()):
+            end += 1
+        return "".join([*lines[:start], block, *lines[end:]])
+    anchors = [i for i, line in enumerate(lines) if line.rstrip("\n") in ("embedding:", "runtime:")]
+    if anchors:
+        index = anchors[0]
+        return "".join([*lines[:index], block, *lines[index:]])
+    if text and not text.endswith("\n"):
+        text += "\n"
+    return text + block
 
 
 def load_model_cards(model_cards_path: Path | None) -> dict[str, dict[str, Any]]:
@@ -867,6 +898,7 @@ def _merge_existing_card_metadata(metadata: dict[str, Any], existing_card: dict[
             "total": "total_parameters",
             "trainable": "trainable_parameters",
             "input_embedding": "embedding_parameters",
+            "non_text": "non_text_parameters",
             "active": "active_parameters",
         }
         for card_key, metadata_key in mapping.items():

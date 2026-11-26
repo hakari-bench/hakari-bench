@@ -319,8 +319,10 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
   parameters, trainable parameters, embedding parameters, transformer/active
   parameters, evaluation timestamps, dataset load duration, and evaluation
   timing.
-- Active parameters are currently computed as total parameters minus input
-  embedding parameters when both counts are available.
+- Active parameters count the text path only: total parameters minus input
+  embedding parameters and non-text (vision/audio encoder and multimodal
+  projector) parameters. See `docs/model_cards.md` and audit cards with
+  `scripts/audit_model_card_parameters.py`.
 
 ## Dataset Configuration
 

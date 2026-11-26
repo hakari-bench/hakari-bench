@@ -26,7 +26,7 @@ Model cards are YAML mappings. The common top-level fields are:
 | `method` | yes | One of `dense`, `sparse`, `reranker`, `late-interaction`, or `bm25`. |
 | `license` | yes for static cards | Display and compliance metadata for the model or baseline. |
 | `links` | recommended | Canonical model, repository, and paper links shown in the Model Details dialog. |
-| `parameters` | recommended | Parameter counts: `total`, `trainable`, `input_embedding`, and `active`. |
+| `parameters` | recommended | Parameter counts: `total`, `trainable`, `input_embedding`, optional `non_text`, and `active`. |
 | `embedding` | method-specific | Dense embedding metadata, including `truncate_dims` and optional output/normalization details. |
 | `runtime` | recommended | Model loading defaults such as sequence length, dtype, attention implementation, backend, and trust-remote-code review state. |
 | `prompts` | optional | Prompt names or prompt text required for correct model use. |
@@ -37,9 +37,43 @@ Model cards are YAML mappings. The common top-level fields are:
 | `notes` | optional | Reviewed operational notes that do not fit structured fields. |
 
 `parameters.active` is the count used for size-aware leaderboard display when
-available. For transformer embedding models, it is usually total parameters
-minus input embedding parameters. Keep overrides in the card when automatic
-metadata collection cannot recover the correct value.
+available. HAKARI-Bench evaluates text retrieval, so active parameters count
+the text path only:
+
+```text
+active = total - input_embedding - non_text
+```
+
+- `total` and `trainable` are counted on the loaded model.
+- `input_embedding` is the token embedding table returned by
+  `get_input_embeddings()` (or the static embedding table).
+- `non_text` counts vision/audio encoders and multimodal projectors that a
+  multimodal checkpoint loads but text retrieval never runs, such as Qwen-VL
+  `visual`, `vision_tower`, `multi_modal_projector`, or `audio_tower`
+  (`hakari_bench.models.NON_TEXT_MODULE_NAMES`). Omit it, or use `0`, for
+  text-only models. Modules that the loader does not build, such as encoders
+  dropped through `vision_config=None`, are already outside `total` and are not
+  listed.
+
+Evaluation records `non_text_parameters` in result JSON and subtracts it
+automatically. When a card sets `non_text`, its `active` value replaces the
+active count stored in results with the same `total`. That way, results
+measured before the exclusion are corrected without re-running them. Keep other
+overrides in the card when automatic metadata collection cannot recover the
+correct value.
+
+Audit card counts against the pinned checkpoint's safetensors headers. Only
+tensor names and shapes are downloaded:
+
+```bash
+uv run python scripts/audit_model_card_parameters.py            # report
+uv run python scripts/audit_model_card_parameters.py --write    # fill non_text
+```
+
+`--write` updates only cards whose `total` and `input_embedding` agree with the
+checkpoint and whose loaded model includes the non-text modules. Review every
+other reported mismatch by loading the model. Header totals legitimately
+differ when a checkpoint stores unused heads or separate adapter files.
 
 Dense `embedding` fields may include:
 
