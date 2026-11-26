@@ -52,6 +52,31 @@ def test_model_card_from_metadata_applies_parameter_overrides() -> None:
     assert card["target"] == {"datasets": ["hakari-bench/NanoBEIR-ja"]}
 
 
+def test_model_card_from_metadata_records_non_text_parameters() -> None:
+    metadata = {
+        "method": "dense",
+        "id": "example/vlm-embedding",
+        "source": {"type": "huggingface", "name": "example/vlm-embedding"},
+        "total_parameters": 100,
+        "trainable_parameters": 100,
+        "embedding_parameters": 30,
+        "non_text_parameters": 25,
+        "active_parameters": 45,
+    }
+
+    card = model_cards.model_card_from_metadata(
+        metadata, truncate_dims=None, overrides=model_cards.ModelCardOverrides()
+    )
+
+    assert card["parameters"] == {
+        "total": 100,
+        "trainable": 100,
+        "input_embedding": 30,
+        "non_text": 25,
+        "active": 45,
+    }
+
+
 def test_model_card_from_metadata_requires_method() -> None:
     metadata = {
         "id": "BAAI/bge-m3",
@@ -876,4 +901,46 @@ def _write_result(
             }
         ),
         encoding="utf-8",
+    )
+
+
+def test_replace_model_card_parameters_text_rewrites_only_the_parameters_block() -> None:
+    text = (
+        "id: example/model\n"
+        "parameters:\n"
+        "  total: 10\n"
+        "  active: 6\n"
+        "runtime:\n"
+        "  dtype: bf16\n"
+        "notes:\n"
+        "- keep this note\n"
+    )
+
+    updated = model_cards.replace_model_card_parameters_text(
+        text, {"total": 10, "input_embedding": 4, "non_text": 2, "active": 4}
+    )
+
+    assert updated == (
+        "id: example/model\n"
+        "parameters:\n"
+        "  total: 10\n"
+        "  input_embedding: 4\n"
+        "  non_text: 2\n"
+        "  active: 4\n"
+        "runtime:\n"
+        "  dtype: bf16\n"
+        "notes:\n"
+        "- keep this note\n"
+    )
+
+
+def test_replace_model_card_parameters_text_inserts_missing_block_before_runtime() -> None:
+    text = "id: example/model\nlinks:\n  huggingface: https://example.test\nruntime:\n  dtype: bf16\n"
+
+    updated = model_cards.replace_model_card_parameters_text(text, {"total": 10, "active": 4})
+
+    assert updated == (
+        "id: example/model\nlinks:\n  huggingface: https://example.test\n"
+        "parameters:\n  total: 10\n  active: 4\n"
+        "runtime:\n  dtype: bf16\n"
     )

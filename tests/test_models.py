@@ -20,6 +20,7 @@ from hakari_bench.models import (
     _patch_pylate_dense_missing_activation_function,
     _set_model_dtype,
     collect_model_metadata,
+    count_parameters_from_tensor_shapes,
     load_model,
     load_gemini_embedding_model,
     load_openai_embedding_model,
@@ -853,6 +854,44 @@ def test_collect_model_metadata_counts_active_parameters_from_st_model_attribute
     assert metadata["active_parameters"] == 18
 
 
+def test_collect_model_metadata_counts_active_parameters_through_custom_backend_wrapper() -> None:
+    class Wrapper:
+        """Custom loader wrapper that forwards attributes but is not indexable."""
+
+        def __init__(self) -> None:
+            self.model = _FakeSentenceTransformerLike(backbone_attr="model")
+
+        def __getattr__(self, name: str) -> Any:
+            return getattr(self.model, name)
+
+    metadata = collect_model_metadata(Wrapper(), _metadata_args())
+
+    assert metadata["total_parameters"] == 38
+    assert metadata["embedding_parameters"] == 20
+    assert metadata["active_parameters"] == 18
+
+
+def test_collect_model_metadata_excludes_non_text_modality_parameters_from_active() -> None:
+    model = _FakeSentenceTransformerLike(backbone_attr="model")
+    backbone = model[0].get_submodule("model")
+    backbone.add_module("visual", torch.nn.Linear(2, 3))  # 9 parameters
+    backbone.add_module("multi_modal_projector", torch.nn.Linear(1, 1))  # 2 parameters
+
+    metadata = collect_model_metadata(model, _metadata_args())
+
+    assert metadata["total_parameters"] == 49
+    assert metadata["embedding_parameters"] == 20
+    assert metadata["non_text_parameters"] == 11
+    assert metadata["active_parameters"] == 18
+
+
+def test_collect_model_metadata_reports_zero_non_text_parameters_for_text_models() -> None:
+    metadata = collect_model_metadata(_FakeSentenceTransformerLike(backbone_attr="model"), _metadata_args())
+
+    assert metadata["non_text_parameters"] == 0
+    assert metadata["active_parameters"] == 18
+
+
 def test_collect_model_metadata_counts_static_embedding_table_as_input_embeddings() -> None:
     model = _FakeStaticSentenceTransformerLike()
     args = _metadata_args()
@@ -974,3 +1013,57 @@ class FakeCustomModule(torch.nn.Module):
     def __init__(self) -> None:
         super().__init__()
         self.model = _FakeNestedModel()
+
+
+def test_count_parameters_from_tensor_shapes_excludes_non_text_modules() -> None:
+    counts = count_parameters_from_tensor_shapes(
+        {
+            "model.language_model.embed_tokens.weight": [10, 4],
+            "model.language_model.layers.0.mlp.weight": [4, 4],
+            "model.visual.blocks.0.attn.weight": [3, 3],
+            "model.visual.patch_embed.proj.weight": [2, 2],
+            "model.multi_modal_projector.linear_1.weight": [2, 1],
+            "1_Dense/linear.weight": [4, 2],
+        }
+    )
+
+    assert counts == {
+        "total": 79,
+        "input_embedding": 40,
+        "input_embedding_tensor": "model.language_model.embed_tokens.weight",
+        "non_text": 15,
+        "active": 24,
+    }
+
+
+def test_count_parameters_from_tensor_shapes_uses_largest_text_embedding_table() -> None:
+    counts = count_parameters_from_tensor_shapes(
+        {
+            "embeddings.word_embeddings.weight": [100, 8],
+            "embeddings.position_embeddings.weight": [16, 8],
+            "encoder.layer.0.weight": [8, 8],
+        }
+    )
+
+    assert counts["input_embedding"] == 800
+    assert counts["non_text"] == 0
+    assert counts["active"] == 128 + 64
+
+
+def test_count_parameters_from_tensor_shapes_skips_buffers_and_reads_parametrized_embeddings() -> None:
+    counts = count_parameters_from_tensor_shapes(
+        {
+            "embeddings.position_ids": [1, 512],
+            "roberta.embeddings.word_embeddings.parametrizations.weight.original": [100, 8],
+            "roberta.embeddings.word_embeddings.parametrizations.weight.0.lora_A": [2, 100, 1],
+            "encoder.weight": [8, 8],
+        }
+    )
+
+    assert counts["total"] == 800 + 200 + 64
+    assert counts["input_embedding"] == 800
+
+
+def test_count_parameters_from_tensor_shapes_reads_static_embedding_tables() -> None:
+    assert count_parameters_from_tensor_shapes({"embeddings": [50, 4]})["active"] == 0
+    assert count_parameters_from_tensor_shapes({"0_StaticEmbedding/embedding.weight": [50, 4]})["active"] == 0

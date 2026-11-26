@@ -2830,6 +2830,40 @@ def test_model_card_metadata_fills_missing_parameter_fields_without_overwriting(
     assert updated["transformer_parameters"] == 4
 
 
+def test_model_card_metadata_with_non_text_count_replaces_result_active_parameters() -> None:
+    model = {
+        "id": "example/vlm-embedding",
+        "total_parameters": 100,
+        "active_parameters": 70,
+        "embedding_parameters": 30,
+        "transformer_parameters": 70,
+    }
+    model_cards = {
+        "example/vlm-embedding": {
+            "parameters": {"total": 100, "input_embedding": 30, "non_text": 25, "active": 45},
+        },
+    }
+
+    updated = report._with_model_card_metadata(model, model_cards=model_cards)
+
+    assert updated["active_parameters"] == 45
+    assert updated["transformer_parameters"] == 45
+    assert updated["non_text_parameters"] == 25
+
+
+def test_model_card_metadata_ignores_non_text_card_for_a_different_checkpoint() -> None:
+    model = {"id": "example/vlm-embedding", "total_parameters": 99, "active_parameters": 69}
+    model_cards = {
+        "example/vlm-embedding": {
+            "parameters": {"total": 100, "input_embedding": 30, "non_text": 25, "active": 45},
+        },
+    }
+
+    updated = report._with_model_card_metadata(model, model_cards=model_cards)
+
+    assert updated["active_parameters"] == 69
+
+
 def test_model_card_metadata_fills_method_from_model_card() -> None:
     model = {"id": "mixedbread-ai/mxbai-rerank-base-v2"}
     model_cards = {

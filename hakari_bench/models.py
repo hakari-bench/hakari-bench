@@ -1898,10 +1898,11 @@ def _version_or_none(package: str) -> str | None:
 
 
 def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
-    total_parameters, trainable_parameters, embedding_parameters = _parameter_counts(model)
+    total_parameters, trainable_parameters, embedding_parameters, non_text_parameters = _parameter_counts(model)
     active_parameters = _active_parameter_count(
         total_parameters=total_parameters,
         embedding_parameters=embedding_parameters,
+        non_text_parameters=non_text_parameters,
     )
     source = _model_source_with_revision(
         getattr(args, "model_source", {"type": "huggingface", "name": args.model}),
@@ -1929,6 +1930,7 @@ def collect_model_metadata(model: Any, args: Any) -> dict[str, Any]:
         "total_parameters": total_parameters,
         "trainable_parameters": trainable_parameters,
         "embedding_parameters": embedding_parameters,
+        "non_text_parameters": non_text_parameters,
         "transformer_parameters": active_parameters,
         "active_parameters": active_parameters,
     }
@@ -2028,26 +2030,107 @@ def _model_source_with_revision(source: Any, *, requested_revision: str | None) 
     return payload
 
 
-def _parameter_counts(model: Any) -> tuple[int | None, int | None, int | None]:
+# Module names of non-text encoders and projectors bundled with multimodal
+# checkpoints (Qwen-VL ``visual``, LLaVA/Mistral3/T5Gemma2 ``vision_tower`` and
+# ``multi_modal_projector``, Gemma 3n ``audio_tower``/``embed_vision``, ...).
+# Text retrieval never runs them, so they are not active parameters.
+NON_TEXT_MODULE_NAMES = frozenset(
+    {
+        "visual",
+        "vision_tower",
+        "vision_model",
+        "vision_encoder",
+        "multi_modal_projector",
+        "mm_projector",
+        "audio_tower",
+        "audio_model",
+        "audio_encoder",
+        "embed_vision",
+        "embed_audio",
+    }
+)
+
+
+def _parameter_counts(model: Any) -> tuple[int | None, int | None, int | None, int | None]:
     named_parameters = _named_parameters(model)
     if named_parameters is None:
-        return None, None, None
+        return None, None, None, None
     total = 0
     trainable = 0
+    non_text = 0
     for name, parameter in named_parameters:
         count = int(parameter.numel())
         total += count
         if parameter.requires_grad:
             trainable += count
-    return total, trainable, _embedding_parameter_count(model)
+        if _is_non_text_parameter(name):
+            non_text += count
+    return total, trainable, _embedding_parameter_count(model), non_text
 
 
-def _active_parameter_count(*, total_parameters: int | None, embedding_parameters: int | None) -> int | None:
+def _is_non_text_parameter(name: str) -> bool:
+    return any(component in NON_TEXT_MODULE_NAMES for component in name.split("."))
+
+
+# Module names that hold a token embedding table in common checkpoints.
+_INPUT_EMBEDDING_MODULE_NAMES = frozenset(
+    {"embed_tokens", "word_embeddings", "tok_embeddings", "wte", "shared", "embedding", "embeddings"}
+)
+# Non-parameter buffers that older checkpoints serialize next to weights.
+_SERIALIZED_BUFFER_NAMES = frozenset({"position_ids"})
+
+
+def count_parameters_from_tensor_shapes(shapes: dict[str, Any]) -> dict[str, Any]:
+    """Count total, input-embedding, non-text and active parameters from tensor shapes.
+
+    ``shapes`` maps checkpoint tensor names (for example from safetensors
+    headers) to shapes. The input embedding is the largest token embedding
+    table outside non-text modules; this mirrors ``get_input_embeddings()``
+    for the checkpoints evaluated so far, but is a header-only estimate.
+    """
+    total = 0
+    non_text = 0
+    embedding_name: str | None = None
+    embedding_count = 0
+    for name, shape in shapes.items():
+        dotted = name.replace("/", ".").replace(".parametrizations.weight.original", ".weight")
+        components = dotted.split(".")
+        if components[-1] in _SERIALIZED_BUFFER_NAMES:
+            continue
+        count = 1
+        for dimension in shape:
+            count *= int(dimension)
+        total += count
+        if _is_non_text_parameter(dotted):
+            non_text += count
+            continue
+        module_name = components[-2] if len(components) >= 2 and components[-1] == "weight" else components[-1]
+        if module_name in _INPUT_EMBEDDING_MODULE_NAMES and count > embedding_count:
+            embedding_name, embedding_count = name, count
+    active = _active_parameter_count(
+        total_parameters=total,
+        embedding_parameters=embedding_count if embedding_name is not None else None,
+        non_text_parameters=non_text,
+    )
+    return {
+        "total": total,
+        "input_embedding": embedding_count if embedding_name is not None else None,
+        "input_embedding_tensor": embedding_name,
+        "non_text": non_text,
+        "active": active,
+    }
+
+
+def _active_parameter_count(
+    *,
+    total_parameters: int | None,
+    embedding_parameters: int | None,
+    non_text_parameters: int | None = None,
+) -> int | None:
     if total_parameters is None or embedding_parameters is None:
         return None
-    if embedding_parameters > total_parameters:
-        return None
-    return total_parameters - embedding_parameters
+    active = total_parameters - embedding_parameters - (non_text_parameters or 0)
+    return active if active >= 0 else None
 
 
 def _embedding_parameter_count(model: Any) -> int | None:
@@ -2113,10 +2196,16 @@ def _static_embedding_weight(model: Any) -> Any | None:
 
 
 def _first_sentence_transformer_module(model: Any) -> Any | None:
-    try:
-        return model[0]
-    except Exception:
-        return None
+    # Custom loader wrappers usually keep the SentenceTransformers-style model
+    # under ``.model``; attribute forwarding does not make the wrapper indexable.
+    for candidate in (model, getattr(model, "model", None)):
+        if candidate is None:
+            continue
+        try:
+            return candidate[0]
+        except Exception:
+            continue
+    return None
 
 
 def _named_parameters(model: Any) -> list[tuple[str, torch.nn.Parameter]] | None:
