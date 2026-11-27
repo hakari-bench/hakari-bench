@@ -240,6 +240,18 @@ uv run python scripts/build_results_database_and_report.py \
   --incremental
 ```
 
+Rebuilds reuse a content-addressed result extract cache by default
+(`~/.cache/hakari-bench/result-extract-cache`, or
+`$HAKARI_BENCH_RESULT_CACHE_DIR`). Each result JSON is parsed at most once per
+content hash, and model cards and viewer configuration are applied after the
+cache. Rebuilding after a model-card-only change, or after a sync that added
+only a few result files, therefore parses only new or changed result JSON.
+Pass `--result-cache-dir PATH` to use another cache location, or
+`--no-result-cache` to parse everything with the streaming reader. The viewer
+mart is precomputed with `--viewer-mart-workers` processes (default: physical
+CPU cores minus one). See [`duckdb_schema.md`](duckdb_schema.md#result-extract-cache)
+for cache keys and invalidation rules.
+
 ```bash
 uv run python scripts/build_results_database_and_report.py \
   --results-dir output/hakari-results \
@@ -292,6 +304,11 @@ By default, this does the following:
      --results-dir ~/.cache/hakari-bench/hf-datasets/hakari-bench__results__xet/hakari-results \
      --duckdb-path output/clean-hf-results-duckdb/hakari-bench__results__xet/hakari_bench.duckdb
    ```
+
+The rebuild step passes `--result-cache-dir` and `--no-result-cache` through
+to the builder. Keep the default cache when rebuilding repeatedly: after the
+first build, a rebuild for a model-card-only change reuses every cached result
+extract.
 
 The dataset repo is private, so authenticate before syncing, for example with
 `hf auth login` or a configured Hugging Face git credential. If the checkout

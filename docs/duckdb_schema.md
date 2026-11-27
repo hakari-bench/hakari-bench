@@ -63,6 +63,70 @@ With no arguments, the builder reads `output/hakari-results` and writes
 `output/hakari-results/hakari_bench.duckdb`. It streams selected result rows
 into DuckDB by default, which keeps Python memory use low for full rebuilds.
 
+### Result extract cache
+
+Full rebuilds are dominated by reading result JSON: the canonical results
+dataset holds tens of thousands of `.json.xz` files, many of which decompress
+to tens of megabytes because they embed `artifacts.top_rankings`. To avoid
+paying that cost on every rebuild, the builder keeps a content-addressed
+result extract cache, enabled by default:
+
+- Each result JSON is read once per build and its raw-file SHA-256 is computed
+  from the full file bytes. The same hash is stored in
+  `source_load_state.payload_sha256`.
+- On a cache miss the file is read in a single streaming pass. The summary
+  payload and the selected top-ranking rows are collected together, using the
+  same ranking selection as the uncached reader, instead of in two separate
+  passes. A second pass is only needed when `artifacts` appears before
+  `evaluation` in the file. The builder stores an extract containing the
+  top-level payload without `artifacts` plus the viewer metrics recomputed
+  from the selected top-ranking rows (`VIEWER_RECOMPUTED_METRICS`). Metric
+  names are rebuilt from the cached values with the canonical task name of
+  the current viewer configuration.
+- Extracts live under
+  `{cache_dir}/v{N}-{fingerprint}/extracts/{sha[:2]}/{sha}.json.zlib`. The
+  namespace changes when `RESULT_EXTRACT_CACHE_VERSION` or the recomputed
+  metric list changes, so stale extracts are never reused.
+- A per-path index under `{cache_dir}/v{N}-{fingerprint}/sources/` maps each
+  result path, file size, and `mtime_ns` to its SHA-256. Unchanged files are
+  therefore not re-read or re-hashed. When size or mtime changed, the file is
+  hashed again, and identical content (for example after a fresh clone) still
+  reuses its extract without parsing.
+- Model cards, dataset registry metadata, and viewer benchmark configuration
+  are applied after the cache, so changing only `config/model_cards/` or
+  `config/viewer/` reuses every extract.
+- Files whose derived values depend on another file (sidecar top-ranking
+  artifacts referenced by `artifacts.top_rankings.path`) are never cached.
+  They are parsed on every build, as without the cache.
+- Legacy JSON with non-standard `NaN`/`Infinity` numbers, such as static
+  embedding results that record `max_seq_length` as `Infinity`, is parsed with
+  the stdlib `json` module like the uncached reader. Its extract is written
+  with the stdlib encoder, which keeps those values. The cache reads every
+  extract with orjson and falls back to the stdlib decoder for these
+  extracts.
+- `--include-retrieval-rankings` builds still parse the ranking artifacts,
+  because the extract does not keep raw rankings.
+
+The cache directory defaults to `$HAKARI_BENCH_RESULT_CACHE_DIR` or
+`~/.cache/hakari-bench/result-extract-cache`. Use `--result-cache-dir PATH`
+to choose another location and `--no-result-cache` to disable it. The cache
+holds derived data only; deleting it is always safe and only makes the next
+build slower. With the cache enabled, a warm build, such as a
+model-card-only change, reads no result JSON. Only cache index entries and
+compressed extracts are read.
+
+Streaming builds also move the work that grows with row count out of the main
+process. Worker processes convert task and metric rows to Arrow tables with
+the DuckDB column types, and one writer thread inserts them in arrival order
+while results keep arriving. A file whose values do not fit those types keeps
+the row-based insert path. The precomputed viewer leaderboard mart is computed
+in parallel by `(view, score target, display-combination chunk)`, and results
+are concatenated in the serial loop order. Use `--viewer-mart-workers N`
+(default: physical CPU cores minus one) to control the mart processes, and
+`--viewer-mart-workers 1` for a serial mart build.
+
+### Incremental builds
+
 Use `--incremental` for repeated local or deploy builds against an existing
 DuckDB file. The builder compares source JSON hashes from `source_load_state`
 with the current files and compares the model-card YAML manifest hash recorded
@@ -369,7 +433,7 @@ canonical facts.
 | column | type | meaning |
 | --- | --- | --- |
 | `result_path` | `VARCHAR` | Source task JSON path. |
-| `payload_sha256` | `VARCHAR` | SHA-256 hash of the result JSON file when the file is available locally, otherwise `NULL`. |
+| `payload_sha256` | `VARCHAR` | SHA-256 hash of the complete raw result JSON file bytes (compressed bytes for `.json.xz`/`.json.gz`) when the file is available locally, otherwise `NULL`. Bytes after the end of a compressed stream are included. |
 | `canonical_key_hash` | `VARCHAR` | Stable hash of the source identity used for future incremental bookkeeping. |
 | `last_successful_batch_id` | `VARCHAR` | Batch id that last loaded this source. |
 | `loaded_at_utc` | `VARCHAR` | Load timestamp for this source state row. |

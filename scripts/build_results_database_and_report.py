@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 from contextlib import contextmanager
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
 import gzip
 import hashlib
 import json
@@ -13,6 +13,7 @@ import os
 import resource
 import shutil
 import sys
+import zlib
 from collections import defaultdict
 from collections.abc import AsyncIterable, Awaitable, Callable, Iterable, Sequence
 from dataclasses import dataclass, field, replace
@@ -86,6 +87,9 @@ FULL_PARSE_RESULT_JSON_MAX_BYTES = 128 * 1024
 STREAM_RESULT_INSERT_CHUNK_SIZE = 10_000
 DEFAULT_RESULTS_DIR = Path("output/hakari-results")
 DEFAULT_DUCKDB_PATH = DEFAULT_RESULTS_DIR / "hakari_bench.duckdb"
+RESULT_EXTRACT_CACHE_VERSION = 1
+RESULT_CACHE_DIR_ENV = "HAKARI_BENCH_RESULT_CACHE_DIR"
+DEFAULT_RESULT_CACHE_DIR = Path.home() / ".cache" / "hakari-bench" / "result-extract-cache"
 
 
 @dataclass(frozen=True)
@@ -116,6 +120,8 @@ class WarehouseBuildPlan:
     result_workers: ResultWorkerCounts
     exclude_model_names: set[str]
     model_name_override: str | None
+    result_cache_dir: Path | None = None
+    viewer_mart_workers: int = 1
 
 
 def _physical_cpu_count_from_linux_cpuinfo(
@@ -513,9 +519,351 @@ def _open_json_bytes_with_raw_sha256(path: Path) -> Any:
     else:
         stream = hashing_file
     try:
-        yield stream, hashing_file.digest
+        yield stream, hashing_file
     finally:
         stream.close()
+
+
+def _result_extract_cache_namespace() -> str:
+    # Bump RESULT_EXTRACT_CACHE_VERSION whenever the extract layout or the
+    # file-intrinsic values stored in it change. The recomputed metric list is
+    # hashed in so a metric change cannot reuse stale cached values.
+    fingerprint = hashlib.sha256(
+        orjson.dumps([RESULT_EXTRACT_CACHE_VERSION, list(VIEWER_RECOMPUTED_METRICS)])
+    ).hexdigest()[:12]
+    return f"v{RESULT_EXTRACT_CACHE_VERSION}-{fingerprint}"
+
+
+def _result_extract_cache_path(cache_dir: Path, payload_sha256: str) -> Path:
+    return cache_dir / _result_extract_cache_namespace() / "extracts" / payload_sha256[:2] / f"{payload_sha256}.json.zlib"
+
+
+def _result_source_index_path(cache_dir: Path, result_path: Path) -> Path:
+    path_key = hashlib.sha256(os.path.abspath(result_path).encode("utf-8")).hexdigest()
+    return cache_dir / _result_extract_cache_namespace() / "sources" / path_key[:2] / f"{path_key}.json"
+
+
+def _atomic_write_bytes(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_name(f"{path.name}.{os.getpid()}.tmp")
+    try:
+        temp_path.write_bytes(data)
+        os.replace(temp_path, path)
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+def _load_result_extract(cache_dir: Path, payload_sha256: str) -> dict[str, Any] | None:
+    try:
+        decoded = zlib.decompress(_result_extract_cache_path(cache_dir, payload_sha256).read_bytes())
+    except (OSError, zlib.error):
+        return None
+    try:
+        extract = orjson.loads(decoded)
+    except orjson.JSONDecodeError:
+        # Extracts of legacy results with NaN/Infinity are written by the
+        # stdlib encoder; read them back the same way.
+        try:
+            extract = json.loads(decoded)
+        except ValueError:
+            return None
+    if not isinstance(extract, dict) or not isinstance(extract.get("summary"), dict):
+        return None
+    if not isinstance(extract.get("ranking_metrics"), list):
+        return None
+    return extract
+
+
+def _store_result_extract(
+    cache_dir: Path,
+    payload_sha256: str,
+    extract: dict[str, Any],
+    *,
+    non_finite_floats: bool = False,
+) -> None:
+    """Write one extract.
+
+    ``non_finite_floats`` marks extracts parsed by the stdlib from legacy JSON
+    with NaN/Infinity. orjson would write those values as null, so they are
+    encoded with the stdlib, which keeps them and round-trips every float.
+    """
+    try:
+        if non_finite_floats:
+            encoded = json.dumps(extract, allow_nan=True, separators=(",", ":")).encode("ascii")
+        else:
+            encoded = orjson.dumps(extract)
+        data = zlib.compress(encoded, 3)
+    except (TypeError, ValueError, orjson.JSONEncodeError):
+        # Values orjson cannot represent exactly (for example integers wider
+        # than 64 bits) stay uncached and use the regular parser.
+        return
+    try:
+        _atomic_write_bytes(_result_extract_cache_path(cache_dir, payload_sha256), data)
+    except OSError:
+        return
+
+
+def _cached_source_sha256(cache_dir: Path, result_path: Path, stat: os.stat_result) -> str | None:
+    try:
+        entry = orjson.loads(_result_source_index_path(cache_dir, result_path).read_bytes())
+    except (OSError, orjson.JSONDecodeError):
+        return None
+    if (
+        isinstance(entry, dict)
+        and entry.get("path") == os.path.abspath(result_path)
+        and entry.get("size") == stat.st_size
+        and entry.get("mtime_ns") == stat.st_mtime_ns
+        and isinstance(entry.get("sha256"), str)
+    ):
+        return entry["sha256"]
+    return None
+
+
+def _store_source_sha256(cache_dir: Path, result_path: Path, stat: os.stat_result, payload_sha256: str) -> None:
+    entry = {
+        "path": os.path.abspath(result_path),
+        "size": stat.st_size,
+        "mtime_ns": stat.st_mtime_ns,
+        "sha256": payload_sha256,
+    }
+    try:
+        _atomic_write_bytes(_result_source_index_path(cache_dir, result_path), orjson.dumps(entry))
+    except OSError:
+        return
+
+
+def _decompress_result_bytes(path: Path, raw: bytes) -> bytes:
+    if path.name.endswith(".json.gz"):
+        return gzip.decompress(raw)
+    if path.name.endswith(".json.xz"):
+        return lzma.decompress(raw)
+    return raw
+
+
+def _result_extract_from_payload(payload: dict[str, Any], *, result_path: Path) -> dict[str, Any] | None:
+    """Build the cacheable, model-card-independent part of one result JSON.
+
+    Returns None when the derived values depend on files other than the
+    result JSON itself (sidecar ranking artifacts), which must not be cached
+    under the result file hash.
+    """
+    summary = dict(payload)
+    summary.pop("artifacts", None)
+    artifact = _top_rankings_artifact(payload)
+    if artifact is not None:
+        rankings = artifact.get("rankings")
+        path = artifact.get("path")
+        if isinstance(path, str) and path and not (isinstance(rankings, list) and rankings):
+            return None
+    evaluation = payload.get("evaluation", {})
+    if not isinstance(evaluation, dict):
+        evaluation = {}
+    try:
+        ranking_metrics = _ranking_metric_values(
+            evaluation=evaluation,
+            embedding_evaluations=_embedding_evaluations(
+                evaluation.get("embedding_evaluations") or payload.get("embedding_evaluations")
+            ),
+            task_payload=payload,
+            result_path=result_path,
+        )
+    except (TypeError, ValueError, KeyError, AttributeError):
+        return None
+    return {"summary": summary, "ranking_metrics": [list(item) for item in ranking_metrics]}
+
+
+def _read_result_summary_with_extract_cache(
+    path: Path,
+    *,
+    cache_dir: Path,
+) -> tuple[dict[str, Any], str | None] | None:
+    """Return the summary payload and raw-file SHA-256, reading the file at most once.
+
+    A per-path index keyed by file size and mtime skips hashing unchanged
+    files; extracts are content-addressed by the raw-file SHA-256, so a file
+    restored with identical bytes reuses its extract.
+    """
+    stat = path.stat()
+    known_sha256 = _cached_source_sha256(cache_dir, path, stat)
+    if known_sha256 is not None:
+        extract = _load_result_extract(cache_dir, known_sha256)
+        if extract is not None:
+            return extract["summary"], known_sha256
+    # The index can miss for unchanged content, for example after a fresh
+    # clone resets every mtime. Hashing the raw bytes is cheap compared with
+    # parsing, so check the content-addressed extract before parsing.
+    payload_sha256 = _payload_sha256(str(path))
+    if payload_sha256 is not None:
+        extract = _load_result_extract(cache_dir, payload_sha256)
+        if extract is not None:
+            _store_source_sha256(cache_dir, path, stat, payload_sha256)
+            return extract["summary"], payload_sha256
+    try:
+        streamed = _read_result_extract_stream(path)
+    except (ijson.JSONError, UnicodeDecodeError, ValueError):
+        streamed = None
+    if streamed is None:
+        return _read_result_summary_with_full_parse(path, cache_dir=cache_dir, stat=stat)
+    summary_payload, payload_sha256, extract = streamed
+    if extract is None:
+        return summary_payload, payload_sha256
+    _store_result_extract(cache_dir, payload_sha256, extract)
+    _store_source_sha256(cache_dir, path, stat, payload_sha256)
+    return extract["summary"], payload_sha256
+
+
+def _read_result_summary_with_full_parse(
+    path: Path,
+    *,
+    cache_dir: Path,
+    stat: os.stat_result,
+) -> tuple[dict[str, Any], str | None] | None:
+    """Fallback for files the streaming reader rejects (for example NaN literals)."""
+    raw = path.read_bytes()
+    payload_sha256 = hashlib.sha256(raw).hexdigest()
+    extract = _load_result_extract(cache_dir, payload_sha256)
+    if extract is None:
+        decoded = _decompress_result_bytes(path, raw)
+        del raw
+        try:
+            payload = orjson.loads(decoded)
+            non_finite_floats = False
+        except orjson.JSONDecodeError:
+            # Legacy JSON with NaN/Infinity (for example static embedding
+            # models recording max_seq_length as Infinity) is parsed with the
+            # stdlib, as the uncached reader does.
+            payload = json.loads(decoded.decode("utf-8"))
+            non_finite_floats = True
+        del decoded
+        if not isinstance(payload, dict):
+            return None
+        extract = _result_extract_from_payload(payload, result_path=path)
+        if extract is None:
+            summary_payload = dict(payload)
+            summary_payload.pop("artifacts", None)
+            return summary_payload, payload_sha256
+        _store_result_extract(cache_dir, payload_sha256, extract, non_finite_floats=non_finite_floats)
+    _store_source_sha256(cache_dir, path, stat, payload_sha256)
+    return extract["summary"], payload_sha256
+
+
+class _PushbackIterator:
+    def __init__(self, iterable: Iterable[Any]) -> None:
+        self._iterator = iter(iterable)
+        self._pushed: list[Any] = []
+
+    def __iter__(self) -> _PushbackIterator:
+        return self
+
+    def __next__(self) -> Any:
+        if self._pushed:
+            return self._pushed.pop()
+        return next(self._iterator)
+
+    def push(self, item: Any) -> None:
+        self._pushed.append(item)
+
+
+def _root_value_events(events: _PushbackIterator) -> Iterable[tuple[str, str, Any]]:
+    """Yield the events of the current root-level value, stopping before the next root key."""
+    for item in events:
+        if item[0] == "":
+            events.push(item)
+            return
+        yield item
+
+
+def _read_result_extract_stream(path: Path) -> tuple[dict[str, Any], str, dict[str, Any] | None]:
+    """Read one result JSON in a single streaming pass.
+
+    Returns the summary payload (everything except ``artifacts``), the raw-file
+    SHA-256, and the cacheable extract (None when the file must not be
+    cached). Top-ranking rows are filtered while streaming, as in the regular
+    two-pass reader, when the selection fields precede ``artifacts``;
+    otherwise the artifact is read with a second streaming pass.
+    """
+    payload: dict[str, Any] = {}
+    artifact: dict[str, Any] | None = None
+    artifact_needs_second_pass = False
+    with _open_json_bytes_with_raw_sha256(path) as (file, hashing_file):
+        events = _PushbackIterator(ijson.parse(file, use_float=True))
+        current_key: str | None = None
+        builder: _JsonValueBuilder | None = None
+        for prefix, event, value in events:
+            if prefix == "" and event == "start_map":
+                continue
+            if prefix == "" and event == "map_key":
+                current_key = str(value)
+                builder = None
+                if current_key == "artifacts":
+                    if _top_ranking_selection_fields_available(payload):
+                        artifact = _collect_top_rankings_artifact(
+                            _root_value_events(events),
+                            payload=payload,
+                            include_retrieval_rankings=False,
+                        )
+                    else:
+                        artifact_needs_second_pass = True
+                        for _ in _root_value_events(events):
+                            pass
+                    current_key = None
+                continue
+            if prefix == "" and event == "end_map":
+                break
+            if current_key is None:
+                continue
+            if builder is None:
+                builder = _JsonValueBuilder()
+            done, result = builder.feed(event, value)
+            if done:
+                payload[current_key] = result
+                current_key = None
+                builder = None
+        for _ in iter(lambda: file.read(1024 * 1024), b""):
+            pass
+        for _ in iter(lambda: hashing_file.read(1024 * 1024), b""):
+            pass
+        payload_sha256 = hashing_file.digest.hexdigest()
+    if artifact_needs_second_pass:
+        artifact = _read_top_rankings_artifact_stream(path, payload=payload, include_retrieval_rankings=False)
+    task_payload = dict(payload)
+    if artifact is not None:
+        task_payload["artifacts"] = {"top_rankings": artifact}
+    return payload, payload_sha256, _result_extract_from_payload(task_payload, result_path=path)
+
+
+def _top_ranking_selection_fields_available(payload: dict[str, Any]) -> bool:
+    # Ranking selection reads evaluation.embedding_evaluations, falling back
+    # to a top-level embedding_evaluations key, plus the reranking evaluation.
+    evaluation = payload.get("evaluation")
+    if not isinstance(evaluation, dict):
+        return False
+    return bool(evaluation.get("embedding_evaluations")) or "embedding_evaluations" in payload
+
+
+def _load_task_payload_for_selected(
+    selected_result: SelectedResultJson,
+    *,
+    include_retrieval_rankings: bool,
+    result_cache_dir: Path | None,
+) -> tuple[dict[str, Any] | None, list[Any] | None]:
+    """Load the task payload used for row building.
+
+    Returns cached ranking metric values when available so the large
+    top-ranking artifact does not have to be parsed again.
+    """
+    if result_cache_dir is not None and not include_retrieval_rankings and selected_result.payload_sha256:
+        extract = _load_result_extract(result_cache_dir, selected_result.payload_sha256)
+        if extract is not None:
+            return extract["summary"], extract["ranking_metrics"]
+    return (
+        _read_result_json_from_summary(
+            selected_result.result_path,
+            payload=selected_result.payload,
+            include_retrieval_rankings=include_retrieval_rankings,
+        ),
+        None,
+    )
 
 
 def _read_result_json(
@@ -664,11 +1012,15 @@ def _read_result_summary_json(path: Path) -> dict[str, Any]:
 
 
 def _read_result_summary_json_with_sha256(path: Path) -> tuple[dict[str, Any], str]:
-    with _open_json_bytes_with_raw_sha256(path) as (file, digest):
+    with _open_json_bytes_with_raw_sha256(path) as (file, hashing_file):
         payload = _read_result_summary_json_from_file(file)
         for _ in iter(lambda: file.read(1024 * 1024), b""):
             pass
-        return payload, digest.hexdigest()
+        # Decompressors stop at the end of the compressed stream; hash any
+        # trailing bytes too so the digest always covers the whole raw file.
+        for _ in iter(lambda: hashing_file.read(1024 * 1024), b""):
+            pass
+        return payload, hashing_file.digest.hexdigest()
 
 
 def _read_result_summary_json_from_file(file: Any) -> dict[str, Any]:
@@ -704,6 +1056,21 @@ def _read_top_rankings_artifact_stream(
     payload: dict[str, Any],
     include_retrieval_rankings: bool,
 ) -> dict[str, Any] | None:
+    with _open_json_bytes(path) as file:
+        return _collect_top_rankings_artifact(
+            ijson.parse(file, use_float=True),
+            payload=payload,
+            include_retrieval_rankings=include_retrieval_rankings,
+        )
+
+
+def _collect_top_rankings_artifact(
+    events: Iterable[tuple[str, str, Any]],
+    *,
+    payload: dict[str, Any],
+    include_retrieval_rankings: bool,
+) -> dict[str, Any] | None:
+    """Collect ``artifacts.top_rankings`` from ijson events, keeping only selected rankings."""
     artifact: dict[str, Any] = {}
     qrels: list[Any] = []
     rankings: list[dict[str, Any]] = []
@@ -728,82 +1095,81 @@ def _read_top_rankings_artifact_stream(
         evaluation=evaluation,
         embedding_evaluations=embedding_evaluations,
     )
-    with _open_json_bytes(path) as file:
-        for prefix, event, value in ijson.parse(file, use_float=True):
-            if prefix in {
-                "artifacts.top_rankings.schema_version",
-                "artifacts.top_rankings.top_k",
-                "artifacts.top_rankings.path",
-            } and event in {"string", "number", "boolean", "null"}:
-                artifact[prefix.rsplit(".", 1)[-1]] = value
-                continue
-            if qrel_builder is not None:
-                done, qrel = qrel_builder.feed(event, value)
-                if done:
-                    qrels.append(qrel)
-                    qrel_builder = None
-                continue
-            if prefix == qrels_item_prefix:
-                if qrel_builder is None:
-                    qrel_builder = _JsonValueBuilder()
-                done, qrel = qrel_builder.feed(event, value)
-                if done:
-                    qrels.append(qrel)
-                    qrel_builder = None
-                continue
-            if prefix == ranking_prefix and event == "start_map":
-                current_ranking = {}
-                current_corpus_ids = None
-                keep_current_ranking = None
-                collect_current_corpus_ids = False
-                in_current_corpus_ids = False
-                continue
-            if current_ranking is None:
-                continue
-            if prefix == ranking_prefix and event == "end_map":
-                if current_corpus_ids is not None:
-                    current_ranking["corpus_ids"] = current_corpus_ids
-                if keep_current_ranking is None:
-                    keep_current_ranking = _keep_top_ranking_row(
-                        current_ranking,
-                        selection_context=selection_context,
-                        include_retrieval_rankings=include_retrieval_rankings,
-                    )
-                if keep_current_ranking:
-                    rankings.append(current_ranking)
-                current_ranking = None
-                current_corpus_ids = None
-                keep_current_ranking = None
-                collect_current_corpus_ids = False
-                in_current_corpus_ids = False
-                continue
-            if prefix == corpus_ids_prefix and event == "start_array":
-                fields_complete = _ranking_selection_fields_complete(current_ranking)
-                if fields_complete:
-                    keep_current_ranking = _keep_top_ranking_row(
-                        current_ranking,
-                        selection_context=selection_context,
-                        include_retrieval_rankings=include_retrieval_rankings,
-                    )
-                collect_current_corpus_ids = not fields_complete or bool(keep_current_ranking)
-                current_corpus_ids = [] if collect_current_corpus_ids else None
-                in_current_corpus_ids = True
-                continue
-            if prefix == corpus_ids_prefix and event == "end_array":
-                in_current_corpus_ids = False
-                continue
-            if in_current_corpus_ids:
-                if collect_current_corpus_ids and prefix == corpus_ids_item_prefix and event in {
-                    "string",
-                    "number",
-                    "boolean",
-                    "null",
-                }:
-                    assert current_corpus_ids is not None
-                    current_corpus_ids.append(value)
-                continue
-            if prefix.startswith(ranking_field_prefix) and event in {"string", "number", "boolean", "null"}:
-                current_ranking[prefix[len(ranking_field_prefix) :]] = value
+    for prefix, event, value in events:
+        if prefix in {
+            "artifacts.top_rankings.schema_version",
+            "artifacts.top_rankings.top_k",
+            "artifacts.top_rankings.path",
+        } and event in {"string", "number", "boolean", "null"}:
+            artifact[prefix.rsplit(".", 1)[-1]] = value
+            continue
+        if qrel_builder is not None:
+            done, qrel = qrel_builder.feed(event, value)
+            if done:
+                qrels.append(qrel)
+                qrel_builder = None
+            continue
+        if prefix == qrels_item_prefix:
+            if qrel_builder is None:
+                qrel_builder = _JsonValueBuilder()
+            done, qrel = qrel_builder.feed(event, value)
+            if done:
+                qrels.append(qrel)
+                qrel_builder = None
+            continue
+        if prefix == ranking_prefix and event == "start_map":
+            current_ranking = {}
+            current_corpus_ids = None
+            keep_current_ranking = None
+            collect_current_corpus_ids = False
+            in_current_corpus_ids = False
+            continue
+        if current_ranking is None:
+            continue
+        if prefix == ranking_prefix and event == "end_map":
+            if current_corpus_ids is not None:
+                current_ranking["corpus_ids"] = current_corpus_ids
+            if keep_current_ranking is None:
+                keep_current_ranking = _keep_top_ranking_row(
+                    current_ranking,
+                    selection_context=selection_context,
+                    include_retrieval_rankings=include_retrieval_rankings,
+                )
+            if keep_current_ranking:
+                rankings.append(current_ranking)
+            current_ranking = None
+            current_corpus_ids = None
+            keep_current_ranking = None
+            collect_current_corpus_ids = False
+            in_current_corpus_ids = False
+            continue
+        if prefix == corpus_ids_prefix and event == "start_array":
+            fields_complete = _ranking_selection_fields_complete(current_ranking)
+            if fields_complete:
+                keep_current_ranking = _keep_top_ranking_row(
+                    current_ranking,
+                    selection_context=selection_context,
+                    include_retrieval_rankings=include_retrieval_rankings,
+                )
+            collect_current_corpus_ids = not fields_complete or bool(keep_current_ranking)
+            current_corpus_ids = [] if collect_current_corpus_ids else None
+            in_current_corpus_ids = True
+            continue
+        if prefix == corpus_ids_prefix and event == "end_array":
+            in_current_corpus_ids = False
+            continue
+        if in_current_corpus_ids:
+            if collect_current_corpus_ids and prefix == corpus_ids_item_prefix and event in {
+                "string",
+                "number",
+                "boolean",
+                "null",
+            }:
+                assert current_corpus_ids is not None
+                current_corpus_ids.append(value)
+            continue
+        if prefix.startswith(ranking_field_prefix) and event in {"string", "number", "boolean", "null"}:
+            current_ranking[prefix[len(ranking_field_prefix) :]] = value
     if not qrels and not rankings and "path" not in artifact:
         return None
     artifact["qrels"] = qrels
@@ -1076,6 +1442,31 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Model name to exclude from the generated DuckDB. May be supplied multiple times.",
     )
     parser.add_argument(
+        "--result-cache-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Directory for the content-addressed result extract cache. Each result JSON is parsed once, and "
+            "its model-card-independent summary plus recomputed ranking metrics are cached by raw-file SHA-256, "
+            "so later builds skip decompressing and parsing unchanged files. Defaults to "
+            f"${RESULT_CACHE_DIR_ENV} or ~/.cache/hakari-bench/result-extract-cache."
+        ),
+    )
+    parser.add_argument(
+        "--viewer-mart-workers",
+        type=int,
+        default=None,
+        help=(
+            "Number of worker processes used to precompute viewer leaderboard mart rows, one view per task. "
+            "Defaults to physical CPU cores minus one. Use 1 for a serial build."
+        ),
+    )
+    parser.add_argument(
+        "--no-result-cache",
+        action="store_true",
+        help="Disable the result extract cache and parse every result JSON with the streaming reader.",
+    )
+    parser.add_argument(
         "--model-name-override",
         default=None,
         help=(
@@ -1142,7 +1533,23 @@ def resolve_warehouse_build_plan(args: argparse.Namespace) -> WarehouseBuildPlan
         result_workers=result_workers,
         exclude_model_names=set(args.exclude_model_name or []),
         model_name_override=args.model_name_override,
+        result_cache_dir=resolve_result_cache_dir(
+            args.result_cache_dir,
+            disabled=args.no_result_cache,
+        ),
+        viewer_mart_workers=max(1, args.viewer_mart_workers or default_result_worker_count()),
     )
+
+
+def resolve_result_cache_dir(value: Path | None, *, disabled: bool) -> Path | None:
+    if disabled:
+        return None
+    if value is not None:
+        return value
+    env_value = os.getenv(RESULT_CACHE_DIR_ENV)
+    if env_value:
+        return Path(env_value)
+    return DEFAULT_RESULT_CACHE_DIR
 
 
 def _append_base_duckdb_arg(value: str | None) -> AppendBaseDuckDb | None:
@@ -1201,6 +1608,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
             plan.duckdb_path,
             viewer_config=viewer_config,
             view_names=mart_view_names,
+            workers=plan.viewer_mart_workers,
         )
         _compact_duckdb_database(plan.duckdb_path)
         if plan.parquet_output_dir is not None:
@@ -1240,11 +1648,13 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
             result_json_workers=plan.result_workers.json,
             result_row_workers=plan.result_workers.row,
             include_result_extensions=plan.include_result_extensions,
+            result_cache_dir=plan.result_cache_dir,
         )
         build_viewer_leaderboard_mart(
             plan.duckdb_path,
             viewer_config=viewer_config,
             view_names=mart_view_names,
+            workers=plan.viewer_mart_workers,
         )
         if plan.parquet_output_dir is not None:
             export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)
@@ -1283,6 +1693,7 @@ def run_warehouse_build(plan: WarehouseBuildPlan, *, memory_monitor: MemoryMonit
         plan.duckdb_path,
         viewer_config=viewer_config,
         view_names=mart_view_names,
+        workers=plan.viewer_mart_workers,
     )
     if plan.parquet_output_dir is not None:
         export_duckdb_tables_to_parquet(plan.duckdb_path, plan.parquet_output_dir)
@@ -1421,6 +1832,7 @@ def _load_results_for_plan(
         result_json_workers=plan.result_workers.json,
         result_row_workers=plan.result_workers.row,
         include_source_hashes=include_source_hashes,
+        result_cache_dir=plan.result_cache_dir,
     )
 
 
@@ -1440,6 +1852,7 @@ def load_results(
     result_json_workers: int = 1,
     result_row_workers: int = 1,
     include_source_hashes: Literal[False] = False,
+    result_cache_dir: Path | None = None,
 ) -> LoadResultsPayload: ...
 
 
@@ -1459,6 +1872,7 @@ def load_results(
     result_json_workers: int = 1,
     result_row_workers: int = 1,
     include_source_hashes: Literal[True] = True,
+    result_cache_dir: Path | None = None,
 ) -> LoadResultsPayloadWithSourceHashes: ...
 
 
@@ -1477,6 +1891,7 @@ def load_results(
     result_json_workers: int = 1,
     result_row_workers: int = 1,
     include_source_hashes: bool = False,
+    result_cache_dir: Path | None = None,
 ) -> LoadResultsPayload | LoadResultsPayloadWithSourceHashes:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
@@ -1551,6 +1966,7 @@ def load_results(
         memory_monitor=memory_monitor,
         result_selection_workers=result_selection_workers,
         model_name_override=model_name_override,
+        result_cache_dir=result_cache_dir,
     )
     processed_result_count = 0
     for processed in _processed_result_rows(
@@ -1561,6 +1977,7 @@ def load_results(
         include_retrieval_rankings=include_retrieval_rankings,
         result_json_workers=result_json_workers,
         result_row_workers=result_row_workers,
+        result_cache_dir=result_cache_dir,
     ):
         if processed is None:
             continue
@@ -1602,6 +2019,87 @@ class ProcessedResultRows:
     diagnostic_rows: list[TaskDiagnosticRow]
     dataset_metadata_rows: list[DatasetMetadataRow]
     ranking_rows: list[RetrievalRankingRow]
+    # Streaming builds may ship task/metric rows as Arrow tables built in the
+    # worker; the matching row list is then empty.
+    task_table: pa.Table | None = None
+    metric_table: pa.Table | None = None
+
+
+@dataclass(frozen=True)
+class StreamingArrowSchemas:
+    task_results: pa.Schema
+    metrics_long: pa.Schema
+
+
+_DUCKDB_TO_ARROW_TYPES: dict[str, pa.DataType] = {
+    "VARCHAR": pa.string(),
+    "DOUBLE": pa.float64(),
+    "BIGINT": pa.int64(),
+    "INTEGER": pa.int32(),
+    "BOOLEAN": pa.bool_(),
+}
+
+
+def _arrow_schema_for_duckdb_table(
+    con: duckdb.DuckDBPyConnection,
+    table_name: str,
+    columns: Sequence[str],
+) -> pa.Schema | None:
+    types = dict(
+        con.execute(
+            "SELECT column_name, data_type FROM duckdb_columns() WHERE table_name = ? AND schema_name = 'main'",
+            [table_name],
+        ).fetchall()
+    )
+    fields = []
+    for column in columns:
+        arrow_type = _DUCKDB_TO_ARROW_TYPES.get(str(types.get(column)))
+        if arrow_type is None:
+            return None
+        fields.append(pa.field(column, arrow_type))
+    return pa.schema(fields)
+
+
+def _streaming_arrow_schemas(con: duckdb.DuckDBPyConnection) -> StreamingArrowSchemas | None:
+    task_schema = _arrow_schema_for_duckdb_table(con, "task_results_raw", TASK_RESULT_COLUMNS)
+    metric_schema = _arrow_schema_for_duckdb_table(con, "metrics_long_raw", METRIC_LONG_COLUMNS)
+    if task_schema is None or metric_schema is None:
+        return None
+    return StreamingArrowSchemas(task_results=task_schema, metrics_long=metric_schema)
+
+
+def _rows_to_arrow_table(rows: Sequence[Any], schema: pa.Schema) -> pa.Table | None:
+    """Convert warehouse rows to Arrow with the DuckDB column types.
+
+    Returns None when a value does not fit the declared type so the caller can
+    keep the row-based insert, which lets DuckDB apply its own casts.
+    """
+    values = [row.duckdb_values() for row in rows]
+    try:
+        arrays = [
+            pa.array([row_values[index] for row_values in values], type=arrow_field.type)
+            for index, arrow_field in enumerate(schema)
+        ]
+        return pa.Table.from_arrays(arrays, schema=schema)
+    except (pa.ArrowInvalid, pa.ArrowTypeError, OverflowError, TypeError, ValueError):
+        return None
+
+
+def _columnarize_processed_rows(
+    processed: ProcessedResultRows,
+    schemas: StreamingArrowSchemas | None,
+) -> ProcessedResultRows:
+    if schemas is None:
+        return processed
+    task_table = _rows_to_arrow_table(processed.rows, schemas.task_results) if processed.rows else None
+    metric_table = _rows_to_arrow_table(processed.metric_rows, schemas.metrics_long) if processed.metric_rows else None
+    return replace(
+        processed,
+        rows=[] if task_table is not None else processed.rows,
+        metric_rows=[] if metric_table is not None else processed.metric_rows,
+        task_table=task_table,
+        metric_table=metric_table,
+    )
 
 
 def _load_results_from_incremental_cache(
@@ -1809,31 +2307,32 @@ async def _async_loaded_result_payloads(
     *,
     include_retrieval_rankings: bool,
     workers: int,
-) -> AsyncIterable[tuple[SelectedResultJson, dict[str, Any] | None]]:
+    result_cache_dir: Path | None = None,
+) -> AsyncIterable[tuple[SelectedResultJson, dict[str, Any] | None, list[Any] | None]]:
     workers = max(1, workers)
     if workers == 1 or len(selected_results) <= 1:
         for selected_result in selected_results:
-            yield (
+            task_payload, ranking_metric_values = _load_task_payload_for_selected(
                 selected_result,
-                _read_result_json_from_summary(
-                    selected_result.result_path,
-                    payload=selected_result.payload,
-                    include_retrieval_rankings=include_retrieval_rankings,
-                ),
+                include_retrieval_rankings=include_retrieval_rankings,
+                result_cache_dir=result_cache_dir,
             )
+            yield selected_result, task_payload, ranking_metric_values
         return
 
     loop = asyncio.get_running_loop()
     with ProcessPoolExecutor(max_workers=workers) as executor:
-        async def submit(selected_result: SelectedResultJson) -> tuple[SelectedResultJson, dict[str, Any] | None]:
-            payload = await loop.run_in_executor(
+        async def submit(
+            selected_result: SelectedResultJson,
+        ) -> tuple[SelectedResultJson, dict[str, Any] | None, list[Any] | None]:
+            task_payload, ranking_metric_values = await loop.run_in_executor(
                 executor,
-                _read_result_json_from_summary_worker,
-                str(selected_result.result_path),
-                selected_result.payload,
+                _load_task_payload_for_selected_worker,
+                selected_result,
                 include_retrieval_rankings,
+                str(result_cache_dir) if result_cache_dir is not None else None,
             )
-            return selected_result, payload
+            return selected_result, task_payload, ranking_metric_values
 
         async for item in _ordered_async_bounded_map(
             selected_results,
@@ -1847,15 +2346,15 @@ def _read_result_json_worker(path: str, include_retrieval_rankings: bool) -> dic
     return _read_result_json(Path(path), include_retrieval_rankings=include_retrieval_rankings)
 
 
-def _read_result_json_from_summary_worker(
-    path: str,
-    payload: dict[str, Any],
+def _load_task_payload_for_selected_worker(
+    selected_result: SelectedResultJson,
     include_retrieval_rankings: bool,
-) -> dict[str, Any] | None:
-    return _read_result_json_from_summary(
-        Path(path),
-        payload=payload,
+    result_cache_dir: str | None,
+) -> tuple[dict[str, Any] | None, list[Any] | None]:
+    return _load_task_payload_for_selected(
+        selected_result,
         include_retrieval_rankings=include_retrieval_rankings,
+        result_cache_dir=Path(result_cache_dir) if result_cache_dir is not None else None,
     )
 
 
@@ -1868,6 +2367,8 @@ def _processed_result_rows(
     include_retrieval_rankings: bool,
     result_json_workers: int,
     result_row_workers: int,
+    result_cache_dir: Path | None = None,
+    arrow_schemas: StreamingArrowSchemas | None = None,
 ) -> Iterable[ProcessedResultRows | None]:
     yield from _iterate_async(
         _async_processed_result_rows(
@@ -1878,6 +2379,8 @@ def _processed_result_rows(
             include_retrieval_rankings=include_retrieval_rankings,
             result_json_workers=result_json_workers,
             result_row_workers=result_row_workers,
+            result_cache_dir=result_cache_dir,
+            arrow_schemas=arrow_schemas,
         )
     )
 
@@ -1891,23 +2394,30 @@ async def _async_processed_result_rows(
     model_cards_path: str | None,
     result_json_workers: int,
     result_row_workers: int,
+    result_cache_dir: Path | None = None,
+    arrow_schemas: StreamingArrowSchemas | None = None,
 ) -> AsyncIterable[ProcessedResultRows | None]:
     workers = max(1, result_row_workers)
     if workers == 1 or len(selected_results) <= 1:
-        async for selected_result, task_payload in _async_loaded_result_payloads(
+        async for selected_result, task_payload, ranking_metric_values in _async_loaded_result_payloads(
             selected_results,
             include_retrieval_rankings=include_retrieval_rankings,
             workers=result_json_workers,
+            result_cache_dir=result_cache_dir,
         ):
             if task_payload is None:
                 yield None
                 continue
-            yield _process_result_rows(
-                selected_result=selected_result,
-                task_payload=task_payload,
-                registry=registry,
-                model_cards=model_cards,
-                include_retrieval_rankings=include_retrieval_rankings,
+            yield _columnarize_processed_rows(
+                _process_result_rows(
+                    selected_result=selected_result,
+                    task_payload=task_payload,
+                    registry=registry,
+                    model_cards=model_cards,
+                    include_retrieval_rankings=include_retrieval_rankings,
+                    ranking_metric_values=ranking_metric_values,
+                ),
+                arrow_schemas,
             )
         return
 
@@ -1920,6 +2430,8 @@ async def _async_processed_result_rows(
                 selected_result,
                 include_retrieval_rankings,
                 model_cards_path,
+                str(result_cache_dir) if result_cache_dir is not None else None,
+                arrow_schemas,
             )
 
         async for item in _ordered_async_bounded_map(
@@ -1954,20 +2466,26 @@ def _process_result_rows_worker(
     selected_result: SelectedResultJson,
     include_retrieval_rankings: bool,
     model_cards_path: str | None,
+    result_cache_dir: str | None = None,
+    arrow_schemas: StreamingArrowSchemas | None = None,
 ) -> ProcessedResultRows | None:
-    task_payload = _read_result_json_from_summary(
-        selected_result.result_path,
-        payload=selected_result.payload,
+    task_payload, ranking_metric_values = _load_task_payload_for_selected(
+        selected_result,
         include_retrieval_rankings=include_retrieval_rankings,
+        result_cache_dir=Path(result_cache_dir) if result_cache_dir is not None else None,
     )
     if task_payload is None:
         return None
-    return _process_result_rows(
-        selected_result=selected_result,
-        task_payload=task_payload,
-        registry=_worker_registry(),
-        model_cards=_worker_model_cards(model_cards_path),
-        include_retrieval_rankings=include_retrieval_rankings,
+    return _columnarize_processed_rows(
+        _process_result_rows(
+            selected_result=selected_result,
+            task_payload=task_payload,
+            registry=_worker_registry(),
+            model_cards=_worker_model_cards(model_cards_path),
+            include_retrieval_rankings=include_retrieval_rankings,
+            ranking_metric_values=ranking_metric_values,
+        ),
+        arrow_schemas,
     )
 
 
@@ -1978,6 +2496,7 @@ def _process_result_rows(
     registry: DatasetRegistry,
     model_cards: dict[str, dict[str, Any]],
     include_retrieval_rankings: bool,
+    ranking_metric_values: Sequence[Sequence[Any]] | None = None,
 ) -> ProcessedResultRows:
     rows: list[TaskResult] = []
     run_accumulators: dict[str, dict[str, Any]] = {}
@@ -2115,15 +2634,24 @@ def _process_result_rows(
                 quantization=_quantization_precision(embedding_evaluation),
             )
         )
-    metric_rows.extend(
-        _metric_rows_from_top_rankings(
-            common=common,
-            evaluation=evaluation,
-            embedding_evaluations=embedding_evaluations,
-            task_payload=task_payload,
-            result_path=result_path,
+    if ranking_metric_values is not None:
+        metric_rows.extend(
+            _metric_rows_from_ranking_metric_values(
+                common=common,
+                result_path=result_path,
+                values=ranking_metric_values,
+            )
         )
-    )
+    else:
+        metric_rows.extend(
+            _metric_rows_from_top_rankings(
+                common=common,
+                evaluation=evaluation,
+                embedding_evaluations=embedding_evaluations,
+                task_payload=task_payload,
+                result_path=result_path,
+            )
+        )
     for metric_name, metric_value in task_payload.get("metrics", {}).items():
         if isinstance(metric_value, int | float):
             metric_rows.append(
@@ -2387,6 +2915,7 @@ def _selected_result_jsons(
     result_selection_workers: int = 1,
     retain_summary_payload: bool = True,
     model_name_override: str | None = None,
+    result_cache_dir: Path | None = None,
 ) -> list[SelectedResultJson]:
     selected_by_task: dict[tuple[str, str, str, str], SelectedResultJson] = {}
     parsed_count = 0
@@ -2405,6 +2934,8 @@ def _selected_result_jsons(
                 target_benchmarks=target_benchmarks,
                 exclude_model_names=exclude_model_names,
                 workers=result_selection_workers,
+                result_cache_dir=result_cache_dir,
+                discard_payload=not retain_summary_payload,
             )
         ):
             parsed_count += 1
@@ -2452,32 +2983,47 @@ async def _async_selected_result_jsons(
     target_benchmarks: set[str],
     exclude_model_names: set[str],
     workers: int,
+    result_cache_dir: Path | None = None,
+    discard_payload: bool = False,
 ) -> AsyncIterable[SelectedResultJson | None]:
     workers = max(1, workers)
     if workers == 1 or len(result_paths) <= 1:
         for result_path in result_paths:
-            yield _selected_result_json(
+            selected = _selected_result_json(
                 result_path,
                 results_dir=results_dir,
                 source_priority=source_priority,
                 benchmark_configs=benchmark_configs,
                 target_benchmarks=target_benchmarks,
                 exclude_model_names=exclude_model_names,
+                result_cache_dir=result_cache_dir,
             )
+            yield _discard_selected_result_payload(selected) if discard_payload and selected is not None else selected
         return
 
     loop = asyncio.get_running_loop()
-    with ProcessPoolExecutor(max_workers=workers) as executor:
+    # Per-build arguments are sent once per worker process instead of being
+    # pickled with every result path.
+    with ProcessPoolExecutor(
+        max_workers=workers,
+        initializer=_init_selected_result_json_worker,
+        initargs=(
+            _SelectionWorkerContext(
+                results_dir=results_dir,
+                source_priority=source_priority,
+                benchmark_configs=list(benchmark_configs),
+                target_benchmarks=set(target_benchmarks),
+                exclude_model_names=set(exclude_model_names),
+                result_cache_dir=result_cache_dir,
+                discard_payload=discard_payload,
+            ),
+        ),
+    ) as executor:
         async def submit(result_path: Path) -> SelectedResultJson | None:
             return await loop.run_in_executor(
                 executor,
-                _selected_result_json_worker,
+                _selected_result_json_from_worker_context,
                 str(result_path),
-                str(results_dir),
-                source_priority,
-                list(benchmark_configs),
-                set(target_benchmarks),
-                set(exclude_model_names),
             )
 
         async for item in _ordered_async_bounded_map(
@@ -2488,22 +3034,41 @@ async def _async_selected_result_jsons(
             yield item
 
 
-def _selected_result_json_worker(
-    result_path: str,
-    results_dir: str,
-    source_priority: int,
-    benchmark_configs: Sequence[BenchmarkConfig],
-    target_benchmarks: set[str],
-    exclude_model_names: set[str],
-) -> SelectedResultJson | None:
-    return _selected_result_json(
+@dataclass(frozen=True)
+class _SelectionWorkerContext:
+    results_dir: Path
+    source_priority: int
+    benchmark_configs: list[BenchmarkConfig]
+    target_benchmarks: set[str]
+    exclude_model_names: set[str]
+    result_cache_dir: Path | None
+    discard_payload: bool
+
+
+_SELECTION_WORKER_CONTEXT: _SelectionWorkerContext | None = None
+
+
+def _init_selected_result_json_worker(context: _SelectionWorkerContext) -> None:
+    global _SELECTION_WORKER_CONTEXT
+    _SELECTION_WORKER_CONTEXT = context
+
+
+def _selected_result_json_from_worker_context(result_path: str) -> SelectedResultJson | None:
+    context = _SELECTION_WORKER_CONTEXT
+    if context is None:
+        raise RuntimeError("selection worker context was not initialized")
+    selected = _selected_result_json(
         Path(result_path),
-        results_dir=Path(results_dir),
-        source_priority=source_priority,
-        benchmark_configs=benchmark_configs,
-        target_benchmarks=target_benchmarks,
-        exclude_model_names=exclude_model_names,
+        results_dir=context.results_dir,
+        source_priority=context.source_priority,
+        benchmark_configs=context.benchmark_configs,
+        target_benchmarks=context.target_benchmarks,
+        exclude_model_names=context.exclude_model_names,
+        result_cache_dir=context.result_cache_dir,
     )
+    if context.discard_payload and selected is not None:
+        return _discard_selected_result_payload(selected)
+    return selected
 
 
 def _results_dirs(results_dir: Path | Sequence[Path]) -> list[Path]:
@@ -2520,8 +3085,13 @@ def _selected_result_json(
     benchmark_configs: Sequence[BenchmarkConfig],
     target_benchmarks: set[str],
     exclude_model_names: set[str],
+    result_cache_dir: Path | None = None,
 ) -> SelectedResultJson | None:
-    summary = _read_result_summary_payload_with_sha256(result_path)
+    summary = (
+        _read_result_summary_with_extract_cache(result_path, cache_dir=result_cache_dir)
+        if result_cache_dir is not None
+        else _read_result_summary_payload_with_sha256(result_path)
+    )
     if summary is None:
         return None
     task_payload, payload_sha256 = summary
@@ -2640,6 +3210,58 @@ def _metric_rows_from_top_rankings(
     task_payload: dict[str, Any],
     result_path: Path,
 ) -> list[MetricLongRow]:
+    return _metric_rows_from_ranking_metric_values(
+        common=common,
+        result_path=result_path,
+        values=_ranking_metric_values(
+            evaluation=evaluation,
+            embedding_evaluations=embedding_evaluations,
+            task_payload=task_payload,
+            result_path=result_path,
+        ),
+    )
+
+
+def _metric_rows_from_ranking_metric_values(
+    *,
+    common: dict[str, Any],
+    result_path: Path,
+    values: Sequence[Sequence[Any]],
+) -> list[MetricLongRow]:
+    benchmark = str(common["benchmark"])
+    task_name = str(common["task_name"])
+    rows: list[MetricLongRow] = []
+    for score_target, embedding_variant_name, score_name, metric_key, metric_value in values:
+        rows.append(
+            MetricLongRow(
+                model_dir=str(common["model_dir"]),
+                model_name=str(common["model_name"]),
+                benchmark=benchmark,
+                dataset_id=str(common["dataset_id"]),
+                task_name=task_name,
+                metric_name=canonical_metric_name(benchmark, f"{task_name}_{score_name}_{metric_key}"),
+                metric_value=float(metric_value),
+                result_path=str(result_path),
+                score_target=score_target,
+                embedding_variant_name=embedding_variant_name,
+            )
+        )
+    return rows
+
+
+def _ranking_metric_values(
+    *,
+    evaluation: dict[str, Any],
+    embedding_evaluations: list[dict[str, Any]],
+    task_payload: dict[str, Any],
+    result_path: Path,
+) -> list[tuple[str, str | None, str, str, float]]:
+    """Recompute viewer metrics from top-ranking artifacts.
+
+    The values depend only on the result file contents, so they can be cached
+    by payload hash and turned into metric rows later with the canonical task
+    name of the current viewer configuration.
+    """
     artifact = _top_rankings_artifact(task_payload)
     if artifact is None:
         return []
@@ -2675,31 +3297,27 @@ def _metric_rows_from_top_rankings(
                     {},
                 ).update(no_safeguard_rankings)
 
-    rows: list[MetricLongRow] = []
+    values: list[tuple[str, str | None, str, str, float]] = []
     for (score_target, embedding_variant_name, score_name), query_rankings in grouped_rankings.items():
         metrics = compute_ir_metrics(
             rankings=query_rankings,
             qrels=qrels,
-            evaluator_name=str(common["task_name"]),
+            evaluator_name="",
             score_name=score_name,
             metric_names=VIEWER_RECOMPUTED_METRICS,
         )
+        metric_prefix = f"_{score_name}_"
         for metric_name, metric_value in metrics.items():
-            rows.append(
-                MetricLongRow(
-                    model_dir=str(common["model_dir"]),
-                    model_name=str(common["model_name"]),
-                    benchmark=str(common["benchmark"]),
-                    dataset_id=str(common["dataset_id"]),
-                    task_name=str(common["task_name"]),
-                    metric_name=canonical_metric_name(str(common["benchmark"]), metric_name),
-                    metric_value=float(metric_value),
-                    result_path=str(result_path),
-                    score_target=score_target,
-                    embedding_variant_name=embedding_variant_name,
+            values.append(
+                (
+                    score_target,
+                    embedding_variant_name,
+                    score_name,
+                    metric_name[len(metric_prefix) :],
+                    float(metric_value),
                 )
             )
-    return rows
+    return values
 
 
 def _qrels_from_ranking_payload(ranking_payload: dict[str, Any]) -> dict[str, set[str]]:
@@ -3602,6 +4220,7 @@ def write_duckdb_streaming_results(
     result_row_workers: int = 1,
     include_result_extensions: bool = False,
     insert_chunk_size: int = STREAM_RESULT_INSERT_CHUNK_SIZE,
+    result_cache_dir: Path | None = None,
 ) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
     target_benchmarks = set(target_benchmark_names(benchmark_configs))
@@ -3616,6 +4235,7 @@ def write_duckdb_streaming_results(
         result_selection_workers=result_selection_workers,
         retain_summary_payload=False,
         model_name_override=model_name_override,
+        result_cache_dir=result_cache_dir,
     )
     loaded_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     source_rows = _source_load_state_rows_from_selected_results(
@@ -3668,24 +4288,31 @@ def write_duckdb_streaming_results(
         _create_dataset_metadata_table(con, "dataset_metadata_raw")
 
         buffers = _StreamingDuckDbBuffers(con=con, chunk_size=max(1, insert_chunk_size))
+        arrow_schemas = _streaming_arrow_schemas(con)
         processed_result_count = 0
-        for processed in _processed_result_rows(
-            selected_results,
-            registry=registry,
-            model_cards=model_cards,
-            model_cards_path=model_cards_path,
-            include_retrieval_rankings=include_retrieval_rankings,
-            result_json_workers=result_json_workers,
-            result_row_workers=result_row_workers,
-        ):
-            if processed is None:
-                continue
-            processed_result_count += 1
-            if memory_monitor is not None:
-                memory_monitor.maybe_sample("result_json_loaded", processed_count=processed_result_count)
-            _merge_run_accumulators(run_accumulators, processed.run_accumulators)
-            buffers.add(processed)
-        buffers.flush()
+        try:
+            for processed in _processed_result_rows(
+                selected_results,
+                registry=registry,
+                model_cards=model_cards,
+                model_cards_path=model_cards_path,
+                include_retrieval_rankings=include_retrieval_rankings,
+                result_json_workers=result_json_workers,
+                result_row_workers=result_row_workers,
+                result_cache_dir=result_cache_dir,
+                arrow_schemas=arrow_schemas,
+            ):
+                if processed is None:
+                    continue
+                processed_result_count += 1
+                if memory_monitor is not None:
+                    memory_monitor.maybe_sample("result_json_loaded", processed_count=processed_result_count)
+                _merge_run_accumulators(run_accumulators, processed.run_accumulators)
+                buffers.add(processed)
+            buffers.flush()
+        except BaseException:
+            buffers.abandon_writes()
+            raise
 
         runs = _runs_from_task_results(run_accumulators)
         _insert_runs(con, runs)
@@ -3720,28 +4347,131 @@ def write_duckdb_streaming_results(
 
 
 @dataclass
+class _OrderedInsertBuffer:
+    """Buffer rows and Arrow tables for one table, inserting them in arrival order."""
+
+    table_name: str
+    columns: Sequence[str]
+    segments: list[pa.Table | list[Any]] = field(default_factory=list)
+    row_count: int = 0
+
+    def add_rows(self, rows: Sequence[Any]) -> None:
+        if rows:
+            self.segments.append(list(rows))
+            self.row_count += len(rows)
+
+    def add_table(self, table: pa.Table | None) -> None:
+        if table is not None and table.num_rows:
+            self.segments.append(table)
+            self.row_count += table.num_rows
+
+    def flush(self, con: duckdb.DuckDBPyConnection) -> None:
+        pending_tables: list[pa.Table] = []
+
+        def flush_tables() -> None:
+            if pending_tables:
+                _insert_arrow_table(con, self.table_name, self.columns, pa.concat_tables(pending_tables))
+                pending_tables.clear()
+
+        for segment in self.segments:
+            if isinstance(segment, pa.Table):
+                pending_tables.append(segment)
+                continue
+            flush_tables()
+            _insert_duckdb_rows(con, self.table_name, self.columns, (row.duckdb_values() for row in segment))
+        flush_tables()
+        self.segments = []
+        self.row_count = 0
+
+    def take(self) -> _OrderedInsertBuffer:
+        taken = _OrderedInsertBuffer(self.table_name, self.columns, self.segments, self.row_count)
+        self.segments = []
+        self.row_count = 0
+        return taken
+
+
+def _insert_arrow_table(
+    con: duckdb.DuckDBPyConnection,
+    table_name: str,
+    columns: Sequence[str],
+    arrow_table: pa.Table,
+) -> None:
+    con.register("_hakari_insert_rows", arrow_table)
+    try:
+        column_sql = ", ".join(columns)
+        con.execute(f"INSERT INTO {table_name} ({column_sql}) SELECT {column_sql} FROM _hakari_insert_rows")
+    finally:
+        con.unregister("_hakari_insert_rows")
+
+
+@dataclass
 class _StreamingDuckDbBuffers:
     con: duckdb.DuckDBPyConnection
     chunk_size: int
-    task_rows: list[TaskResult] = field(default_factory=list)
-    metric_rows: list[MetricLongRow] = field(default_factory=list)
+    task_buffer: _OrderedInsertBuffer = field(
+        default_factory=lambda: _OrderedInsertBuffer("task_results_raw", TASK_RESULT_COLUMNS)
+    )
+    metric_buffer: _OrderedInsertBuffer = field(
+        default_factory=lambda: _OrderedInsertBuffer("metrics_long_raw", METRIC_LONG_COLUMNS)
+    )
     diagnostic_rows: list[TaskDiagnosticRow] = field(default_factory=list)
     dataset_metadata_rows: list[DatasetMetadataRow] = field(default_factory=list)
     ranking_rows: list[RetrievalRankingRow] = field(default_factory=list)
+    # The large task/metric inserts run on one writer thread with its own
+    # cursor so result collection keeps feeding the worker processes while
+    # DuckDB ingests. A single FIFO writer keeps insertion order unchanged.
+    background_writer: bool = True
+    max_pending_writes: int = 2
+    _writer: ThreadPoolExecutor | None = None
+    _writer_con: duckdb.DuckDBPyConnection | None = None
+    _pending_writes: list[Future[None]] = field(default_factory=list)
+
+    def _submit_write(self, buffer: _OrderedInsertBuffer) -> None:
+        if not self.background_writer:
+            buffer.flush(self.con)
+            return
+        if self._writer is None or self._writer_con is None:
+            self._writer = ThreadPoolExecutor(max_workers=1, thread_name_prefix="hakari-duckdb-writer")
+            self._writer_con = self.con.cursor()
+        self._pending_writes.append(self._writer.submit(buffer.take().flush, self._writer_con))
+        while len(self._pending_writes) > self.max_pending_writes:
+            self._pending_writes.pop(0).result()
+
+    def wait_for_writes(self) -> None:
+        try:
+            while self._pending_writes:
+                self._pending_writes.pop(0).result()
+        finally:
+            if self._writer is not None:
+                self._writer.shutdown(wait=True)
+                self._writer = None
+            if self._writer_con is not None:
+                self._writer_con.close()
+                self._writer_con = None
+
+    def abandon_writes(self) -> None:
+        # Used on error paths: stop the writer without masking the original
+        # exception with a secondary insert failure.
+        try:
+            self.wait_for_writes()
+        except Exception:
+            pass
 
     def add(self, processed: ProcessedResultRows) -> None:
-        self.task_rows.extend(processed.rows)
-        self.metric_rows.extend(processed.metric_rows)
+        self.task_buffer.add_rows(processed.rows)
+        self.task_buffer.add_table(processed.task_table)
+        self.metric_buffer.add_rows(processed.metric_rows)
+        self.metric_buffer.add_table(processed.metric_table)
         self.diagnostic_rows.extend(processed.diagnostic_rows)
         self.dataset_metadata_rows.extend(processed.dataset_metadata_rows)
         self.ranking_rows.extend(processed.ranking_rows)
         self.flush_ready()
 
     def flush_ready(self) -> None:
-        if len(self.task_rows) >= self.chunk_size:
-            self._flush_task_rows()
-        if len(self.metric_rows) >= self.chunk_size:
-            self._flush_metric_rows()
+        if self.task_buffer.row_count >= self.chunk_size:
+            self._submit_write(self.task_buffer)
+        if self.metric_buffer.row_count >= self.chunk_size:
+            self._submit_write(self.metric_buffer)
         if len(self.diagnostic_rows) >= self.chunk_size:
             self._flush_diagnostic_rows()
         if len(self.dataset_metadata_rows) >= self.chunk_size:
@@ -3750,25 +4480,12 @@ class _StreamingDuckDbBuffers:
             self._flush_ranking_rows()
 
     def flush(self) -> None:
-        self._flush_task_rows()
-        self._flush_metric_rows()
+        self._submit_write(self.task_buffer)
+        self._submit_write(self.metric_buffer)
+        self.wait_for_writes()
         self._flush_diagnostic_rows()
         self._flush_dataset_metadata_rows()
         self._flush_ranking_rows()
-
-    def _flush_task_rows(self) -> None:
-        if not self.task_rows:
-            return
-        rows = self.task_rows
-        self.task_rows = []
-        _insert_duckdb_rows(self.con, "task_results_raw", TASK_RESULT_COLUMNS, (row.duckdb_values() for row in rows))
-
-    def _flush_metric_rows(self) -> None:
-        if not self.metric_rows:
-            return
-        rows = self.metric_rows
-        self.metric_rows = []
-        _insert_duckdb_rows(self.con, "metrics_long_raw", METRIC_LONG_COLUMNS, (row.duckdb_values() for row in rows))
 
     def _flush_diagnostic_rows(self) -> None:
         if not self.diagnostic_rows:
@@ -5820,11 +6537,13 @@ def build_viewer_leaderboard_mart(
     *,
     viewer_config: ViewerConfig,
     view_names: Sequence[str] | None = None,
+    workers: int = 1,
 ) -> None:
     mart_rows, language_rows = _viewer_leaderboard_mart_rows_from_cached_records(
         db_path,
         viewer_config=viewer_config,
         view_names=view_names,
+        workers=workers,
     )
     con = duckdb.connect(str(db_path))
     try:
@@ -5937,173 +6656,273 @@ def _viewer_leaderboard_mart_rows_from_service(
     return mart_rows, language_rows
 
 
+MartCombination = tuple[RerankingTaskScope, tuple[bool, bool, bool, bool]]
+MART_COMBINATIONS_PER_TASK = 4
+
+
 def _viewer_leaderboard_mart_rows_from_cached_records(
     db_path: Path,
     *,
     viewer_config: ViewerConfig,
     view_names: Sequence[str] | None = None,
+    workers: int = 1,
 ) -> tuple[list[tuple[Any, ...]], list[tuple[Any, ...]]]:
-    display_flag_sets = list(product((False, True), repeat=4))
-    service = LeaderboardService(duckdb_path=db_path, config=viewer_config, model_cards_path=None, use_precomputed=False)
+    resolved_view_names = list(view_names or viewer_config.view_names)
+    units = _viewer_leaderboard_mart_units(viewer_config, resolved_view_names)
     mart_rows: list[tuple[Any, ...]] = []
     language_rows: list[tuple[Any, ...]] = []
-    all_variant_flags = VariantDisplayFlags(quantization=True, truncate=True, rescore=True, other=True)
-    for view_name in view_names or viewer_config.view_names:
-        benchmarks = viewer_config.benchmarks_for_view(view_name)
-        overall = viewer_config.overall_for_view(view_name)
-        is_overall = overall is not None
-        selected_score_group = (
-            None
-            if is_overall
-            else _select_score_group(_score_groups_for_view(viewer_config, view_name), None)
+    workers = max(1, workers)
+    if workers == 1 or len(units) <= 1:
+        service = LeaderboardService(
+            duckdb_path=db_path, config=viewer_config, model_cards_path=None, use_precomputed=False
         )
-        language_filter_policy = _language_filter_policy_for_view(
-            viewer_config,
-            view_name,
-            overall=overall,
-        )
-        for score_target in ("all", "reranking"):
-            records = service.task_results_repository.fetch_task_result_rows(
-                benchmarks=benchmarks,
+        for view_name, score_target, combinations in units:
+            unit_mart_rows, unit_language_rows = _viewer_leaderboard_mart_rows_for_combinations(
+                service,
+                viewer_config=viewer_config,
+                view_name=view_name,
                 score_target=score_target,
-                score_metric="ndcg@10",
-                include_embedding_variants=True,
-                variant_display_flags=all_variant_flags,
+                combinations=combinations,
             )
-            bm25_task_scores = []
-            if score_target == "reranking":
-                bm25_records = service.task_results_repository.fetch_task_result_rows(
-                    benchmarks=benchmarks,
-                    score_target="all",
-                    score_metric="ndcg@10",
-                    include_embedding_variants=False,
-                    variant_display_flags=VariantDisplayFlags(),
-                )
-                bm25_task_scores = _task_scores_from_records(
-                    bm25_records,
-                    include_any_variants=False,
-                    variant_flags=VariantDisplayFlags(),
-                )
-            task_scopes = [
-                task_scope
-                for target, task_scope in _viewer_leaderboard_mart_targets(viewer_config, view_name)
+            mart_rows.extend(unit_mart_rows)
+            language_rows.extend(unit_language_rows)
+        return mart_rows, language_rows
+    # Units are independent, so split each (view, score target) into chunks of
+    # display combinations and compute them in separate processes. Results are
+    # concatenated in submission order, which is the serial loop order, so the
+    # mart rows are identical to a serial build.
+    parallel_units = [
+        (view_name, score_target, list(combinations[index : index + MART_COMBINATIONS_PER_TASK]))
+        for view_name, score_target, combinations in units
+        for index in range(0, len(combinations), MART_COMBINATIONS_PER_TASK)
+    ]
+    with ProcessPoolExecutor(max_workers=min(workers, len(parallel_units))) as executor:
+        futures = [
+            executor.submit(
+                _viewer_leaderboard_mart_rows_worker,
+                str(db_path),
+                viewer_config,
+                view_name,
+                score_target,
+                combinations,
+            )
+            for view_name, score_target, combinations in parallel_units
+        ]
+        for future in futures:
+            unit_mart_rows, unit_language_rows = future.result()
+            mart_rows.extend(unit_mart_rows)
+            language_rows.extend(unit_language_rows)
+    return mart_rows, language_rows
+
+
+def _viewer_leaderboard_mart_units(
+    viewer_config: ViewerConfig,
+    view_names: Sequence[str],
+) -> list[tuple[str, ScoreTarget, list[MartCombination]]]:
+    display_flag_sets = cast(list[tuple[bool, bool, bool, bool]], list(product((False, True), repeat=4)))
+    units: list[tuple[str, ScoreTarget, list[MartCombination]]] = []
+    for view_name in view_names:
+        targets = _viewer_leaderboard_mart_targets(viewer_config, view_name)
+        score_targets: tuple[ScoreTarget, ...] = ("all", "reranking")
+        for score_target in score_targets:
+            combinations: list[MartCombination] = [
+                (task_scope, flags)
+                for target, task_scope in targets
                 if target == score_target
+                for flags in display_flag_sets
             ]
-            for task_scope in task_scopes:
-                for quantization, truncate, rescore, other in display_flag_sets:
-                    variant_flags = VariantDisplayFlags(
-                        quantization=quantization,
-                        truncate=truncate,
-                        rescore=rescore,
-                        other=other,
-                    )
-                    include_any_variants = variant_flags.any_enabled
-                    rows = _task_scores_from_records(
-                        records,
-                        include_any_variants=include_any_variants,
-                        variant_flags=variant_flags,
-                    )
-                    if score_target == "all":
-                        rows = _exclude_reranker_task_scores(rows)
-                    elif score_target == "reranking":
-                        rows = _append_missing_bm25_task_scores(rows, bm25_task_scores)
-                    rows = _exclude_configured_tasks(rows, viewer_config)
-                    expected_task_keys = (
-                        viewer_config.expected_task_keys_for_overall(
-                            overall,
-                            score_target=score_target,
-                            reranking_task_scope=task_scope,
-                        )
-                        if overall is not None
-                        else None
-                    )
-                    if expected_task_keys is not None:
-                        rows = [row for row in rows if row.task_key in expected_task_keys]
-                    available_languages = _language_options(
-                        rows,
-                        policy=language_filter_policy,
-                    )
-                    precomputed_language_filters = _precomputed_language_filters_for_view(view_name)
-                    if precomputed_language_filters:
-                        rows = _filter_rows_by_languages(
-                            rows,
-                            precomputed_language_filters,
-                            policy=language_filter_policy,
-                        )
-                    metric_score_group = None
-                    if overall is not None:
-                        if expected_task_keys is not None and not precomputed_language_filters:
-                            rows = _filter_rows_to_complete_models(rows, expected_task_keys)
-                        metric_score_group = _overall_metric_score_group(
-                            overall,
-                            score_aggregation="micro",
-                        )
-                    elif selected_score_group is not None:
-                        rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
-                        metric_score_group = selected_score_group
-                    leaderboard_rows = compute_leaderboard_rows(
-                        rows,
-                        is_overall=is_overall,
-                        expected_task_keys=expected_task_keys,
-                        score_group=metric_score_group,
-                        metric_columns=[],
-                        overall_score_aggregation="micro",
-                    )
-                    sorted_rows = sort_rows(leaderboard_rows, sort="borda_rank", direction="asc")
-                    expected_tasks = (
-                        len(expected_task_keys)
-                        if expected_task_keys is not None
-                        else len({row.task_key for row in rows})
-                    )
-                    language_rows.extend(
-                        (
-                            view_name,
-                            score_target,
-                            task_scope,
-                            quantization,
-                            truncate,
-                            rescore,
-                            other,
-                            option.code,
-                            option.label,
-                            option.task_count,
-                        )
-                        for option in available_languages
-                    )
-                    mart_rows.extend(
-                        (
-                            view_name,
-                            score_target,
-                            task_scope,
-                            quantization,
-                            truncate,
-                            rescore,
-                            other,
-                            expected_tasks,
-                            row.borda_rank,
-                            row.mean_rank,
-                            row.model_name,
-                            row.model_type,
-                            row.borda_score,
-                            row.mean_score,
-                            row.macro_mean,
-                            row.micro_mean,
-                            row.task_count,
-                            row.active_parameters,
-                            row.total_parameters,
-                            row.max_seq_length,
-                            row.dtype,
-                            row.attn_implementation,
-                            row.prompt_summary,
-                            row.trust_remote_code,
-                            row.embedding_variant_name,
-                            row.embedding_dim,
-                            row.quantization,
-                            row.source_model_name,
-                            row.base_score_delta_percent,
-                        )
-                        for row in sorted_rows
-                    )
+            units.append((view_name, score_target, combinations))
+    return units
+
+
+_MART_WORKER_SERVICE: tuple[str, LeaderboardService] | None = None
+
+
+def _viewer_leaderboard_mart_rows_worker(
+    db_path: str,
+    viewer_config: ViewerConfig,
+    view_name: str,
+    score_target: ScoreTarget,
+    combinations: list[MartCombination],
+) -> tuple[list[tuple[Any, ...]], list[tuple[Any, ...]]]:
+    global _MART_WORKER_SERVICE
+    if _MART_WORKER_SERVICE is None or _MART_WORKER_SERVICE[0] != db_path:
+        _MART_WORKER_SERVICE = (
+            db_path,
+            LeaderboardService(
+                duckdb_path=Path(db_path), config=viewer_config, model_cards_path=None, use_precomputed=False
+            ),
+        )
+    return _viewer_leaderboard_mart_rows_for_combinations(
+        _MART_WORKER_SERVICE[1],
+        viewer_config=viewer_config,
+        view_name=view_name,
+        score_target=score_target,
+        combinations=combinations,
+    )
+
+
+def _viewer_leaderboard_mart_rows_for_combinations(
+    service: LeaderboardService,
+    *,
+    viewer_config: ViewerConfig,
+    view_name: str,
+    score_target: ScoreTarget,
+    combinations: Sequence[MartCombination],
+) -> tuple[list[tuple[Any, ...]], list[tuple[Any, ...]]]:
+    mart_rows: list[tuple[Any, ...]] = []
+    language_rows: list[tuple[Any, ...]] = []
+    if not combinations:
+        return mart_rows, language_rows
+    all_variant_flags = VariantDisplayFlags(quantization=True, truncate=True, rescore=True, other=True)
+    benchmarks = viewer_config.benchmarks_for_view(view_name)
+    overall = viewer_config.overall_for_view(view_name)
+    is_overall = overall is not None
+    selected_score_group = (
+        None
+        if is_overall
+        else _select_score_group(_score_groups_for_view(viewer_config, view_name), None)
+    )
+    language_filter_policy = _language_filter_policy_for_view(
+        viewer_config,
+        view_name,
+        overall=overall,
+    )
+    records = service.task_results_repository.fetch_task_result_rows(
+        benchmarks=benchmarks,
+        score_target=score_target,
+        score_metric="ndcg@10",
+        include_embedding_variants=True,
+        variant_display_flags=all_variant_flags,
+    )
+    bm25_task_scores = []
+    if score_target == "reranking":
+        bm25_records = service.task_results_repository.fetch_task_result_rows(
+            benchmarks=benchmarks,
+            score_target="all",
+            score_metric="ndcg@10",
+            include_embedding_variants=False,
+            variant_display_flags=VariantDisplayFlags(),
+        )
+        bm25_task_scores = _task_scores_from_records(
+            bm25_records,
+            include_any_variants=False,
+            variant_flags=VariantDisplayFlags(),
+        )
+    for task_scope, (quantization, truncate, rescore, other) in combinations:
+        variant_flags = VariantDisplayFlags(
+            quantization=quantization,
+            truncate=truncate,
+            rescore=rescore,
+            other=other,
+        )
+        include_any_variants = variant_flags.any_enabled
+        rows = _task_scores_from_records(
+            records,
+            include_any_variants=include_any_variants,
+            variant_flags=variant_flags,
+        )
+        if score_target == "all":
+            rows = _exclude_reranker_task_scores(rows)
+        elif score_target == "reranking":
+            rows = _append_missing_bm25_task_scores(rows, bm25_task_scores)
+        rows = _exclude_configured_tasks(rows, viewer_config)
+        expected_task_keys = (
+            viewer_config.expected_task_keys_for_overall(
+                overall,
+                score_target=score_target,
+                reranking_task_scope=task_scope,
+            )
+            if overall is not None
+            else None
+        )
+        if expected_task_keys is not None:
+            rows = [row for row in rows if row.task_key in expected_task_keys]
+        available_languages = _language_options(
+            rows,
+            policy=language_filter_policy,
+        )
+        precomputed_language_filters = _precomputed_language_filters_for_view(view_name)
+        if precomputed_language_filters:
+            rows = _filter_rows_by_languages(
+                rows,
+                precomputed_language_filters,
+                policy=language_filter_policy,
+            )
+        metric_score_group = None
+        if overall is not None:
+            if expected_task_keys is not None and not precomputed_language_filters:
+                rows = _filter_rows_to_complete_models(rows, expected_task_keys)
+            metric_score_group = _overall_metric_score_group(
+                overall,
+                score_aggregation="micro",
+            )
+        elif selected_score_group is not None:
+            rows = _aggregate_benchmark_score_group_scores(rows, selected_score_group)
+            metric_score_group = selected_score_group
+        leaderboard_rows = compute_leaderboard_rows(
+            rows,
+            is_overall=is_overall,
+            expected_task_keys=expected_task_keys,
+            score_group=metric_score_group,
+            metric_columns=[],
+            overall_score_aggregation="micro",
+        )
+        sorted_rows = sort_rows(leaderboard_rows, sort="borda_rank", direction="asc")
+        expected_tasks = (
+            len(expected_task_keys)
+            if expected_task_keys is not None
+            else len({row.task_key for row in rows})
+        )
+        language_rows.extend(
+            (
+                view_name,
+                score_target,
+                task_scope,
+                quantization,
+                truncate,
+                rescore,
+                other,
+                option.code,
+                option.label,
+                option.task_count,
+            )
+            for option in available_languages
+        )
+        mart_rows.extend(
+            (
+                view_name,
+                score_target,
+                task_scope,
+                quantization,
+                truncate,
+                rescore,
+                other,
+                expected_tasks,
+                row.borda_rank,
+                row.mean_rank,
+                row.model_name,
+                row.model_type,
+                row.borda_score,
+                row.mean_score,
+                row.macro_mean,
+                row.micro_mean,
+                row.task_count,
+                row.active_parameters,
+                row.total_parameters,
+                row.max_seq_length,
+                row.dtype,
+                row.attn_implementation,
+                row.prompt_summary,
+                row.trust_remote_code,
+                row.embedding_variant_name,
+                row.embedding_dim,
+                row.quantization,
+                row.source_model_name,
+                row.base_score_delta_percent,
+            )
+            for row in sorted_rows
+        )
     return mart_rows, language_rows
 
 
