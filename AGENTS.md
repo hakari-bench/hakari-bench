@@ -286,6 +286,13 @@ output/hakari-results/{model_id}/{huggingface_dataset_name}/{split_or_task}.json
   duplicate logical model-task rows from earlier directories.
   `model_name` comes from result JSON `model.id`; do not use `model_dir` as
   part of the logical model identity.
+- DuckDB builds reuse a content-addressed result extract cache
+  (`~/.cache/hakari-bench/result-extract-cache` by default) keyed by the raw
+  result-file SHA-256. Model cards and viewer config are applied after the
+  cache, so model-card-only rebuilds do not re-parse result JSON. Bump
+  `RESULT_EXTRACT_CACHE_VERSION` in `scripts/build_results_database_and_report.py`
+  whenever the cached extract layout or its file-derived values change. See
+  `docs/duckdb_schema.md`.
 - DuckDB builds default to streaming result rows into DuckDB. Use
   `--materialize-results-in-python` only for the legacy materialized path or
   `--html-output` when a static HTML report is required.

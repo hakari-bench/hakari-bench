@@ -315,3 +315,20 @@ def test_rebuild_duckdb_command_points_at_cached_results(tmp_path: Path) -> None
     assert command[command.index("--duckdb-path") + 1] == str(plan.duckdb_path)
     assert "--incremental" in command
     assert command[command.index("--exclude-model-name") + 1] == "bad/model"
+
+
+def test_rebuild_duckdb_command_passes_result_cache_options(tmp_path: Path) -> None:
+    default_plan = sync_rebuild.resolve_plan(sync_rebuild.build_arg_parser().parse_args(["--cache-root", str(tmp_path)]))
+    default_command = sync_rebuild.rebuild_duckdb_command(default_plan)
+    assert "--result-cache-dir" not in default_command
+    assert "--no-result-cache" not in default_command
+
+    plan = sync_rebuild.resolve_plan(
+        sync_rebuild.build_arg_parser().parse_args(
+            ["--cache-root", str(tmp_path), "--result-cache-dir", str(tmp_path / "extracts"), "--no-result-cache"]
+        )
+    )
+    command = sync_rebuild.rebuild_duckdb_command(plan)
+
+    assert command[command.index("--result-cache-dir") + 1] == str(tmp_path / "extracts")
+    assert "--no-result-cache" in command
