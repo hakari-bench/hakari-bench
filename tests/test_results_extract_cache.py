@@ -241,19 +241,42 @@ models:
     assert active(second) == {5}
 
 
-def test_result_extract_cache_skips_legacy_non_standard_json(tmp_path: Path) -> None:
+@pytest.mark.parametrize("workers", [1, 2])
+def test_result_extract_cache_reuses_legacy_non_finite_json(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, workers: int
+) -> None:
+    # Static embedding results record max_seq_length as Infinity, and some
+    # legacy files carry NaN timings. These are not valid strict JSON, but
+    # their extracts must still be cached and reused without re-parsing.
     results_dir = tmp_path / "results"
-    path = results_dir / "example__model" / "hakari-bench__NanoMIRACL" / "en.json"
+    path = results_dir / "example__model" / "hakari-bench__NanoMIRACL" / "en.json.xz"
     payload = _payload()
     payload["evaluation"]["wall_seconds"] = float("nan")
+    payload["model"]["max_seq_length"] = float("inf")
     _write_result(path, json.dumps(payload))
     cache_dir = tmp_path / "cache"
+    kwargs: dict[str, Any] = {
+        "model_cards_path": None,
+        "include_source_hashes": True,
+        "result_selection_workers": workers,
+        "result_row_workers": workers,
+    }
 
-    uncached = report.load_results(results_dir, model_cards_path=None)
-    cached = report.load_results(results_dir, model_cards_path=None, result_cache_dir=cache_dir)
+    uncached = report.load_results(results_dir, **kwargs)
+    cold = report.load_results(results_dir, result_cache_dir=cache_dir, **kwargs)
+    assert len(list(cache_dir.rglob("*.json.zlib"))) == 1
 
-    assert repr(_comparable(cached)) == repr(_comparable(uncached))
-    assert not list(cache_dir.rglob("*.json.zlib"))
+    _forbid_result_parsing(monkeypatch)
+    warm = report.load_results(results_dir, result_cache_dir=cache_dir, **kwargs)
+
+    assert uncached[2]
+    assert repr(_comparable(cold)) == repr(_comparable(uncached))
+    assert repr(_comparable(warm)) == repr(_comparable(uncached))
+    payload_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    extract = report._load_result_extract(cache_dir, payload_sha256)
+    assert extract is not None
+    assert extract["summary"]["model"]["max_seq_length"] == float("inf")
+    assert repr(extract["summary"]["evaluation"]["wall_seconds"]) == "nan"
 
 
 def test_result_extract_cache_does_not_cache_sidecar_rankings(tmp_path: Path) -> None:
