@@ -58,6 +58,8 @@ class SyncRebuildPlan:
     model_cards_path: Path | None
     parquet_output_dir: Path | None
     exclude_model_names: list[str]
+    result_cache_dir: Path | None = None
+    no_result_cache: bool = False
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -187,6 +189,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--no-model-cards", action="store_true", help="Do not pass model cards to the DuckDB builder.")
     parser.add_argument("--parquet-output-dir", type=Path, default=None)
     parser.add_argument("--exclude-model-name", action="append", default=None)
+    parser.add_argument(
+        "--result-cache-dir",
+        type=Path,
+        default=None,
+        help="Result extract cache directory passed to the DuckDB builder.",
+    )
+    parser.add_argument(
+        "--no-result-cache",
+        action="store_true",
+        help="Disable the DuckDB builder result extract cache.",
+    )
     return parser
 
 
@@ -222,6 +235,8 @@ def resolve_plan(args: argparse.Namespace) -> SyncRebuildPlan:
         model_cards_path=None if args.no_model_cards else args.model_cards_path,
         parquet_output_dir=args.parquet_output_dir,
         exclude_model_names=list(args.exclude_model_name or []),
+        result_cache_dir=args.result_cache_dir,
+        no_result_cache=args.no_result_cache,
     )
 
 
@@ -504,6 +519,10 @@ def rebuild_duckdb_command(plan: SyncRebuildPlan) -> list[str]:
         command.extend(["--parquet-output-dir", str(plan.parquet_output_dir)])
     for model_name in plan.exclude_model_names:
         command.extend(["--exclude-model-name", model_name])
+    if plan.result_cache_dir is not None:
+        command.extend(["--result-cache-dir", str(plan.result_cache_dir)])
+    if plan.no_result_cache:
+        command.append("--no-result-cache")
     return command
 
 
