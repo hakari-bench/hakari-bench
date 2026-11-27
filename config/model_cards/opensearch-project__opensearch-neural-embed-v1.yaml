@@ -1,0 +1,58 @@
+id: opensearch-project/opensearch-neural-embed-v1
+source:
+  type: huggingface
+  name: opensearch-project/opensearch-neural-embed-v1
+  revision_requested: d558088abac35e8932772965a85e927aedfe49c7
+  revision: d558088abac35e8932772965a85e927aedfe49c7
+method: dense
+parameters:
+  total: 597875712
+  trainable: 597875712
+  input_embedding: 155309056
+  active: 442566656
+embedding:
+  truncate_dims: null
+  output_dimension: 2048
+  mrl_support: false
+  pooling: mean
+  include_prompt: true
+runtime:
+  max_seq_length: 8192
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: flash_attention_2
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: english_only
+  languages:
+  - en
+  evidence:
+    source_url: https://huggingface.co/opensearch-project/opensearch-neural-embed-v1
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: official_model_identity
+target:
+  all: true
+  evaluation_scope: standard
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/opensearch-project/opensearch-neural-embed-v1
+links:
+  huggingface: https://huggingface.co/opensearch-project/opensearch-neural-embed-v1
+notes:
+- Qwen3-Embedding-0.6B student with mean pooling and a 1024 to 2048 Dense projection.
+  The saved `query` prompt is the web-search instruction; documents use an empty prompt.
+- The 2048-dimensional output concatenates the leading 1024 dimensions of two teacher
+  spaces, so no Matryoshka truncation is documented. Evaluate base plus the standard
+  full-dimension quantized/rescore variants.
+- SentenceTransformers 5.4.1 fails in bf16 because mean pooling returns fp32 into the
+  bf16 Dense layer. Evaluated with SentenceTransformers 6.3.0 and Transformers 5.24.0,
+  which reproduce the official example scores within 0.001.

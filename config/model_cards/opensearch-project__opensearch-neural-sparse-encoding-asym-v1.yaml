@@ -1,0 +1,59 @@
+id: opensearch-project/opensearch-neural-sparse-encoding-asym-v1
+source:
+  type: huggingface
+  name: opensearch-project/opensearch-neural-sparse-encoding-asym-v1
+  revision_requested: ccda614feb63872c8f910447d81ea95149e307f7
+  revision: ccda614feb63872c8f910447d81ea95149e307f7
+method: sparse
+parameters:
+  total: 178798964
+  trainable: 178798964
+  input_embedding: 39068160
+  active: 139730804
+embedding:
+  output_dimension: 30522
+  truncate_dims: null
+  pooling: max_relu
+runtime:
+  dtype: bf16
+  attn_implementation: sdpa
+  max_seq_length: 512
+  trust_remote_code: false
+  backend_library: sentence-transformers
+  similarity_fn_name: dot
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: english_only
+  languages:
+  - en
+  evidence:
+    source_url: https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-asym-v1
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: official_model_identity
+target:
+  all: true
+  evaluation_scope: standard
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-asym-v1
+links:
+  huggingface: https://huggingface.co/opensearch-project/opensearch-neural-sparse-encoding-asym-v1
+  github: https://github.com/opensearch-project/neural-search
+notes:
+- Asymmetric two-tower SPLADE model loaded through the SentenceTransformers Router.
+  encode_query runs the bert-medium query tower (256-token limit) and encode_document
+  runs the GTE document tower (512-token limit); both share the BERT WordPiece vocabulary.
+- The native GTE document tower needs Transformers >=5.22.1. Evaluated in a separate
+  environment with Transformers 5.24.0 and SentenceTransformers 6.3.0.
+- Parameters sum both towers. Active parameters subtract both input embedding tables
+  (15627264 query + 23440896 document); the query tower alone has 25777466 active
+  parameters at search time. The root safetensors header covers only the document
+  tower; the query tower is stored under `query_0_MLMTransformer/`.
+- bf16 matched fp32 within 0.004 nDCG@10 on NanoArguAna, NanoSciFact, and NanoFiQA2018.
