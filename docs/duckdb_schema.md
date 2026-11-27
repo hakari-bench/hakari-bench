@@ -96,9 +96,14 @@ result extract cache, enabled by default:
   are applied after the cache, so changing only `config/model_cards/` or
   `config/viewer/` reuses every extract.
 - Files whose derived values depend on another file (sidecar top-ranking
-  artifacts referenced by `artifacts.top_rankings.path`) and legacy JSON with
-  non-standard `NaN`/`Infinity` numbers are never cached. They are parsed on
-  every build, as without the cache.
+  artifacts referenced by `artifacts.top_rankings.path`) are never cached.
+  They are parsed on every build, as without the cache.
+- Legacy JSON with non-standard `NaN`/`Infinity` numbers, such as static
+  embedding results that record `max_seq_length` as `Infinity`, is parsed with
+  the stdlib `json` module like the uncached reader. Its extract is written
+  with the stdlib encoder, which keeps those values. The cache reads every
+  extract with orjson and falls back to the stdlib decoder for these
+  extracts.
 - `--include-retrieval-rankings` builds still parse the ranking artifacts,
   because the extract does not keep raw rankings.
 

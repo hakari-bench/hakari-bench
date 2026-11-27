@@ -555,10 +555,18 @@ def _atomic_write_bytes(path: Path, data: bytes) -> None:
 
 def _load_result_extract(cache_dir: Path, payload_sha256: str) -> dict[str, Any] | None:
     try:
-        data = _result_extract_cache_path(cache_dir, payload_sha256).read_bytes()
-        extract = orjson.loads(zlib.decompress(data))
-    except (OSError, zlib.error, orjson.JSONDecodeError):
+        decoded = zlib.decompress(_result_extract_cache_path(cache_dir, payload_sha256).read_bytes())
+    except (OSError, zlib.error):
         return None
+    try:
+        extract = orjson.loads(decoded)
+    except orjson.JSONDecodeError:
+        # Extracts of legacy results with NaN/Infinity are written by the
+        # stdlib encoder; read them back the same way.
+        try:
+            extract = json.loads(decoded)
+        except ValueError:
+            return None
     if not isinstance(extract, dict) or not isinstance(extract.get("summary"), dict):
         return None
     if not isinstance(extract.get("ranking_metrics"), list):
@@ -566,10 +574,26 @@ def _load_result_extract(cache_dir: Path, payload_sha256: str) -> dict[str, Any]
     return extract
 
 
-def _store_result_extract(cache_dir: Path, payload_sha256: str, extract: dict[str, Any]) -> None:
+def _store_result_extract(
+    cache_dir: Path,
+    payload_sha256: str,
+    extract: dict[str, Any],
+    *,
+    non_finite_floats: bool = False,
+) -> None:
+    """Write one extract.
+
+    ``non_finite_floats`` marks extracts parsed by the stdlib from legacy JSON
+    with NaN/Infinity. orjson would write those values as null, so they are
+    encoded with the stdlib, which keeps them and round-trips every float.
+    """
     try:
-        data = zlib.compress(orjson.dumps(extract), 3)
-    except (TypeError, orjson.JSONEncodeError):
+        if non_finite_floats:
+            encoded = json.dumps(extract, allow_nan=True, separators=(",", ":")).encode("ascii")
+        else:
+            encoded = orjson.dumps(extract)
+        data = zlib.compress(encoded, 3)
+    except (TypeError, ValueError, orjson.JSONEncodeError):
         # Values orjson cannot represent exactly (for example integers wider
         # than 64 bits) stay uncached and use the regular parser.
         return
@@ -703,21 +727,22 @@ def _read_result_summary_with_full_parse(
         del raw
         try:
             payload = orjson.loads(decoded)
-            cacheable = True
+            non_finite_floats = False
         except orjson.JSONDecodeError:
-            # Legacy JSON with NaN/Infinity cannot round-trip through orjson,
-            # so it is parsed with the stdlib and left uncached.
+            # Legacy JSON with NaN/Infinity (for example static embedding
+            # models recording max_seq_length as Infinity) is parsed with the
+            # stdlib, as the uncached reader does.
             payload = json.loads(decoded.decode("utf-8"))
-            cacheable = False
+            non_finite_floats = True
         del decoded
         if not isinstance(payload, dict):
             return None
-        extract = _result_extract_from_payload(payload, result_path=path) if cacheable else None
+        extract = _result_extract_from_payload(payload, result_path=path)
         if extract is None:
             summary_payload = dict(payload)
             summary_payload.pop("artifacts", None)
             return summary_payload, payload_sha256
-        _store_result_extract(cache_dir, payload_sha256, extract)
+        _store_result_extract(cache_dir, payload_sha256, extract, non_finite_floats=non_finite_floats)
     _store_source_sha256(cache_dir, path, stat, payload_sha256)
     return extract["summary"], payload_sha256
 
