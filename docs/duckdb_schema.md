@@ -2152,7 +2152,11 @@ length range filters are ranking-population filters whenever they are set.
 6. Aggregate per model into `borda_score`, `mean_score`, `task_count`, and
    metadata columns.
 7. For overall views, return both `macro_mean` and `micro_mean`; `mean_score`
-   follows the selected `score` aggregation.
+   follows the selected `score` aggregation. Under `score=macro` the ranked rows
+   are already one score per configured group, so `micro_mean` equals
+   `macro_mean`; the table then renders only the Macro Mean column, while CSV
+   export keeps both fields. Under `score=micro`, `micro_mean` is the raw-task
+   mean and both columns are rendered.
 8. Apply parameter and task length range filters before the completeness rule
    and ranking. If `rank_filtered=1`, also apply model, task, and active
    refinement facet filters before ranking. With a task filter, use direct

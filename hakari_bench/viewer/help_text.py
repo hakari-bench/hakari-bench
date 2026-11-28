@@ -54,7 +54,8 @@ PAGE_OVERVIEW = HelpCopy(
         "relevant documents were placed perfectly at the top of the first 10 results, and 0 means "
         "nothing relevant was found. Borda Score, the default sort, is a ranking-based score instead "
         "of an average score; Macro Mean and Micro Mean are two ways of averaging the same per-task "
-        "numbers. Each of those column headers has its own help icon.\n\n"
+        "numbers. The initial view scores with Macro, so only Macro Mean is shown; Micro Mean joins it "
+        "when Score is Micro. Each of those column headers has its own help icon.\n\n"
         "The Multilingual / English switch selects the language scope: English includes English and code "
         "tasks, while Multilingual clears language and category facets. The overview counts at the top "
         "describe the default page and stay fixed; the counts above the table follow your language, "
@@ -157,11 +158,12 @@ SCORE_AGGREGATION = HelpCopy(
         "M-BEIR uses its configured task or language groups. Macro Mean then gives each benchmark "
         "equal weight, regardless of its raw task count.\n\n"
         "Pick Micro to rank on individual tasks, or Macro to compare configured group means before "
-        "ranking. In the Overall scope both averages stay "
-        "visible side by side as the Macro Mean and Micro Mean columns, so this switch decides which of "
-        "them counts as the model's headline mean: Mean Score where shown, the "
-        "mean-based rank, and the STD delta on the mean. Borda Score can change too: Micro ranks "
-        "models on raw tasks, while Macro ranks them on configured group means.\n\n"
+        "ranking. In the Overall scope with Micro, both averages stay visible side by side as the Macro "
+        "Mean and Micro Mean columns, and this switch decides which of them counts as the model's "
+        "headline mean: Mean Score where shown, the mean-based rank, and the STD delta on the mean. With "
+        "Macro the table works from one score per configured group, so a plain average of those rows "
+        "equals Macro Mean and only the Macro Mean column is shown. Borda Score can change too: Micro "
+        "ranks models on raw tasks, while Macro ranks them on configured group means.\n\n"
         "Table display and Score are linked, because per-task columns only make sense with per-task "
         "weighting: Task columns forces Micro and Grouped columns forces Macro, and while either is "
         "active the incompatible Score choice is disabled.\n\n"
@@ -551,10 +553,12 @@ ACTIVE_PARAMS = HelpCopy(
     title="Active params",
     summary="Keeps only models whose active parameter count, in millions, falls inside the range you set.",
     details=(
-        "Active params here is the non-embedding parameter count, in millions: total parameters minus the "
-        "input embedding table. It is not the per-token active count that mixture-of-experts model cards "
-        "advertise; see the Active Params column help for what the number does and does not mean.\n\n"
-        "For example, a max of 500 keeps models with at most 500M non-embedding parameters, which is a "
+        "Active params here is the text encoding parameter count, in millions: total parameters minus the "
+        "input embedding table and minus any vision or audio modules that a multimodal checkpoint loads "
+        "but text retrieval never runs. It is not the per-token active count that mixture-of-experts "
+        "model cards advertise; see the Active Params column help for what the number does and does not "
+        "mean.\n\n"
+        "For example, a max of 500 keeps models with at most 500M text encoding parameters, which is a "
         "reasonable ceiling for indexing a large corpus on modest hardware.\n\n"
         "Rows without active-parameter metadata are excluded as soon as either bound is set. This range "
         "narrows the ranked model population immediately, even when Recalculate ranks from filters is "
@@ -567,9 +571,10 @@ TOTAL_PARAMS = HelpCopy(
     title="Total params",
     summary="Keeps only models whose total parameter count, in millions, falls inside the range you set.",
     details=(
-        "Total params is the full parameter count of the model, in millions, including the input embedding "
-        "table. It predicts the memory and download footprint, while Active params drops the embedding "
-        "table so models with very different vocabulary sizes can be compared.\n\n"
+        "Total params is the full parameter count of the loaded model, in millions, including the input "
+        "embedding table and any vision or audio modules of a multimodal checkpoint. It predicts the "
+        "memory and download footprint, while Active params drops the embedding table and those non-text "
+        "modules so models with very different vocabulary sizes or modalities can be compared.\n\n"
         "For example, a max of 1000 keeps models of roughly 1B parameters or less.\n\n"
         "Rows without total-parameter metadata are excluded as soon as either bound is set. This range "
         "narrows the ranked model population immediately, even when Recalculate ranks from filters is off."
@@ -668,27 +673,49 @@ MACRO_MEAN_COLUMN = HelpCopy(
     title="Macro Mean",
     summary="The model's average score with every benchmark counting once, whatever its task count.",
     details=(
-        "Macro Mean first averages the tasks inside each benchmark into one score per benchmark, then "
-        "averages those benchmark scores. A suite with 182 tasks and a suite with 5 tasks therefore have "
-        "the same influence on the result.\n\n"
+        "Macro Mean is a two-step average. First, the tasks inside each benchmark (Nano-set) are averaged "
+        "into one score per benchmark. Then those benchmark scores are averaged with equal weight. A suite "
+        "with 182 tasks and a suite with 5 tasks therefore have the same influence on the result. M-BEIR "
+        "is the one benchmark with an inner step: its 13-task x 14-language matrix is first averaged per "
+        "task, and those 13 task means are then averaged into the single M-BEIR score that enters the "
+        "mean.\n\n"
+        "For example, if a model scores 80 on a 100-task benchmark and 40 on a 2-task benchmark, Macro "
+        "Mean is (80 + 40) / 2 = 60, while the plain task average (Micro Mean) is about 79.2, because "
+        "the large benchmark supplies 100 of the 102 tasks.\n\n"
         "It is the number to read when you want breadth across benchmark families rather than a raw "
         "average dominated by whichever suite happens to be largest.\n\n"
-        "The value is the selected metric multiplied by 100, nDCG@10 by default. Compare it with Micro "
-        "Mean in the next column: a model whose Macro Mean is clearly lower than its Micro Mean is strong "
-        "on the big suites and weaker on the smaller, often more specialized ones."
+        "Why it is sometimes the only mean column: with Score set to Macro, which is the initial view and "
+        "is forced by Grouped columns, the leaderboard is computed from one score per benchmark. A plain "
+        "average of those benchmark scores is Macro Mean again, so a separate Micro Mean column would only "
+        "repeat the same number. Micro Mean appears next to this column when Score is Micro, which Task "
+        "columns forces and which you can also pick while per-task columns are hidden, because only then "
+        "are raw task scores averaged directly and the two numbers differ.\n\n"
+        "The value is the selected metric multiplied by 100, nDCG@10 by default. When both columns are "
+        "shown, a model whose Macro Mean is clearly lower than its Micro Mean is strong on the big suites "
+        "and weaker on the smaller, often more specialized ones."
     ),
 )
 
 
 MICRO_MEAN_COLUMN = HelpCopy(
     title="Micro Mean",
-    summary="The model's plain average over every task in scope, with each task counting once.",
+    summary="The model's plain average over every raw task in scope, with each task counting once.",
     details=(
-        "Micro Mean averages all raw task scores equally, so benchmarks contribute in proportion to how "
-        "many tasks they contain in the selected scope. In Multilingual scope, M-BEIR contributes "
-        "182 cells from its 13-task x 14-language matrix; English keeps only its English slice.\n\n"
+        "Micro Mean adds up the model's score on every raw task in scope and divides by the number of "
+        "tasks, with no benchmark-level step in between. Benchmarks therefore contribute in proportion to "
+        "how many tasks they contain in the selected scope. In Multilingual scope, M-BEIR alone "
+        "contributes 182 cells from its "
+        "13-task x 14-language matrix; English keeps only its English slice.\n\n"
+        "For example, if a model scores 80 on a 100-task benchmark and 40 on a 2-task benchmark, Micro "
+        "Mean is about 79.2, because 100 of the 102 tasks come from the large benchmark. Macro Mean for "
+        "the same model is (80 + 40) / 2 = 60.\n\n"
         "It is the straightforward 'average over everything that was measured' number, and it is the one "
         "to use when the task mix of the benchmark already reflects what you care about.\n\n"
+        "This column only appears when Score is Micro, which Task columns forces and which you can also "
+        "pick while per-task columns are hidden. With Score set to Macro, "
+        "including the initial Grouped view, the leaderboard works from one score per benchmark, so a "
+        "plain average of those rows would equal Macro Mean and the column is hidden instead of repeating "
+        "it.\n\n"
         "The value is the selected metric multiplied by 100, nDCG@10 by default. Compare it with Macro "
         "Mean in the previous column to see whether a model's standing depends on the large multilingual "
         "suites."
@@ -698,20 +725,32 @@ MICRO_MEAN_COLUMN = HelpCopy(
 
 ACTIVE_PARAMS_COLUMN = HelpCopy(
     title="Active Params",
-    summary="The parameters that actually compute: the model without its token embedding lookup table.",
+    summary=(
+        "The parameters on the text encoding path: the model without its token embedding table and "
+        "without any vision or audio modules."
+    ),
     details=(
-        "HAKARI-Bench computes this as Total Params minus the input embedding parameters, and stores the "
-        "same value as transformer_parameters. Looking a token up in the embedding table is a table read, "
-        "not arithmetic, so those weights inflate a checkpoint without doing the work of encoding a "
+        "HAKARI-Bench evaluates text retrieval, so this column counts only what encodes text:\n\n"
+        "Active Params = Total Params - input embedding parameters - non-text parameters\n\n"
+        "The input embedding table is dropped because looking a token up is a table read, not "
+        "arithmetic, so those weights inflate a checkpoint without doing the work of encoding a "
         "document. Dropping them is what makes a model with a 250K-token multilingual vocabulary "
         "comparable to one with a 30K English vocabulary.\n\n"
+        "Non-text parameters are the vision or audio encoders and multimodal projectors that a "
+        "multimodal checkpoint loads but text retrieval never runs, such as visual, vision_tower, "
+        "multi_modal_projector, or audio_tower modules. Nemotron-3.5-Embed-8B is an example: its 8.38B "
+        "total includes a 537M token embedding table and 428M of vision modules, so it shows 7.42B here. "
+        "Text-only models have no non-text part, and modules a loader never builds, such as encoders "
+        "dropped with vision_config set to null, are not in Total Params to begin with. Results measured "
+        "before this exclusion was introduced take the corrected count from the model's reviewed model "
+        "card instead of being re-run.\n\n"
         "One caveat, because the term is overloaded: this is not the mixture-of-experts sense of active "
         "parameters. Expert routing is not modelled here, so every expert is counted whether or not a "
         "token would use it. nomic-embed-text-v2-moe shows 283M in this column, which is its 475M total "
         "minus a 192M embedding table - not the smaller per-token expert subset its model card "
         "advertises. The two numbers share a name and measure different things, so do not compare this "
         "column against a published MoE active-parameter figure.\n\n"
-        "Read it as encoder size, which is a reasonable proxy for cost among dense transformers of "
+        "Read it as text encoder size, which is a reasonable proxy for cost among dense transformers of "
         "similar shape, and a poor one across architectures. Hosted API models that do not publish their "
         "size show Unknown. Switch to Chart with Active Params on the x axis to see which models sit "
         "above the quality-per-size trend, and use the Active params range under Filter results to keep "
@@ -722,14 +761,18 @@ ACTIVE_PARAMS_COLUMN = HelpCopy(
 
 TOTAL_PARAMS_COLUMN = HelpCopy(
     title="Total Params",
-    summary="Every parameter in the checkpoint, which is what has to fit in memory.",
+    summary="Every parameter in the loaded checkpoint, which is what has to fit in memory.",
     details=(
-        "Total Params counts the whole model: the transformer, the token embedding matrix, and, for a "
-        "mixture-of-experts model, all experts whether or not a given token uses them.\n\n"
-        "The gap between this column and Active Params is exactly the input embedding table, so a wide "
-        "gap means a large vocabulary rather than sparse computation. embeddinggemma-300m is the clear "
-        "case: 308M total against 106M in Active Params, because a vocabulary of roughly 260K tokens carries "
-        "most of the checkpoint.\n\n"
+        "Total Params counts the whole model as it was loaded for evaluation: the transformer, the token "
+        "embedding matrix, for a mixture-of-experts model all experts whether or not a given token uses "
+        "them, and, for a multimodal checkpoint, any vision or audio modules that were loaded even "
+        "though text retrieval does not run them.\n\n"
+        "The gap between this column and Active Params is the input embedding table plus those non-text "
+        "modules. For a text-only model it is just the embedding table, so a wide gap means a large "
+        "vocabulary rather than sparse computation. embeddinggemma-300m is the clear case: 308M total "
+        "against 106M in Active Params, because a vocabulary of roughly 260K tokens carries most of the "
+        "checkpoint. For a multimodal checkpoint part of the gap is vision weights: Nemotron-3.5-Embed-8B "
+        "shows 8.38B here and 7.42B in Active Params, of which 428M is its vision encoder.\n\n"
         "Read it as the memory and download footprint. As a rough guide, bf16 weights need about 2 bytes "
         "per parameter, so a 600M-parameter model is around 1.2GB before any runtime overhead. Hosted API "
         "models that do not publish their size show Unknown."
@@ -796,8 +839,9 @@ MEAN_SCORE_COLUMN = HelpCopy(
         "Mean Score is the average of the model's per-task scores in the selected benchmark scope, shown "
         "as the selected metric multiplied by 100. Unlike Borda Score it is an absolute quality number, so "
         "it can be compared with published results for the same metric.\n\n"
-        "In the Overall scope this column is replaced by Macro Mean and Micro Mean, which show the two "
-        "aggregation choices side by side; here a single benchmark is in view, so one average is enough.\n\n"
+        "In the Overall scope this column is replaced by Macro Mean, plus Micro Mean when Score is Micro, "
+        "which show the two aggregation choices side by side; here a single benchmark is in view, so one "
+        "average is enough.\n\n"
         "Read it alongside Borda Score. A model can have a slightly lower mean but a better Borda Score "
         "when it wins more of the individual tasks by small margins."
     ),

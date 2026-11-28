@@ -4419,6 +4419,38 @@ COLUMN_HELP = {
 }
 
 
+MEAN_COLUMN_LABELS = {
+    "macro_mean": "Macro Mean",
+    "micro_mean": "Micro Mean",
+    "mean_score": "Mean Score",
+}
+
+
+def _mean_column_keys(result: LeaderboardResult) -> list[str]:
+    """Return the headline mean columns for the current scoring mode.
+
+    Under Macro scoring (Grouped columns, the initial view) the leaderboard is
+    computed from one score per configured group, so a plain average of those
+    rows reproduces Macro Mean exactly. Showing a second, identical Micro Mean
+    column would suggest a distinction that does not exist, so Micro Mean only
+    appears when Micro scoring keeps raw task scores and the two averages differ.
+    """
+
+    if not result.is_overall or (result.rank_filtered and result.task_filter):
+        return ["mean_score"]
+    if result.score_aggregation == "macro":
+        return ["macro_mean"]
+    return ["macro_mean", "micro_mean"]
+
+
+def _displayed_sort_key(*, result: LeaderboardResult, sort: str) -> str:
+    """Map a sort on a hidden duplicate mean column to the column that shows it."""
+
+    if sort == "micro_mean" and "micro_mean" not in _mean_column_keys(result):
+        return "macro_mean"
+    return sort
+
+
 def render_table_head(
     *,
     result: LeaderboardResult,
@@ -4442,19 +4474,12 @@ def render_table_head(
         ("model_name", "Model Name", "asc", "left", False, ""),
         ("borda_score", "Borda Score", "desc", "right", False, ""),
     ]
-    if result.is_overall and not (result.rank_filtered and result.task_filter):
-        columns.extend(
-            [
-                ("macro_mean", "Macro Mean", "desc", "right", False, ""),
-                ("micro_mean", "Micro Mean", "desc", "right", False, ""),
-            ]
-        )
-    else:
-        columns.append(("mean_score", "Mean Score", "desc", "right", False, ""))
     columns.extend(
-        (f"metric:{column}", metric_labels[column], "asc" if result.show_task_ranks else "desc", "right", True, column)
-        for column in result.metric_columns
+        (key, MEAN_COLUMN_LABELS[key], "desc", "right", False, "") for key in _mean_column_keys(result)
     )
+    # Model size, context length, and vector size decide whether a model is
+    # deployable at all, so they sit right after the headline means instead of
+    # behind a long run of per-task columns.
     columns.extend(
         [
             ("active_parameters", "Active Params", "asc", "right", False, ""),
@@ -4462,6 +4487,10 @@ def render_table_head(
             ("max_seq_length", "Max Tokens", "desc", "right", False, ""),
             ("embedding_dim", "Dims", "desc", "right", False, ""),
         ]
+    )
+    columns.extend(
+        (f"metric:{column}", metric_labels[column], "asc" if result.show_task_ranks else "desc", "right", True, column)
+        for column in result.metric_columns
     )
     if result.include_quantization_variants:
         columns.append(("quantization", "Quant", "asc", "left", False, ""))
@@ -4476,6 +4505,7 @@ def render_table_head(
                 ("model_type", "Model Type", "", "left", False, ""),
             ]
         )
+    sort_indicator_key = _displayed_sort_key(result=result, sort=sort)
     heads = []
     for key, label, default_direction, align, is_metric, full_metric_name in columns:
         align = "left"
@@ -4485,7 +4515,7 @@ def render_table_head(
             if sortable
             else ""
         )
-        indicator = _render_sort_indicator(active=sort == key, direction=direction) if sortable else ""
+        indicator = _render_sort_indicator(active=sort_indicator_key == key, direction=direction) if sortable else ""
         query_payload = (
             state_payload(result=result, sort=key, direction=next_direction, filter_state=filter_state)
             if sortable
@@ -4613,6 +4643,8 @@ def render_table_body(
         target=score_bar_target,
     )
     metric_rank_labels = _metric_rank_display_labels(result)
+    mean_keys = _mean_column_keys(result)
+    displayed_sort = _displayed_sort_key(result=result, sort=sort)
     visible_index = 0
     for row in result.rows:
         hidden = not filter_context.is_visible(row)
@@ -4624,15 +4656,14 @@ def render_table_body(
             visible_index += 1
             index_label = str(visible_index)
         borda_score_cell = _score_cell_sort_attributes(
-            _render_borda_score_cell(result=result, row=row), keys=["borda_score"], sort=sort,
+            _render_borda_score_cell(result=result, row=row), keys=["borda_score"], sort=displayed_sort,
         )
-        mean_keys = ["macro_mean", "micro_mean"] if result.is_overall and not (result.rank_filtered and result.task_filter) else ["mean_score"]
         mean_cells = _score_cell_sort_attributes(
-            _render_mean_cells(result=result, row=row), keys=mean_keys, sort=sort,
+            _render_mean_cells(result=result, row=row), keys=mean_keys, sort=displayed_sort,
         )
         metric_cells = _score_cell_sort_attributes(
             _render_metric_cells(result=result, row=row, metric_rank_labels=metric_rank_labels),
-            keys=[f"metric:{column}" for column in result.metric_columns], sort=sort,
+            keys=[f"metric:{column}" for column in result.metric_columns], sort=displayed_sort,
         )
         body_rows.append(
             f"""<tr class="{row_class}"{hidden_attrs}>
@@ -4640,11 +4671,11 @@ def render_table_body(
               {render_model_name_cell(row, model_views[row.model_name], score_bar_width=score_bar_widths.get(row.model_name), score_bar_target=score_bar_target)}
               {borda_score_cell}
               {mean_cells}
-              {metric_cells}
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.active_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_params(row.total_parameters)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_max_len(row.max_seq_length)}</td>
               <td class="px-2 py-1 text-left tabular-nums">{_fmt_row_embedding_dim(row)}</td>
+              {metric_cells}
               {_render_quantization_cell(result=result, row=row)}
               {_render_rescore_cell(result=result, row=row)}
               {_render_base_delta_cell(result=result, row=row)}
@@ -4668,7 +4699,7 @@ def _score_cell_sort_attributes(markup: str, *, keys: list[str], sort: str) -> s
 
 def _leaderboard_table_colspan(result: LeaderboardResult) -> int:
     column_count = 3  # leading rank index + model + borda score
-    column_count += 2 if result.is_overall and not (result.rank_filtered and result.task_filter) else 1
+    column_count += len(_mean_column_keys(result))
     column_count += len(result.metric_columns)
     column_count += 4
     if result.include_quantization_variants:
@@ -4962,17 +4993,18 @@ def _render_metric_cells(
 
 
 def _render_mean_cells(*, result: LeaderboardResult, row: LeaderboardRow) -> str:
-    if result.is_overall and not (result.rank_filtered and result.task_filter):
+    cells = []
+    for key in _mean_column_keys(result):
+        score = getattr(row, key)
         if result.show_task_z_scores:
-            return (
-                _render_score_z_cell(score=row.macro_mean, z_score=row.macro_mean_z, cell_class="px-2 py-1 text-left tabular-nums")
-                + _render_score_z_cell(score=row.micro_mean, z_score=row.micro_mean_z, cell_class="px-2 py-1 text-left tabular-nums")
+            cells.append(
+                _render_score_z_cell(
+                    score=score, z_score=getattr(row, f"{key}_z"), cell_class="px-2 py-1 text-left tabular-nums"
+                )
             )
-        return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.macro_mean)}</td>
-                <td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.micro_mean)}</td>"""
-    if result.show_task_z_scores:
-        return _render_score_z_cell(score=row.mean_score, z_score=row.mean_score_z, cell_class="px-2 py-1 text-left tabular-nums")
-    return f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(row.mean_score)}</td>"""
+        else:
+            cells.append(f"""<td class="px-2 py-1 text-left tabular-nums">{_fmt_score(score)}</td>""")
+    return "\n                ".join(cells)
 
 
 def _render_metric_z_cell(*, score: float | None, z_score: float | None) -> str:
