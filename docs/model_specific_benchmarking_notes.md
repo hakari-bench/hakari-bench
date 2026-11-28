@@ -1495,17 +1495,21 @@ standard sparse budget grid; no extra budget variants are needed.
 The default environment (Transformers 5.12.1, SentenceTransformers 5.4.1) loads
 the checkpoint. FlashAttention 2 through the `flash-attn` dependency group
 reproduced the official example within about 1 point of the dot-product score
-(89.8 versus 90.5), as did SDPA. Evaluate the English and code subset:
+(89.8 versus 90.5), as did SDPA. Evaluate the standard task set:
 
 ```bash
 uv run --group flash-attn hakari-bench evaluate from-model-card \
   --model-card config/model_cards/Linkup-Platform__linkup-sparseup-embed-v2.yaml \
-  --all --english --device cuda:0 --batch-size 16
+  --all --device cuda:0 --batch-size 4
 ```
 
 Each sequence materializes `[length, 50370]` activations before pooling, so
 long-document tasks need a smaller batch size. Reduce `--batch-size` instead of
 the 8192-token limit.
+
+The completed 563-task run kept GPU scoring throughout. Batch size 16 ran out
+of memory on long-document tasks with a 32 GB GPU; the first 12 tasks used
+batch size 16 and the remaining 551 used batch size 4.
 
 The `-pretrain` checkpoint is an intermediate contrastive checkpoint that the
 authors describe as needing fine-tuning. Do not evaluate it as a retrieval
@@ -1530,8 +1534,10 @@ NanoFiQA2018, so use the standard bf16 runtime with SDPA.
 OMP_NUM_THREADS=8 uv run --no-project --python /path/to/venv/bin/python \
   python -m hakari_bench.cli evaluate from-model-card \
   --model-card config/model_cards/opensearch-project__opensearch-neural-sparse-encoding-asym-v1.yaml \
-  --all --english --device cuda:0 --batch-size 32
+  --all --device cuda:0 --batch-size 32
 ```
+
+The completed 563-task run used batch size 32 for every task.
 
 Automatic parameter counting cannot inspect the `Router`, so the card records
 the parameter counts. They include both towers, and the active count subtracts
@@ -1558,8 +1564,10 @@ environment with FlashAttention 2:
 OMP_NUM_THREADS=8 uv run --no-project --python /path/to/venv/bin/python \
   python -m hakari_bench.cli evaluate from-model-card \
   --model-card config/model_cards/opensearch-project__opensearch-neural-embed-v1.yaml \
-  --all --english --device cuda:0 --batch-size 16
+  --all --device cuda:0 --batch-size 16
 ```
+
+The completed 563-task run used batch size 16 for every task.
 
 ## DexelLabs MargEmbed-Akan
 
@@ -1575,3 +1583,5 @@ SentenceTransformers >=6. SentenceTransformers 6.3.0 with Transformers 5.24.0
 loads it in bf16 with SDPA. The license is CC BY-NC 4.0, and the card records
 it as non-commercial. HAKARI-Bench has no Twi tasks, so the run measures
 English and cross-lingual transfer from a Twi-focused model.
+
+The completed 563-task run used batch size 64 for every task.
