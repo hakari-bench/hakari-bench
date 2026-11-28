@@ -1474,3 +1474,114 @@ hakari-bench evaluate from-model-card \
 
 The custom loader is an explicit CLI option; the model card alone does not
 select it. Reduce batch size for long documents without shortening context.
+
+## Linkup SPARSEUP-v2
+
+`Linkup-Platform/linkup-sparseup-embed-v2` is an English learned sparse
+retriever (SPLADE head on ModernBERT-base). Use `evaluate sparse` with the
+reviewed card `config/model_cards/Linkup-Platform__linkup-sparseup-embed-v2.yaml`.
+The checkpoint needs `trust_remote_code`; `custom_st.py` and
+`modeling_splade.py` were reviewed at revision
+`7165075edb8c7e5e6d1125aa8a6a753d3c50c5d8`. They apply a logit shift of 18,
+keep the top 12 vocabulary activations per token before max pooling, and fold
+case and leading-space vocabulary variants onto one dimension.
+
+The `query` and `document` prompt names (`[Q]` / `[D]`) select the branch and
+its 8192-token limit; the prefix tokens are attended but not pooled. Do not add
+manual prefixes. Keep raw dot-product scoring, the bf16 checkpoint precision,
+and unpruned base vectors. The upstream top-k pruning recipe is covered by the
+standard sparse budget grid; no extra budget variants are needed.
+
+The default environment (Transformers 5.12.1, SentenceTransformers 5.4.1) loads
+the checkpoint. FlashAttention 2 through the `flash-attn` dependency group
+reproduced the official example within about 1 point of the dot-product score
+(89.8 versus 90.5), as did SDPA. Evaluate the standard task set:
+
+```bash
+uv run --group flash-attn hakari-bench evaluate from-model-card \
+  --model-card config/model_cards/Linkup-Platform__linkup-sparseup-embed-v2.yaml \
+  --all --device cuda:0 --batch-size 4
+```
+
+Each sequence materializes `[length, 50370]` activations before pooling, so
+long-document tasks need a smaller batch size. Reduce `--batch-size` instead of
+the 8192-token limit.
+
+The completed 563-task run kept GPU scoring throughout. Batch size 16 ran out
+of memory on long-document tasks with a 32 GB GPU; the first 12 tasks used
+batch size 16 and the remaining 551 used batch size 4.
+
+The `-pretrain` checkpoint is an intermediate contrastive checkpoint that the
+authors describe as needing fine-tuning. Do not evaluate it as a retrieval
+model.
+
+## OpenSearch Neural Sparse asym-v1
+
+`opensearch-project/opensearch-neural-sparse-encoding-asym-v1` is an
+asymmetric English SPLADE model loaded through the SentenceTransformers
+`Router`. `encode_query` runs a bert-medium query tower with a 256-token limit,
+and `encode_document` runs a GTE document tower with a 512-token limit. Both
+towers share the BERT WordPiece vocabulary. The saved prompts are empty.
+
+The GTE document tower uses the native `gte` architecture and needs
+Transformers >=5.22.1. Use a separate environment when the default one must
+stay on older versions. Transformers 5.24.0 with SentenceTransformers 6.3.0
+and Torch 2.9.1/CUDA 12.8 reproduced the official example score (18.19). bf16
+matched fp32 within 0.004 nDCG@10 on NanoArguAna, NanoSciFact, and
+NanoFiQA2018, so use the standard bf16 runtime with SDPA.
+
+```bash
+OMP_NUM_THREADS=8 uv run --no-project --python /path/to/venv/bin/python \
+  python -m hakari_bench.cli evaluate from-model-card \
+  --model-card config/model_cards/opensearch-project__opensearch-neural-sparse-encoding-asym-v1.yaml \
+  --all --device cuda:0 --batch-size 32
+```
+
+The completed 563-task run used batch size 32 for every task.
+
+Automatic parameter counting cannot inspect the `Router`, so the card records
+the parameter counts. They include both towers, and the active count subtracts
+both input embedding tables. The query tower alone has 25.8M active
+parameters at search time.
+
+## OpenSearch Neural Embed v1
+
+`opensearch-project/opensearch-neural-embed-v1` is an English dense model
+distilled into Qwen3-Embedding-0.6B. It uses mean pooling, a 1024 to 2048
+`Dense` projection, and an 8192-token maximum. The saved `query` prompt is the
+web-search instruction, and documents use an empty prompt. The 2048-dimensional
+output concatenates the leading 1024 dimensions of two teacher spaces, so no
+Matryoshka truncation is documented. Evaluate base plus the standard
+full-dimension quantized/rescore variants.
+
+SentenceTransformers 5.4.1 fails in bf16 with `mat1 and mat2 must have the same
+dtype`: the mean pooling output reaches the bf16 `Dense` layer as FP32.
+SentenceTransformers 6.3.0 with Transformers 5.24.0 loads the projection in
+bf16 and reproduces the official example scores within 0.001. Use that
+environment with FlashAttention 2:
+
+```bash
+OMP_NUM_THREADS=8 uv run --no-project --python /path/to/venv/bin/python \
+  python -m hakari_bench.cli evaluate from-model-card \
+  --model-card config/model_cards/opensearch-project__opensearch-neural-embed-v1.yaml \
+  --all --device cuda:0 --batch-size 16
+```
+
+The completed 563-task run used batch size 16 for every task.
+
+## DexelLabs MargEmbed-Akan
+
+`DexelLabs/MargEmbed-Akan` is a Twi (Akan) to English retrieval model distilled
+from `McGill-NLP/AfriE5-Large-instruct` (XLM-RoBERTa large, 512 tokens, mean
+pooling). The checkpoint's saved prompts are empty, but the official usage
+applies `Instruct: Given a question, retrieve Wikipedia passages that answer
+the question\nQuery: ` to queries and no prompt to passages. The card stores
+these explicit prompts.
+
+The SentenceTransformers config uses module paths that need
+SentenceTransformers >=6. SentenceTransformers 6.3.0 with Transformers 5.24.0
+loads it in bf16 with SDPA. The license is CC BY-NC 4.0, and the card records
+it as non-commercial. HAKARI-Bench has no Twi tasks, so the run measures
+English and cross-lingual transfer from a Twi-focused model.
+
+The completed 563-task run used batch size 64 for every task.
