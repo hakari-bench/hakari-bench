@@ -560,6 +560,19 @@ read as an analytical instrument rather than a general-purpose dashboard.
   becomes the vertical scroll context, so pure CSS sticky cannot pin the header on
   page scroll. Do not "fix" this by removing the horizontal wrapper — that makes a
   wide table scroll the whole page and drags the footer/chrome off-screen.
+- Column order after the rank index is Model Name, Borda Score, the headline
+  mean column(s), then the model metadata columns (Active Params, Total Params,
+  Max Tokens, Dims), and only then the per-task or grouped metric columns
+  followed by variant and other columns. Size, context length, and vector size
+  decide whether a model is deployable, so they must stay visible without
+  scrolling past dozens of task columns.
+- In the Overall scope the headline means follow the scoring mode. Micro shows
+  Macro Mean and Micro Mean side by side. Macro (the initial Grouped view)
+  shows only Macro Mean, because the table is computed from one score per
+  configured group and a plain average of those rows equals Macro Mean; a second
+  identical column would suggest a difference that does not exist. A legacy
+  `sort=micro_mean` link under Macro highlights Macro Mean, which carries the
+  same value. Single-benchmark views and ranked task filters show Mean Score.
 - Keep model name sticky and readable during horizontal scroll.
 - Keep task columns narrow, but allow Task and Grouped headers to grow vertically
   and wrap long names. Never replace part of a metric label with an ellipsis.

@@ -165,6 +165,23 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert page.locator('[aria-label="Score aggregation: Micro (locked by Task columns)"]').count() == 1
                 assert page.get_by_role("button", name="Macro", exact=True).is_disabled() is True
                 task_table = page.locator(".leaderboard-table").first
+                # Micro scoring keeps raw tasks, so both means are shown and the
+                # model size columns follow them before any per-task column.
+                task_head_keys = task_table.locator("thead th").evaluate_all(
+                    "(headers) => headers.map((header) => header.dataset.columnKey)"
+                )
+                assert task_head_keys[:9] == [
+                    "index",
+                    "model_name",
+                    "borda_score",
+                    "macro_mean",
+                    "micro_mean",
+                    "active_parameters",
+                    "total_parameters",
+                    "max_seq_length",
+                    "embedding_dim",
+                ]
+                assert task_head_keys[9].startswith("metric:")
                 task_table.locator('th[data-column-key="metric:a2"] button').click()
                 page.wait_for_url(lambda url: "sort=metric%3Aa2" in url, timeout=15_000)
                 page.locator("#leaderboard-loading-toast.htmx-request").wait_for(state="detached", timeout=15_000)
@@ -267,7 +284,7 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                         const badgeRow = cells[1].querySelector(".model-variant-badges").getBoundingClientRect();
                         const bordaScoreCell = cells[2].getBoundingClientRect();
                         const macroMeanCell = cells[3].getBoundingClientRect();
-                        const microMeanCell = cells[4].getBoundingClientRect();
+                        const activeParamsCell = cells[4].getBoundingClientRect();
                         const modelButtonStyle = getComputedStyle(cells[1].querySelector(".model-detail-trigger"));
                         const badgeStyle = getComputedStyle(cells[1].querySelector(".model-variant-badges span"));
                         const rankStyle = getComputedStyle(cells[0]);
@@ -292,21 +309,21 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                             modelButtonTop: modelButton.top,
                             bordaScoreLeft: bordaScoreCell.left,
                             macroMeanLeft: macroMeanCell.left,
-                            microMeanLeft: microMeanCell.left,
+                            activeParamsLeft: activeParamsCell.left,
                             rankHeaderText: headers[0].innerText,
                             modelHeaderText: headers[1].innerText,
                             bordaScoreHeaderText: headers[2].innerText,
                             macroMeanHeaderText: headers[3].innerText,
-                            microMeanHeaderText: headers[4].innerText,
+                            activeParamsHeaderText: headers[4].innerText,
                             bordaScoreHeaderLabelLeft: headerLabelLeft(2),
                             bordaScoreBodyContentLeft: bodyContentLeft(2),
                             macroMeanHeaderLabelLeft: headerLabelLeft(3),
                             macroMeanBodyContentLeft: bodyContentLeft(3),
-                            microMeanHeaderLabelLeft: headerLabelLeft(4),
-                            microMeanBodyContentLeft: bodyContentLeft(4),
+                            activeParamsHeaderLabelLeft: headerLabelLeft(4),
+                            activeParamsBodyContentLeft: bodyContentLeft(4),
                             bordaScoreHeaderButtonTextAlign: getComputedStyle(headers[2].querySelector("button")).textAlign,
                             macroMeanHeaderButtonTextAlign: getComputedStyle(headers[3].querySelector("button")).textAlign,
-                            microMeanHeaderButtonTextAlign: getComputedStyle(headers[4].querySelector("button")).textAlign,
+                            activeParamsHeaderButtonTextAlign: getComputedStyle(headers[4].querySelector("button")).textAlign,
                             rankHeaderPosition: rankHeaderStyle.position,
                             modelHeaderPosition: modelHeaderStyle.position,
                             bordaScoreHeaderPosition: bordaScoreHeaderStyle.position,
@@ -330,14 +347,17 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert 0 <= long_model_layout["rankCellLeft"] <= 32
                 assert long_model_layout["rankCellRight"] <= long_model_layout["modelCellLeft"] + 0.5
                 assert long_model_layout["modelCellRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
-                assert long_model_layout["bordaScoreLeft"] < long_model_layout["macroMeanLeft"] < long_model_layout["microMeanLeft"]
+                assert long_model_layout["bordaScoreLeft"] < long_model_layout["macroMeanLeft"] < long_model_layout["activeParamsLeft"]
                 assert long_model_layout["modelButtonRight"] <= long_model_layout["bordaScoreLeft"] + 0.5
                 assert long_model_layout["badgeRowTop"] >= long_model_layout["modelButtonTop"] - 0.5
                 assert long_model_layout["rankHeaderText"] == ""
                 assert "Model" in long_model_layout["modelHeaderText"]
                 assert "Borda" in long_model_layout["bordaScoreHeaderText"]
                 assert "Mean" in long_model_layout["macroMeanHeaderText"]
-                assert "Mean" in long_model_layout["microMeanHeaderText"]
+                # Grouped columns score with Macro, where Micro Mean would only repeat
+                # Macro Mean, so the model size columns follow Macro Mean directly.
+                assert "Active Params" in long_model_layout["activeParamsHeaderText"]
+                assert page.locator('#leaderboard-panel thead th[data-column-key="micro_mean"]').count() == 0
                 assert long_model_layout["modelCellContentFlexWrap"] == "wrap"
                 assert long_model_layout["modelCellContentFlexDirection"] == "row"
                 assert long_model_layout["modelButtonFontSize"] == pytest.approx(13.0, abs=0.1)
@@ -347,15 +367,15 @@ def test_viewer_browser_smoke_covers_static_javascript(tmp_path: Path) -> None:
                 assert long_model_layout["rankTextAlign"] == "right"
                 assert long_model_layout["bordaScoreHeaderButtonTextAlign"] == "left"
                 assert long_model_layout["macroMeanHeaderButtonTextAlign"] == "left"
-                assert long_model_layout["microMeanHeaderButtonTextAlign"] == "left"
+                assert long_model_layout["activeParamsHeaderButtonTextAlign"] == "left"
                 assert long_model_layout["bordaScoreHeaderLabelLeft"] == pytest.approx(
                     long_model_layout["bordaScoreBodyContentLeft"], abs=0.5
                 )
                 assert long_model_layout["macroMeanHeaderLabelLeft"] == pytest.approx(
                     long_model_layout["macroMeanBodyContentLeft"], abs=0.5
                 )
-                assert long_model_layout["microMeanHeaderLabelLeft"] == pytest.approx(
-                    long_model_layout["microMeanBodyContentLeft"], abs=0.5
+                assert long_model_layout["activeParamsHeaderLabelLeft"] == pytest.approx(
+                    long_model_layout["activeParamsBodyContentLeft"], abs=0.5
                 )
                 assert long_model_layout["rankHeaderPosition"] == "sticky"
                 assert long_model_layout["modelHeaderPosition"] == "sticky"
