@@ -19,6 +19,7 @@ from hakari_bench.viewer.app import (
     _database_footer_label,
     _fmt_max_len,
     _fmt_params,
+    _leaderboard_table_colspan,
     _metric_column_label,
     _metric_column_labels,
     _render_task_breakdown_section,
@@ -6029,6 +6030,92 @@ def test_leaderboard_table_pins_rank_index_then_model_name(tmp_path: Path) -> No
     assert 'class="model-score-bar" value="0.00" max="100"' in body
 
 
+def _overall_mean_result(*, score_aggregation: str) -> LeaderboardResult:
+    return LeaderboardResult(
+        view_name="Overall",
+        view_label="Overall",
+        is_overall=True,
+        score_aggregation=cast(Any, score_aggregation),
+        expected_tasks=1,
+        rows=[
+            LeaderboardRow(
+                borda_rank=1,
+                mean_rank=1,
+                model_name="model/a",
+                borda_score=100.0,
+                mean_score=70.0,
+                macro_mean=70.0,
+                micro_mean=60.0 if score_aggregation == "micro" else 70.0,
+                task_count=1,
+                active_parameters=100_000_000,
+                total_parameters=200_000_000,
+                max_seq_length=512,
+                embedding_dim=768,
+                metric_values={"BenchA": 70.0},
+                metric_sort_values={"BenchA": 1.0},
+            ),
+        ],
+        available_views=["Overall"],
+        available_view_labels={"Overall": "Overall"},
+        score_groups=[],
+        metric_columns=["BenchA"],
+    )
+
+
+def _head_column_keys(head: str) -> list[str]:
+    return re.findall(r'<th scope="col"[^>]*data-column-key="([^"]+)"', head)
+
+
+def test_leaderboard_micro_score_shows_both_means_then_model_size_columns() -> None:
+    result = _overall_mean_result(score_aggregation="micro")
+
+    head = render_table_head(result=result, sort="borda_score", direction="desc")
+    body = render_table_body(result=result)
+
+    assert _head_column_keys(head) == [
+        "index",
+        "model_name",
+        "borda_score",
+        "macro_mean",
+        "micro_mean",
+        "active_parameters",
+        "total_parameters",
+        "max_seq_length",
+        "embedding_dim",
+        "metric:BenchA",
+    ]
+    # Body cells follow the header order: rank, model, Borda, Macro, Micro, then
+    # the four model metadata cells before the metric cell.
+    cells = re.findall(r"<td\b[^>]*>(.*?)</td>", body.split("</tr>", 1)[0], flags=re.S)
+    texts = [" ".join(re.sub(r"<[^>]+>", " ", cell).split()) for cell in cells]
+    assert texts[3:10] == ["70.00", "60.00", "100M", "200M", "512", "768", "70.00"]
+
+
+def test_leaderboard_macro_score_shows_single_macro_mean_column() -> None:
+    result = _overall_mean_result(score_aggregation="macro")
+
+    head = render_table_head(result=result, sort="micro_mean", direction="desc")
+    body = render_table_body(result=result, sort="micro_mean")
+
+    # Under Macro the plain mean of group means repeats Macro Mean, so only one
+    # mean column is shown.
+    assert _head_column_keys(head) == [
+        "index",
+        "model_name",
+        "borda_score",
+        "macro_mean",
+        "active_parameters",
+        "total_parameters",
+        "max_seq_length",
+        "embedding_dim",
+        "metric:BenchA",
+    ]
+    assert 'data-score-key="micro_mean"' not in body
+    # An old micro_mean sort link still highlights the column that carries the value.
+    assert 'data-score-key="macro_mean" data-score-sort="active"' in body
+    assert _leaderboard_table_colspan(result) == len(_head_column_keys(head))
+
+
 def test_leaderboard_model_name_score_bar_handles_one_visible_filtered_row(tmp_path: Path) -> None:
     db_path = tmp_path / "results.duckdb"
     _write_task_results(
@@ -7835,9 +7922,9 @@ def test_viewer_renders_and_applies_parameter_filters(tmp_path: Path) -> None:
     assert ">Params</span>" not in response.text
     assert ">Length</span>" not in response.text
     assert {"Active params", "Total params"} <= _help_titles(response.text)
-    assert "Active params here is the non-embedding parameter count" in response.text
-    assert "Total params is the full parameter count of the model" in response.text
-    assert "at most 500M non-embedding parameters" in response.text
+    assert "Active params here is the text encoding parameter count" in response.text
+    assert "Total params is the full parameter count of the loaded model" in response.text
+    assert "at most 500M text encoding parameters" in response.text
     assert 'name="active_params_max" value="100"' in response.text
     params_filter_section = response.text.split("Query length</span>", 1)[0]
     assert params_filter_section.count("viewer-text-input w-28") >= 2
@@ -9004,14 +9091,21 @@ def test_viewer_explains_the_page_and_its_score_columns(tmp_path: Path) -> None:
     assert "HAKARI-Bench" in _help_titles(page.text)
     assert "Each row is a model evaluated in Retrieval or Reranking mode" in page.text
     # The headline numbers explain themselves at the column they label.
-    assert {"Borda Score", "Macro Mean", "Micro Mean"} <= _help_titles(leaderboard.text)
+    assert {"Borda Score", "Macro Mean"} <= _help_titles(leaderboard.text)
+    # The initial Macro view would show an identical Micro Mean, so it is hidden
+    # until Micro scoring makes the two averages differ.
+    assert "Micro Mean" not in _help_titles(leaderboard.text)
+    micro_leaderboard = client.get("/leaderboard?view=Overall&columns=task")
+    assert {"Macro Mean", "Micro Mean"} <= _help_titles(micro_leaderboard.text)
+    assert "average of those benchmark scores is Macro Mean again" in leaderboard.text
     assert all(copy.get("eyebrow") != "Score column" for registry in _help_registries(leaderboard.text) for copy in registry.values())
     # Model metadata columns are as opaque as the score columns.
     assert {"Active Params", "Total Params", "Max Tokens", "Dims"} <= _help_titles(leaderboard.text)
     assert "1024 dimensions in float32 is 4KB per document" in leaderboard.text
     # Active Params is total minus the embedding table, which is NOT the MoE
     # per-token count; the help must not let a reader assume otherwise.
-    assert "Total Params minus the input embedding parameters" in leaderboard.text
+    assert "Active Params = Total Params - input embedding parameters - non-text parameters" in leaderboard.text
+    assert "vision or audio encoders and multimodal projectors" in leaderboard.text
     assert "this is not the mixture-of-experts sense of active parameters" in leaderboard.text
     # The lead line reads as a tip callout, not as a bare bold paragraph.
     assert 'class="hakari-modal-callout"' in leaderboard.text
