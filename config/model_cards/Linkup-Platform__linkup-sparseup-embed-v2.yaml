@@ -1,0 +1,66 @@
+id: Linkup-Platform/linkup-sparseup-embed-v2
+source:
+  type: huggingface
+  name: Linkup-Platform/linkup-sparseup-embed-v2
+  revision_requested: 7165075edb8c7e5e6d1125aa8a6a753d3c50c5d8
+  revision: 7165075edb8c7e5e6d1125aa8a6a753d3c50c5d8
+method: sparse
+parameters:
+  total: 149656770
+  trainable: 149656770
+  input_embedding: 38684160
+  active: 110972610
+embedding:
+  output_dimension: 50370
+  truncate_dims: null
+  pooling: max_relu
+runtime:
+  dtype: bf16
+  attn_implementation: flash_attention_2
+  max_seq_length: 8192
+  trust_remote_code: true
+  remote_code_approved: true
+  backend_library: sentence-transformers
+  similarity_fn_name: dot
+prompts:
+  query_prompt_name: query
+  document_prompt_name: document
+language_support:
+  category: english_only
+  languages:
+  - en
+  evidence:
+    source_url: https://huggingface.co/Linkup-Platform/linkup-sparseup-embed-v2
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: official_model_identity
+target:
+  all: true
+  evaluation_scope: standard
+license:
+  id: apache-2.0
+  label: Apache 2.0
+  type: permissive
+  commercial_use: allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/Linkup-Platform/linkup-sparseup-embed-v2
+links:
+  huggingface: https://huggingface.co/Linkup-Platform/linkup-sparseup-embed-v2
+  papers:
+  - title: 'SPARSEUP: Towards Better Recipes for Training Modern Learned Sparse Retrievers'
+    url: https://arxiv.org/abs/2611.09680
+notes:
+- Remote custom_st.py and modeling_splade.py reviewed at the pinned revision. They
+  define a SPLADE head on ModernBERT-base with a logit shift, per-position top-12
+  activations, and case/space vocabulary folding; no network or file access beyond
+  the checkpoint.
+- The `[Q]` and `[D]` prompts select the query/document branch and are attended but
+  not pooled. Keep the checkpoint's 8192-token query and document limits.
+- The vector space is the 50370-entry tokenizer vocabulary (about 34k dimensions are
+  reachable after folding). Keep raw dot-product scoring and unpruned base vectors;
+  the standard sparse budget grid covers the model's top-k pruning use.
+- Evaluated in the default environment (Transformers 5.12.1, SentenceTransformers
+  5.4.1) with the flash-attn dependency group.
+- Parameter counts come from the loaded model. The safetensors header total is 50370
+  higher because it also stores the integer `vocab_fold_index` buffer, which is not
+  a model parameter.

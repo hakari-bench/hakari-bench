@@ -1,0 +1,62 @@
+id: DexelLabs/MargEmbed-Akan
+source:
+  type: huggingface
+  name: DexelLabs/MargEmbed-Akan
+  revision_requested: 515277e42f5d85fa4631b9f98fa10a368a801604
+  revision: 515277e42f5d85fa4631b9f98fa10a368a801604
+method: dense
+parameters:
+  total: 559890432
+  trainable: 559890432
+  input_embedding: 256002048
+  active: 303888384
+embedding:
+  truncate_dims: null
+  output_dimension: 1024
+  mrl_support: false
+  pooling: mean
+  include_prompt: true
+runtime:
+  max_seq_length: 512
+  dtype: bf16
+  trust_remote_code: false
+  attn_implementation: sdpa
+  backend_library: sentence-transformers
+  similarity_fn_name: cosine
+prompts:
+  query_prompt: 'Instruct: Given a question, retrieve Wikipedia passages that answer
+    the question
+
+    Query: '
+  document_prompt: ''
+language_support:
+  category: english_plus
+  languages:
+  - ak
+  - tw
+  - en
+  evidence:
+    source_url: https://huggingface.co/DexelLabs/MargEmbed-Akan
+    classification_policy: model identity first; use broad score evidence only for
+      models without explicit language identity
+    classification_reason: official_model_card_twi_to_english_retrieval
+target:
+  all: true
+  evaluation_scope: standard
+license:
+  id: cc-by-nc-4.0
+  label: CC BY-NC 4.0
+  type: non_commercial
+  commercial_use: not_allowed
+  source: huggingface_model_card
+  source_url: https://huggingface.co/DexelLabs/MargEmbed-Akan
+links:
+  huggingface: https://huggingface.co/DexelLabs/MargEmbed-Akan
+  github: https://github.com/princeannan4332/MargEmbed-Akan
+notes:
+- Twi (Akan) to English retrieval model distilled from McGill-NLP/AfriE5-Large-instruct
+  (XLM-RoBERTa large). The checkpoint's saved prompts are empty; the official usage
+  applies the question instruction to queries only and no prompt to passages.
+- The SentenceTransformers config uses module paths that require SentenceTransformers
+  >=6. Evaluated with SentenceTransformers 6.3.0 and Transformers 5.24.0.
+- No Matryoshka truncation dimensions are documented.
